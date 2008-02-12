@@ -1,8 +1,0 @@
-#summary This page is about Rothars World of Warcraft Interface.
-
-*Details*
-
-Check Test:
-  * li1
-  * li2
-  * li3

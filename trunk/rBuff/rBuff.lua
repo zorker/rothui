@@ -31,25 +31,18 @@
     local b = _G[name.."Border"]
     local i = _G[name.."Icon"]
     local fp = _G[name]
-    local f, t
-      
-    f = CreateFrame("Frame", nil, fp)
-    f:SetWidth(32)
-    f:SetHeight(32) 
-   
-    t = f:CreateTexture(nil,"OVERLAY")
-    t:SetTexture("Interface\\AddOns\\myBottons\\overlay.blp")
-    t:SetAllPoints(f)
-    f.texture = t
     
-    --i:SetTexCoord(0.07,0.93,0.07,0.93)
-    --i:ClearAllPoints()
-    --i:SetPoint("TOPLEFT", f, "TOPLEFT", 0, -0)
-    --i:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -0, 0)
+    f = CreateFrame("Frame", nil, fp)
+    f:SetAllPoints(fp)
+   
+    local t = f:CreateTexture(nil,"Overlay")
+    t:SetTexture("Interface\\AddOns\\rTextures\\rGloss")
+    t:SetPoint("TOPLEFT", f, "TOPLEFT", -4, 4)
+    t:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 4, -4)
+    f.texture = t
 
     if b then b:Hide() end
       
-    end
   end
   
   SecondsToTimeAbbrev = function(time)

@@ -30,19 +30,26 @@
   
     local b = _G[name.."Border"]
     local i = _G[name.."Icon"]
-    local fp = _G[name]
-    
-    f = CreateFrame("Frame", nil, fp)
-    f:SetAllPoints(fp)
-   
-    local t = f:CreateTexture(nil,"Overlay")
-    t:SetTexture("Interface\\AddOns\\rTextures\\rGloss")
-    t:SetPoint("TOPLEFT", f, "TOPLEFT", -4, 4)
-    t:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 4, -4)
-    f.texture = t
+    local f = _G[name]
+    local c = _G[name.."Gloss"]
 
-    if b then b:Hide() end
+    --DEFAULT_CHAT_FRAME:AddMessage(name.."Gloss");
+    
+    if not c then
+   
+      local fg = CreateFrame("Frame", name.."Gloss", f)
+      fg:SetAllPoints(f)
       
+      local t = f:CreateTexture(nil,"Overlay")
+      t:SetTexture("Interface\\AddOns\\rTextures\\simpleSquareGloss")
+      t:SetPoint("TOPLEFT", fg, "TOPLEFT", -3, 3)
+      t:SetPoint("BOTTOMRIGHT", fg, "BOTTOMRIGHT", 3, -3)
+      fg.texture = t
+        
+    end
+    
+    if b then b:Hide() end
+  
   end
   
   SecondsToTimeAbbrev = function(time)

@@ -3,21 +3,21 @@ local _G = getfenv(0)
 
 addon:RegisterEvent"PLAYER_LOGIN"
 addon:SetScript("OnEvent", function()
-	
-	local dummy = function() end
+  
+  local dummy = function() end
 
-	--important or you CANNOT move the bars!!!
-	UIPARENT_MANAGED_FRAME_POSITIONS["PetActionBarFrame"] = nil
-	UIPARENT_MANAGED_FRAME_POSITIONS["ShapeshiftBarFrame"] = nil
-	UIPARENT_MANAGED_FRAME_POSITIONS["PossessBarFrame"] = nil
-	UIPARENT_MANAGED_FRAME_POSITIONS["CastingBarFrame"] = nil
-	UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = nil
-	UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomRight"] = nil
-	UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBar"] = nil
-	UIPARENT_MANAGED_FRAME_POSITIONS["BonusActionBarFrame"] = nil
-	UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarRight"] = nil
-	UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarLeft"] = nil
-	
+  --important or you CANNOT move the bars!!!
+  UIPARENT_MANAGED_FRAME_POSITIONS["PetActionBarFrame"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["ShapeshiftBarFrame"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["PossessBarFrame"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["CastingBarFrame"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomRight"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBar"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["BonusActionBarFrame"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarRight"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarLeft"] = nil
+  
   MainMenuBar:Show()
   MainMenuBar:SetWidth(512)
   MainMenuBar:SetFrameLevel(0)
@@ -26,32 +26,32 @@ addon:SetScript("OnEvent", function()
   
   
   MainMenuBarMaxLevelBar:SetWidth(512)
-	
-	--MainMenuBarArtFrame:Hide()
+  
+  --MainMenuBarArtFrame:Hide()
 
-	CharacterMicroButton:Hide()
-	TalentMicroButton:Hide()
-	CharacterMicroButton:Hide()
-	SpellbookMicroButton:Hide()
-	QuestLogMicroButton:Hide()
-	SocialsMicroButton:Hide()
-	MainMenuMicroButton:Hide()
-	HelpMicroButton:Hide()
-	LFGMicroButton:Hide()
+  CharacterMicroButton:Hide()
+  TalentMicroButton:Hide()
+  CharacterMicroButton:Hide()
+  SpellbookMicroButton:Hide()
+  QuestLogMicroButton:Hide()
+  SocialsMicroButton:Hide()
+  MainMenuMicroButton:Hide()
+  HelpMicroButton:Hide()
+  LFGMicroButton:Hide()
 
-	MainMenuBarBackpackButton:Hide()
-	CharacterBag0Slot:Hide()
-	CharacterBag1Slot:Hide()
-	CharacterBag2Slot:Hide()
-	CharacterBag3Slot:Hide()
+  MainMenuBarBackpackButton:Hide()
+  CharacterBag0Slot:Hide()
+  CharacterBag1Slot:Hide()
+  CharacterBag2Slot:Hide()
+  CharacterBag3Slot:Hide()
 
-	MainMenuBarPageNumber:Hide()
-	ActionBarUpButton:Hide()
-	ActionBarDownButton:Hide()
-	KeyRingButton:Disable()
-	KeyRingButton:DisableDrawLayer()
-	KeyRingButton:Hide()
-	
+  MainMenuBarPageNumber:Hide()
+  ActionBarUpButton:Hide()
+  ActionBarDownButton:Hide()
+  KeyRingButton:Disable()
+  KeyRingButton:DisableDrawLayer()
+  KeyRingButton:Hide()
+  
   MainMenuBarLeftEndCap:SetPoint("BOTTOM", "MainMenuBarArtFrame", "BOTTOM", -292, -3)
   MainMenuBarRightEndCap:SetPoint("BOTTOM", "MainMenuBarArtFrame", "BOTTOM", 292, -3)
 
@@ -61,21 +61,21 @@ addon:SetScript("OnEvent", function()
   MainMenuBarTexture0:Hide()
   MainMenuBarTexture1:Hide()
   MainMenuBarTexture2:Hide()
-  MainMenuBarTexture3:Hide()	
+  MainMenuBarTexture3:Hide()  
   
   -- with this you could hide warrior stance textures
   BonusActionBarTexture0:Hide()
-	BonusActionBarTexture1:Hide()
-	
-	--hide gryphons y/n
-	MainMenuBarLeftEndCap:Hide()
-	MainMenuBarRightEndCap:Hide()
-	
-	MainMenuExpBar:SetWidth(512)
-	MainMenuExpBar:SetHeight(1)
-	ReputationWatchBar:SetWidth(512)
-	ReputationWatchBar:SetHeight(1)
-	
+  BonusActionBarTexture1:Hide()
+  
+  --hide gryphons y/n
+  MainMenuBarLeftEndCap:Hide()
+  MainMenuBarRightEndCap:Hide()
+  
+  MainMenuExpBar:SetWidth(512)
+  MainMenuExpBar:SetHeight(1)
+  ReputationWatchBar:SetWidth(512)
+  ReputationWatchBar:SetHeight(1)
+  
   --hide XP BAR y/n
   MainMenuExpBar:Hide()
   MainMenuExpBar.Show = dummy
@@ -85,26 +85,26 @@ addon:SetScript("OnEvent", function()
   ReputationWatchBar.Show = dummy
   
   ExhaustionTick:Hide()
-	ExhaustionTick.Show = dummy
-	
-  --Put Performanceframe to the right	
-	MainMenuBarPerformanceBarFrame:SetParent(UIParent)
-	MainMenuBarPerformanceBarFrame:SetPoint("BOTTOMRIGHT", "UIParent", "BOTTOMRIGHT", 0, -5)
-	
-	--put the multibars to places
-	MultiBarBottomLeft:ClearAllPoints()
-	MultiBarBottomLeft:SetPoint("BOTTOMLEFT", "MainMenuBar", "TOPLEFT", 8,-3)
-	MultiBarBottomRight:ClearAllPoints()
-	MultiBarBottomRight:SetPoint("BOTTOMLEFT", "MultiBarBottomLeft", "TOPLEFT", 0,15)
-	ShapeshiftBarFrame:ClearAllPoints()
-	ShapeshiftBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", -10, 7)
-	PetActionBarFrame:ClearAllPoints()
-	PetActionBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", -10, 7)
-	PossessBarFrame:ClearAllPoints()
-	PossessBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", -10, 7)
+  ExhaustionTick.Show = dummy
+  
+  --Put Performanceframe to the right  
+  MainMenuBarPerformanceBarFrame:SetParent(UIParent)
+  MainMenuBarPerformanceBarFrame:SetPoint("BOTTOMRIGHT", "UIParent", "BOTTOMRIGHT", 0, -5)
+  
+  --put the multibars to places
+  MultiBarBottomLeft:ClearAllPoints()
+  MultiBarBottomLeft:SetPoint("BOTTOMLEFT", "MainMenuBar", "TOPLEFT", 8,-3)
+  MultiBarBottomRight:ClearAllPoints()
+  MultiBarBottomRight:SetPoint("BOTTOMLEFT", "MultiBarBottomLeft", "TOPLEFT", 0,15)
+  ShapeshiftBarFrame:ClearAllPoints()
+  ShapeshiftBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", -10, 7)
+  PetActionBarFrame:ClearAllPoints()
+  PetActionBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", -10, 7)
+  PossessBarFrame:ClearAllPoints()
+  PossessBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", -10, 7)
 
-	MultiBarRight:ClearAllPoints()
-	MultiBarRight:SetPoint("RIGHT",-10, 0)
+  MultiBarRight:ClearAllPoints()
+  MultiBarRight:SetPoint("RIGHT",-10, 0)
 
   --bonusactionbarframe ... frame shows warrior stances...
   BonusActionBarFrame:Hide()
@@ -117,5 +117,5 @@ addon:SetScript("OnEvent", function()
 
   MultiBarRight:SetScale(0.8)
   MultiBarLeft:SetScale(0.8)
-	
+  
 end)

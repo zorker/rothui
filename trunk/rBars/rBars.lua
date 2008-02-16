@@ -1,9 +1,6 @@
 local addon = CreateFrame"Frame"
 local _G = getfenv(0)
 
-addon:RegisterEvent"PLAYER_LOGIN"
-addon:SetScript("OnEvent", function()
-  
   local dummy = function() end
 
   --important or you CANNOT move the bars!!!
@@ -93,9 +90,9 @@ addon:SetScript("OnEvent", function()
   
   --put the multibars to places
   MultiBarBottomLeft:ClearAllPoints()
-  MultiBarBottomLeft:SetPoint("BOTTOMLEFT", "MainMenuBar", "TOPLEFT", 8,-3)
+  MultiBarBottomLeft:SetPoint("BOTTOMLEFT", "MainMenuBar", "TOPLEFT", 8,-6)
   MultiBarBottomRight:ClearAllPoints()
-  MultiBarBottomRight:SetPoint("BOTTOMLEFT", "MultiBarBottomLeft", "TOPLEFT", 0,15)
+  MultiBarBottomRight:SetPoint("BOTTOMLEFT", "MultiBarBottomLeft", "TOPLEFT", 0,10)
   ShapeshiftBarFrame:ClearAllPoints()
   ShapeshiftBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", -10, 7)
   PetActionBarFrame:ClearAllPoints()
@@ -108,14 +105,64 @@ addon:SetScript("OnEvent", function()
 
   --bonusactionbarframe ... frame shows warrior stances...
   BonusActionBarFrame:Hide()
+  BonusActionBarFrame.Show = dummy
   
   --SCALE
   MainMenuBar:SetScale(0.8)
-  BonusActionBarFrame:SetScale(0.8)
+  BonusActionBarFrame:SetScale(1)
   MultiBarBottomLeft:SetScale(0.8)
   MultiBarBottomRight:SetScale(0.8)
 
   MultiBarRight:SetScale(0.8)
   MultiBarLeft:SetScale(0.8)
   
-end)
+  -------------
+  -- BUTTONS --
+  -------------
+  
+  addon:SetScript("OnEvent", function()
+    if(event=="PLAYER_LOGIN") then
+      local j
+      for j=1,12 do
+        addon:makebuttongloss("ActionButton", j)
+        addon:makebuttongloss("MultiBarBottomRightButton", j)
+        addon:makebuttongloss("MultiBarBottomLeftButton", j)
+        addon:makebuttongloss("MultiBarLeftButton", j)
+        addon:makebuttongloss("MultiBarRightButton", j)
+    	end
+    	
+    end
+  end)
+
+  function addon:makebuttongloss(name, i)
+  
+    local bu  = _G[name..i]
+    local ic  = _G[name..i.."Icon"]
+    local co  = _G[name..i.."Count"]
+    local bo  = _G[name..i.."Border"]
+    local ho  = _G[name..i.."HotKey"]
+    local cd  = _G[name..i.."Cooldown"]
+    local na  = _G[name..i.."Name"]
+    local fl  = _G[name..i.."Flash"]
+    local nt  = _G[name..i.."NormalTexture"]
+     
+    bo:Hide()
+    ho:Hide()
+    cd:Hide()
+    na:Hide()
+    fl:Hide()
+    nt:Hide()
+    
+    local te = bu:CreateTexture(nil,"ARTWORK")
+    te:SetTexture("Interface\\AddOns\\rTextures\\simpleSquareGloss")
+    te:SetPoint("TOPLEFT", bu, "TOPLEFT", -5, 5)
+    te:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 5, -5)
+    
+    bu:SetPushedTexture("Interface\\AddOns\\rTextures\\simpleSquareGloss")
+    bu:SetHighlightTexture("Interface\\AddOns\\rTextures\\simpleSquareHighlight")
+    
+    ic:SetTexCoord(0.07,0.93,0.07,0.93)
+  
+  end
+  
+  addon:RegisterEvent"PLAYER_LOGIN"

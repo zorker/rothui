@@ -79,8 +79,8 @@ local _G = getfenv(0)
   MainMenuBarTexture3:Hide()  
   
   -- with this you could hide warrior stance textures
-  --BonusActionBarTexture0:Hide()
-  --BonusActionBarTexture1:Hide()
+  BonusActionBarTexture0:Hide()
+  BonusActionBarTexture1:Hide()
   
   --hide max lvl texture
   MainMenuMaxLevelBar0:Hide()
@@ -112,6 +112,11 @@ local _G = getfenv(0)
   
   --MainMenuBarPerformanceBarFrameButton
   
+  MultiBarBottomLeft:Show()
+  MultiBarBottomRight:Show()
+  MultiBarRight:Show()
+  MultiBarLeft:Show()
+  
   --put the multibars to places
   MultiBarBottomLeft:ClearAllPoints()
   MultiBarBottomLeft:SetPoint("BOTTOMLEFT", "MainMenuBar", "TOPLEFT", 8,-3)
@@ -130,11 +135,16 @@ local _G = getfenv(0)
   --bonusactionbarframe ... frame shows warrior stances...
   --BonusActionBarFrame:Hide()
   --BonusActionBarFrame.Show = dummy
+
+  BonusActionBarFrame:SetParent(UIParent)
+  
+  BonusActionButton1:ClearAllPoints()
+  BonusActionButton1:SetPoint("BOTTOM",UIParent,"BOTTOM",-230,14);
   
   --SCALE
-  local myscale = 1
+  local myscale = 0.8
   MainMenuBar:SetScale(myscale)
-  BonusActionBarFrame:SetScale(1)
+  BonusActionBarFrame:SetScale(myscale)
   MultiBarBottomLeft:SetScale(myscale)
   MultiBarBottomRight:SetScale(myscale)
   MultiBarRight:SetScale(myscale)
@@ -168,9 +178,13 @@ local _G = getfenv(0)
     getglobal(this:GetName().."NormalTexture"):SetWidth(36)
     getglobal(this:GetName().."NormalTexture"):SetPoint("Center", 0, 0);
     
+    --getglobal(this:GetName()):SetBackdropColor(0,0,0,1);
+    
     getglobal(this:GetName().."NormalTexture"):Show()
-    getglobal(this:GetName().."NormalTexture"):SetTexture("Interface\\AddOns\\rTextures\\test2")
+    getglobal(this:GetName().."NormalTexture"):SetTexture("Interface\\AddOns\\rTextures\\gloss")
     getglobal(this:GetName().."Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
+    getglobal(this:GetName().."Icon"):SetPoint("TOPLEFT", getglobal(this:GetName()), "TOPLEFT", 2, -2)
+    getglobal(this:GetName().."Icon"):SetPoint("BOTTOMRIGHT", getglobal(this:GetName()), "BOTTOMRIGHT", -2, 2)
     getglobal(this:GetName().."Name"):Hide()
     getglobal(this:GetName().."HotKey"):Hide()
     --DEFAULT_CHAT_FRAME:AddMessage("GetPushedTextOffset "..getglobal(this:GetName()):GetPushedTexture())

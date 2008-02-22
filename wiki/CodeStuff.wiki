@@ -1,0 +1,26 @@
+To save them from getting deleted by blizz forums!
+
+{{{
+  
+  local hooks = {};
+  local range;
+
+  hooks["ActionButton_OnUpdate"] = ActionButton_OnUpdate;
+  
+  ActionButton_OnUpdate = function(elapsed)
+    if ( IsActionInRange(ActionButton_GetPagedID(this)) == 0) then
+        getglobal(this:GetName().."Icon"):SetVertexColor(0.2,0.2,0.2);
+        getglobal(this:GetName().."NormalTexture"):SetVertexColor(0.2,0.2,0.2);
+        range = 1;
+	else
+        range = 0;
+    end
+	hooks["ActionButton_OnUpdate"](elapsed);
+		
+	if (this.range ~= range and range == 0) then
+        ActionButton_UpdateUsable()
+    end
+        this.range = range;
+	end
+	
+}}}

@@ -43,3 +43,13 @@ change multibarbottomright layout
   end
   
 }}}
+
+hook tooltip
+{{{
+  
+  hooksecurefunc("GameTooltip_SetDefaultAnchor", function (tooltip, parent)
+  tooltip:SetOwner(parent,"ANCHOR_NONE");
+  tooltip:SetPoint("CENTER",UIParent,"CENTER",0,0);
+  end
+  
+}}}

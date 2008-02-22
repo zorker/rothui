@@ -22,13 +22,25 @@ local _G = getfenv(0)
   MainMenuBar:SetPoint("Bottom",0,10)
   --MainMenuBar:SetPoint("Bottom",0,0)
   
+	ShapeshiftBarLeft:Hide()
+	ShapeshiftBarLeft.Show = dummy
+	ShapeshiftBarMiddle:Hide()
+	ShapeshiftBarMiddle.Show = dummy
+	ShapeshiftBarRight:Hide()
+	ShapeshiftBarRight.Show = dummy
+	
+	ShapeshiftBarFrame:Hide()
+	ShapeshiftBarFrame.Show = dummy
   
   MainMenuBarMaxLevelBar:SetWidth(512)
+  MainMenuBarMaxLevelBar:Hide()
+  MainMenuBarMaxLevelBar.Show = dummy
   
   --MainMenuBarArtFrame:Hide()
 
   CharacterMicroButton:Hide()
   TalentMicroButton:Hide()
+  TalentMicroButton.Show = dummy
   CharacterMicroButton:Hide()
   SpellbookMicroButton:Hide()
   QuestLogMicroButton:Hide()
@@ -67,8 +79,14 @@ local _G = getfenv(0)
   MainMenuBarTexture3:Hide()  
   
   -- with this you could hide warrior stance textures
-  BonusActionBarTexture0:Hide()
-  BonusActionBarTexture1:Hide()
+  --BonusActionBarTexture0:Hide()
+  --BonusActionBarTexture1:Hide()
+  
+  --hide max lvl texture
+  MainMenuMaxLevelBar0:Hide()
+  MainMenuMaxLevelBar1:Hide()
+  MainMenuMaxLevelBar2:Hide()
+  MainMenuMaxLevelBar3:Hide()
   
   MainMenuExpBar:SetWidth(512)
   MainMenuExpBar:SetHeight(1)
@@ -87,45 +105,94 @@ local _G = getfenv(0)
   ExhaustionTick.Show = dummy
   
   --Put Performanceframe to the right  
-  MainMenuBarPerformanceBarFrame:SetParent(UIParent)
-  MainMenuBarPerformanceBarFrame:SetPoint("BOTTOMRIGHT", "UIParent", "BOTTOMRIGHT", 0, -5)
+  --MainMenuBarPerformanceBarFrame:SetParent(UIParent)
+  --MainMenuBarPerformanceBarFrame:SetPoint("BOTTOMRIGHT", "UIParent", "BOTTOMRIGHT", 0, -5)
+  MainMenuBarPerformanceBarFrame:Hide()
+  MainMenuBarPerformanceBarFrame.Show = dummy
+  
+  --MainMenuBarPerformanceBarFrameButton
   
   --put the multibars to places
   MultiBarBottomLeft:ClearAllPoints()
-  MultiBarBottomLeft:SetPoint("BOTTOMLEFT", "MainMenuBar", "TOPLEFT", 8,-6)
+  MultiBarBottomLeft:SetPoint("BOTTOMLEFT", "MainMenuBar", "TOPLEFT", 8,-3)
   MultiBarBottomRight:ClearAllPoints()
-  MultiBarBottomRight:SetPoint("BOTTOMLEFT", "MultiBarBottomLeft", "TOPLEFT", 0,10)
+  MultiBarBottomRight:SetPoint("BOTTOMLEFT", "MultiBarBottomLeft", "TOPLEFT", 0,8)
   ShapeshiftBarFrame:ClearAllPoints()
-  ShapeshiftBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", -10, 7)
+  ShapeshiftBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRight, "TOPLEFT", -10, 7)
   PetActionBarFrame:ClearAllPoints()
-  PetActionBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", -10, 7)
+  PetActionBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRight, "TOPLEFT", -10, 7)
   PossessBarFrame:ClearAllPoints()
-  PossessBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", -10, 7)
+  PossessBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRight, "TOPLEFT", -10, 7)
 
   MultiBarRight:ClearAllPoints()
   MultiBarRight:SetPoint("RIGHT",-10, 0)
 
   --bonusactionbarframe ... frame shows warrior stances...
-  BonusActionBarFrame:Hide()
-  BonusActionBarFrame.Show = dummy
+  --BonusActionBarFrame:Hide()
+  --BonusActionBarFrame.Show = dummy
   
   --SCALE
-  MainMenuBar:SetScale(0.8)
+  local myscale = 1
+  MainMenuBar:SetScale(myscale)
   BonusActionBarFrame:SetScale(1)
-  MultiBarBottomLeft:SetScale(0.8)
-  MultiBarBottomRight:SetScale(0.8)
-  MultiBarRight:SetScale(0.8)
-  MultiBarLeft:SetScale(0.8)
+  MultiBarBottomLeft:SetScale(myscale)
+  MultiBarBottomRight:SetScale(myscale)
+  MultiBarRight:SetScale(myscale)
+  MultiBarLeft:SetScale(myscale)
+  
+  --RAAAAANGE
+  
+  local hooks = {};
+  local range;
+
+  hooks["ActionButton_OnUpdate"] = ActionButton_OnUpdate;
+  
+  ActionButton_OnUpdate = function(elapsed)
+  
+    if ( IsActionInRange(ActionButton_GetPagedID(this)) == 0) then
+      getglobal(this:GetName().."Icon"):SetVertexColor(1,0,0);
+      getglobal(this:GetName().."NormalTexture"):SetVertexColor(1,0,0);
+      range = 1;
+    else
+      range = 0;
+    end
+
+    hooks["ActionButton_OnUpdate"](elapsed);
+              
+    if (this.range ~= range and range == 0) then
+      ActionButton_UpdateUsable()
+    end
+    
+    getglobal(this:GetName().."NormalTexture"):SetAlpha(1)
+    getglobal(this:GetName().."NormalTexture"):SetHeight(36)
+    getglobal(this:GetName().."NormalTexture"):SetWidth(36)
+    getglobal(this:GetName().."NormalTexture"):SetPoint("Center", 0, 0);
+    
+    getglobal(this:GetName().."NormalTexture"):Show()
+    getglobal(this:GetName().."NormalTexture"):SetTexture("Interface\\AddOns\\rTextures\\test2")
+    getglobal(this:GetName().."Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
+    getglobal(this:GetName().."Name"):Hide()
+    getglobal(this:GetName().."HotKey"):Hide()
+    --DEFAULT_CHAT_FRAME:AddMessage("GetPushedTextOffset "..getglobal(this:GetName()):GetPushedTexture())
+
+    this.range = range;
+
+  end
+  
+  
   
   -------------
   -- BUTTONS --
   -------------
+  
+  --[[
   
   addon:SetScript("OnEvent", function()
     if(event=="PLAYER_LOGIN") then
       local j
       for j=1,12 do
         addon:makebuttongloss("ActionButton", j)
+        addon:makebuttongloss("BonusActionButton", j)
         addon:makebuttongloss("MultiBarBottomRightButton", j)
         addon:makebuttongloss("MultiBarBottomLeftButton", j)
         addon:makebuttongloss("MultiBarLeftButton", j)
@@ -146,20 +213,33 @@ local _G = getfenv(0)
     local na  = _G[name..i.."Name"]
     local fl  = _G[name..i.."Flash"]
     local nt  = _G[name..i.."NormalTexture"]
+    
+    
+    if name == "MultiBarRightButton" then
+      bu:ClearAllPoints();
+      if ( i > 1 ) then
+        bu:SetPoint("LEFT",_G["MultiBarRightButton"..(i-1)],"RIGHT",5,0);
+      else
+        bu:SetPoint("CENTER",UIParent,"CENTER",-290,0);
+      end
+    end
+    
      
     bo:Hide()
     ho:Hide()
     na:Hide()
-    --cd:Hide()
-    --fl:Hide()
 
-    local te = bu:CreateTexture(name..i.."Overlay","Artwork")
-    te:SetTexture("Interface\\Buttons\\UI-Quickslot2")
-    te:SetPoint("TOPLEFT", nt, "TOPLEFT", 0, 0)
-    te:SetPoint("BOTTOMRIGHT", nt, "BOTTOMRIGHT", 0, 0)
+    --local te = bu:CreateTexture(name..i.."Overlay","Overlay")
+    --te:SetTexture("Interface\\Buttons\\UI-Quickslot2")
+    --te:SetPoint("TOPLEFT", nt, "TOPLEFT", 0, 0)
+    --te:SetPoint("BOTTOMRIGHT", nt, "BOTTOMRIGHT", 0, 0)
+    
+    nt:SetTexture("Interface\\Buttons\\UI-Quickslot2")
 
-    ic:SetTexCoord(0.07,0.93,0.07,0.93)
+    ic:SetTexCoord(0.1,0.9,0.1,0.9)
   
   end
+  
+  ]]--
   
   addon:RegisterEvent"PLAYER_LOGIN"

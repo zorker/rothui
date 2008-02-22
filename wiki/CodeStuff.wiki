@@ -24,3 +24,22 @@ To save them from getting deleted by blizz forums!
 	end
 	
 }}}
+
+change multibarbottomright layout
+
+{{{
+  
+  local button;
+  
+  for i = 1, 12, 1 do
+    button = _G["MultiBarRightButton"..i];
+    button:ClearAllPoints();
+    
+    if ( i > 1 ) then
+      button:SetPoint("LEFT",_G["MultiBarRightButton"..(i-1)],"RIGHT",5,0);
+    else
+      button:SetPoint("CENTER",UIParent,"CENTER",-290,0);
+    end
+  end
+  
+}}}

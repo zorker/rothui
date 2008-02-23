@@ -1,7 +1,3 @@
- Dieser Thread ist für und rum um den Bau von Interfaces welche Wert auf eine geringe Speicherlast legen.
-
-Zu erst einmal Links zum Thema:
-
 Addons
 
 evl:

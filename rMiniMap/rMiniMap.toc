@@ -1,0 +1,6 @@
+## Interface: 21337
+## Author: rothar
+## Title: rMiniMap
+## Notes: fucking simple minimap
+
+rMiniMap.lua

@@ -40,6 +40,21 @@
       local fg = CreateFrame("Frame", name.."Gloss", f)
       fg:SetAllPoints(f)
       
+<<<<<<< .mine
+      f:SetScale(1)
+      
+      local t = f:CreateTexture(nil,"ARTWORK")
+      t:SetTexture("Interface\\AddOns\\rTextures\\gloss")
+      t:SetPoint("TOPLEFT", fg, "TOPLEFT", -0, 0)
+      t:SetPoint("BOTTOMRIGHT", fg, "BOTTOMRIGHT", 0, -0)
+      fg.texture = t
+      
+      i:SetTexCoord(0.1,0.9,0.1,0.9)
+      i:SetPoint("TOPLEFT", fg, "TOPLEFT", 2, -2)
+      i:SetPoint("BOTTOMRIGHT", fg, "BOTTOMRIGHT", -2, 2)
+        
+    end
+=======
       local t = f:CreateTexture(nil,"Overlay")
       t:SetTexture("Interface\\AddOns\\rTextures\\simpleSquareGloss")
       t:SetPoint("TOPLEFT", fg, "TOPLEFT", -3, 3)
@@ -47,7 +62,13 @@
       fg.texture = t
         
     end
+>>>>>>> .r29
     
+<<<<<<< .mine
+    
+    
+=======
+>>>>>>> .r29
     if b then b:Hide() end
   
   end

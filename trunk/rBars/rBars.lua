@@ -8,6 +8,8 @@ local _G = getfenv(0)
   UIPARENT_MANAGED_FRAME_POSITIONS["ShapeshiftBarFrame"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["PossessBarFrame"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["CastingBarFrame"] = nil
+  --UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBarPerformanceBarFrame"] = nil
+  --UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBarPerformanceBarButton"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomRight"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBar"] = nil
@@ -106,7 +108,13 @@ local _G = getfenv(0)
   
   --Put Performanceframe to the right  
   --MainMenuBarPerformanceBarFrame:SetParent(UIParent)
-  --MainMenuBarPerformanceBarFrame:SetPoint("BOTTOMRIGHT", "UIParent", "BOTTOMRIGHT", 0, -5)
+  --MainMenuBarPerformanceBarFrame:ClearAllPoints()
+  --MainMenuBarPerformanceBarFrame:SetPoint("CENTER", "UIParent", "CENTER", 0, 0)
+  --MainMenuBarPerformanceBarFrameButton:SetParent(UIParent)
+  --MainMenuBarPerformanceBarFrameButton:ClearAllPoints()
+  --MainMenuBarPerformanceBarFrameButton:SetPoint("CENTER", "UIParent", "CENTER", 0, 0)
+  
+  
   MainMenuBarPerformanceBarFrame:Hide()
   MainMenuBarPerformanceBarFrame.Show = dummy
   
@@ -119,9 +127,9 @@ local _G = getfenv(0)
   
   --put the multibars to places
   MultiBarBottomLeft:ClearAllPoints()
-  MultiBarBottomLeft:SetPoint("BOTTOMLEFT", "MainMenuBar", "TOPLEFT", 8,-3)
+  MultiBarBottomLeft:SetPoint("BOTTOMLEFT", "MainMenuBar", "TOPLEFT", 8,-6)
   MultiBarBottomRight:ClearAllPoints()
-  MultiBarBottomRight:SetPoint("BOTTOMLEFT", "MultiBarBottomLeft", "TOPLEFT", 0,8)
+  MultiBarBottomRight:SetPoint("BOTTOMLEFT", "MultiBarBottomLeft", "TOPLEFT", 0,15)
   ShapeshiftBarFrame:ClearAllPoints()
   ShapeshiftBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRight, "TOPLEFT", -10, 7)
   PetActionBarFrame:ClearAllPoints()
@@ -180,6 +188,7 @@ local _G = getfenv(0)
     
     --getglobal(this:GetName()):SetBackdropColor(0,0,0,1);
     
+    getglobal(this:GetName().."Border"):Hide()
     getglobal(this:GetName().."NormalTexture"):Show()
     getglobal(this:GetName().."NormalTexture"):SetTexture("Interface\\AddOns\\rTextures\\gloss")
     getglobal(this:GetName().."Icon"):SetTexCoord(0.1,0.9,0.1,0.9)

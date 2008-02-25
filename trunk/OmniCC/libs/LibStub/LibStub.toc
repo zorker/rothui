@@ -1,0 +1,9 @@
+## Interface: 20100
+## Title: Lib: LibStub
+## Notes: Universal Library Stub
+## Credits: Kaelten, Cladhaire, ckknight, Mikk, Ammo, Nevcairiel
+## X-Website: http://jira.wowace.com/browse/LS | http://www.wowace.com/wiki/LibStub
+## X-Category: Library
+## X-License: Public Domain	
+
+LibStub.lua

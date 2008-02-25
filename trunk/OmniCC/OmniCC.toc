@@ -1,0 +1,10 @@
+## Interface: 20300
+## Title: OmniCC
+## Notes: Cooldown count for everything
+## Author: Tuller
+## Version: 2.0.7
+## SavedVariables: OmniCCDB
+## OptionalDeps: LibStub, LibSharedMedia-2.0
+embeds.xml
+localization.lua
+full.lua

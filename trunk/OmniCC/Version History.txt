@@ -1,0 +1,65 @@
+OmniCC Version History
+
+2.0.7
+Updated for 2.3
+Rewrote the options menu in pure lua
+
+2.0.6
+Fixed a crash issue on Macs in 2.2 and on the 2.3 PTR
+Removed OmniCC Basic.
+
+2.0.5
+Both: Changed the hooking code to increase significantly increase compatibility.
+Full: Tweaked the layering of cooldown text
+Full: Fixed a bug that caused a font not set error
+
+2.0.4
+Full: Made the minimum scale check independent of UIScale
+
+2.0.3
+Full: Fixed a bug with LibSharedMedia that caused some Ace addons to not work
+Full: Fixed a bug causing cooldown text to sometimes appear below cooldown models
+Full: Set default minimum scale setting to 0
+
+2.0.2
+Options: Implemented a better font selector
+
+2.0.1
+Full: Fixed an error on cooldowns of an hour in duration
+
+2.0.0
+Full: Completely rewritten to be more compatible.  Settings have been reset
+Full: The blacklist option has been replaced with minimum scale option. This option controls how big a frame must be for cooldown text to be displayed.
+Full: Replaced slash commands with an options window, accessable via /omnicc or /occ
+Full: Implemented SharedMedia support
+
+1.3
+Update for 2.2
+Basic: Modified the hiding behavior for buffs
+Basic: Cleaned up and commented code
+
+1.2
+Fixed a bug causing cooldown text to be transparent on Bartender3
+Fixed the font not set error
+
+Added localization file
+Added blaclist file, please add any frames you do not want omnicc to show to to this list
+Added a command, /omnicc blacklist: toggles not showing text on blacklisted frames
+
+1.1
+Updated for 2.1
+Implemented text scaling
+
+1.0
+Addon folder name is now OmniCC, instead of !OmniCC.  DELETE !OMNICC BEFORE RUNNING!
+Added a pulse option, which causes the icon of an object to pulse when it becomes available.
+Added a time format option, which switches between MM:SS and MM formats
+Settings changes will now immediately affect all visible cooldown text
+Set cooldown text to toplevel to prevent issues with other mods
+Removed the shine option
+Removed support for Discord Action Bars
+
+
+Known Issues:
+* Does not work on CT_BottomBar
+* CT calls Cooldown:SetCooldown directly, which I cannot directly hook

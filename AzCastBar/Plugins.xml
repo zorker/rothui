@@ -1,0 +1,6 @@
+<Ui>
+
+	<Include file="Plugins\CastBar.lua"/>
+	<Include file="Plugins\Mirror.lua"/>
+
+</Ui>

@@ -2,6 +2,9 @@ local addon = CreateFrame"Frame"
 local _G = getfenv(0)
 
   local dummy = function() end
+  
+  -- set shaftshift ON/OFF here !!!
+  local set_shapeshift = 0
 
   -------------------------------------------------------
   -- put frames here that are blocked from moving
@@ -37,8 +40,10 @@ local _G = getfenv(0)
 	ShapeshiftBarRight:Hide()
 	ShapeshiftBarRight.Show = dummy
 	
-	--ShapeshiftBarFrame:Hide()
-	--ShapeshiftBarFrame.Show = dummy
+	if set_shapeshift == 0 then
+	  ShapeshiftBarFrame:Hide()
+	  ShapeshiftBarFrame.Show = dummy
+	end
 
   CharacterMicroButton:Hide()
   TalentMicroButton:Hide()

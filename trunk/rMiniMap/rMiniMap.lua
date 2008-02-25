@@ -29,8 +29,10 @@
               end
           end)
           
-          Minimap:SetPoint("Top",0,-30)
-          Minimap:SetPoint("Right",-10,0)
+          --Minimap:SetPoint("Top",0,-15)
+          
+          Minimap:SetPoint("Top",0,-15)
+          Minimap:SetPoint("Right",-15,0)
   
           MiniMapTrackingBorder:Hide()
           MiniMapTrackingBackground:Hide()
@@ -46,8 +48,8 @@
           Minimap:SetScale(1)
       		
       		local f = CreateFrame("Frame", "minigloss")
-          f:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -2, 2)
-          f:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 2, -2)
+          f:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -1, 1)
+          f:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 1, -1)
           
           local t = f:CreateTexture(nil,"ARTWORK")
           t:SetTexture("Interface\\AddOns\\rTextures\\minigloss")

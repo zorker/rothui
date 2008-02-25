@@ -41,6 +41,15 @@
 
     --DEFAULT_CHAT_FRAME:AddMessage(name.."Gloss");
     
+    if name == "DebuffButton1" then
+    
+      DebuffButton1:ClearAllPoints()
+      DebuffButton1:SetPoint("TOPRIGHT", BuffFrame, "BOTTOMRIGHT", 0, 0)
+      --DebuffButton1.SetPoint = function() end
+    
+    end
+    
+    
     if not c then
    
       local fg = CreateFrame("Frame", name.."Gloss", f)

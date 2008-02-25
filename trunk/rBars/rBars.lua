@@ -68,6 +68,7 @@ local _G = getfenv(0)
   KeyRingButton:Disable()
   KeyRingButton:DisableDrawLayer()
   KeyRingButton:Hide()
+  KeyRingButton.show = dummy
   
   MainMenuExpBar:SetWidth(512)
   MainMenuExpBar:SetHeight(1)

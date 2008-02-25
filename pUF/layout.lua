@@ -77,8 +77,10 @@ local updateHealth = function(self, object, unit, min, max)
 		else
 			self.value:SetText(max)
 		end
+	elseif(UnitIsPlayer(unit)) then
+	  self.value:SetText(min.." - "..d.."%")
 	else
-        self.value:SetText(min.." - "..d.."%")
+        self.value:SetText(d.."%")
         --[[
         if(c > 0) then
             self.value:SetText("-"..c)
@@ -371,6 +373,7 @@ local func = function(settings, self, unit)
 		self:SetHeight(23)
 		hp:SetHeight(18)
 		pp:SetHeight(4)
+		ppp:Hide()
 	
 		local debuffs = CreateFrame("Frame", nil, self)
 		debuffs:SetHeight(self:GetHeight())

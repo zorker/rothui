@@ -1,0 +1,30 @@
+## Interface: 20300
+## Author: Thrae
+## Version: 0.2
+## Title: TinyTip
+## Title-koKR: 툴팁
+## Notes: Adds reaction coloring, unit class / classification, race, and optionally pvp rank and guild to your tooltip. It's what Thrae wants in a tooltip. Additional functionality can be found in TinytipModules.
+## Notes-koKR: 우호도에 따른  색상기능이 있고, 직업/종족/계급/길드 등의 정보를 툴팁에 표시합니다.
+## Notes-zhCN: 为信息条添加职业、种族、军衔、公会等多种信息，并默认设置为跟随鼠标。
+## Notes-zhTW: 在提示訊息增加職業、種族、官階、公會等訊息，並預設為跟隨游標。
+## Notes-esES: Anyade a tus tooltip color de reaccion, clase/clasificacion de la unidad, raza y opcionalmente rango JcJ y hermandad. Por defecto esta enganchado al puntero del raton. Tambien muestra informacion de ToT y mas. Es lo que Thrae quiere en un tooltip.
+## Notes-deDE: Erweitert den Tooltip um Farbkodierung nach Reaktion, Klasse / Klassifikation, Rasse und optional PvP-Rang sowie Gilde. Alles, was Thrae in einem Tooltip haben will. Zusätzliche Funktionen sind in TinyTipModuleCore und TinyTipModules zu finden.
+##
+## LoadManagers: TinyTipModules
+## X-TinyTipModule-Always: 1
+##
+## X-Website: http://code.google.com/p/thrae-wow/
+## X-Email: generalmx@gmail.com
+## X-Category: Interface Enhancements
+##
+
+localization\TinyTipLocale.lua
+localization\TinyTipLocale_deDE.lua
+localization\TinyTipLocale_frFR.lua
+## localization\TinyTipLocale_esES.lua
+localization\TinyTipLocale_koKR.lua
+localization\TinyTipLocale_zhTW.lua
+localization\TinyTipLocale_zhCN.lua
+
+StandAloneConfig.lua
+TinyTip.lua

@@ -35,29 +35,31 @@ assert(KCT, "WTF?! WARE IZ KCT?!!?1")
 
 local textoverrides = {
     ["*"] = { isStaggered = nil, },
-    ["AURA_END"] = { r = 0.4, g = 0.7, b = 0.4, },
-    ["AURA_END_HARMFUL"] = { r = 0.7, g = 0.4, b = 0.4, },
+    ["AURA_END"] = { r = 0, g = 1, b = 0, },
+    ["AURA_END_HARMFUL"] = { r = 1, g = 0, b = 0, },
 }
 
 local textsubs = {
     ["*"] = {
-        ["<"] = "[",
-        [">"] = "]",
+        ["<"] = "",
+        [">"] = "",
     },
     ["AURA_START"] = {
-        APPEND = { "+ ", " +" },
+        APPEND = { "++ ", "" },
     },
     ["AURA_END"] = {
-        APPEND = { "- ", " -" },
+        APPEND = { "-- ", "" },
         [" fades"] = "",
+        [" schwindet"] = "",
     },
     ["AURA_START_HARMFUL"] = {
         --FUNC = function(v) KCT:Print("Test"..v) end,
-        APPEND = { "+ ", " +" },
+        APPEND = { "++ ", "" },
     },
     ["AURA_END_HARMFUL"] = {
-        APPEND = { "- ", " -" },
+        APPEND = { "-- ", "" },
         [" fades"] = "",
+        [" schwindet"] = "",
     },
 }
 

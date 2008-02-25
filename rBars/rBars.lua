@@ -37,8 +37,8 @@ local _G = getfenv(0)
 	ShapeshiftBarRight:Hide()
 	ShapeshiftBarRight.Show = dummy
 	
-	ShapeshiftBarFrame:Hide()
-	ShapeshiftBarFrame.Show = dummy
+	--ShapeshiftBarFrame:Hide()
+	--ShapeshiftBarFrame.Show = dummy
 
   CharacterMicroButton:Hide()
   TalentMicroButton:Hide()
@@ -83,6 +83,9 @@ local _G = getfenv(0)
   ExhaustionTick:Hide()
   ExhaustionTick.Show = dummy
   
+  MainMenuBarPerformanceBarFrame:Hide()
+  MainMenuBarPerformanceBarFrame.Show = dummy
+  
   --------------------------------------------------
   -- Hide / Change Bar Textures
   -------------------------------------------------
@@ -121,45 +124,75 @@ local _G = getfenv(0)
   MainMenuBar:SetFrameLevel(0)
   MainMenuBar:SetFrameStrata("BACKGROUND")
   MainMenuBar:SetPoint("Bottom",0,10)
-  
-  MultiBarBottomLeft:ClearAllPoints()
-  MultiBarBottomLeft:SetPoint("BOTTOMLEFT", "MainMenuBar", "TOPLEFT", 8,-6)
-  
-  MultiBarBottomRight:ClearAllPoints()
-  MultiBarBottomRight:SetPoint("BOTTOMLEFT", "MultiBarBottomLeft", "TOPLEFT", 0,15)
-
-  MultiBarRight:ClearAllPoints()
-  MultiBarRight:SetPoint("RIGHT",-15, 0)
-  
-  ShapeshiftBarFrame:ClearAllPoints()
-  ShapeshiftBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", -10, 7)
-  
-  PetActionBarFrame:ClearAllPoints()
-  PetActionBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRight, "TOPLEFT", -10, 7)
-  
-  PossessBarFrame:ClearAllPoints()
-  PossessBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRight, "TOPLEFT", -10, 7)
 
   --fix the bug with the frame placement to make the bonusactionbar match the mainbar exactly
   BonusActionBarFrame:SetParent(UIParent)
   BonusActionButton1:ClearAllPoints()
   BonusActionButton1:SetPoint("BOTTOM",UIParent,"BOTTOM",-230,14);
 
+  ActionButton7:ClearAllPoints()  
+  ActionButton7:SetPoint("BOTTOMLEFT",ActionButton1,"TOPLEFT",0,5);
+  
+  BonusActionButton7:ClearAllPoints()  
+  BonusActionButton7:SetPoint("BOTTOMLEFT",BonusActionButton1,"TOPLEFT",0,5);
+
+  MultiBarBottomLeftButton1:ClearAllPoints()  
+  MultiBarBottomLeftButton1:SetPoint("BOTTOMLEFT",ActionButton6,"BOTTOMRIGHT",5,0);
+
+  MultiBarBottomLeftButton7:ClearAllPoints()  
+  MultiBarBottomLeftButton7:SetPoint("BOTTOMLEFT",MultiBarBottomLeftButton1,"TOPLEFT",0,5);
+
+  MultiBarBottomRightButton1:ClearAllPoints()  
+  MultiBarBottomRightButton1:SetPoint("BOTTOMLEFT",ActionButton7,"TOPLEFT",0,15);
+
+  MultiBarRight:ClearAllPoints()
+  MultiBarRight:SetPoint("RIGHT",-15, 0)
+  
+  ShapeshiftButton1:ClearAllPoints()
+  ShapeshiftButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",5,15);
+
+  PetActionButton1:ClearAllPoints()
+  PetActionButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",7,15);
+
+  PossessButton1:ClearAllPoints()
+  PossessButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",5,15);
+  
+
   -------------------------------
-  -- Fix petbar look
+  -- Fix petbar, shapeshift look
   --------------------------------
   
-  getglobal("PetActionButton1Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
-  getglobal("PetActionButton2Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
-  getglobal("PetActionButton3Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
-  getglobal("PetActionButton4Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
-  getglobal("PetActionButton5Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
-  getglobal("PetActionButton6Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
-  getglobal("PetActionButton7Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
-  getglobal("PetActionButton8Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
-  getglobal("PetActionButton9Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
-  getglobal("PetActionButton10Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
+  local j
+  for j=1,10 do
+    
+    local bu = _G["PetActionButton"..j]
+    local ic = _G["PetActionButton"..j.."Icon"]
+    local bo = _G["PetActionButton"..j.."Border"]
+    local fl = _G["PetActionButton"..j.."Flash"]
+    
+    ic:SetTexCoord(0.1,0.9,0.1,0.9)
+    ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 1, -1)
+    ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -1, 1)
+    
+    --currently i am not able to change the texture. need a update script like for the main bar...damn
 
+  end
+  
+  local j
+  for j=1,10 do
+    
+    local bu = _G["ShapeshiftButton"..j]
+    local ic = _G["ShapeshiftButton"..j.."Icon"]
+    local nt = _G["ShapeshiftButton"..j.."NormalTexture"]
+    
+    ic:SetTexCoord(0.1,0.9,0.1,0.9)
+    ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 1, -1)
+    ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -1, 1)
+    nt:SetTexture("Interface\\AddOns\\rTextures\\gloss")
+    nt:SetPoint("TOPLEFT", bu, "TOPLEFT", 0, 0)
+    nt:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 0, 0)
+    
+  end
   
   -------------
   -- SCALE
@@ -172,6 +205,7 @@ local _G = getfenv(0)
   MultiBarBottomRight:SetScale(myscale)
   MultiBarRight:SetScale(myscale)
   MultiBarLeft:SetScale(myscale)
+  PetActionBarFrame:SetScale(0.85)
   
   
   ------------------------------
@@ -200,26 +234,14 @@ local _G = getfenv(0)
       ActionButton_UpdateUsable()
     end
     
-    --do some nice stuff with the barbuttons
-    getglobal(this:GetName().."NormalTexture"):SetAlpha(1)
-    --width and height fix to make the NT use my 64x64px textures
-    getglobal(this:GetName().."NormalTexture"):SetHeight(36)
-    getglobal(this:GetName().."NormalTexture"):SetWidth(36)
-    getglobal(this:GetName().."NormalTexture"):SetPoint("Center", 0, 0);
-    getglobal(this:GetName().."Border"):Hide()
-    getglobal(this:GetName().."NormalTexture"):Show()
+    --some stuff to fix the hiding of the normaltexture
     getglobal(this:GetName().."NormalTexture"):SetTexture("Interface\\AddOns\\rTextures\\gloss")
-    getglobal(this:GetName().."Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
-    getglobal(this:GetName().."Icon"):SetPoint("TOPLEFT", getglobal(this:GetName()), "TOPLEFT", 2, -2)
-    getglobal(this:GetName().."Icon"):SetPoint("BOTTOMRIGHT", getglobal(this:GetName()), "BOTTOMRIGHT", -2, 2)
+    getglobal(this:GetName().."NormalTexture"):SetAlpha(1)
+    getglobal(this:GetName().."NormalTexture"):Show()
+    getglobal(this:GetName().."Border"):Hide()
     getglobal(this:GetName().."Name"):Hide()
     getglobal(this:GetName().."HotKey"):Hide()
     
-    --this must be done because the blizzard ui tries to replace the performance button all the time :/ 
-    pb:SetParent(UIParent)
-    pb:ClearAllPoints()
-    pb:SetPoint("BOTTOMRIGHT", "UIParent", "BOTTOMRIGHT", -13, 15)
-
     this.range = range;
 
   end
@@ -229,7 +251,6 @@ local _G = getfenv(0)
   -- BUTTONS --
   -------------
   
-  --[[
   
   addon:SetScript("OnEvent", function()
     if(event=="PLAYER_LOGIN") then
@@ -257,23 +278,21 @@ local _G = getfenv(0)
     local na  = _G[name..i.."Name"]
     local fl  = _G[name..i.."Flash"]
     local nt  = _G[name..i.."NormalTexture"]
-    
-    bo:Hide()
+
     ho:Hide()
     na:Hide()
 
-    --local te = bu:CreateTexture(name..i.."Overlay","Overlay")
-    --te:SetTexture("Interface\\Buttons\\UI-Quickslot2")
-    --te:SetPoint("TOPLEFT", nt, "TOPLEFT", 0, 0)
-    --te:SetPoint("BOTTOMRIGHT", nt, "BOTTOMRIGHT", 0, 0)
-    
-    nt:SetTexture("Interface\\Buttons\\UI-Quickslot2")
+    nt:SetHeight(36)
+    nt:SetWidth(36)
+    nt:SetPoint("Center", 0, 0);
 
     ic:SetTexCoord(0.1,0.9,0.1,0.9)
+    ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
+    ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
   
   end
   
   
-  ]]--
+  
   
   addon:RegisterEvent"PLAYER_LOGIN"

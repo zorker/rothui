@@ -3,27 +3,33 @@ local _G = getfenv(0)
 
   local dummy = function() end
 
-  --important or you CANNOT move the bars!!!
+  -------------------------------------------------------
+  -- put frames here that are blocked from moving
+  --------------------------------------------------------
+  UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarRight"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarLeft"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomRight"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBar"] = nil
+    
+  --[[
   UIPARENT_MANAGED_FRAME_POSITIONS["PetActionBarFrame"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["ShapeshiftBarFrame"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["PossessBarFrame"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["CastingBarFrame"] = nil
-  --UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBarPerformanceBarFrame"] = nil
-  --UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBarPerformanceBarButton"] = nil
-  UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = nil
-  UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomRight"] = nil
-  UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBar"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBarPerformanceBarFrame"] = nil
+  UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBarPerformanceBarButton"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["BonusActionBarFrame"] = nil
-  UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarRight"] = nil
-  UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarLeft"] = nil
+  ]]--
   
-  MainMenuBar:Show()
-  MainMenuBar:SetWidth(512)
-  MainMenuBar:SetFrameLevel(0)
-  MainMenuBar:SetFrameStrata("BACKGROUND")
-  MainMenuBar:SetPoint("Bottom",0,10)
-  --MainMenuBar:SetPoint("Bottom",0,0)
   
+  --------------------------------------
+  -- HIDE STUFF
+  ---------------------------------------
+
+  --cannot hide art frame it will hide the mainbar too..trying to repoint mainbar though...
+  --MainMenuBarArtFrame:Hide()
+
 	ShapeshiftBarLeft:Hide()
 	ShapeshiftBarLeft.Show = dummy
 	ShapeshiftBarMiddle:Hide()
@@ -33,12 +39,6 @@ local _G = getfenv(0)
 	
 	ShapeshiftBarFrame:Hide()
 	ShapeshiftBarFrame.Show = dummy
-  
-  MainMenuBarMaxLevelBar:SetWidth(512)
-  MainMenuBarMaxLevelBar:Hide()
-  MainMenuBarMaxLevelBar.Show = dummy
-  
-  --MainMenuBarArtFrame:Hide()
 
   CharacterMicroButton:Hide()
   TalentMicroButton:Hide()
@@ -64,17 +64,39 @@ local _G = getfenv(0)
   KeyRingButton:DisableDrawLayer()
   KeyRingButton:Hide()
   
+  MainMenuExpBar:SetWidth(512)
+  MainMenuExpBar:SetHeight(1)
+  ReputationWatchBar:SetWidth(512)
+  ReputationWatchBar:SetHeight(1)
+  MainMenuBarMaxLevelBar:SetWidth(512)
+  MainMenuBarMaxLevelBar:Hide()
+  MainMenuBarMaxLevelBar.Show = dummy
+  
+  --hide XP BAR y/n
+  MainMenuExpBar:Hide()
+  MainMenuExpBar.Show = dummy
+
+  --hide REP BAR y/n
+  ReputationWatchBar:Hide()
+  ReputationWatchBar.Show = dummy
+  
+  ExhaustionTick:Hide()
+  ExhaustionTick.Show = dummy
+  
+  --------------------------------------------------
+  -- Hide / Change Bar Textures
+  -------------------------------------------------
+  
   MainMenuBarLeftEndCap:SetPoint("BOTTOM", "MainMenuBarArtFrame", "BOTTOM", -290, 0)
   MainMenuBarRightEndCap:SetPoint("BOTTOM", "MainMenuBarArtFrame", "BOTTOM", 290, 0)
-  
   
   --hide gryphons y/n
   MainMenuBarLeftEndCap:Hide()
   MainMenuBarRightEndCap:Hide()  
 
   --with this you could hide the main_bar_textures
-  MainMenuBarTexture0:SetPoint("BOTTOM", "MainMenuBarArtFrame", "BOTTOM", -128, 0)
-  MainMenuBarTexture1:SetPoint("BOTTOM", "MainMenuBarArtFrame", "BOTTOM", 128, 0)
+  --MainMenuBarTexture0:SetPoint("BOTTOM", "MainMenuBarArtFrame", "BOTTOM", -128, 0)
+  --MainMenuBarTexture1:SetPoint("BOTTOM", "MainMenuBarArtFrame", "BOTTOM", 128, 0)
   MainMenuBarTexture0:Hide()
   MainMenuBarTexture1:Hide()
   MainMenuBarTexture2:Hide()
@@ -90,66 +112,59 @@ local _G = getfenv(0)
   MainMenuMaxLevelBar2:Hide()
   MainMenuMaxLevelBar3:Hide()
   
-  MainMenuExpBar:SetWidth(512)
-  MainMenuExpBar:SetHeight(1)
-  ReputationWatchBar:SetWidth(512)
-  ReputationWatchBar:SetHeight(1)
+  -----------------------------------
+  -- put bars to places
+  -----------------------------------
   
-  --hide XP BAR y/n
-  MainMenuExpBar:Hide()
-  MainMenuExpBar.Show = dummy
-
-  --hide REP BAR y/n
-  ReputationWatchBar:Hide()
-  ReputationWatchBar.Show = dummy
+  MainMenuBar:Show()
+  MainMenuBar:SetWidth(512)
+  MainMenuBar:SetFrameLevel(0)
+  MainMenuBar:SetFrameStrata("BACKGROUND")
+  MainMenuBar:SetPoint("Bottom",0,10)
   
-  ExhaustionTick:Hide()
-  ExhaustionTick.Show = dummy
-  
-  --Put Performanceframe to the right  
-  --MainMenuBarPerformanceBarFrame:SetParent(UIParent)
-  --MainMenuBarPerformanceBarFrame:ClearAllPoints()
-  --MainMenuBarPerformanceBarFrame:SetPoint("CENTER", "UIParent", "CENTER", 0, 0)
-  --MainMenuBarPerformanceBarFrameButton:SetParent(UIParent)
-  --MainMenuBarPerformanceBarFrameButton:ClearAllPoints()
-  --MainMenuBarPerformanceBarFrameButton:SetPoint("CENTER", "UIParent", "CENTER", 0, 0)
-  
-  
-  MainMenuBarPerformanceBarFrame:Hide()
-  MainMenuBarPerformanceBarFrame.Show = dummy
-  
-  --MainMenuBarPerformanceBarFrameButton
-  
-  MultiBarBottomLeft:Show()
-  MultiBarBottomRight:Show()
-  MultiBarRight:Show()
-  MultiBarLeft:Show()
-  
-  --put the multibars to places
   MultiBarBottomLeft:ClearAllPoints()
   MultiBarBottomLeft:SetPoint("BOTTOMLEFT", "MainMenuBar", "TOPLEFT", 8,-6)
+  
   MultiBarBottomRight:ClearAllPoints()
   MultiBarBottomRight:SetPoint("BOTTOMLEFT", "MultiBarBottomLeft", "TOPLEFT", 0,15)
+
+  MultiBarRight:ClearAllPoints()
+  MultiBarRight:SetPoint("RIGHT",-15, 0)
+  
   ShapeshiftBarFrame:ClearAllPoints()
-  ShapeshiftBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRight, "TOPLEFT", -10, 7)
+  ShapeshiftBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", -10, 7)
+  
   PetActionBarFrame:ClearAllPoints()
   PetActionBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRight, "TOPLEFT", -10, 7)
+  
   PossessBarFrame:ClearAllPoints()
   PossessBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomRight, "TOPLEFT", -10, 7)
 
-  MultiBarRight:ClearAllPoints()
-  MultiBarRight:SetPoint("RIGHT",-10, 0)
-
-  --bonusactionbarframe ... frame shows warrior stances...
-  --BonusActionBarFrame:Hide()
-  --BonusActionBarFrame.Show = dummy
-
+  --fix the bug with the frame placement to make the bonusactionbar match the mainbar exactly
   BonusActionBarFrame:SetParent(UIParent)
-  
   BonusActionButton1:ClearAllPoints()
   BonusActionButton1:SetPoint("BOTTOM",UIParent,"BOTTOM",-230,14);
+
+  -------------------------------
+  -- Fix petbar look
+  --------------------------------
   
-  --SCALE
+  getglobal("PetActionButton1Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
+  getglobal("PetActionButton2Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
+  getglobal("PetActionButton3Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
+  getglobal("PetActionButton4Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
+  getglobal("PetActionButton5Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
+  getglobal("PetActionButton6Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
+  getglobal("PetActionButton7Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
+  getglobal("PetActionButton8Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
+  getglobal("PetActionButton9Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
+  getglobal("PetActionButton10Icon"):SetTexCoord(0.1,0.9,0.1,0.9)
+
+  
+  -------------
+  -- SCALE
+  -------------
+  
   local myscale = 0.8
   MainMenuBar:SetScale(myscale)
   BonusActionBarFrame:SetScale(myscale)
@@ -158,10 +173,14 @@ local _G = getfenv(0)
   MultiBarRight:SetScale(myscale)
   MultiBarLeft:SetScale(myscale)
   
-  --RAAAAANGE
+  
+  ------------------------------
+  -- Change the Buttons
+  ------------------------------
   
   local hooks = {};
   local range;
+  local pb = MainMenuBarPerformanceBarFrame
 
   hooks["ActionButton_OnUpdate"] = ActionButton_OnUpdate;
   
@@ -181,13 +200,12 @@ local _G = getfenv(0)
       ActionButton_UpdateUsable()
     end
     
+    --do some nice stuff with the barbuttons
     getglobal(this:GetName().."NormalTexture"):SetAlpha(1)
+    --width and height fix to make the NT use my 64x64px textures
     getglobal(this:GetName().."NormalTexture"):SetHeight(36)
     getglobal(this:GetName().."NormalTexture"):SetWidth(36)
     getglobal(this:GetName().."NormalTexture"):SetPoint("Center", 0, 0);
-    
-    --getglobal(this:GetName()):SetBackdropColor(0,0,0,1);
-    
     getglobal(this:GetName().."Border"):Hide()
     getglobal(this:GetName().."NormalTexture"):Show()
     getglobal(this:GetName().."NormalTexture"):SetTexture("Interface\\AddOns\\rTextures\\gloss")
@@ -196,12 +214,15 @@ local _G = getfenv(0)
     getglobal(this:GetName().."Icon"):SetPoint("BOTTOMRIGHT", getglobal(this:GetName()), "BOTTOMRIGHT", -2, 2)
     getglobal(this:GetName().."Name"):Hide()
     getglobal(this:GetName().."HotKey"):Hide()
-    --DEFAULT_CHAT_FRAME:AddMessage("GetPushedTextOffset "..getglobal(this:GetName()):GetPushedTexture())
+    
+    --this must be done because the blizzard ui tries to replace the performance button all the time :/ 
+    pb:SetParent(UIParent)
+    pb:ClearAllPoints()
+    pb:SetPoint("BOTTOMRIGHT", "UIParent", "BOTTOMRIGHT", -13, 15)
 
     this.range = range;
 
   end
-  
   
   
   -------------
@@ -237,17 +258,6 @@ local _G = getfenv(0)
     local fl  = _G[name..i.."Flash"]
     local nt  = _G[name..i.."NormalTexture"]
     
-    
-    if name == "MultiBarRightButton" then
-      bu:ClearAllPoints();
-      if ( i > 1 ) then
-        bu:SetPoint("LEFT",_G["MultiBarRightButton"..(i-1)],"RIGHT",5,0);
-      else
-        bu:SetPoint("CENTER",UIParent,"CENTER",-290,0);
-      end
-    end
-    
-     
     bo:Hide()
     ho:Hide()
     na:Hide()
@@ -262,6 +272,7 @@ local _G = getfenv(0)
     ic:SetTexCoord(0.1,0.9,0.1,0.9)
   
   end
+  
   
   ]]--
   

@@ -1,0 +1,1 @@
+Copy this folder into your World of Warcraft folder.

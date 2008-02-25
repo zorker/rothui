@@ -42,12 +42,15 @@ function addon:setupNamePlate(frame)
 	highlightRegion.Show = function() end
 
 	nameTextRegion:ClearAllPoints()
-	nameTextRegion:SetPoint("BOTTOM", healthBar, "TOP", 0, 2)
-	nameTextRegion:SetFont(NAMEPLATE_FONT, 12)
+	nameTextRegion:SetPoint("BOTTOM", healthBar, "TOP", 0, 5)
+	nameTextRegion:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE")
 
 	levelTextRegion:ClearAllPoints()
-	levelTextRegion:SetPoint("RIGHT", healthBar, "LEFT", -1, 2)
-	levelTextRegion:SetFont(NAMEPLATE_FONT, 12)
+	levelTextRegion:SetPoint("RIGHT", healthBar, "LEFT", -2, 1)
+	levelTextRegion:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE")
+
+	raidIconRegion:ClearAllPoints()
+	raidIconRegion:SetPoint("BOTTOM", healthBar, "TOP", 0, 20)
 
 	healthBar:SetStatusBarTexture(tex)
 	healthBar:SetHeight(12)

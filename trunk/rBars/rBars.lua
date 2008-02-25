@@ -169,12 +169,16 @@ local _G = getfenv(0)
     local ic = _G["PetActionButton"..j.."Icon"]
     local bo = _G["PetActionButton"..j.."Border"]
     local fl = _G["PetActionButton"..j.."Flash"]
+    local nt = _G["PetActionButton"..j.."NormalTexture2"]
     
     ic:SetTexCoord(0.1,0.9,0.1,0.9)
     ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 1, -1)
     ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -1, 1)
+
+    nt:SetWidth(36)
+    nt:SetHeight(36)
+    nt:SetPoint("CENTER",bu,"CENTER",0,0)
     
-    --currently i am not able to change the texture. need a update script like for the main bar...damn
 
   end
   
@@ -214,7 +218,6 @@ local _G = getfenv(0)
   
   local hooks = {};
   local range;
-  local pb = MainMenuBarPerformanceBarFrame
 
   hooks["ActionButton_OnUpdate"] = ActionButton_OnUpdate;
   
@@ -242,11 +245,17 @@ local _G = getfenv(0)
     getglobal(this:GetName().."Name"):Hide()
     getglobal(this:GetName().."HotKey"):Hide()
     
+    for j=1,10 do
+      local nt = _G["PetActionButton"..j.."NormalTexture2"]
+      nt:SetTexture("Interface\\AddOns\\rTextures\\gloss")
+    end
+    
+    
     this.range = range;
 
   end
   
-  
+
   -------------
   -- BUTTONS --
   -------------

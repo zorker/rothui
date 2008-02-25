@@ -9,9 +9,15 @@
   addon:SetScript("OnEvent", function()
     
     if(event=="PLAYER_LOGIN") then
-      TemporaryEnchantFrame:ClearAllPoints()
-      TemporaryEnchantFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -12, 3)
-      TemporaryEnchantFrame.SetPoint = function() end
+      
+      --TemporaryEnchantFrame:ClearAllPoints()
+      --TemporaryEnchantFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -12, 3)
+      --TemporaryEnchantFrame.SetPoint = function() end
+      
+      BuffFrame:ClearAllPoints()
+      BuffFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -15, 1)
+      BuffFrame.SetPoint = function() end
+
       TicketStatusFrame:Hide()
       TicketStatusFrame.Show = function() end
     elseif(event=="PLAYER_AURAS_CHANGED") then

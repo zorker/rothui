@@ -1,0 +1,12 @@
+## Interface: 20300
+## Version: 08.01.30
+## Title: AzCastBarOptions
+## Author: Ryn (Earthen Ring EU)
+## Notes: Options Dialog for AzCastBar.
+## SavedVariables: AzCastBar_Profiles
+## Dependencies: AzCastBar
+## LoadOnDemand: 1
+DropDowns.lua
+Options.lua
+Factory.lua
+Extras.lua

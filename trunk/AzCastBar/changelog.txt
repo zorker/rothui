@@ -1,0 +1,53 @@
+AzCastBar Changes | 2008 Jan 30
+-------------------------------
+- Code and plugin framework improved and optimized.
+- The Options received a big optimization as well.
+- The profile loader under the options will now only load settings for bars which is currently loaded.
+
+AzCastBar Changes | 2007 Dec 28
+-------------------------------
+- Included "FlightTimes" and "BGTimers" as added plugins for AzCastBar, if you do not wish to use these, do not copy them to your AddOn folder.
+
+AzCastBar Changes | 2007 Nov 22
+-------------------------------
+- Fixed an error in the options dialog if you did not have SharedMediaLib installed.
+
+AzCastBar Changes | 2007 Nov 21
+-------------------------------
+- Changed the TOC version to 20300 for the 2.3 patch.
+- Added pet casting bar.
+- Options: Added support for SharedMediaLib to make more textures available. The library is not included with AzCastBar, but it will use it if installed.
+- Options: You now select which cast bar to configure in the window on the left side instead of buttons.
+- Options: You can now use the mousewheel to increase and decrease slider values.
+
+AzCastBar Changes | 2007 Aug 21
+-------------------------------
+- Fixed a problem which would hide the castbar, if you tried to cast something new while the GCD from a channeled spell was still up (e.g. spamming the mind flay button).
+- Options: Added "Enable Bar" option.
+- A problem causing the cast to go out of sync, when the cast bars gets hidden by calling up the map or hiding the UI with Alt+Z, has been fixed.
+- Fixed an error when clicking on a cast bar when the options had not yet been loaded.
+- When moving the bars with the mouse in "Edit Mode", the option frame for the current bar will now be updated accordingly.
+
+AzCastBar Changes | 2007 Aug 16
+-------------------------------
+- Options: Added slider for the castbar backdrop indent.
+- Fixed an issue that made the castbars appear "laggy" the longer your computer uptime was. The cause of this was due to LUA cutting off decimals on large numbers.
+- Made the option dialog Load on Demand.
+- Did a lot of restructuring of the entire mod.
+- Added profiles which you can load, save and delete manually. These settings are stored with the Load on Demand Option Dialog, so the saved entries will not take up memory until the Options is loaded.
+- Recoded a lot of how the settings are stored, this means your old config is lost, sorry.
+- The Texture drop down should now show the correct selected texture.
+
+AzCastBar Changes | 2007 Jul 19
+-------------------------------
+- Updated TOC to 20200 for the 2.2.0 patch.
+- Option for frame alpha added, this is how transparent the frame is. Default is 100.
+- The "Show Anchors" option which makes the bars movable is now a global option which will unlock all bars at once, and it will no longer get saved between sessions.
+- Added "Show Spell Rank" option, which if the spell has a rank, will show it in brackets after the spell name.
+- There is now an option to for the Safe Zone Area (Player Bar only).
+- Included a few Textures which you can switch to from the options.
+- Added option for Fade Out Time.
+
+AzCastBar Changes | 2007 Jul 09
+-------------------------------
+- First Release

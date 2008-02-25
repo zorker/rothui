@@ -1,0 +1,6 @@
+## Interface: 20300
+## Author: p3lim
+## Title: |cffff6000p|rTags
+## Notes: Replaces the default nameplates
+
+core.lua

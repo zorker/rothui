@@ -33,17 +33,17 @@ local _G = getfenv(0)
   --cannot hide art frame it will hide the mainbar too..trying to repoint mainbar though...
   --MainMenuBarArtFrame:Hide()
 
-	ShapeshiftBarLeft:Hide()
-	ShapeshiftBarLeft.Show = dummy
-	ShapeshiftBarMiddle:Hide()
-	ShapeshiftBarMiddle.Show = dummy
-	ShapeshiftBarRight:Hide()
-	ShapeshiftBarRight.Show = dummy
-	
-	if set_shapeshift == 0 then
-	  ShapeshiftBarFrame:Hide()
-	  ShapeshiftBarFrame.Show = dummy
-	end
+  ShapeshiftBarLeft:Hide()
+  ShapeshiftBarLeft.Show = dummy
+  ShapeshiftBarMiddle:Hide()
+  ShapeshiftBarMiddle.Show = dummy
+  ShapeshiftBarRight:Hide()
+  ShapeshiftBarRight.Show = dummy
+  
+  if set_shapeshift == 0 then
+    ShapeshiftBarFrame:Hide()
+    ShapeshiftBarFrame.Show = dummy
+  end
 
   CharacterMicroButton:Hide()
   TalentMicroButton:Hide()
@@ -229,19 +229,28 @@ local _G = getfenv(0)
   
   ActionButton_OnUpdate = function(elapsed)
   
-    if ( IsActionInRange(ActionButton_GetPagedID(this)) == 0) then
-      getglobal(this:GetName().."Icon"):SetVertexColor(1,0,0);
-      getglobal(this:GetName().."NormalTexture"):SetVertexColor(1,0,0);
-      range = 1;
+    if ( IsActionInRange(ActionButton_GetPagedID(this)) == 0 ) 
+    then
+        getglobal(this:GetName().."Icon"):SetVertexColor(1,0,0);
+        getglobal(this:GetName()):SetAlpha(0.8)
     else
-      range = 0;
+      
+      local isUsable, notEnoughMana = IsUsableAction(ActionButton_GetPagedID(this))
+      
+      if ( notEnoughMana ) then
+        getglobal(this:GetName().."Icon"):SetVertexColor(0,0,1);
+        getglobal(this:GetName()):SetAlpha(0.8)
+      elseif ( isUsable ) then
+        getglobal(this:GetName().."Icon"):SetVertexColor(1, 1, 1);
+        getglobal(this:GetName()):SetAlpha(1)
+      else
+        getglobal(this:GetName().."Icon"):SetVertexColor(0.3, 0.3, 0.3);
+        getglobal(this:GetName()):SetAlpha(0.8)
+      end
+      
     end
-
+    
     hooks["ActionButton_OnUpdate"](elapsed);
-              
-    if (this.range ~= range and range == 0) then
-      ActionButton_UpdateUsable()
-    end
     
     --some stuff to fix the hiding of the normaltexture
     getglobal(this:GetName().."NormalTexture"):SetTexture("Interface\\AddOns\\rTextures\\gloss")
@@ -277,8 +286,8 @@ local _G = getfenv(0)
         addon:makebuttongloss("MultiBarBottomLeftButton", j)
         addon:makebuttongloss("MultiBarLeftButton", j)
         addon:makebuttongloss("MultiBarRightButton", j)
-    	end
-    	
+      end
+      
     end
   end)
   

@@ -71,7 +71,7 @@ do
 		"Interface\\Addons\\AzCastBar\\Textures\\SmoothBar",
 		"Interface\\Addons\\AzCastBar\\Textures\\Streamline",
 		"Interface\\Addons\\AzCastBar\\Textures\\Streamline-Inverted",
-		"Interface\\Addons\\rTextures\\Rounded",
+		"Interface\\Addons\\rTextures\\statusbar",
 	};
 	local textureName;
 	for _, texture in ipairs(AZCB_Textures) do

@@ -3,6 +3,6 @@
 ## Title: AzCastBar
 ## Author: Ryn (Earthen Ring EU)
 ## Notes: Casting Bar Mod
-## SavedVariablesPerCharacter: AzCastBar_Config
+## SavedVariables: AzCastBar_Config
 Core.lua
 Plugins.xml

@@ -1,4 +1,8 @@
   
+  BUFF_FLASH_TIME_ON = 0.8;
+  BUFF_FLASH_TIME_OFF = 0.8;
+  BUFF_MIN_ALPHA = 0.70;
+
   ---------------------------
   -- based on p3lim pbuffs --
   ---------------------------
@@ -10,12 +14,12 @@
     
     if(event=="PLAYER_LOGIN") then
       
-      --TemporaryEnchantFrame:ClearAllPoints()
-      --TemporaryEnchantFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -12, 3)
-      --TemporaryEnchantFrame.SetPoint = function() end
+      TemporaryEnchantFrame:ClearAllPoints()
+      TemporaryEnchantFrame:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMRIGHT", 5, -5)
+      TemporaryEnchantFrame.SetPoint = function() end
       
       BuffFrame:ClearAllPoints()
-      BuffFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -15, 1)
+      BuffFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -15, 0)
       BuffFrame.SetPoint = function() end
 
       TicketStatusFrame:Hide()
@@ -38,14 +42,17 @@
     local i = _G[name.."Icon"]
     local f = _G[name]
     local c = _G[name.."Gloss"]
+    local ff = _G[name.."Duration"]
+
+    ff:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE")
 
     --DEFAULT_CHAT_FRAME:AddMessage(name.."Gloss");
     
     if name == "DebuffButton1" then
     
       DebuffButton1:ClearAllPoints()
-      DebuffButton1:SetPoint("TOPRIGHT", BuffFrame, "BOTTOMRIGHT", 0, 0)
-      --DebuffButton1.SetPoint = function() end
+      DebuffButton1:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -15, -90)
+      DebuffButton1.SetPoint = function() end
     
     end
     

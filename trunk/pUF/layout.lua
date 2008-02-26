@@ -12,7 +12,7 @@ local GetPetHappiness = GetPetHappiness
 local UnitClassification = UnitClassification
 local SetRaidTargetIconTexture = SetRaidTargetIconTexture
 
-local tex = "Interface\\AddOns\\rTextures\\Rounded"
+local tex = "Interface\\AddOns\\rTextures\\statusbar"
 
 local menu = function(self)
 	local unit = self.unit:sub(1, -2)

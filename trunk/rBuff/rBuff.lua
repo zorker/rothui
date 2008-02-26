@@ -15,23 +15,20 @@
     if(event=="PLAYER_LOGIN") then
       
       TemporaryEnchantFrame:ClearAllPoints()
-      TemporaryEnchantFrame:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMRIGHT", 5, -5)
+      TemporaryEnchantFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -15, 0)
       TemporaryEnchantFrame.SetPoint = function() end
-      
-      BuffFrame:ClearAllPoints()
-      BuffFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -15, 0)
-      BuffFrame.SetPoint = function() end
 
       TicketStatusFrame:Hide()
       TicketStatusFrame.Show = function() end
+      
     elseif(event=="PLAYER_AURAS_CHANGED") then
       local i
       i = 1
-      while _G["BuffButton"..i] do addon:Update("BuffButton"..i) i = i + 1 end
+      while _G["BuffButton"..i] do addon:Update("BuffButton"..i, 1) i = i + 1 end
       i = 1
-      while _G["DebuffButton"..i] do addon:Update("DebuffButton"..i, true) i = i + 1 end
+      while _G["DebuffButton"..i] do addon:Update("DebuffButton"..i, 2) i = i + 1 end
       i = 1
-      while _G["TempEnchant"..i] do addon:Update("TempEnchant"..i, true) i = i + 1 end
+      while _G["TempEnchant"..i] do addon:Update("TempEnchant"..i, 3) i = i + 1 end
     end
     
   end)
@@ -45,17 +42,6 @@
     local ff = _G[name.."Duration"]
 
     ff:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE")
-
-    --DEFAULT_CHAT_FRAME:AddMessage(name.."Gloss");
-    
-    if name == "DebuffButton1" then
-    
-      DebuffButton1:ClearAllPoints()
-      DebuffButton1:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -15, -90)
-      DebuffButton1.SetPoint = function() end
-    
-    end
-    
     
     if not c then
    
@@ -70,14 +56,20 @@
       t:SetPoint("BOTTOMRIGHT", fg, "BOTTOMRIGHT", 0, -0)
       fg.texture = t
       
+      if isDebuff == 2 then
+        t:SetVertexColor(1,0,0)
+      elseif isDebuff == 3 then
+        t:SetVertexColor(0,0,1)
+      else
+        t:SetVertexColor(0,1,0)
+      end
+      
       i:SetTexCoord(0.1,0.9,0.1,0.9)
       i:SetPoint("TOPLEFT", fg, "TOPLEFT", 2, -2)
       i:SetPoint("BOTTOMRIGHT", fg, "BOTTOMRIGHT", -2, 2)
         
     end
-    
-    
-    
+
     if b then b:Hide() end
   
   end

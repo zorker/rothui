@@ -11,7 +11,7 @@ local cfg;
 local AZCB_DefOptions = {
 	enabled = true,
 	showIcon = true,
-	texture = "Interface\\Addons\\rTextures\\Rounded",
+	texture = "Interface\\Addons\\rTextures\\statusbar",
 	width = 300,
 	height = 20,
 

@@ -1,5 +1,5 @@
 local addon = CreateFrame("Frame", nil, UIParent)
-local tex = "Interface\\AddOns\\rTextures\\Rounded"
+local tex = "Interface\\AddOns\\rTextures\\statusbar"
 local time = 0
 
 local function IsNamePlateFrame(frame)

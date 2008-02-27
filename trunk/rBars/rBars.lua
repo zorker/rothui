@@ -32,6 +32,7 @@ local _G = getfenv(0)
 
   --cannot hide art frame it will hide the mainbar too..trying to repoint mainbar though...
   --MainMenuBarArtFrame:Hide()
+  MainMenuBarArtFrame:SetFrameStrata("BACKGROUND")
 
   ShapeshiftBarLeft:Hide()
   ShapeshiftBarLeft.Show = dummy
@@ -178,8 +179,8 @@ local _G = getfenv(0)
     local nt = _G["PetActionButton"..j.."NormalTexture2"]
     
     ic:SetTexCoord(0.1,0.9,0.1,0.9)
-    ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 1, -1)
-    ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -1, 1)
+    ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 0, 0)
+    ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 0, 0)
 
     nt:SetWidth(36)
     nt:SetHeight(36)
@@ -231,21 +232,25 @@ local _G = getfenv(0)
   
     if ( IsActionInRange(ActionButton_GetPagedID(this)) == 0 ) 
     then
-        getglobal(this:GetName().."Icon"):SetVertexColor(1,0,0);
-        getglobal(this:GetName()):SetAlpha(0.8)
+        getglobal(this:GetName().."Icon"):SetVertexColor(0.7,0,0);
+        --getglobal(this:GetName().."NormalTexture"):SetVertexColor(1,0,0);
+        --getglobal(this:GetName()):SetAlpha(0.6)
     else
       
       local isUsable, notEnoughMana = IsUsableAction(ActionButton_GetPagedID(this))
       
       if ( notEnoughMana ) then
-        getglobal(this:GetName().."Icon"):SetVertexColor(0,0,1);
-        getglobal(this:GetName()):SetAlpha(0.8)
+        getglobal(this:GetName().."Icon"):SetVertexColor(0.2,0.4,0.5);
+        --getglobal(this:GetName().."NormalTexture"):SetVertexColor(0,0,1);
+        --getglobal(this:GetName()):SetAlpha(0.6)
       elseif ( isUsable ) then
         getglobal(this:GetName().."Icon"):SetVertexColor(1, 1, 1);
-        getglobal(this:GetName()):SetAlpha(1)
+        --getglobal(this:GetName().."NormalTexture"):SetVertexColor(1,1,1);
+        --getglobal(this:GetName()):SetAlpha(1)
       else
         getglobal(this:GetName().."Icon"):SetVertexColor(0.3, 0.3, 0.3);
-        getglobal(this:GetName()):SetAlpha(0.8)
+        --getglobal(this:GetName().."NormalTexture"):SetVertexColor(1,1,1);
+        --getglobal(this:GetName()):SetAlpha(0.6)
       end
       
     end
@@ -305,6 +310,18 @@ local _G = getfenv(0)
 
     ho:Hide()
     na:Hide()
+    
+    --texture flash will only show on the standard attack button and BLINK...omg
+    fl:SetTexture("Interface\\AddOns\\rTextures\\flash")
+
+    --mouseover texture
+    bu:SetHighlightTexture("Interface\\AddOns\\rTextures\\hover")    
+    
+    --on button press...should be some kind of flash or yellow texture
+    bu:SetPushedTexture("Interface\\AddOns\\rTextures\\pushed")
+    
+    --this one is active when checkbutton gets activated
+    bu:SetCheckedTexture("Interface\\AddOns\\rTextures\\checked") 
 
     nt:SetHeight(36)
     nt:SetWidth(36)

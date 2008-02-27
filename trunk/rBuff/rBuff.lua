@@ -17,7 +17,9 @@
       TemporaryEnchantFrame:ClearAllPoints()
       TemporaryEnchantFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -15, 0)
       TemporaryEnchantFrame.SetPoint = function() end
-
+      
+      --BuffFrame:SetScale(1)
+      
       TicketStatusFrame:Hide()
       TicketStatusFrame.Show = function() end
       
@@ -41,14 +43,14 @@
     local c = _G[name.."Gloss"]
     local ff = _G[name.."Duration"]
 
-    ff:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE")
+    ff:SetFont(NAMEPLATE_FONT, 14, "THINOUTLINE")
+    ff:ClearAllPoints()
+    ff:SetPoint("TOP",f,"BOTTOM",0,0)
     
     if not c then
    
       local fg = CreateFrame("Frame", name.."Gloss", f)
       fg:SetAllPoints(f)
-      
-      f:SetScale(1)
       
       local t = f:CreateTexture(nil,"ARTWORK")
       t:SetTexture("Interface\\AddOns\\rTextures\\gloss")
@@ -56,13 +58,27 @@
       t:SetPoint("BOTTOMRIGHT", fg, "BOTTOMRIGHT", 0, -0)
       fg.texture = t
       
+      --[[
       if isDebuff == 2 then
-        t:SetVertexColor(1,0,0)
+        local t = f:CreateTexture(nil,"ARTWORK")
+        t:SetTexture("Interface\\AddOns\\rTextures\\gloss_red")
+        t:SetPoint("TOPLEFT", fg, "TOPLEFT", -0, 0)
+        t:SetPoint("BOTTOMRIGHT", fg, "BOTTOMRIGHT", 0, -0)
+        fg.texture = t
       elseif isDebuff == 3 then
-        t:SetVertexColor(0,0,1)
+        local t = f:CreateTexture(nil,"ARTWORK")
+        t:SetTexture("Interface\\AddOns\\rTextures\\gloss_purple")
+        t:SetPoint("TOPLEFT", fg, "TOPLEFT", -0, 0)
+        t:SetPoint("BOTTOMRIGHT", fg, "BOTTOMRIGHT", 0, -0)
+        fg.texture = t
       else
-        t:SetVertexColor(0,1,0)
+        local t = f:CreateTexture(nil,"ARTWORK")
+        t:SetTexture("Interface\\AddOns\\rTextures\\gloss_green")
+        t:SetPoint("TOPLEFT", fg, "TOPLEFT", -0, 0)
+        t:SetPoint("BOTTOMRIGHT", fg, "BOTTOMRIGHT", 0, -0)
+        fg.texture = t
       end
+      ]]--
       
       i:SetTexCoord(0.1,0.9,0.1,0.9)
       i:SetPoint("TOPLEFT", fg, "TOPLEFT", 2, -2)

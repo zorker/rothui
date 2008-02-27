@@ -427,6 +427,9 @@ pUF:RegisterStyle("Pelim", setmetatable({
 	rpoint = "BOTTOM",
 	rsortDir = "DESC",
 	ryOffset = 5,
+  --rgroupFilter = "WARRIOR,ROGUE,DRUID,PALADIN,SHAMAN,PRIEST,MAGE,WARLOCK,HUNTER",
+  --rgroupBy = "CLASS",
+  --rgroupingOrder = "WARRIOR,ROGUE,DRUID,PALADIN,SHAMAN,PRIEST,MAGE,WARLOCK,HUNTER", 
 	["raid-width"] = 100,
 	["raid-height"] = 18,
     

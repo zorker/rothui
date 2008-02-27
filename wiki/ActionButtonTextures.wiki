@@ -1,4 +1,4 @@
-`Nochmal eine kleine aber imo wichtige Liste zu den ActionButtons.
+Nochmal eine kleine aber imo wichtige Liste zu den ActionButtons.
 
 Daten stammen aus der XML Datei:
   * http://wdnaddons.com/2337799/FrameXML/ActionButtonTemplate.xml
@@ -8,21 +8,21 @@ $parent entspricht dem Button, also zum Beispeil BonusActionButton2
 
 $parent = BonusActionButton2
 
-Element: $parentIcon
-Textur: Entspricht der Icon Textur
-Level: Background
+  * Element: $parentIcon
+  * Textur: Entspricht der Icon Textur
+  * Level: Background
 
-Element: $parentFlash
-Textur: Interface\Buttons\UI-QuickslotRed
-Level: Artwork
+  * Element: $parentFlash
+  * Textur: Interface\Buttons\UI-QuickslotRed
+  * Level: Artwork
 
-Element: $parentBorder
-Textur: Interface\Buttons\UI-ActionButton-Border
-Level: Overlay
+  * Element: $parentBorder
+  * Textur: Interface\Buttons\UI-ActionButton-Border
+  * Level: Overlay
 
-Element: $parentNormalTexture
-Textur: Interface\Buttons\UI-Quickslot2
-Level: -
+  * Element: $parentNormalTexture
+  * Textur: Interface\Buttons\UI-Quickslot2
+  * Level: -
 
 Kommen wir zu Pushed, Checked und Highlight.
 

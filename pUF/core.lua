@@ -321,6 +321,9 @@ function pUF:Spawn(unit, name)
 		header:SetAttribute("sortDir", style.rsortDir)
 		header:SetAttribute("xOffset", style.rxOffset)
 		header:SetAttribute("yOffset", style.ryOffset)
+    header:SetAttribute("groupFilter", style.rgroupFilter)
+    header:SetAttribute("groupBy", style.rgroupBy)
+    header:SetAttribute("groupingOrder ", style.rgroupingOrder) 
 		header.initialConfigFunction = rinitObject
 		header:Show()
 

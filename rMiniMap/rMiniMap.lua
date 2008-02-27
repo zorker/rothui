@@ -47,15 +47,10 @@
       Minimap:SetMaskTexture"Interface\\AddOns\\rMiniMap\\mask"
       Minimap:SetScale(1)
       
-      local f = CreateFrame("Frame", "minigloss")
-      f:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -1.5, 1.4)
-      f:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 1, -1.5)
-      
-      local t = f:CreateTexture(nil,"ARTWORK")
+      local t = Minimap:CreateTexture(nil,"Overlay")
       t:SetTexture("Interface\\AddOns\\rTextures\\minigloss")
-      t:SetPoint("TOPLEFT", f, "TOPLEFT", -0, 0)
-      t:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0, -0)
-      f.texture = t
+      t:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -0, 0)
+      t:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 0, -0)
 
       for _, frame in pairs(frames) do
         frame:Hide()

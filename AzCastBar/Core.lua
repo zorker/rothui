@@ -188,12 +188,14 @@ function AzCastBar_ApplyBarSettingsSpecific(baseFrame,id)
 	frame.texture:SetTexture(cfgEntry.texture);
 	-- Colors
 	frame:SetBackdropColor(unpack(cfgEntry.colBackdrop));
-	frame.background:SetVertexColor(unpack(cfgEntry.colBackground));
+	frame.background:SetTexture(cfgEntry.texture);
+	frame.background:SetVertexColor(1,1,1,0.3);
 	frame.status:SetStatusBarColor(unpack(cfgEntry.colNormal));
 	frame.right:SetTextColor(unpack(cfgEntry.colFont));
 	frame.left:SetTextColor(unpack(cfgEntry.colFont));
 	if (frame.safezone) then
-		frame.safezone:SetTexture(unpack(cfgEntry.colSafezone));
+  	frame.safezone:SetTexture(cfgEntry.texture);
+  	frame.safezone:SetVertexColor(1,0,0,0.7);
 	end
 	-- Call the OnConfigChanged func
 	if (baseFrame.OnConfigChanged) then

@@ -1,4 +1,4 @@
-Nochmal eine kleine aber imo wichtige Liste zu den ActionButtons.
+`Nochmal eine kleine aber imo wichtige Liste zu den ActionButtons.
 
 Daten stammen aus der XML Datei:
   * http://wdnaddons.com/2337799/FrameXML/ActionButtonTemplate.xml
@@ -26,7 +26,7 @@ Level: -
 
 Kommen wir zu Pushed, Checked und Highlight.
 
-Diese lassen sich nicht direkt mit einem Framenamen ansprechen, aber mit einem eigenen Lua-Befehl. Das ist doch auch was.
+Diese lassen sich nicht direkt mit einem Framenamen ansprechen, aber mit einem eigenen Lua-Befehl. Das ist doch auch was.`
 
 {{{
 <PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>

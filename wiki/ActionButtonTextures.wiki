@@ -1,8 +1,7 @@
-
 Nochmal eine kleine aber imo wichtige Liste zu den ActionButtons.
 
 Daten stammen aus der XML Datei:
-http://wdnaddons.com/2337799/FrameXML/ActionButtonTemplate.xml
+  * http://wdnaddons.com/2337799/FrameXML/ActionButtonTemplate.xml
 
 
 $parent entspricht dem Button, also zum Beispeil BonusActionButton2

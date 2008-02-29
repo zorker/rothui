@@ -33,7 +33,14 @@ local updateName = function(self, unit)
 	if(UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) or not UnitIsConnected(unit)) then
 		self.Name:SetTextColor(.5, .5, .5)	
 	else
-		self.Name:SetTextColor(1, 1, 1)
+		--local color = UnitIsPlayer(unit) and RAID_CLASS_COLORS[select(2, UnitClass(unit))] or UnitReactionColor[UnitReaction(unit, "player")]
+		local color = UnitIsPlayer(unit) and RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+		--if(color) then self:SetStatusBarColor(color.r, color.g, color.b) end
+		if(color) then 
+		  self.Name:SetTextColor(color.r, color.g, color.b) 
+		else
+		  self.Name:SetTextColor(1, 1, 1)
+		end
 	end
     
     if(unit == "target") then
@@ -90,6 +97,7 @@ local updateHealth = function(self, object, unit, min, max)
         --]]
 	end
 
+  --[[
 	if(UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) or not UnitIsConnected(unit)) then
 		object.Name:SetTextColor(.5, .5, .5)
 		object.Power:SetStatusBarColor(.5, .5, .5)
@@ -107,6 +115,28 @@ local updateHealth = function(self, object, unit, min, max)
 		local color = UnitIsPlayer(unit) and RAID_CLASS_COLORS[select(2, UnitClass(unit))] or UnitReactionColor[UnitReaction(unit, "player")]
 		if(color) then self:SetStatusBarColor(color.r, color.g, color.b) end
 	end
+	
+	]]--
+
+	object.Name:SetTextColor(1, 1, 1)
+	self:SetStatusBarColor(0.14, .14, 0.14)
+	
+	if(UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) or not UnitIsConnected(unit)) then
+		--object.Name:SetTextColor(.5, .5, .5)
+		--object.Power:SetStatusBarColor(.5, .5, .5)
+		self:SetStatusBarColor(.6, .6, .6)
+	elseif(unit == "pet") then
+    local happiness = pUF.colors.happiness
+		local color = happiness[GetPetHappiness()]
+    --if(color) then self:SetStatusBarColor(color.r, color.g, color.b) end
+    if(color) then object.Name:SetTextColor(color.r, color.g, color.b) end
+	else
+		local color = UnitIsPlayer(unit) and RAID_CLASS_COLORS[select(2, UnitClass(unit))] or UnitReactionColor[UnitReaction(unit, "player")]
+		--if(color) then self:SetStatusBarColor(color.r, color.g, color.b) end
+		if(color) then object.Name:SetTextColor(color.r, color.g, color.b) end
+	end
+
+	object:UpdateName(unit)
 	
 end
 

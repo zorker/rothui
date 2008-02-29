@@ -233,24 +233,16 @@ local _G = getfenv(0)
     if ( IsActionInRange(ActionButton_GetPagedID(this)) == 0 ) 
     then
         getglobal(this:GetName().."Icon"):SetVertexColor(0.7,0,0);
-        --getglobal(this:GetName().."NormalTexture"):SetVertexColor(1,0,0);
-        --getglobal(this:GetName()):SetAlpha(0.6)
     else
       
       local isUsable, notEnoughMana = IsUsableAction(ActionButton_GetPagedID(this))
       
       if ( notEnoughMana ) then
         getglobal(this:GetName().."Icon"):SetVertexColor(0.2,0.4,0.5);
-        --getglobal(this:GetName().."NormalTexture"):SetVertexColor(0,0,1);
-        --getglobal(this:GetName()):SetAlpha(0.6)
       elseif ( isUsable ) then
         getglobal(this:GetName().."Icon"):SetVertexColor(1, 1, 1);
-        --getglobal(this:GetName().."NormalTexture"):SetVertexColor(1,1,1);
-        --getglobal(this:GetName()):SetAlpha(1)
       else
-        getglobal(this:GetName().."Icon"):SetVertexColor(0.3, 0.3, 0.3);
-        --getglobal(this:GetName().."NormalTexture"):SetVertexColor(1,1,1);
-        --getglobal(this:GetName()):SetAlpha(0.6)
+        getglobal(this:GetName().."Icon"):SetVertexColor(0.3,0.3,0.3);
       end
       
     end

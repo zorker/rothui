@@ -8,8 +8,10 @@
   	
     self.Name:SetTextColor(0.6, 0.6, 0.6)
   
-    color = UnitReactionColor[UnitReaction(unit, "player")]
-    self.Name:SetTextColor(color.r, color.g, color.b)
+    if UnitReactionColor[UnitReaction(unit, "player")] then
+      local color = UnitReactionColor[UnitReaction(unit, "player")]
+      self.Name:SetTextColor(color.r, color.g, color.b)
+    end
   
   	--if(UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) or not UnitIsConnected(unit)) then
     --self.Name:SetTextColor(.5, .5, .5)	

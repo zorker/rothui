@@ -247,8 +247,9 @@ function AzCastBar_MakeBar()
 	f.status:SetStatusBarTexture(f.texture);
 
 	f.background = f.status:CreateTexture(nil,"BACKGROUND");
-	--f.background:SetTexture("Interface\\TargetingFrame\\UI-StatusBar");
-	f.background:SetTexture(0.3,0.3,0.3,0.3);
+	f.background:SetTexture("Interface\\TargetingFrame\\UI-StatusBar");
+	f.background:SetBlendMode("BLEND");
+	f.background:SetVertexColor(1,1,1,0.3);
 	f.background:SetPoint("TOPLEFT");
 	f.background:SetPoint("BOTTOMRIGHT");
 

@@ -4,7 +4,7 @@ local _G = getfenv(0)
   local dummy = function() end
   
   -- set shaftshift ON/OFF here !!!
-  local set_shapeshift = 0
+  local set_shapeshift = 1
 
   -------------------------------------------------------
   -- put frames here that are blocked from moving
@@ -161,8 +161,10 @@ local _G = getfenv(0)
   PetActionButton1:ClearAllPoints()
   PetActionButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",7,15);
 
-  PossessButton1:ClearAllPoints()
-  PossessButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",5,15);
+  if PossessButton1 then
+    PossessButton1:ClearAllPoints()
+    PossessButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",5,15);
+  end
   
 
   -------------------------------
@@ -261,12 +263,28 @@ local _G = getfenv(0)
       local nt = _G["PetActionButton"..j.."NormalTexture2"]
       nt:SetTexture("Interface\\AddOns\\rTextures\\gloss")
     end
-    
-    
     this.range = range;
-
   end
+
+  local bonushooks = {};
+  local i;
   
+  bonushooks["onshow"] = BonusActionBarFrame:GetScript("OnShow");
+  bonushooks["onshide"] = BonusActionBarFrame:GetScript("OnHide");
+  
+  BonusActionBarFrame:SetScript("OnShow", function(self,...)
+    if ( bonushooks["onshow"] ) then bonushooks["onshow"](self,...); end;
+    for i = 1, 12, 1 do
+      _G["ActionButton"..i]:SetAlpha(0);
+    end;
+  end);
+  
+  BonusActionBarFrame:SetScript("OnHide", function(self,...)
+    if ( bonushooks["onhide"] ) then bonushooks["onhide"](self,...); end;
+    for i = 1, 12, 1 do
+      _G["ActionButton"..i]:SetAlpha(1);
+    end;
+  end);
 
   -------------
   -- BUTTONS --

@@ -62,7 +62,7 @@
   
     local hpp = hp:CreateFontString(nil, "OVERLAY")
     hpp:SetPoint("RIGHT", -3, 0)
-    hpp:SetFontObject(GameFontNormal)
+    hpp:SetFontObject(GameFontHighlight)
     hpp:SetTextColor(1, 1, 1)
   
     hp.func = updateHealth
@@ -86,8 +86,8 @@
     ppbg:SetAlpha(0.3)
   
     local ppp = pp:CreateFontString(nil, "OVERLAY")
-    ppp:SetPoint("RIGHT", hpp, "LEFT")
-    ppp:SetFontObject(GameFontNormal)
+    ppp:SetPoint("RIGHT", hpp, "LEFT",2,0)
+    ppp:SetFontObject(GameFontHighlight)
     ppp:SetTextColor(1, 1, 1)
       
     pp.func = updatePower
@@ -99,7 +99,7 @@
     name:SetPoint("LEFT", hp, 3, 0)
     name:SetPoint("RIGHT", ppp, "LEFT")
     name:SetJustifyH"LEFT"
-    name:SetFontObject(GameFontNormal)
+    name:SetFontObject(GameFontHighlight)
     name.func = updateName
     name.value = hp
     self.Name = name
@@ -308,7 +308,8 @@
   
   local player  = pUF:Spawn("player", "pUF_Player")
   local target  = pUF:Spawn("target", "pUF_Target")
-  local tot     = pUF:Spawn"targettarget"
+  --local tot     = pUF:Spawn"targettarget"
+  local tot     = pUF:Spawn("targettarget", "pUF_ToT")
   local pet     = pUF:Spawn"pet"
   local focus   = pUF:Spawn"focus"
   local party   = pUF:Spawn"party"

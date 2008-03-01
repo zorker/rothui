@@ -58,7 +58,7 @@
   		bar.value:SetText()
   	elseif(unit == "player") then
       local c = max - min
-      bar.value:SetText(min.." .")
+      bar.value:SetText(min.." . ")
     else
   		local c = max - min
   		if(c > 0) then

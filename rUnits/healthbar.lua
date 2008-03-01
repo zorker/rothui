@@ -19,6 +19,7 @@
   	if(self.unit ~= unit) then return end
   
   	min, max = UnitHealth(unit), UnitHealthMax(unit)
+  	
   	bar = self.Health
   
   	bar:SetMinMaxValues(0, max)
@@ -44,11 +45,14 @@
   	local c = max - min
   	local d = floor(min/max*100)
   	
-    bar.value:SetTextColor(1, 1, 1)
+    bar.value:SetTextColor(1,1,1)
+    
+    --color = UnitReactionColor[UnitReaction(unit, "player")]
+    --bar.value:SetTextColor(color.r, color.g, color.b)
   
-  	if(UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) or not UnitIsConnected(unit)) then
-  		bar.value:SetTextColor(.5, .5, .5)	
-  	end
+  	--if(UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) or not UnitIsConnected(unit)) then
+  	--	bar.value:SetTextColor(.5, .5, .5)	
+  	--end
   	
   	if UnitIsPlayer(unit) then
   	  local color = UnitIsPlayer(unit) and RAID_CLASS_COLORS[select(2, UnitClass(unit))]
@@ -57,10 +61,13 @@
   	
   	if(UnitIsDead(unit)) then
   		bar.value:SetText"Dead"
+  		bar.value:SetTextColor(0.6, 0.6, 0.6)
   	elseif(UnitIsGhost(unit)) then
   		bar.value:SetText"Ghost"
+  		bar.value:SetTextColor(0.6, 0.6, 0.6)
   	elseif(not UnitIsConnected(unit)) then
   		bar.value:SetText"Offline"
+  		bar.value:SetTextColor(0.6, 0.6, 0.6)
   	elseif(UnitIsEnemy("player",unit)) then
   		if(c > 0) then
   			bar.value:SetText(max-c.."%")

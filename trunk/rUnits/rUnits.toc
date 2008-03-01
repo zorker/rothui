@@ -1,0 +1,19 @@
+## Interface: 20300
+## Author: Rothar
+## Title: rUnits
+## Notes: fucking simple unitframes (based on oUF and pUF)
+
+core.lua
+
+name.lua
+
+healthbar.lua
+powerbar.lua
+
+aura.lua
+
+cpoints.lua
+icons.lua
+leader.lua
+
+layout.lua

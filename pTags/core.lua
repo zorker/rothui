@@ -48,8 +48,6 @@ function addon:setupNamePlate(frame)
 	levelTextRegion:ClearAllPoints()
 	levelTextRegion:SetPoint("RIGHT", healthBar, "LEFT", -2, 1)
 	levelTextRegion:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE")
-	levelTextRegion:Hide()
-	levelTextRegion.show = function() end
 
 	raidIconRegion:ClearAllPoints()
 	raidIconRegion:SetPoint("BOTTOM", healthBar, "TOP", 0, 20)

@@ -202,15 +202,14 @@
   ---------------------------
   
   function rf_Button_OnLoad()
-    local name = this:GetName();
-  
-    this.icon = _G[name .. "Icon"];
-    this.time = _G[name .. "Duration"];
+    local name    = this:GetName();
+    this.icon     = _G[name .. "Icon"];
+    this.time     = _G[name .. "Duration"];
     this.cooldown = _G[name .. "Cooldown"];
-    this.count = _G[name .. "Count"];
-    this.count2 = _G[name .. "Count2"];
-    this.border = _G[name .. "Border"];
-    this.update = 0;
+    this.count    = _G[name .. "Count"];
+    this.count2   = _G[name .. "Count2"];
+    this.border   = _G[name .. "Border"];
+    this.update   = 0;
   end
   
   

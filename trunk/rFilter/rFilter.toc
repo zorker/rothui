@@ -1,0 +1,5 @@
+## Interface: 21337
+## Title: rFilter
+## Notes: Filter Buffs/Debuffs for Player/Target (based on Debuff Filter from porkbone)
+## Author: rothar
+core.xml

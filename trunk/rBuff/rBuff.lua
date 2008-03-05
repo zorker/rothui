@@ -1,5 +1,4 @@
 --[[-------------------------------------------------------------------------
-  Copyright (c) 2006-2008, Trond A Ekseth
   Copyright (c) 2008, p3lim
   Copyright (c) 2008, zork
   All rights reserved.

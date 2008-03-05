@@ -1,7 +1,0 @@
-## Interface: 20300
-## Author: p3lim
-## Title: |cffff6000p|rChat
-## Notes: Makes the spammy corner more pretty
-
-core.lua
-fane.lua

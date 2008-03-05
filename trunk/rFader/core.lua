@@ -14,9 +14,9 @@ hide:SetScript("OnEvent", function ()
     MultiBarBottomRight:SetAlpha(1)
     MainMenuBar:SetAlpha(1)
     BonusActionBarFrame:SetAlpha(1)
-    pUF_Player:SetAlpha(1)
-    pUF_Target:SetAlpha(1)
-    pUF_ToT:SetAlpha(1)
+    rUnits_Player:SetAlpha(1)
+    rUnits_Target:SetAlpha(1)
+    rUnits_ToT:SetAlpha(1)
 
   elseif event == "PLAYER_REGEN_DISABLED" then
 
@@ -27,9 +27,9 @@ hide:SetScript("OnEvent", function ()
     MultiBarBottomRight:SetAlpha(1)
     MainMenuBar:SetAlpha(1)
     BonusActionBarFrame:SetAlpha(1)
-    pUF_Player:SetAlpha(1)
-    pUF_Target:SetAlpha(1)
-    pUF_ToT:SetAlpha(1)
+    rUnits_Player:SetAlpha(1)
+    rUnits_Target:SetAlpha(1)
+    rUnits_ToT:SetAlpha(1)
     
   end
 end)

@@ -1,5 +1,5 @@
   
-  function pUF:UpdateName(unit)
+  function rUnits:UpdateName(unit)
 
   	if(self.unit ~= unit) then return end
 

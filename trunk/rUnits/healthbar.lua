@@ -12,10 +12,10 @@
   local UnitReaction = UnitReaction
   local RAID_CLASS_COLORS = RAID_CLASS_COLORS
   
-  local health = pUF.colors.health
+  local health = rUnits.colors.health
   local min, max, bar, color
   
-  function pUF:UpdateHealth(unit)
+  function rUnits:UpdateHealth(unit)
   	if(self.unit ~= unit) then return end
   
   	min, max = UnitHealth(unit), UnitHealthMax(unit)

@@ -118,7 +118,7 @@
     icon:SetPoint("TOP", hp, 0, 8)
     self.RaidIcon = icon
   
-    if(self:GetParent():GetName()=="pUF_Party") then
+    if(self:GetParent():GetName()=="rUnits_Party") then
       self.numDebuffs = 3
       
       local debuffs = CreateFrame("Frame", nil, self)
@@ -137,7 +137,7 @@
       
     end
   
-    if(self:GetParent():GetName()=="pUF_Raid") then
+    if(self:GetParent():GetName()=="rUnits_Raid") then
       self.numDebuffs = 3
       
       local debuffs = CreateFrame("Frame", nil, self)
@@ -291,7 +291,7 @@
     return self
   end
   
-  pUF:RegisterStyle("Pelim", setmetatable({
+  rUnits:RegisterStyle("Pelim", setmetatable({
     rpoint = "BOTTOM",
     rsortDir = "DESC",
     ryOffset = 5,
@@ -306,14 +306,14 @@
     ["initial-height"] = 23,
   }, {__call = func}))
   
-  local player  = pUF:Spawn("player", "pUF_Player")
-  local target  = pUF:Spawn("target", "pUF_Target")
-  --local tot     = pUF:Spawn"targettarget"
-  local tot     = pUF:Spawn("targettarget", "pUF_ToT")
-  local pet     = pUF:Spawn"pet"
-  local focus   = pUF:Spawn"focus"
-  local party   = pUF:Spawn"party"
-  local raid    = pUF:Spawn"raid"
+  local player  = rUnits:Spawn("player", "rUnits_Player")
+  local target  = rUnits:Spawn("target", "rUnits_Target")
+  --local tot     = rUnits:Spawn"targettarget"
+  local tot     = rUnits:Spawn("targettarget", "rUnits_ToT")
+  local pet     = rUnits:Spawn"pet"
+  local focus   = rUnits:Spawn"focus"
+  local party   = rUnits:Spawn"party"
+  local raid    = rUnits:Spawn"raid"
   
   player:SetPoint("CENTER", -230, -150)
   target:SetPoint("LEFT", player, "RIGHT", 240, 0)

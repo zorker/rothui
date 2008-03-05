@@ -1,6 +1,6 @@
 ## Interface: 21337
 ## Author: rothar
 ## Title: rBuff
-## Notes: fucking simple buffs
+## Notes: simple buffs
 
 rBuff.lua

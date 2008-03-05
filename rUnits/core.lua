@@ -1,10 +1,39 @@
-  
+--[[-------------------------------------------------------------------------
+  Copyright (c) 2006-2008, Trond A Ekseth
+  Copyright (c) 2008, p3lim
+  Copyright (c) 2008, zork
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are
+  met:
+
+      * Redistributions of source code must retain the above copyright
+        notice, this list of conditions and the following disclaimer.
+      * Redistributions in binary form must reproduce the above
+        copyright notice, this list of conditions and the following
+        disclaimer in the documentation and/or other materials provided
+        with the distribution.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+---------------------------------------------------------------------------]]
+   
   local _G = getfenv(0)
   local select = select
   local type = type
   local tostring = tostring
   
-  local print = function(a) ChatFrame1:AddMessage("|cff33ff99pUF:|r "..tostring(a)) end
+  local print = function(a) ChatFrame1:AddMessage("|cff33ff99rUnits:|r "..tostring(a)) end
   local error = function(...) print("|cffff0000Error:|r ", string.format(...)) end
   
   -- Colors
@@ -32,9 +61,9 @@
   local log = {}
   
   -- add-on object
-  local pUF = CreateFrame"Button"
-  local RegisterEvent = pUF.RegisterEvent
-  local metatable = {__index = pUF}
+  local rUnits = CreateFrame"Button"
+  local RegisterEvent = rUnits.RegisterEvent
+  local metatable = {__index = rUnits}
   
   local style, cache
   local styles = {}
@@ -240,7 +269,7 @@
   	ClickCastFrames[object] = true
   end
   
-  function pUF:RegisterStyle(name, func)
+  function rUnits:RegisterStyle(name, func)
   	if(type(name) ~= "string") then return error("Bad argument #1 to 'RegisterStyle' (string expected, got %s)", type(name)) end
   	if(type(func) ~= "table" and type(getmetatable(func).__call) ~= "function") then return error("Bad argument #2 to 'RegisterStyle' (table expected, got %s)", type(func)) end
   	if(styles[name]) then return error("Style [%s] already registered.", name) end
@@ -249,7 +278,7 @@
   	styles[name] = func
   end
   
-  function pUF:SetActiveStyle(name)
+  function rUnits:SetActiveStyle(name)
   	if(type(name) ~= "string") then return error("Bad argument #1 to 'SetActiveStyle' (string expected, got %s)", type(name)) end
   	if(not styles[name]) then return error("Style [%s] does not exist.", name) end
   
@@ -259,14 +288,14 @@
   	style = name
   end
   
-  function pUF:Spawn(unit, name)
+  function rUnits:Spawn(unit, name)
   	if(not unit) then return error("Bad argument #1 to 'Spawn' (string expected, got %s)", type(unit)) end
   	if(not style) then return error("Unable to create frame. No styles have been registered.") end
   
   	local style = styles[style]
   	local object
   	if(unit == "party") then
-  		local header = CreateFrame("Frame", "pUF_Party", UIParent, "SecurePartyHeaderTemplate")
+  		local header = CreateFrame("Frame", "rUnits_Party", UIParent, "SecurePartyHeaderTemplate")
   		header:SetAttribute("template","SecureUnitButtonTemplate")
   		header:SetPoint"CENTER"
   		header:SetMovable(true)
@@ -282,7 +311,7 @@
   
   		return header
   	elseif(unit == "raid") then
-  		local header = CreateFrame("Frame", "pUF_Raid", UIParent, "SecureRaidGroupHeaderTemplate")
+  		local header = CreateFrame("Frame", "rUnits_Raid", UIParent, "SecureRaidGroupHeaderTemplate")
   		header:SetAttribute("template","SecureUnitButtonTemplate")
   		header:SetPoint"CENTER"
   		header:SetMovable(true)
@@ -319,7 +348,7 @@
   	return object
   end
   
-  function pUF:RegisterFrameObject()
+  function rUnits:RegisterFrameObject()
   	error":RegisterFrameObject is deprecated"
   end
   
@@ -328,7 +357,7 @@
   --	Notes:
   --		- Internal function, but externally avaible as someone might want to call it.
   --]]
-  function pUF:RegisterObject(object, subType)
+  function rUnits:RegisterObject(object, subType)
   	local unit = object.unit
   
   	-- We could use a table containing this info, but it's just as easy to do it
@@ -366,7 +395,7 @@
   --	Notes:
   --		- Does a full update of all elements on the object.
   --]]
-  function pUF:UpdateAll()
+  function rUnits:UpdateAll()
   	local unit = self.unit
   	if(not UnitExists(unit)) then return end
   
@@ -378,7 +407,7 @@
   end
   
   --[[ Name ]]
-  function pUF:UpdateName(unit)
+  function rUnits:UpdateName(unit)
   	if(self.unit ~= unit) then return end
   	local name = UnitName(unit)
   
@@ -388,5 +417,5 @@
   	self.Name:SetText(name)
   end
   
-  pUF.colors = colors
-  _G.pUF = pUF
+  rUnits.colors = colors
+  _G.rUnits = rUnits

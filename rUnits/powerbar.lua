@@ -5,11 +5,11 @@
   local UnitPowerType = UnitPowerType
   local GetPetHappiness = GetPetHappiness
   
-  local power = pUF.colors.power
-  local happiness = pUF.colors.happiness
+  local power = rUnits.colors.power
+  local happiness = rUnits.colors.happiness
   local min, max, bar, color
   
-  function pUF:UpdatePower(unit)
+  function rUnits:UpdatePower(unit)
   	if(self.unit ~= unit) then return end
   
   	min, max = UnitMana(unit), UnitManaMax(unit)

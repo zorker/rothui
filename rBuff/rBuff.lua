@@ -3,10 +3,6 @@
   BUFF_FLASH_TIME_OFF = 0.8;
   BUFF_MIN_ALPHA = 0.70;
 
-  ---------------------------
-  -- based on p3lim pbuffs --
-  ---------------------------
-
   local addon = CreateFrame"Frame"
   local _G = getfenv(0)
   

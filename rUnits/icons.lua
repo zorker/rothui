@@ -2,7 +2,7 @@
   local GetRaidTargetIndex = GetRaidTargetIndex
   local SetRaidTargetIconTexture = SetRaidTargetIconTexture
   
-  function pUF:UpdateRaidIcon(unit)
+  function rUnits:UpdateRaidIcon(unit)
   	if self.unit then
   		local index = GetRaidTargetIndex(self.unit)
   		local icon = self.RaidIcon

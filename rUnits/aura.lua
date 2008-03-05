@@ -74,7 +74,7 @@
   	return button
   end
   
-  function pUF:SetAuraPosition(unit, nb, nd)
+  function rUnits:SetAuraPosition(unit, nb, nd)
   	icons = self.Buffs
   	if(icons and nb > 0) then
   		for i=1, nb do
@@ -114,7 +114,7 @@
   	end
   end
   
-  function pUF:UpdateAura(unit)
+  function rUnits:UpdateAura(unit)
   	if(self.unit ~= unit) then return end
   
   	nb = 0

@@ -1,1 +1,0 @@
-put this under the interface folder. overwrites the petbar texture with a transparent one.

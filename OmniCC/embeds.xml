@@ -1,4 +1,0 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="libs\LibStub\LibStub.lua"/>
-	<Script file="libs\LibSharedMedia-2.0\LibSharedMedia-2.0.lua"/>
-</Ui>

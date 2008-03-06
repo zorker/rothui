@@ -1,7 +1,0 @@
-## Interface: 20400
-## Version: 08.02.24
-## Title: TipTac
-## Author: Ryn (Earthen Ring EU)
-## Notes: Highly Customizable Tooltip Enhancement Addon
-## SavedVariables: TipTac_Config
-TipTac.lua

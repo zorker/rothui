@@ -1,6 +1,0 @@
-## Interface: 20300
-## Title: LynStats
-## Author: Lyn
-## Notes: mail, xp, fps, mb usage, time, latency
-## X-Credits: CML by rdji, evl_Clock by Evl
-core.lua

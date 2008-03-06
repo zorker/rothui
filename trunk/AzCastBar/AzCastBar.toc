@@ -1,8 +1,0 @@
-## Interface: 20300
-## Version: 08.01.30
-## Title: AzCastBar
-## Author: Ryn (Earthen Ring EU)
-## Notes: Casting Bar Mod
-## SavedVariables: AzCastBar_Config
-Core.lua
-Plugins.xml

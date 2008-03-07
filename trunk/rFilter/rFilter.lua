@@ -54,23 +54,30 @@
     },
   }
   
-
-
-
-  
   addon:SetScript("OnEvent", function()
   
     if(event=="PLAYER_LOGIN") then
       addon:rf_createbufframe()
+      addon:rf_createdebufframe()
     end  
 
     if(event=="PLAYER_REGEN_ENABLED") then
       addon:rf_hidebufframe()
+      addon:rf_hidedebufframe()
     end  
     
     if(event=="PLAYER_REGEN_DISABLED") then
       addon:rf_showbufframe()
+      addon:rf_showdebufframe()
     end  
+  
+    if (event=="UNIT_AURA" and arg1=="target") then
+      addon:rf_checktargetdebuffs()
+    end
+    
+    if (event=="PLAYER_TARGET_CHANGED") then
+      addon:rf_checktargetdebuffs()
+    end
   
     if(event=="PLAYER_AURAS_CHANGED") then
       addon:rf_checkplayerbuffs()
@@ -81,7 +88,7 @@
   function addon:rf_createbufframe()
     local f = CreateFrame("Frame","rf_bf",UIParent)
     f:SetFrameStrata("BACKGROUND")
-    f:SetWidth(64)
+    f:SetWidth(50)
     f:SetHeight(37)
     f:SetBackdrop({
       bgFile = "Interface/Tooltips/UI-Tooltip-Background", 
@@ -90,7 +97,8 @@
       insets = { left = 0, right = 0, top = 0, bottom = 0 }
     })
     f:SetBackdropColor(0,0,0,0.8)
-    f:SetPoint("CENTER",-167,-280)
+    f:ClearAllPoints()  
+    f:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",0,15)
     f:Hide()
     
     local rf_bft0 = f:CreateFontString("rf_bft0", "OVERLAY")
@@ -116,6 +124,52 @@
     
   end
   
+  function addon:rf_createdebufframe()
+    local f = CreateFrame("Frame","rf_df",UIParent)
+    f:SetFrameStrata("BACKGROUND")
+    f:SetWidth(100)
+    f:SetHeight(37)
+    f:SetBackdrop({
+      bgFile = "Interface/Tooltips/UI-Tooltip-Background", 
+      edgeFile = "", 
+      tile = true, tileSize = 16, edgeSize = 16, 
+      insets = { left = 0, right = 0, top = 0, bottom = 0 }
+    })
+    f:SetBackdropColor(0,0,0,0.8)
+    f:ClearAllPoints()  
+    f:SetPoint("BOTTOMRIGHT",MultiBarBottomRightButton12,"TOPRIGHT",0,15)
+    f:Hide()
+    
+    local rf_dft0 = f:CreateFontString("rf_dft0", "OVERLAY")
+    rf_dft0:SetPoint("TOPRIGHT", -5, -5)
+    rf_dft0:SetFontObject(GameFontHighlight)
+    rf_dft0:SetTextColor(1, 1, 1)
+    rf_dft0:SetText("Debuffs:")
+    rf_dft0:Show()
+  
+    local rf_dft1 = f:CreateFontString("rf_dft1", "OVERLAY")
+    rf_dft1:SetPoint("TOPRIGHT", "rf_dft0", "BOTTOMRIGHT", 0, -2)
+    rf_dft1:SetFontObject(GameFontHighlight)
+    rf_dft1:SetTextColor(1, 0, 0)
+    rf_dft1:SetText("RZ")
+    rf_dft1:Show()
+    
+    local rf_dft2 = f:CreateFontString("rf_dft2", "OVERLAY")
+    rf_dft2:SetPoint("TOPRIGHT", "rf_dft1", "TOPLEFT", -5, 0)
+    rf_dft2:SetFontObject(GameFontHighlight)
+    rf_dft2:SetTextColor(1, 0, 0)
+    rf_dft2:SetText("DS")
+    rf_dft2:Show()
+    
+    local rf_dft3 = f:CreateFontString("rf_dft3", "OVERLAY")
+    rf_dft3:SetPoint("TOPRIGHT", "rf_dft2", "TOPLEFT", -5, 0)
+    rf_dft3:SetFontObject(GameFontHighlight)
+    rf_dft3:SetTextColor(1, 0, 0)
+    rf_dft3:SetText("TC")
+    rf_dft3:Show()
+    
+  end
+  
   function addon:rf_showbufframe()
     local f = _G["rf_bf"]
     f:Show()
@@ -127,6 +181,16 @@
     f:Hide()  
   end
   
+  function addon:rf_showdebufframe()
+    local f = _G["rf_df"]
+    f:Show()
+  end
+  
+  
+  function addon:rf_hidedebufframe()
+    local f = _G["rf_df"]
+    f:Hide()  
+  end
   
   function addon:rf_checkplayerbuffs()
   
@@ -169,7 +233,67 @@
       
   end
   
+  function addon:rf_checktargetdebuffs()
+  
+    local name, texture, applications, debufftype, duration, timeleft
+    local found_dft1 = 0
+    local found_dft2 = 0
+    local found_dft3 = 0
+    local rz_apps = 0
+  
+    for i = 1, 40 do
+      name, _, texture, applications, debufftype, duration, timeleft = UnitDebuff("target", i)
+      
+      if applications then
+        DEFAULT_CHAT_FRAME:AddMessage(name.." "..applications)
+      else
+        DEFAULT_CHAT_FRAME:AddMessage(name)
+      end
+      
+      if (not texture) then
+        break
+      end
+      if (rf_settings.td_list[name]) then
+      
+        if name == "Rüstung zerreißen" then
+          found_dft1 = 1
+          rz_apps = applications
+        end
+        if name == "Demoralisierender Ruf" then
+          found_dft2 = 1
+        end
+        if name == "Donnerknall" then
+          found_dft3 = 1
+        end
+      end
+    end
+    
+    if found_dft1 == 1 then
+      rf_dft1:SetText("RZ"..rz_apps)
+      rf_dft1:SetTextColor(0, 1, 0)
+    else
+      rf_dft1:SetText("RZ")
+      rf_dft1:SetTextColor(1, 0, 0)
+    end
+
+    if found_dft2 == 1 then
+      rf_dft2:SetTextColor(0, 1, 0)
+    else
+      rf_dft2:SetTextColor(1, 0, 0)
+    end
+  
+    if found_dft3 == 1 then
+      rf_dft3:SetTextColor(0, 1, 0)
+    else
+      rf_dft3:SetTextColor(1, 0, 0)
+    end
+  
+  end
+  
+  
   addon:RegisterEvent"PLAYER_AURAS_CHANGED"
   addon:RegisterEvent"PLAYER_LOGIN"
-  addon:RegisterEvent"PLAYER_REGEN_DISABLED";
-  addon:RegisterEvent"PLAYER_REGEN_ENABLED";
+  addon:RegisterEvent"PLAYER_REGEN_DISABLED"
+  addon:RegisterEvent"PLAYER_REGEN_ENABLED"
+  addon:RegisterEvent"PLAYER_TARGET_CHANGED"
+  addon:RegisterEvent"UNIT_AURA"

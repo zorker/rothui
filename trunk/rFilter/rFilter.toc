@@ -1,6 +1,0 @@
-## Interface: 21337
-## Author: rothar
-## Title: rFilter
-## Notes: buff/debuff tracking
-
-rFilter.lua

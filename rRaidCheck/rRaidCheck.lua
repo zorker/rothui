@@ -45,7 +45,7 @@
     local f = CreateFrame("Frame","rrc_frame",UIParent)
     f:SetFrameStrata("BACKGROUND")
     f:SetWidth(100)
-    f:SetHeight(100)
+    --f:SetHeight(100)
     f:SetBackdrop({
       bgFile = "Interface/Tooltips/UI-Tooltip-Background", 
       edgeFile = "", 

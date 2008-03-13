@@ -1,5 +1,7 @@
   
-  function addon:rf_checkraidhealth()
+  -- NOT FUNCTIONAL ATM, DON'T USE IT
+  
+  function addon:rrc_checkhealth()
     local n = GetNumRaidMembers()  
     if n > 0 then
       local c = 0
@@ -36,7 +38,7 @@
     end
   end
   
-  function addon:rf_checkraidmana()
+  function addon:rrc_checkmana()
     local n = GetNumRaidMembers()  
     if n > 0 then
       local c = 0
@@ -75,7 +77,7 @@
     end
   end
   
-  function addon:rf_checkdead()
+  function addon:rrc_checkdead()
     local n = GetNumRaidMembers()  
     if n > 0 then
       local c = 0
@@ -91,7 +93,7 @@
     end
   end
   
-  function addon:rf_checkghosts()
+  function addon:rrc_checkghosts()
     local n = GetNumRaidMembers()  
     if n > 0 then
       local c = 0
@@ -107,7 +109,7 @@
     end
   end
   
-  function addon:rf_checkoffline()
+  function addon:rrc_checkoffline()
     local n = GetNumRaidMembers()  
     if n > 0 then
       local c = 0

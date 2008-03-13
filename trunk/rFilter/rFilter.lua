@@ -1,4 +1,4 @@
-﻿﻿--[[-------------------------------------------------------------------------
+﻿--[[-------------------------------------------------------------------------
   Copyright (c) 2008, zork
   All rights reserved.
 
@@ -27,7 +27,7 @@
   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
----------------------------------------------------------------------------]]
+---------------------------------------------------------------------------]]--
   
   local addon = CreateFrame"Frame"
   local _G = getfenv(0)

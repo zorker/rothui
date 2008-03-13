@@ -42,7 +42,7 @@
 
   function addon:rrc_onUpdate(self, elapsed)
     totalElapsed = totalElapsed + elapsed
-    if (totalElapsed < 1) then 
+    if (totalElapsed < 2) then 
       return
     end
     totalElapsed = totalElapsed - floor(totalElapsed)

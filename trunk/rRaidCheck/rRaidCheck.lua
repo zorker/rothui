@@ -32,13 +32,35 @@
   local addon = CreateFrame"Frame"
   local _G = getfenv(0)  
   
-  addon:SetScript("OnEvent", function()
+  local totalElapsed = 0.0;
   
+  addon:SetScript("OnEvent", function()
     if(event=="PLAYER_LOGIN") then
       addon:rrc_createframe()
     end  
-
   end)
+
+  function addon:rrc_onUpdate(self, elapsed)
+    totalElapsed = totalElapsed + elapsed
+    if (totalElapsed < 1) then 
+      return
+    end
+    totalElapsed = totalElapsed - floor(totalElapsed)
+    local n = GetNumRaidMembers()  
+    if n > 0 then  
+      
+      -- SET texts of the frames with the return values of the functions
+      
+      local fin_raidhp  = addon:rrc_checkhealth()
+      local fin_raidmp  = addon:rrc_checkmana()
+      local fin_dead    = addon:rrc_checkdead()
+      
+      rrc_t0:SetText("Raid Health "..fin_raidhp.." %")
+      rrc_t1:SetText("Raid Mana "..fin_raidmp.." %")
+      rrc_t2:SetText("Raid Dead "..fin_dead)
+      
+    end
+  end
   
   
   function addon:rrc_createframe()
@@ -75,8 +97,10 @@
     rrc_t2:SetPoint("TOPLEFT", "rrc_t1", "TOPRIGHT", 5, 0)
     rrc_t2:SetFontObject(GameFontHighlight)
     rrc_t2:SetTextColor(0.6, 0.6, 0.6)
-    rrc_t2:SetText("Dead")
+    rrc_t2:SetText("Raid Dead")
     rrc_t2:Show()
+    
+    f:SetScript("OnUpdate", addon:rrc_onUpdate);
     
   end
   

@@ -27,11 +27,11 @@
           c = c + 1
         else
         
-         act_hp = UnitHealth(unit);
-         max_hp = UnitHealthMax(unit);
-         per_hp = floor(act_hp/max_hp*100)
-         
-         sum_per_hp = sum_per_hp + per_hp
+          act_hp = UnitHealth(unit);
+          max_hp = UnitHealthMax(unit);
+          per_hp = floor(act_hp/max_hp*100)
+          
+          sum_per_hp = sum_per_hp + per_hp
         
         end
     
@@ -51,3 +51,57 @@
     
   end
   
+  
+  function addon:rf_checkraidmana()
+
+    local n = GetNumRaidMembers()  
+
+    if n > 0 then
+    
+      local c = 0
+      local d
+      local unit
+      local i
+      local act_mp
+      local max_mp
+      local per_mp
+      local sum_per_mp = 0
+      local avg_raid_mp
+    
+      for i = 1, n do
+    
+        unit = "raid"..i
+    
+        if(UnitIsDead(unit)) then
+          c = c + 1
+        elseif(UnitIsGhost(unit)) then
+          c = c + 1
+        elseif(not UnitIsConnected(unit)) then
+          c = c + 1
+        elseif(UnitPowerType(unit) != 0) then
+          c = c + 1
+        else
+        
+          act_mp = UnitMana(unit);
+          max_mp = UnitManaMax(unit);
+          per_mp = floor(act_mp/max_mp*100)
+          
+          sum_per_mp = sum_per_mp + per_mp
+        
+        end
+    
+      end
+    
+      d = n - c
+      
+      if d == 0 then
+        avg_raid_mp = 0
+      else    
+        avg_raid_mp = floor(sum_per_mp / d)
+      end
+  
+      -- avg_raid_mp liefert den % MP wert des Raids, offline, tote, ghosts oder klassen ohne Powertype=Mana werden nicht gewertet
+    
+    end
+    
+  end

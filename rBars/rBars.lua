@@ -208,6 +208,8 @@ local _G = getfenv(0)
   		this:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss");
   		getglobal(this:GetName().."HotKey"):SetVertexColor(0.6, 0.6, 0.6);
   	end
+  	
+  	ActionButton_UpdateCount();
 
   	if ( HasAction(ActionButton_GetPagedID(this)) ) then
   		this:RegisterEvent("ACTIONBAR_UPDATE_STATE");
@@ -271,7 +273,7 @@ local _G = getfenv(0)
   	local normalTexture = getglobal(this:GetName().."NormalTexture");
     if ( IsActionInRange(ActionButton_GetPagedID(this)) == 0 ) 
     then
-      icon:SetVertexColor(0.7,0,0);
+      icon:SetVertexColor(0.7,0.1,0.1);
     else
       local isUsable, notEnoughMana = IsUsableAction(ActionButton_GetPagedID(this));
       if ( notEnoughMana ) then

@@ -5,6 +5,8 @@ local _G = getfenv(0)
   
   -- set shaftshift ON/OFF here !!!
   local set_shapeshift = 1
+  
+  RANGE_INDICATOR = "";
 
   -------------------------------------------------------
   -- put frames here that are blocked from moving

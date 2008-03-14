@@ -33,6 +33,8 @@ local _G = getfenv(0)
   --cannot hide art frame it will hide the mainbar too..trying to repoint mainbar though...
   --MainMenuBarArtFrame:Hide()
   MainMenuBarArtFrame:SetFrameStrata("BACKGROUND")
+  
+  ChatFrame1:SetFrameStrata("DIALOG")
 
   ShapeshiftBarLeft:Hide()
   ShapeshiftBarLeft.Show = dummy
@@ -165,47 +167,7 @@ local _G = getfenv(0)
     PossessButton1:ClearAllPoints()
     PossessButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",5,15);
   end
-  
 
-  -------------------------------
-  -- Fix petbar, shapeshift look
-  --------------------------------
-  
-  local j
-  for j=1,10 do
-    
-    local bu = _G["PetActionButton"..j]
-    local ic = _G["PetActionButton"..j.."Icon"]
-    local bo = _G["PetActionButton"..j.."Border"]
-    local fl = _G["PetActionButton"..j.."Flash"]
-    local nt = _G["PetActionButton"..j.."NormalTexture2"]
-    
-    ic:SetTexCoord(0.1,0.9,0.1,0.9)
-    ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 0, 0)
-    ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 0, 0)
-
-    nt:SetWidth(36)
-    nt:SetHeight(36)
-    nt:SetPoint("CENTER",bu,"CENTER",0,0)
-    
-
-  end
-  
-  local j
-  for j=1,10 do
-    
-    local bu = _G["ShapeshiftButton"..j]
-    local ic = _G["ShapeshiftButton"..j.."Icon"]
-    local nt = _G["ShapeshiftButton"..j.."NormalTexture"]
-    
-    ic:SetTexCoord(0.1,0.9,0.1,0.9)
-    ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 1, -1)
-    ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -1, 1)
-    nt:SetTexture("Interface\\AddOns\\rTextures\\gloss")
-    nt:SetPoint("TOPLEFT", bu, "TOPLEFT", 0, 0)
-    nt:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 0, 0)
-    
-  end
   
   -------------
   -- SCALE
@@ -224,67 +186,104 @@ local _G = getfenv(0)
   ------------------------------
   -- Change the Buttons
   ------------------------------
-  
-  local hooks = {};
-  local range;
 
-  hooks["ActionButton_OnUpdate"] = ActionButton_OnUpdate;
+  ActionButton_Update = function()
+  	
+  	local icon = getglobal(this:GetName().."Icon");
+  	local buttonCooldown = getglobal(this:GetName().."Cooldown");
+  	local texture = GetActionTexture(ActionButton_GetPagedID(this));
+  	if ( texture ) then
+  		icon:SetTexture(texture);
+  		icon:Show();
+  		this.rangeTimer = -1;
+  		this:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss");
+  		-- Save texture if the button is a bonus button, will be needed later
+  		if ( this.isBonus ) then
+  			this.texture = texture;
+  		end
+  	else
+  		icon:Hide();
+  		buttonCooldown:Hide();
+  		this.rangeTimer = nil;
+  		this:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss");
+  		getglobal(this:GetName().."HotKey"):SetVertexColor(0.6, 0.6, 0.6);
+  	end
+
+  	if ( HasAction(ActionButton_GetPagedID(this)) ) then
+  		this:RegisterEvent("ACTIONBAR_UPDATE_STATE");
+  		this:RegisterEvent("ACTIONBAR_UPDATE_USABLE");
+  		this:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN");
+  		this:RegisterEvent("UPDATE_INVENTORY_ALERTS");
+  		this:RegisterEvent("PLAYER_AURAS_CHANGED");
+  		this:RegisterEvent("PLAYER_TARGET_CHANGED");
+  		this:RegisterEvent("UNIT_INVENTORY_CHANGED");
+  		this:RegisterEvent("CRAFT_SHOW");
+  		this:RegisterEvent("CRAFT_CLOSE");
+  		this:RegisterEvent("TRADE_SKILL_SHOW");
+  		this:RegisterEvent("TRADE_SKILL_CLOSE");
+  		this:RegisterEvent("PLAYER_ENTER_COMBAT");
+  		this:RegisterEvent("PLAYER_LEAVE_COMBAT");
+  		this:RegisterEvent("START_AUTOREPEAT_SPELL");
+  		this:RegisterEvent("STOP_AUTOREPEAT_SPELL");
   
-  ActionButton_OnUpdate = function(elapsed)
+  		this:Show();
+  		ActionButton_UpdateState();
+  		ActionButton_UpdateUsable();
+  		ActionButton_UpdateCooldown();
+  		ActionButton_UpdateFlash();
+  	else
+  		this:UnregisterEvent("ACTIONBAR_UPDATE_STATE");
+  		this:UnregisterEvent("ACTIONBAR_UPDATE_USABLE");
+  		this:UnregisterEvent("ACTIONBAR_UPDATE_COOLDOWN");
+  		this:UnregisterEvent("UPDATE_INVENTORY_ALERTS");
+  		this:UnregisterEvent("PLAYER_AURAS_CHANGED");
+  		this:UnregisterEvent("PLAYER_TARGET_CHANGED");
+  		this:UnregisterEvent("UNIT_INVENTORY_CHANGED");
+  		this:UnregisterEvent("CRAFT_SHOW");
+  		this:UnregisterEvent("CRAFT_CLOSE");
+  		this:UnregisterEvent("TRADE_SKILL_SHOW");
+  		this:UnregisterEvent("TRADE_SKILL_CLOSE");
+  		this:UnregisterEvent("PLAYER_ENTER_COMBAT");
+  		this:UnregisterEvent("PLAYER_LEAVE_COMBAT");
+  		this:UnregisterEvent("START_AUTOREPEAT_SPELL");
+  		this:UnregisterEvent("STOP_AUTOREPEAT_SPELL");
   
+  		if ( this.showgrid == 0 ) then
+  			this:Hide();
+  		else
+  			buttonCooldown:Hide();
+  		end
+  	end
+  end
+  
+  ActionButton_ShowGrid = function(button)
+  	if ( not button ) then
+  		button = this;
+  	end
+  	button.showgrid = button.showgrid+1;
+  	getglobal(button:GetName().."NormalTexture"):SetVertexColor(1.0, 1.0, 1.0);
+  	
+  	button:Show();
+  end
+  
+  ActionButton_UpdateUsable = function()
+  	local icon = getglobal(this:GetName().."Icon");
+  	local normalTexture = getglobal(this:GetName().."NormalTexture");
     if ( IsActionInRange(ActionButton_GetPagedID(this)) == 0 ) 
     then
-        getglobal(this:GetName().."Icon"):SetVertexColor(0.7,0,0);
+      icon:SetVertexColor(0.7,0,0);
     else
-      
-      local isUsable, notEnoughMana = IsUsableAction(ActionButton_GetPagedID(this))
-      
+      local isUsable, notEnoughMana = IsUsableAction(ActionButton_GetPagedID(this));
       if ( notEnoughMana ) then
-        getglobal(this:GetName().."Icon"):SetVertexColor(0.2,0.4,0.5);
+        icon:SetVertexColor(0.2,0.4,0.5);
       elseif ( isUsable ) then
-        getglobal(this:GetName().."Icon"):SetVertexColor(1, 1, 1);
+        icon:SetVertexColor(1, 1, 1);
       else
-        getglobal(this:GetName().."Icon"):SetVertexColor(0.3,0.3,0.3);
+        icon:SetVertexColor(0.3,0.3,0.3);
       end
-      
     end
-    
-    hooks["ActionButton_OnUpdate"](elapsed);
-    
-    --some stuff to fix the hiding of the normaltexture
-    getglobal(this:GetName().."NormalTexture"):SetTexture("Interface\\AddOns\\rTextures\\gloss")
-    getglobal(this:GetName().."NormalTexture"):SetAlpha(1)
-    getglobal(this:GetName().."NormalTexture"):Show()
-    getglobal(this:GetName().."Border"):Hide()
-    getglobal(this:GetName().."Name"):Hide()
-    getglobal(this:GetName().."HotKey"):Hide()
-    
-    for j=1,10 do
-      local nt = _G["PetActionButton"..j.."NormalTexture2"]
-      nt:SetTexture("Interface\\AddOns\\rTextures\\gloss")
-    end
-    this.range = range;
   end
 
-  local bonushooks = {};
-  local i;
-  
-  bonushooks["onshow"] = BonusActionBarFrame:GetScript("OnShow");
-  bonushooks["onshide"] = BonusActionBarFrame:GetScript("OnHide");
-  
-  BonusActionBarFrame:SetScript("OnShow", function(self,...)
-    if ( bonushooks["onshow"] ) then bonushooks["onshow"](self,...); end;
-    for i = 1, 12, 1 do
-      _G["ActionButton"..i]:SetAlpha(0);
-    end;
-  end);
-  
-  BonusActionBarFrame:SetScript("OnHide", function(self,...)
-    if ( bonushooks["onhide"] ) then bonushooks["onhide"](self,...); end;
-    for i = 1, 12, 1 do
-      _G["ActionButton"..i]:SetAlpha(1);
-    end;
-  end);
 
   -------------
   -- BUTTONS --
@@ -321,16 +320,9 @@ local _G = getfenv(0)
     ho:Hide()
     na:Hide()
     
-    --texture flash will only show on the standard attack button and BLINK...omg
     fl:SetTexture("Interface\\AddOns\\rTextures\\flash")
-
-    --mouseover texture
     bu:SetHighlightTexture("Interface\\AddOns\\rTextures\\hover")    
-    
-    --on button press...should be some kind of flash or yellow texture
     bu:SetPushedTexture("Interface\\AddOns\\rTextures\\pushed")
-    
-    --this one is active when checkbutton gets activated
     bu:SetCheckedTexture("Interface\\AddOns\\rTextures\\checked") 
 
     nt:SetHeight(36)

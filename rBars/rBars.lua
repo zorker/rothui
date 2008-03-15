@@ -266,7 +266,6 @@ local _G = getfenv(0)
   	end
   	button.showgrid = button.showgrid+1;
   	getglobal(button:GetName().."NormalTexture"):SetVertexColor(1.0, 1.0, 1.0);
-  	
   	button:Show();
   end
   
@@ -276,18 +275,80 @@ local _G = getfenv(0)
     if ( IsActionInRange(ActionButton_GetPagedID(this)) == 0 ) 
     then
       icon:SetVertexColor(0.7,0.1,0.1);
+      normalTexture:SetVertexColor(1,1,1);
     else
       local isUsable, notEnoughMana = IsUsableAction(ActionButton_GetPagedID(this));
       if ( notEnoughMana ) then
         icon:SetVertexColor(0.2,0.4,0.5);
+        normalTexture:SetVertexColor(1,1,1);
       elseif ( isUsable ) then
         icon:SetVertexColor(1, 1, 1);
+        normalTexture:SetVertexColor(1,1,1);
       else
         icon:SetVertexColor(0.3,0.3,0.3);
+        normalTexture:SetVertexColor(1,1,1);
       end
     end
   end
-
+  
+  ActionButton_OnUpdate = function(elapsed) 
+  
+  	local hotkey = getglobal(this:GetName().."HotKey");
+  	local button = ActionButton_GetPagedID(this);
+  
+  	if ( hotkey:GetText() == RANGE_INDICATOR ) then
+  		if ( IsActionInRange(button) == 1 ) then
+  			hotkey:Hide();
+  		else
+  			hotkey:Show();
+  		end
+  	end
+  
+  	if ( ActionButton_IsFlashing() ) then
+  		this.flashtime = this.flashtime - elapsed;
+  		if ( this.flashtime <= 0 ) then
+  			local overtime = -this.flashtime;
+  			if ( overtime >= ATTACK_BUTTON_FLASH_TIME ) then
+  				overtime = 0;
+  			end
+  			this.flashtime = ATTACK_BUTTON_FLASH_TIME - overtime;
+  
+  			local flashTexture = getglobal(this:GetName().."Flash");
+  			if ( flashTexture:IsVisible() ) then
+  				flashTexture:Hide();
+  			else
+  				flashTexture:Show();
+  			end
+  		end
+  	end
+  	
+  	-- Handle range indicator
+  	if ( this.rangeTimer ) then
+  		this.rangeTimer = this.rangeTimer - elapsed;
+  
+  		if ( this.rangeTimer <= 0 ) then
+  			ActionButton_UpdateUsable();
+  			this.rangeTimer = TOOLTIP_UPDATE_TIME;
+  		end
+  	end
+  
+  	if ( not this.updateTooltip ) then
+  		return;
+  	end
+  
+  	this.updateTooltip = this.updateTooltip - elapsed;
+  	if ( this.updateTooltip > 0 ) then
+  		return;
+  	end
+  
+  	if ( GameTooltip:IsOwned(this) ) then
+  		ActionButton_SetTooltip();
+  	else
+  		this.updateTooltip = nil;
+  	end
+  
+  end
+  
 
   -------------
   -- BUTTONS --

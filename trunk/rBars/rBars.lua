@@ -11,23 +11,15 @@ local _G = getfenv(0)
   -------------------------------------------------------
   -- put frames here that are blocked from moving
   --------------------------------------------------------
+
+
+
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarRight"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarLeft"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomRight"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBar"] = nil
     
-  --[[
-  UIPARENT_MANAGED_FRAME_POSITIONS["PetActionBarFrame"] = nil
-  UIPARENT_MANAGED_FRAME_POSITIONS["ShapeshiftBarFrame"] = nil
-  UIPARENT_MANAGED_FRAME_POSITIONS["PossessBarFrame"] = nil
-  UIPARENT_MANAGED_FRAME_POSITIONS["CastingBarFrame"] = nil
-  UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBarPerformanceBarFrame"] = nil
-  UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBarPerformanceBarButton"] = nil
-  UIPARENT_MANAGED_FRAME_POSITIONS["BonusActionBarFrame"] = nil
-  ]]--
-  
-  
   --------------------------------------
   -- HIDE STUFF
   ---------------------------------------
@@ -37,19 +29,13 @@ local _G = getfenv(0)
   MainMenuBarArtFrame:SetFrameStrata("BACKGROUND")
   
   ChatFrame1:SetFrameStrata("DIALOG")
-
-  ShapeshiftBarLeft:Hide()
-  ShapeshiftBarLeft.Show = dummy
-  ShapeshiftBarMiddle:Hide()
-  ShapeshiftBarMiddle.Show = dummy
-  ShapeshiftBarRight:Hide()
-  ShapeshiftBarRight.Show = dummy
   
   if set_shapeshift == 0 then
     ShapeshiftBarFrame:Hide()
     ShapeshiftBarFrame.Show = dummy
   end
 
+  
   CharacterMicroButton:Hide()
   TalentMicroButton:Hide()
   TalentMicroButton.Show = dummy
@@ -82,6 +68,9 @@ local _G = getfenv(0)
   MainMenuBarMaxLevelBar:SetWidth(512)
   MainMenuBarMaxLevelBar:Hide()
   MainMenuBarMaxLevelBar.Show = dummy
+  
+  --[[
+  ]]--
   
   --hide XP BAR y/n
   MainMenuExpBar:Hide()
@@ -279,7 +268,7 @@ local _G = getfenv(0)
     else
       local isUsable, notEnoughMana = IsUsableAction(ActionButton_GetPagedID(this));
       if ( notEnoughMana ) then
-        icon:SetVertexColor(0.2,0.4,0.5);
+        icon:SetVertexColor(0.1,0.1,0.7);
         normalTexture:SetVertexColor(1,1,1);
       elseif ( isUsable ) then
         icon:SetVertexColor(1, 1, 1);
@@ -348,6 +337,108 @@ local _G = getfenv(0)
   	end
   
   end
+  
+  ----------------------------------
+  -- PET FRAME --
+  -----------------------------------
+  
+PetActionBar_Update = function()
+  local glosstexture = "Interface\\AddOns\\rTextures\\gloss"
+    local petActionButton, petActionIcon, petAutoCastableTexture, petAutoCastModel;
+    local petActionsUsable = GetPetActionsUsable();
+    for i=1, NUM_PET_ACTION_SLOTS, 1 do
+        petActionButton = getglobal("PetActionButton"..i);
+        petActionIcon = getglobal("PetActionButton"..i.."Icon");
+        petNormalTexture = getglobal("PetActionButton"..i.."NormalTexture2");
+        petAutoCastableTexture = getglobal("PetActionButton"..i.."AutoCastable");
+        petAutoCastModel = getglobal("PetActionButton"..i.."AutoCast");
+        local name, subtext, texture, isToken, isActive, autoCastAllowed, autoCastEnabled = GetPetActionInfo(i);
+        if ( not isToken ) then
+            petActionIcon:SetTexture(texture);
+            petActionButton.tooltipName = name;
+        else
+            petActionIcon:SetTexture(getglobal(texture));
+            petActionButton.tooltipName = getglobal(name);
+        end
+        petActionButton.isToken = isToken;
+        petActionButton.tooltipSubtext = subtext;
+        if ( isActive ) then
+            petActionButton:SetChecked(1);
+        else
+            petActionButton:SetChecked(0);
+        end
+        if ( autoCastAllowed ) then
+            petAutoCastableTexture:Show();
+        else
+            petAutoCastableTexture:Hide();
+        end
+        if ( autoCastEnabled ) then
+            petAutoCastModel:Show();
+        else
+            petAutoCastModel:Hide();
+        end
+        if ( name ) then
+            petActionButton:Show();
+        else
+            if ( PetActionBarFrame.showgrid == 0 ) then
+                petActionButton:Hide();
+            end
+        end
+        if ( texture ) then
+            if ( petActionsUsable ) then
+                SetDesaturation(petActionIcon, nil);
+            else
+                SetDesaturation(petActionIcon, 1);
+            end
+            petActionIcon:Show();
+            petActionButton:SetNormalTexture(glosstexture);
+            petActionButton:SetWidth(32);
+            petActionButton:SetHeight(32);
+            petActionIcon:SetTexCoord(0.1,0.9,0.1,0.9);
+            petNormalTexture:SetPoint("TOPLEFT", petActionButton, "TOPLEFT", -2, 2);
+            petNormalTexture:SetPoint("BOTTOMRIGHT", petActionButton, "BOTTOMRIGHT", 2, -2);
+            
+        else
+            petActionIcon:Hide();
+            petActionButton:SetNormalTexture(glosstexture);
+            petActionButton:SetWidth(32);
+            petActionButton:SetHeight(32);
+            petActionIcon:SetTexCoord(0.1,0.9,0.1,0.9);
+            petNormalTexture:SetPoint("TOPLEFT", petActionButton, "TOPLEFT", -2, 2);
+            petNormalTexture:SetPoint("BOTTOMRIGHT", petActionButton, "BOTTOMRIGHT", 2, -2);
+       end
+    end
+    PetActionBar_UpdateCooldowns();
+    if ( not PetHasActionBar() ) then
+        --ControlReleased();
+        HidePetActionBar();
+    end
+end
+  
+  
+  -------------------
+  -- cpt HOOK --
+  -----------------
+  
+  local bonushooks = {};
+  local i;
+  
+  bonushooks["onshow"] = BonusActionBarFrame:GetScript("OnShow");
+  bonushooks["onshide"] = BonusActionBarFrame:GetScript("OnHide");
+  
+  BonusActionBarFrame:SetScript("OnShow", function(self,...)
+    if ( bonushooks["onshow"] ) then bonushooks["onshow"](self,...); end;
+    for i = 1, 12, 1 do
+      _G["ActionButton"..i]:SetAlpha(0);
+    end;
+  end);
+  
+  BonusActionBarFrame:SetScript("OnHide", function(self,...)
+    if ( bonushooks["onhide"] ) then bonushooks["onhide"](self,...); end;
+    for i = 1, 12, 1 do
+      _G["ActionButton"..i]:SetAlpha(1);
+    end;
+  end);
   
 
   -------------

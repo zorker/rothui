@@ -65,6 +65,8 @@
       addon:rf_create_tc_bar()
       addon:rf_create_rz_bar()
       addon:rf_create_ds_bar()
+      addon:rf_create_bs_bar()
+      addon:rf_create_cs_bar()
       addon:rf_createbufframe()
       addon:rf_createdebufframe()
     end  
@@ -126,15 +128,15 @@
     ]]--
   
     local rf_bft1 = f:CreateFontString("rf_bft1", "OVERLAY")
-    --rf_bft1:SetPoint("TOPLEFT", "rf_bft0", "BOTTOMLEFT", 0, -2)
-    rf_bft1:SetPoint("TOPLEFT", 0, -0)
+    rf_bft1:SetPoint("LEFT", "rf_cs_bar", "RIGHT", 5, 0)
     rf_bft1:SetFontObject(GameFontHighlight)
     rf_bft1:SetTextColor(0.5, 0.5, 0.5)
     rf_bft1:SetText("CS")
     rf_bft1:Show()
     
     local rf_bft2 = f:CreateFontString("rf_bft2", "OVERLAY")
-    rf_bft2:SetPoint("TOPLEFT", "rf_bft1", "BOTTOMLEFT", 0, 0)
+    --rf_bft2:SetPoint("LEFT", "rf_bft1", "RIGHT", 10, 0)
+    rf_bft2:SetPoint("LEFT", "rf_bs_bar", "RIGHT", 5, 0)
     rf_bft2:SetFontObject(GameFontHighlight)
     rf_bft2:SetTextColor(0.5, 0.5, 0.5)
     rf_bft2:SetText("BS")
@@ -145,8 +147,8 @@
   function addon:rf_createdebufframe()
     local f = CreateFrame("Frame","rf_df",UIParent)
     f:SetFrameStrata("BACKGROUND")
-    f:SetWidth(40)
-    f:SetHeight(60)
+    f:SetWidth(60)
+    f:SetHeight(20)
     --[[
     f:SetBackdrop({
       bgFile = "Interface/Tooltips/UI-Tooltip-Background", 
@@ -157,7 +159,7 @@
     f:SetBackdropColor(0,0,0,0.5)
     ]]--
     f:ClearAllPoints()  
-    f:SetPoint("TOPLEFT",rf_bf,"TOPRIGHT",5,0)
+    f:SetPoint("BOTTOMLEFT","rf_rz_bar","TOPLEFT",0,5)
     f:Hide()
     
     --[[
@@ -172,22 +174,22 @@
     local rf_dft1 = f:CreateFontString("rf_dft1", "OVERLAY")
     --rf_dft1:SetPoint("TOPRIGHT", "rf_dft0", "BOTTOMRIGHT", 0, -2)
     --rf_dft1:SetPoint("TOPRIGHT", 0, -0)
-    rf_dft1:SetPoint("RIGHT", "rf_rz_bar", "LEFT", -10, 0)
+    rf_dft1:SetPoint("LEFT", "rf_rz_bar", "RIGHT", 5, 0)
     rf_dft1:SetFontObject(GameFontHighlight)
     rf_dft1:SetTextColor(0.5, 0.5, 0.5)
-    rf_dft1:SetText("RZ0")
+    rf_dft1:SetText("RZ")
     rf_dft1:Show()
     
     local rf_dft2 = f:CreateFontString("rf_dft2", "OVERLAY")
     --rf_dft2:SetPoint("TOP", "rf_dft1", "BOTTOM", 0, 0)
-    rf_dft2:SetPoint("RIGHT", "rf_ds_bar", "LEFT", -10, 0)
+    rf_dft2:SetPoint("LEFT", "rf_ds_bar", "RIGHT", 5, 0)
     rf_dft2:SetFontObject(GameFontHighlight)
     rf_dft2:SetTextColor(0.5, 0.5, 0.5)
     rf_dft2:SetText("DS")
     rf_dft2:Show()
     
     local rf_dft3 = f:CreateFontString("rf_dft3", "OVERLAY")
-    rf_dft3:SetPoint("RIGHT", "rf_tc_bar", "LEFT", -10, 0)
+    rf_dft3:SetPoint("LEFT", "rf_tc_bar", "RIGHT", 5, 0)
     rf_dft3:SetFontObject(GameFontHighlight)
     rf_dft3:SetTextColor(0.5, 0.5, 0.5)
     rf_dft3:SetText("TC")
@@ -195,21 +197,21 @@
     
     
     local rf_dft4 = f:CreateFontString("rf_dft4", "OVERLAY")
-    rf_dft4:SetPoint("TOPLEFT")
+    rf_dft4:SetPoint("BOTTOMLEFT")
     rf_dft4:SetFontObject(GameFontHighlight)
     rf_dft4:SetTextColor(0.5, 0.5, 0.5)
     rf_dft4:SetText("SK")
     rf_dft4:Show()
     
     local rf_dft5 = f:CreateFontString("rf_dft5", "OVERLAY")
-    rf_dft5:SetPoint("TOPLEFT", "rf_dft4", "BOTTOMLEFT", 0, 0)
+    rf_dft5:SetPoint("LEFT", "rf_dft4", "RIGHT", 10, 0)
     rf_dft5:SetFontObject(GameFontHighlight)
     rf_dft5:SetTextColor(0.5, 0.5, 0.5)
     rf_dft5:SetText("FdS")
     rf_dft5:Show()
     
     local rf_dft6 = f:CreateFontString("rf_dft6", "OVERLAY")
-    rf_dft6:SetPoint("TOPLEFT", "rf_dft5", "BOTTOMLEFT", 0, 0)
+    rf_dft6:SetPoint("LEFT", "rf_dft5", "RIGHT", 10, 0)
     rf_dft6:SetFontObject(GameFontHighlight)
     rf_dft6:SetTextColor(0.5, 0.5, 0.5)
     rf_dft6:SetText("FdT")
@@ -223,12 +225,12 @@
   
   	local f = CreateFrame("Frame","rf_tc_bar",UIParent);
   	f:SetWidth(100);
-  	f:SetHeight(10);
+  	f:SetHeight(8);
   	f:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", insets = { left = -1, right = -1, top = -1, bottom = -1 } });
   	f:EnableMouse(0);
   	f:SetToplevel(1);
     f:ClearAllPoints()  
-    f:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",35,15)
+    f:SetPoint("BOTTOMLEFT",ActionButton7,"TOPLEFT",0,20)
   	f:Hide();
   	
   	f.status = CreateFrame("StatusBar","rf_tc_status",f);
@@ -243,7 +245,7 @@
   	--f.texture:SetPoint("TOPLEFT");
   	--f.texture:SetPoint("BOTTOMRIGHT");
   	f.texture:SetWidth(0)
-	  f.texture:SetHeight(10)
+	  f.texture:SetHeight(8)
   	f.texture:SetPoint("LEFT", f, "LEFT")
   	
   	f.texture:SetTexture(tex);
@@ -267,12 +269,12 @@
   
   	local f = CreateFrame("Frame","rf_ds_bar",UIParent);
   	f:SetWidth(100);
-  	f:SetHeight(10);
+  	f:SetHeight(8);
   	f:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", insets = { left = -1, right = -1, top = -1, bottom = -1 } });
   	f:EnableMouse(0);
   	f:SetToplevel(1);
     f:ClearAllPoints()  
-    f:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",35,45)
+    f:SetPoint("BOTTOMLEFT",rf_tc_bar,"TOPLEFT",0,5)
   	f:Hide();
   	
   	f.status = CreateFrame("StatusBar","rf_ds_status",f);
@@ -287,7 +289,7 @@
   	--f.texture:SetPoint("TOPLEFT");
   	--f.texture:SetPoint("BOTTOMRIGHT");
   	f.texture:SetWidth(0)
-	  f.texture:SetHeight(10)
+	  f.texture:SetHeight(8)
   	f.texture:SetPoint("LEFT", f, "LEFT")
   	
   	f.texture:SetTexture(tex);
@@ -310,12 +312,12 @@
   
   	local f = CreateFrame("Frame","rf_rz_bar",UIParent);
   	f:SetWidth(100);
-  	f:SetHeight(10);
+  	f:SetHeight(8);
   	f:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", insets = { left = -1, right = -1, top = -1, bottom = -1 } });
   	f:EnableMouse(0);
   	f:SetToplevel(1);
     f:ClearAllPoints()  
-    f:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",35,30)
+    f:SetPoint("BOTTOMLEFT",rf_tc_bar,"TOPLEFT",0,18)
   	f:Hide();
   	
   	f.status = CreateFrame("StatusBar","rf_rz_status",f);
@@ -330,7 +332,7 @@
   	--f.texture:SetPoint("TOPLEFT");
   	--f.texture:SetPoint("BOTTOMRIGHT");
   	f.texture:SetWidth(0)
-	  f.texture:SetHeight(10)
+	  f.texture:SetHeight(8)
   	f.texture:SetPoint("LEFT", f, "LEFT")
   	
   	f.texture:SetTexture(tex);
@@ -347,10 +349,101 @@
   
   end
   
+  function addon:rf_create_bs_bar()
+  
+    local tex = "Interface\\AddOns\\rTextures\\statusbar"
+  
+  	local f = CreateFrame("Frame","rf_bs_bar",UIParent);
+  	f:SetWidth(100);
+  	f:SetHeight(8);
+  	f:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", insets = { left = -1, right = -1, top = -1, bottom = -1 } });
+  	f:EnableMouse(0);
+  	f:SetToplevel(1);
+    f:ClearAllPoints()  
+    f:SetPoint("BOTTOMLEFT",MultiBarBottomLeftButton7,"TOPLEFT",0,20)
+  	f:Hide();
+  	
+  	f.status = CreateFrame("StatusBar","rf_bs_status",f);
+  	f.status:SetPoint("TOPLEFT");
+  	f.status:SetPoint("BOTTOMRIGHT");
+  	--f.status:SetWidth(100)
+	  --f.status:SetHeight(10)
+  	--f.status:SetPoint("LEFT", f, "LEFT")
+  	f.status:SetStatusBarColor(0.5,0.75,1,1);
+  
+  	f.texture = f.status:CreateTexture("rf_bs_texture");
+  	--f.texture:SetPoint("TOPLEFT");
+  	--f.texture:SetPoint("BOTTOMRIGHT");
+  	f.texture:SetWidth(0)
+	  f.texture:SetHeight(8)
+  	f.texture:SetPoint("LEFT", f, "LEFT")
+  	
+  	f.texture:SetTexture(tex);
+  	f.texture:SetVertexColor(0.8,0.8,0.3,1);
+  
+  	f.status:SetStatusBarTexture(f.texture);
+  
+  	f.background = f.status:CreateTexture(nil,"BACKGROUND");
+  	f.background:SetTexture(tex);
+  	f.background:SetBlendMode("BLEND");
+  	f.background:SetVertexColor(1,1,1,0.3);
+  	f.background:SetPoint("TOPLEFT");
+  	f.background:SetPoint("BOTTOMRIGHT");
+  	
+  end
+  
+  
+  function addon:rf_create_cs_bar()
+  
+    local tex = "Interface\\AddOns\\rTextures\\statusbar"
+  
+  	local f = CreateFrame("Frame","rf_cs_bar",UIParent);
+  	f:SetWidth(100);
+  	f:SetHeight(8);
+  	f:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", insets = { left = -1, right = -1, top = -1, bottom = -1 } });
+  	f:EnableMouse(0);
+  	f:SetToplevel(1);
+    f:ClearAllPoints()  
+    f:SetPoint("BOTTOMLEFT",rf_bs_bar,"TOPLEFT",0,5)
+  	f:Hide();
+  	
+  	f.status = CreateFrame("StatusBar","rf_cs_status",f);
+  	f.status:SetPoint("TOPLEFT");
+  	f.status:SetPoint("BOTTOMRIGHT");
+  	--f.status:SetWidth(100)
+	  --f.status:SetHeight(10)
+  	--f.status:SetPoint("LEFT", f, "LEFT")
+  	f.status:SetStatusBarColor(0.5,0.75,1,1);
+  
+  	f.texture = f.status:CreateTexture("rf_cs_texture");
+  	--f.texture:SetPoint("TOPLEFT");
+  	--f.texture:SetPoint("BOTTOMRIGHT");
+  	f.texture:SetWidth(0)
+	  f.texture:SetHeight(8)
+  	f.texture:SetPoint("LEFT", f, "LEFT")
+  	
+  	f.texture:SetTexture(tex);
+  	f.texture:SetVertexColor(0.8,0.8,0.3,1);
+  
+  	f.status:SetStatusBarTexture(f.texture);
+  
+  	f.background = f.status:CreateTexture(nil,"BACKGROUND");
+  	f.background:SetTexture(tex);
+  	f.background:SetBlendMode("BLEND");
+  	f.background:SetVertexColor(1,1,1,0.3);
+  	f.background:SetPoint("TOPLEFT");
+  	f.background:SetPoint("BOTTOMRIGHT");
+  
+  end
+  
   
   function addon:rf_showbufframe()
     local f = _G["rf_bf"]
     f:Show()
+    
+    rf_bs_bar:Show()
+    rf_cs_bar:Show()
+    
   end
   
   
@@ -358,9 +451,8 @@
     local f = _G["rf_bf"]
     f:Hide()  
     
-    rf_rz_bar:Hide()
-    rf_tc_bar:Hide()
-    rf_ds_bar:Hide()
+    rf_bs_bar:Hide()
+    rf_cs_bar:Hide()
     
   end
   
@@ -378,6 +470,11 @@
   function addon:rf_hidedebufframe()
     local f = _G["rf_df"]
     f:Hide()  
+    
+    rf_rz_bar:Hide()
+    rf_tc_bar:Hide()
+    rf_ds_bar:Hide()
+    
   end
   
   function addon:rf_checkplayerbuffs()
@@ -387,6 +484,8 @@
     local found_bft2 = 0
     local time_bft1 = 0
     local time_bft2 = 0
+    local timebar_bft1 = 0
+    local timebar_bft2 = 0
   
     for i = 1, 40 do
       index, untilcancelled = GetPlayerBuff(i, "HELPFUL")
@@ -402,18 +501,24 @@
         if name == "Befehlsruf" then
           found_bft1 = 1
           time_bft1 = floor(timeleft)
+          timebar_bft1 = floor(timeleft*100/120)
         end
         if name == "Schlachtruf" then
           found_bft2 = 1
           time_bft2 = floor(timeleft)
+          timebar_bft2 = floor(timeleft*100/120)
         end
       end
       
     end
     
+    rf_cs_texture:SetWidth(0.001)
+    rf_bs_texture:SetWidth(0.001)
+    
     if found_bft1 == 1 then
       rf_bft1:SetText("CS |cffffff55"..time_bft1)
       rf_bft1:SetTextColor(0, 1, 0)
+      rf_cs_texture:SetWidth(timebar_bft1)
     else
       rf_bft1:SetText("CS")
       rf_bft1:SetTextColor(0.5, 0.5, 0.5)
@@ -422,6 +527,7 @@
     if found_bft2 == 1 then
       rf_bft2:SetText("BS |cffffff55"..time_bft2)
       rf_bft2:SetTextColor(0, 1, 0)
+      rf_bs_texture:SetWidth(timebar_bft2)
     else
       rf_bft2:SetText("BS")
       rf_bft2:SetTextColor(0.5, 0.5, 0.5)
@@ -503,14 +609,14 @@
     
     if found_dft1 == 1 then
       if time_dft1 >= 1 then
-        rf_dft1:SetText("RZ"..rz_apps.." |cffffff55"..time_dft1)
+        rf_dft1:SetText("RZ |cffffffff("..rz_apps..") |cffffff55"..time_dft1)
         rf_rz_texture:SetWidth(timebar_dft1)
       else
-        rf_dft1:SetText("RZ"..rz_apps)
+        rf_dft1:SetText("RZ |cffffffff("..rz_apps..")")
       end
       rf_dft1:SetTextColor(0, 1, 0)
     else
-      rf_dft1:SetText("RZ0")
+      rf_dft1:SetText("RZ")
       rf_dft1:SetTextColor(0.5, 0.5, 0.5)
     end
 

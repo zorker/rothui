@@ -61,6 +61,7 @@
     f:SetHeight(64)
     local t = f:CreateTexture(nil,"BACKGROUND")
     t:SetTexture(SpellIcon)
+    t:SetTexCoord(0.1,0.9,0.1,0.9)
     t:SetAllPoints(f)
     f.texture = t
     f:SetPoint("CENTER",posX,posY)
@@ -69,15 +70,19 @@
 
   function addon:rsc_onUpDate()
     local f = CreateFrame("Frame", "OnUpdateDemoFrame")
-    local totalElapsed = 0.0
+    local totalElapsed = 0
     local function onUpdateDemo(self, elapsed)
       totalElapsed = totalElapsed + elapsed
-      if (totalElapsed < 0.5) then return end
-      totalElapsed = totalElapsed - floor(totalElapsed)
-      --ChatFrame1:AddMessage("tick...")
-      addon:rsc_check_spell(30356, "rsc_frame1")
-      addon:rsc_check_spell(30357, "rsc_frame2")   
-      addon:rsc_check_spell(2565, "rsc_frame3")
+      if (totalElapsed < 0.5) then 
+        return 
+      else
+        ChatFrame1:AddMessage("tick"..totalElapsed)
+        --totalElapsed = totalElapsed - floor(totalElapsed)
+        totalElapsed = totalElapsed - 0.5
+        addon:rsc_check_spell(30356, "rsc_frame1")
+        addon:rsc_check_spell(30357, "rsc_frame2")   
+        addon:rsc_check_spell(2565, "rsc_frame3")
+      end
     end
     f:SetScript("OnUpdate", onUpdateDemo)
     if UnitAffectingCombat("player") == 1 then

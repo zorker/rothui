@@ -76,7 +76,7 @@
       if (totalElapsed < 0.5) then 
         return 
       else
-        ChatFrame1:AddMessage("tick"..totalElapsed)
+        --ChatFrame1:AddMessage("tick"..totalElapsed)
         --totalElapsed = totalElapsed - floor(totalElapsed)
         totalElapsed = totalElapsed - 0.5
         addon:rsc_check_spell(30356, "rsc_frame1")

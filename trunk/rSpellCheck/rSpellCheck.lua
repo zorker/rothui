@@ -34,49 +34,29 @@
   
   addon:SetScript("OnEvent", function()
     if(event=="PLAYER_LOGIN") then
-      --spellid (icon-texture), framename, and coordinates
+      --spellid (icon-texture), framename, coordinates, framestrata
       --30356 = shield slam spellid
       --30357 = revenge 
-      addon:rsc_create_icon(30356,"rsc_frame1",0,0)
-      addon:rsc_create_icon(30357,"rsc_frame2",64,0)
+      addon:rsc_create_icon(30356,"rsc_frame1",-32,0,"LOW")
+      addon:rsc_create_icon(30357,"rsc_frame2",32,0,"BACKGROUND")
+      addon:rsc_create_icon(2565,"rsc_frame3",0,64,"BACKGROUND")
+      addon:rsc_onUpDate()
     end  
     
-    if(event=="SPELL_UPDATE_COOLDOWN") then
-      addon:rsc_check_spell(30356, "rsc_frame1")
-      addon:rsc_check_spell(30357, "rsc_frame2")
-    end 
-    
-    --[[ 
-    --want to test the SPELL_UPDATE_COOLDOWN-Event
     if(event=="PLAYER_REGEN_ENABLED") then
-      --framename
-      addon:rsc_hide_frame("rsc_frame1")
-      addon:rsc_hide_frame("rsc_frame2")
+      addon:rsc_show_timeframe("OnUpdateDemoFrame")
     end  
+    
     if(event=="PLAYER_REGEN_DISABLED") then
-      --spellid, framename (you need to know which frame to hide/show)
-      addon:rsc_check_spell(30356, "rsc_frame1")
-      addon:rsc_check_spell(30357, "rsc_frame2")
+      addon:rsc_show_timeframe("OnUpdateDemoFrame")
     end  
-    if (event=="UNIT_AURA" and arg1=="target") then
-      addon:rsc_check_spell(30356, "rsc_frame1")
-      addon:rsc_check_spell(30357, "rsc_frame2")
-    end
-    if (event=="PLAYER_TARGET_CHANGED") then
-      addon:rsc_check_spell(30356, "rsc_frame1")
-      addon:rsc_check_spell(30357, "rsc_frame2")    
-    end
-    if(event=="PLAYER_AURAS_CHANGED") then
-      addon:rsc_check_spell(30356, "rsc_frame1")
-      addon:rsc_check_spell(30357, "rsc_frame2")
-    end
-    ]]--
+    
   end)
   
-  function addon:rsc_create_icon(spellId,frameName,posX,posY)
+  function addon:rsc_create_icon(spellId,frameName,posX,posY,framestrata)
     local spellName, spellRank, SpellIcon, SpellCost, spellIsFunnel, spellPowerType, spellCastTime, spellMinRange, spellMaxRange = GetSpellInfo(spellId)
     local f = CreateFrame("Frame",frameName,UIParent)
-    f:SetFrameStrata("BACKGROUND")
+    f:SetFrameStrata(framestrata)
     f:SetWidth(64)
     f:SetHeight(64)
     local t = f:CreateTexture(nil,"BACKGROUND")
@@ -87,18 +67,49 @@
     f:Hide()
   end
 
+  function addon:rsc_onUpDate()
+    local f = CreateFrame("Frame", "OnUpdateDemoFrame")
+    local totalElapsed = 0.0
+    local function onUpdateDemo(self, elapsed)
+      totalElapsed = totalElapsed + elapsed
+      if (totalElapsed < 0.5) then return end
+      totalElapsed = totalElapsed - floor(totalElapsed)
+      --ChatFrame1:AddMessage("tick...")
+      addon:rsc_check_spell(30356, "rsc_frame1")
+      addon:rsc_check_spell(30357, "rsc_frame2")   
+      addon:rsc_check_spell(2565, "rsc_frame3")
+    end
+    f:SetScript("OnUpdate", onUpdateDemo)
+    if UnitAffectingCombat("player") == 1 then
+      f:Show()
+    else
+      f:Hide()
+    end
+  end
+
   function addon:rsc_check_spell(spellId,frameName)
     local spellName, spellRank, SpellIcon, SpellCost, spellIsFunnel, spellPowerType, spellCastTime, spellMinRange, spellMaxRange = GetSpellInfo(spellId)
     local check_spell = 0
     local spellUsable, spellNoMana = IsUsableSpell(spellName)
     local spellCooldownStartTime, spellCooldownDuration, spellEnabled = GetSpellCooldown(spellName);
+    local localizedClass, englishClass = UnitClass("player");
+    local stance = GetShapeshiftForm(true);
+    
+    --WARRIORS will get this only when stance == 2
+    
     if UnitAffectingCombat("player") == 1 then
       if UnitExists("target") == 1 then
-        if IsSpellInRange(spellName,"target") == 1 then
+        if IsSpellInRange(spellName,"target") == 1 or IsSpellInRange(spellName,"target") == nil then
           if spellUsable == 1 then
             if spellNoMana ~= 1 then  
               if spellCooldownDuration == 0 then
-                check_spell = 1
+                if englishClass == "WARRIOR" then
+                  if stance == 2 then
+                    check_spell = 1
+                  end
+                else  
+                  check_spell = 1
+                end
               end
             end
           end
@@ -113,38 +124,25 @@
   end
   
   function addon:rsc_show_frame(frameName)
-    frameName:Show()
+    local f = _G[frameName]
+    f:Show() 
   end
   
   function addon:rsc_hide_frame(frameName)
-    frameName:Hide()    
+    local f = _G[frameName]
+    f:Hide()    
   end
   
-  --addon:RegisterEvent"PLAYER_AURAS_CHANGED"
+  function addon:rsc_show_timeframe(frameName)
+    local f = _G[frameName]
+    f:Show() 
+  end
+  
+  function addon:rsc_hide_timeframe(frameName)
+    local f = _G[frameName]
+    f:Hide()    
+  end
+  
   addon:RegisterEvent"PLAYER_LOGIN"
-  --addon:RegisterEvent"PLAYER_REGEN_DISABLED"
-  --addon:RegisterEvent"PLAYER_REGEN_ENABLED"
-  --addon:RegisterEvent"PLAYER_TARGET_CHANGED"
-  --addon:RegisterEvent"UNIT_AURA"
-  addon:RegisterEvent"SPELL_UPDATE_COOLDOWN"
-
-
---[[
-Maybe try the onUpdate Stuff (which I don't like because of CPU usage..
-
-  Quoted from Iruel (http://forums.worldofwarcraft.com/thread.html?topicId=2215845681&sid=1):
-  If you'd rather roll your own, or understand how the libraries work before picking one, the underlying mechanic in the WoW UI is the 'OnUpdate' handler, this is called once per screen repaint for each visible frame, and is passed the time in seconds since the last repaint (Important note: If your frame can ever be hidden remember that this is the time since the last repaint, not since the last time your OnUpdate was fired).
-  Simple code to use an OnUpdate would be something like this (untested):
-
-  local frame = CreateFrame("Frame", "OnUpdateDemoFrame");
-  local totalElapsed = 0.0;
-  local function onUpdateDemo(self, elapsed)
-    totalElapsed = totalElapsed + elapsed;
-    if (totalElapsed < 1) then return; end
-    totalElapsed = totalElapsed - floor(totalElapsed);
-    ChatFrame1:AddMessage("tick...");
-  end
-  frame:SetScript("OnUpdate", onUpdateDemo);
-  frame:Show();
-]]--
-  
+  addon:RegisterEvent"PLAYER_REGEN_DISABLED"
+  addon:RegisterEvent"PLAYER_REGEN_ENABLED"

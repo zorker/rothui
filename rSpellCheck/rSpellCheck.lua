@@ -118,7 +118,7 @@
         if IsSpellInRange(spellName,"target") == 1 or IsSpellInRange(spellName,"target") == nil then
           if spellUsable == 1 then
             if spellNoMana ~= 1 then  
-              if spellCooldownDuration < 0.4 then
+              if spellCooldownDuration < 1 then
                 if englishClass == "WARRIOR" then
                   if stance == 2 then
                     if spellId == 29707 then

@@ -40,6 +40,14 @@
       addon:rsc_create_icon(30356,"rsc_frame1",0,0)
       addon:rsc_create_icon(30357,"rsc_frame2",64,0)
     end  
+    
+    if(event=="SPELL_UPDATE_COOLDOWN") then
+      addon:rsc_check_spell(30356, "rsc_frame1")
+      addon:rsc_check_spell(30357, "rsc_frame2")
+    end 
+    
+    --[[ 
+    --want to test the SPELL_UPDATE_COOLDOWN-Event
     if(event=="PLAYER_REGEN_ENABLED") then
       --framename
       addon:rsc_hide_frame("rsc_frame1")
@@ -62,6 +70,7 @@
       addon:rsc_check_spell(30356, "rsc_frame1")
       addon:rsc_check_spell(30357, "rsc_frame2")
     end
+    ]]--
   end)
   
   function addon:rsc_create_icon(spellId,frameName,posX,posY)
@@ -111,9 +120,11 @@
     frameName:Hide()    
   end
   
-  addon:RegisterEvent"PLAYER_AURAS_CHANGED"
+  --addon:RegisterEvent"PLAYER_AURAS_CHANGED"
   addon:RegisterEvent"PLAYER_LOGIN"
-  addon:RegisterEvent"PLAYER_REGEN_DISABLED"
-  addon:RegisterEvent"PLAYER_REGEN_ENABLED"
-  addon:RegisterEvent"PLAYER_TARGET_CHANGED"
-  addon:RegisterEvent"UNIT_AURA"
+  --addon:RegisterEvent"PLAYER_REGEN_DISABLED"
+  --addon:RegisterEvent"PLAYER_REGEN_ENABLED"
+  --addon:RegisterEvent"PLAYER_TARGET_CHANGED"
+  --addon:RegisterEvent"UNIT_AURA"
+  addon:RegisterEvent"SPELL_UPDATE_COOLDOWN"
+  

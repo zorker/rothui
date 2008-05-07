@@ -37,11 +37,11 @@
       --spellid (icon-texture), framename, coordinates, framestrata
       --30356 = shield slam spellid
       --30357 = revenge 
-      addon:rsc_create_icon(30356,"rsc_frame1",0,0,"BACKGROUND")
-      addon:rsc_create_icon(30357,"rsc_frame2",40,0,"BACKGROUND")
-      addon:rsc_create_icon(2565,"rsc_frame3",0,40,"BACKGROUND")
-      addon:rsc_create_icon(29707,"rsc_frame4",-40,0,"BACKGROUND")
-      addon:rsc_create_icon(30022,"rsc_frame5",0,-40,"BACKGROUND")
+      addon:rsc_create_icon(30356,"rsc_frame1",0,0,"MEDIUM") --ss
+      addon:rsc_create_icon(30357,"rsc_frame2",0,0,"LOW") --rev
+      addon:rsc_create_icon(2565,"rsc_frame3",0,40,"BACKGROUND") --block
+      addon:rsc_create_icon(29707,"rsc_frame4",-40,0,"BACKGROUND") --heroic
+      addon:rsc_create_icon(30022,"rsc_frame5",0,0,"BACKGROUND") --deva
       addon:rsc_onUpDate()
     end  
     

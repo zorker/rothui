@@ -37,9 +37,11 @@
       --spellid (icon-texture), framename, coordinates, framestrata
       --30356 = shield slam spellid
       --30357 = revenge 
-      addon:rsc_create_icon(30356,"rsc_frame1",0,0,"LOW")
-      addon:rsc_create_icon(30357,"rsc_frame2",0,0,"LOW")
-      addon:rsc_create_icon(2565,"rsc_frame3",0,0,"BACKGROUND")
+      addon:rsc_create_icon(30356,"rsc_frame1",0,0,"BACKGROUND")
+      addon:rsc_create_icon(30357,"rsc_frame2",40,0,"BACKGROUND")
+      addon:rsc_create_icon(2565,"rsc_frame3",0,40,"BACKGROUND")
+      addon:rsc_create_icon(29707,"rsc_frame4",-40,0,"BACKGROUND")
+      addon:rsc_create_icon(30022,"rsc_frame5",0,-40,"BACKGROUND")
       addon:rsc_onUpDate()
     end  
     
@@ -57,13 +59,20 @@
     local spellName, spellRank, SpellIcon, SpellCost, spellIsFunnel, spellPowerType, spellCastTime, spellMinRange, spellMaxRange = GetSpellInfo(spellId)
     local f = CreateFrame("Frame",frameName,UIParent)
     f:SetFrameStrata(framestrata)
-    f:SetWidth(64)
-    f:SetHeight(64)
+    f:SetWidth(32)
+    f:SetHeight(32)
     local t = f:CreateTexture(nil,"BACKGROUND")
     t:SetTexture(SpellIcon)
     t:SetTexCoord(0.1,0.9,0.1,0.9)
     t:SetAllPoints(f)
     f.texture = t
+
+    local t2 = f:CreateTexture(nil,"LOW")
+    t2:SetTexture("Interface\\AddOns\\rTextures\\gloss")
+    t2:SetPoint("TOPLEFT", f, "TOPLEFT", -2, 2)
+    t2:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 2, -2)
+    f.texture = t2
+    
     f:SetPoint("CENTER",posX,posY)
     f:Hide()
   end
@@ -82,6 +91,8 @@
         addon:rsc_check_spell(30356, "rsc_frame1")
         addon:rsc_check_spell(30357, "rsc_frame2")   
         addon:rsc_check_spell(2565, "rsc_frame3")
+        addon:rsc_check_spell(29707, "rsc_frame4")
+        addon:rsc_check_spell(30022, "rsc_frame5")
       end
     end
     f:SetScript("OnUpdate", onUpdateDemo)
@@ -110,7 +121,15 @@
               if spellCooldownDuration == 0 then
                 if englishClass == "WARRIOR" then
                   if stance == 2 then
-                    check_spell = 1
+                    if spellId == 29707 then
+                      --heroic
+                      if UnitMana("player") > 50 then
+                        --ChatFrame1:AddMessage("tick"..UnitMana("player"))
+                        check_spell = 1
+                      end
+                    else
+                      check_spell = 1
+                    end
                   end
                 else  
                   check_spell = 1

@@ -82,12 +82,12 @@
     local totalElapsed = 0
     local function onUpdateDemo(self, elapsed)
       totalElapsed = totalElapsed + elapsed
-      if (totalElapsed < 0.5) then 
+      if (totalElapsed < 0.3) then 
         return 
       else
         --ChatFrame1:AddMessage("tick"..totalElapsed)
         --totalElapsed = totalElapsed - floor(totalElapsed)
-        totalElapsed = totalElapsed - 0.5
+        totalElapsed = totalElapsed - 0.3
         addon:rsc_check_spell(30356, "rsc_frame1")
         addon:rsc_check_spell(30357, "rsc_frame2")   
         addon:rsc_check_spell(2565, "rsc_frame3")
@@ -118,7 +118,7 @@
         if IsSpellInRange(spellName,"target") == 1 or IsSpellInRange(spellName,"target") == nil then
           if spellUsable == 1 then
             if spellNoMana ~= 1 then  
-              if spellCooldownDuration == 0 then
+              if spellCooldownDuration < 0.4 then
                 if englishClass == "WARRIOR" then
                   if stance == 2 then
                     if spellId == 29707 then

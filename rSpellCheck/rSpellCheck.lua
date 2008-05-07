@@ -36,24 +36,31 @@
     if(event=="PLAYER_LOGIN") then
       --spellid (icon-texture), framename, and coordinates
       --30356 = shield slam spellid
+      --30357 = revenge 
       addon:rsc_create_icon(30356,"rsc_frame1",0,0)
+      addon:rsc_create_icon(30357,"rsc_frame2",64,0)
     end  
     if(event=="PLAYER_REGEN_ENABLED") then
       --framename
       addon:rsc_hide_frame("rsc_frame1")
+      addon:rsc_hide_frame("rsc_frame2")
     end  
     if(event=="PLAYER_REGEN_DISABLED") then
       --spellid, framename (you need to know which frame to hide/show)
       addon:rsc_check_spell(30356, "rsc_frame1")
+      addon:rsc_check_spell(30357, "rsc_frame2")
     end  
     if (event=="UNIT_AURA" and arg1=="target") then
       addon:rsc_check_spell(30356, "rsc_frame1")
+      addon:rsc_check_spell(30357, "rsc_frame2")
     end
     if (event=="PLAYER_TARGET_CHANGED") then
-      addon:rsc_check_spell(30356, "rsc_frame1")    
+      addon:rsc_check_spell(30356, "rsc_frame1")
+      addon:rsc_check_spell(30357, "rsc_frame2")    
     end
     if(event=="PLAYER_AURAS_CHANGED") then
       addon:rsc_check_spell(30356, "rsc_frame1")
+      addon:rsc_check_spell(30357, "rsc_frame2")
     end
   end)
   

@@ -127,4 +127,24 @@
   --addon:RegisterEvent"PLAYER_TARGET_CHANGED"
   --addon:RegisterEvent"UNIT_AURA"
   addon:RegisterEvent"SPELL_UPDATE_COOLDOWN"
+
+
+--[[
+Maybe try the onUpdate Stuff (which I don't like because of CPU usage..
+
+  Quoted from Iruel (http://forums.worldofwarcraft.com/thread.html?topicId=2215845681&sid=1):
+  If you'd rather roll your own, or understand how the libraries work before picking one, the underlying mechanic in the WoW UI is the 'OnUpdate' handler, this is called once per screen repaint for each visible frame, and is passed the time in seconds since the last repaint (Important note: If your frame can ever be hidden remember that this is the time since the last repaint, not since the last time your OnUpdate was fired).
+  Simple code to use an OnUpdate would be something like this (untested):
+
+  local frame = CreateFrame("Frame", "OnUpdateDemoFrame");
+  local totalElapsed = 0.0;
+  local function onUpdateDemo(self, elapsed)
+    totalElapsed = totalElapsed + elapsed;
+    if (totalElapsed < 1) then return; end
+    totalElapsed = totalElapsed - floor(totalElapsed);
+    ChatFrame1:AddMessage("tick...");
+  end
+  frame:SetScript("OnUpdate", onUpdateDemo);
+  frame:Show();
+]]--
   

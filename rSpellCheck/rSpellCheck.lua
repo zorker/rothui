@@ -46,7 +46,7 @@
     end  
     
     if(event=="PLAYER_REGEN_ENABLED") then
-      addon:rsc_show_timeframe("OnUpdateDemoFrame")
+      addon:rsc_hide_timeframe("OnUpdateDemoFrame")
     end  
     
     if(event=="PLAYER_REGEN_DISABLED") then

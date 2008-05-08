@@ -33,7 +33,10 @@
   local _G = getfenv(0)
   
   addon:SetScript("OnEvent", function()
+    
+    --create the icons and hide them on player login
     if(event=="PLAYER_LOGIN") then
+      
       --spellid (icon-texture), framename, coordinates, framestrata
       --30356 = shield slam spellid
       --30357 = revenge 
@@ -42,13 +45,20 @@
       addon:rsc_create_icon(2565,"rsc_frame3",0,40,"BACKGROUND") --block
       addon:rsc_create_icon(29707,"rsc_frame4",-40,0,"BACKGROUND") --heroic
       addon:rsc_create_icon(30022,"rsc_frame5",0,0,"BACKGROUND") --deva
+      
+      --start the onupdate fuction once, this includes a timer that will
+      --activate/deactivate itself depending on the frame-status.
+      --active on Show(), deactive on Hide()
       addon:rsc_onUpDate()
-    end  
+      
+    end
     
+    --stop the onupdate timer when out of combat
     if(event=="PLAYER_REGEN_ENABLED") then
       addon:rsc_hide_timeframe("rscOnUpdateFrame")
-    end  
+    end
     
+    --start the onupdate timer when in combat
     if(event=="PLAYER_REGEN_DISABLED") then
       addon:rsc_show_timeframe("rscOnUpdateFrame")
     end  
@@ -56,54 +66,91 @@
   end)
   
   function addon:rsc_create_icon(spellId,frameName,posX,posY,framestrata)
+    
+    --get spell infos
     local spellName, spellRank, SpellIcon, SpellCost, spellIsFunnel, spellPowerType, spellCastTime, spellMinRange, spellMaxRange = GetSpellInfo(spellId)
+    
+    --create the basic frame
     local f = CreateFrame("Frame",frameName,UIParent)
     f:SetFrameStrata(framestrata)
     f:SetWidth(32)
     f:SetHeight(32)
+    
+    --create icon texture
     local t = f:CreateTexture(nil,"BACKGROUND")
     t:SetTexture(SpellIcon)
     t:SetTexCoord(0.1,0.9,0.1,0.9)
     t:SetAllPoints(f)
     f.texture = t
-
+    
+    --create gloss texture
     local t2 = f:CreateTexture(nil,"LOW")
     t2:SetTexture("Interface\\AddOns\\rTextures\\gloss")
     t2:SetPoint("TOPLEFT", f, "TOPLEFT", -2, 2)
     t2:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 2, -2)
     f.texture = t2
     
+    --position the frame
     f:SetPoint("CENTER",posX,posY)
     f:Hide()
+  
   end
 
   function addon:rsc_onUpDate()
+    
+    --create the timer frame that will "contain" the timer
+    --timer can be switched on/off when showing/hiding the frame
     local f = CreateFrame("Frame", "rscOnUpdateFrame")
     local totalElapsed = 0
-    local function onUpdateDemo(self, elapsed)
+    
+    --hacked timer function from Iriel
+    local function rscOnUpdateTimer(self, elapsed)
+    
       totalElapsed = totalElapsed + elapsed
-      if (totalElapsed < 0.3) then 
+      
+      --determines how often the function is called
+      --currently ~3x a second
+      local rsc_update_timer = 0.333
+      
+      if (totalElapsed < rsc_update_timer) then 
+        
+        --do nothing
+        --THIS ONE IS IMPORTANT
+        --you need this or the onUpdate function will kill your CPU
         return 
+        
       else
+        
         --ChatFrame1:AddMessage("tick"..totalElapsed)
         --totalElapsed = totalElapsed - floor(totalElapsed)
-        totalElapsed = totalElapsed - 0.3
+        totalElapsed = totalElapsed - rsc_update_timer
+        
+        --call the check_spell function
         addon:rsc_check_spell(30356, "rsc_frame1")
         addon:rsc_check_spell(30357, "rsc_frame2")   
         addon:rsc_check_spell(2565, "rsc_frame3")
         addon:rsc_check_spell(29707, "rsc_frame4")
         addon:rsc_check_spell(30022, "rsc_frame5")
+        
       end
+      
     end
-    f:SetScript("OnUpdate", onUpdateDemo)
+    
+    --set a script on the frame that activates itself on each onupdate (every frame generation!)
+    f:SetScript("OnUpdate", rscOnUpdateTimer)
+    
+    --Hide (STOP) the timer out of combat, otherwise Show (START) it
     if UnitAffectingCombat("player") == 1 then
       f:Show()
     else
       f:Hide()
     end
+    
   end
 
   function addon:rsc_check_spell(spellId,frameName)
+  
+    --get spell info
     local spellName, spellRank, SpellIcon, SpellCost, spellIsFunnel, spellPowerType, spellCastTime, spellMinRange, spellMaxRange = GetSpellInfo(spellId)
     local check_spell = 0
     local spellUsable, spellNoMana = IsUsableSpell(spellName)
@@ -111,8 +158,9 @@
     local localizedClass, englishClass = UnitClass("player");
     local stance = GetShapeshiftForm(true);
     
+    --a lot of conditions
     --WARRIORS will get this only when stance == 2
-    
+    --need >50 rage before heroic icon will be displayed
     if UnitAffectingCombat("player") == 1 then
       if UnitExists("target") == 1 then
         if IsSpellInRange(spellName,"target") == 1 or IsSpellInRange(spellName,"target") == nil then
@@ -140,11 +188,14 @@
         end
       end
     end
+    
+    --on/off
     if check_spell == 1 then
       addon:rsc_show_frame(frameName)
     else
       addon:rsc_hide_frame(frameName)
-    end    
+    end
+    
   end
   
   function addon:rsc_show_frame(frameName)

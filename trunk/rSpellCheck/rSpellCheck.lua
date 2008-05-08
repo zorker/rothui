@@ -46,11 +46,11 @@
     end  
     
     if(event=="PLAYER_REGEN_ENABLED") then
-      addon:rsc_hide_timeframe("OnUpdateDemoFrame")
+      addon:rsc_hide_timeframe("rscOnUpdateFrame")
     end  
     
     if(event=="PLAYER_REGEN_DISABLED") then
-      addon:rsc_show_timeframe("OnUpdateDemoFrame")
+      addon:rsc_show_timeframe("rscOnUpdateFrame")
     end  
     
   end)
@@ -78,7 +78,7 @@
   end
 
   function addon:rsc_onUpDate()
-    local f = CreateFrame("Frame", "OnUpdateDemoFrame")
+    local f = CreateFrame("Frame", "rscOnUpdateFrame")
     local totalElapsed = 0
     local function onUpdateDemo(self, elapsed)
       totalElapsed = totalElapsed + elapsed
@@ -159,12 +159,12 @@
   
   function addon:rsc_show_timeframe(frameName)
     local f = _G[frameName]
-    f:Show() 
+    f:Show()
   end
   
   function addon:rsc_hide_timeframe(frameName)
     local f = _G[frameName]
-    f:Hide()    
+    f:Hide()
   end
   
   addon:RegisterEvent"PLAYER_LOGIN"

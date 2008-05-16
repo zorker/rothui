@@ -1,0 +1,6 @@
+## Interface: 21337
+## Author: Rothar
+## Title: rFilter2
+## Notes: addon of awesomeness...lol
+
+rFilter2.lua

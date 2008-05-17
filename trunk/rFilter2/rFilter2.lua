@@ -41,8 +41,25 @@
 
   --DEFAULT_CHAT_FRAME:AddMessage("found "..rf2_player_name.." : "..rf2_player_class)
   
-  if rf2_player_name == "Grombur" and rf2_player_class == "WARRIOR" 
-  then
+  if rf2_player_name == "Grombur" and rf2_player_class == "HUNTER" then
+    rf2_spell_list = {
+      buffs = {
+        [1] = { tag = "battle", spellid = 2048, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "commanding", spellid = 469, size = 32, fontsize = 24, posx = 40, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+      },
+      debuffs = {
+        [1] = { tag = "demo", spellid = 25203, size = 32, fontsize = 24, posx = 0, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "sunder", spellid = 25225, size = 32, fontsize = 24, posx = 40, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [3] = { tag = "clap", spellid = 25264, size = 32, fontsize = 24, posx = 80, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [4] = { tag = "scorpid", spellid = 3043, size = 32, fontsize = 24, posx = 120, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+      },
+      cooldowns = {
+        [1] = { tag = "wrath", spellid = 19574, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "rapid", spellid = 3045, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [3] = { tag = "arcane", spellid = 27019, size = 32, fontsize = 24, posx = 80, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+      },
+    }
+  elseif rf2_player_name == "Rothar" and rf2_player_class == "WARRIOR" then
     rf2_spell_list = {
       buffs = {
         [1] = { tag = "battle", spellid = 2048, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
@@ -59,7 +76,7 @@
         [2] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
         [3] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 80, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
-    }
+    }   
   else
     rf2_spell_list = {
       buffs = {
@@ -195,8 +212,8 @@
         return 
       else
         --ChatFrame1:AddMessage("tick"..totalElapsed)
-        --totalElapsed = totalElapsed - floor(totalElapsed)
-        totalElapsed = totalElapsed - rf2_update_timer
+        totalElapsed = totalElapsed - floor(totalElapsed)
+        --totalElapsed = totalElapsed - rf2_update_timer
         --do sth
         for index,value in ipairs(rf2_spell_list.buffs) do 
           local string = rf2_spell_list.buffs[index]
@@ -326,6 +343,9 @@
     local now = floor(GetTime())
     --DEFAULT_CHAT_FRAME:AddMessage("found "..frameTag.." : "..floortime.." : "..localstartime.." : "..now)
     local cooldown = (localstartime+floortime-now)
+    --if cooldown == 2 then
+    --  DEFAULT_CHAT_FRAME:AddMessage(spellName.." READY IN 2 SECONDS !!!")
+    --end
     if cooldown > 1 then
       f:Show()
     end

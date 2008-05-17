@@ -205,6 +205,8 @@
     f:SetPoint("CENTER",posX,posY)
     if testmode == 1 then
       f:Show()
+      num:SetText("9")
+      time:SetText("99")
     else
       f:Hide()
     end

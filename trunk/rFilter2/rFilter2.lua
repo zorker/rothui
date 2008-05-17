@@ -38,20 +38,21 @@
   -----------------------------------------------------
   
   local rf2_spell_list = {
-  	buffs = {
-  		[1] = { tag = "battle", spellid = 2048, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
-  		[2] = { tag = "commanding", spellid = 469, size = 32, fontsize = 24, posx = 40, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
-  	},
-  	debuffs = {
-  		[1] = { tag = "demo", spellid = 25203, size = 32, fontsize = 24, posx = 0, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-  		[2] = { tag = "sunder", spellid = 25225, size = 32, fontsize = 24, posx = 40, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-  		[3] = { tag = "clap", spellid = 25264, size = 32, fontsize = 24, posx = 80, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-  	},
-  	cooldowns = {
-  		[1] = { tag = "revenge", spellid = 30357, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
-  		[2] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
-  		[3] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 80, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
-  	},
+    buffs = {
+      [1] = { tag = "battle", spellid = 2048, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+      [2] = { tag = "commanding", spellid = 469, size = 32, fontsize = 24, posx = 40, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+    },
+    debuffs = {
+      [1] = { tag = "demo", spellid = 25203, size = 32, fontsize = 24, posx = 0, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+      [2] = { tag = "sunder", spellid = 25225, size = 32, fontsize = 24, posx = 40, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+      [3] = { tag = "clap", spellid = 25264, size = 32, fontsize = 24, posx = 80, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+      [4] = { tag = "scorpid", spellid = 3043, size = 32, fontsize = 24, posx = 120, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+    },
+    cooldowns = {
+      [1] = { tag = "revenge", spellid = 30357, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+      [2] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+      [3] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 80, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+    },
   }
   
   -----------------------------------------------------
@@ -262,7 +263,7 @@
             floornum = ""
           end
         end        
-        --DEFAULT_CHAT_FRAME:AddMessage("found "..name.." : "..floortime)
+        --DEFAULT_CHAT_FRAME:AddMessage("found "..spellName.." : "..floortime)
         f:Show()
         f2:SetText(floortime)
         f3:SetText(floornum)
@@ -279,12 +280,12 @@
     local f3 = _G["rf2_"..frameTag.."_num"]
     local spellCooldownStartTime, spellCooldownDuration, spellEnabled = GetSpellCooldown(spellName);
     
-    local localstartime = ""
+    local localstartime = 0
     if spellCooldownStartTime ~= nil then
       localstartime = floor(spellCooldownStartTime)
     end
     
-    local floortime = ""
+    local floortime = 0
     if spellCooldownDuration ~= nil then
       floortime = floor(spellCooldownDuration)
     end
@@ -297,14 +298,13 @@
         floornum = ""
       end
     end        
-    
     local now = floor(GetTime())
-    
     --DEFAULT_CHAT_FRAME:AddMessage("found "..frameTag.." : "..floortime.." : "..localstartime.." : "..now)
-    if ((localstartime+floortime)-now) > 1 then
+    local cooldown = (localstartime+floortime-now)
+    if cooldown > 1 then
       f:Show()
     end
-    f2:SetText((localstartime+floortime)-now)
+    f2:SetText(cooldown)
     f3:SetText(floornum)
     
   end

@@ -31,29 +31,54 @@
   
   local addon = CreateFrame"Frame"
   local _G = getfenv(0)
-  
+  local rf2_player_name, _ = UnitName("player")
+  local _, rf2_player_class = UnitClass("player")
+
   -----------------------------------------------------
   -- EDIT YOUR BUFFS/DEBUFFS IN HERE
   -- IMPORTANT, TAGS HAVE TO BE UNIQUE!!!
   -----------------------------------------------------
+
+  --DEFAULT_CHAT_FRAME:AddMessage("found "..rf2_player_name.." : "..rf2_player_class)
   
-  local rf2_spell_list = {
-    buffs = {
-      [1] = { tag = "battle", spellid = 2048, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
-      [2] = { tag = "commanding", spellid = 469, size = 32, fontsize = 24, posx = 40, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
-    },
-    debuffs = {
-      [1] = { tag = "demo", spellid = 25203, size = 32, fontsize = 24, posx = 0, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-      [2] = { tag = "sunder", spellid = 25225, size = 32, fontsize = 24, posx = 40, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-      [3] = { tag = "clap", spellid = 25264, size = 32, fontsize = 24, posx = 80, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-      [4] = { tag = "scorpid", spellid = 3043, size = 32, fontsize = 24, posx = 120, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-    },
-    cooldowns = {
-      [1] = { tag = "revenge", spellid = 30357, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
-      [2] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
-      [3] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 80, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
-    },
-  }
+  if rf2_player_name == "Grombur" and rf2_player_class == "WARRIOR" 
+  then
+    rf2_spell_list = {
+      buffs = {
+        [1] = { tag = "battle", spellid = 2048, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "commanding", spellid = 469, size = 32, fontsize = 24, posx = 40, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+      },
+      debuffs = {
+        [1] = { tag = "demo", spellid = 25203, size = 32, fontsize = 24, posx = 0, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "sunder", spellid = 25225, size = 32, fontsize = 24, posx = 40, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [3] = { tag = "clap", spellid = 25264, size = 32, fontsize = 24, posx = 80, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [4] = { tag = "scorpid", spellid = 3043, size = 32, fontsize = 24, posx = 120, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+      },
+      cooldowns = {
+        [1] = { tag = "revenge", spellid = 30357, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [3] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 80, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+      },
+    }
+  else
+    rf2_spell_list = {
+      buffs = {
+        [1] = { tag = "battle", spellid = 2048, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[2] = { tag = "commanding", spellid = 469, size = 32, fontsize = 24, posx = 40, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+      },
+      debuffs = {
+        [1] = { tag = "demo", spellid = 25203, size = 32, fontsize = 24, posx = 0, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "sunder", spellid = 25225, size = 32, fontsize = 24, posx = 40, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[3] = { tag = "clap", spellid = 25264, size = 32, fontsize = 24, posx = 80, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[4] = { tag = "scorpid", spellid = 3043, size = 32, fontsize = 24, posx = 120, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+      },
+      cooldowns = {
+        [1] = { tag = "revenge", spellid = 30357, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[2] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[3] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 80, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+      },
+    }    
+  end
   
   -----------------------------------------------------
   -- DO NOT TOUCH ANYTHING BELOW THIS LINE !!!

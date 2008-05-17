@@ -33,11 +33,15 @@
   local _G = getfenv(0)
   local rf2_player_name, _ = UnitName("player")
   local _, rf2_player_class = UnitClass("player")
-
+  
   -----------------------------------------------------
   -- EDIT YOUR BUFFS/DEBUFFS IN HERE
   -- IMPORTANT, TAGS HAVE TO BE UNIQUE!!!
   -----------------------------------------------------
+
+  -- to enable the icons OOC, put this to 1 while moving the icons and to 0 when ready
+  -- 0 = off // 1 = on
+  local testmode = 1
 
   --DEFAULT_CHAT_FRAME:AddMessage("found "..rf2_player_name.." : "..rf2_player_class)
   
@@ -64,17 +68,25 @@
       buffs = {
         [1] = { tag = "battle", spellid = 2048, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
         [2] = { tag = "commanding", spellid = 469, size = 32, fontsize = 24, posx = 40, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [3] = { tag = "block", spellid = 2565, size = 32, fontsize = 24, posx = 80, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [4] = { tag = "rampage", spellid = 30033, size = 32, fontsize = 24, posx = 120, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [5] = { tag = "berserker", spellid = 18499, size = 32, fontsize = 24, posx = 160, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       debuffs = {
-        [1] = { tag = "demo", spellid = 25203, size = 32, fontsize = 24, posx = 0, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [2] = { tag = "sunder", spellid = 25225, size = 32, fontsize = 24, posx = 40, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [1] = { tag = "sunder", spellid = 25225, size = 32, fontsize = 24, posx = 0, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "demo", spellid = 25203, size = 32, fontsize = 24, posx = 40, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
         [3] = { tag = "clap", spellid = 25264, size = 32, fontsize = 24, posx = 80, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
         [4] = { tag = "scorpid", spellid = 3043, size = 32, fontsize = 24, posx = 120, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [5] = { tag = "fearie", spellid = 26993, size = 32, fontsize = 24, posx = 160, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [6] = { tag = "fearieferal", spellid = 27011, size = 32, fontsize = 24, posx = 160, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [7] = { tag = "curseofreck", spellid = 27226, size = 32, fontsize = 24, posx = 200, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [8] = { tag = "curseoftong", spellid = 11719, size = 32, fontsize = 24, posx = 240, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       cooldowns = {
-        [1] = { tag = "revenge", spellid = 30357, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [2] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [3] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 80, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[1] = { tag = "revenge", spellid = 30357, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[2] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [1] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "berserkercool", spellid = 18499, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
     }   
   else
@@ -191,7 +203,11 @@
     num:Show()
     --position the frame
     f:SetPoint("CENTER",posX,posY)
-    f:Hide()
+    if testmode == 1 then
+      f:Show()
+    else
+      f:Hide()
+    end
   end
   
   

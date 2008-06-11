@@ -45,11 +45,13 @@
   
   --alpha when buff/debuff/cd not active
   --values between 0 and one are allowed
-  local alpha_when_not_active = 0
+  local alpha_when_not_active = 0.5
+  
+  local alpha_when_in_combat = 1
   
   --make icon grey when buff noch active
   --0 = off // 1 = on
-  local use_grey_vertex = 0
+  local use_grey_vertex = 1
 
   --DEFAULT_CHAT_FRAME:AddMessage("found "..rf2_player_name.." : "..rf2_player_class)
   
@@ -208,6 +210,10 @@
     local f = _G["rf2_"..frameTag]
     f:SetAlpha(alpha_when_not_active)
     
+    if UnitAffectingCombat("player") == 1 then
+      f:SetAlpha(alpha_when_in_combat)
+    end
+    
     local f2 = _G["rf2_"..frameTag.."_time"]
     local f3 = _G["rf2_"..frameTag.."_num"]
     f2:SetText("")
@@ -216,7 +222,7 @@
     local f4 = _G["rf2_"..frameTag.."_icon"]
     if use_grey_vertex == 1
     then
-      f4:SetVertexColor(0.2,0.2,0.2)
+      local shaderSupported = f4:SetDesaturated(1)
     end
     
     for i = 1, 40 do
@@ -240,7 +246,7 @@
         
         if use_grey_vertex == 1
         then
-          f4:SetVertexColor(1,1,1)
+          local shaderSupported = f4:SetDesaturated(nil)
         end
         
       end
@@ -260,6 +266,10 @@
 
     local f = _G["rf2_"..frameTag]
     f:SetAlpha(alpha_when_not_active)
+    
+    if UnitAffectingCombat("player") == 1 then
+      f:SetAlpha(alpha_when_in_combat)
+    end
 
     local f2 = _G["rf2_"..frameTag.."_time"]
     local f3 = _G["rf2_"..frameTag.."_num"]
@@ -269,7 +279,7 @@
     local f4 = _G["rf2_"..frameTag.."_icon"]
     if use_grey_vertex == 1
     then
-      f4:SetVertexColor(0.2,0.2,0.2)
+      local shaderSupported = f4:SetDesaturated(1)
     end
 
     for i = 1, 40 do
@@ -293,7 +303,7 @@
         
         if use_grey_vertex == 1
         then
-          f4:SetVertexColor(1,1,1)
+          local shaderSupported = f4:SetDesaturated(nil)
         end
         
       end

@@ -58,14 +58,14 @@
   if rf2_player_name == "Grombur" and rf2_player_class == "HUNTER" then
     rf2_spell_list = {
       buffs = {
-        [1] = { tag = "battle", spellid = 2048, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [2] = { tag = "commanding", spellid = 469, size = 32, fontsize = 24, posx = 40, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [1] = { tag = "battle", spellid = 2048, unit = "player", size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "commanding", spellid = 469, unit = "player", size = 32, fontsize = 24, posx = 40, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       debuffs = {
-        [1] = { tag = "demo", spellid = 25203, size = 32, fontsize = 24, posx = 0, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [2] = { tag = "sunder", spellid = 25225, size = 32, fontsize = 24, posx = 40, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [3] = { tag = "clap", spellid = 25264, size = 32, fontsize = 24, posx = 80, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [4] = { tag = "scorpid", spellid = 3043, size = 32, fontsize = 24, posx = 120, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [1] = { tag = "demo", spellid = 25203, unit = "target", size = 32, fontsize = 24, posx = 0, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "sunder", spellid = 25225, unit = "target", size = 32, fontsize = 24, posx = 40, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [3] = { tag = "clap", spellid = 25264, unit = "target", size = 32, fontsize = 24, posx = 80, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [4] = { tag = "scorpid", spellid = 3043, unit = "target", size = 32, fontsize = 24, posx = 120, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       cooldowns = {
         [1] = { tag = "wrath", spellid = 19574, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
@@ -76,20 +76,20 @@
   elseif rf2_player_name == "Rothar" and rf2_player_class == "WARRIOR" then
     rf2_spell_list = {
       buffs = {
-        [1] = { tag = "commanding", spellid = 469, size = 20, fontsize = 16, posx = -371, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [2] = { tag = "battle", spellid = 2048, size = 20, fontsize = 16, posx = -343, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [1] = { tag = "commanding", spellid = 469,  unit = "player", size = 20, fontsize = 16, posx = -371, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "battle",     spellid = 2048, unit = "player", size = 20, fontsize = 16, posx = -343, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[3] = { tag = "block", spellid = 2565, size = 20, fontsize = 15, posx = 30, posy = -260, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[3] = { tag = "rampage", spellid = 30033, size = 18, fontsize = 14, posx = -25, posy = -260, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[3] = { tag = "berserker", spellid = 18499, size = 32, fontsize = 24, posx = 160, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[5] = { tag = "block", spellid = 2565, size = 32, fontsize = 24, posx = 80, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       debuffs = {
-        [1] = { tag = "sunder", spellid = 25225, size = 20, fontsize = 16, posx = -300, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [2] = { tag = "demo", spellid = 25203, size = 20, fontsize = 16, posx = -272, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [3] = { tag = "clap", spellid = 25264, size = 20, fontsize = 16, posx = -244, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [4] = { tag = "scorpid", spellid = 3043, size = 18, fontsize = 16, posx = -216, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [5] = { tag = "fearie", spellid = 26993, size = 18, fontsize = 16, posx = -188, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [6] = { tag = "fearieferal", spellid = 27011, size = 18, fontsize = 16, posx = -188, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [1] = { tag = "sunder",       spellid = 25225,  unit = "target", size = 20, fontsize = 16, posx = -300, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "demo",         spellid = 25203,  unit = "target", size = 20, fontsize = 16, posx = -272, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [3] = { tag = "clap",         spellid = 25264,  unit = "target", size = 20, fontsize = 16, posx = -244, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [4] = { tag = "scorpid",      spellid = 3043,   unit = "target", size = 18, fontsize = 16, posx = -216, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [5] = { tag = "fearie",       spellid = 26993,  unit = "target", size = 20, fontsize = 16, posx = -188, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [6] = { tag = "fearieferal",  spellid = 27011,  unit = "target", size = 20, fontsize = 16, posx = -188, posy = -180, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[7] = { tag = "curseofreck", spellid = 27226, size = 18, fontsize = 14, posx = 50, posy = -230, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[8] = { tag = "curseoftong", spellid = 11719, size = 18, fontsize = 14, posx = 75, posy = -230, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
@@ -187,11 +187,11 @@
         totalElapsed = totalElapsed - floor(totalElapsed)
         for index,value in ipairs(rf2_spell_list.buffs) do 
           local string = rf2_spell_list.buffs[index]
-          addon:rf2_check_buff(string.tag,string.spellid)
+          addon:rf2_check_buff(string.tag,string.spellid,string.unit)
         end
         for index,value in ipairs(rf2_spell_list.debuffs) do 
           local string = rf2_spell_list.debuffs[index]
-          addon:rf2_check_debuff(string.tag,string.spellid)
+          addon:rf2_check_debuff(string.tag,string.spellid,string.unit)
         end
         for index,value in ipairs(rf2_spell_list.cooldowns) do 
           local string = rf2_spell_list.cooldowns[index]
@@ -204,8 +204,12 @@
   end
   
  
-  function addon:rf2_check_buff(frameTag,spellId)
+  function addon:rf2_check_buff(frameTag,spellId,unit)
     local spellName, spellRank, SpellIcon, SpellCost, spellIsFunnel, spellPowerType, spellCastTime, spellMinRange, spellMaxRange = GetSpellInfo(spellId)
+    
+    if unit = nil then
+      unit = "player"
+    end
     
     local f = _G["rf2_"..frameTag]
     f:SetAlpha(alpha_when_not_active)
@@ -226,7 +230,7 @@
     end
     
     for i = 1, 40 do
-      local name, rank, texture, applications, duration, timeleft = UnitBuff("player", i)
+      local name, rank, texture, applications, duration, timeleft = UnitBuff(unit, i)
       if name == spellName then
         local floortime = ""
         if timeleft ~= nil then
@@ -261,8 +265,12 @@
     
   end
   
-  function addon:rf2_check_debuff(frameTag,spellId)
+  function addon:rf2_check_debuff(frameTag,spellId,unit)
     local spellName, spellRank, SpellIcon, SpellCost, spellIsFunnel, spellPowerType, spellCastTime, spellMinRange, spellMaxRange = GetSpellInfo(spellId)
+
+    if unit = nil then
+      unit = "target"
+    end
 
     local f = _G["rf2_"..frameTag]
     f:SetAlpha(alpha_when_not_active)
@@ -283,7 +291,7 @@
     end
 
     for i = 1, 40 do
-      local name, _, texture, applications, debufftype, duration, timeleft = UnitDebuff("target", i)
+      local name, _, texture, applications, debufftype, duration, timeleft = UnitDebuff(unit, i)
       if name == spellName then
         local floortime = ""
         if timeleft ~= nil then

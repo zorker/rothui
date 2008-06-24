@@ -41,13 +41,13 @@
 
   -- to enable the icons OOC, put this to 1 while moving the icons and to 0 when ready
   -- 0 = off // 1 = on
-  local testmode = 1
+  local testmode = 0
   
   --alpha when buff/debuff/cd not active
   --values between 0 and one are allowed
-  local alpha_when_not_active = 0.5
+  local alpha_when_not_active = 0
   
-  local alpha_when_in_combat = 1
+  local alpha_when_in_combat = 0.3
   
   --make icon grey when buff noch active
   --0 = off // 1 = on
@@ -207,7 +207,7 @@
   function addon:rf2_check_buff(frameTag,spellId,unit)
     local spellName, spellRank, SpellIcon, SpellCost, spellIsFunnel, spellPowerType, spellCastTime, spellMinRange, spellMaxRange = GetSpellInfo(spellId)
     
-    if unit = nil then
+    if unit == nil then
       unit = "player"
     end
     
@@ -268,7 +268,7 @@
   function addon:rf2_check_debuff(frameTag,spellId,unit)
     local spellName, spellRank, SpellIcon, SpellCost, spellIsFunnel, spellPowerType, spellCastTime, spellMinRange, spellMaxRange = GetSpellInfo(spellId)
 
-    if unit = nil then
+    if unit == nil then
       unit = "target"
     end
 

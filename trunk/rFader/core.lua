@@ -26,7 +26,7 @@ hide:SetScript("OnEvent", function ()
 
   if event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_ENTERING_WORLD" then
 
-    rUnits_Player:SetAlpha(0.3)
+    rUnits_Player:SetAlpha(0)
     rUnits_Target:SetAlpha(0.3)
     rUnits_ToT:SetAlpha(0.3)
 
@@ -98,7 +98,7 @@ end)
   
   function hide:create_d3mapframe()
     local f = CreateFrame("Frame",nil,UIParent)
-    f:SetFrameStrata("DIALOG")
+    f:SetFrameStrata("LOW")
     f:SetWidth(360)
     f:SetHeight(180)
     
@@ -108,7 +108,7 @@ end)
     t:SetAllPoints(f)
     f.texture = t
     
-    f:SetPoint("TOPRIGHT",83,0)
+    f:SetPoint("TOPRIGHT",78,-5)
     f:Show()
   end
   

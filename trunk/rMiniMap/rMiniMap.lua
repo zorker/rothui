@@ -1,5 +1,5 @@
 
-  function GetMinimapShape() return "SQUARE" end
+  --function GetMinimapShape() return "CIRCLE" end
   local addon = CreateFrame"Frame"
   
   local frames = {
@@ -29,8 +29,8 @@
         end
       end)
       
-      Minimap:SetPoint("Top",0,-15)
-      Minimap:SetPoint("Right",-15,0)
+      Minimap:ClearAllPoints()
+      Minimap:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -30, -10)
 
       MiniMapTrackingBorder:Hide()
       MiniMapTrackingBackground:Hide()
@@ -44,13 +44,13 @@
       MiniMapBattlefieldFrame:ClearAllPoints()
       MiniMapBattlefieldFrame:SetPoint("TOPRIGHT", -2, -2)
       MiniMapMailFrame:UnregisterEvent"UPDATE_PENDING_MAIL"
-      Minimap:SetMaskTexture"Interface\\AddOns\\rMiniMap\\mask"
+      --Minimap:SetMaskTexture"Interface\\AddOns\\rMiniMap\\mask"
       Minimap:SetScale(1)
       
-      local t = Minimap:CreateTexture(nil,"Overlay")
-      t:SetTexture("Interface\\AddOns\\rTextures\\minigloss")
-      t:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -0, 0)
-      t:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 0, -0)
+      --local t = Minimap:CreateTexture(nil,"Overlay")
+      --t:SetTexture("Interface\\AddOns\\rTextures\\minigloss")
+      --t:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -1, 1)
+      --t:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 1, -1)
 
       for _, frame in pairs(frames) do
         frame:Hide()

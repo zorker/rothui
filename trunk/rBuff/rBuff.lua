@@ -42,10 +42,10 @@
     if(event=="PLAYER_LOGIN") then
       
       TemporaryEnchantFrame:ClearAllPoints()
-      TemporaryEnchantFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -15, 0)
+      TemporaryEnchantFrame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -190, -15)
       TemporaryEnchantFrame.SetPoint = function() end
       
-      --BuffFrame:SetScale(1)
+      BuffFrame:SetScale(0.95)
       
       TicketStatusFrame:Hide()
       TicketStatusFrame.Show = function() end

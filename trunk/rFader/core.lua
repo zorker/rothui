@@ -10,10 +10,18 @@ hide:SetScript("OnEvent", function ()
   if(event=="PLAYER_LOGIN") then
     --hide:create_trinketbarframe()
     --hide:create_actionbarframe()
+
     hide:create_angelframe()
     hide:create_demonframe()
     hide:create_d3mapframe()
+    
+    hide:create_topframe()
     hide:create_bottomframe()
+    hide:create_d3barframe()
+
+    --hide:create_testrechts()
+    --hide:create_testlinks()
+
   end 
 
   if event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_ENTERING_WORLD" then
@@ -59,8 +67,8 @@ end)
   function hide:create_angelframe()
     local f = CreateFrame("Frame",nil,UIParent)
     f:SetFrameStrata("TOOLTIP")
-    f:SetWidth(200)
-    f:SetHeight(200)
+    f:SetWidth(155)
+    f:SetHeight(155)
     
     local t = f:CreateTexture(nil,"BACKGROUND")
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_angel")
@@ -68,15 +76,15 @@ end)
     t:SetAllPoints(f)
     f.texture = t
     
-    f:SetPoint("BOTTOMRIGHT",0,0)
+    f:SetPoint("BOTTOM",275,0)
     f:Show()
   end
   
   function hide:create_demonframe()
     local f = CreateFrame("Frame",nil,UIParent)
     f:SetFrameStrata("TOOLTIP")
-    f:SetWidth(200)
-    f:SetHeight(200)
+    f:SetWidth(155)
+    f:SetHeight(155)
     
     local t = f:CreateTexture(nil,"HIGHLIGHT ")
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_demon")
@@ -84,15 +92,15 @@ end)
     t:SetAllPoints(f)
     f.texture = t
     
-    f:SetPoint("BOTTOM",-373,0)
+    f:SetPoint("BOTTOM",-280,0)
     f:Show()
   end
   
   function hide:create_d3mapframe()
     local f = CreateFrame("Frame",nil,UIParent)
     f:SetFrameStrata("DIALOG")
-    f:SetWidth(320)
-    f:SetHeight(320)
+    f:SetWidth(360)
+    f:SetHeight(180)
     
     local t = f:CreateTexture(nil,"BACKGROUND")
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_map")
@@ -100,15 +108,31 @@ end)
     t:SetAllPoints(f)
     f.texture = t
     
-    f:SetPoint("TOP",0,0)
+    f:SetPoint("TOPRIGHT",83,0)
+    f:Show()
+  end
+  
+  function hide:create_topframe()
+    local f = CreateFrame("Frame",nil,UIParent)
+    f:SetFrameStrata("BACKGROUND")
+    f:SetWidth(512)
+    f:SetHeight(64)
+    
+    local t = f:CreateTexture(nil,"BACKGROUND")
+    t:SetTexture("Interface\\AddOns\\rTextures\\d3_top")
+    --t:SetTexCoord(0.1,0.9,0.1,0.9)
+    t:SetAllPoints(f)
+    f.texture = t
+    
+    f:SetPoint("BOTTOM",0,54)
     f:Show()
   end
   
   function hide:create_bottomframe()
     local f = CreateFrame("Frame",nil,UIParent)
     f:SetFrameStrata("TOOLTIP")
-    f:SetWidth(512)
-    f:SetHeight(128)
+    f:SetWidth(450)
+    f:SetHeight(112)
     
     local t = f:CreateTexture(nil,"BACKGROUND")
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_bottom")
@@ -118,6 +142,57 @@ end)
     
     f:SetPoint("BOTTOM",0,0)
     f:Show()
+  end
+  
+  function hide:create_d3barframe()
+    local f = CreateFrame("Frame",nil,UIParent)
+    f:SetFrameStrata("BACKGROUND")
+    f:SetWidth(512)
+    f:SetHeight(256)
+    
+    local t = f:CreateTexture(nil,"BACKGROUND")
+    t:SetTexture("Interface\\AddOns\\rTextures\\d3_bar3")
+    --t:SetTexCoord(0.1,0.9,0.1,0.9)
+    t:SetAllPoints(f)
+    f.texture = t
+    
+    f:SetPoint("BOTTOM",0,14)
+    f:Show()
+  end
+  
+  function hide:create_testrechts()
+    local f = CreateFrame("Frame",nil,UIParent)
+    f:SetFrameStrata("TOOLTIP")
+    f:SetWidth(512)
+    f:SetHeight(128)
+    
+    local t = f:CreateTexture(nil,"BACKGROUND")
+    t:SetTexture("Interface\\AddOns\\rTextures\\testrechts")
+    --t:SetTexCoord(0.1,0.9,0.1,0.9)
+    t:SetAllPoints(f)
+    f.texture = t
+    
+    f:SetPoint("BOTTOM",256,0)
+    f:Show()
+    f:SetAlpha(0.5)
+    
+  end
+  
+  function hide:create_testlinks()
+    local f = CreateFrame("Frame",nil,UIParent)
+    f:SetFrameStrata("TOOLTIP")
+    f:SetWidth(512)
+    f:SetHeight(128)
+    
+    local t = f:CreateTexture(nil,"BACKGROUND")
+    t:SetTexture("Interface\\AddOns\\rTextures\\testlinks")
+    --t:SetTexCoord(0.1,0.9,0.1,0.9)
+    t:SetAllPoints(f)
+    f.texture = t
+    
+    f:SetPoint("BOTTOM",-256,0)
+    f:Show()
+    f:SetAlpha(0.5)
   end
   
   function hide:create_trinketbarframe()

@@ -47,7 +47,7 @@
   --values between 0 and one are allowed
   local alpha_when_not_active = 0
   
-  local alpha_when_in_combat = 0.3
+  local alpha_when_in_combat = 0
   
   --make icon grey when buff noch active
   --0 = off // 1 = on
@@ -76,20 +76,20 @@
   elseif rf2_player_name == "Rothar" and rf2_player_class == "WARRIOR" then
     rf2_spell_list = {
       buffs = {
-        [1] = { tag = "commanding", spellid = 469,  unit = "player", size = 18, fontsize = 16, posx = -90, posy = -322, framestrata = "LOW", anchor = "UIParent"},
-        [2] = { tag = "battle",     spellid = 2048, unit = "player", size = 18, fontsize = 16, posx = -60, posy = -322, framestrata = "LOW", anchor = "UIParent"},
+        [1] = { tag = "commanding", spellid = 469,  unit = "player", size = 18, fontsize = 16, posx = -90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [2] = { tag = "battle",     spellid = 2048, unit = "player", size = 18, fontsize = 16, posx = -60, posy = -300, framestrata = "LOW", anchor = "UIParent"},
         --[3] = { tag = "block", spellid = 2565, size = 20, fontsize = 15, posx = 30, posy = -260, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[3] = { tag = "rampage", spellid = 30033, size = 18, fontsize = 14, posx = -25, posy = -260, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[3] = { tag = "berserker", spellid = 18499, size = 32, fontsize = 24, posx = 160, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[5] = { tag = "block", spellid = 2565, size = 32, fontsize = 24, posx = 80, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       debuffs = {
-        [1] = { tag = "sunder",       spellid = 25225,  unit = "target", size = 18, fontsize = 16, posx = -30, posy = -322, framestrata = "LOW", anchor = "UIParent"},
-        [2] = { tag = "demo",         spellid = 25203,  unit = "target", size = 18, fontsize = 16, posx = -0, posy = -322, framestrata = "LOW", anchor = "UIParent"},
-        [3] = { tag = "clap",         spellid = 25264,  unit = "target", size = 18, fontsize = 16, posx = 30, posy = -322, framestrata = "LOW", anchor = "UIParent"},
-        [4] = { tag = "scorpid",      spellid = 3043,   unit = "target", size = 18, fontsize = 16, posx = 60, posy = -322, framestrata = "LOW", anchor = "UIParent"},
-        [5] = { tag = "fearie",       spellid = 26993,  unit = "target", size = 18, fontsize = 16, posx = 90, posy = -322, framestrata = "LOW", anchor = "UIParent"},
-        [6] = { tag = "fearieferal",  spellid = 27011,  unit = "target", size = 18, fontsize = 16, posx = 90, posy = -322, framestrata = "LOW", anchor = "UIParent"},
+        [1] = { tag = "sunder",       spellid = 25225,  unit = "target", size = 18, fontsize = 16, posx = -30, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [2] = { tag = "demo",         spellid = 25203,  unit = "target", size = 18, fontsize = 16, posx = -0, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [3] = { tag = "clap",         spellid = 25264,  unit = "target", size = 18, fontsize = 16, posx = 30, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [4] = { tag = "scorpid",      spellid = 3043,   unit = "target", size = 18, fontsize = 16, posx = 60, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [5] = { tag = "fearie",       spellid = 26993,  unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [6] = { tag = "fearieferal",  spellid = 27011,  unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
         --[7] = { tag = "curseofreck", spellid = 27226, size = 18, fontsize = 14, posx = 50, posy = -230, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[8] = { tag = "curseoftong", spellid = 11719, size = 18, fontsize = 14, posx = 75, posy = -230, framestrata = "BACKGROUND", anchor = "UIParent"},
       },

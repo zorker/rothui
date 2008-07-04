@@ -15,7 +15,7 @@ hide:SetScript("OnEvent", function ()
     hide:create_demonframe()
     hide:create_d3mapframe()
     
-    hide:create_topframe()
+    --hide:create_topframe()
     hide:create_bottomframe()
     hide:create_d3barframe()
 
@@ -26,7 +26,7 @@ hide:SetScript("OnEvent", function ()
 
   if event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_ENTERING_WORLD" then
 
-    rUnits_Player:SetAlpha(0)
+    rUnits_Player:SetAlpha(0.3)
     rUnits_Target:SetAlpha(0.3)
     rUnits_ToT:SetAlpha(0.3)
 
@@ -151,7 +151,7 @@ end)
     f:SetHeight(256)
     
     local t = f:CreateTexture(nil,"BACKGROUND")
-    t:SetTexture("Interface\\AddOns\\rTextures\\d3_bar3")
+    t:SetTexture("Interface\\AddOns\\rTextures\\d3_bar4")
     --t:SetTexCoord(0.1,0.9,0.1,0.9)
     t:SetAllPoints(f)
     f.texture = t

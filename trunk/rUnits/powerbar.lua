@@ -77,7 +77,13 @@
   	
   	if UnitIsPlayer(unit) then
   	  local color = UnitIsPlayer(unit) and RAID_CLASS_COLORS[select(2, UnitClass(unit))]
-  	  bar.value:SetTextColor(color.r, color.g, color.b) 
+  	  if color then 
+  	    bar.value:SetTextColor(color.r, color.g, color.b) 
+  	  end
+  	end
+  	
+  	if(unit == "player") then
+  	  bar.value:SetTextColor(1,1,1) 
   	end
     
   	if(min < 0) then
@@ -90,7 +96,7 @@
   		bar.value:SetText()
   	elseif(unit == "player") then
       local c = max - min
-      bar.value:SetText(min.." . ")
+      bar.value:SetText(min)
     else
   		local c = max - min
   		if(c > 0) then

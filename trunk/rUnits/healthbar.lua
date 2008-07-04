@@ -52,13 +52,17 @@
   
   	min, max = UnitHealth(unit), UnitHealthMax(unit)
   	
+  	local GetPetHappiness = GetPetHappiness
+  	local happiness = rUnits.colors.happiness
+  	
   	bar = self.Health
   
   	bar:SetMinMaxValues(0, max)
   	bar:SetValue(min)
   
     if(unit == "pet" and GetPetHappiness()) then
-			color = happiness[GetPetHappiness()]
+			--color = happiness[GetPetHappiness()]
+			color = health[2]
 		elseif(UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) or not UnitIsConnected(unit)) then
 			color = health[1]
 		else
@@ -70,7 +74,12 @@
 
 			if(bar.bg) then
 				--bar.bg:SetVertexColor(color.r*.5, color.g*.5, color.b*.5)
-				bar.bg:SetVertexColor(1,1,1,0.3)
+				color = UnitIsPlayer(unit) and RAID_CLASS_COLORS[select(2, UnitClass(unit))] or UnitReactionColor[UnitReaction(unit, "player")]
+				if color then 
+				  bar.bg:SetVertexColor(color.r, color.g, color.b,0.9)
+				else
+				  bar.bg:SetVertexColor(1,1,1,0.3)
+				end
 			end
 		end
 		
@@ -88,18 +97,25 @@
   	
   	if UnitIsPlayer(unit) then
   	  local color = UnitIsPlayer(unit) and RAID_CLASS_COLORS[select(2, UnitClass(unit))]
-  	  bar.value:SetTextColor(color.r, color.g, color.b) 
+  	  if color then bar.value:SetTextColor(color.r, color.g, color.b) end
+  	end
+  	
+  	if(unit == "player") then
+  	  bar.value:SetTextColor(1,1,1) 
   	end
   	
   	if(UnitIsDead(unit)) then
   		bar.value:SetText"Dead"
   		bar.value:SetTextColor(0.6, 0.6, 0.6)
+  		bar.bg:SetVertexColor(1,1,1,0.3)
   	elseif(UnitIsGhost(unit)) then
   		bar.value:SetText"Ghost"
   		bar.value:SetTextColor(0.6, 0.6, 0.6)
+  		bar.bg:SetVertexColor(1,1,1,0.3)
   	elseif(not UnitIsConnected(unit)) then
   		bar.value:SetText"Offline"
   		bar.value:SetTextColor(0.6, 0.6, 0.6)
+  		bar.bg:SetVertexColor(1,1,1,0.3)
   	elseif(UnitIsEnemy("player",unit)) then
   		if(c > 0) then
   			bar.value:SetText(max-c.."%")
@@ -113,7 +129,7 @@
   			bar.value:SetText(max)
   		end
   	elseif(UnitIsPlayer(unit)) then
- 	    bar.value:SetText(min.." . "..d.."%")
+ 	    bar.value:SetText(min.." . "..max.." . "..d.."%")
   	else
       bar.value:SetText(d.."%")
   	end

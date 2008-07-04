@@ -89,10 +89,10 @@
   	
   	if(debuff) then
   		--button.overlay = texture
-  		texture:SetVertexColor(0,0,0)
+  		texture:SetVertexColor(1,1,1)
   		button:SetScript("OnEnter", debuffOnEnter)
   	else
-  		texture:SetVertexColor(0,0,0)
+  		texture:SetVertexColor(1,1,1)
   		button:SetScript("OnEnter", buffOnEnter)
   	end
   	button:SetScript("OnLeave", onLeave)

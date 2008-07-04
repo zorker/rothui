@@ -42,7 +42,7 @@
     if(event=="PLAYER_LOGIN") then
       
       TemporaryEnchantFrame:ClearAllPoints()
-      TemporaryEnchantFrame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -190, -15)
+      TemporaryEnchantFrame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -190, -20)
       TemporaryEnchantFrame.SetPoint = function() end
       
       BuffFrame:SetScale(0.95)

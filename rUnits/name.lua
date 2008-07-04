@@ -38,12 +38,12 @@
   	local name = UnitName(unit)
     local lvl = UnitLevel(unit)
   	
-    self.Name:SetTextColor(0.6, 0.6, 0.6)
+    self.Name:SetTextColor(1,1,1)
   
-    if UnitReactionColor[UnitReaction(unit, "player")] then
-      local color = UnitReactionColor[UnitReaction(unit, "player")]
-      self.Name:SetTextColor(color.r, color.g, color.b)
-    end
+    --if UnitReactionColor[UnitReaction(unit, "player")] then
+    --  local color = UnitReactionColor[UnitReaction(unit, "player")]
+    --  self.Name:SetTextColor(color.r, color.g, color.b)
+    --end
   
   	--if(UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) or not UnitIsConnected(unit)) then
     --self.Name:SetTextColor(.5, .5, .5)	
@@ -52,6 +52,11 @@
   	if UnitIsPlayer(unit) then
   	  local color = UnitIsPlayer(unit) and RAID_CLASS_COLORS[select(2, UnitClass(unit))]
   	  self.Name:SetTextColor(color.r, color.g, color.b) 
+  	end
+  	
+  	if(unit == "player") then
+  	  self.Name:SetTextColor(1,1,1) 
+  	  self.Name:Hide()
   	end
       
     if(unit == "target") then

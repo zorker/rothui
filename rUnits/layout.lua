@@ -100,6 +100,7 @@
     name:SetPoint("RIGHT", ppp, "LEFT")
     name:SetJustifyH"LEFT"
     name:SetFontObject(GameFontHighlight)
+    
     name.func = updateName
     name.value = hp
     self.Name = name
@@ -133,7 +134,8 @@
       hp:SetHeight(18)
       pp:SetHeight(4)
       ppp:Hide()
-      --hpp:Hide()
+      hpp:Hide()
+      name:SetPoint("RIGHT", hp, "RIGHT")
       
     end
   
@@ -153,22 +155,29 @@
       pp:SetHeight(4)
       pp:Hide()
       ppp:Hide()
-      ppp:Hide()
       hpp:Hide()
       name:SetPoint("RIGHT", hp, "RIGHT")
   
     end
   
     if(unit and unit == "targettarget") then
-      self.numDebuffs = 0
       
-      self:SetWidth(100)
+      self:SetWidth(120)
       self:SetHeight(23)
       hp:SetHeight(18)
       pp:SetHeight(4)
       ppp:Hide()
       hpp:Hide()
       name:SetPoint("RIGHT", hp, "RIGHT")
+  
+      self.numDebuffs = 3
+      
+      local debuffs = CreateFrame("Frame", nil, self)
+      debuffs:SetHeight(self:GetHeight())
+      debuffs:SetWidth(30)
+      debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT", -5, -5)
+      debuffs.size = 20
+      self.Debuffs = debuffs
   
       --[[
       local debuffs = CreateFrame("Frame", nil, self)
@@ -191,25 +200,31 @@
       pp:SetHeight(4)
       
       --ppp:Show()
+
+      hpp:SetPoint("LEFT", hp, "LEFT", 3, 0)
+      hpp:SetJustifyH"LEFT"
       
-      --ppp:SetPoint("LEFT", hp, "LEFT", 3, 0)
-      --ppp:SetJustifyH"LEFT"
+      ppp:SetPoint("RIGHT", hp, "RIGHT", -3, 0)
+      ppp:SetJustifyH"RIGHT"
       
-      self.numDebuffs = 40
+      self.numDebuffs = 5
       
       local debuffs = CreateFrame("Frame", nil, self)
       debuffs:SetHeight(self:GetHeight())
       debuffs:SetWidth(30)
       debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT", -5, -5)
-      debuffs.size = 20
+      --debuffs:SetPoint("BOTTOMLEFT", self, "TOPLEFT", -5, 12)
+      debuffs.size = 30
       self.Debuffs = debuffs
       
+      --[[
       local buffs = CreateFrame("Frame", nil, self)
       buffs:SetHeight(self:GetHeight())
       buffs:SetWidth(30)
       buffs:SetPoint("BOTTOMLEFT", self, "TOPLEFT", -5, 5)
       buffs.size = 20
       self.Buffs = buffs
+      ]]--
       
       
     end
@@ -217,7 +232,7 @@
     if(unit and unit == "pet") then
       self.numDebuffs = 0
       
-      self:SetWidth(100)
+      self:SetWidth(120)
       self:SetHeight(23)
       hp:SetHeight(18)
       pp:SetHeight(4)
@@ -236,6 +251,7 @@
     
     if(unit and unit == "target") then
       self.numDebuffs = 40
+      self.numBuffs = 10
       
       self:SetWidth(223)
       self:SetHeight(23)
@@ -243,12 +259,14 @@
       pp:SetHeight(4)
       ppp:Hide()
     
+      
       local debuffs = CreateFrame("Frame", nil, self)
       debuffs:SetHeight(self:GetHeight())
       debuffs:SetWidth(30)
       debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT", -5, -5)
       debuffs.size = 20
       self.Debuffs = debuffs
+      --[[]]--
       
       local buffs = CreateFrame("Frame", nil, self)
       buffs:SetHeight(self:GetHeight())
@@ -257,19 +275,19 @@
       buffs.size = 20
       self.Buffs = buffs
   
-      --[[
+      
       local cpoints = self:CreateFontString(nil, "OVERLAY")
-      cpoints:SetPoint("RIGHT", self, "LEFT", -9, 1)
+      cpoints:SetPoint("LEFT", self, "RIGHT", 5, 1)
       cpoints:SetFont(DAMAGE_TEXT_FONT, 38)
       cpoints:SetTextColor(1, 1, 1)
-      cpoints:SetJustifyH"RIGHT"
+      cpoints:SetJustifyH"LEFT"
       self.CPoints = cpoints
-      ]]--
+      --[[]]--
     end
       
       if(unit and unit == "focus") then
       
-      self:SetWidth(100)
+      self:SetWidth(120)
       self:SetHeight(23)
       hp:SetHeight(18)
       pp:SetHeight(4)
@@ -313,18 +331,27 @@
   local pet     = rUnits:Spawn"pet"
   local focus   = rUnits:Spawn"focus"
   local party   = rUnits:Spawn"party"
-  local raid    = rUnits:Spawn"raid"
+  --local raid    = rUnits:Spawn"raid"
   
-  player:SetPoint("CENTER", -230, -150)
-  target:SetPoint("LEFT", player, "RIGHT", 240, 0)
+  player:SetPoint("TOPLEFT", 40, -40)
+  --target:SetPoint("LEFT", player, "RIGHT", 270, 0)
+  target:SetPoint("TOP", 0, -40)
   tot:SetPoint("RIGHT", target, "LEFT", -10, 0)
   pet:SetPoint("LEFT", player, "RIGHT", 10, 0)
   focus:SetPoint("LEFT", player, "RIGHT", 10, 0)
-  party:SetPoint("TOPLEFT", 15, -15)
-  raid:SetPoint("TOPLEFT", 15, -15)
+  party:SetPoint("TOPLEFT", 10, -10)
+  --raid:SetPoint("TOPLEFT", 10, -10)
   
+
   local temptoggle = CreateFrame"Frame"
   temptoggle:SetScript("OnEvent", function(self, event, ...)
+
+  if GetNumRaidMembers() > 1 then
+    party:Hide()
+  else
+    party:Show()
+  end
+  --[[
       if GetNumRaidMembers() > 1 then
           if GetNumRaidMembers() > 30 then
               raid:Hide()
@@ -336,8 +363,10 @@
       elseif GetNumPartyMembers() > 1  then
           party:Show()
       end
+  ]]--
   end)
   temptoggle:RegisterEvent"PARTY_MEMBERS_CHANGED"
   temptoggle:RegisterEvent"PARTY_LEADER_CHANGED"
   temptoggle:RegisterEvent"RAID_ROSTER_UPDATE"
   temptoggle:RegisterEvent"PLAYER_LOGIN"
+  

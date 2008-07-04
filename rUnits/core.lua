@@ -51,7 +51,7 @@
   	health = {
   		[0] = {r = 49/255, g = 207/255, b = 37/255}, -- Health
   		[1] = {r = .6, g = .6, b = .6}, -- Tapped targets
-  		[2] = {r = .15, g = .15, b = .15} -- back bar
+  		[2] = {r = .1, g = .1, b = .1} -- black bar
   	},
   	happiness = {
   		[1] = {r = 1, g = 0, b = 0}, -- need.... | unhappy

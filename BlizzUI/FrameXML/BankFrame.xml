@@ -2,9 +2,12 @@
 ..\FrameXML\UI.xsd">
     <Script file="BankFrame.lua"/>
 	<Button name="BankItemButtonGenericTemplate" inherits="ItemButtonTemplate" virtual="true">
+		<Frames>
+			<Cooldown name="$parentCooldown" inherits="CooldownFrameTemplate"/>
+		</Frames>
 		<Scripts>
 			<OnLoad>
-				BankFrameItemButton_OnLoad();
+				BankFrameItemButton_OnLoad(self);
 			</OnLoad>
 			<OnEnter>
 				BankFrameItemButton_OnEnter(self);
@@ -15,23 +18,33 @@
 			</OnLeave>
 			<OnClick>
 				if ( IsModifiedClick() ) then
-					BankFrameItemButtonGeneric_OnModifiedClick(arg1);
+					BankFrameItemButtonGeneric_OnModifiedClick(self, button);
 				else
-					BankFrameItemButtonGeneric_OnClick(arg1);
+					BankFrameItemButtonGeneric_OnClick(self, button);
 				end
 			</OnClick>
             <OnDragStart>
-                BankFrameItemButtonGeneric_OnClick("LeftButton");
+                BankFrameItemButtonGeneric_OnClick(self, "LeftButton");
             </OnDragStart>
             <OnReceiveDrag>
-                BankFrameItemButtonGeneric_OnClick("LeftButton");
+                BankFrameItemButtonGeneric_OnClick(self, "LeftButton");
             </OnReceiveDrag>
 		</Scripts>
 	</Button>
 	<Button name="BankItemButtonBagTemplate" inherits="ItemButtonTemplate" virtual="true">
+		<Frames>
+			<Cooldown name="$parentCooldown" inherits="CooldownFrameTemplate"/>
+			<Frame name="$parentHighlightFrame" setAllPoints="true">
+				<Layers>
+					<Layer>
+						<Texture name="$parentTexture" alphaMode="ADD" file="Interface\Buttons\CheckButtonHilight" setAllPoints="true" hidden="true"/>
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
 		<Scripts>
 			<OnLoad>
-				BankFrameBagButton_OnLoad();
+				BankFrameBagButton_OnLoad(self);
 			</OnLoad>
 			<OnEnter>
 				BankFrameItemButton_OnEnter(self);
@@ -42,27 +55,18 @@
 			</OnLeave>
 			<OnClick>
 				if ( IsModifiedClick("PICKUPACTION") ) then
-					BankFrameItemButtonBag_Pickup();
+					BankFrameItemButtonBag_Pickup(self);
 				else
-					BankFrameItemButtonBag_OnClick(arg1);
+					BankFrameItemButtonBag_OnClick(self, button);
 				end
 			</OnClick>
 	        <OnDragStart>
-				BankFrameItemButtonBag_Pickup();
+				BankFrameItemButtonBag_Pickup(self);
 			</OnDragStart>
 	        <OnReceiveDrag>
-	            BankFrameItemButtonBag_OnClick();
+	            BankFrameItemButtonBag_OnClick(self);
 	        </OnReceiveDrag>
 		</Scripts>
-		<Frames>
-			<Frame name="$parentHighlightFrame" setAllPoints="true">
-				<Layers>
-					<Layer>
-						<Texture name="$parentTexture" alphaMode="ADD" file="Interface\Buttons\CheckButtonHilight" setAllPoints="true" hidden="true"/>									
-					</Layer>
-				</Layers>
-			</Frame>
-		</Frames>
 	</Button>
 
 
@@ -528,8 +532,8 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								SmallMoneyFrame_OnLoad();
-								MoneyFrame_SetType("STATIC");
+								SmallMoneyFrame_OnLoad(self);
+								MoneyFrame_SetType(self, "STATIC");
 							</OnLoad>
 						</Scripts>
 					</Frame>
@@ -547,16 +551,16 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				BankFrame_OnLoad();
+				BankFrame_OnLoad(self);
 			</OnLoad>
 			<OnEvent>
-				BankFrame_OnEvent(event);
+				BankFrame_OnEvent(self, event, ...);
 			</OnEvent>
 			<OnShow>
-				BankFrame_OnShow();
+				BankFrame_OnShow(self);
 			</OnShow>
 			<OnHide>
-				BankFrame_OnHide();
+				BankFrame_OnHide(self);
 			</OnHide>
 		</Scripts>
 	</Frame>

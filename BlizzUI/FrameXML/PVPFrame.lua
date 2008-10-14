@@ -1,23 +1,24 @@
 MAX_ARENA_TEAMS = 3;
 MAX_ARENA_TEAM_MEMBERS = 10;
 
-function PVPFrame_OnLoad()
+function PVPFrame_OnLoad(self)
 	PVPFrameLine1:SetAlpha(0.3);
 	PVPHonorKillsLabel:SetVertexColor(0.6, 0.6, 0.6);
 	PVPHonorHonorLabel:SetVertexColor(0.6, 0.6, 0.6);
 	PVPHonorTodayLabel:SetVertexColor(0.6, 0.6, 0.6);
 	PVPHonorYesterdayLabel:SetVertexColor(0.6, 0.6, 0.6);
 	PVPHonorLifetimeLabel:SetVertexColor(0.6, 0.6, 0.6);
-	this:RegisterEvent("PLAYER_ENTERING_WORLD");
-	this:RegisterEvent("ARENA_TEAM_UPDATE");
-	this:RegisterEvent("ARENA_TEAM_ROSTER_UPDATE");
-	this:RegisterEvent("PLAYER_PVP_KILLS_CHANGED");
-	this:RegisterEvent("PLAYER_PVP_RANK_CHANGED");
-	this:RegisterEvent("HONOR_CURRENCY_UPDATE");
-	--this:RegisterEvent("ARENA_SEASON_WORLD_STATE");
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
+	self:RegisterEvent("ARENA_TEAM_UPDATE");
+	self:RegisterEvent("ARENA_TEAM_ROSTER_UPDATE");
+	self:RegisterEvent("PLAYER_PVP_KILLS_CHANGED");
+	self:RegisterEvent("PLAYER_PVP_RANK_CHANGED");
+	self:RegisterEvent("HONOR_CURRENCY_UPDATE");
+	--self:RegisterEvent("ARENA_SEASON_WORLD_STATE");
 end
 
-function PVPFrame_OnEvent(event, arg1)
+function PVPFrame_OnEvent(self, event, ...)
+	local arg1 = ...;
 	if ( event == "PLAYER_ENTERING_WORLD" ) then
 		-- PVPFrame.season = GetCurrentArenaSeason();
 		PVPFrame_Update();
@@ -60,6 +61,17 @@ end
 function PVPFrame_OnShow()
 	PVPFrame_SetFaction();
 	PVPFrame_Update();
+	PVPMicroButton_SetPushed();
+	UpdateMicroButtons();
+	SetPortraitTexture(PVPFramePortrait, "player");
+	PlaySound("igCharacterInfoOpen");
+end
+
+function PVPFrame_OnHide()
+	PVPTeamDetails:Hide();
+	PVPMicroButton_SetNormal();
+	UpdateMicroButtons();
+	PlaySound("igCharacterInfoClose");
 end
 
 function PVPFrame_SetFaction()
@@ -76,10 +88,12 @@ function PVPFrame_Update()
 	end	
 	PVPHonor_Update();
 	PVPTeam_Update();
-end
-
-function PVPFrame_OnHide()
-	PVPTeamDetails:Hide();
+	
+	if ( GetCurrentArenaSeason() == 0 ) then	--We're in an off-season.
+		PVPFrame_SetToOffSeason();
+	elseif ( PVPFrameOffSeason:IsShown() ) then
+		PVPFrame_SetToInSeason();
+	end
 end
 
 function PVPTeam_Update()
@@ -111,13 +125,13 @@ function PVPTeam_Update()
 
 	-- fill out data
 	for index, value in pairs(ARENA_TEAMS) do
+		buttonIndex = buttonIndex + 1;
+		button = getglobal("PVPTeam"..buttonIndex);
 		if ( value.index ) then
-			buttonIndex = buttonIndex + 1;
 			-- Pull Values
 			teamName, teamSize, teamRating, teamPlayed, teamWins,  seasonTeamPlayed, seasonTeamWins, playerPlayed, seasonPlayerPlayed, teamRank, playerRating, background.r, background.g, background.b, emblem, emblemColor.r, emblemColor.g, emblemColor.b, border, borderColor.r, borderColor.g, borderColor.b = GetArenaTeam(value.index);
 
 			-- Set button elements to variables 
-			button = getglobal("PVPTeam"..buttonIndex);
 			buttonName = "PVPTeam"..buttonIndex;
 			data = buttonName.."Data";
 			standard = buttonName.."Standard";
@@ -194,18 +208,8 @@ function PVPTeam_Update()
 			getglobal(buttonName.."Background"):SetVertexColor(0, 0, 0);
 			getglobal(buttonName.."Background"):SetAlpha(1);
 			getglobal(buttonName.."TeamType"):Hide();
-		end
-	end
-	for i=(buttonIndex+1), MAX_ARENA_TEAMS do
-		getglobal("PVPTeam"..i):SetID(0);
-	end
-
-	-- show unused teams
-	for index, value in pairs(ARENA_TEAMS) do
-		if ( not value.index ) then
+		else
 			-- Set button elements to variables 
-			buttonIndex = buttonIndex + 1;
-			button = getglobal("PVPTeam"..buttonIndex);
 			buttonName = "PVPTeam"..buttonIndex;
 			data = buttonName.."Data";
 
@@ -222,43 +226,37 @@ function PVPTeam_Update()
 			getglobal(buttonName.."StandardBorder"):Hide();
 			getglobal(buttonName.."StandardEmblem"):Hide();
 			getglobal(buttonName.."TeamType"):SetFormattedText(PVP_TEAMSIZE, value.size, value.size);
-			getglobal(buttonName.."TeamType"):Show();
+			getglobal(buttonName.."TeamType"):Show();		end
 			count = count +1;
-		end
 	end
 	if ( count == 3 ) then
 		PVPFrameToggleButton:Hide();
 	else
 		PVPFrameToggleButton:Show();
 	end
+
 end
 
-function PVPTeam_OnEnter()
-	local highlight = getglobal(this:GetName().."Highlight");
-	if ( GetArenaTeam(this:GetID() ) ) then
-		highlight:Show();
-		GameTooltip_AddNewbieTip(ARENA_TEAM, 1.0, 1.0, 1.0, CLICK_FOR_DETAILS, 1);
+function PVPTeam_OnEnter(self)
+	if ( GetArenaTeam(self:GetID() ) ) then
+		getglobal(self:GetName().."Highlight"):Show();
+		GameTooltip_AddNewbieTip(self, ARENA_TEAM, 1.0, 1.0, 1.0, CLICK_FOR_DETAILS, 1);
 	else
-		GameTooltip_AddNewbieTip(ARENA_TEAM, 1.0, 1.0, 1.0, ARENA_TEAM_LEAD_IN, 1);
+		GameTooltip_AddNewbieTip(self, ARENA_TEAM, 1.0, 1.0, 1.0, ARENA_TEAM_LEAD_IN, 1);
 	end		
 end
 
-function PVPTeam_OnLeave()
-	local highlight = getglobal(this:GetName().."Highlight");
-	highlight:Hide();	
+function PVPTeam_OnLeave(self)
+	getglobal(self:GetName().."Highlight"):Hide();	
 	GameTooltip:Hide();
 end
 
 function PVPTeamDetails_OnShow()
-	UIPanelWindows["CharacterFrame"].width = CharacterFrame:GetWidth() + PVPTeamDetails:GetWidth();
-	UpdateUIPanelPositions(CharacterFrame);
 	PlaySound("igSpellBookOpen");
 end
 
 function PVPTeamDetails_OnHide()
 	CloseArenaTeamRoster();
-	UIPanelWindows["CharacterFrame"].width = CharacterFrame:GetWidth();
-	UpdateUIPanelPositions();
 	PlaySound("igSpellBookClose");
 end
 
@@ -424,15 +422,14 @@ function PVPFrameToggleButton_OnClick()
 end
 						
 
-function PVPTeamDetailsButton_OnClick(button)
+function PVPTeamDetailsButton_OnClick(self, button)
 	if ( button == "LeftButton" ) then
 		PVPTeamDetails.previousSelectedTeamMember = PVPTeamDetails.selectedTeamMember;
-		PVPTeamDetails.selectedTeamMember = this.teamIndex;
+		PVPTeamDetails.selectedTeamMember = self.teamIndex;
 		SetArenaTeamRosterSelection(PVPTeamDetails.team, PVPTeamDetails.selectedTeamMember);
 		PVPTeamDetails_Update(PVPTeamDetails.team);
 	else
-		local teamIndex = this.teamIndex;
-		local name, rank, level, class, online = GetArenaTeamRosterInfo(PVPTeamDetails.team, teamIndex);
+		local name, rank, level, class, online = GetArenaTeamRosterInfo(PVPTeamDetails.team, self.teamIndex);
 		PVPFrame_ShowDropdown(name, online);
 	end
 end
@@ -461,11 +458,11 @@ function PVPFrame_ShowDropdown(name, online)
 	end
 end
 
-function PVPStandard_OnLoad()
-	this:SetAlpha(0.1);
+function PVPStandard_OnLoad(self)
+	self:SetAlpha(0.1);
 end
 
-function PVPTeam_OnClick(id)
+function PVPTeam_OnClick(self, id)
 	local teamName, teamSize = GetArenaTeam(id);
 	if ( not teamName ) then
 		return;
@@ -481,18 +478,16 @@ function PVPTeam_OnClick(id)
 	end
 end
 
-function PVPTeam_OnMouseDown()
-	if ( GetArenaTeam(this:GetID()) ) then
-		local button = getglobal(this:GetName());
-		local point, relativeTo, relativePoint, offsetX, offsetY = this:GetPoint();
-		button:SetPoint(point, relativeTo, relativePoint, offsetX-2, offsetY-2);
+function PVPTeam_OnMouseDown(self)
+	if ( GetArenaTeam(self:GetID()) ) then
+		local point, relativeTo, relativePoint, offsetX, offsetY = self:GetPoint();
+		self:SetPoint(point, relativeTo, relativePoint, offsetX-2, offsetY-2);
 	end
 end
-function PVPTeam_OnMouseUp()
-	if ( GetArenaTeam(this:GetID()) ) then
-		local button = getglobal(this:GetName());
-		local point, relativeTo, relativePoint, offsetX, offsetY = this:GetPoint();
-		button:SetPoint(point, relativeTo, relativePoint, offsetX+2, offsetY+2);
+function PVPTeam_OnMouseUp(self)
+	if ( GetArenaTeam(self:GetID()) ) then
+		local point, relativeTo, relativePoint, offsetX, offsetY = self:GetPoint();
+		self:SetPoint(point, relativeTo, relativePoint, offsetX+2, offsetY+2);
 	end
 end
 
@@ -516,4 +511,43 @@ function PVPHonor_Update()
 	PVPHonorTodayKills:SetText(hk);
 	PVPHonorTodayHonor:SetText(cp);
 	PVPHonorTodayHonor:SetHeight(14);
+end
+
+function PVPMicroButton_SetPushed()
+	PVPMicroButtonTexture:SetPoint("TOP", PVPMicroButton, "TOP", 5, -31);
+	PVPMicroButtonTexture:SetAlpha(0.5);
+end
+
+function PVPMicroButton_SetNormal()
+	PVPMicroButtonTexture:SetPoint("TOP", PVPMicroButton, "TOP", 6, -30);
+	PVPMicroButtonTexture:SetAlpha(1.0);
+end
+
+function PVPFrame_SetToOffSeason()
+	PVPTeam1:Hide();
+	PVPTeam1Standard:Hide();
+	PVPTeam2:Hide();
+	PVPTeam2Standard:Hide();
+	PVPTeam3:Hide();
+	PVPTeam3Standard:Hide();
+	
+	PVPFrameBlackFilter:Show();
+	
+	PVPFrameOffSeason:Show();
+	
+	local previousArenaSeason = GetPreviousArenaSeason();
+	PVPFrameOffSeasonText:SetText(format(ARENA_OFF_SEASON_TEXT, previousArenaSeason, previousArenaSeason+1));
+end
+
+function PVPFrame_SetToInSeason()
+	PVPTeam1:Show();
+	PVPTeam1Standard:Show();
+	PVPTeam2:Show();
+	PVPTeam2Standard:Show();
+	PVPTeam3:Show();
+	PVPTeam3Standard:Show();
+	
+	PVPFrameBlackFilter:Hide();
+	
+	PVPFrameOffSeason:Hide();
 end

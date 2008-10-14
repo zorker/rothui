@@ -433,38 +433,34 @@
 		AssistUnit("target");
 	</Binding>
 	<Binding name="NAMEPLATES">
-		if ( NAMEPLATES_ON and not FRIENDNAMEPLATES_ON) then
-			HideNameplates();
-			NAMEPLATES_ON = nil;
+		local SHOW_ENEMIES = GetCVarBool("nameplateShowEnemies");
+		local SHOW_FRIENDS = GetCVarBool("nameplateShowFriends");
+		if ( SHOW_ENEMIES and not SHOW_FRIENDS ) then
+			SetCVar("nameplateShowEnemies", 0);
 		else
-			ShowNameplates();
-			NAMEPLATES_ON = 1;
-			HideFriendNameplates();
-			FRIENDNAMEPLATES_ON = nil;
+			SetCVar("nameplateShowEnemies", 1);
+			SetCVar("nameplateShowFriends", 0);
 		end
 	</Binding>
 	<Binding name="FRIENDNAMEPLATES">
-		if ( FRIENDNAMEPLATES_ON and not NAMEPLATES_ON) then
-			HideFriendNameplates();
-			FRIENDNAMEPLATES_ON = nil;
+		local SHOW_ENEMIES = GetCVarBool("nameplateShowEnemies");
+		local SHOW_FRIENDS = GetCVarBool("nameplateShowFriends");
+		if ( SHOW_FRIENDS and not SHOW_ENEMIES ) then
+			SetCVar("nameplateShowFriends", 0);
 		else
-			ShowFriendNameplates();
-			FRIENDNAMEPLATES_ON = 1;
-			HideNameplates();
-			NAMEPLATES_ON = nil;
+			SetCVar("nameplateShowFriends", 1);
+			SetCVar("nameplateShowEnemies", 0);
 		end
 	</Binding>
 	<Binding name="ALLNAMEPLATES">
-		if ( not (NAMEPLATES_ON and FRIENDNAMEPLATES_ON) ) then
-			ShowNameplates();
-			NAMEPLATES_ON = 1;
-			ShowFriendNameplates();
-			FRIENDNAMEPLATES_ON = 1;
+		local SHOW_ENEMIES = GetCVarBool("nameplateShowEnemies");
+		local SHOW_FRIENDS = GetCVarBool("nameplateShowFriends");
+		if ( not SHOW_ENEMIES and not SHOW_FRIENDS ) then
+			SetCVar("nameplateShowEnemies", 1);
+			SetCVar("nameplateShowFriends", 1);
 		else
-			HideNameplates();
-			NAMEPLATES_ON = nil;
-			HideFriendNameplates();
-			FRIENDNAMEPLATES_ON = nil;
+			SetCVar("nameplateShowEnemies", 0);
+			SetCVar("nameplateShowFriends", 0);
 		end
 	</Binding>
 	<Binding name="ATTACKTARGET">
@@ -516,11 +512,14 @@
 	<Binding name="TOGGLEPETBOOK">
 		ToggleSpellBook(BOOKTYPE_PET);
 	</Binding>
+	<Binding name="TOGGLEINSCRIPTION">
+		ToggleSpellBook(INSCRIPTION);
+	</Binding>
 	<Binding name="TOGGLETALENTS">
 		ToggleTalentFrame();
 	</Binding>
 	<Binding name="TOGGLECHARACTER4">
-		ToggleCharacter("PVPFrame");
+		ToggleFrame(PVPFrame);
 	</Binding>
 	<Binding name="TOGGLECHARACTER3">
 		ToggleCharacter("PetPaperDollFrame");
@@ -532,7 +531,7 @@
 		ToggleCharacter("SkillFrame");
 	</Binding>
 	<Binding name="TOGGLEQUESTLOG">
-		ToggleQuestLog();
+		ToggleFrame(QuestLogFrame);
 	</Binding>
 	<Binding name="TOGGLEGAMEMENU">
 		ToggleGameMenu();
@@ -541,7 +540,10 @@
 		ToggleMinimap();
 	</Binding>
 	<Binding name="TOGGLEWORLDMAP">
-		ToggleWorldMap();
+		ToggleFrame(WorldMapFrame);
+	</Binding>
+	<Binding name="TOGGLEPVP">
+		ToggleFrame(PVPFrame);
 	</Binding>
 	<Binding name="TOGGLESOCIAL">
 		ToggleFriendsFrame();
@@ -582,24 +584,40 @@
 	<Binding name="TOGGLECHANNELPULLOUT">
 		ChannelPullout_ToggleDisplay();
 	</Binding>
+	<Binding name="TOGGLEACHIEVEMENT">
+		ToggleAchievementFrame();
+	</Binding>
+	<Binding name="TOGGLESTATISTICS">
+		ToggleAchievementFrame(1);
+	</Binding>
+
 	<!-- Misc -->
-	<Binding name="MINIMAPZOOMIN" header="MISC">
+	<Binding name="STOPCASTING" header="MISC">
+		SpellStopCasting();
+	</Binding>
+	<Binding name="STOPATTACK">
+		StopAttack();
+	</Binding>
+	<Binding name="DISMOUNT">
+		Dismount();
+	</Binding>
+	<Binding name="MINIMAPZOOMIN">
 		Minimap_ZoomIn();
 	</Binding>
 	<Binding name="MINIMAPZOOMOUT">
 		Minimap_ZoomOut();
 	</Binding>
 	<Binding name="TOGGLEMUSIC">
-		SoundOptionsFrame_ToggleMusic();
+		Sound_ToggleMusic();
 	</Binding>
 	<Binding name="TOGGLESOUND">
-		SoundOptionsFrame_ToggleSound();
+		Sound_ToggleSound();
 	</Binding>
 	<Binding name="MASTERVOLUMEUP">
-		SoundOptionsFrame_MasterVolumeUp();
+		Sound_MasterVolumeUp();
 	</Binding>
 	<Binding name="MASTERVOLUMEDOWN">
-		SoundOptionsFrame_MasterVolumeDown();
+		Sound_MasterVolumeDown();
 	</Binding>
 	<Binding name="TOGGLESELFMUTE">
 		if ( GetCVar("VoiceChatSelfMute") == "0" ) then
@@ -1125,6 +1143,42 @@
 	<Binding name="RAIDTARGETNONE">
 		SetRaidTarget("target", 0);
 	</Binding>
+	<!-- Vehicle bindings -->
+	<Binding name="VEHICLEEXIT" header="VEHICLE">
+		VehicleExit();
+	</Binding>
+	<Binding name="VEHICLEPREVSEAT">
+		VehiclePrevSeat();
+	</Binding>
+	<Binding name="VEHICLENEXTSEAT">
+		VehicleNextSeat();
+	</Binding>
+	<Binding name="VEHICLEAIMUP" runOnUp="true">
+		if ( keystate == "down" ) then
+		VehicleAimUpStart();
+		else
+		VehicleAimUpStop();
+		end
+	</Binding>
+	<Binding name="VEHICLEAIMDOWN" runOnUp="true">
+		if ( keystate == "down" ) then
+		VehicleAimDownStart();
+		else
+		VehicleAimDownStop();
+		end
+	</Binding>
+	<Binding name="VEHICLEAIMINCREMENT">
+		VehicleAimIncrement(0.1);
+	</Binding>
+	<Binding name="VEHICLEAIMDECREMENT">
+		VehicleAimDecrement(0.1);
+	</Binding>
+	<Binding name="VEHICLECAMERAZOOMIN">
+		VehicleCameraZoomIn(1.0);
+	</Binding>
+	<Binding name="VEHICLECAMERAZOOMOUT">
+		VehicleCameraZoomOut(1.0);
+	</Binding>
 
 <!-- Hidden bindings -->
 	<Binding name="TURNORACTION" runOnUp="true" hidden="true">
@@ -1177,7 +1231,9 @@
 
 	<!-- Modified Click Actions -->
 	<ModifiedClick action="SELFCAST" default="ALT"/>
+	<ModifiedClick action="FOCUSCAST" default="NONE"/>
 	<ModifiedClick action="AUTOLOOTTOGGLE" default="SHIFT"/>
+	<ModifiedClick action="MAILAUTOLOOTTOGGLE" default="SHIFT"/>
 	<ModifiedClick action="STICKYCAMERA" default="CTRL"/>
 	<ModifiedClick action="CHATLINK" default="SHIFT-BUTTON1"/>
 	<ModifiedClick action="DRESSUP" default="CTRL-BUTTON1"/>
@@ -1187,4 +1243,5 @@
 	<ModifiedClick action="COMPAREITEMS" default="SHIFT"/>
 	<ModifiedClick action="OPENALLBAGS" default="SHIFT"/>
 	<ModifiedClick action="QUESTWATCHTOGGLE" default="SHIFT"/>
+	<ModifiedClick action="TOKENWATCHTOGGLE" default="SHIFT"/>
 </Bindings>

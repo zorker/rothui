@@ -3,6 +3,10 @@ function OpenStackSplitFrame(maxStack, parent, anchor, anchorTo)
 	if ( StackSplitFrame.owner ) then
 		StackSplitFrame.owner.hasStackSplit = 0;
 	end
+	
+	if ( not maxStack ) then
+		maxStack = 0;
+	end
 
 	StackSplitFrame.maxStack = maxStack;
 	if ( StackSplitFrame.maxStack < 2 ) then
@@ -175,12 +179,12 @@ function StackSplitFrameCancel_Click()
 	StackSplitFrame:Hide();
 end
 
-function StackSplitFrame_OnHide()	
-	for key in next, (this.down or {}) do
+function StackSplitFrame_OnHide (self)	
+	for key in next, (self.down or {}) do
 		if ( GetBindingAction(key) ) then
 			RunBinding(GetBindingAction(key), "up");
 		end
-		this.down[key] = nil;
+		self.down[key] = nil;
 	end
 	
 	if ( StackSplitFrame.owner ) then

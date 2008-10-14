@@ -1,6 +1,11 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 	<Script file="SpellBookFrame.lua"/>
+	<Frame name="SpellBookShineTemplate" inherits="AutoCastShineTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="30" y="30"/>
+		</Size>
+	</Frame>
 	<CheckButton name="SpellBookSkillLineTabTemplate" virtual="true" hidden="true">
 		<Size>
 			<AbsDimension x="32" y="32"/>
@@ -23,11 +28,11 @@
 		</Layers>
 		<Scripts>
 			<OnClick>
-				SpellBookSkillLineTab_OnClick();
+				SpellBookSkillLineTab_OnClick(self);
 			</OnClick>
 			<OnEnter>
-				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-				GameTooltip:SetText(this.tooltip);
+				GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+				GameTooltip:SetText(self.tooltip);
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide();
@@ -46,11 +51,11 @@
 		</HitRectInsets>
 	  <Scripts>
 			<OnClick>
-				ToggleSpellBook(this.bookType);
+				SpellBookFrameTabButton_OnClick(self);
 			</OnClick>
 			<OnEnter>
-				GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-				GameTooltip:SetText(MicroButtonTooltipText(this:GetText(), this.binding), 1.0,1.0,1.0 );
+				GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+				GameTooltip:SetText(MicroButtonTooltipText(self:GetText(), self.binding), 1.0,1.0,1.0 );
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide();
@@ -65,9 +70,9 @@
 				</Anchor>
 			</Anchors>
 		</ButtonText>
-		<NormalFont inherits="GameFontNormalSmall"/>
-		<HighlightFont inherits="GameFontHighlightSmall"/>
-		<DisabledFont inherits="GameFontHighlightSmall"/>
+		<NormalFont style="GameFontNormalSmall"/>
+		<HighlightFont style="GameFontHighlightSmall"/>
+		<DisabledFont style="GameFontHighlightSmall"/>
 		<NormalTexture file="Interface\SpellBook\UI-SpellBook-Tab-Unselected"/>
         <HighlightTexture file="Interface\SpellBook\UI-SpellbookPanel-Tab-Highlight" alphaMode="ADD"/>
     </Button>
@@ -134,53 +139,35 @@
 		</Layers>
 		<Frames>
 			<Cooldown name="$parentCooldown" inherits="CooldownFrameTemplate"/>
-			<Model name="$parentAutoCast" file="Interface\Buttons\UI-AutoCastButton.mdx" scale="1.22" hidden="true">
-				<Size>
-					<AbsDimension x="36" y="36"/>
-				</Size>
-				<Anchors>
-					<Anchor point="CENTER">
-						<Offset>
-							<AbsDimension x="1" y="1"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnLoad>
-						this:SetSequence(0);
-						this:SetSequenceTime(0, 0);
-					</OnLoad>
-				</Scripts>
-			</Model>
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				SpellButton_OnLoad();
+				SpellButton_OnLoad(self);
 			</OnLoad>
 			<OnEvent>
-				SpellButton_OnEvent(event);
+				SpellButton_OnEvent(self, event, ...);
 			</OnEvent>
 			<PreClick>
-				this:SetChecked(0);
+				self:SetChecked(0);
 			</PreClick>
 			<OnClick>
 				if ( IsModifiedClick() ) then
-					SpellButton_OnModifiedClick(arg1);
+					SpellButton_OnModifiedClick(self, button);
 				else
-					SpellButton_OnClick(arg1);
+					SpellButton_OnClick(self, button);
 				end
 			</OnClick>
 			<OnShow>
-				SpellButton_OnShow();
+				SpellButton_OnShow(self);
 			</OnShow>
 			<OnHide>
-				SpellButton_OnHide();
+				SpellButton_OnHide(self);
 			</OnHide>
 			<OnDragStart>
-				SpellButton_OnDrag();
+				SpellButton_OnDrag(self);
 			</OnDragStart>
 			<OnReceiveDrag>
-				SpellButton_OnDrag();
+				SpellButton_OnDrag(self);
 			</OnReceiveDrag>
 			<OnEnter>
 				SpellButton_OnEnter(self);
@@ -221,7 +208,7 @@
 		</HitRectInsets>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture file="Interface\Spellbook\Spellbook-Icon">
+				<Texture name="$parentIcon" file="Interface\Spellbook\Spellbook-Icon">
 					<Size>
 						<AbsDimension x="58" y="58"/>
 					</Size>
@@ -235,7 +222,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="ARTWORK">
-				<Texture file="Interface\Spellbook\UI-SpellbookPanel-TopLeft">
+				<Texture name="$parentTopLeft" file="Interface\Spellbook\UI-SpellbookPanel-TopLeft">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -243,7 +230,7 @@
 						<Anchor point="TOPLEFT"/>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\Spellbook\UI-SpellbookPanel-TopRight">
+				<Texture name="$parentTopRight" file="Interface\Spellbook\UI-SpellbookPanel-TopRight">
 					<Size>
 						<AbsDimension x="128" y="256"/>
 					</Size>
@@ -251,7 +238,7 @@
 						<Anchor point="TOPRIGHT"/>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\Spellbook\UI-SpellbookPanel-BotLeft">
+				<Texture name="$parentBotLeft" file="Interface\Spellbook\UI-SpellbookPanel-BotLeft">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -259,7 +246,7 @@
 						<Anchor point="BOTTOMLEFT"/>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\Spellbook\UI-SpellbookPanel-BotRight">
+				<Texture name="$parentBotRight" file="Interface\Spellbook\UI-SpellbookPanel-BotRight">
 					<Size>
 						<AbsDimension x="128" y="256"/>
 					</Size>
@@ -343,7 +330,7 @@
 				</Layers>
 				<Scripts>
 					<OnClick>
-						PrevPageButton_OnClick();
+						SpellBookPrevPageButton_OnClick();
 					</OnClick>
 				</Scripts>
 				<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Up"/>
@@ -373,7 +360,7 @@
 				</Layers>
 				<Scripts>
 					<OnClick>
-						NextPageButton_OnClick();
+						SpellBookNextPageButton_OnClick();
 					</OnClick>
 				</Scripts>
 				<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up"/>
@@ -389,7 +376,40 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self:SetFrameLevel(self:GetFrameLevel() + 1);
+					</OnLoad>
+				</Scripts>
 			</Button>
+			<CheckButton name="ShowAllSpellRanksCheckBox" inherits="OptionsSmallCheckButtonTemplate">
+				<Size>
+					<AbsDimension x="26" y="26"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="74" y="-38"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<HitRectInsets>
+					<AbsInset left="0" right="0" top="0" bottom="0"/>
+				</HitRectInsets>
+				<Scripts>
+					<OnLoad>
+						getglobal(self:GetName().."Text"):SetText(SHOW_ALL_SPELL_RANKS);
+					</OnLoad>
+					<OnShow>
+						self:SetChecked( GetCVarBool("ShowAllSpellRanks") );
+					</OnShow>
+					<OnClick>
+						PlaySound("igMainMenuOptionCheckBoxOn");
+						SetCVar("ShowAllSpellRanks", self:GetChecked());
+						UpdateSpells();
+					</OnClick>
+				</Scripts>
+			</CheckButton>
 			<CheckButton name="SpellButton1" inherits="SpellButtonTemplate" id="1">
 				<Anchors>
 					<Anchor point="TOPLEFT">
@@ -653,16 +673,16 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				SpellBookFrame_OnLoad();
+				SpellBookFrame_OnLoad(self);
 			</OnLoad>
 			<OnEvent>
-				SpellBookFrame_OnEvent();
+				SpellBookFrame_OnEvent(self, event, ...);
 			</OnEvent>
 			<OnShow>
-				SpellBookFrame_OnShow();
+				SpellBookFrame_OnShow(self);
 			</OnShow>
 			<OnHide>
-				SpellBookFrame_OnHide();
+				SpellBookFrame_OnHide(self);
 			</OnHide>
 		</Scripts>
 	</Frame>

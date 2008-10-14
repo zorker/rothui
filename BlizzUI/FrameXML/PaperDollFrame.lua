@@ -30,9 +30,10 @@ CR_WEAPON_SKILL_MAINHAND = 21;
 CR_WEAPON_SKILL_OFFHAND = 22;
 CR_WEAPON_SKILL_RANGED = 23;
 CR_EXPERTISE = 24;
+CR_ARMOR_PENETRATION = 25;
 
 ATTACK_POWER_MAGIC_NUMBER = 14;
-BLOCK_PER_STRENGTH = 0.05;
+BLOCK_PER_STRENGTH = 0.5;
 HEALTH_PER_STAMINA = 10;
 ARMOR_PER_AGILITY = 2;
 MANA_PER_INTELLECT = 15;
@@ -68,33 +69,27 @@ PLAYERSTAT_DROPDOWN_OPTIONS = {
 	"PLAYERSTAT_DEFENSES",
 };
 
-function PaperDollFrame_OnLoad()
-	this:RegisterEvent("PLAYER_ENTERING_WORLD");
-	this:RegisterEvent("CHARACTER_POINTS_CHANGED");
-	this:RegisterEvent("UNIT_MODEL_CHANGED");
-	this:RegisterEvent("UNIT_LEVEL");
-	this:RegisterEvent("UNIT_RESISTANCES");
-	this:RegisterEvent("UNIT_STATS");
-	this:RegisterEvent("UNIT_DAMAGE");
-	this:RegisterEvent("UNIT_RANGEDDAMAGE");
-	this:RegisterEvent("PLAYER_DAMAGE_DONE_MODS");
-	this:RegisterEvent("UNIT_ATTACK_SPEED");
-	this:RegisterEvent("UNIT_ATTACK_POWER");
-	this:RegisterEvent("UNIT_RANGED_ATTACK_POWER");
-	this:RegisterEvent("UNIT_ATTACK");
-	this:RegisterEvent("PLAYER_GUILD_UPDATE");
-	this:RegisterEvent("SKILL_LINES_CHANGED");
-	this:RegisterEvent("VARIABLES_LOADED");
-	this:RegisterEvent("COMBAT_RATING_UPDATE");
-
-	-- Need to save stats to display
-	RegisterForSavePerCharacter("PLAYERSTAT_LEFTDROPDOWN_SELECTION");
-	PLAYERSTAT_LEFTDROPDOWN_SELECTION = nil;
-	RegisterForSavePerCharacter("PLAYERSTAT_RIGHTDROPDOWN_SELECTION");
-	PLAYERSTAT_RIGHTDROPDOWN_SELECTION = nil;
+function PaperDollFrame_OnLoad (self)
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
+	self:RegisterEvent("CHARACTER_POINTS_CHANGED");
+	self:RegisterEvent("UNIT_MODEL_CHANGED");
+	self:RegisterEvent("UNIT_LEVEL");
+	self:RegisterEvent("UNIT_RESISTANCES");
+	self:RegisterEvent("UNIT_STATS");
+	self:RegisterEvent("UNIT_DAMAGE");
+	self:RegisterEvent("UNIT_RANGEDDAMAGE");
+	self:RegisterEvent("PLAYER_DAMAGE_DONE_MODS");
+	self:RegisterEvent("UNIT_ATTACK_SPEED");
+	self:RegisterEvent("UNIT_ATTACK_POWER");
+	self:RegisterEvent("UNIT_RANGED_ATTACK_POWER");
+	self:RegisterEvent("UNIT_ATTACK");
+	self:RegisterEvent("PLAYER_GUILD_UPDATE");
+	self:RegisterEvent("SKILL_LINES_CHANGED");
+	self:RegisterEvent("VARIABLES_LOADED");
+	self:RegisterEvent("COMBAT_RATING_UPDATE");
 end
 
-function PaperDoll_IsEquippedSlot(slot)
+function PaperDoll_IsEquippedSlot (slot)
 	if ( slot ) then
 		slot = tonumber(slot);
 		if ( slot ) then
@@ -104,13 +99,14 @@ function PaperDoll_IsEquippedSlot(slot)
 	return false;
 end
 
-function CharacterModelFrame_OnMouseUp(button)
+function CharacterModelFrame_OnMouseUp (self, button)
 	if ( button == "LeftButton" ) then
 		AutoEquipCursorItem();
 	end
 end
 
-function PaperDollFrame_OnEvent(event, unit)
+function PaperDollFrame_OnEvent (self, event, ...)
+	local unit = ...;
 	if ( event == "PLAYER_ENTERING_WORLD" or
 		event == "UNIT_MODEL_CHANGED" and unit == "player" ) then
 		CharacterModelFrame:SetUnit("player");
@@ -118,23 +114,25 @@ function PaperDollFrame_OnEvent(event, unit)
 	end
 	if ( event == "VARIABLES_LOADED" ) then
 		-- Set defaults if no settings for the dropdowns
-		if ( not PLAYERSTAT_LEFTDROPDOWN_SELECTION or not PLAYERSTAT_RIGHTDROPDOWN_SELECTION ) then
+		if ( GetCVar("playerStatLeftDropdown") == "" or GetCVar("playerStatRightDropdown") == "" ) then
 			local temp, classFileName = UnitClass("player");
 			classFileName = strupper(classFileName);
-			PLAYERSTAT_LEFTDROPDOWN_SELECTION = "PLAYERSTAT_BASE_STATS";
+			SetCVar("playerStatLeftDropdown", "PLAYERSTAT_BASE_STATS");
 			if ( classFileName == "MAGE" or classFileName == "PRIEST" or classFileName == "WARLOCK" or classFileName == "DRUID" ) then
-				PLAYERSTAT_RIGHTDROPDOWN_SELECTION = "PLAYERSTAT_SPELL_COMBAT";
+				SetCVar("playerStatRightDropdown", "PLAYERSTAT_SPELL_COMBAT");
 			elseif ( classFileName == "HUNTER" ) then
-				PLAYERSTAT_RIGHTDROPDOWN_SELECTION = "PLAYERSTAT_RANGED_COMBAT";
+				SetCVar("playerStatRightDropdown", "PLAYERSTAT_RANGED_COMBAT");
 			else
-				PLAYERSTAT_RIGHTDROPDOWN_SELECTION = "PLAYERSTAT_MELEE_COMBAT";
+				SetCVar("playerStatRightDropdown", "PLAYERSTAT_MELEE_COMBAT");
 			end
 		end
-		PaperDollFrame_UpdateStats();
+		PaperDollFrame_UpdateStats(self);
 	end
-	if ( not this:IsVisible() ) then
+	
+	if ( not self:IsVisible() ) then
 		return;
 	end
+
 	if ( unit == "player" ) then
 		if ( event == "UNIT_LEVEL" ) then
 			PaperDollFrame_SetLevel();
@@ -228,7 +226,7 @@ function PaperDollFrame_SetStat(statFrame, statIndex)
 		local attackPower = GetAttackPowerForStat(statIndex,effectiveStat);
 		statFrame.tooltip2 = format(statFrame.tooltip2, attackPower);
 		if ( unitClass == "WARRIOR" or unitClass == "SHAMAN" or unitClass == "PALADIN" ) then
-			statFrame.tooltip2 = statFrame.tooltip2 .. "\n" .. format( STAT_BLOCK_TOOLTIP, effectiveStat*BLOCK_PER_STRENGTH );
+			statFrame.tooltip2 = statFrame.tooltip2 .. "\n" .. format( STAT_BLOCK_TOOLTIP, max(0, effectiveStat*BLOCK_PER_STRENGTH-10) );
 		end
 	elseif ( statIndex == 3 ) then
 		local baseStam = min(20, effectiveStat);
@@ -286,9 +284,9 @@ function PaperDollFrame_SetRating(statFrame, ratingIndex)
 	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..statName.." "..rating..FONT_COLOR_CODE_CLOSE;
 	-- Can probably axe this if else tree if all rating tooltips follow the same format
 	if ( ratingIndex == CR_HIT_MELEE ) then
-		statFrame.tooltip2 = format(CR_HIT_MELEE_TOOLTIP, UnitLevel("player"), ratingBonus, GetArmorPenetration());
+		statFrame.tooltip2 = format(CR_HIT_MELEE_TOOLTIP, UnitLevel("player"), ratingBonus, GetCombatRating(CR_ARMOR_PENETRATION), GetArmorPenetration());
 	elseif ( ratingIndex == CR_HIT_RANGED ) then
-		statFrame.tooltip2 = format(CR_HIT_RANGED_TOOLTIP, UnitLevel("player"), ratingBonus, GetArmorPenetration());
+		statFrame.tooltip2 = format(CR_HIT_RANGED_TOOLTIP, UnitLevel("player"), ratingBonus, GetCombatRating(CR_ARMOR_PENETRATION), GetArmorPenetration());
 	elseif ( ratingIndex == CR_DODGE ) then
 		statFrame.tooltip2 = format(CR_DODGE_TOOLTIP, ratingBonus);
 	elseif ( ratingIndex == CR_PARRY ) then
@@ -471,9 +469,12 @@ function PaperDollFrame_SetResilience(statFrame)
 		lowestRating = CR_CRIT_TAKEN_SPELL;
 	end
 
+	local maxRatingBonus = GetMaxCombatRatingBonus(lowestRating);
+	local lowestRatingBonus = GetCombatRatingBonus(lowestRating);
+
 	PaperDollFrame_SetLabelAndText(statFrame, STAT_RESILIENCE, minResilience);
 	statFrame.tooltip = HIGHLIGHT_FONT_COLOR_CODE..STAT_RESILIENCE.." "..minResilience..FONT_COLOR_CODE_CLOSE;
-	statFrame.tooltip2 = format(RESILIENCE_TOOLTIP, GetCombatRatingBonus(lowestRating), min(GetCombatRatingBonus(lowestRating) * 2, 25.00), GetCombatRatingBonus(lowestRating));
+	statFrame.tooltip2 = format(RESILIENCE_TOOLTIP, lowestRatingBonus, min(lowestRatingBonus * 2, maxRatingBonus), lowestRatingBonus);
 	statFrame:Show();
 end
 
@@ -756,7 +757,11 @@ function PaperDollFrame_SetRangedDamage(statFrame, unit)
 		baseDamage = (minDamage + maxDamage) * 0.5;
 		fullDamage = baseDamage * percent;
 		totalBonus = 0;
-		damagePerSecond = (max(fullDamage,1) / rangedAttackSpeed);
+		if( rangedAttackSpeed == 0 ) then
+			damagePerSecond = 0;
+		else
+			damagePerSecond = (max(fullDamage,1) / rangedAttackSpeed);
+		end
 		tooltip = max(floor(minDamage),1).." - "..max(ceil(maxDamage),1);
 	else
 		minDamage = (minDamage / percent) - physicalBonusPos - physicalBonusNeg;
@@ -765,7 +770,11 @@ function PaperDollFrame_SetRangedDamage(statFrame, unit)
 		baseDamage = (minDamage + maxDamage) * 0.5;
 		fullDamage = (baseDamage + physicalBonusPos + physicalBonusNeg) * percent;
 		totalBonus = (fullDamage - baseDamage);
-		damagePerSecond = (max(fullDamage,1) / rangedAttackSpeed);
+		if( rangedAttackSpeed == 0 ) then
+			damagePerSecond = 0;
+		else
+			damagePerSecond = (max(fullDamage,1) / rangedAttackSpeed);
+		end
 		tooltip = max(floor(minDamage),1).." - "..max(ceil(maxDamage),1);
 	end
 
@@ -990,21 +999,21 @@ function PaperDollFrame_SetExpertise(statFrame, unit)
 	statFrame:Show();
 end
 
-function CharacterSpellBonusDamage_OnEnter()
-	GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-	GameTooltip:SetText(HIGHLIGHT_FONT_COLOR_CODE..BONUS_DAMAGE.." "..this.minModifier..FONT_COLOR_CODE_CLOSE);
+function CharacterSpellBonusDamage_OnEnter (self)
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+	GameTooltip:SetText(HIGHLIGHT_FONT_COLOR_CODE..BONUS_DAMAGE.." "..self.minModifier..FONT_COLOR_CODE_CLOSE);
 	for i=2, MAX_SPELL_SCHOOLS do
-		GameTooltip:AddDoubleLine(getglobal("DAMAGE_SCHOOL"..i), this.bonusDamage[i], NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+		GameTooltip:AddDoubleLine(getglobal("DAMAGE_SCHOOL"..i), self.bonusDamage[i], NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
 		GameTooltip:AddTexture("Interface\\PaperDollInfoFrame\\SpellSchoolIcon"..i);
 	end
 	
 	local petStr, damage;
-	if( this.bonusDamage[6] > this.bonusDamage[3] ) then
+	if( self.bonusDamage[6] > self.bonusDamage[3] ) then
 		petStr = PET_BONUS_TOOLTIP_WARLOCK_SPELLDMG_SHADOW;
-		damage = this.bonusDamage[6];
+		damage = self.bonusDamage[6];
 	else
 		petStr = PET_BONUS_TOOLTIP_WARLOCK_SPELLDMG_FIRE;
-		damage = this.bonusDamage[3];
+		damage = self.bonusDamage[3];
 	end
 	
 	local petBonusAP = ComputePetBonus("PET_BONUS_SPELLDMG_TO_AP", damage );
@@ -1015,12 +1024,12 @@ function CharacterSpellBonusDamage_OnEnter()
 	GameTooltip:Show();
 end
 
-function CharacterSpellCritChance_OnEnter()
-	GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+function CharacterSpellCritChance_OnEnter (self)
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 	GameTooltip:SetText(HIGHLIGHT_FONT_COLOR_CODE..COMBAT_RATING_NAME11.." "..GetCombatRating(11)..FONT_COLOR_CODE_CLOSE);
 	local spellCrit;
 	for i=2, MAX_SPELL_SCHOOLS do
-		spellCrit = format("%.2f", this.spellCrit[i]);
+		spellCrit = format("%.2f", self.spellCrit[i]);
 		spellCrit = spellCrit.."%";
 		GameTooltip:AddDoubleLine(getglobal("DAMAGE_SCHOOL"..i), spellCrit, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
 		GameTooltip:AddTexture("Interface\\PaperDollInfoFrame\\SpellSchoolIcon"..i);
@@ -1028,7 +1037,7 @@ function CharacterSpellCritChance_OnEnter()
 	GameTooltip:Show();
 end
 
-function PaperDollFrame_OnShow()
+function PaperDollFrame_OnShow (self)
 	--PaperDollFrame_SetGuild();
 	PaperDollFrame_SetLevel();
 	PaperDollFrame_SetResistances();
@@ -1044,83 +1053,84 @@ function PaperDollFrame_OnShow()
 		PlayerTitleDropDown:Hide();		
 	end
 	if ( GetCurrentTitle() == 0 ) then
-		UIDropDownMenu_SetText(PAPERDOLL_SELECT_TITLE, PlayerTitleDropDown);	
+		UIDropDownMenu_SetText(PlayerTitleDropDown, PAPERDOLL_SELECT_TITLE);	
 	elseif ( GetCurrentTitle() == -1 ) then
-		UIDropDownMenu_SetText(NONE, PlayerTitleDropDown);	
+		UIDropDownMenu_SetText(PlayerTitleDropDown, NONE);	
 	else
-		UIDropDownMenu_SetText(GetTitleName(GetCurrentTitle()), PlayerTitleDropDown);	
+		UIDropDownMenu_SetText(PlayerTitleDropDown, GetTitleName(GetCurrentTitle()));	
 	end
 	
 end
  
-function PaperDollFrame_OnHide()
+function PaperDollFrame_OnHide (self)
+
 end
 
-function PaperDollItemSlotButton_OnLoad()
-	this:RegisterForDrag("LeftButton");
-	this:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-	local slotName = this:GetName();
+function PaperDollItemSlotButton_OnLoad (self)
+	self:RegisterForDrag("LeftButton");
+	self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+	local slotName = self:GetName();
 	local id, textureName, checkRelic = GetInventorySlotInfo(strsub(slotName,10));
-	this:SetID(id);
+	self:SetID(id);
 	local texture = getglobal(slotName.."IconTexture");
 	texture:SetTexture(textureName);
-	this.backgroundTextureName = textureName;
-	this.checkRelic = checkRelic;
-	this.UpdateTooltip = PaperDollItemSlotButton_OnEnter;
+	self.backgroundTextureName = textureName;
+	self.checkRelic = checkRelic;
+	self.UpdateTooltip = PaperDollItemSlotButton_OnEnter;
 end
 
-function PaperDollItemSlotButton_OnShow()
-	this:RegisterEvent("UNIT_INVENTORY_CHANGED");
-	this:RegisterEvent("MERCHANT_UPDATE");
-	this:RegisterEvent("PLAYERBANKSLOTS_CHANGED");
-	this:RegisterEvent("ITEM_LOCK_CHANGED");
-	this:RegisterEvent("CURSOR_UPDATE");
-	this:RegisterEvent("BAG_UPDATE_COOLDOWN");
-	this:RegisterEvent("SHOW_COMPARE_TOOLTIP");
-	this:RegisterEvent("UPDATE_INVENTORY_ALERTS");
+function PaperDollItemSlotButton_OnShow (self)
+	self:RegisterEvent("UNIT_INVENTORY_CHANGED");
+	self:RegisterEvent("MERCHANT_UPDATE");
+	self:RegisterEvent("PLAYERBANKSLOTS_CHANGED");
+	self:RegisterEvent("ITEM_LOCK_CHANGED");
+	self:RegisterEvent("CURSOR_UPDATE");
+	self:RegisterEvent("BAG_UPDATE_COOLDOWN");
+	self:RegisterEvent("SHOW_COMPARE_TOOLTIP");
+	self:RegisterEvent("UPDATE_INVENTORY_ALERTS");
 
-	PaperDollItemSlotButton_Update();
+	PaperDollItemSlotButton_Update(self);
 end
 
-function PaperDollItemSlotButton_OnHide()
-	this:UnregisterEvent("UNIT_INVENTORY_CHANGED");
-	this:UnregisterEvent("MERCHANT_UPDATE");
-	this:UnregisterEvent("PLAYERBANKSLOTS_CHANGED");
-	this:UnregisterEvent("ITEM_LOCK_CHANGED");
-	this:UnregisterEvent("CURSOR_UPDATE");
-	this:UnregisterEvent("BAG_UPDATE_COOLDOWN");
-	this:UnregisterEvent("SHOW_COMPARE_TOOLTIP");
-	this:UnregisterEvent("UPDATE_INVENTORY_ALERTS");
+function PaperDollItemSlotButton_OnHide (self)
+	self:UnregisterEvent("UNIT_INVENTORY_CHANGED");
+	self:UnregisterEvent("MERCHANT_UPDATE");
+	self:UnregisterEvent("PLAYERBANKSLOTS_CHANGED");
+	self:UnregisterEvent("ITEM_LOCK_CHANGED");
+	self:UnregisterEvent("CURSOR_UPDATE");
+	self:UnregisterEvent("BAG_UPDATE_COOLDOWN");
+	self:UnregisterEvent("SHOW_COMPARE_TOOLTIP");
+	self:UnregisterEvent("UPDATE_INVENTORY_ALERTS");
 end
 
-function PaperDollItemSlotButton_OnEvent(self, event, ...)
+function PaperDollItemSlotButton_OnEvent (self, event, ...)
 	local arg1, arg2 = ...;
 	if ( event == "UNIT_INVENTORY_CHANGED" ) then
 		if ( arg1 == "player" ) then
-			PaperDollItemSlotButton_Update();
+			PaperDollItemSlotButton_Update(self);
 		end
 		return;
 	end
 	if ( event == "ITEM_LOCK_CHANGED" ) then
-		if ( not arg2 and arg1 == this:GetID() ) then
-			PaperDollItemSlotButton_UpdateLock();
+		if ( not arg2 and arg1 == self:GetID() ) then
+			PaperDollItemSlotButton_UpdateLock(self);
 		end
 		return;
 	end
 	if ( event == "BAG_UPDATE_COOLDOWN" ) then
-		PaperDollItemSlotButton_Update();
+		PaperDollItemSlotButton_Update(self);
 		return;
 	end
 	if ( event == "CURSOR_UPDATE" ) then
-		if ( CursorCanGoInSlot(this:GetID()) ) then
-			this:LockHighlight();
+		if ( CursorCanGoInSlot(self:GetID()) ) then
+			self:LockHighlight();
 		else
-			this:UnlockHighlight();
+			self:UnlockHighlight();
 		end
 		return;
 	end
 	if ( event == "SHOW_COMPARE_TOOLTIP" ) then
-		if ( (arg1 ~= this:GetID()) or (arg2 > NUM_SHOPPING_TOOLTIPS) ) then
+		if ( (arg1 ~= self:GetID()) or (arg2 > NUM_SHOPPING_TOOLTIPS) ) then
 			return;
 		end
 
@@ -1129,91 +1139,91 @@ function PaperDollItemSlotButton_OnEvent(self, event, ...)
 		if ( arg2 > 1 ) then
 			anchor = "ANCHOR_BOTTOMRIGHT";
 		end
-		tooltip:SetOwner(this, anchor);
-		local hasItem, hasCooldown = tooltip:SetInventoryItem("player", this:GetID());
+		tooltip:SetOwner(self, anchor);
+		local hasItem, hasCooldown = tooltip:SetInventoryItem("player", self:GetID());
 		if ( not hasItem ) then
 			tooltip:Hide();
 		end
 		return;
 	end
 	if ( event == "UPDATE_INVENTORY_ALERTS" ) then
-		PaperDollItemSlotButton_Update();
+		PaperDollItemSlotButton_Update(self);
 	end
 end
 
-function PaperDollItemSlotButton_OnClick(button)
+function PaperDollItemSlotButton_OnClick (self, button)
 	if ( button == "LeftButton" ) then
 		local type = GetCursorInfo();
 		if ( type == "merchant" and MerchantFrame.extendedCost ) then
 			MerchantFrame_ConfirmExtendedItemCost(MerchantFrame.extendedCost);
 		else
-			PickupInventoryItem(this:GetID());
+			PickupInventoryItem(self:GetID());
 		end
 	else
-		UseInventoryItem(this:GetID());
+		UseInventoryItem(self:GetID());
 	end
 end
 
-function PaperDollItemSlotButton_OnModifiedClick(button)
-	if ( HandleModifiedItemClick(GetInventoryItemLink("player", this:GetID())) ) then
+function PaperDollItemSlotButton_OnModifiedClick (self, button)
+	if ( HandleModifiedItemClick(GetInventoryItemLink("player", self:GetID())) ) then
 		return;
 	end
 	if ( IsModifiedClick("SOCKETITEM") ) then
-		SocketInventoryItem(this:GetID());
+		SocketInventoryItem(self:GetID());
 	end
 end
 
-function PaperDollItemSlotButton_Update()
-	local textureName = GetInventoryItemTexture("player", this:GetID());
-	local cooldown = getglobal(this:GetName().."Cooldown");
+function PaperDollItemSlotButton_Update (self)
+	local textureName = GetInventoryItemTexture("player", self:GetID());
+	local cooldown = getglobal(self:GetName().."Cooldown");
 	if ( textureName ) then
-		SetItemButtonTexture(this, textureName);
-		SetItemButtonCount(this, GetInventoryItemCount("player", this:GetID()));
-		if ( GetInventoryItemBroken("player", this:GetID()) ) then
-			SetItemButtonTextureVertexColor(this, 0.9, 0, 0);
-			SetItemButtonNormalTextureVertexColor(this, 0.9, 0, 0);
+		SetItemButtonTexture(self, textureName);
+		SetItemButtonCount(self, GetInventoryItemCount("player", self:GetID()));
+		if ( GetInventoryItemBroken("player", self:GetID()) ) then
+			SetItemButtonTextureVertexColor(self, 0.9, 0, 0);
+			SetItemButtonNormalTextureVertexColor(self, 0.9, 0, 0);
 		else
-			SetItemButtonTextureVertexColor(this, 1.0, 1.0, 1.0);
-			SetItemButtonNormalTextureVertexColor(this, 1.0, 1.0, 1.0);
+			SetItemButtonTextureVertexColor(self, 1.0, 1.0, 1.0);
+			SetItemButtonNormalTextureVertexColor(self, 1.0, 1.0, 1.0);
 		end
 		if ( cooldown ) then
-			local start, duration, enable = GetInventoryItemCooldown("player", this:GetID());
+			local start, duration, enable = GetInventoryItemCooldown("player", self:GetID());
 			CooldownFrame_SetTimer(cooldown, start, duration, enable);
 		end
-		this.hasItem = 1;
+		self.hasItem = 1;
 	else
-		local textureName = this.backgroundTextureName;
-		if ( this.checkRelic and UnitHasRelicSlot("player") ) then
+		local textureName = self.backgroundTextureName;
+		if ( self.checkRelic and UnitHasRelicSlot("player") ) then
 			textureName = "Interface\\Paperdoll\\UI-PaperDoll-Slot-Relic.blp";
 		end
-		SetItemButtonTexture(this, textureName);
-		SetItemButtonCount(this, 0);
-		SetItemButtonTextureVertexColor(this, 1.0, 1.0, 1.0);
-		SetItemButtonNormalTextureVertexColor(this, 1.0, 1.0, 1.0);
+		SetItemButtonTexture(self, textureName);
+		SetItemButtonCount(self, 0);
+		SetItemButtonTextureVertexColor(self, 1.0, 1.0, 1.0);
+		SetItemButtonNormalTextureVertexColor(self, 1.0, 1.0, 1.0);
 		if ( cooldown ) then
 			cooldown:Hide();
 		end
-		this.hasItem = nil;
+		self.hasItem = nil;
 	end
 
-	PaperDollItemSlotButton_UpdateLock();
+	PaperDollItemSlotButton_UpdateLock(self);
 
 	-- Update repair all button status
 	MerchantFrame_UpdateGuildBankRepair();
 	MerchantFrame_UpdateCanRepairAll();
 end
 
-function PaperDollItemSlotButton_UpdateLock()
-	if ( IsInventoryItemLocked(this:GetID()) ) then
+function PaperDollItemSlotButton_UpdateLock (self)
+	if ( IsInventoryItemLocked(self:GetID()) ) then
 		--this:SetNormalTexture("Interface\\Buttons\\UI-Quickslot");
-		SetItemButtonDesaturated(this, 1, 0.5, 0.5, 0.5);
+		SetItemButtonDesaturated(self, 1, 0.5, 0.5, 0.5);
 	else 
 		--this:SetNormalTexture("Interface\\Buttons\\UI-Quickslot2");
-		SetItemButtonDesaturated(this, nil);
+		SetItemButtonDesaturated(self, nil);
 	end
 end
 
-function PaperDollItemSlotButton_OnEnter(self)
+function PaperDollItemSlotButton_OnEnter (self)
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 	local hasItem, hasCooldown, repairCost = GameTooltip:SetInventoryItem("player", self:GetID());
 	if ( not hasItem ) then
@@ -1228,21 +1238,21 @@ function PaperDollItemSlotButton_OnEnter(self)
 		SetTooltipMoney(GameTooltip, repairCost);
 		GameTooltip:Show();
 	else
-		CursorUpdate();
+		CursorUpdate(self);
 	end
 end
 
-function PaperDollStatTooltip(unit)
-	if ( not this.tooltip ) then
+function PaperDollStatTooltip (self, unit)
+	if ( not self.tooltip ) then
 		return;
 	end
 	if ( not unit ) then
 		unit = "player";
 	end
-	GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-	GameTooltip:SetText(this.tooltip);
-	if ( this.tooltip2 ) then
-		GameTooltip:AddLine(this.tooltip2, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1);
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+	GameTooltip:SetText(self.tooltip);
+	if ( self.tooltip2 ) then
+		GameTooltip:AddLine(self.tooltip2, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1);
 	end
 	GameTooltip:Show();
 end
@@ -1318,49 +1328,53 @@ function PaperDollFormatStat(name, base, posBuff, negBuff, frame, textString)
 	frame.tooltip = text;
 end
 
-function CharacterAttackFrame_OnEnter()
+function CharacterAttackFrame_OnEnter (self)
 	-- Main hand weapon
-	GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 	GameTooltip:SetText(INVTYPE_WEAPONMAINHAND, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
-	GameTooltip:AddLine(this.weaponSkill);
-	GameTooltip:AddLine(this.weaponRating);
+	GameTooltip:AddLine(self.weaponSkill);
+	GameTooltip:AddLine(self.weaponRating);
 	-- Check for offhand weapon
-	if ( this.offhandSkill ) then
+	if ( self.offhandSkill ) then
 		GameTooltip:AddLine("\n");
 		GameTooltip:AddLine(INVTYPE_WEAPONOFFHAND, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
-		GameTooltip:AddLine(this.offhandSkill);
-		GameTooltip:AddLine(this.offhandRating);
+		GameTooltip:AddLine(self.offhandSkill);
+		GameTooltip:AddLine(self.offhandRating);
 	end
 	GameTooltip:Show();
 end
 
-function CharacterDamageFrame_OnEnter()
+function CharacterDamageFrame_OnEnter (self)
 	-- Main hand weapon
-	GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-	GameTooltip:SetText(INVTYPE_WEAPONMAINHAND, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
-	GameTooltip:AddDoubleLine(ATTACK_SPEED_COLON, format("%.2f", this.attackSpeed), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-	GameTooltip:AddDoubleLine(DAMAGE_COLON, this.damage, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-	GameTooltip:AddDoubleLine(DAMAGE_PER_SECOND, format("%.1f", this.dps), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+	if ( self == PetDamageFrame ) then
+		GameTooltip:SetText(INVTYPE_WEAPONMAINHAND_PET, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
+	else
+		GameTooltip:SetText(INVTYPE_WEAPONMAINHAND, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
+	end
+	GameTooltip:AddDoubleLine(ATTACK_SPEED_COLON, format("%.2f", self.attackSpeed), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+	GameTooltip:AddDoubleLine(DAMAGE_COLON, self.damage, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+	GameTooltip:AddDoubleLine(DAMAGE_PER_SECOND, format("%.1f", self.dps), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
 	-- Check for offhand weapon
-	if ( this.offhandAttackSpeed ) then
+	if ( self.offhandAttackSpeed ) then
 		GameTooltip:AddLine("\n");
 		GameTooltip:AddLine(INVTYPE_WEAPONOFFHAND, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
-		GameTooltip:AddDoubleLine(ATTACK_SPEED_COLON, format("%.2f", this.offhandAttackSpeed), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-		GameTooltip:AddDoubleLine(DAMAGE_COLON, this.offhandDamage, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-		GameTooltip:AddDoubleLine(DAMAGE_PER_SECOND, format("%.1f", this.offhandDps), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+		GameTooltip:AddDoubleLine(ATTACK_SPEED_COLON, format("%.2f", self.offhandAttackSpeed), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+		GameTooltip:AddDoubleLine(DAMAGE_COLON, self.offhandDamage, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+		GameTooltip:AddDoubleLine(DAMAGE_PER_SECOND, format("%.1f", self.offhandDps), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
 	end
 	GameTooltip:Show();
 end
 
-function CharacterRangedDamageFrame_OnEnter()
-	if ( not this.damage ) then
+function CharacterRangedDamageFrame_OnEnter (self)
+	if ( not self.damage ) then
 		return;
 	end
-	GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 	GameTooltip:SetText(INVTYPE_RANGED, HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
-	GameTooltip:AddDoubleLine(ATTACK_SPEED_COLON, format("%.2f", this.attackSpeed), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-	GameTooltip:AddDoubleLine(DAMAGE_COLON, this.damage, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-	GameTooltip:AddDoubleLine(DAMAGE_PER_SECOND, format("%.1f", this.dps), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+	GameTooltip:AddDoubleLine(ATTACK_SPEED_COLON, format("%.2f", self.attackSpeed), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+	GameTooltip:AddDoubleLine(DAMAGE_COLON, self.damage, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+	GameTooltip:AddDoubleLine(DAMAGE_PER_SECOND, format("%.1f", self.dps), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
 	GameTooltip:Show();
 end
 
@@ -1384,19 +1398,19 @@ function PaperDollFrame_GetArmorReduction(armor, attackerLevel)
 end
 
 -- Paperdoll stat selection functions
-function PlayerStatFrameLeftDropDown_OnLoad()
-	UIDropDownMenu_Initialize(this, PlayerStatFrameLeftDropDown_Initialize);
-	UIDropDownMenu_SetSelectedValue(this, PLAYERSTAT_LEFTDROPDOWN_SELECTION);
-	UIDropDownMenu_SetWidth(99, this);
-	UIDropDownMenu_JustifyText("LEFT", this);
+function PlayerStatFrameLeftDropDown_OnLoad (self)
+	UIDropDownMenu_Initialize(self, PlayerStatFrameLeftDropDown_Initialize);
+	UIDropDownMenu_SetSelectedValue(self, GetCVar("playerStatLeftDropdown"));
+	UIDropDownMenu_SetWidth(self, 99);
+	UIDropDownMenu_JustifyText(self, "LEFT");
 end
 
-function PlayerStatFrameLeftDropDown_Initialize()
+function PlayerStatFrameLeftDropDown_Initialize (self)
 	-- Setup buttons
 	local info = UIDropDownMenu_CreateInfo();
 	local checked;
 	for i=1, getn(PLAYERSTAT_DROPDOWN_OPTIONS) do
-		if ( PLAYERSTAT_DROPDOWN_OPTIONS[i] == PLAYERSTAT_LEFTDROPDOWN_SELECTION ) then
+		if ( PLAYERSTAT_DROPDOWN_OPTIONS[i] == GetCVar("playerStatLeftDropdown") ) then
 			checked = 1;
 		else
 			checked = nil;
@@ -1410,25 +1424,25 @@ function PlayerStatFrameLeftDropDown_Initialize()
 	end
 end
 
-function PlayerStatFrameLeftDropDown_OnClick()
-	UIDropDownMenu_SetSelectedValue(getglobal(this.owner), this.value);
-	PLAYERSTAT_LEFTDROPDOWN_SELECTION = this.value;
-	UpdatePaperdollStats("PlayerStatFrameLeft", this.value);
+function PlayerStatFrameLeftDropDown_OnClick (self)
+	UIDropDownMenu_SetSelectedValue(getglobal(self.owner), self.value);
+	SetCVar("playerStatLeftDropdown", self.value);
+	UpdatePaperdollStats("PlayerStatFrameLeft", self.value);
 end
 
-function PlayerStatFrameRightDropDown_OnLoad()
-	UIDropDownMenu_Initialize(this, PlayerStatFrameRightDropDown_Initialize);
-	UIDropDownMenu_SetSelectedValue(this, PLAYERSTAT_RIGHTDROPDOWN_SELECTION);
-	UIDropDownMenu_SetWidth(99, this);
-	UIDropDownMenu_JustifyText("LEFT", this);
+function PlayerStatFrameRightDropDown_OnLoad (self)
+	UIDropDownMenu_Initialize(self, PlayerStatFrameRightDropDown_Initialize);
+	UIDropDownMenu_SetSelectedValue(self, GetCVar("playerStatRightDropdown"));
+	UIDropDownMenu_SetWidth(self, 99);
+	UIDropDownMenu_JustifyText(self, "LEFT");
 end
 
-function PlayerStatFrameRightDropDown_Initialize()
+function PlayerStatFrameRightDropDown_Initialize (self)
 	-- Setup buttons
 	local info = UIDropDownMenu_CreateInfo();
 	local checked;
 	for i=1, getn(PLAYERSTAT_DROPDOWN_OPTIONS) do
-		if ( PLAYERSTAT_DROPDOWN_OPTIONS[i] == PLAYERSTAT_RIGHTDROPDOWN_SELECTION ) then
+		if ( PLAYERSTAT_DROPDOWN_OPTIONS[i] == GetCVar("playerStatRightDropdown") ) then
 			checked = 1;
 		else
 			checked = nil;
@@ -1442,18 +1456,18 @@ function PlayerStatFrameRightDropDown_Initialize()
 	end
 end
 
-function PlayerStatFrameRightDropDown_OnClick()
-	UIDropDownMenu_SetSelectedValue(getglobal(this.owner), this.value);
-	PLAYERSTAT_RIGHTDROPDOWN_SELECTION = this.value;
-	UpdatePaperdollStats("PlayerStatFrameRight", this.value);
+function PlayerStatFrameRightDropDown_OnClick (self)
+	UIDropDownMenu_SetSelectedValue(getglobal(self.owner), self.value);
+	SetCVar("playerStatRightDropdown", self.value);
+	UpdatePaperdollStats("PlayerStatFrameRight", self.value);
 end
 
 -- Player title dropdown functions
-function PlayerTitleDropDown_OnLoad()
-	UIDropDownMenu_Initialize(this, PlayerTitleDropDown_Initialize);
-	UIDropDownMenu_SetSelectedValue(this,GetCurrentTitle());
-	UIDropDownMenu_SetWidth(160, this);
-	UIDropDownMenu_JustifyText("LEFT", this);
+function PlayerTitleDropDown_OnLoad (self)
+	UIDropDownMenu_Initialize(self, PlayerTitleDropDown_Initialize);
+	UIDropDownMenu_SetSelectedValue(self, GetCurrentTitle());
+	UIDropDownMenu_SetWidth(self, 160);
+	UIDropDownMenu_JustifyText(self, "LEFT");
 	PlayerTitleDropDownLeft:SetHeight(50);
 	PlayerTitleDropDownMiddle:SetHeight(50);
 	PlayerTitleDropDownRight:SetHeight(50);
@@ -1499,14 +1513,14 @@ function PlayerTitleDropDown_Initialize()
 	PlayerTitleDropDown.titleCount = titleCount;
 end
 
-function PlayerTitleDropDown_OnClick()
-	UIDropDownMenu_SetSelectedValue(PlayerTitleDropDown, this.value);
-	SetCurrentTitle(this.value);
+function PlayerTitleDropDown_OnClick (self)
+	UIDropDownMenu_SetSelectedValue(PlayerTitleDropDown, self.value);
+	SetCurrentTitle(self.value);
 end
 
 function PaperDollFrame_UpdateStats()
-	UpdatePaperdollStats("PlayerStatFrameLeft", PLAYERSTAT_LEFTDROPDOWN_SELECTION);	
-	UpdatePaperdollStats("PlayerStatFrameRight", PLAYERSTAT_RIGHTDROPDOWN_SELECTION);	
+	UpdatePaperdollStats("PlayerStatFrameLeft", GetCVar("playerStatLeftDropdown"));	
+	UpdatePaperdollStats("PlayerStatFrameRight", GetCVar("playerStatRightDropdown"));	
 end
 
 function PaperDollFrame_SetLabelAndText(statFrame, label, text, isPercentage)

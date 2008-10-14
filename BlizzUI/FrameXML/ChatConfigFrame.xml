@@ -7,10 +7,10 @@
 		</Size>
 		<Scripts>
 			<OnLoad>
-				getglobal(this:GetName().."Highlight"):SetVertexColor(0.11, 0.325, 0.48);
+				getglobal(self:GetName().."Highlight"):SetVertexColor(0.11, 0.325, 0.48);
 			</OnLoad>
 			<OnClick>
-				ChatConfigCategory_OnClick(this);
+				ChatConfigCategory_OnClick(self);
 			</OnClick>
 		</Scripts>
 		<ButtonText name="$parentNormalText">
@@ -25,14 +25,14 @@
 				</Anchor>
 			</Anchors>
 		</ButtonText>
-		<NormalFont inherits="GameFontNormal" justifyH="LEFT"/>
-		<HighlightFont inherits="GameFontHighlight" justifyH="LEFT"/>
+		<NormalFont style="GameFontNormalLeft"/>
+		<HighlightFont style="GameFontHighlightLeft"/>
 		<HighlightTexture name="$parentHighlight" file="Interface\Buttons\UI-Listbox-Highlight2" alphaMode="ADD"/>
 	</Button>
 	<Button name="ConfigFilterButtonTemplate" inherits="ConfigCategoryButtonTemplate" virtual="true">
 		<Scripts>
 			<OnClick>
-				ChatConfigFilter_OnClick(this:GetID()+FauxScrollFrame_GetOffset(ChatConfigCombatSettingsFiltersScrollFrame));
+				ChatConfigFilter_OnClick(self:GetID()+FauxScrollFrame_GetOffset(ChatConfigCombatSettingsFiltersScrollFrame));
 			</OnClick>
 		</Scripts>
 	</Button>
@@ -50,8 +50,8 @@
 		</Backdrop>
 		<Scripts>
 			<OnLoad>
-				this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
-				this:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
+				self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
+				self:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
 			</OnLoad>
 		</Scripts>
 	</Frame>
@@ -76,7 +76,7 @@
 			<OnClick>
 				local checked = self:GetChecked();
 				if ( self.func ) then
-					self.func(checked);
+					self.func(self, checked);
 				end
 				
 				ChatConfigFrame_PlayCheckboxSound(checked);
@@ -165,7 +165,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
+				self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
 			</OnLoad>
 		</Scripts>
 	</Frame>
@@ -201,7 +201,7 @@
 				</Layers>
 				<Scripts>
 					<OnClick>
-						MessageTypeColor_OpenColorPicker(this);
+						MessageTypeColor_OpenColorPicker(self);
 					</OnClick>
 				</Scripts>
 				<NormalTexture name="$parentNormalTexture" file="Interface\ChatFrame\ChatFrameColorSwatch"/>
@@ -262,7 +262,7 @@
 				</Layers>
 				<Scripts>
 					<OnClick>
-						ChatUnitColor_OpenColorPicker(this);
+						ChatUnitColor_OpenColorPicker(self);
 					</OnClick>
 				</Scripts>
 				<NormalTexture name="$parentNormalTexture" file="Interface\ChatFrame\ChatFrameColorSwatch"/>
@@ -270,7 +270,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
+				self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
 			</OnLoad>
 		</Scripts>
 	</Frame>
@@ -319,7 +319,7 @@
 		<Scripts>
 			<OnClick>
 				PlaySound("UChatScrollButton");
-				ChatConfig_UpdateCombatTabs(this:GetID());
+				ChatConfig_UpdateCombatTabs(self:GetID());
 			</OnClick>
 			<OnEnter>
 			</OnEnter>
@@ -339,7 +339,7 @@
 				</Anchor>
 			</Anchors>
 		</ButtonText>
-		<NormalFont inherits="GameFontNormalSmall"/>
+		<NormalFont style="GameFontNormalSmall"/>
 		<HighlightTexture file="Interface\PaperDollInfoFrame\UI-Character-Tab-Highlight" alphaMode="ADD">
 			<Anchors>
 				<Anchor point="LEFT" relativeTo="$parentLeft">
@@ -385,6 +385,9 @@
 					</Anchors>
 				</Texture>
 				<FontString name="ChatConfigFrameHeaderText" inherits="GameFontNormal">
+					<Size>
+						<AbsDimension x="185" y="12"/>
+					</Size>
 					<Anchors>
 						<Anchor point="TOP" relativeTo="ChatConfigFrameHeader">
 							<Offset x="0" y="-14"/>
@@ -512,7 +515,7 @@
 						<Size x="10" y="10"/>
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeTo="$parentLeft" relativePoint="BOTTOMLEFT">
-								<Offset x="0" y="-50"/>
+								<Offset x="0" y="-30"/>
 							</Anchor>
 						</Anchors>
 					</Frame>
@@ -545,7 +548,7 @@
 				<Scripts>
 					<OnShow>
 						-- Have to build it here since the channel list doesn't exist on load
-						CreateChatChannelList(GetChannelList());
+						CreateChatChannelList(self, GetChannelList());
 						ChatConfig_CreateCheckboxes(ChatConfigChannelSettingsLeft, CHAT_CONFIG_CHANNEL_LIST, "ChatConfigCheckBoxWithSwatchTemplate");
 						ChatConfig_UpdateCheckboxes(ChatConfigChannelSettingsLeft);
 						ChatConfigFrameDefaultButton:Show();
@@ -642,7 +645,7 @@
 								</Anchors>
 								<Scripts>
 									<OnVerticalScroll>
-										FauxScrollFrame_OnVerticalScroll(CHATCONFIG_FILTER_HEIGHT, ChatConfig_UpdateFilterList);
+										FauxScrollFrame_OnVerticalScroll(self, offset, CHATCONFIG_FILTER_HEIGHT, ChatConfig_UpdateFilterList);
 									</OnVerticalScroll>
 								</Scripts>
 							</ScrollFrame>
@@ -756,8 +759,8 @@
 										PlaySound("UChatScrollButton");
 									</OnClick>
 									<OnEnter>
-										GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-										GameTooltip_AddNewbieTip(MOVE_FILTER_UP, 1.0, 1.0, 1.0);
+										GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+										GameTooltip_AddNewbieTip(self, MOVE_FILTER_UP, 1.0, 1.0, 1.0);
 									</OnEnter>
 									<OnLeave>
 										GameTooltip:Hide();
@@ -788,8 +791,8 @@
 										PlaySound("UChatScrollButton");
 									</OnClick>
 									<OnEnter>
-										GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-										GameTooltip_AddNewbieTip(MOVE_FILTER_DOWN, 1.0, 1.0, 1.0);
+										GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+										GameTooltip_AddNewbieTip(self, MOVE_FILTER_DOWN, 1.0, 1.0, 1.0);
 									</OnEnter>
 									<OnLeave>
 										GameTooltip:Hide();
@@ -898,7 +901,7 @@
 									<Size x="450" y="0"/>
 									<Anchors>
 										<Anchor point="TOPLEFT" relativeTo="CombatConfigColors" relativePoint="TOPLEFT">
-											<Offset x="25" y="-32"/>
+											<Offset x="25" y="-27"/>
 										</Anchor>
 									</Anchors>
 								</FontString>
@@ -969,8 +972,8 @@
 										</Anchors>
 										<Scripts>
 											<OnLoad>
-												getglobal(this:GetName().."Text"):SetText(COMBATLOG_HIGHLIGHT_KILL);
-												this.tooltip = HIGHLIGHT_KILL_COMBATLOG_TOOLTIP;
+												getglobal(self:GetName().."Text"):SetText(COMBATLOG_HIGHLIGHT_KILL);
+												self.tooltip = HIGHLIGHT_KILL_COMBATLOG_TOOLTIP;
 											</OnLoad>
 											<OnClick>
 												local checked = self:GetChecked()
@@ -995,8 +998,8 @@
 										</Anchors>
 										<Scripts>
 											<OnLoad>
-												getglobal(this:GetName().."Text"):SetText(COMBATLOG_HIGHLIGHT_ABILITY);
-												this.tooltip = HIGHLIGHT_ABILITY_COMBATLOG_TOOLTIP;
+												getglobal(self:GetName().."Text"):SetText(COMBATLOG_HIGHLIGHT_ABILITY);
+												self.tooltip = HIGHLIGHT_ABILITY_COMBATLOG_TOOLTIP;
 											</OnLoad>
 											<OnClick>
 												local checked = self:GetChecked()
@@ -1021,8 +1024,8 @@
 										</Anchors>
 										<Scripts>
 											<OnLoad>
-												getglobal(this:GetName().."Text"):SetText(COMBATLOG_HIGHLIGHT_DAMAGE);
-												this.tooltip = HIGHLIGHT_DAMAGE_COMBATLOG_TOOLTIP;
+												getglobal(self:GetName().."Text"):SetText(COMBATLOG_HIGHLIGHT_DAMAGE);
+												self.tooltip = HIGHLIGHT_DAMAGE_COMBATLOG_TOOLTIP;
 											</OnLoad>
 											<OnClick>
 												local checked = self:GetChecked()
@@ -1047,8 +1050,8 @@
 										</Anchors>
 										<Scripts>
 											<OnLoad>
-												getglobal(this:GetName().."Text"):SetText(COMBATLOG_HIGHLIGHT_SCHOOL);
-												this.tooltip = HIGHLIGHT_SCHOOL_COMBATLOG_TOOLTIP;
+												getglobal(self:GetName().."Text"):SetText(COMBATLOG_HIGHLIGHT_SCHOOL);
+												self.tooltip = HIGHLIGHT_SCHOOL_COMBATLOG_TOOLTIP;
 											</OnLoad>
 											<OnClick>
 												local checked = self:GetChecked()
@@ -1065,7 +1068,7 @@
 								</Frames>
 								<Scripts>
 									<OnLoad>
-										this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
+										self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
 									</OnLoad>
 								</Scripts>
 							</Frame>
@@ -1117,8 +1120,8 @@
 												</Anchors>
 												<Scripts>
 													<OnLoad>
-														getglobal(this:GetName().."Text"):SetText(UNIT_NAMES);
-														this.tooltip = UNIT_NAMES_COMBATLOG_TOOLTIP;
+														getglobal(self:GetName().."Text"):SetText(UNIT_NAMES);
+														self.tooltip = UNIT_NAMES_COMBATLOG_TOOLTIP;
 													</OnLoad>
 													<OnClick>
 														local checked = self:GetChecked()
@@ -1139,7 +1142,7 @@
 										</Frames>
 										<Scripts>
 											<OnLoad>
-												this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
+												self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
 											</OnLoad>
 										</Scripts>
 									</Frame>
@@ -1172,8 +1175,8 @@
 												</Anchors>
 												<Scripts>
 													<OnLoad>
-														getglobal(this:GetName().."Text"):SetText(SPELL_NAMES);
-														this.tooltip = SPELL_NAMES_COMBATLOG_TOOLTIP;
+														getglobal(self:GetName().."Text"):SetText(SPELL_NAMES);
+														self.tooltip = SPELL_NAMES_COMBATLOG_TOOLTIP;
 													</OnLoad>
 													<OnClick>
 														local checked = self:GetChecked()
@@ -1195,8 +1198,8 @@
 												</Anchors>
 												<Scripts>
 													<OnLoad>
-														getglobal(this:GetName().."Text"):SetText(COLOR_BY_SCHOOL);
-														this.tooltip = SPELL_COLOR_BY_SCHOOL_COMBATLOG_TOOLTIP;
+														getglobal(self:GetName().."Text"):SetText(COLOR_BY_SCHOOL);
+														self.tooltip = SPELL_COLOR_BY_SCHOOL_COMBATLOG_TOOLTIP;
 													</OnLoad>
 													<OnClick>
 														local checked = self:GetChecked()
@@ -1240,7 +1243,7 @@
 												</Layers>
 												<Scripts>
 													<OnClick>
-														SpellColor_OpenColorPicker(this);
+														SpellColor_OpenColorPicker(self);
 													</OnClick>
 												</Scripts>
 												<NormalTexture name="$parentNormalTexture" file="Interface\ChatFrame\ChatFrameColorSwatch"/>
@@ -1248,7 +1251,7 @@
 										</Frames>
 										<Scripts>
 											<OnLoad>
-												this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
+												self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
 											</OnLoad>
 										</Scripts>
 									</Frame>
@@ -1281,8 +1284,8 @@
 												</Anchors>
 												<Scripts>
 													<OnLoad>
-														getglobal(this:GetName().."Text"):SetText(DAMAGE_NUMBER);
-														this.tooltip = SPELL_DAMAGE_NUMBER_COMBATLOG_TOOLTIP;
+														getglobal(self:GetName().."Text"):SetText(DAMAGE_NUMBER);
+														self.tooltip = SPELL_DAMAGE_NUMBER_COMBATLOG_TOOLTIP;
 													</OnLoad>
 													<OnClick>
 														local checked = self:GetChecked()
@@ -1304,8 +1307,8 @@
 												</Anchors>
 												<Scripts>
 													<OnLoad>
-														getglobal(this:GetName().."Text"):SetText(COLOR_BY_SCHOOL);
-														this.tooltip = SPELL_COLOR_BY_SCHOOL_COMBATLOG_TOOLTIP;
+														getglobal(self:GetName().."Text"):SetText(COLOR_BY_SCHOOL);
+														self.tooltip = SPELL_COLOR_BY_SCHOOL_COMBATLOG_TOOLTIP;
 													</OnLoad>
 													<OnClick>
 														local checked = self:GetChecked()
@@ -1349,7 +1352,7 @@
 												</Layers>
 												<Scripts>
 													<OnClick>
-														DamageColor_OpenColorPicker(this);
+														DamageColor_OpenColorPicker(self);
 													</OnClick>
 												</Scripts>
 												<NormalTexture name="$parentNormalTexture" file="Interface\ChatFrame\ChatFrameColorSwatch"/>
@@ -1357,7 +1360,7 @@
 										</Frames>
 										<Scripts>
 											<OnLoad>
-												this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
+												self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
 											</OnLoad>
 										</Scripts>
 									</Frame>
@@ -1390,8 +1393,8 @@
 												</Anchors>
 												<Scripts>
 													<OnLoad>
-														getglobal(this:GetName().."Text"):SetText(DAMAGE_SCHOOL_TEXT);
-														this.tooltip = SPELL_DAMAGE_SCHOOL_COMBATLOG_TOOLTIP;
+														getglobal(self:GetName().."Text"):SetText(DAMAGE_SCHOOL_TEXT);
+														self.tooltip = SPELL_DAMAGE_SCHOOL_COMBATLOG_TOOLTIP;
 													</OnLoad>
 													<OnClick>
 														local checked = self:GetChecked()
@@ -1408,7 +1411,7 @@
 										</Frames>
 										<Scripts>
 											<OnLoad>
-												this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
+												self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
 											</OnLoad>
 										</Scripts>
 									</Frame>
@@ -1441,8 +1444,8 @@
 												</Anchors>
 												<Scripts>
 													<OnLoad>
-														getglobal(this:GetName().."Text"):SetText(ENTIRE_LINE);
-														this.tooltip = ENTIRE_LINE_COMBATLOG_TOOLTIP;
+														getglobal(self:GetName().."Text"):SetText(ENTIRE_LINE);
+														self.tooltip = ENTIRE_LINE_COMBATLOG_TOOLTIP;
 													</OnLoad>
 													<OnClick>
 														local checked = self:GetChecked()
@@ -1464,8 +1467,8 @@
 												</Anchors>
 												<Scripts>
 													<OnLoad>
-														getglobal(this:GetName().."Text"):SetText(BY_SOURCE);
-														this.tooltip = BY_SOURCE_COMBATLOG_TOOLTIP;
+														getglobal(self:GetName().."Text"):SetText(BY_SOURCE);
+														self.tooltip = BY_SOURCE_COMBATLOG_TOOLTIP;
 													</OnLoad>
 													<OnClick>
 														local checked = self:GetChecked();
@@ -1483,8 +1486,8 @@
 												</Anchors>
 												<Scripts>
 													<OnLoad>
-														getglobal(this:GetName().."Text"):SetText(BY_TARGET);
-														this.tooltip = BY_TARGET_COMBATLOG_TOOLTIP;
+														getglobal(self:GetName().."Text"):SetText(BY_TARGET);
+														self.tooltip = BY_TARGET_COMBATLOG_TOOLTIP;
 													</OnLoad>
 													<OnClick>
 														local checked = self:GetChecked();
@@ -1497,7 +1500,7 @@
 										</Frames>
 										<Scripts>
 											<OnLoad>
-												this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
+												self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b, 0.5);
 											</OnLoad>
 										</Scripts>
 									</Frame>
@@ -1526,7 +1529,7 @@
 									<Size x="450" y="0"/>
 									<Anchors>
 										<Anchor point="TOPLEFT">
-											<Offset x="15" y="-32"/>
+											<Offset x="15" y="-27"/>
 										</Anchor>
 									</Anchors>
 								</FontString>
@@ -1560,8 +1563,8 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
-										getglobal(this:GetName().."Text"):SetText(SHOW_TIMESTAMP);
-										this.tooltip = TIMESTAMP_COMBATLOG_TOOLTIP;
+										getglobal(self:GetName().."Text"):SetText(SHOW_TIMESTAMP);
+										self.tooltip = TIMESTAMP_COMBATLOG_TOOLTIP;
 									</OnLoad>
 									<OnClick>
 										local checked = self:GetChecked()
@@ -1586,8 +1589,8 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
-										getglobal(this:GetName().."Text"):SetText(SHOW_BRACES);
-										this.tooltip = SHOW_BRACES_COMBATLOG_TOOLTIP;
+										getglobal(self:GetName().."Text"):SetText(SHOW_BRACES);
+										self.tooltip = SHOW_BRACES_COMBATLOG_TOOLTIP;
 									</OnLoad>
 									<OnClick>
 										local checked = self:GetChecked()
@@ -1609,8 +1612,8 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
-										getglobal(this:GetName().."Text"):SetText(UNIT_NAMES);
-										this.tooltip = UNIT_NAMES_SHOW_BRACES_COMBATLOG_TOOLTIP;
+										getglobal(self:GetName().."Text"):SetText(UNIT_NAMES);
+										self.tooltip = UNIT_NAMES_SHOW_BRACES_COMBATLOG_TOOLTIP;
 									</OnLoad>
 									<OnClick>
 										local checked = self:GetChecked()
@@ -1636,8 +1639,8 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
-										getglobal(this:GetName().."Text"):SetText(SPELL_NAMES);
-										this.tooltip = SPELL_NAMES_SHOW_BRACES_COMBATLOG_TOOLTIP;
+										getglobal(self:GetName().."Text"):SetText(SPELL_NAMES);
+										self.tooltip = SPELL_NAMES_SHOW_BRACES_COMBATLOG_TOOLTIP;
 									</OnLoad>
 									<OnClick>
 										local checked = self:GetChecked()
@@ -1659,8 +1662,8 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
-										getglobal(this:GetName().."Text"):SetText(ITEM_NAMES);
-										this.tooltip = ITEM_NAMES_SHOW_BRACES_COMBATLOG_TOOLTIP;
+										getglobal(self:GetName().."Text"):SetText(ITEM_NAMES);
+										self.tooltip = ITEM_NAMES_SHOW_BRACES_COMBATLOG_TOOLTIP;
 									</OnLoad>
 									<OnClick>
 										local checked = self:GetChecked()
@@ -1682,8 +1685,8 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
-										getglobal(this:GetName().."Text"):SetText(USE_FULL_TEXT_MODE);
-										this.tooltip = FULL_TEXT_COMBATLOG_TOOLTIP;
+										getglobal(self:GetName().."Text"):SetText(USE_FULL_TEXT_MODE);
+										self.tooltip = FULL_TEXT_COMBATLOG_TOOLTIP;
 									</OnLoad>
 									<OnClick>
 										local checked = self:GetChecked()
@@ -1734,14 +1737,14 @@
 								</Layers>
 								<Scripts>
 									<OnShow>
-										this:SetText(CHATCONFIG_SELECTED_FILTER.name);
+										self:SetText(CHATCONFIG_SELECTED_FILTER.name);
 									</OnShow>
 									<OnEnterPressed>
-										CombatConfig_SetFilterName(this:GetText());
-										this:HighlightText(0, -1);
+										CombatConfig_SetFilterName(self:GetText());
+										self:HighlightText(0, -1);
 									</OnEnterPressed>
 									<OnEditFocusGained>
-										this:HighlightText();
+										self:HighlightText();
 									</OnEditFocusGained>
 								</Scripts>
 							</EditBox>
@@ -1773,8 +1776,8 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
-										getglobal(this:GetName().."Text"):SetText(SHOW_QUICK_BUTTON);
-										this.tooltip = QUICK_BUTTON_COMBATLOG_TOOLTIP;
+										getglobal(self:GetName().."Text"):SetText(SHOW_QUICK_BUTTON);
+										self.tooltip = QUICK_BUTTON_COMBATLOG_TOOLTIP;
 									</OnLoad>
 									<OnClick>
 										local checked = self:GetChecked()
@@ -1797,7 +1800,7 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
-										getglobal(this:GetName().."Text"):SetText(SOLO);
+										getglobal(self:GetName().."Text"):SetText(SOLO);
 									</OnLoad>
 									<OnClick>
 										local checked = self:GetChecked()
@@ -1819,7 +1822,7 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
-										getglobal(this:GetName().."Text"):SetText(PARTY);
+										getglobal(self:GetName().."Text"):SetText(PARTY);
 									</OnLoad>
 									<OnClick>
 										local checked = self:GetChecked()
@@ -1841,7 +1844,7 @@
 								</Anchors>
 								<Scripts>
 									<OnLoad>
-										getglobal(this:GetName().."Text"):SetText(RAID);
+										getglobal(self:GetName().."Text"):SetText(RAID);
 									</OnLoad>
 									<OnClick>
 										local checked = self:GetChecked()
@@ -1858,8 +1861,8 @@
 						</Frames>
 						<Scripts>
 							<OnLoad>
-								this:RegisterEvent("PARTY_MEMBERS_CHANGED");
-								this:RegisterEvent("RAID_ROSTER_UPDATE");
+								self:RegisterEvent("PARTY_MEMBERS_CHANGED");
+								self:RegisterEvent("RAID_ROSTER_UPDATE");
 							</OnLoad>
 							<OnEvent>
 								if ( event == "PARTY_MEMBERS_CHANGED" or event == "RAID_ROSTER_UPDATE" ) then
@@ -1950,9 +1953,11 @@
 				<Scripts>
 					<OnClick>
 						HideUIPanel(ChatConfigFrame);
-						Blizzard_CombatLog_RefreshGlobalLinks();
-						Blizzard_CombatLog_ApplyFilters(Blizzard_CombatLog_CurrentSettings);
-						Blizzard_CombatLog_Refilter();
+						if ( IsCombatLog(FCF_GetCurrentChatFrame()) ) then
+							Blizzard_CombatLog_RefreshGlobalLinks();
+							Blizzard_CombatLog_ApplyFilters(Blizzard_CombatLog_CurrentSettings);
+							Blizzard_CombatLog_Refilter();
+						end
 						PlaySound("gsTitleOptionOK");
 					</OnClick>
 				</Scripts>
@@ -1960,10 +1965,10 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				ChatConfigFrame_OnLoad();
+				ChatConfigFrame_OnLoad(self);
 			</OnLoad>
 			<OnEvent>
-				ChatConfigFrame_OnEvent(event);
+				ChatConfigFrame_OnEvent(self, event, ...);
 			</OnEvent>
 			<OnShow>
 				CHATCONFIG_SELECTED_FILTER_OLD_SETTINGS = CopyTable(Blizzard_CombatLog_Filters);

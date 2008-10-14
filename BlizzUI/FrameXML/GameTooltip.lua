@@ -75,10 +75,12 @@ function GameTooltip_SetDefaultAnchor(tooltip, parent)
 	tooltip.default = 1;
 end
 
-function GameTooltip_OnLoad()
-	this.updateTooltip = TOOLTIP_UPDATE_TIME;
-	this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
-	this:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
+function GameTooltip_OnLoad(self)
+	self.updateTooltip = TOOLTIP_UPDATE_TIME;
+	self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
+	self:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
+	self.statusBar2 = getglobal(self:GetName().."StatusBar2");
+	self.statusBar2Text = getglobal(self:GetName().."StatusBar2Text");
 end
 
 function SetTooltipMoney(frame, money, type, prefixText, suffixText)
@@ -96,12 +98,12 @@ function SetTooltipMoney(frame, money, type, prefixText, suffixText)
 		frame.numMoneyFrames = frame.numMoneyFrames+1;
 		moneyFrame = CreateFrame("Frame", name, frame, "TooltipMoneyFrameTemplate");
 		name = moneyFrame:GetName();
-		MoneyFrame_SetType("STATIC", moneyFrame);
+		MoneyFrame_SetType(moneyFrame, "STATIC");
 	end
 	getglobal(name.."PrefixText"):SetText(prefixText);
 	getglobal(name.."SuffixText"):SetText(suffixText);
 	if ( type ) then
-		MoneyFrame_SetType(type, moneyFrame);
+		MoneyFrame_SetType(moneyFrame, type);
 	end
 	moneyFrame:SetPoint("LEFT", frame:GetName().."TextLeft"..numLines, "LEFT", 4, 0);
 	moneyFrame:Show();
@@ -111,31 +113,49 @@ function SetTooltipMoney(frame, money, type, prefixText, suffixText)
 		frame.shownMoneyFrames = frame.shownMoneyFrames+1;
 	end
 	MoneyFrame_Update(moneyFrame:GetName(), money);
-	frame:SetMinimumWidth(moneyFrame:GetWidth());
+	local moneyFrameWidth = moneyFrame:GetWidth();
+	if ( frame:GetMinimumWidth() < moneyFrameWidth ) then
+		frame:SetMinimumWidth(moneyFrameWidth);
+	end
 	frame.hasMoney = 1;
 end
 
-function GameTooltip_ClearMoney()
-	if ( not this.shownMoneyFrames ) then
+function GameTooltip_ClearMoney(self)
+	if ( not self.shownMoneyFrames ) then
 		return;
 	end
 	
 	local moneyFrame;
-	for i=1, this.shownMoneyFrames do
-		moneyFrame = getglobal(this:GetName().."MoneyFrame"..i);
+	for i=1, self.shownMoneyFrames do
+		moneyFrame = getglobal(self:GetName().."MoneyFrame"..i);
 		if(moneyFrame) then
 			moneyFrame:Hide();
-			MoneyFrame_SetType("STATIC", moneyFrame);
+			MoneyFrame_SetType(moneyFrame, "STATIC");
 		end
 	end
-	this.shownMoneyFrames = nil;
+	self.shownMoneyFrames = nil;
 end
 
-function GameTooltip_OnHide()
-	this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
-	this:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
-	this.default = nil;
-	GameTooltip_ClearMoney();
+function GameTooltip_ClearStatusBars(self)
+	if ( not self.shownStatusBars ) then
+		return;
+	end
+	local statusBar;
+	for i=1, self.shownStatusBars do
+		statusBar = getglobal(self:GetName().."StatusBar"..i);
+		if ( statusBar ) then
+			statusBar:Hide();
+		end
+	end
+	self.shownStatusBars = 0;
+end
+
+function GameTooltip_OnHide(self)
+	self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
+	self:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
+	self.default = nil;
+	GameTooltip_ClearMoney(self);
+	GameTooltip_ClearStatusBars(self);
 end
 
 function GameTooltip_OnUpdate(self, elapsed)
@@ -152,9 +172,9 @@ function GameTooltip_OnUpdate(self, elapsed)
 	end
 end
 
-function GameTooltip_AddNewbieTip(normalText, r, g, b, newbieText, noNormalText)
+function GameTooltip_AddNewbieTip(frame, normalText, r, g, b, newbieText, noNormalText)
 	if ( SHOW_NEWBIE_TIPS == "1" ) then
-		GameTooltip_SetDefaultAnchor(GameTooltip, this);
+		GameTooltip_SetDefaultAnchor(GameTooltip, frame);
 		if ( normalText ) then
 			GameTooltip:SetText(normalText, r, g, b);
 			GameTooltip:AddLine(newbieText, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1);
@@ -164,13 +184,13 @@ function GameTooltip_AddNewbieTip(normalText, r, g, b, newbieText, noNormalText)
 		GameTooltip:Show();
 	else
 		if ( not noNormalText ) then
-			GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+			GameTooltip:SetOwner(frame, "ANCHOR_RIGHT");
 			GameTooltip:SetText(normalText, r, g, b);
 		end
 	end
 end
 
-function GameTooltip_ShowCompareItem()
+function GameTooltip_ShowCompareItem(shift)
 	local item, link = GameTooltip:GetItem();
 	if ( not link ) then
 		return;
@@ -178,12 +198,16 @@ function GameTooltip_ShowCompareItem()
 
 	local item1 = nil;
 	local item2 = nil;
+	local item3 = nil;
 	local side = "left";
-	if ( ShoppingTooltip1:SetHyperlinkCompareItem(link, 1) ) then
+	if ( ShoppingTooltip1:SetHyperlinkCompareItem(link, 1, shift) ) then
 		item1 = true;
 	end
-	if ( ShoppingTooltip2:SetHyperlinkCompareItem(link, 2) ) then
+	if ( ShoppingTooltip2:SetHyperlinkCompareItem(link, 2, shift) ) then
 		item2 = true;
+	end
+	if ( ShoppingTooltip3:SetHyperlinkCompareItem(link, 3, shift) ) then
+		item3 = true;
 	end
 
 	-- find correct side
@@ -214,6 +238,9 @@ function GameTooltip_ShowCompareItem()
 		if ( item2  ) then
 			totalWidth = totalWidth + ShoppingTooltip2:GetWidth();
 		end
+		if ( item3  ) then
+			totalWidth = totalWidth + ShoppingTooltip3:GetWidth();
+		end
 
 		if ( (side == "left") and (totalWidth > leftPos) ) then
 			GameTooltip:SetAnchorType(GameTooltip:GetAnchorType(), (totalWidth - leftPos), 0);
@@ -223,15 +250,39 @@ function GameTooltip_ShowCompareItem()
 	end
 
 	-- anchor the compare tooltips
+	if ( item3 ) then
+		ShoppingTooltip3:SetOwner(GameTooltip, "ANCHOR_NONE");
+		ShoppingTooltip3:ClearAllPoints();
+		if ( side and side == "left" ) then
+			ShoppingTooltip3:SetPoint("TOPRIGHT", "GameTooltip", "TOPLEFT", 0, -10);
+		else
+			ShoppingTooltip3:SetPoint("TOPLEFT", "GameTooltip", "TOPRIGHT", 0, -10);
+		end
+		ShoppingTooltip3:SetHyperlinkCompareItem(link, 3, shift);
+		ShoppingTooltip3:Show();
+	end
+	
 	if ( item1 ) then
-		ShoppingTooltip1:SetOwner(GameTooltip, "ANCHOR_NONE");
+		if( item3 ) then
+			ShoppingTooltip1:SetOwner(ShoppingTooltip3, "ANCHOR_NONE");
+		else
+			ShoppingTooltip1:SetOwner(GameTooltip, "ANCHOR_NONE");
+		end
 		ShoppingTooltip1:ClearAllPoints();
 		if ( side and side == "left" ) then
-			ShoppingTooltip1:SetPoint("TOPRIGHT", "GameTooltip", "TOPLEFT", 0, -10);
+			if( item3 ) then
+				ShoppingTooltip1:SetPoint("TOPRIGHT", "ShoppingTooltip3", "TOPLEFT", 0, 0);
+			else
+				ShoppingTooltip1:SetPoint("TOPRIGHT", "GameTooltip", "TOPLEFT", 0, -10);
+			end
 		else
-			ShoppingTooltip1:SetPoint("TOPLEFT", "GameTooltip", "TOPRIGHT", 0, -10);
+			if( item3 ) then
+				ShoppingTooltip1:SetPoint("TOPLEFT", "ShoppingTooltip3", "TOPRIGHT", 0, 0);
+			else
+				ShoppingTooltip1:SetPoint("TOPLEFT", "GameTooltip", "TOPRIGHT", 0, -10);
+			end
 		end
-		ShoppingTooltip1:SetHyperlinkCompareItem(link, 1);
+		ShoppingTooltip1:SetHyperlinkCompareItem(link, 1, shift);
 		ShoppingTooltip1:Show();
 
 		if ( item2 ) then
@@ -242,8 +293,38 @@ function GameTooltip_ShowCompareItem()
 			else
 				ShoppingTooltip2:SetPoint("TOPLEFT", "ShoppingTooltip1", "TOPRIGHT", 0, 0);
 			end
-			ShoppingTooltip2:SetHyperlinkCompareItem(link, 2);
+			ShoppingTooltip2:SetHyperlinkCompareItem(link, 2, shift);
 			ShoppingTooltip2:Show();
 		end
 	end
+end
+
+function GameTooltip_ShowStatusBar(self, min, max, value, text)
+	self:AddLine(" ", 1.0, 1.0, 1.0);
+	local numLines = self:NumLines();
+	if ( not self.numStatusBars ) then
+		self.numStatusBars = 0;
+	end
+	if ( not self.shownStatusBars ) then
+		self.shownStatusBars = 0;
+	end
+	local index = self.shownStatusBars+1;
+	local name = self:GetName().."StatusBar"..index;
+	local statusBar = getglobal(name);
+	if ( not statusBar ) then
+		self.numStatusBars = self.numStatusBars+1;
+		statusBar = CreateFrame("StatusBar", name, self, "TooltipStatusBarTemplate");
+	end
+	if ( not text ) then
+		text = "";
+	end
+	getglobal(name.."Text"):SetText(text);
+	statusBar:SetMinMaxValues(min, max);
+	statusBar:SetValue(value);
+	statusBar:Show();
+	statusBar:SetPoint("LEFT", self:GetName().."TextLeft"..numLines, "LEFT", 0, -2);
+	statusBar:SetPoint("RIGHT", self, "RIGHT", -9, 0);
+	statusBar:Show();
+	self.shownStatusBars = index;
+	self:SetMinimumWidth(140);
 end

@@ -188,6 +188,9 @@
 			</xs:choice>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="ButtonStyleType">
+		<xs:attribute name="style" type="xs:string" use="required"/>
+	</xs:complexType>
 	<xs:complexType name="ScriptsType">
 		<xs:sequence>
 			<xs:choice maxOccurs="unbounded">
@@ -245,6 +248,7 @@
 				<xs:element name="OnTooltipSetItem" type="xs:string"/>
 				<xs:element name="OnTooltipSetSpell" type="xs:string"/>
 				<xs:element name="OnTooltipSetQuest" type="xs:string"/>
+        <xs:element name="OnTooltipSetAchievement" type="xs:string"/>
 			</xs:choice>
 		</xs:sequence>
 	</xs:complexType>
@@ -442,9 +446,9 @@
 						<xs:element name="DisabledTexture" type="ui:TextureType"/>
 						<xs:element name="HighlightTexture" type="ui:TextureType"/>
 						<xs:element name="ButtonText" type="FontStringType"/>
-						<xs:element name="NormalFont" type="FontType"/>
-						<xs:element name="HighlightFont" type="FontType"/>
-						<xs:element name="DisabledFont" type="FontType"/>
+						<xs:element name="NormalFont" type="ButtonStyleType"/>
+						<xs:element name="HighlightFont" type="ButtonStyleType"/>
+						<xs:element name="DisabledFont" type="ButtonStyleType"/>
 						<xs:element name="NormalColor" type="ColorType"/>
 						<xs:element name="HighlightColor" type="ColorType"/>
 						<xs:element name="DisabledColor" type="ColorType"/>
@@ -558,6 +562,11 @@
 					</xs:simpleType>
 				</xs:attribute>
 				<xs:attribute name="fogFar" default="1.0">
+					<xs:simpleType>
+						<xs:restriction base="xs:float"/>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="glow" default="1.0">
 					<xs:simpleType>
 						<xs:restriction base="xs:float"/>
 					</xs:simpleType>
@@ -698,6 +707,7 @@
 		<xs:complexContent>
 			<xs:extension base="FrameType">
 				<xs:attribute name="reverse" type="xs:boolean" default="false"/>
+				<xs:attribute name="drawEdge" type="xs:boolean" default="false"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

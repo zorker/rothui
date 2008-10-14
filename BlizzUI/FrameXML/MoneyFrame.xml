@@ -18,7 +18,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						local parent = this:GetParent();
+						local parent = self:GetParent();
 						OpenCoinPickupFrame(1, MoneyTypeInfo[parent.moneyType].UpdateFunc(), parent);
 						parent.hasPickup = 1;
 					</OnClick>
@@ -41,7 +41,7 @@
 						</Anchor>
 					</Anchors>
 				</ButtonText>
-				<NormalFont inherits="NumberFontNormalLarge" justifyH="RIGHT"/>
+				<NormalFont style="NumberFontNormalLargeRight"/>
 				<PushedTextOffset>
 					<AbsDimension x="0" y="0"/>
 				</PushedTextOffset>
@@ -59,7 +59,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						local parent = this:GetParent();
+						local parent = self:GetParent();
 						OpenCoinPickupFrame(COPPER_PER_SILVER, MoneyTypeInfo[parent.moneyType].UpdateFunc(), parent);
 						parent.hasPickup = 1;
 					</OnClick>
@@ -82,7 +82,7 @@
 						</Anchor>
 					</Anchors>
 				</ButtonText>
-				<NormalFont inherits="NumberFontNormalLarge" justifyH="RIGHT"/>
+				<NormalFont style="NumberFontNormalLargeRight"/>
 				<PushedTextOffset>
 					<AbsDimension x="0" y="0"/>
 				</PushedTextOffset>
@@ -100,7 +100,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						local parent = this:GetParent();
+						local parent = self:GetParent();
 						OpenCoinPickupFrame(COPPER_PER_GOLD, MoneyTypeInfo[parent.moneyType].UpdateFunc(), parent);
 						parent.hasPickup = 1;
 					</OnClick>
@@ -123,7 +123,7 @@
 						</Anchor>
 					</Anchors>
 				</ButtonText>
-				<NormalFont inherits="NumberFontNormalLarge" justifyH="RIGHT"/>
+				<NormalFont style="NumberFontNormalLargeRight"/>
 				<PushedTextOffset>
 					<AbsDimension x="0" y="0"/>
 				</PushedTextOffset>
@@ -131,18 +131,18 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				MoneyFrame_OnLoad();
+				MoneyFrame_OnLoad(self);
 			</OnLoad>
 			<OnEvent>
-				MoneyFrame_OnEvent();
+				MoneyFrame_OnEvent(self, event, ...);
 			</OnEvent>
 			<OnShow>
-				MoneyFrame_UpdateMoney();
+				MoneyFrame_UpdateMoney(self);
 			</OnShow>
 			<OnHide>
-				if ( this.hasPickup == 1 ) then
+				if ( self.hasPickup == 1 ) then
 					CoinPickupFrame:Hide();
-					this.hasPickup = 0;
+					self.hasPickup = 0;
 				end
 			</OnHide>
 		</Scripts>
@@ -165,7 +165,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						local parent = this:GetParent();
+						local parent = self:GetParent();
 						OpenCoinPickupFrame(1, MoneyTypeInfo[parent.moneyType].UpdateFunc(), parent);
 						parent.hasPickup = 1;
 					</OnClick>
@@ -188,7 +188,7 @@
 						</Anchor>
 					</Anchors>
 				</ButtonText>
-				<NormalFont inherits="NumberFontNormal" justifyH="RIGHT"/>
+				<NormalFont style="NumberFontNormalRight"/>
 				<PushedTextOffset>
 					<AbsDimension x="0" y="0"/>
 				</PushedTextOffset>
@@ -206,7 +206,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						local parent = this:GetParent();
+						local parent = self:GetParent();
 						OpenCoinPickupFrame(COPPER_PER_SILVER, MoneyTypeInfo[parent.moneyType].UpdateFunc(), parent);
 						parent.hasPickup = 1;
 					</OnClick>
@@ -229,7 +229,7 @@
 						</Anchor>
 					</Anchors>
 				</ButtonText>
-				<NormalFont inherits="NumberFontNormal" justifyH="RIGHT"/>
+				<NormalFont style="NumberFontNormalRight"/>
 				<PushedTextOffset>
 					<AbsDimension x="0" y="0"/>
 				</PushedTextOffset>
@@ -247,7 +247,7 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						local parent = this:GetParent();
+						local parent = self:GetParent();
 						OpenCoinPickupFrame(COPPER_PER_GOLD, MoneyTypeInfo[parent.moneyType].UpdateFunc(), parent);
 						parent.hasPickup = 1;
 					</OnClick>
@@ -270,7 +270,7 @@
 						</Anchor>
 					</Anchors>
 				</ButtonText>
-				<NormalFont inherits="NumberFontNormal" justifyH="RIGHT"/>
+				<NormalFont style="NumberFontNormalRight"/>
 				<PushedTextOffset>
 					<AbsDimension x="0" y="0"/>
 				</PushedTextOffset>
@@ -278,18 +278,18 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				SmallMoneyFrame_OnLoad();
+				SmallMoneyFrame_OnLoad(self);
 			</OnLoad>
 			<OnEvent>
-				MoneyFrame_OnEvent();
+				MoneyFrame_OnEvent(self, event, ...);
 			</OnEvent>
 			<OnShow>
-				MoneyFrame_UpdateMoney();
+				MoneyFrame_UpdateMoney(self);
 			</OnShow>
 			<OnHide>
-				if ( this.hasPickup == 1 ) then
+				if ( self.hasPickup == 1 ) then
 					CoinPickupFrame:Hide();
-					this.hasPickup = 0;
+					self.hasPickup = 0;
 				end
 			</OnHide>
 		</Scripts>
@@ -300,8 +300,8 @@
 		</Size>
 		<Scripts>
 			<OnEnter>
-					GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-					GameTooltip:SetMerchantCostItem(this.index, this.item);
+					GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+					GameTooltip:SetMerchantCostItem(self.index, self.item);
 			</OnEnter>
 			<OnLeave>
 					GameTooltip:Hide();
@@ -325,7 +325,7 @@
 				<Anchor point="LEFT"/>
 			</Anchors>
 		</NormalTexture>
-		<NormalFont inherits="NumberFontNormal" justifyH="RIGHT"/>
+		<NormalFont style="NumberFontNormalRight"/>
 		<PushedTextOffset>
 			<AbsDimension x="0" y="0"/>
 		</PushedTextOffset>
@@ -335,7 +335,7 @@
 			<AbsDimension x="128" y="13"/>
 		</Size>
 		<Frames>
-			<Button name="$parentPoints" inherits="SmallDenominationTemplate" hidden="true">
+			<Button name="$parentHonor" inherits="SmallDenominationTemplate" hidden="true">
 				<Anchors>
 					<Anchor point="LEFT">
 						<Offset>
@@ -345,8 +345,27 @@
 				</Anchors>
 				<Scripts>
 					<OnEnter>
-							GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-							GameTooltip:SetText(this.pointType);
+							GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+							GameTooltip:SetText(HONOR_POINTS);
+					</OnEnter>
+					<OnLeave>
+							GameTooltip:Hide();
+							ResetCursor();
+					</OnLeave>
+				</Scripts>
+			</Button>
+			<Button name="$parentArena" inherits="SmallDenominationTemplate" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT">
+						<Offset>
+							<AbsDimension x="13" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnEnter>
+							GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+							GameTooltip:SetText(ARENA_POINTS);
 					</OnEnter>
 					<OnLeave>
 							GameTooltip:Hide();
@@ -356,7 +375,7 @@
 			</Button>
 			<Button name="$parentItem1" inherits="SmallDenominationTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="$parentPoints" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="$parentArena" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="0" y="0"/>
 						</Offset>

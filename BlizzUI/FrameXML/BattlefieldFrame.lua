@@ -12,19 +12,22 @@ CURRENT_BATTLEFIELD_QUEUES = {};
 PREVIOUS_BATTLEFIELD_QUEUES = {};
 
 
-function BattlefieldFrame_OnLoad()
-	this:RegisterEvent("PLAYER_ENTERING_WORLD");
-	this:RegisterEvent("BATTLEFIELDS_SHOW");
-	this:RegisterEvent("BATTLEFIELDS_CLOSED");
-	this:RegisterEvent("UPDATE_BATTLEFIELD_STATUS");
-	this:RegisterEvent("PARTY_LEADER_CHANGED");
+function BattlefieldFrame_OnLoad (self)
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
+	self:RegisterEvent("BATTLEFIELDS_SHOW");
+	self:RegisterEvent("BATTLEFIELDS_CLOSED");
+	self:RegisterEvent("UPDATE_BATTLEFIELD_STATUS");
+	self:RegisterEvent("PARTY_LEADER_CHANGED");
+	self:RegisterEvent("ZONE_CHANGED");
+	self:RegisterEvent("ZONE_CHANGED_NEW_AREA");
 	
 	BattlefieldFrame.timerDelay = 0;
 end
 
-function BattlefieldFrame_OnEvent()
+function BattlefieldFrame_OnEvent (self, event, ...)
 	if ( event == "PLAYER_ENTERING_WORLD" ) then
 		MiniMapBattlefieldDropDown_OnLoad();
+		BattlefieldFrame_UpdateStatus(false, nil);
 	elseif ( event == "BATTLEFIELDS_SHOW" ) then
 		if ( not IsBattlefieldArena() ) then
 			ShowUIPanel(BattlefieldFrame);
@@ -41,8 +44,9 @@ function BattlefieldFrame_OnEvent()
 		end
 	elseif ( event == "BATTLEFIELDS_CLOSED" ) then
 		HideUIPanel(BattlefieldFrame);
-	elseif ( event == "UPDATE_BATTLEFIELD_STATUS" ) then
-		BattlefieldFrame_UpdateStatus();
+	elseif ( event == "UPDATE_BATTLEFIELD_STATUS" or event == "ZONE_CHANGED_NEW_AREA" or event == "ZONE_CHANGED") then
+		local arg1 = ...
+		BattlefieldFrame_UpdateStatus(false, arg1);
 		BattlefieldFrame_Update();
 	end
 	if ( event == "PARTY_LEADER_CHANGED" ) then
@@ -50,24 +54,64 @@ function BattlefieldFrame_OnEvent()
 	end
 end
 
-function BattlefieldFrame_OnUpdate(elapsed)
-	if ( BATTLEFIELD_SHUTDOWN_TIMER == 0 ) then
+local QUEUE_LAST_UPDATED = {}
+
+function BattlefieldTimerFrame_OnUpdate(self, elapsed)
+	local keepUpdating = false;
+	if ( BATTLEFIELD_SHUTDOWN_TIMER > 0 ) then
+		keepUpdating = true;
+	else
+		for i = 1, MAX_BATTLEFIELD_QUEUES do
+			local expiration = GetBattlefieldPortExpiration(i)/1000;
+			if 	(	( expiration > 0 and expiration <= 10 ) and 
+					( not QUEUE_LAST_UPDATED[i] or QUEUE_LAST_UPDATED[i] and QUEUE_LAST_UPDATED[i] + 10 < GetTime() ) ) then 
+				QUEUE_LAST_UPDATED[i] = GetTime();
+				local _, mapName, instanceID, _, _, teamSize, registeredMatch = GetBattlefieldStatus(i);
+				if ( mapName ) then
+					if ( instanceID ~= 0 ) then
+						mapName = mapName.." "..instanceID;
+					end
+					if ( teamSize ~= 0 ) then
+						if ( registeredMatch ) then
+							mapName = ARENA_RATED_MATCH.." "..format(PVP_TEAMSIZE, teamSize, teamSize);
+						else
+							mapName = ARENA_CASUAL.." "..format(PVP_TEAMSIZE, teamSize, teamSize);
+						end
+					end
+				end
+				local dialog = StaticPopup_Show("CONFIRM_BATTLEFIELD_ENTRY", mapName, nil, i);
+				if ( dialog ) then
+					dialog.data = i;
+				end
+				PlaySound("PVPTHROUGHQUEUE");
+				keepUpdating = true;
+			elseif ( expiration > 10 ) then
+				keepUpdating = true;
+			end
+		end
+	end
+	
+	if ( not keepUpdating ) then
+		BattlefieldTimerFrame:SetScript("OnUpdate", nil);
 		return;
 	end
+	
+	local frame = BattlefieldFrame
+	
 	BATTLEFIELD_SHUTDOWN_TIMER = BATTLEFIELD_SHUTDOWN_TIMER - elapsed;
 	-- Set the time for the score frame
 	WorldStateScoreFrameTimer:SetFormattedText(SecondsToTimeAbbrev(BATTLEFIELD_SHUTDOWN_TIMER));
 	-- Check if I should send a message only once every 3 seconds (BATTLEFIELD_TIMER_DELAY)
-	BattlefieldFrame.timerDelay = BattlefieldFrame.timerDelay + elapsed;
-	if ( BattlefieldFrame.timerDelay < BATTLEFIELD_TIMER_DELAY ) then
+	frame.timerDelay = frame.timerDelay + elapsed;
+	if ( frame.timerDelay < BATTLEFIELD_TIMER_DELAY ) then
 		return;
 	else
-		BattlefieldFrame.timerDelay = 0
+		frame.timerDelay = 0
 	end
-	
+
 	local threshold = BATTLEFIELD_TIMER_THRESHOLDS[BATTLEFIELD_TIMER_THRESHOLD_INDEX];
 	if ( BATTLEFIELD_SHUTDOWN_TIMER > 0 ) then
-		if ( BATTLEFIELD_SHUTDOWN_TIMER < threshold and BATTLEFIELD_TIMER_THRESHOLD_INDEX ~= getn(BATTLEFIELD_TIMER_THRESHOLDS) ) then
+		if ( BATTLEFIELD_SHUTDOWN_TIMER < threshold and BATTLEFIELD_TIMER_THRESHOLD_INDEX ~= #BATTLEFIELD_TIMER_THRESHOLDS ) then
 			-- If timer past current threshold advance to the next one
 			BATTLEFIELD_TIMER_THRESHOLD_INDEX = BATTLEFIELD_TIMER_THRESHOLD_INDEX + 1;
 		else
@@ -89,7 +133,6 @@ function BattlefieldFrame_OnUpdate(elapsed)
 				end
 				DEFAULT_CHAT_FRAME:AddMessage(string, info.r, info.g, info.b, info.id);
 				PREVIOUS_BATTLEFIELD_MOD = currentMod;
-				
 			end
 		end
 	else
@@ -97,7 +140,7 @@ function BattlefieldFrame_OnUpdate(elapsed)
 	end
 end
 
-function BattlefieldFrame_UpdateStatus(tooltipOnly)
+function BattlefieldFrame_UpdateStatus(tooltipOnly, mapIndex)
 	local status, mapName, instanceID, levelRangeMin, levelRangeMax, teamSize, registeredMatch;
 	local numberQueues = 0;
 	local waitTime, timeInQueue;
@@ -119,6 +162,16 @@ function BattlefieldFrame_UpdateStatus(tooltipOnly)
 		CURRENT_BATTLEFIELD_QUEUES = {};
 	end
 
+	if ( CanHearthAndResurrectFromArea() ) then
+		if ( not MiniMapBattlefieldFrame.inWorldPVPArea ) then
+			MiniMapBattlefieldFrame.inWorldPVPArea = true;
+			UIFrameFadeIn(MiniMapBattlefieldFrame, CHAT_FRAME_FADE_TIME);
+			BattlegroundShineFadeIn();
+		end
+	else
+		MiniMapBattlefieldFrame.inWorldPVPArea = false;
+	end
+	
 	for i=1, MAX_BATTLEFIELD_QUEUES do
 		status, mapName, instanceID, levelRangeMin, levelRangeMax, teamSize, registeredMatch = GetBattlefieldStatus(i);
 		if ( mapName ) then
@@ -166,8 +219,13 @@ function BattlefieldFrame_UpdateStatus(tooltipOnly)
 				showRightClickText = 1;
 			elseif ( status == "confirm" ) then
 				-- Have been accepted show enter battleground dialog
-				tooltip = format(BATTLEFIELD_QUEUE_CONFIRM, mapName, SecondsToTime(GetBattlefieldPortExpiration(i)/1000));
-				if ( not tooltipOnly ) then
+				local seconds = SecondsToTime(GetBattlefieldPortExpiration(i)/1000);
+				if ( seconds ~= "" ) then
+					tooltip = format(BATTLEFIELD_QUEUE_CONFIRM, mapName, seconds);
+				else
+					tooltip = format(BATTLEFIELD_QUEUE_PENDING_REMOVAL, mapName);
+				end
+				if ( (i==mapIndex) and (not tooltipOnly) ) then
 					local dialog = StaticPopup_Show("CONFIRM_BATTLEFIELD_ENTRY", mapName, nil, i);
 					if ( dialog ) then
 						dialog.data = i;
@@ -176,6 +234,7 @@ function BattlefieldFrame_UpdateStatus(tooltipOnly)
 					MiniMapBattlefieldFrame:Show();
 				end
 				showRightClickText = 1;
+				BattlefieldTimerFrame:SetScript("OnUpdate", BattlefieldTimerFrame_OnUpdate);
 			elseif ( status == "active" ) then
 				-- In the battleground
 				if ( teamSize ~= 0 ) then
@@ -184,6 +243,9 @@ function BattlefieldFrame_UpdateStatus(tooltipOnly)
 					tooltip = format(BATTLEFIELD_IN_BATTLEFIELD, mapName);
 				end
 				BATTLEFIELD_SHUTDOWN_TIMER = GetBattlefieldInstanceExpiration()/1000;
+				if ( BATTLEFIELD_SHUTDOWN_TIMER > 0 ) then
+					BattlefieldTimerFrame:SetScript("OnUpdate", BattlefieldTimerFrame_OnUpdate);
+				end
 				BATTLEFIELD_TIMER_THRESHOLD_INDEX = 1;
 				PREVIOUS_BATTLEFIELD_MOD = 0;
 				MiniMapBattlefieldFrame.status = status;
@@ -208,7 +270,7 @@ function BattlefieldFrame_UpdateStatus(tooltipOnly)
 	
 	if ( not tooltipOnly ) then
 		MiniMapBattlefieldFrame_isArena();
-		if ( numberQueues == 0 ) then
+		if ( numberQueues == 0 and (not CanHearthAndResurrectFromArea()) ) then
 			-- Clear everything out
 			MiniMapBattlefieldFrame:Hide();
 		else
@@ -242,7 +304,7 @@ function BattlefieldFrame_Update()
 	local playerLevel = UnitLevel("player");
 	local button, buttonStatus;
 	local instanceID;
-	local mapName, mapDescription, minLevel, maxLevel, mapID, mapX, mapY, mapFull, levelMax, maxGroup = GetBattlefieldInfo();
+	local mapName, mapDescription, minLevel, maxLevel, mapFull, levelMax, maxGroup = GetBattlefieldInfo();
 	
 	-- Set title text
 	BattlefieldFrameFrameLabel:SetText(mapName);
@@ -356,6 +418,23 @@ function MiniMapBattlefieldDropDown_Initialize()
 	local status, mapName, instanceID, levelRangeMin, levelRangeMax, teamSize, registeredMatch;
 	local numQueued = 0;
 	local numShown = 0;
+	
+	if ( CanHearthAndResurrectFromArea() ) then
+		numShown = numShown + 1;
+		info = UIDropDownMenu_CreateInfo();
+		info.text = GetRealZoneText();
+		info.isTitle = 1;
+		info.notCheckable = 1;
+		UIDropDownMenu_AddButton(info);
+
+		info = UIDropDownMenu_CreateInfo();
+		info.text = format(LEAVE_ZONE, GetRealZoneText());			
+		
+		info.func = HearthAndResurrectFromArea;
+		info.notCheckable = 1;
+		UIDropDownMenu_AddButton(info);
+	end
+		
 	for i=1, MAX_BATTLEFIELD_QUEUES do
 		status, mapName, instanceID, levelRangeMin, levelRangeMax, teamSize, registeredMatch = GetBattlefieldStatus(i);
 
@@ -393,7 +472,7 @@ function MiniMapBattlefieldDropDown_Initialize()
 				if ( teamSize == 0 ) then
 					info = UIDropDownMenu_CreateInfo();
 					info.text = CHANGE_INSTANCE;
-					info.func = ShowBattlefieldList;
+					info.func = function(self, ...) ShowBattlefieldList(...) end;
 					info.arg1 = i;
 					info.notCheckable = 1;
 					UIDropDownMenu_AddButton(info);
@@ -401,7 +480,7 @@ function MiniMapBattlefieldDropDown_Initialize()
 
 				info = UIDropDownMenu_CreateInfo();
 				info.text = LEAVE_QUEUE;
-				info.func = AcceptBattlefieldPort;
+				info.func = function (self, ...) AcceptBattlefieldPort(...) end;
 				info.arg1 = i;
 				info.notCheckable = 1;
 				UIDropDownMenu_AddButton(info);
@@ -410,7 +489,7 @@ function MiniMapBattlefieldDropDown_Initialize()
 
 				info = UIDropDownMenu_CreateInfo();
 				info.text = ENTER_BATTLE;
-				info.func = AcceptBattlefieldPort;
+				info.func = function (self, ...) AcceptBattlefieldPort(...) end;
 				info.arg1 = i;
 				info.arg2 = 1;
 				info.notCheckable = 1;
@@ -419,7 +498,7 @@ function MiniMapBattlefieldDropDown_Initialize()
 				if ( teamSize == 0 ) then
 					info = UIDropDownMenu_CreateInfo();
 					info.text = LEAVE_QUEUE;
-					info.func = AcceptBattlefieldPort;
+					info.func = function (self, ...) AcceptBattlefieldPort(...) end;
 					info.arg1 = i;
 					info.notCheckable = 1;
 					UIDropDownMenu_AddButton(info);
@@ -445,7 +524,7 @@ function MiniMapBattlefieldDropDown_Initialize()
 			else
 				info.text = LEAVE_BATTLEGROUND;				
 			end
-			info.func = LeaveBattlefield;
+			info.func = function (self, ...) LeaveBattlefield(...) end;
 			info.notCheckable = 1;
 			UIDropDownMenu_AddButton(info);
 

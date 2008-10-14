@@ -5,15 +5,26 @@ COMBOFRAME_SHINE_FADE_IN = 0.3;
 COMBOFRAME_SHINE_FADE_OUT = 0.4;
 COMBO_FRAME_LAST_NUM_POINTS = 0;
 
-function ComboPointsFrame_OnEvent()
-	local comboPoints = GetComboPoints();
+function ComboFrame_OnEvent(self, event, ...)
+	if ( event == "PLAYER_TARGET_CHANGED" ) then
+		ComboFrame_Update();
+	elseif ( event == "UNIT_COMBO_POINTS" ) then
+		local unit = ...;
+		if ( unit == PlayerFrame.unit ) then
+			ComboFrame_Update();
+		end
+	end
+end
+
+function ComboFrame_Update()
+	local comboPoints = GetComboPoints(PlayerFrame.unit, "target");
 	local comboPoint, comboPointHighlight, comboPointShine;
 	if ( comboPoints > 0 ) then
 		if ( not ComboFrame:IsShown() ) then
 			ComboFrame:Show();
 			UIFrameFadeIn(ComboFrame, COMBOFRAME_FADE_IN);
 		end
-		
+
 		local fadeInfo = {};
 		for i=1, MAX_COMBO_POINTS do
 			comboPointHighlight = getglobal("ComboPoint"..i.."Highlight");
@@ -46,11 +57,11 @@ function ComboPointShineFadeIn(frame)
 	fadeInfo.mode = "IN";
 	fadeInfo.timeToFade = COMBOFRAME_SHINE_FADE_IN;
 	fadeInfo.finishedFunc = ComboPointShineFadeOut;
-	fadeInfo.finishedArg1 = frame:GetName();
+	fadeInfo.finishedArg1 = frame;
 	UIFrameFade(frame, fadeInfo);
 end
 
 --hack since a frame can't have a reference to itself in it
-function ComboPointShineFadeOut(frameName)
-	UIFrameFadeOut(getglobal(frameName), COMBOFRAME_SHINE_FADE_OUT);
+function ComboPointShineFadeOut(frame)
+	UIFrameFadeOut(frame, COMBOFRAME_SHINE_FADE_OUT);
 end

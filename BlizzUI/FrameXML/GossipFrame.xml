@@ -105,7 +105,7 @@
 		</Layers>
 		<Scripts>
 			<OnClick>
-				GossipTitleButton_OnClick();
+				GossipTitleButton_OnClick(self, button);
 			</OnClick>
 		</Scripts>
 		<HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
@@ -121,7 +121,7 @@
 				</Anchor>
 			</Anchors>
 		</ButtonText>
-		<NormalFont inherits="QuestFont" justifyH="LEFT"/>
+		<NormalFont style="QuestFontLeft"/>
 	</Button>
 	<Frame name="GossipFrame" toplevel="true" parent="UIParent" movable="true" enableMouse="true" hidden="true">
  		<Size>
@@ -178,6 +178,9 @@
 				<Layers>
 					<Layer level="BACKGROUND">
 						<FontString name="GossipFrameNpcNameText" inherits="GameFontHighlight">
+							<Size>
+								<AbsDimension x="235" y="20"/>
+							</Size>
 							<Anchors>
 								<Anchor point="LEFT"/>
 								<Anchor point="RIGHT"/>
@@ -187,7 +190,7 @@
 				</Layers>
 				<Scripts>
                      <OnLoad>
-                        this:SetFrameLevel(this:GetFrameLevel() + 2);
+                        self:SetFrameLevel(self:GetFrameLevel() + 2);
                     </OnLoad>
                 </Scripts>
 			</Frame>
@@ -578,7 +581,7 @@
  		</Frames>
 		<Scripts>
 			<OnLoad>
-				GossipFrame_OnLoad();
+				GossipFrame_OnLoad(self);
 			</OnLoad>
 			<OnShow>
 				PlaySound("igQuestListOpen");
@@ -587,7 +590,7 @@
 				end
 			</OnShow>
 			<OnEvent>
-				GossipFrame_OnEvent();
+				GossipFrame_OnEvent(self, event, ...);
 			</OnEvent>
 			<OnHide>
 				PlaySound("igQuestListClose");

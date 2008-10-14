@@ -1,10 +1,25 @@
 
-ManaBarColor = {};
-ManaBarColor[0] = { r = 0.00, g = 0.00, b = 1.00, prefix = MANA };
-ManaBarColor[1] = { r = 1.00, g = 0.00, b = 0.00, prefix = RAGE_POINTS };
-ManaBarColor[2] = { r = 1.00, g = 0.50, b = 0.25, prefix = FOCUS_POINTS };
-ManaBarColor[3] = { r = 1.00, g = 1.00, b = 0.00, prefix = ENERGY_POINTS };
-ManaBarColor[4] = { r = 0.00, g = 1.00, b = 1.00, prefix = HAPPINESS_POINTS };
+PowerBarColor = {};
+PowerBarColor["MANA"] = { r = 0.00, g = 0.00, b = 1.00 };
+PowerBarColor["RAGE"] = { r = 1.00, g = 0.00, b = 0.00 };
+PowerBarColor["FOCUS"] = { r = 1.00, g = 0.50, b = 0.25 };
+PowerBarColor["ENERGY"] = { r = 1.00, g = 1.00, b = 0.00 };
+PowerBarColor["HAPPINESS"] = { r = 0.00, g = 1.00, b = 1.00 };
+PowerBarColor["RUNES"] = { r = 0.50, g = 0.50, b = 0.50 };
+PowerBarColor["RUNIC_POWER"] = { r = 0.00, g = 0.82, b = 1.00 };
+-- vehicle colors
+PowerBarColor["AMMOSLOT"] = { r = 0.80, g = 0.60, b = 0.00 };
+PowerBarColor["FUEL"] = { r = 0.0, g = 0.55, b = 0.5 };
+
+-- these are mostly needed for a fallback case (in case the code tries to index a power token that is missing from the table,
+-- it will try to index by power type instead)
+PowerBarColor[0] = PowerBarColor["MANA"];
+PowerBarColor[1] = PowerBarColor["RAGE"];
+PowerBarColor[2] = PowerBarColor["FOCUS"];
+PowerBarColor[3] = PowerBarColor["ENERGY"];
+PowerBarColor[4] = PowerBarColor["HAPPINESS"];
+PowerBarColor[5] = PowerBarColor["RUNES"];
+PowerBarColor[6] = PowerBarColor["RUNIC_POWER"];
 
 --[[
 	This system uses "update" functions as OnUpdate, and OnEvent handlers.
@@ -16,71 +31,122 @@ ManaBarColor[4] = { r = 0.00, g = 1.00, b = 1.00, prefix = HAPPINESS_POINTS };
 	I needed a seperate OnUpdate and OnEvent handlers. And needed to parse the event.
 ]]--
 
-function UnitFrame_Initialize(unit, name, portrait, healthbar, healthtext, manabar, manatext)
-	this.unit = unit;
-	this.name = name;
-	this.portrait = portrait;
-	this.healthbar = healthbar;
-	this.manabar = manabar;
-	UnitFrameHealthBar_Initialize(unit, healthbar, healthtext);
-	UnitFrameManaBar_Initialize(unit, manabar, manatext);
-	UnitFrame_Update();
-	this:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-	this:RegisterEvent("UNIT_NAME_UPDATE");
-	this:RegisterEvent("UNIT_PORTRAIT_UPDATE");
-	this:RegisterEvent("UNIT_DISPLAYPOWER");
+function UnitFrame_Initialize (self, unit, name, portrait, healthbar, healthtext, manabar, manatext, threatIndicator, threatFeedbackUnit, threatNumericIndicator)
+	self.unit = unit;
+	self.name = name;
+	self.portrait = portrait;
+	self.healthbar = healthbar;
+	self.manabar = manabar;
+	self.threatIndicator = threatIndicator;
+	self.threatNumericIndicator = threatNumericIndicator;
+	if (self.healthbar) then
+		self.healthbar.capNumericDisplay = true;
+	end
+	if (self.manabar) then
+		self.manabar.capNumericDisplay = true;
+	end
+	UnitFrameHealthBar_Initialize(unit, healthbar, healthtext, true);
+	UnitFrameManaBar_Initialize(unit, manabar, manatext, (unit == "player" or unit == "pet"));
+	UnitFrameThreatIndicator_Initialize(unit, self, threatFeedbackUnit);
+	UnitFrame_Update(self);
+	self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+	self:RegisterEvent("UNIT_NAME_UPDATE");
+	self:RegisterEvent("UNIT_PORTRAIT_UPDATE");
+	self:RegisterEvent("UNIT_DISPLAYPOWER");
 end
 
-function UnitFrame_Update()
-	this.name:SetText(GetUnitName(this.unit));
-	SetPortraitTexture(this.portrait, this.unit);
-	UnitFrameHealthBar_Update(this.healthbar, this.unit);
-	UnitFrameManaBar_Update(this.manabar, this.unit);
+function UnitFrame_SetUnit (self, unit, healthbar, manabar)
+	self.unit = unit;
+	healthbar.unit = unit;
+	if ( manabar ) then	--Party Pet frames don't have a mana bar.
+		manabar.unit = unit;
+	end
+	self:SetAttribute("unit", unit);
+	if ( (self==PlayerFrame or self==PetFrame) and unit=="player") then
+		local _,class = UnitClass("player");
+		if ( class=="DEATHKNIGHT" ) then
+			if ( self==PlayerFrame ) then
+				RuneFrame:SetScale(1)
+				RuneFrame:ClearAllPoints()
+				RuneFrame:SetPoint("TOP", self,"BOTTOM", 52, 34)
+			elseif ( self==PetFrame ) then
+				RuneFrame:SetScale(0.6)
+				RuneFrame:ClearAllPoints()
+				RuneFrame:SetPoint("TOP",self,"BOTTOM",25,20)
+			end
+		end
+	end
+	UnitFrame_Update(self);
 end
 
-function UnitFrame_OnEvent(event)
+function UnitFrame_Update (self)
+	if ( self.overrideName ) then
+		self.name:SetText(GetUnitName(self.overrideName));
+	else
+		self.name:SetText(GetUnitName(self.unit));
+	end
+	
+	UnitFramePortrait_Update(self);
+	UnitFrameHealthBar_Update(self.healthbar, self.unit);
+	UnitFrameManaBar_Update(self.manabar, self.unit);
+	UnitFrame_UpdateThreatIndicator(self.threatIndicator, self.threatNumericIndicator);
+end
+
+function UnitFramePortrait_Update (self)
+	SetPortraitTexture(self.portrait, self.unit);
+	if ( self == PlayerFrame ) then
+		return;
+	end
+	
+	local textureName = self.portrait:GetTexture();
+	if ( (not textureName) or (textureName == "Interface\\CharacterFrame\\TemporaryPortrait-Pet") or
+		(string.sub(textureName or "", 1, 51) == "Interface\\CharacterFrame\\TemporaryPortrait-Vehicle-") ) then
+		if ( self.portraitType == "Mechanical" ) then
+			self.portrait:SetTexture("Interface\\CharacterFrame\\TemporaryPortrait-Vehicle-Mechanical");
+		elseif ( self.portraitType == "Natural" ) then
+			self.portrait:SetTexture("Interface\\CharacterFrame\\TemporaryPortrait-Vehicle-Organic");
+		else
+			self.portrait:SetTexture("Interface\\CharacterFrame\\TemporaryPortrait-Pet");
+		end
+	end
+end
+
+function UnitFrame_OnEvent(self, event, ...)
+	local arg1 = ...
+	
+	local unit = self.unit;
 	if ( event == "UNIT_NAME_UPDATE" ) then
-		if ( arg1 == this.unit ) then
-			this.name:SetText(GetUnitName(this.unit));
+		if ( arg1 == unit ) then
+			self.name:SetText(GetUnitName(unit));
 		end
 	elseif ( event == "UNIT_PORTRAIT_UPDATE" ) then
-		if ( arg1 == this.unit ) then
-			SetPortraitTexture(this.portrait, this.unit);
+		if ( arg1 == unit ) then
+			UnitFramePortrait_Update(self);
 		end
 	elseif ( event == "UNIT_DISPLAYPOWER" ) then
-		if ( arg1 == this.unit ) then
-			UnitFrame_UpdateManaType();
+		if ( arg1 == unit ) then
+			UnitFrame_UpdateManaType(self);
 		end
 	end
 end
 
-function UnitFrame_OnEnter(self)
-	if ( SpellIsTargeting() ) then
-		if ( SpellCanTargetUnit(self.unit) ) then
-			SetCursor("CAST_CURSOR");
-		else
-			SetCursor("CAST_ERROR_CURSOR");
-		end
-	end
-
-	GameTooltip_SetDefaultAnchor(GameTooltip, self);
+function UnitFrame_OnEnter (self)
 	-- If showing newbie tips then only show the explanation
-	if ( SHOW_NEWBIE_TIPS == "1" and self:GetName() ~= "PartyMemberFrame1" and self:GetName() ~= "PartyMemberFrame2" and self:GetName() ~= "PartyMemberFrame3" and self:GetName() ~= "PartyMemberFrame4") then
-		if ( self:GetName() == "PlayerFrame" ) then
-			GameTooltip_AddNewbieTip(PARTY_OPTIONS_LABEL, 1.0, 1.0, 1.0, NEWBIE_TOOLTIP_PARTYOPTIONS);
+	if ( SHOW_NEWBIE_TIPS == "1" ) then
+		if ( self == PlayerFrame ) then
+			GameTooltip_SetDefaultAnchor(GameTooltip, self);
+			GameTooltip_AddNewbieTip(self, PARTY_OPTIONS_LABEL, 1.0, 1.0, 1.0, NEWBIE_TOOLTIP_PARTYOPTIONS);
 			return;
-		elseif ( UnitPlayerControlled("target") and not UnitIsUnit("target", "player") and not UnitIsUnit("target", "pet") ) then
-			GameTooltip_AddNewbieTip(PLAYER_OPTIONS_LABEL, 1.0, 1.0, 1.0, NEWBIE_TOOLTIP_PLAYEROPTIONS);
+		elseif ( self == TargetFrame and UnitPlayerControlled("target") and not UnitIsUnit("target", "player") and not UnitIsUnit("target", "pet") ) then
+			GameTooltip_SetDefaultAnchor(GameTooltip, self);
+			GameTooltip_AddNewbieTip(self, PLAYER_OPTIONS_LABEL, 1.0, 1.0, 1.0, NEWBIE_TOOLTIP_PLAYEROPTIONS);
 			return;
 		end
 	end
 	UnitFrame_UpdateTooltip(self);
 end
 
-function UnitFrame_OnLeave()
-	if ( SpellIsTargeting() ) then
-		SetCursor("CAST_ERROR_CURSOR");
-	end
+function UnitFrame_OnLeave ()
 	if ( SHOW_NEWBIE_TIPS == "1" ) then
 		GameTooltip:Hide();
 	else
@@ -88,7 +154,7 @@ function UnitFrame_OnLeave()
 	end
 end
 
-function UnitFrame_UpdateTooltip(self)
+function UnitFrame_UpdateTooltip (self)
 	GameTooltip_SetDefaultAnchor(GameTooltip, self);
 	if ( GameTooltip:SetUnit(self.unit) ) then
 		self.UpdateTooltip = UnitFrame_UpdateTooltip;
@@ -100,48 +166,60 @@ function UnitFrame_UpdateTooltip(self)
 	GameTooltipTextLeft1:SetTextColor(r, g, b);
 end
 
-function UnitFrame_UpdateManaType(unitFrame)
-	if ( not unitFrame ) then
-		unitFrame = this;
-	end
+function UnitFrame_UpdateManaType (unitFrame)
+	assert(unitFrame);
 	if ( not unitFrame.manabar ) then
-		return;
+		if ( unitFrame.manaBar ) then
+			unitFrame.manabar = unitFrame.manaBar;
+		else
+			return;
+		end
 	end
-	local info = ManaBarColor[UnitPowerType(unitFrame.unit)];
+	local powerType, powerToken = UnitPowerType(unitFrame.unit);
+	local prefix = getglobal(powerToken);
+	local info = PowerBarColor[powerToken];
+	if ( not info ) then
+		-- couldn't find a power token entry...default to indexing by power type or just mana if we don't have that either
+		info = PowerBarColor[powerType] or PowerBarColor["MANA"];
+	end
+	unitFrame.manabar.powerType = powerType;
 	unitFrame.manabar:SetStatusBarColor(info.r, info.g, info.b);
-	--Hack for pets
-	if ( unitFrame.unit == "pet" and info.prefix ~= HAPPINESS_POINTS ) then
-		return;
-	end
 	-- Update the manabar text
 	if ( not unitFrame.noTextPrefix ) then
-		SetTextStatusBarTextPrefix(unitFrame.manabar, info.prefix);
+		SetTextStatusBarTextPrefix(unitFrame.manabar, prefix);
 	end
 	TextStatusBar_UpdateTextString(unitFrame.manabar);
 
 	-- Setup newbie tooltip
-	if ( unitFrame:GetName() == "PlayerFrame" ) then
-		unitFrame.manabar.tooltipTitle = info.prefix;
-		unitFrame.manabar.tooltipText = getglobal("NEWBIE_TOOLTIP_MANABAR"..UnitPowerType(unitFrame.unit));
-	else
-		unitFrame.manabar.tooltipTitle = nil;
-		unitFrame.manabar.tooltipText = nil;
+	-- FIXME: Fix this to use powerToken instead of powerType
+	if ( unitFrame.unit ~= "pet" or powerToken == "HAPPINESS" ) then
+	    if ( unitFrame:GetName() == "PlayerFrame" ) then
+		    unitFrame.manabar.tooltipTitle = prefix;
+		    unitFrame.manabar.tooltipText = getglobal("NEWBIE_TOOLTIP_MANABAR_"..powerType);
+	    else
+		    unitFrame.manabar.tooltipTitle = nil;
+		    unitFrame.manabar.tooltipText = nil;
+	    end
 	end
 end
 
-function UnitFrameHealthBar_Initialize(unit, statusbar, statustext)
+function UnitFrameHealthBar_Initialize (unit, statusbar, statustext, frequentUpdates)
 	if ( not statusbar ) then
 		return;
 	end
 
 	statusbar.unit = unit;
 	SetTextStatusBarText(statusbar, statustext);
-	statusbar:RegisterEvent("UNIT_HEALTH");
+	if ( GetCVarBool("predictedHealth") and frequentUpdates ) then
+		statusbar:SetScript("OnUpdate", UnitFrameHealthBar_OnUpdate);
+	else
+		statusbar:RegisterEvent("UNIT_HEALTH");
+	end
 	statusbar:RegisterEvent("UNIT_MAXHEALTH");
 	statusbar:SetScript("OnEvent", UnitFrameHealthBar_OnEvent);
 
 	-- Setup newbie tooltip
-	if ( this and (this:GetName() == "PlayerFrame") ) then
+	if ( statusbar and (statusbar:GetParent() == PlayerFrame) ) then
 		statusbar.tooltipTitle = HEALTH;
 		statusbar.tooltipText = NEWBIE_TOOLTIP_HEALTHBAR;
 	else
@@ -158,61 +236,76 @@ function UnitFrameHealthBar_OnEvent(self, event, ...)
 	end
 end
 
+function UnitFrameHealthBar_OnUpdate(self)
+	if ( not self.disconnected ) then
+		local currValue = UnitHealth(self.unit);
+		if ( currValue ~= self.currValue ) then
+			self:SetValue(currValue);
+			self.currValue = currValue;
+			TextStatusBar_UpdateTextString(self);
+		end
+	end
+end
+
 function UnitFrameHealthBar_Update(statusbar, unit)
 	if ( not statusbar ) then
 		return;
 	end
 	
 	if ( unit == statusbar.unit ) then
-		local currValue = UnitHealth(unit);
 		local maxValue = UnitHealthMax(unit);
-
-		statusbar.showPercentage = nil;
 		
 		-- Safety check to make sure we never get an empty bar.
 		statusbar.forceHideText = false;
 		if ( maxValue == 0 ) then
 			maxValue = 1;
 			statusbar.forceHideText = true;
-		elseif ( maxValue == 100 ) then
-			--This should be displayed as percentage.
-			statusbar.showPercentage = true;
 		end
 
 		statusbar:SetMinMaxValues(0, maxValue);
 
-		if ( not UnitIsConnected(unit) ) then
+		statusbar.disconnected = not UnitIsConnected(unit);
+		if ( statusbar.disconnected ) then
 			statusbar:SetStatusBarColor(0.5, 0.5, 0.5);
 			statusbar:SetValue(maxValue);
+			statusbar.currValue = maxValue;
 		else
+			local currValue = UnitHealth(unit);
 			statusbar:SetStatusBarColor(0.0, 1.0, 0.0);
 			statusbar:SetValue(currValue);
+			statusbar.currValue = currValue;
 		end
 	end
 	TextStatusBar_UpdateTextString(statusbar);
 end
 
-function UnitFrameHealthBar_OnValueChanged(value)
-	TextStatusBar_OnValueChanged();
-	HealthBar_OnValueChanged(value);
+function UnitFrameHealthBar_OnValueChanged(self, value)
+	TextStatusBar_OnValueChanged(self, value);
+	HealthBar_OnValueChanged(self, value);
 end
 
-function UnitFrameManaBar_Initialize(unit, statusbar, statustext)
+function UnitFrameManaBar_Initialize (unit, statusbar, statustext, frequentUpdates)
 	if ( not statusbar ) then
 		return;
 	end
 	statusbar.unit = unit;
 	SetTextStatusBarText(statusbar, statustext);
-	statusbar:RegisterEvent("UNIT_MANA");
-	statusbar:RegisterEvent("UNIT_RAGE");
-	statusbar:RegisterEvent("UNIT_FOCUS");
-	statusbar:RegisterEvent("UNIT_ENERGY");
-	statusbar:RegisterEvent("UNIT_HAPPINESS");
+	if ( GetCVarBool("predictedPower") and frequentUpdates ) then
+		statusbar:SetScript("OnUpdate", UnitFrameManaBar_OnUpdate);
+	else
+		statusbar:RegisterEvent("UNIT_MANA");
+		statusbar:RegisterEvent("UNIT_RAGE");
+		statusbar:RegisterEvent("UNIT_FOCUS");
+		statusbar:RegisterEvent("UNIT_ENERGY");
+		statusbar:RegisterEvent("UNIT_HAPPINESS");
+		statusbar:RegisterEvent("UNIT_RUNIC_POWER");
+	end
 	statusbar:RegisterEvent("UNIT_MAXMANA");
 	statusbar:RegisterEvent("UNIT_MAXRAGE");
 	statusbar:RegisterEvent("UNIT_MAXFOCUS");
 	statusbar:RegisterEvent("UNIT_MAXENERGY");
 	statusbar:RegisterEvent("UNIT_MAXHAPPINESS");
+	statusbar:RegisterEvent("UNIT_MAXRUNIC_POWER");
 	statusbar:RegisterEvent("UNIT_DISPLAYPOWER");
 	statusbar:SetScript("OnEvent", UnitFrameManaBar_OnEvent);
 end
@@ -225,28 +318,103 @@ function UnitFrameManaBar_OnEvent(self, event, ...)
 	end
 end
 
+function UnitFrameManaBar_OnUpdate(self)
+	if ( not self.disconnected ) then
+		local currValue = UnitPower(self.unit, self.powerType);
+		if ( currValue ~= self.currValue ) then
+			self:SetValue(currValue);
+			self.currValue = currValue;
+			TextStatusBar_UpdateTextString(self);
+		end
+	end
+end
+
 function UnitFrameManaBar_Update(statusbar, unit)
 	if ( not statusbar ) then
 		return;
 	end
-	
+
 	if ( unit == statusbar.unit ) then
-		local maxValue = UnitManaMax(unit);
+		-- be sure to update the power type before grabbing the max power!
+		UnitFrame_UpdateManaType(statusbar:GetParent());
+
+		local maxValue = UnitPowerMax(unit, statusbar.powerType);
 
 		statusbar:SetMinMaxValues(0, maxValue);
 
-		-- If disconnected
-
-		if ( not UnitIsConnected(unit) ) then
+		statusbar.disconnected = not UnitIsConnected(unit);
+		if ( statusbar.disconnected ) then
 			statusbar:SetValue(maxValue);
+			statusbar.currValue = maxValue;
 			statusbar:SetStatusBarColor(0.5, 0.5, 0.5);
 		else
-			local currValue = UnitMana(unit);
+			local currValue = UnitPower(unit, statusbar.powerType);
 			statusbar:SetValue(currValue);
-			UnitFrame_UpdateManaType(statusbar:GetParent());
+			statusbar.currValue = currValue;
 		end
 	end
 	TextStatusBar_UpdateTextString(statusbar);
+end
+
+function UnitFrameThreatIndicator_Initialize(unit, unitFrame, feedbackUnit)
+	local indicator = unitFrame.threatIndicator;
+	if ( not indicator ) then
+		return;
+	end
+
+	indicator.unit = unit;
+	indicator.feedbackUnit = feedbackUnit or unit;
+
+	unitFrame:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE");
+	if ( unitFrame.OnEvent == nil ) then
+		unitFrame.OnEvent = unitFrame:GetScript("OnEvent") or false;
+	end
+	unitFrame:SetScript("OnEvent", UnitFrameThreatIndicator_OnEvent);
+end
+
+function UnitFrameThreatIndicator_OnEvent(self, event, ...)
+	if ( self.OnEvent ) then
+		self.OnEvent(self, event, ...);
+	end
+	if ( event == "UNIT_THREAT_SITUATION_UPDATE" ) then
+		UnitFrame_UpdateThreatIndicator(self.threatIndicator, self.threatNumericIndicator,...);
+	end
+end
+
+function UnitFrame_UpdateThreatIndicator(indicator, numericIndicator, unit)
+	if ( not indicator ) then
+		return;
+	end
+
+	if ( not unit or unit == indicator.feedbackUnit ) then
+		local status;
+		if ( indicator.feedbackUnit ~= indicator.unit ) then
+			status = UnitThreatSituation(indicator.feedbackUnit, indicator.unit);
+		else
+			status = UnitThreatSituation(indicator.feedbackUnit);
+		end
+
+		if ( status > 0 and IsThreatWarningEnabled() ) then
+			indicator:SetVertexColor(GetThreatStatusColor(status));
+			indicator:Show();
+
+			if ( numericIndicator ) then
+				if ( ShowNumericThreat() ) then
+					local isTanking, status, percentage = UnitDetailedThreatSituation(indicator.feedbackUnit, indicator.unit);
+					numericIndicator.text:SetText(format("%d", percentage).."%");
+					numericIndicator.bg:SetVertexColor(GetThreatStatusColor(status));
+					numericIndicator:Show();
+				else
+					numericIndicator:Hide();
+				end
+			end
+		else
+			indicator:Hide();
+			if ( numericIndicator ) then
+				numericIndicator:Hide();
+			end
+		end
+	end
 end
 
 function GetUnitName(unit, showServerName)
@@ -259,5 +427,13 @@ function GetUnitName(unit, showServerName)
 		end
 	else
 		return name;
+	end
+end
+
+function ShowNumericThreat()
+	if ( GetCVar("threatShowNumeric") == "1" ) then
+		return true;
+	else
+		return false;
 	end
 end

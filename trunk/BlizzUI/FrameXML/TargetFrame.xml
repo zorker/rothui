@@ -7,16 +7,21 @@
 		</Size>
 		<Scripts>
 			<OnLoad>
-				getglobal(this:GetName().."Border"):SetWidth(13);
-				getglobal(this:GetName().."Border"):SetHeight(13);
+				local border = getglobal(self:GetName().."Border");
+				border:SetWidth(13);
+				border:SetHeight(13);
 			</OnLoad>
 			<OnEnter>
-				if ( this:GetCenter() > GetScreenWidth()/2 ) then
-					GameTooltip:SetOwner(this, "ANCHOR_LEFT");
+				if ( self:GetCenter() > GetScreenWidth()/2 ) then
+					GameTooltip:SetOwner(self, "ANCHOR_LEFT");
 				else
-					GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+					GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 				end
-				GameTooltip:SetUnitDebuff(this:GetParent().unit, this:GetID(), SHOW_DISPELLABLE_DEBUFFS);
+				local filter;
+				if ( GetCVarBool("showDispelDebuffs") ) then
+					filter = "RAID";
+				end
+				GameTooltip:SetUnitDebuff(self:GetParent().unit, self:GetID(), filter);
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide();
@@ -69,13 +74,13 @@
 		</Frames>
 		<Scripts>
 			<OnUpdate>
-				if ( GameTooltip:IsOwned(this) ) then
-					GameTooltip:SetUnitDebuff("target", this.id);
+				if ( GameTooltip:IsOwned(self) ) then
+					GameTooltip:SetUnitDebuff(self.unit, self:GetID());
 				end
 			</OnUpdate>
 			<OnEnter>
-				GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT", 15, -25);
-				GameTooltip:SetUnitDebuff("target", this.id);
+				GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 15, -25);
+				GameTooltip:SetUnitDebuff(self.unit, self:GetID());
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide();
@@ -87,10 +92,10 @@
 			<AbsDimension x="21" y="21"/>
 		</Size>
 		<Layers>
-			<Layer level="ARTWORK">
+			<Layer level="BACKGROUND">
 				<Texture name="$parentIcon" setAllPoints="true"/>
 			</Layer>
-			<Layer level="OVERLAY">
+			<Layer level="ARTWORK">
 				<FontString name="$parentCount" inherits="NumberFontNormalSmall">
 					<Anchors>
 						<Anchor point="BOTTOMRIGHT">
@@ -100,6 +105,20 @@
 						</Anchor>
 					</Anchors>
 				</FontString>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture name="$parentStealable" file="Interface\TargetingFrame\UI-TargetingFrame-Stealable" hidden="true" alphaMode="ADD">
+					<Size>
+						<AbsDimension x="24" y="24"/>
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
 			</Layer>
 		</Layers>
 		<Frames>
@@ -115,13 +134,13 @@
 		</Frames>
 		<Scripts>
 			<OnUpdate>
-				if ( GameTooltip:IsOwned(this) ) then
-					GameTooltip:SetUnitBuff("target", this.id);
+				if ( GameTooltip:IsOwned(self) ) then
+					GameTooltip:SetUnitBuff(self.unit, self:GetID());
 				end
 			</OnUpdate>
 			<OnEnter>
-				GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT", 15, -25);
-				GameTooltip:SetUnitBuff("target", this.id);
+				GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", 15, -25);
+				GameTooltip:SetUnitBuff(self.unit, self:GetID());
 			</OnEnter>
 			<OnLeave>
 				GameTooltip:Hide();
@@ -144,18 +163,18 @@
 		</HitRectInsets>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="TargetFrameFlash" file="Interface\TargetingFrame\UI-TargetingFrame-Flash">
+				<Texture name="TargetFrameFlash" file="Interface\TargetingFrame\UI-TargetingFrame-Flash" hidden="true">
 					<Size>
-						<AbsDimension x="242" y="95"/>
+						<AbsDimension x="242" y="93"/>
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
 							<Offset>
-								<AbsDimension x="-10" y="-1"/>
+								<AbsDimension x="-24" y="0"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
-					<TexCoords left="0.05078125" right="1.0" top="0" bottom="0.7578125"/>
+					<TexCoords left="0" right="0.9453125" top="0" bottom="0.181640625"/>
 				</Texture>
 				<Texture name="TargetFrameBackground">
 					<Size>
@@ -170,6 +189,8 @@
 					</Anchors>
 					<Color r="0" g="0" b="0" a="0.5"/>
 				</Texture>
+			</Layer>
+			<Layer level="BORDER">
 				<Texture name="TargetFrameNameBackground" file="Interface\TargetingFrame\UI-TargetingFrame-LevelBackground">
 					<Size>
 						<AbsDimension x="119" y="19"/>
@@ -182,8 +203,6 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-			</Layer>
-			<Layer level="BORDER">
 				<Texture name="TargetPortrait">
 					<Size>
 						<AbsDimension x="64" y="64"/>
@@ -319,7 +338,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						TargetFrameDropDown_OnLoad();
+						TargetFrameDropDown_OnLoad(self);
 					</OnLoad>
 				</Scripts>
 			</Frame>
@@ -336,15 +355,15 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						TextStatusBar_Initialize();
-						this.textLockable = 1;
-						this.cvar = "targetStatusText";
-						this.cvarLabel = "STATUS_TEXT_TARGET";
-						this.zeroText = "";
+						TextStatusBar_Initialize(self);
+						self.textLockable = 1;
+						self.cvar = "targetStatusText";
+						self.cvarLabel = "STATUS_TEXT_TARGET";
+						self.zeroText = "";
 					</OnLoad>
 					<OnValueChanged>
-						UnitFrameHealthBar_OnValueChanged(arg1);
-						TargetHealthCheck();
+						UnitFrameHealthBar_OnValueChanged(self, value);
+						TargetHealthCheck(self, value);
 					</OnValueChanged>
 				</Scripts>
 				<BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
@@ -362,10 +381,10 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						TextStatusBar_Initialize();
-						this.textLockable = 1;
-						this.cvar = "targetStatusText";
-						this.cvarLabel = "STATUS_TEXT_TARGET";
+						TextStatusBar_Initialize(self);
+						self.textLockable = 1;
+						self.cvar = "targetStatusText";
+						self.cvarLabel = "STATUS_TEXT_TARGET";
 					</OnLoad>
 				</Scripts>
 				<BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
@@ -384,13 +403,13 @@
 				</Anchors>
 				<Scripts>
 					<OnShow>
-						Target_Spellbar_AdjustPosition();
+						Target_Spellbar_AdjustPosition(self);
 					</OnShow>
 					<OnLoad>
-						Target_Spellbar_OnLoad();
+						Target_Spellbar_OnLoad(self);
 					</OnLoad>
 					<OnEvent>
-						Target_Spellbar_OnEvent();
+						Target_Spellbar_OnEvent(self, event, ...);
 					</OnEvent>
 				</Scripts>
 			</StatusBar>
@@ -404,30 +423,75 @@
 					<AbsDimension x="10" y="10"/>
 				</Size>
 			</Frame>
+			<Frame name="TargetFrameNumericalThreat" hidden="true">
+				<Size>
+					<AbsDimension x="49" y="18"/>
+				</Size>
+				<Anchors>
+					<Anchor point="BOTTOM" relativePoint="TOP">
+						<Offset x="-50" y="-22"/>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<FontString name="$parentValue" inherits="GameFontHighlight" text="100%">
+							<Anchors>
+								<Anchor point="TOP">
+									<Offset x="0" y="-4"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<Texture name="$parentBG" file="Interface\TargetingFrame\UI-StatusBar">
+							<Size>
+								<AbsDimension x="37" y="14"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOP">
+									<Offset x="0" y="-3"/>
+								</Anchor>
+							</Anchors>
+						</Texture>
+					</Layer>
+					<Layer level="ARTWORK">
+						<Texture file="Interface\TargetingFrame\NumericThreatBorder">
+							<TexCoords left="0" right="0.765625" top="0" bottom="0.5625"/>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad>
+						self.text = getglobal(self:GetName().."Value");
+						self.bg = getglobal(self:GetName().."BG");
+					</OnLoad>
+				</Scripts>
+			</Frame>
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				UnitFrame_Initialize("target", TargetName, TargetPortrait,
+				UnitFrame_Initialize(self, "target", TargetName, TargetPortrait,
 									 TargetFrameHealthBar, TargetFrameHealthBarText,
-									 TargetFrameManaBar, TargetFrameManaBarText);
-				this.noTextPrefix = true;
-				TargetFrame_OnLoad();
+									 TargetFrameManaBar, TargetFrameManaBarText,
+				                     TargetFrameFlash, 
+									 "player",
+									 TargetFrameNumericalThreat);
+				self.noTextPrefix = true;
+				TargetFrame_OnLoad(self);
 			</OnLoad>
 			<OnEvent>
-				TargetFrame_OnEvent(event);
+				TargetFrame_OnEvent(self, event, ...);
 			</OnEvent>
 			<OnUpdate>
-				TargetFrame_OnUpdate();
-				TargetFrame_HealthUpdate(arg1, "target");
+				TargetFrame_OnUpdate(self, elapsed);
+				TargetFrame_HealthUpdate(self, elapsed, "target");
 			</OnUpdate>
 			<OnHide>
-				TargetFrame_OnHide();
+				TargetFrame_OnHide(self);
 			</OnHide>
 			<OnEnter>
 				UnitFrame_OnEnter(self);
 			</OnEnter>
 			<OnLeave>
-				UnitFrame_OnLeave();
+				UnitFrame_OnLeave(self);
 			</OnLeave>
 		</Scripts>
 	</Button>
@@ -466,7 +530,7 @@
 					<Anchors>
 						<Anchor point="TOPLEFT">
 							<Offset>
-								<AbsDimension x="6" y="-6"/>
+								<AbsDimension x="5" y="-5"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -505,7 +569,7 @@
 				</Layers>
 				<Scripts>
 					<OnLoad>
-						RaiseFrameLevel(this);
+						RaiseFrameLevel(self);
 					</OnLoad>
 				</Scripts>
 			</Frame>
@@ -522,7 +586,7 @@
 				</Anchors>
 				<Scripts>
 					<OnValueChanged>
-						TargetofTargetHealthCheck();
+						TargetofTargetHealthCheck(self, value);
 					</OnValueChanged>
 				</Scripts>
 				<BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
@@ -581,19 +645,19 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				TargetofTarget_OnLoad();
+				TargetofTarget_OnLoad(self);
 			</OnLoad>
 			<OnShow>
-				TargetDebuffButton_Update();
+				TargetFrame_UpdateAuras(self);
 			</OnShow>
 			<OnHide>
-				TargetofTarget_OnHide();
+				TargetofTarget_OnHide(self);
 			</OnHide>
 			<OnEvent>
-				UnitFrame_OnEvent(event);
+				UnitFrame_OnEvent(self, event, ...);
 			</OnEvent>
 			<OnUpdate>
-				TargetofTarget_Update();
+				TargetofTarget_Update(self, elapsed);
 			</OnUpdate>
 		</Scripts>
 	</Button>

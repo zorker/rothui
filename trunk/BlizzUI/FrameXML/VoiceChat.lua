@@ -21,7 +21,7 @@ local function AddTalker(name, unit)
 	talker.unit = unit;
 	tinsert(VOICECHAT_TALKERS, talker);
 	if ( not VoiceChatTalkers:GetScript("OnUpdate") ) then
-		VoiceChatTalkers:SetScript("OnUpdate", function() VoiceChatTalkers_OnUpdate(arg1) end);
+		VoiceChatTalkers:SetScript("OnUpdate", VoiceChatTalkers_OnUpdate);
 	end
 end
 
@@ -49,7 +49,8 @@ function VoiceChatTalkers_OnLoad()
 	VoiceChatTalkers:SetAlpha(0);
 end
 
-function VoiceChatTalkers_OnEvent()
+function VoiceChatTalkers_OnEvent(self, event, ...)
+	local arg1, arg2 = ...;
 	if ( event == "VOICE_PLATE_START" ) then
 		if ( arg1 and (not arg2 or not UnitIsUnit(arg2, "player")) ) then
 			AddTalker(arg1, arg2);
@@ -67,7 +68,7 @@ function VoiceChatTalkers_OnEvent()
 	end
 end
 
-function VoiceChatTalkers_OnUpdate(elapsed)
+function VoiceChatTalkers_OnUpdate(self, elapsed)
 	timeSinceLast = timeSinceLast + elapsed;
 	if ( timeSinceLast > VOICECHAT_UPDATE_FREQ ) then
 		local update = false;
@@ -166,19 +167,19 @@ function VoiceChatTalkers_ResizeFrame(visible)
 	end
 end
 
-function VoiceChat_OnUpdate(elapsed)
-	if ( not this.show ) then
-		if ( this.unit ) then
-			if ( this.name == UnitName("player") ) then
+function VoiceChat_OnUpdate(self, elapsed)
+	if ( not self.show ) then
+		if ( self.unit ) then
+			if ( self.name == UnitName("player") ) then
 				return;
-			elseif ( this.timer ) then
-				if ( this.timer < 0 ) then
-					UIFrameFadeOut(this, 0.35); 
-					this.timer = nil;
-					this.unit = nil;
-					this.name = nil;
+			elseif ( self.timer ) then
+				if ( self.timer < 0 ) then
+					UIFrameFadeOut(self, 0.35); 
+					self.timer = nil;
+					self.unit = nil;
+					self.name = nil;
 				else
-					this.timer = this.timer - elapsed;
+					self.timer = self.timer - elapsed;
 				end
 			end
 		end
@@ -193,25 +194,6 @@ function VoiceChat_Animate(frame, animate)
 		UIFrameFlashStop(getglobal(frameName.."Flash"));
 		frame:Hide();
 	end
-end
-
-function SetTextureDesaturated(icon, desaturated, r, g, b)
-	if ( not icon ) then
-		return;
-	end
-	local shaderSupported = icon:SetDesaturated(desaturated);
-
-	if ( not desaturated ) then
-		r = 1.0;
-		g = 1.0;
-		b = 1.0;
-	elseif ( not r or not shaderSupported ) then
-		r = 0.5;
-		g = 0.5;
-		b = 0.5;
-	end
-	
-	icon:SetVertexColor(r, g, b);
 end
 
 
@@ -234,52 +216,40 @@ end
 function VoiceChat_Toggle()
 	if ( IsVoiceChatEnabled() ) then
 		-- Options Frame Enable
-		AudioOptionsFrameTab2:Enable();
-		AudioOptionsFrameTab2:SetDisabledTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
-		AudioOptionsFrameTab1:Show();
-		AudioOptionsFrameTab2:Show();
 		GameMenuButtonSoundOptions:SetText(SOUNDOPTIONS_MENU);
 		ChannelFrameAutoJoin:Show();
 		VoiceChatTalkers:Show();
 		--- Friends Frame Enable
 		FriendsFrameToggleTab3:Enable();
-		FriendsFrameToggleTab3:SetDisabledTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
+		FriendsFrameToggleTab3:SetDisabledFontObject(GameFontHighlightSmall);
 		FriendsFrameToggleTab3:Show();
 		IgnoreFrameToggleTab3:Enable();
-		IgnoreFrameToggleTab3:SetDisabledTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
+		IgnoreFrameToggleTab3:SetDisabledFontObject(GameFontHighlightSmall);
 		IgnoreFrameToggleTab3:Show();
 	else
 		if ( IsVoiceChatAllowedByServer() ) then
 			-- Options Frame Enable
-			AudioOptionsFrameTab2:Enable();
-			AudioOptionsFrameTab2:SetDisabledTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
-			AudioOptionsFrameTab1:Show();
-			AudioOptionsFrameTab2:Show();
 			GameMenuButtonSoundOptions:SetText(SOUNDOPTIONS_MENU);
 		else
 			-- Options Frame Disable
-			AudioOptionsFrameTab2:Disable();						
-			AudioOptionsFrameTab2:SetDisabledTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
-			AudioOptionsFrameTab1:Hide();
-			AudioOptionsFrameTab2:Hide();
 			GameMenuButtonSoundOptions:SetText(VOICE_SOUND);
 		end
 		ChannelFrameAutoJoin:Hide();
 		VoiceChatTalkers:Hide();
 		--- Friends Frame Disable
 		FriendsFrameToggleTab3:Disable();						
-		FriendsFrameToggleTab3:SetDisabledTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
+		FriendsFrameToggleTab3:SetDisabledFontObject(GameFontDisableSmall);
 		FriendsFrameToggleTab3:Hide();
 		IgnoreFrameToggleTab3:Disable();						
-		IgnoreFrameToggleTab3:SetDisabledTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
+		IgnoreFrameToggleTab3:SetDisabledFontObject(GameFontDisableSmall);
 		IgnoreFrameToggleTab3:Hide();
 	end
 end
 
 --[ Minimap DropDown Functions ]--
 
-function MiniMapVoiceChatDropDown_OnLoad()
-	UIDropDownMenu_Initialize(MiniMapVoiceChatDropDown, MiniMapVoiceChatDropDown_Initialize, "MENU");
+function MiniMapVoiceChatDropDown_OnLoad(self)
+	UIDropDownMenu_Initialize(self, MiniMapVoiceChatDropDown_Initialize, "MENU");
 end
 
 function MiniMapVoiceChatDropDown_Initialize()
@@ -291,7 +261,7 @@ function MiniMapVoiceChatDropDown_Initialize()
 		info = UIDropDownMenu_CreateInfo();
 		info.text = name;
 		info.checked = active;
-		info.func = SetActiveVoiceChannelBySessionID;
+		info.func = function (self, id) SetActiveVoiceChannelBySessionID(id) end;
 		info.arg1 = id;
 		UIDropDownMenu_AddButton(info);
 	end
@@ -305,7 +275,7 @@ function MiniMapVoiceChatDropDown_Initialize()
 	info = UIDropDownMenu_CreateInfo();
 	info.text = NONE;
 	info.checked = checked;
-	info.func = SetActiveVoiceChannelBySessionID;
+	info.func = function (self, id) SetActiveVoiceChannelBySessionID(id) end;
 	info.arg1 = 0;
 	UIDropDownMenu_AddButton(info);
 
@@ -330,5 +300,4 @@ function SetSelfMuteState()
 	else
 		MiniMapVoiceChatFrameIconMuted:Hide();
 	end
-
 end

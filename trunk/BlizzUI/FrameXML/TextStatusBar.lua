@@ -1,7 +1,7 @@
 
-function TextStatusBar_Initialize()
-	this:RegisterEvent("CVAR_UPDATE");
-	this.lockShow = 0;
+function TextStatusBar_Initialize(self)
+	self:RegisterEvent("CVAR_UPDATE");
+	self.lockShow = 0;
 end
 
 function SetTextStatusBarText(bar, text)
@@ -30,9 +30,6 @@ function TextStatusBar_OnEvent(self, event, ...)
 end
 
 function TextStatusBar_UpdateTextString(textStatusBar)
-	if ( not textStatusBar ) then
-		textStatusBar = this;
-	end
 	local textString = textStatusBar.TextString;
 	if(textString) then
 		local value = textStatusBar:GetValue();
@@ -40,7 +37,7 @@ function TextStatusBar_UpdateTextString(textStatusBar)
 
 		if ( ( tonumber(valueMax) ~= valueMax or valueMax > 0 ) and not ( textStatusBar.pauseUpdates ) ) then
 			textStatusBar:Show();
-			if ( value and valueMax > 0 and ( GetCVar("statusTextPercentage") == "1" or textStatusBar.showPercentage ) ) then
+			if ( value and valueMax > 0 and ( GetCVarBool("statusTextPercentage") or textStatusBar.showPercentage ) ) then
 				if ( value == 0 and textStatusBar.zeroText ) then
 					textString:SetText(textStatusBar.zeroText);
 					textStatusBar.isZero = 1;
@@ -60,6 +57,10 @@ function TextStatusBar_UpdateTextString(textStatusBar)
 				return;
 			else
 				textStatusBar.isZero = nil;
+				if ( textStatusBar.capNumericDisplay ) then
+					value = TextStatusBar_CapDisplayOfNumericValue(value);
+					valueMax = TextStatusBar_CapDisplayOfNumericValue(valueMax);
+				end
 				if ( textStatusBar.prefix and (textStatusBar.alwaysPrefix or not (textStatusBar.cvar and GetCVar(textStatusBar.cvar) == "1" and textStatusBar.textLockable) ) ) then
 					textString:SetText(textStatusBar.prefix.." "..value.." / "..valueMax);
 				else
@@ -81,8 +82,19 @@ function TextStatusBar_UpdateTextString(textStatusBar)
 	end
 end
 
-function TextStatusBar_OnValueChanged()
-	TextStatusBar_UpdateTextString();
+function TextStatusBar_CapDisplayOfNumericValue(value)
+	local strLen = strlen(value);
+	local retString = value;
+	if ( strLen > 8 ) then
+		retString = string.sub(value, 1, -7)..SECOND_NUMBER_CAP;
+	elseif ( strLen > 5 ) then
+		retString = string.sub(value, 1, -4)..FIRST_NUMBER_CAP;
+	end
+	return retString;
+end
+
+function TextStatusBar_OnValueChanged(self)
+	TextStatusBar_UpdateTextString(self);
 end
 
 function SetTextStatusBarTextPrefix(bar, prefix)
@@ -117,7 +129,7 @@ function HideTextStatusBarText(bar)
 		if ( bar.lockShow > 0 ) then
 			bar.lockShow = bar.lockShow - 1;
 		end
-		if ( bar.lockShow > 0 or this.isZero == 1) then
+		if ( bar.lockShow > 0 or bar.isZero == 1) then
 			bar.TextString:Show();
 		elseif ( (bar.cvar and GetCVar(bar.cvar) == "1" and bar.textLockable) or bar.forceShow ) then
 			bar.TextString:Show();

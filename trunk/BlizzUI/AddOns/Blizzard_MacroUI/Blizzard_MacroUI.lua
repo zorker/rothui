@@ -1,4 +1,6 @@
-MAX_MACROS = 18;
+MAX_ACCOUNT_MACROS = 36;
+MAX_CHARACTER_MACROS = 18;
+NUM_MACROS_PER_ROW = 6;
 NUM_MACRO_ICONS_SHOWN = 20;
 NUM_ICONS_PER_ROW = 5;
 NUM_ICON_ROWS = 4;
@@ -10,18 +12,18 @@ function MacroFrame_Show()
 	ShowUIPanel(MacroFrame);
 end
 
-function MacroFrame_OnLoad()
+function MacroFrame_OnLoad(self)
 	MacroFrame_SetAccountMacros();
 	PanelTemplates_SetNumTabs(MacroFrame, 2);
 	PanelTemplates_SetTab(MacroFrame, 1);
 end
 
-function MacroFrame_OnShow()
+function MacroFrame_OnShow(self)
 	MacroFrame_Update();
 	PlaySound("igCharacterInfoOpen");
 end
 
-function MacroFrame_OnHide()
+function MacroFrame_OnHide(self)
 	MacroPopupFrame:Hide();
 	MacroFrame_SaveMacro();
 	--SaveMacros();
@@ -30,6 +32,7 @@ end
 
 function MacroFrame_SetAccountMacros()
 	MacroFrame.macroBase = 0;
+	MacroFrame.macroMax = MAX_ACCOUNT_MACROS;
 	local numAccountMacros, numCharacterMacros = GetNumMacros();
 	if ( numAccountMacros > 0 ) then
 		MacroFrame_SelectMacro(MacroFrame.macroBase + 1);
@@ -39,7 +42,8 @@ function MacroFrame_SetAccountMacros()
 end
 
 function MacroFrame_SetCharacterMacros()
-	MacroFrame.macroBase = MAX_MACROS;
+	MacroFrame.macroBase = MAX_ACCOUNT_MACROS;
+	MacroFrame.macroMax = MAX_CHARACTER_MACROS;
 	local numAccountMacros, numCharacterMacros = GetNumMacros();
 	if ( numCharacterMacros > 0 ) then
 		MacroFrame_SelectMacro(MacroFrame.macroBase + 1);
@@ -51,8 +55,8 @@ end
 function MacroFrame_Update()
 	local numMacros;
 	local numAccountMacros, numCharacterMacros = GetNumMacros();
-	local macroButton, macroIcon, macroName;
-	local name, texture, body, isLocal;
+	local macroButtonName, macroButton, macroIcon, macroName;
+	local name, texture, body;
 	local selectedName, selectedBody, selectedIcon;
 
 	if ( MacroFrame.macroBase == 0 ) then
@@ -62,31 +66,38 @@ function MacroFrame_Update()
 	end
 
 	-- Macro List
-	for i=1, MAX_MACROS do
-		macroButton = getglobal("MacroButton"..i);
-		macroIcon = getglobal("MacroButton"..i.."Icon");
-		macroName = getglobal("MacroButton"..i.."Name");
-		if ( i <= numMacros ) then
-			name, texture, body, isLocal = GetMacroInfo(MacroFrame.macroBase + i);
-			macroIcon:SetTexture(texture);
-			macroName:SetText(name);
-			macroButton:Enable();
-			-- Highlight Selected Macro
-			if ( MacroFrame.selectedMacro and (i == (MacroFrame.selectedMacro - MacroFrame.macroBase)) ) then
-				macroButton:SetChecked(1);
-				MacroFrameSelectedMacroName:SetText(name);
-				MacroFrameText:SetText(body);
-				MacroFrameSelectedMacroButton:SetID(i);
-				MacroFrameSelectedMacroButtonIcon:SetTexture(texture);
-				MacroPopupFrame.selectedIconTexture = texture;
+	local maxMacroButtons = max(MAX_ACCOUNT_MACROS, MAX_CHARACTER_MACROS);
+	for i=1, maxMacroButtons do
+		macroButtonName = "MacroButton"..i;
+		macroButton = _G[macroButtonName];
+		macroIcon = _G[macroButtonName.."Icon"];
+		macroName = _G[macroButtonName.."Name"];
+		if ( i <= MacroFrame.macroMax ) then
+			if ( i <= numMacros ) then
+				name, texture, body = GetMacroInfo(MacroFrame.macroBase + i);
+				macroIcon:SetTexture(texture);
+				macroName:SetText(name);
+				macroButton:Enable();
+				-- Highlight Selected Macro
+				if ( MacroFrame.selectedMacro and (i == (MacroFrame.selectedMacro - MacroFrame.macroBase)) ) then
+					macroButton:SetChecked(1);
+					MacroFrameSelectedMacroName:SetText(name);
+					MacroFrameText:SetText(body);
+					MacroFrameSelectedMacroButton:SetID(i);
+					MacroFrameSelectedMacroButtonIcon:SetTexture(texture);
+					MacroPopupFrame.selectedIconTexture = texture;
+				else
+					macroButton:SetChecked(0);
+				end
 			else
 				macroButton:SetChecked(0);
+				macroIcon:SetTexture("");
+				macroName:SetText("");
+				macroButton:Disable();
 			end
+			macroButton:Show();
 		else
-			macroButton:SetChecked(0);
-			macroIcon:SetTexture("");
-			macroName:SetText("");
-			macroButton:Disable();
+			macroButton:Hide();
 		end
 	end
 
@@ -100,10 +111,10 @@ function MacroFrame_Update()
 	end
 	
 	--Update New Button
-	if ( numMacros == MAX_MACROS ) then
-		MacroNewButton:Disable();
-	else
+	if ( numMacros < MacroFrame.macroMax ) then
 		MacroNewButton:Enable();
+	else
+		MacroNewButton:Disable();
 	end
 
 	-- Disable Buttons
@@ -126,9 +137,9 @@ function MacroFrame_AddMacroLine(line)
 	end
 end
 
-function MacroButton_OnClick()
+function MacroButton_OnClick(self, button)
 	MacroFrame_SaveMacro();
-	MacroFrame_SelectMacro(MacroFrame.macroBase + this:GetID());
+	MacroFrame_SelectMacro(MacroFrame.macroBase + self:GetID());
 	MacroFrame_Update();
 	MacroPopupFrame:Hide();
 	MacroFrameText:ClearFocus();
@@ -138,13 +149,13 @@ function MacroFrame_SelectMacro(id)
 	MacroFrame.selectedMacro = id;
 end
 
-function MacroNewButton_OnClick()
+function MacroNewButton_OnClick(self, button)
 	MacroFrame_SaveMacro();
 	MacroPopupFrame.mode = "new";
 	MacroPopupFrame:Show();
 end
 
-function MacroEditButton_OnClick()
+function MacroEditButton_OnClick(self, button)
 	MacroFrame_SaveMacro();
 	MacroPopupFrame.mode = "edit";
 	MacroPopupFrame:Show();
@@ -169,8 +180,24 @@ function MacroFrame_ShowDetails()
 	MacroFrameSelectedMacroButton:Show();
 end
 
-function MacroPopupFrame_OnShow()
-	if ( this.mode == "new" ) then
+function MacroButtonContainer_OnLoad(self)
+	local button;
+	local maxMacroButtons = max(MAX_ACCOUNT_MACROS, MAX_CHARACTER_MACROS);
+	for i=1, maxMacroButtons do
+		button = CreateFrame("CheckButton", "MacroButton"..i, self, "MacroButtonTemplate");
+		button:SetID(i);
+		if ( i == 1 ) then
+			button:SetPoint("TOPLEFT", self, "TOPLEFT", 6, -6);
+		elseif ( mod(i, NUM_MACROS_PER_ROW) == 1 ) then
+			button:SetPoint("TOP", "MacroButton"..(i-NUM_MACROS_PER_ROW), "BOTTOM", 0, -10);
+		else
+			button:SetPoint("LEFT", "MacroButton"..(i-1), "RIGHT", 13, 0);
+		end
+	end
+end
+
+function MacroPopupFrame_OnShow(self)
+	if ( self.mode == "new" ) then
 		MacroFrameText:Hide();
 		MacroFrameSelectedMacroButtonIcon:SetTexture("");
 		MacroPopupFrame.selectedIcon = nil;
@@ -178,7 +205,7 @@ function MacroPopupFrame_OnShow()
 	MacroPopupEditBox:SetFocus();
 
 	PlaySound("igCharacterInfoOpen");
-	MacroPopupFrame_Update();
+	MacroPopupFrame_Update(self);
 	MacroPopupOkayButton_Update();
 
 	-- Disable Buttons
@@ -189,8 +216,8 @@ function MacroPopupFrame_OnShow()
 	MacroFrameTab2:Disable();
 end
 
-function MacroPopupFrame_OnHide()
-	if ( this.mode == "new" ) then
+function MacroPopupFrame_OnHide(self)
+	if ( self.mode == "new" ) then
 		MacroFrameText:Show();
 		MacroFrameText:SetFocus();
 	end
@@ -205,32 +232,33 @@ function MacroPopupFrame_OnHide()
 	else
 		numMacros = numCharacterMacros;
 	end
-	if ( numMacros < MAX_MACROS ) then
+	if ( numMacros < MacroFrame.macroMax ) then
 		MacroNewButton:Enable();
 	end
 	-- Enable tabs
 	PanelTemplates_UpdateTabs(MacroFrame);
 end
 
-function MacroPopupFrame_Update()
+function MacroPopupFrame_Update(self)
+	self = self or MacroPopupFrame;
 	local numMacroIcons = GetNumMacroIcons();
 	local macroPopupIcon, macroPopupButton;
 	local macroPopupOffset = FauxScrollFrame_GetOffset(MacroPopupScrollFrame);
 	local index;
 	
 	-- Determine whether we're creating a new macro or editing an existing one
-	if ( this.mode == "new" ) then
+	if ( self.mode == "new" ) then
 		MacroPopupEditBox:SetText("");
-	elseif ( this.mode == "edit" ) then
-		local name, texture, body, isLocal = GetMacroInfo(MacroFrame.selectedMacro);
+	elseif ( self.mode == "edit" ) then
+		local name, texture, body = GetMacroInfo(MacroFrame.selectedMacro);
 		MacroPopupEditBox:SetText(name);
 	end
 	
 	-- Icon list
 	local texture;
 	for i=1, NUM_MACRO_ICONS_SHOWN do
-		macroPopupIcon = getglobal("MacroPopupButton"..i.."Icon");
-		macroPopupButton = getglobal("MacroPopupButton"..i);
+		macroPopupIcon = _G["MacroPopupButton"..i.."Icon"];
+		macroPopupButton = _G["MacroPopupButton"..i];
 		index = (macroPopupOffset * NUM_ICONS_PER_ROW) + i;
 		texture = GetMacroIconInfo(index);
 		if ( index <= numMacroIcons ) then
@@ -270,19 +298,22 @@ function MacroPopupOkayButton_Update()
 	end
 end
 
-function MacroPopupButton_OnClick()
-	MacroPopupFrame.selectedIcon = this:GetID() + (FauxScrollFrame_GetOffset(MacroPopupScrollFrame) * NUM_ICONS_PER_ROW);
+function MacroPopupButton_OnClick(self, button)
+	MacroPopupFrame.selectedIcon = self:GetID() + (FauxScrollFrame_GetOffset(MacroPopupScrollFrame) * NUM_ICONS_PER_ROW);
 	-- Clear out selected texture
 	MacroPopupFrame.selectedIconTexture = nil;
 	MacroFrameSelectedMacroButtonIcon:SetTexture(GetMacroIconInfo(MacroPopupFrame.selectedIcon));
 	MacroPopupOkayButton_Update();
-	MacroPopupFrame_Update();
+	local mode = MacroPopupFrame.mode;
+	MacroPopupFrame.mode = nil;
+	MacroPopupFrame_Update(MacroPopupFrame);
+	MacroPopupFrame.mode = mode;
 end
 
-function MacroPopupOkayButton_OnClick()
+function MacroPopupOkayButton_OnClick(self, button)
 	local index = 1
 	if ( MacroPopupFrame.mode == "new" ) then
-		index = CreateMacro(MacroPopupEditBox:GetText(), MacroPopupFrame.selectedIcon, nil, nil, (MacroFrame.macroBase > 0));
+		index = CreateMacro(MacroPopupEditBox:GetText(), MacroPopupFrame.selectedIcon, nil, (MacroFrame.macroBase > 0));
 	elseif ( MacroPopupFrame.mode == "edit" ) then
 		index = EditMacro(MacroFrame.selectedMacro, MacroPopupEditBox:GetText(), MacroPopupFrame.selectedIcon);
 	end

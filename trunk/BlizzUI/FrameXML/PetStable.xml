@@ -26,13 +26,13 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				this:RegisterForDrag("LeftButton");
+				self:RegisterForDrag("LeftButton");
 			</OnLoad>
 			<OnEnter>
-				if (this.tooltip) then
-					GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-					GameTooltip:SetText(this.tooltip);
-					GameTooltip:AddLine(this.tooltipSubtext, "", 1.0, 1.0, 1.0);
+				if (self.tooltip) then
+					GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+					GameTooltip:SetText(self.tooltip);
+					GameTooltip:AddLine(self.tooltipSubtext, "", 1.0, 1.0, 1.0);
 					GameTooltip:Show();
 				end
 			</OnEnter>
@@ -40,15 +40,15 @@
 				GameTooltip:Hide();
 			</OnLeave>
 			<OnClick>
-				if ( ClickStablePet(this:GetID()) ) then
+				if ( ClickStablePet(self:GetID()) ) then
 					PetStable_Update();
 				end
 			</OnClick>
 			<OnDragStart>
-				PickupStablePet(this:GetID());
+				PickupStablePet(self:GetID());
 			</OnDragStart>
 			<OnReceiveDrag>
-				if ( ClickStablePet(this:GetID()) ) then
+				if ( ClickStablePet(self:GetID()) ) then
 					PetStable_Update();
 				end
 			</OnReceiveDrag>
@@ -149,15 +149,6 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="PetStableLoyaltyText" inherits="GameFontNormalSmall" text="Loyalty: Mans Best Friend">
-                    <Anchors>
-                        <Anchor point="TOP" relativeTo="PetStableLevelText" relativePoint="BOTTOM">
-                            <Offset>
-                                <AbsDimension x="0" y="-1"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </FontString>
 				<FontString name="PetStableSlotText" inherits="GameFontHighlightSmall" text="STABLE_SLOT_TEXT">
 					<Anchors>
 						<Anchor point="BOTTOM">
@@ -192,14 +183,14 @@
                 </Anchors>
                 <Scripts>
 					<OnLoad>
-						Model_OnLoad();
-						this:RegisterEvent("DISPLAY_SIZE_CHANGED");
+						Model_OnLoad(self);
+						self:RegisterEvent("DISPLAY_SIZE_CHANGED");
 					</OnLoad>
 					<OnEvent>
-						this:RefreshUnit();
+						self:RefreshUnit();
 					</OnEvent>
                     <OnUpdate>
-                        Model_OnUpdate(arg1, this);
+                        Model_OnUpdate(self, elapsed);
                     </OnUpdate>
                 </Scripts>
 				<Frames>
@@ -216,7 +207,7 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								this:RegisterForClicks("LeftButtonDown", "LeftButtonUp");
+								self:RegisterForClicks("LeftButtonDown", "LeftButtonUp");
 							</OnLoad>
 							<OnClick>
 								Model_RotateLeft(PetStableModel);
@@ -235,7 +226,7 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								this:RegisterForClicks("LeftButtonDown", "LeftButtonUp");
+								self:RegisterForClicks("LeftButtonDown", "LeftButtonUp");
 							</OnLoad>
 							<OnClick>
 								Model_RotateRight(PetStableModel);
@@ -268,8 +259,8 @@
 						</Layers>
 						<Scripts>
 							<OnEnter>
-								GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-								GameTooltip:SetText(this.tooltip);
+								GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+								GameTooltip:SetText(self.tooltip);
 							</OnEnter>
 							<OnLeave>
 								GameTooltip:Hide();
@@ -282,7 +273,7 @@
 				<Anchors>
 					<Anchor point="BOTTOMLEFT">
 						<Offset>
-							<AbsDimension x="95" y="150"/>
+							<AbsDimension x="45" y="150"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -308,6 +299,15 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
+			</CheckButton>
+			<CheckButton name="PetStableStabledPet2" inherits="PetStableSlotTemplate" id="2">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="PetStableStabledPet1" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="15" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
 				<Layers>
 					<Layer level="BACKGROUND">
 						<FontString inherits="GameFontNormalSmall" text="STABLED_PETS">
@@ -322,9 +322,18 @@
 					</Layer>
 				</Layers>
 			</CheckButton>
-			<CheckButton name="PetStableStabledPet2" inherits="PetStableSlotTemplate" id="2">
+			<CheckButton name="PetStableStabledPet3" inherits="PetStableSlotTemplate" id="3">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="PetStableStabledPet1" relativePoint="RIGHT">
+					<Anchor point="LEFT" relativeTo="PetStableStabledPet2" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="15" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</CheckButton>
+			<CheckButton name="PetStableStabledPet4" inherits="PetStableSlotTemplate" id="4">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="PetStableStabledPet3" relativePoint="RIGHT">
 						<Offset>
 							<AbsDimension x="15" y="0"/>
 						</Offset>
@@ -358,7 +367,7 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						SmallMoneyFrame_OnLoad();
+						SmallMoneyFrame_OnLoad(self);
 					</OnLoad>
 				</Scripts>
 			</Frame>
@@ -372,8 +381,8 @@
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						SmallMoneyFrame_OnLoad();
-						MoneyFrame_SetType("STATIC");
+						SmallMoneyFrame_OnLoad(self);
+						MoneyFrame_SetType(self, "STATIC");
 					</OnLoad>
 				</Scripts>
 			</Frame>
@@ -389,7 +398,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				PetStable_OnLoad();
+				PetStable_OnLoad(self);
 			</OnLoad>
 			<OnShow>
 				PlaySound("igCharacterInfoOpen");
@@ -399,7 +408,7 @@
 				PlaySound("igCharacterInfoClose");
 			</OnHide>
 			<OnEvent>
-				PetStable_OnEvent();
+				PetStable_OnEvent(self, event, ...);
 			</OnEvent>
 		</Scripts>
 	</Frame>

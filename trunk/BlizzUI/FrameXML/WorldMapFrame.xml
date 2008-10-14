@@ -14,7 +14,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="ARTWORK">
-				<Texture file="Interface\WorldMap\UI-WorldMap-Top1">
+				<Texture name="$parentTexture1">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -26,7 +26,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\WorldMap\UI-WorldMap-Top2">
+				<Texture name="$parentTexture2">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -38,7 +38,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\WorldMap\UI-WorldMap-Top3">
+				<Texture name="$parentTexture3">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -50,7 +50,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\WorldMap\UI-WorldMap-Top4">
+				<Texture name="$parentTexture4">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -62,7 +62,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\WorldMap\UI-WorldMap-Middle1">
+				<Texture name="$parentTexture5">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -74,7 +74,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\WorldMap\UI-WorldMap-Middle2">
+				<Texture name="$parentTexture6">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -86,7 +86,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\WorldMap\UI-WorldMap-Middle3">
+				<Texture name="$parentTexture7">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -98,7 +98,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\WorldMap\UI-WorldMap-Middle4">
+				<Texture name="$parentTexture8">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -110,7 +110,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\WorldMap\UI-WorldMap-Bottom1">
+				<Texture name="$parentTexture9">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -122,7 +122,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\WorldMap\UI-WorldMap-Bottom2">
+				<Texture name="$parentTexture10">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -134,7 +134,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\WorldMap\UI-WorldMap-Bottom3">
+				<Texture name="$parentTexture11">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -146,7 +146,7 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\WorldMap\UI-WorldMap-Bottom4">
+				<Texture name="$parentTexture12">
 					<Size>
 						<AbsDimension x="256" y="256"/>
 					</Size>
@@ -167,7 +167,6 @@
 						</Anchor>
 					</Anchors>
 				</FontString>
-
 			</Layer>
 		</Layers>
 		<Frames>
@@ -250,7 +249,7 @@
 				</Layers>
 				<Scripts>
 					<OnEnter>
-						WorldMapTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT");
+						WorldMapTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT");
 						WorldMapTooltip:SetText(TOGGLE_BATTLEFIELDMINIMAP_TOOLTIP, nil, nil, nil, nil, 1);
 						WorldMapTooltip:Show();
 					</OnEnter>
@@ -276,6 +275,28 @@
 					</OnClick>
 				</Scripts>
 			</Button>
+			<Frame name="WorldMapLevelDropDown" inherits="UIDropDownMenuTemplate" id="2">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="WorldMapZoomOutButton" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="-10" y="-3"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString inherits="GameFontNormalSmall" text="FLOOR">
+							<Anchors>
+								<Anchor point="TOPLEFT">
+									<Offset>
+										<AbsDimension x="20" y="10"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
 			<Button name="WorldMapMagnifyingGlassButton">
 				<Size>
 					<AbsDimension x="179" y="40"/>
@@ -301,8 +322,8 @@
 				</Layers>
 				<Scripts>
 					<OnLoad>
-						this:SetFrameLevel(this:GetFrameLevel() + 2);
-						this:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+						self:SetFrameLevel(self:GetFrameLevel() + 2);
+						self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 					</OnLoad>
 					<OnClick>
 						WorldMapZoomOutButton_OnClick();
@@ -317,7 +338,7 @@
 						</Anchor>
 					</Anchors>
 				</ButtonText>
-				<NormalFont inherits="GameFontHighlightSmall"/>
+				<NormalFont style="GameFontHighlightSmall"/>
 			</Button>
 			<Button name="WorldMapFrameCloseButton" inherits="UIPanelCloseButton">
 				<Anchors>
@@ -471,17 +492,17 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								this.unit = "player";
-								this:SetFrameLevel(this:GetFrameLevel()+1);
+								self.unit = "player";
+								self:SetFrameLevel(self:GetFrameLevel()+1);
 							</OnLoad>
 							<OnEnter>
-								WorldMapUnit_OnEnter();
+								WorldMapUnit_OnEnter(self);
 							</OnEnter>
 							<OnLeave>
 								WorldMapTooltip:Hide();
 							</OnLeave>
 							<OnMouseUp>
-								MapUnit_OnMouseUp(arg1, "WorldMapRaid", "WorldMapParty");
+								MapUnit_OnMouseUp(self, button, "WorldMapRaid", "WorldMapParty");
 							</OnMouseUp>
 						</Scripts>
 					</Frame>
@@ -538,12 +559,12 @@
 					<Frame name="WorldMapDeathRelease" inherits="WorldMapCorpseTemplate">
 						<Scripts>
 							<OnEnter>
-								local x, y = this:GetCenter();
-								local parentX, parentY = this:GetParent():GetCenter();
+								local x, y = self:GetCenter();
+								local parentX, parentY = self:GetParent():GetCenter();
 								if ( x > parentX ) then
-									WorldMapTooltip:SetOwner(this, "ANCHOR_LEFT");
+									WorldMapTooltip:SetOwner(self, "ANCHOR_LEFT");
 								else
-									WorldMapTooltip:SetOwner(this, "ANCHOR_RIGHT");
+									WorldMapTooltip:SetOwner(self, "ANCHOR_RIGHT");
 								end
 								WorldMapTooltip:SetText(SPIRIT_HEALER_RELEASE_RED);
 								WorldMapTooltip:Show();
@@ -559,8 +580,8 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								this.fadeOut = nil;
-								this:SetSequence(0);
+								self.fadeOut = nil;
+								self:SetSequence(0);
 							</OnLoad>
 						</Scripts>
 					</Model>
@@ -653,42 +674,44 @@
 				</Frames>
 				<Scripts>
 					<OnLoad>
-						this:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+						self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 					</OnLoad>
 					<OnMouseUp>
-						WorldMapButton_OnClick(arg1);
+						WorldMapButton_OnClick(self, button);
 					</OnMouseUp>
 					<OnUpdate>
-						WorldMapButton_OnUpdate(arg1);
+						WorldMapButton_OnUpdate(self, elapsed);
 					</OnUpdate>
 				</Scripts>
 			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				WorldMapFrame_OnLoad();
+				WorldMapFrame_OnLoad(self);
 			</OnLoad>
 			<OnShow>
-				SetupFullscreenScale(this);
+				SetupFullscreenScale(self);
 				UpdateMicroButtons();
 				SetMapToCurrentZone();
 				PlaySound("igQuestLogOpen");
 				CloseDropDownMenus();
 				WorldMapFrame_PingPlayerPosition();
+				WorldMap_LoadTextures();
 			</OnShow>
 			<OnHide>
 				UpdateMicroButtons();
 				PlaySound("igQuestLogClose");
+				WorldMap_ClearTextures();
 			</OnHide>
 			<OnEvent>
-				WorldMapFrame_OnEvent();
+				WorldMapFrame_OnEvent(self, event, ...);
 			</OnEvent>
 			<OnUpdate>
 				RequestBattlefieldPositions();
 			</OnUpdate>
 			<OnKeyDown>
-				local binding = GetBindingFromClick(arg1)
-				if ((binding == "TOGGLEWORLDMAP") or (arg1 == "ESCAPE")) then
+				local binding = GetBindingFromClick(key)
+				if ((binding == "TOGGLEWORLDMAP") or (key == "ESCAPE")) then
 					RunBinding("TOGGLEWORLDMAP");
 				elseif ( binding == "SCREENSHOT" ) then
 					RunBinding("SCREENSHOT");
@@ -701,8 +724,8 @@
 	<GameTooltip name="WorldMapTooltip" frameStrata="TOOLTIP" hidden="true" parent="WorldMapFrame" inherits="GameTooltipTemplate">
 		<Scripts>
 			<OnLoad>
-				this:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
-				this:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
+				self:SetBackdropBorderColor(TOOLTIP_DEFAULT_COLOR.r, TOOLTIP_DEFAULT_COLOR.g, TOOLTIP_DEFAULT_COLOR.b);
+				self:SetBackdropColor(TOOLTIP_DEFAULT_BACKGROUND_COLOR.r, TOOLTIP_DEFAULT_BACKGROUND_COLOR.g, TOOLTIP_DEFAULT_BACKGROUND_COLOR.b);
 			</OnLoad>
 		</Scripts>
 	</GameTooltip>

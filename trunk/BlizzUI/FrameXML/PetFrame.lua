@@ -2,62 +2,80 @@
 --PET_FLASH_ON_TIME = 0.5;
 --PET_FLASH_OFF_TIME = 0.5;
 
-function PetFrame_OnLoad()
-	this.attackModeCounter = 0;
-	this.attackModeSign = -1;
-	--this.flashState = 1;
-	--this.flashTimer = 0;
-	CombatFeedback_Initialize(PetHitIndicator, 30);
-	PetFrame_Update();
-	this:RegisterEvent("UNIT_PET");
-	this:RegisterEvent("UNIT_COMBAT");
-	this:RegisterEvent("UNIT_AURA");
-	this:RegisterEvent("PET_ATTACK_START");
-	this:RegisterEvent("PET_ATTACK_STOP");
-	this:RegisterEvent("UNIT_HAPPINESS");
-	this:RegisterEvent("PET_UI_UPDATE");
+function PetFrame_OnLoad (self)
+	self.attackModeCounter = 0;
+	self.attackModeSign = -1;
+	--self.flashState = 1;
+	--self.flashTimer = 0;
+	CombatFeedback_Initialize(self, PetHitIndicator, 30);
+	PetFrame_Update(self);
+	self:RegisterEvent("UNIT_PET");
+	self:RegisterEvent("UNIT_COMBAT");
+	self:RegisterEvent("UNIT_AURA");
+	self:RegisterEvent("PET_ATTACK_START");
+	self:RegisterEvent("PET_ATTACK_STOP");
+	self:RegisterEvent("UNIT_HAPPINESS");
+	self:RegisterEvent("PET_UI_UPDATE");
+	self:RegisterEvent("PET_RENAMEABLE");
 	local showmenu = function()
-		ToggleDropDownMenu(1, nil, PetFrameDropDown);
+		ToggleDropDownMenu(1, nil, PetFrameDropDown, "PetFrame", 44, 8);
 	end
-	SecureUnitButton_OnLoad(this, "pet", showmenu);
-end
-
-function PetFrame_Update()
-	if ( UnitIsVisible("pet") ) then
-		if ( this:IsShown() ) then
-			UnitFrame_Update();
-		else
-			this:Show();
-		end
-		--this.flashState = 1;
-		--this.flashTimer = PET_FLASH_ON_TIME;
-		if ( UnitManaMax("pet") == 0 ) then
-			PetFrameTexture:SetTexture("Interface\\TargetingFrame\\UI-SmallTargetingFrame-NoMana");
-			PetFrameManaBarText:Hide();
-		else
-			PetFrameTexture:SetTexture("Interface\\TargetingFrame\\UI-SmallTargetingFrame");
-		end
-		PetAttackModeTexture:Hide();
-
-		PetFrame_SetHappiness();
-		RefreshBuffs(getglobal("PetFrame"), 0, "pet");
-	else
-		this:Hide();
+	SecureUnitButton_OnLoad(self, "pet", showmenu);
+	
+	local _, class = UnitClass("player");
+	if ( class == "DEATHKNIGHT" ) then
+		self:SetPoint("TOPLEFT", PlayerFrame, "TOPLEFT", 60, -75);
+	elseif ( class == "SHAMAN" ) then
+		self:SetPoint("TOPLEFT", PlayerFrame, "TOPLEFT", 60, -100);
 	end
 end
 
-function PetFrame_OnEvent(event)
-	UnitFrame_OnEvent(event);
+function PetFrame_Update (self, override)
+	if ( (not PlayerFrame.animating) or (override) ) then
+		if ( UnitIsVisible(self.unit) ) then
+			if ( self:IsShown() ) then
+				UnitFrame_Update(self);
+			else
+				self:Show();
+			end
+			--self.flashState = 1;
+			--self.flashTimer = PET_FLASH_ON_TIME;
+			if ( UnitPowerMax(self.unit) == 0 ) then
+				PetFrameTexture:SetTexture("Interface\\TargetingFrame\\UI-SmallTargetingFrame-NoMana");
+				PetFrameManaBarText:Hide();
+			else
+				PetFrameTexture:SetTexture("Interface\\TargetingFrame\\UI-SmallTargetingFrame");
+			end
+			PetAttackModeTexture:Hide();
 
+			PetFrame_SetHappiness(self);
+			RefreshBuffs(self, 0, self.unit);
+		else
+			self:Hide();
+		end
+	end
+end
+
+function PetFrame_OnEvent (self, event, ...)
+	UnitFrame_OnEvent(self, event, ...);
+
+	local arg1, arg2, arg3, arg4, arg5 = ...;
 	if ( (event == "UNIT_PET" and arg1 == "player" ) or event == "PET_UI_UPDATE" ) then
-		PetFrame_Update();
+		local unit
+		if ( UnitInVehicle("player") and UnitHasVehicleUI("player") ) then
+			unit = "player";
+		else
+			unit = "pet";
+		end
+		UnitFrame_SetUnit(self, unit, PetFrameHealthBar, PetFrameManaBar);
+		PetFrame_Update(self);
 	elseif ( event == "UNIT_COMBAT" ) then
-		if ( arg1 == "pet" ) then
-			CombatFeedback_OnCombatEvent(arg2, arg3, arg4, arg5);
+		if ( arg1 == self.unit ) then
+			CombatFeedback_OnCombatEvent(self, arg2, arg3, arg4, arg5);
 		end
 	elseif ( event == "UNIT_AURA" ) then
-		if ( arg1 == "pet" ) then
-			RefreshBuffs(this, 0, "pet");
+		if ( arg1 == self.unit ) then
+			RefreshBuffs(self, 0, self.unit);
 		end
 	elseif ( event == "PET_ATTACK_START" ) then
 		PetAttackModeTexture:SetVertexColor(1.0, 1.0, 1.0, 1.0);
@@ -65,22 +83,24 @@ function PetFrame_OnEvent(event)
 	elseif ( event == "PET_ATTACK_STOP" ) then
 		PetAttackModeTexture:Hide();
 	elseif ( event == "UNIT_HAPPINESS" ) then
-		PetFrame_SetHappiness();
+		PetFrame_SetHappiness(self);
+	elseif ( event == "PET_RENAMEABLE" ) then
+		StaticPopup_Show("RENAME_PET");
 	end
 end
 
-function PetFrame_OnUpdate(elapsed)
+function PetFrame_OnUpdate (self, elapsed)
 	if ( PetAttackModeTexture:IsShown() ) then
 		local alpha = 255;
-		local counter = this.attackModeCounter + elapsed;
-		local sign    = this.attackModeSign;
+		local counter = self.attackModeCounter + elapsed;
+		local sign    = self.attackModeSign;
 
 		if ( counter > 0.5 ) then
 			sign = -sign;
-			this.attackModeSign = sign;
+			self.attackModeSign = sign;
 		end
 		counter = mod(counter, 0.5);
-		this.attackModeCounter = counter;
+		self.attackModeCounter = counter;
 
 		if ( sign == 1 ) then
 			alpha = (55  + (counter * 400)) / 255;
@@ -89,14 +109,14 @@ function PetFrame_OnUpdate(elapsed)
 		end
 		PetAttackModeTexture:SetVertexColor(1.0, 1.0, 1.0, alpha);
 	end
-	CombatFeedback_OnUpdate(elapsed);
+	CombatFeedback_OnUpdate(self, elapsed);
 	-- Expiration flash stuff
 	--local petTimeRemaining = nil;
 	--if ( GetPetTimeRemaining() ) then
-	---	if ( this.flashState == 1 ) then
-	--		this:SetAlpha(this.flashTimer/PET_FLASH_ON_TIME);
+	---	if ( self.flashState == 1 ) then
+	--		self:SetAlpha(this.flashTimer/PET_FLASH_ON_TIME);
 	--	else
-	--		this:SetAlpha((PET_FLASH_OFF_TIME - this.flashTimer)/PET_FLASH_OFF_TIME);
+	--		self:SetAlpha((PET_FLASH_OFF_TIME - this.flashTimer)/PET_FLASH_OFF_TIME);
 	--	end
 	--	petTimeRemaining = GetPetTimeRemaining() / 1000;
 	--end
@@ -115,8 +135,8 @@ function PetFrame_OnUpdate(elapsed)
 	
 end
 
-function PetFrame_SetHappiness()
-	local happiness, damagePercentage, loyaltyRate = GetPetHappiness();
+function PetFrame_SetHappiness ()
+	local happiness, damagePercentage = GetPetHappiness();
 	local hasPetUI, isHunterPet = HasPetUI();
 	if ( not happiness or not isHunterPet ) then
 		PetFrameHappiness:Hide();
@@ -132,45 +152,47 @@ function PetFrame_SetHappiness()
 	end
 	PetFrameHappiness.tooltip = getglobal("PET_HAPPINESS"..happiness);
 	PetFrameHappiness.tooltipDamage = format(PET_DAMAGE_PERCENTAGE, damagePercentage);
-	if ( loyaltyRate < 0 ) then
-		PetFrameHappiness.tooltipLoyalty = getglobal("LOSING_LOYALTY");
-	elseif ( loyaltyRate > 0 ) then
-		PetFrameHappiness.tooltipLoyalty = getglobal("GAINING_LOYALTY");
-	else
-		PetFrameHappiness.tooltipLoyalty = nil;
+end
+
+function PetFrameDropDown_OnLoad (self)
+	UIDropDownMenu_Initialize(self, PetFrameDropDown_Initialize, "MENU");
+end
+
+function PetFrameDropDown_Initialize ()
+	if ( UnitExists(PetFrame.unit) ) then
+		if ( PetFrame.unit == "player" ) then
+			UnitPopup_ShowMenu(PetFrameDropDown, "SELF", "player");
+		else
+			if ( UnitIsUnit("pet", "vehicle") ) then
+				UnitPopup_ShowMenu(PetFrameDropDown, "VEHICLE", "vehicle");
+			else
+				UnitPopup_ShowMenu(PetFrameDropDown, "PET", "pet");
+			end
+		end
 	end
 end
 
-function PetFrameDropDown_OnLoad()
-	UIDropDownMenu_Initialize(this, PetFrameDropDown_Initialize, "MENU");
+function PetCastingBarFrame_OnLoad (self)
+	CastingBarFrame_OnLoad(self, "pet", false);
+
+	self:RegisterEvent("UNIT_PET");
+
+	self.showCastbar = UnitIsPossessed("pet");
 end
 
-function PetFrameDropDown_Initialize()
-	if ( UnitExists("pet") ) then
-		UnitPopup_ShowMenu(PetFrameDropDown, "PET", "pet");
-	end
-end
-
-function PetCastingBarFrame_OnLoad()
-	CastingBarFrame_OnLoad("pet", false);
-
-	this:RegisterEvent("UNIT_PET");
-
-	this.showCastbar = UnitIsPossessed("pet");
-end
-
-function PetCastingBarFrame_OnEvent()
+function PetCastingBarFrame_OnEvent (self, event, ...)
+	local arg1 = ...;
 	if ( event == "UNIT_PET" ) then
 		if ( arg1 == "player" ) then
-			this.showCastbar = UnitIsPossessed("pet");
+			self.showCastbar = UnitIsPossessed("pet");
 
-			if ( not this.showCastbar ) then
-				this:Hide();
-			elseif ( this.casting or this.channeling ) then
-				this:Show();
+			if ( not self.showCastbar ) then
+				self:Hide();
+			elseif ( self.casting or self.channeling ) then
+				self:Show();
 			end
 		end
 		return;
 	end
-	CastingBarFrame_OnEvent(event, arg1);
+	CastingBarFrame_OnEvent(self, event, ...);
 end

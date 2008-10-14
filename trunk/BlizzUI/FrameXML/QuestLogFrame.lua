@@ -5,56 +5,52 @@ QUESTLOG_QUEST_HEIGHT = 16;
 UPDATE_DELAY = 0.1;
 MAX_QUESTLOG_QUESTS = 25;
 MAX_QUESTWATCH_LINES = 30;
+MAX_ACHIEVEMENTWATCH_LINES = 10;
 MAX_WATCHABLE_QUESTS = 5;
 MAX_NUM_PARTY_MEMBERS = 4;
 MAX_QUEST_WATCH_TIME = 300;
 QUEST_WATCH_NO_EXPIRE = -1;
+ACHIEVEMENTWATCH_TIMEDWIDTH = 160;
+ACHIEVEMENTWATCH_MAXWIDTH = 210;
+
+NUM_ACHIEVEMENTWATCH_LINES_USED = 0;
 
 QuestDifficultyColor = { };
-QuestDifficultyColor["impossible"] = { r = 1.00, g = 0.10, b = 0.10 };
-QuestDifficultyColor["verydifficult"] = { r = 1.00, g = 0.50, b = 0.25 };
-QuestDifficultyColor["difficult"] = { r = 1.00, g = 1.00, b = 0.00 };
-QuestDifficultyColor["standard"] = { r = 0.25, g = 0.75, b = 0.25 };
-QuestDifficultyColor["trivial"]	= { r = 0.50, g = 0.50, b = 0.50 };
-QuestDifficultyColor["header"]	= { r = 0.7, g = 0.7, b = 0.7 };
+QuestDifficultyColor["impossible"] = { r = 1.00, g = 0.10, b = 0.10, font = QuestDifficulty_Impossible };
+QuestDifficultyColor["verydifficult"] = { r = 1.00, g = 0.50, b = 0.25, font = QuestDifficulty_Verydifficult };
+QuestDifficultyColor["difficult"] = { r = 1.00, g = 1.00, b = 0.00, font = QuestDifficulty_Difficult };
+QuestDifficultyColor["standard"] = { r = 0.25, g = 0.75, b = 0.25, font = QuestDifficulty_Standard };
+QuestDifficultyColor["trivial"]	= { r = 0.50, g = 0.50, b = 0.50, font = QuestDifficulty_Trivial };
+QuestDifficultyColor["header"]	= { r = 0.7, g = 0.7, b = 0.7, font = QuestDifficulty_Header };
 
-
-
-function ToggleQuestLog()
-	if ( QuestLogFrame:IsShown() ) then
-		HideUIPanel(QuestLogFrame);
-	else
-		ShowUIPanel(QuestLogFrame);
-	end
+function QuestLogTitleButton_OnLoad(self)
+	self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+	self:RegisterEvent("UNIT_QUEST_LOG_CHANGED");
+	self:RegisterEvent("PARTY_MEMBERS_CHANGED");
+	self:RegisterEvent("PARTY_MEMBER_ENABLE");
+	self:RegisterEvent("PARTY_MEMBER_DISABLE");
 end
 
-function QuestLogTitleButton_OnLoad()
-	this:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-	this:RegisterEvent("UNIT_QUEST_LOG_CHANGED");
-	this:RegisterEvent("PARTY_MEMBERS_CHANGED");
-	this:RegisterEvent("PARTY_MEMBER_ENABLE");
-	this:RegisterEvent("PARTY_MEMBER_DISABLE");
-end
-
-function QuestLogTitleButton_OnEvent(event)
-	if ( GameTooltip:IsOwned(this) ) then
+function QuestLogTitleButton_OnEvent(self, event, ...)
+	if ( GameTooltip:IsOwned(self) ) then
 		GameTooltip:Hide();
-		QuestLog_UpdatePartyInfoTooltip();
+		QuestLog_UpdatePartyInfoTooltip(self);
 	end
 end
 
-function QuestLog_OnLoad()
-	this.selectedButtonID = 2;
-	this:RegisterEvent("QUEST_LOG_UPDATE");
-	this:RegisterEvent("QUEST_WATCH_UPDATE");
-	this:RegisterEvent("UPDATE_FACTION");
-	this:RegisterEvent("UNIT_QUEST_LOG_CHANGED");
-	this:RegisterEvent("PARTY_MEMBERS_CHANGED");
-	this:RegisterEvent("PARTY_MEMBER_ENABLE");
-	this:RegisterEvent("PARTY_MEMBER_DISABLE");
+function QuestLog_OnLoad(self)
+	self.selectedButtonID = 2;
+	self:RegisterEvent("QUEST_LOG_UPDATE");
+	self:RegisterEvent("QUEST_WATCH_UPDATE");
+	self:RegisterEvent("UPDATE_FACTION");
+	self:RegisterEvent("UNIT_QUEST_LOG_CHANGED");
+	self:RegisterEvent("PARTY_MEMBERS_CHANGED");
+	self:RegisterEvent("PARTY_MEMBER_ENABLE");
+	self:RegisterEvent("PARTY_MEMBER_DISABLE");
 end
 
-function QuestLog_OnEvent(event)
+function QuestLog_OnEvent(self, event, ...)
+	local arg1 = ...;
 	if ( event == "QUEST_LOG_UPDATE" or event == "UPDATE_FACTION" or (event == "UNIT_QUEST_LOG_CHANGED" and arg1 == "player") ) then
 		QuestLog_Update();
 		QuestWatch_Update();
@@ -71,7 +67,7 @@ function QuestLog_OnEvent(event)
 		QuestLog_Update();
 		if ( event == "PARTY_MEMBERS_CHANGED" ) then
 			-- Determine whether the selected quest is pushable or not
-			if ( GetQuestLogPushable() and GetNumPartyMembers() > 0 ) then
+			if ( GetQuestLogPushable() and ( GetNumPartyMembers() > 0 or GetNumRaidMembers() > 1 ) ) then
 				QuestFramePushQuestButton:Enable();
 			else
 				QuestFramePushQuestButton:Disable();
@@ -93,12 +89,12 @@ function QuestLog_OnHide()
 	PlaySound("igQuestLogClose");
 end
 
-function QuestLog_OnUpdate(elapsed)
-	if ( QuestLogFrame.hasTimer ) then
-		QuestLogFrame.timePassed = QuestLogFrame.timePassed + elapsed;
-		if ( QuestLogFrame.timePassed > UPDATE_DELAY ) then
+function QuestLog_OnUpdate(self, elapsed)
+	if ( self.hasTimer ) then
+		self.timePassed = self.timePassed + elapsed;
+		if ( self.timePassed > UPDATE_DELAY ) then
 			QuestLogTimerText:SetText(TIME_REMAINING.." "..SecondsToTime(GetQuestLogTimeLeft()));
-			QuestLogFrame.timePassed = 0;		
+			self.timePassed = 0;		
 		end
 	end
 end
@@ -246,7 +242,7 @@ function QuestLog_Update()
 				color = GetDifficultyColor(level);
 			end
 			questTitleTag:SetTextColor(color.r, color.g, color.b);
-			questLogTitle:SetTextColor(color.r, color.g, color.b);
+			questLogTitle:SetNormalFontObject(color.font);
 			questNumGroupMates:SetTextColor(color.r, color.g, color.b);
 			questLogTitle.r = color.r;
 			questLogTitle.g = color.g;
@@ -295,7 +291,7 @@ function QuestLog_Update()
 	-- Determine whether the selected quest is pushable or not
 	if ( numEntries == 0 ) then
 		QuestFramePushQuestButton:Disable();
-	elseif ( GetQuestLogPushable() and GetNumPartyMembers() > 0 ) then
+	elseif ( GetQuestLogPushable() and ( GetNumPartyMembers() > 0 or GetNumRaidMembers() > 1 ) ) then
 		QuestFramePushQuestButton:Enable();
 	else
 		QuestFramePushQuestButton:Disable();
@@ -407,10 +403,10 @@ function QuestLog_UpdateQuestDetails(doNotScroll)
 		if ( GetQuestLogRequiredMoney() > GetMoney() ) then
 			-- Not enough money
 			QuestLogRequiredMoneyText:SetTextColor(0, 0, 0);
-			SetMoneyFrameColor("QuestLogRequiredMoneyFrame", 1.0, 0.1, 0.1);
+			SetMoneyFrameColor("QuestLogRequiredMoneyFrame", "red");
 		else
 			QuestLogRequiredMoneyText:SetTextColor(0.2, 0.2, 0.2);
-			SetMoneyFrameColor("QuestLogRequiredMoneyFrame", 1.0, 1.0, 1.0);
+			SetMoneyFrameColor("QuestLogRequiredMoneyFrame", "white");
 		end
 		QuestLogRequiredMoneyText:Show();
 		QuestLogRequiredMoneyFrame:Show();
@@ -458,9 +454,10 @@ function QuestLog_UpdateQuestDetails(doNotScroll)
 	local numChoices = GetNumQuestLogChoices();
 	local money = GetQuestLogRewardMoney();
 	local honor = GetQuestLogRewardHonor();
+	local talents = GetQuestLogRewardTalents();
 	local playerTitle = GetQuestLogRewardTitle();
 
-	if ( playerTitle or (numRewards + numChoices + money + honor) > 0 ) then
+	if ( playerTitle or (numRewards + numChoices + money + honor + talents) > 0 ) then
 		QuestLogRewardTitleText:Show();
 		QuestFrame_SetAsLastShown(QuestLogRewardTitleText);
 	else
@@ -481,12 +478,12 @@ function QuestFrame_SetAsLastShown(frame, spacerFrame)
 	spacerFrame:SetPoint("TOP", frame, "BOTTOM", 0, 0);
 end
 
-function QuestLogTitleButton_OnClick(button)
-	local questName = this:GetText();
-	local questIndex = this:GetID() + FauxScrollFrame_GetOffset(QuestLogListScrollFrame);
+function QuestLogTitleButton_OnClick(self, button)
+	local questName = self:GetText();
+	local questIndex = self:GetID() + FauxScrollFrame_GetOffset(QuestLogListScrollFrame);
 	if ( IsModifiedClick() ) then
 		-- If header then return
-		if ( this.isHeader ) then
+		if ( self.isHeader ) then
 			return;
 		end
 		-- Otherwise try to track it or put it into chat
@@ -520,21 +517,21 @@ function QuestLogTitleButton_OnClick(button)
 	QuestLog_Update();
 end
 
-function QuestLogTitleButton_OnEnter()
+function QuestLogTitleButton_OnEnter(self)
 	-- Set highlight
-	getglobal(this:GetName().."Tag"):SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
+	getglobal(self:GetName().."Tag"):SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
 
 	-- Set group info tooltip
-	QuestLog_UpdatePartyInfoTooltip();
+	QuestLog_UpdatePartyInfoTooltip(self);
 end
 
-function QuestLog_UpdatePartyInfoTooltip()
-	local index = this:GetID() + FauxScrollFrame_GetOffset(QuestLogListScrollFrame);
+function QuestLog_UpdatePartyInfoTooltip(self)
+	local index = self:GetID() + FauxScrollFrame_GetOffset(QuestLogListScrollFrame);
 	local numPartyMembers = GetNumPartyMembers();
-	if ( numPartyMembers == 0 or this.isHeader ) then
+	if ( numPartyMembers == 0 or self.isHeader ) then
 		return;
 	end
-	GameTooltip_SetDefaultAnchor(GameTooltip, this);
+	GameTooltip_SetDefaultAnchor(GameTooltip, self);
 	
 	local questLogTitleText = GetQuestLogTitle(index);
 	GameTooltip:SetText(questLogTitleText);
@@ -555,12 +552,12 @@ function QuestLog_UpdatePartyInfoTooltip()
 	GameTooltip:Show();
 end
 
-function QuestLogCollapseAllButton_OnClick()
-	if (this.collapsed) then
-		this.collapsed = nil;
+function QuestLogCollapseAllButton_OnClick(self)
+	if (self.collapsed) then
+		self.collapsed = nil;
 		ExpandQuestHeader(0);
 	else
-		this.collapsed = 1;
+		self.collapsed = 1;
 		QuestLogListScrollFrameScrollBar:SetValue(0);
 		CollapseQuestHeader(0);
 	end
@@ -675,19 +672,22 @@ function QuestWatch_Update()
 		QuestLogTrackTracking:SetVertexColor(1.0, 0, 0);
 	end
 	
-	-- If no watch lines used then hide the frame and return
-	if ( watchTextIndex == 1 ) then
+	-- If no watch lines used then hide the frame. Don't return! We need to manage frame positions.
+	if ( watchTextIndex == 1 and (not (BarberShopFrame and BarberShopFrame:IsShown())) ) then
 		QuestWatchFrame:Hide();
-		return;
 	else
 		QuestWatchFrame:Show();
 		QuestWatchFrame:SetHeight(watchTextIndex * 13);
 		QuestWatchFrame:SetWidth(questWatchMaxWidth + 10);
-	end
-
-	-- Hide unused watch lines
-	for i=watchTextIndex, MAX_QUESTWATCH_LINES do
-		getglobal("QuestWatchLine"..i):Hide();
+		
+		-- Hide unused watch lines
+		if ( MAX_QUESTWATCH_LINES - NUM_ACHIEVEMENTWATCH_LINES_USED < watchTextIndex ) then
+			watchTextIndex = MAX_QUESTWATCH_LINES - NUM_ACHIEVEMENTWATCH_LINES_USED;
+		end
+		
+		for i=watchTextIndex, MAX_QUESTWATCH_LINES do
+			getglobal("QuestWatchLine"..i):Hide();
+		end
 	end
 
 	UIParent_ManageFramePositions();
@@ -731,4 +731,319 @@ function QuestLogUpdateQuestCount(numQuests)
 		QuestLogCount:SetPoint("TOPRIGHT", QuestLogFrame, "TOPRIGHT", -44, -41);
 	end
 	QuestLogCount:SetWidth(width+hPadding);
+end
+
+function AchievementWatch_OnEvent (self, event, ...)
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		self:UnregisterEvent(event);
+		event = "TRACKED_ACHIEVEMENT_UPDATE";
+	end
+	
+	if ( event == "TRACKED_ACHIEVEMENT_UPDATE" ) then
+		local achievementID, criteriaID, elapsed, duration = ...;
+		if ( not elapsed or ( elapsed >= duration ) ) then
+			local timerInfo = self.timers[achievementID];
+			if ( timerInfo ) then
+				-- This would have been autotimed at some point.
+				local startTime, duration, criteriaID = timerInfo.startTime, timerInfo.duration, timerInfo.criteriaID;
+				if ( GetTime() - startTime >= duration ) then
+					-- This timer already expired, don't display any timer info.
+					timerInfo.startTime = nil;
+					timerInfo.duration = nil;
+					timerInfo.criteriaID = nil;
+					self.timers[achievementID] = nil;
+				else
+					self.hasTimer = true;
+					self.startTime = startTime;
+					self.duration = duration;
+					self.timedCriteria = criteriaID;
+					AchievementWatch_Update();
+					return
+				end
+			end
+			self.hasTimer = nil;
+			self.startTime = nil;
+			self.duration = nil;
+			self.timedCriteria = nil;
+			AchievementWatch_Update();
+		elseif ( GetTrackedAchievement() == achievementID and duration > elapsed ) then
+			self.hasTimer = true;
+			self.startTime = GetTime() - elapsed;
+			self.duration = duration;
+			self.timedCriteria = criteriaID;
+		
+			local timerInfo = self.timers[achievementID]
+			if ( timerInfo ) then
+				timerInfo.startTime = GetTime() - elapsed;
+				timerInfo.duration = duration;
+				timerInfo.criteriaID = criteriaID;
+			else
+				self.timers[achievementID] = { ["startTime"] = GetTime() - elapsed, ["duration"] = duration, ["criteriaID"] = criteriaID };
+			end
+			AchievementWatch_Update();	
+		elseif ( achievementID and duration ) then
+			-- I didn't really want to be creating tables here, but this isn't going to be hit on a regular basis, and it solves the issue for now.
+			local timerInfo = self.timers[achievementID]
+			if ( timerInfo ) then
+				timerInfo.startTime = GetTime() - elapsed;
+				timerInfo.duration = duration;
+				timerInfo.criteriaID = criteriaID;
+			else
+				self.timers[achievementID] = { ["startTime"] = GetTime() - elapsed, ["duration"] = duration, ["criteriaID"] = criteriaID };
+			end
+		end
+	elseif ( event == "ACHIEVEMENT_EARNED" ) then
+		local id = ...
+		if ( id == GetTrackedAchievement() ) then
+			AchievementWatch_Update();	
+		end
+	end
+end
+
+function AchievementWatchButton_OnClick ()
+	if ( not AchievementFrame ) then
+		AchievementFrame_LoadUI();
+		AchievementFrame_ToggleAchievementFrame();
+	elseif ( not AchievementFrame:IsShown() ) then
+		AchievementFrame_ToggleAchievementFrame();
+	end
+	
+	AchievementFrame_SelectAchievement(AchievementWatchFrame.achievementID);
+end
+
+function WatchLine_OnUpdate (self, elapsed)
+	local timeNow = GetTime();
+	local timeLeft = math.floor(self.startTime + self.duration - timeNow);
+	if ( timeLeft <= 0 ) then
+		self.text:SetText(string.format("- " .. SECONDS_ABBR, 0));
+		self.text:SetTextColor(1, 0, 0, 1);
+		self:SetScript("OnUpdate", nil);
+		for i = 1, MAX_ACHIEVEMENTWATCH_LINES do
+			local watchLine = getglobal("AchievementWatchLine" .. i);
+			if ( watchLine.id == AchievementWatchFrame.timedCriteria ) then
+				if ( watchLine.statusBar:IsShown() ) then
+					watchLine.statusBar:GetStatusBarTexture():SetVertexColor(1, 0, 0, 1);
+				end
+			end
+		end
+	else
+		self.text:SetText("- " .. SecondsToTime(timeLeft));
+		local percentage = ( timeNow - self.startTime ) / self.duration;
+		if ( percentage < .6 ) then
+			self.text:SetTextColor(1, 1, 1, 1);
+		elseif ( percentage < .8 ) then
+			percentage = percentage - .6;
+			local redPercentage = percentage / .2;
+			self.text:SetTextColor(1, 1, 1 - redPercentage, 1);
+		else
+			-- Once 20% time is left, slowly fade to red.
+			percentage = percentage - .8;
+			local greenPercentage = percentage / .2;
+			self.text:SetTextColor(1, 1 - greenPercentage, 0, 1);
+		end
+	end
+end
+
+function AchievementWatch_Update()
+	local numCriteria;
+	local achievementWatchMaxWidth = 0;
+	local tempWidth;
+	local watchLine, watchText;
+	local criteriaString, criteriaType, completed, uantity, totalQuantity, name, flags, assetID, quantityString;
+	local achievementTitle
+	local watchTextIndex = 1;
+	local achievementID;
+	local criteriaCompleted;
+	
+	local watchFrame = AchievementWatchFrame;
+
+	NUM_ACHIEVEMENTWATCH_LINES_USED = 0;
+	
+	achievementID = GetTrackedAchievement();
+		
+	local frameHeight = 0;
+
+	if ( achievementID ) then
+		numCriteria = GetAchievementNumCriteria(achievementID);
+		local _, achievementName, _, completed, _, _, _, _, _, icon = GetAchievementInfo(achievementID);
+		watchFrame.achievementID = achievementID;
+		
+				
+		-- Set title
+		watchLine = getglobal("AchievementWatchLine"..watchTextIndex);
+		watchText = watchLine.text;
+		watchText:SetText(achievementName);
+		watchLine:Show();
+		watchLine.icon:Show();
+		watchLine.border:Show();
+		watchLine.icon:SetTexture(icon);
+			
+		if ( completed ) then
+			watchText:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
+		else
+			watchText:SetTextColor(0.75, 0.61, 0);
+		end
+			
+		frameHeight = frameHeight + 15;
+			
+		-- 18 is the width of watchLine.icon + it's offset
+		tempWidth = watchText:GetStringWidth() + 18;
+		-- Set the anchor of the title line a little lower
+		watchText:Show();
+		if ( tempWidth > achievementWatchMaxWidth ) then
+			achievementWatchMaxWidth = tempWidth;
+		end
+		watchTextIndex = watchTextIndex + 1;
+		criteriaCompleted = 0;
+
+		local lastLine = watchLine;
+		local nextXOffset = 0;
+			
+		if ( watchFrame.hasTimer and not completed ) then
+			watchLine = getglobal("AchievementWatchLine"..watchTextIndex);
+			watchLine.startTime = watchFrame.startTime;
+			watchLine.duration = watchFrame.duration;
+			watchLine.statusBar:Hide();
+			watchLine:SetScript("OnUpdate", WatchLine_OnUpdate);
+			watchLine:Show();
+			watchLine:SetPoint("TOPLEFT", lastLine, "BOTTOMLEFT", 16, 0);
+			watchTextIndex = watchTextIndex + 1;
+			if ( achievementWatchMaxWidth <= ACHIEVEMENTWATCH_TIMEDWIDTH ) then
+				achievementWatchMaxWidth = ACHIEVEMENTWATCH_TIMEDWIDTH;
+			end
+			nextXOffset = -16;
+			frameHeight = frameHeight + 15;
+		end
+			
+			
+		for j=1, numCriteria do
+			criteriaString, criteriaType, completed, quantity, totalQuantity, name, flags, assetID, quantityString, criteriaID = GetAchievementCriteriaInfo(achievementID, j);
+			
+			if ( completed or watchTextIndex > MAX_ACHIEVEMENTWATCH_LINES ) then
+				-- Do nothing =O
+			elseif ( watchTextIndex == MAX_ACHIEVEMENTWATCH_LINES ) then
+				lastLine = watchLine;
+				watchLine = getglobal("AchievementWatchLine"..watchTextIndex);
+				watchLine:SetScript("OnUpdate", nil);
+				-- We ran out of lines. Make sure we don't need to display anything else. If we do, change the last line to "..." and setup the mouseover.
+		
+				local numUncompleted = 0;
+				if ( not completed ) then
+					numUncompleted = numUncompleted + 1;
+				end
+				
+				for k=j+1, numCriteria do
+					local tempCriteriaString, tempCriteriaType, completed = GetAchievementCriteriaInfo(achievementID, k);
+					if ( not completed ) then
+						criteriaString = tempCriteriaString;
+						numUncompleted = numUncompleted + 1;
+					end
+				end
+				
+				if ( numUncompleted == 0 ) then
+					-- Total false alarm. Hide the last line (we only displayed MAX_ACHIEVEMENTWATCH_LINES - 1) but increment watchTextIndex anyways, so we can skip the above loop.
+					watchLine:Hide();
+				elseif ( numUncompleted > 1 ) then
+					-- We did run out of space
+					watchLine.statusBar:Hide();
+					watchLine:Show();
+					watchLine:SetPoint("TOPLEFT", lastLine, "BOTTOMLEFT", nextXOffset + 4, 0);
+					watchLine.text:SetText("...");
+					watchLine.text:Show();
+					frameHeight = frameHeight + 15;
+				else	
+					-- Just enough space!
+					watchText = watchLine.text;
+					-- Set Objective text
+					tempWidth = watchText:GetStringWidth();
+					-- Color the objectives
+					watchText:SetTextColor(0.8, 0.8, 0.8);
+					watchLine.statusBar:Hide();
+					watchText:SetText(" - "..criteriaString);
+					watchLine:SetPoint("TOPLEFT", lastLine, "BOTTOMLEFT", 0, 0);
+					nextXOffset = 0;
+					tempWidth = watchText:GetStringWidth();
+					watchLine:Show();
+					frameHeight = frameHeight + 15;
+				end
+				
+				watchTextIndex = watchTextIndex + 1;
+			elseif ( bit.band(flags, ACHIEVEMENT_CRITERIA_PROGRESS_BAR) == ACHIEVEMENT_CRITERIA_PROGRESS_BAR ) then
+				lastLine = watchLine;
+				watchLine = getglobal("AchievementWatchLine"..watchTextIndex);
+				-- Progress Bar
+				watchLine:SetScript("OnUpdate", nil);
+				watchLine:Show();
+				watchLine.statusBar:Show();
+				watchLine.id = criteriaID
+				watchLine.text:SetText("");
+				watchLine.statusBar:GetStatusBarTexture():SetVertexColor(0, 0.6, 0, 1);
+				watchLine.statusBar:SetMinMaxValues(0, totalQuantity);
+				watchLine.statusBar:SetValue(quantity);
+				watchLine.statusBar.text:SetText(string.format("%s / %d", quantity, totalQuantity));
+				watchLine.statusBar.OnClick = AchievementWatchButton_OnClick;
+				watchTextIndex = watchTextIndex + 1;
+				if ( lastLine.icon and lastLine.icon:IsShown() ) then
+					watchLine:SetPoint("TOPLEFT", lastLine, "BOTTOMLEFT", nextXOffset, -8);
+				else
+					watchLine:SetPoint("TOPLEFT", lastLine, "BOTTOMLEFT", nextXOffset, -4);
+				end
+				nextXOffset = 0;
+				tempWidth = 180;
+				frameHeight = frameHeight + 19;
+			else
+				lastLine = watchLine;
+				watchLine = getglobal("AchievementWatchLine"..watchTextIndex);
+				-- Regular text stuff
+				watchText = watchLine.text;
+				-- Set Objective text
+				tempWidth = watchText:GetStringWidth();
+				-- Color the objectives
+				watchText:SetTextColor(0.8, 0.8, 0.8);
+				
+				watchLine.statusBar:Hide();
+				watchText:SetText(" - "..criteriaString);
+				
+				watchLine:SetPoint("TOPLEFT", lastLine, "BOTTOMLEFT", 0, 0);
+				nextXOffset = 0;
+				
+				tempWidth = watchText:GetStringWidth();
+				
+				watchLine:SetScript("OnUpdate", nil);
+				watchLine:Show();
+				watchTextIndex = watchTextIndex + 1;
+				frameHeight = frameHeight + 15;
+			end
+							
+			if ( tempWidth > achievementWatchMaxWidth ) then
+				achievementWatchMaxWidth = tempWidth;
+			end
+		end
+	end
+	
+	-- If no watch lines used then hide the frame and return
+	if ( watchTextIndex == 1 and (not (BarberShopFrame and BarberShopFrame:IsShown()))) then
+		watchLine = getglobal("AchievementWatchLine"..watchTextIndex);
+		watchLine:Hide();
+		watchFrame:Hide();
+		return;
+	else		
+		NUM_ACHIEVEMENTWATCH_LINES_USED = watchTextIndex - 1;
+		
+		achievementWatchMaxWidth = min(ACHIEVEMENTWATCH_MAXWIDTH, achievementWatchMaxWidth) + 10;
+		
+		watchFrame:Show();
+		watchFrame:SetHeight(frameHeight);
+		watchFrame:SetWidth(achievementWatchMaxWidth);
+		watchFrame.desiredWidth = achievementWatchMaxWidth;
+	end
+
+	-- Hide unused watch lines
+	if ( NUM_ACHIEVEMENTWATCH_LINES_USED < MAX_ACHIEVEMENTWATCH_LINES ) then
+		for i=NUM_ACHIEVEMENTWATCH_LINES_USED + 1, MAX_ACHIEVEMENTWATCH_LINES do
+			getglobal("AchievementWatchLine"..i):Hide();
+		end
+	end
+
+	UIParent_ManageFramePositions();
 end

@@ -3,42 +3,69 @@
 	<Script file="RaidFrame.lua"/>
 	<Frame name="RaidInfoInstanceTemplate" virtual="true">
 		<Size>
-			<AbsDimension x="220" y="40"/>
+			<AbsDimension x="230" y="40"/>
 		</Size>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<FontString name="$parentName" inherits="GameFontNormal" justifyH="LEFT">
+				<FontString name="$parentID" inherits="GameFontDisableSmall" justifyH="RIGHT">
 					<Size>
-						<AbsDimension x="190" y="16"/>
+						<AbsDimension x="55" y="10"/>
 					</Size>
 					<Anchors>
-						<Anchor point="TOPLEFT">
+						<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT">
 							<Offset>
-								<AbsDimension x="-2" y="-10"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-				<FontString name="$parentID" inherits="GameFontDisableSmall">
-					<Anchors>
-						<Anchor point="LEFT" relativeTo="$parentName" relativePoint="RIGHT">
-							<Offset>
-								<AbsDimension x="0" y="-1"/>
+								<AbsDimension x="0" y="-11"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
 				</FontString>
 				<FontString name="$parentReset" inherits="GameFontHighlightSmall" >
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parentName" relativePoint="BOTTOMLEFT">
+						<Anchor point="TOPLEFT">
 							<Offset>
-								<AbsDimension x="0" y="0"/>
+								<AbsDimension x="-2" y="-26"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
 				</FontString>
 			</Layer>
 		</Layers>
+		<Frames>
+			<Frame name="$parentName" enableMouse="true">
+				<Size>
+					<AbsDimension x="170" y="16"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="-2" y="-10"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<FontString name="$parentText" inherits="GameFontNormal" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="LEFT"/>
+								<Anchor point="RIGHT"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEnter>
+						local text = _G[self:GetName().."Text"];
+						if ( text:GetWidth() > self:GetWidth() ) then
+							GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+							GameTooltip:SetText(text:GetText());
+						end
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide();
+					</OnLeave>
+				</Scripts>
+			</Frame>
+		</Frames>
 	</Frame>
 	<Frame name="RaidFrame" setAllPoints="true" hidden="true" parent="FriendsFrame">
 		<Layers>
@@ -74,9 +101,9 @@
 						ConvertToRaid();
 					</OnClick>
 				</Scripts>
-				<NormalFont inherits="GameFontNormalSmall"/>
-				<HighlightFont inherits="GameFontHighlightSmall"/>
-				<DisabledFont inherits="GameFontDisableSmall"/>
+				<NormalFont style="GameFontNormalSmall"/>
+				<HighlightFont style="GameFontHighlightSmall"/>
+				<DisabledFont style="GameFontDisableSmall"/>
 			</Button>
 			<Button name="RaidFrameRaidInfoButton" inherits="UIPanelButtonTemplate" text="RAID_INFO">
 				<Size>
@@ -98,9 +125,9 @@
 						end
 					</OnClick>
 				</Scripts>
-				<NormalFont inherits="GameFontNormalSmall"/>
-				<HighlightFont inherits="GameFontHighlightSmall"/>
-				<DisabledFont inherits="GameFontDisableSmall"/>
+				<NormalFont style="GameFontNormalSmall"/>
+				<HighlightFont style="GameFontHighlightSmall"/>
+				<DisabledFont style="GameFontDisableSmall"/>
 			</Button>
 			<Frame name="RaidInfoFrame" enableMouse="true" hidden="true">
 				<Size>
@@ -256,19 +283,19 @@
 						</Frames>
 						<Scripts>
 							<OnLoad>
-								ScrollFrame_OnLoad();
+								ScrollFrame_OnLoad(self);
 							</OnLoad>
 							<OnScrollRangeChanged>
-								ScrollFrame_OnScrollRangeChanged(arg2);
+								ScrollFrame_OnScrollRangeChanged(self, yrange);
 							</OnScrollRangeChanged>
 							<!--  The code to disable the ScrollDownButton is pretty hacked, but it works -->
 							<OnVerticalScroll>
-								local scrollbar = getglobal(this:GetName().."ScrollBar");
-								scrollbar:SetValue(arg1);
+								local scrollbar = getglobal(self:GetName().."ScrollBar");
+								scrollbar:SetValue(offset);
 								local min;
 								local max;
 								min, max = scrollbar:GetMinMaxValues();
-								if ( arg1 == 0 ) then
+								if ( offset == 0 ) then
 									getglobal(scrollbar:GetName().."ScrollUpButton"):Disable();
 								else
 									getglobal(scrollbar:GetName().."ScrollUpButton"):Enable();
@@ -280,7 +307,7 @@
 								end
 							</OnVerticalScroll>
 							<OnMouseWheel>
-								ScrollFrameTemplate_OnMouseWheel(arg1);
+								ScrollFrameTemplate_OnMouseWheel(self, delta);
 							</OnMouseWheel>
 						</Scripts>
 						<ScrollChild>
@@ -317,14 +344,14 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				RaidFrame_OnLoad();
+				RaidFrame_OnLoad(self);
 			</OnLoad>
 			<OnShow>
 				RaidFrame_Update();
 				RequestRaidInfo();
 			</OnShow>
 			<OnEvent>
-				RaidFrame_OnEvent();
+				RaidFrame_OnEvent(self, event, ...);
 			</OnEvent>
 		</Scripts>
 		<HitRectInsets>

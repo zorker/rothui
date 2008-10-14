@@ -71,14 +71,17 @@
 		</Layers>
 		<Scripts>
 			<OnLoad>
-				CastingBarFrame_OnLoad("player", true);
+				CastingBarFrame_OnLoad(self, "player", true);
 			</OnLoad>
 			<OnEvent>
-				CastingBarFrame_OnEvent(event, arg1);
+				CastingBarFrame_OnEvent(self, event, ...);
 			</OnEvent>
 			<OnUpdate>
-				CastingBarFrame_OnUpdate();
+				CastingBarFrame_OnUpdate(self, elapsed);
 			</OnUpdate>
+			<OnShow>
+				CastingBarFrame_OnShow(self);
+			</OnShow>
 		</Scripts>
 		<BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
 		<BarColor r="1.0" g="0.7" b="0.0"/>

@@ -17,12 +17,6 @@ LAST_ITEM_COUNT = 0;
 LAST_ITEM_START_BID = 0;
 LAST_ITEM_BUYOUT = 0;
 
--- added these so that they could be changed in localization files
-BUYOUT_TEXT_OFFSET_NO_SCROLL = -178;
-BUYOUT_TEXT_OFFSET_WITH_SCROLL = -153
-BUYOUT_TEXT_YOFFSET_NO_SCROLL = 0;
-BUYOUT_TEXT_YOFFSET_WITH_SCROLL = 0;
-
 AuctionSort = { };
 
 -- owner sorts
@@ -49,7 +43,7 @@ AuctionSort["owner_bid"] = {
 AuctionSort["owner_quality"] = {
 	{ column = "bid",		reverse = false	},
 	{ column = "quantity",	reverse = true	},
-	{ column = "buyout",	reverse = false	},
+	{ column = "minbidbuyout",	reverse = false	},
 	{ column = "name",		reverse = false	},
 	{ column = "level",		reverse = true	},
 	{ column = "quality",	reverse = false	},
@@ -69,14 +63,14 @@ AuctionSort["owner_duration"] = {
 AuctionSort["bidder_quality"] = {
 	{ column =  "bid",		reverse = false	},
 	{ column =  "quantity",	reverse = true	},
-	{ column =  "buyout",	reverse = false	},
+	{ column =  "minbidbuyout",	reverse = false	},
 	{ column =  "name",		reverse = false	},
 	{ column =  "level",	reverse = true	},
 	{ column =  "quality",	reverse = false	},
 };
 
 AuctionSort["bidder_level"] = {
-	{ column =  "buyout",	reverse = true	},
+	{ column =  "minbidbuyout",	reverse = true	},
 	{ column =  "status",	reverse = true	},
 	{ column =  "bid",		reverse = true	},
 	{ column =  "duration",	reverse = true	},
@@ -102,7 +96,7 @@ AuctionSort["bidder_status"] = {
 	{ column =  "name",		reverse = false	},
 	{ column =  "level",	reverse = true	},
 	{ column =  "quality",	reverse = false	},
-	{ column =  "buyout",	reverse = false	},
+	{ column =  "minbidbuyout",	reverse = false	},
 	{ column =  "bid",		reverse = false	},
 	{ column =  "duration", reverse = false	},
 	{ column =  "status",	reverse = false	},
@@ -113,7 +107,7 @@ AuctionSort["bidder_bid"] = {
 	{ column =  "name",		reverse = false	},
 	{ column =  "level",	reverse = true	},
 	{ column =  "quality",	reverse = false	},
-	{ column =  "buyout",	reverse = false	},
+	{ column =  "minbidbuyout",	reverse = false	},
 	{ column =  "status",	reverse = false	},
 	{ column =  "duration",	reverse = false	},
 	{ column =  "bid",		reverse = false	},
@@ -124,7 +118,7 @@ AuctionSort["bidder_duration"] = {
 	{ column =  "name",		reverse = false	},
 	{ column =  "level",	reverse = true	},
 	{ column =  "quality",	reverse = false	},
-	{ column =  "buyout",	reverse = false	},
+	{ column =  "minbidbuyout",	reverse = false	},
 	{ column =  "status",	reverse = false	},
 	{ column =  "bid",		reverse = false	},
 	{ column =  "duration",	reverse = false	},
@@ -135,7 +129,7 @@ AuctionSort["list_level"] = {
 	{ column = "duration",	reverse = true	},
 	{ column = "bid",		reverse = true	},
 	{ column = "quantity",	reverse = false	},
-	{ column = "buyout",	reverse = true	},
+	{ column = "minbidbuyout",	reverse = true	},
 	{ column = "name",		reverse = true	},
 	{ column = "quality",	reverse = true	},
 	{ column = "level",		reverse = false	},
@@ -143,7 +137,7 @@ AuctionSort["list_level"] = {
 AuctionSort["list_duration"] = {
 	{ column = "bid",		reverse = false	},
 	{ column = "quantity",	reverse = true	},
-	{ column = "buyout",	reverse = false	},
+	{ column = "minbidbuyout",	reverse = false	},
 	{ column = "name",		reverse = false	},
 	{ column = "level",		reverse = true	},
 	{ column = "quality",	reverse = false	},
@@ -153,7 +147,7 @@ AuctionSort["list_seller"] = {
 	{ column = "duration",	reverse = false	},
 	{ column = "bid",		reverse = false },
 	{ column = "quantity",	reverse = true	},
-	{ column = "buyout",	reverse = false	},
+	{ column = "minbidbuyout",	reverse = false	},
 	{ column = "name",		reverse = false	},
 	{ column = "level",		reverse = true	},
 	{ column = "quality",	reverse = false	},
@@ -172,7 +166,7 @@ AuctionSort["list_quality"] = {
 	{ column = "duration",	reverse = false	},
 	{ column = "bid",		reverse = false	},
 	{ column = "quantity",	reverse = true	},
-	{ column = "buyout",	reverse = false	},
+	{ column = "minbidbuyout",	reverse = false	},
 	{ column = "name",		reverse = false	},
 	{ column = "level",		reverse = true	},
 	{ column = "quality",	reverse = false	},
@@ -195,11 +189,11 @@ StaticPopupDialogs["BUYOUT_AUCTION"] = {
 	text = BUYOUT_AUCTION_CONFIRMATION,
 	button1 = ACCEPT,
 	button2 = CANCEL,
-	OnAccept = function()
+	OnAccept = function(self)
 		PlaceAuctionBid(AuctionFrame.type, GetSelectedAuctionItem(AuctionFrame.type), AuctionFrame.buyoutPrice);
 	end,
-	OnShow = function()
-		MoneyFrame_Update(this:GetName().."MoneyFrame", AuctionFrame.buyoutPrice);
+	OnShow = function(self)
+		MoneyFrame_Update(self.moneyFrame, AuctionFrame.buyoutPrice);
 	end,
 	hasMoneyFrame = 1,
 	showAlert = 1,
@@ -214,12 +208,12 @@ StaticPopupDialogs["CANCEL_AUCTION"] = {
 	OnAccept = function()
 		CancelAuction(GetSelectedAuctionItem("owner"));
 	end,
-	OnShow = function()
-		MoneyFrame_Update(this:GetName().."MoneyFrame", AuctionFrameAuctions.cancelPrice);
+	OnShow = function(self)
+		MoneyFrame_Update(self.moneyFrame, AuctionFrameAuctions.cancelPrice);
 		if ( AuctionFrameAuctions.cancelPrice > 0 ) then
-			getglobal(this:GetName().."Text"):SetText(CANCEL_AUCTION_CONFIRMATION_MONEY);
+			self.text:SetText(CANCEL_AUCTION_CONFIRMATION_MONEY);
 		else
-			getglobal(this:GetName().."Text"):SetText(CANCEL_AUCTION_CONFIRMATION);
+			self.text:SetText(CANCEL_AUCTION_CONFIRMATION);
 		end
 		
 	end,
@@ -230,13 +224,11 @@ StaticPopupDialogs["CANCEL_AUCTION"] = {
 	hideOnEscape = 1
 };
 
-function AuctionFrame_OnLoad()
-	this:RegisterEvent("ADDON_LOADED");
-	AUCTION_DISPLAY_ON_CHARACTER = "0";
+function AuctionFrame_OnLoad (self)
 
 	-- Tab Handling code
-	PanelTemplates_SetNumTabs(this, 3);
-	PanelTemplates_SetTab(AuctionFrame, 1);
+	PanelTemplates_SetNumTabs(self, 3);
+	PanelTemplates_SetTab(self, 1);
 	AuctionsBuyoutText:SetText(BUYOUT_PRICE.." |cff808080("..OPTIONAL..")|r");
 
 	-- Set focus rules
@@ -297,27 +289,18 @@ function AuctionFrame_Hide()
 	HideUIPanel(AuctionFrame);
 end
 
-function AuctionFrame_OnShow()
-	this.gotAuctions = nil;
-	this.gotBids = nil;
-	AuctionFrameTab_OnClick(1);
+function AuctionFrame_OnShow (self)
+	self.gotAuctions = nil;
+	self.gotBids = nil;
+	AuctionFrameTab_OnClick(nil, 1);
 	SetPortraitTexture(AuctionPortraitTexture,"npc");
 	BrowseNoResultsText:SetText(BROWSE_SEARCH_TEXT);
 	PlaySound("AuctionWindowOpen");
 end
 
-function AuctionFrame_OnEvent()
-	if ( event == "ADDON_LOADED" ) then
-		if ( arg1 == "Blizzard_AuctionUI" ) then
-			ShowOnPlayerCheckButton:SetChecked(AUCTION_DISPLAY_ON_CHARACTER);
-			this:UnregisterEvent("ADDON_LOADED");
-		end
-	end
-end
-
-function AuctionFrameTab_OnClick(index)
+function AuctionFrameTab_OnClick(self, index)
 	if ( not index ) then
-		index = this:GetID();
+		index = self:GetID();
 	end
 	PanelTemplates_SetTab(AuctionFrame, index);
 	AuctionFrameAuctions:Hide();
@@ -358,8 +341,8 @@ end
 
 -- Browse tab functions
 
-function AuctionFrameBrowse_OnLoad()
-	this:RegisterEvent("AUCTION_ITEM_LIST_UPDATE");
+function AuctionFrameBrowse_OnLoad(self)
+	self:RegisterEvent("AUCTION_ITEM_LIST_UPDATE");
 
 	-- set default sort
 	AuctionFrame_SetSort("list", "quality", false);
@@ -381,7 +364,7 @@ function AuctionFrameBrowse_UpdateArrows()
 	SortButton_UpdateArrow(BrowseCurrentBidSort, "list", "bid");
 end
 
-function AuctionFrameBrowse_OnEvent()
+function AuctionFrameBrowse_OnEvent(self, event, ...)
 	if ( event == "AUCTION_ITEM_LIST_UPDATE" ) then
 		AuctionFrameBrowse_Update();
 		-- Stop "searching" messaging
@@ -393,10 +376,9 @@ function AuctionFrameBrowse_OnEvent()
 end
 
 function BrowseButton_OnClick(button)
-	if ( not button ) then
-		button = this;
-	end
-	if ( AUCTION_DISPLAY_ON_CHARACTER == "1" ) then
+	assert(button);
+	
+	if ( GetCVarBool("auctionDisplayOnCharacter") ) then
 		DressUpItemLink(GetAuctionItemLink("list", button:GetID() + FauxScrollFrame_GetOffset(BrowseScrollFrame)));
 	end
 	SetSelectedAuctionItem("list", button:GetID() + FauxScrollFrame_GetOffset(BrowseScrollFrame));
@@ -405,8 +387,8 @@ function BrowseButton_OnClick(button)
 	AuctionFrameBrowse_Update();
 end
 
-function BrowseDropDown_OnLoad()
-	UIDropDownMenu_Initialize(this, BrowseDropDown_Initialize);
+function BrowseDropDown_OnLoad(self)
+	UIDropDownMenu_Initialize(self, BrowseDropDown_Initialize);
 	UIDropDownMenu_SetSelectedValue(BrowseDropDown,-1);
 end
 
@@ -425,8 +407,8 @@ function BrowseDropDown_Initialize()
 	end
 end
 
-function BrowseDropDown_OnClick()
-	UIDropDownMenu_SetSelectedValue(BrowseDropDown, this.value);
+function BrowseDropDown_OnClick(self)
+	UIDropDownMenu_SetSelectedValue(BrowseDropDown, self.value);
 end
 
 function AuctionFrameBrowse_InitClasses(...)
@@ -435,7 +417,7 @@ function AuctionFrameBrowse_InitClasses(...)
 	end
 end
 
-function AuctionFrameBrowse_Reset()
+function AuctionFrameBrowse_Reset(self)
 	BrowseName:SetText("");
 	BrowseMinLevel:SetText("");
 	BrowseMaxLevel:SetText("");
@@ -452,17 +434,17 @@ function AuctionFrameBrowse_Reset()
 	AuctionFrameBrowse.selectedInvtypeIndex = nil;
 
 	AuctionFrameFilters_Update()
-	this:Disable();
+	self:Disable();
 end
 
-function BrowseResetButton_OnUpdate()
+function BrowseResetButton_OnUpdate(self, elapsed)
 	if ( (BrowseName:GetText() == "") and (BrowseMinLevel:GetText() == "") and (BrowseMaxLevel:GetText() == "") and
 	     (not IsUsableCheckButton:GetChecked()) and (UIDropDownMenu_GetSelectedValue(BrowseDropDown) == -1) and
 	     (not AuctionFrameBrowse.selectedClass) and (not AuctionFrameBrowse.selectedSubclass) and (not AuctionFrameBrowse.selectedInvtype) )
 	then
-		this:Disable();
+		self:Disable();
 	else
-		this:Enable();
+		self:Enable();
 	end
 end
 
@@ -511,9 +493,9 @@ function AuctionFrameBrowse_Search(page)
 	AuctionFrameBrowse.isSearching = 1;
 end
 
-function BrowseSearchButton_OnUpdate()
+function BrowseSearchButton_OnUpdate(self, elapsed)
 	if (CanSendAuctionQuery("list")) then
-		this:Enable();
+		self:Enable();
 		if ( BrowsePrevPageButton.isEnabled ) then
 			BrowsePrevPageButton:Enable();
 		else
@@ -531,7 +513,7 @@ function BrowseSearchButton_OnUpdate()
 		BrowseCurrentBidSort:Enable();
 		AuctionFrameBrowse_UpdateArrows();
 	else
-		this:Disable();
+		self:Disable();
 		BrowsePrevPageButton:Disable();
 		BrowseNextPageButton:Disable();
 		BrowseQualitySort:Disable();
@@ -555,7 +537,7 @@ function BrowseSearchButton_OnUpdate()
 			BrowseNoResultsText:SetText(SEARCHING_FOR_ITEMS);
 			AuctionFrameBrowse.isSearchingThrottle = 0.3;
 		else
-			AuctionFrameBrowse.isSearchingThrottle = AuctionFrameBrowse.isSearchingThrottle - arg1;
+			AuctionFrameBrowse.isSearchingThrottle = AuctionFrameBrowse.isSearchingThrottle - elapsed;
 		end
 	else
 		BrowseSearchDotsText:Hide();
@@ -681,39 +663,39 @@ function FilterButton_SetType(button, type, text, isLast)
 	button.type = type; 
 end
 
-function AuctionFrameFilter_OnClick()
-	if ( this.type == "class" ) then
-		if ( AuctionFrameBrowse.selectedClass == this:GetText() ) then
+function AuctionFrameFilter_OnClick(self, button)
+	if ( self.type == "class" ) then
+		if ( AuctionFrameBrowse.selectedClass == self:GetText() ) then
 			AuctionFrameBrowse.selectedClass = nil;
 			AuctionFrameBrowse.selectedClassIndex = nil;
 		else
-			AuctionFrameBrowse.selectedClass = this:GetText();
-			AuctionFrameBrowse.selectedClassIndex = this.index;
+			AuctionFrameBrowse.selectedClass = self:GetText();
+			AuctionFrameBrowse.selectedClassIndex = self.index;
 		end
 		AuctionFrameBrowse.selectedSubclass = nil;
 		AuctionFrameBrowse.selectedSubclassIndex = nil;
 		AuctionFrameBrowse.selectedInvtype = nil;
 		AuctionFrameBrowse.selectedInvtypeIndex = nil;
-	elseif ( this.type == "subclass" ) then
-		if ( AuctionFrameBrowse.selectedSubclass == this:GetText() ) then
+	elseif ( self.type == "subclass" ) then
+		if ( AuctionFrameBrowse.selectedSubclass == self:GetText() ) then
 			AuctionFrameBrowse.selectedSubclass = nil;
 			AuctionFrameBrowse.selectedSubclassIndex = nil;
 		else
-			AuctionFrameBrowse.selectedSubclass = this:GetText();
-			AuctionFrameBrowse.selectedSubclassIndex = this.index;
+			AuctionFrameBrowse.selectedSubclass = self:GetText();
+			AuctionFrameBrowse.selectedSubclassIndex = self.index;
 		end
 		AuctionFrameBrowse.selectedInvtype = nil;
 		AuctionFrameBrowse.selectedInvtypeIndex = nil;
-	elseif ( this.type == "invtype" ) then
-		AuctionFrameBrowse.selectedInvtype = this:GetText();
-		AuctionFrameBrowse.selectedInvtypeIndex = this.index;
+	elseif ( self.type == "invtype" ) then
+		AuctionFrameBrowse.selectedInvtype = self:GetText();
+		AuctionFrameBrowse.selectedInvtypeIndex = self.index;
 	end
 	AuctionFrameFilters_Update()
 end
 
 function AuctionFrameBrowse_Update()
 	local numBatchAuctions, totalAuctions = GetNumAuctionItems("list");
-	local button, buttonName, iconTexture, itemName, color, itemCount, moneyFrame, buyoutMoneyFrame, buyoutText, buttonHighlight;
+	local button, buttonName, iconTexture, itemName, color, itemCount, moneyFrame, buyoutFrame, buyoutMoney, buttonHighlight;
 	local offset = FauxScrollFrame_GetOffset(BrowseScrollFrame);
 	local index;
 	local isLastSlotEmpty;
@@ -746,22 +728,26 @@ function AuctionFrameBrowse_Update()
 
 			buttonName = "BrowseButton"..i;
 			name, texture, count, quality, canUse, level, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner =  GetAuctionItemInfo("list", offset + i);
+			if ( not name ) then	--Bug  145328
+				button:Hide();
+				-- If the last button is empty then set isLastSlotEmpty var
+				if ( i == NUM_BROWSE_TO_DISPLAY ) then
+					isLastSlotEmpty = 1;
+				end
+			end
 			duration = GetAuctionItemTimeLeft("list", offset + i);
 
 			-- Resize button if there isn't a scrollbar
 			buttonHighlight = getglobal("BrowseButton"..i.."Highlight");
 			if ( numBatchAuctions < NUM_BROWSE_TO_DISPLAY ) then
-				getglobal(button:GetName().."BuyoutText"):SetPoint("LEFT", getglobal(button:GetName().."BuyoutMoneyFrame"), "RIGHT", BUYOUT_TEXT_OFFSET_NO_SCROLL, BUYOUT_TEXT_YOFFSET_NO_SCROLL)
 				button:SetWidth(625);
 				buttonHighlight:SetWidth(589);
 				BrowseCurrentBidSort:SetWidth(207);
 			elseif ( numBatchAuctions == NUM_BROWSE_TO_DISPLAY and totalAuctions <= NUM_BROWSE_TO_DISPLAY ) then
-				getglobal(button:GetName().."BuyoutText"):SetPoint("LEFT", getglobal(button:GetName().."BuyoutMoneyFrame"), "RIGHT", BUYOUT_TEXT_OFFSET_NO_SCROLL, BUYOUT_TEXT_YOFFSET_NO_SCROLL)
 				button:SetWidth(625);
 				buttonHighlight:SetWidth(589);
 				BrowseCurrentBidSort:SetWidth(207);
 			else
-				getglobal(button:GetName().."BuyoutText"):SetPoint("LEFT", getglobal(button:GetName().."BuyoutMoneyFrame"), "RIGHT", BUYOUT_TEXT_OFFSET_WITH_SCROLL, BUYOUT_TEXT_YOFFSET_WITH_SCROLL)
 				button:SetWidth(600);
 				buttonHighlight:SetWidth(562);
 				BrowseCurrentBidSort:SetWidth(184);
@@ -797,9 +783,6 @@ function AuctionFrameBrowse_Update()
 			end
 			-- Set high bid
 			moneyFrame = getglobal(buttonName.."MoneyFrame");
-			yourBidText = getglobal(buttonName.."YourBidText");
-			buyoutMoneyFrame = getglobal(buttonName.."BuyoutMoneyFrame");
-			buyoutText = getglobal(buttonName.."BuyoutText");
 			-- If not bidAmount set the bid amount to the min bid
 			if ( bidAmount == 0 ) then
 				displayedPrice = minBid;
@@ -810,6 +793,7 @@ function AuctionFrameBrowse_Update()
 			end
 			MoneyFrame_Update(moneyFrame:GetName(), displayedPrice);
 
+			yourBidText = getglobal(buttonName.."YourBidText");
 			if ( highBidder ) then
 				yourBidText:Show();
 			else
@@ -820,15 +804,15 @@ function AuctionFrameBrowse_Update()
 				-- Lie about our buyout price
 				buyoutPrice = requiredBid;
 			end
+			buyoutFrame = getglobal(buttonName.."BuyoutFrame");
 			if ( buyoutPrice > 0 ) then
-				moneyFrame:SetPoint("RIGHT", buttonName, "RIGHT", 10, 10);
-				MoneyFrame_Update(buyoutMoneyFrame:GetName(), buyoutPrice);
-				buyoutMoneyFrame:Show();
-				buyoutText:Show();
+				moneyFrame:SetPoint("RIGHT", button, "RIGHT", 10, 10);
+				buyoutMoney = getglobal(buyoutFrame:GetName().."Money");
+				MoneyFrame_Update(buyoutMoney, buyoutPrice);
+				buyoutFrame:Show();
 			else
-				moneyFrame:SetPoint("RIGHT", buttonName, "RIGHT", 10, 3);
-				buyoutMoneyFrame:Hide();
-				buyoutText:Hide();
+				moneyFrame:SetPoint("RIGHT", button, "RIGHT", 10, 3);
+				buyoutFrame:Hide();
 			end
 			-- Set high bidder
 			--if ( not highBidder ) then
@@ -908,14 +892,14 @@ end
 
 -- Bid tab functions
 
-function AuctionFrameBid_OnLoad()
-	this:RegisterEvent("AUCTION_BIDDER_LIST_UPDATE");
+function AuctionFrameBid_OnLoad(self)
+	self:RegisterEvent("AUCTION_BIDDER_LIST_UPDATE");
 
 	-- set default sort
 	AuctionFrame_SetSort("bidder", "duration", false);
 end
 
-function AuctionFrameBid_OnEvent()
+function AuctionFrameBid_OnEvent(self, event, ...)
 	if ( event == "AUCTION_BIDDER_LIST_UPDATE" ) then
 		AuctionFrameBid_Update();
 	end
@@ -1077,10 +1061,9 @@ function AuctionFrameBid_Update()
 end
 
 function BidButton_OnClick(button)
-	if ( not button ) then
-		button = this;
-	end
-	if ( AUCTION_DISPLAY_ON_CHARACTER == "1" ) then
+	assert(button)
+	
+	if ( GetCVarBool("auctionDisplayOnCharacter") ) then
 		DressUpItemLink(GetAuctionItemLink("bidder", button:GetID() + FauxScrollFrame_GetOffset(BidScrollFrame)));
 	end
 	SetSelectedAuctionItem("bidder", button:GetID() + FauxScrollFrame_GetOffset(BidScrollFrame));
@@ -1092,8 +1075,8 @@ end
 
 -- Auctions tab functions
 
-function AuctionFrameAuctions_OnLoad()
-	this:RegisterEvent("AUCTION_OWNED_LIST_UPDATE");
+function AuctionFrameAuctions_OnLoad(self)
+	self:RegisterEvent("AUCTION_OWNED_LIST_UPDATE");
 
 	-- set default sort
 	AuctionFrame_SetSort("owner", "duration", false);
@@ -1101,7 +1084,7 @@ function AuctionFrameAuctions_OnLoad()
 	AuctionsRadioButton_OnClick(2);
 end
 
-function AuctionFrameAuctions_OnEvent()
+function AuctionFrameAuctions_OnEvent(self, event, ...)
 	if ( event == "AUCTION_OWNED_LIST_UPDATE" ) then
 		AuctionFrameAuctions_Update();
 	end
@@ -1126,9 +1109,9 @@ function AuctionFrameAuctions_Update()
 	local offset = FauxScrollFrame_GetOffset(AuctionsScrollFrame);
 	local index;
 	local name, texture, count, quality, canUse, minBid, minIncrement, buyoutPrice, duration, bidAmount, highBidder, owner;
-	local buttonBuyoutText, buttonBuyoutFrame;
+	local buttonBuyoutFrame, buttonBuyoutMoney;
 	local isLastSlotEmpty;
-	local bidAmountMoneyFrame;
+	local bidAmountMoneyFrame, bidAmountMoneyFrameLabel;
 
 	-- Update sort arrows
 	SortButton_UpdateArrow(AuctionsQualitySort, "owner", "quality");
@@ -1149,7 +1132,7 @@ function AuctionFrameAuctions_Update()
 		else
 			auction:Show();
 			
-			name, texture, count, quality, canUse, level, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner =  GetAuctionItemInfo("owner", offset + i);
+			name, texture, count, quality, canUse, level, minBid, minIncrement, buyoutPrice, bidAmount, highBidder, owner, saleStatus = GetAuctionItemInfo("owner", offset + i);
 			duration = GetAuctionItemTimeLeft("owner", offset + i);
 
 			buttonName = "AuctionsButton"..i;
@@ -1157,86 +1140,105 @@ function AuctionFrameAuctions_Update()
 
 			-- Resize button if there isn't a scrollbar
 			buttonHighlight = getglobal(buttonName.."Highlight");
-			buttonBuyoutFrame = getglobal(buttonName.."BuyoutMoneyFrame");
-			buttonBuyoutText = getglobal(buttonName.."BuyoutMoneyFrameText");
 			if ( numBatchAuctions < NUM_AUCTIONS_TO_DISPLAY ) then
-				buttonBuyoutText:SetPoint("LEFT", buttonBuyoutFrame, "RIGHT", -205, 0)
 				auction:SetWidth(599);
 				buttonHighlight:SetWidth(565);
 				AuctionsBidSort:SetWidth(213);
 			elseif ( numBatchAuctions == NUM_AUCTIONS_TO_DISPLAY and totalAuctions <= NUM_AUCTIONS_TO_DISPLAY ) then
-				buttonBuyoutText:SetPoint("LEFT", buttonBuyoutFrame, "RIGHT", -205, 0)
 				auction:SetWidth(599);
 				buttonHighlight:SetWidth(565);
 				AuctionsBidSort:SetWidth(213);
 			else
-				buttonBuyoutText:SetPoint("LEFT", buttonBuyoutFrame, "RIGHT", -182, 0)
 				auction:SetWidth(576);
 				buttonHighlight:SetWidth(543);
 				AuctionsBidSort:SetWidth(193);
 			end
+			
+			-- Display differently based on the saleStatus
+			-- saleStatus "1" means that the item was sold
 			-- Set name and quality color
 			color = ITEM_QUALITY_COLORS[quality];
 			itemName = getglobal(buttonName.."Name");
-			itemName:SetText(name);
-			itemName:SetVertexColor(color.r, color.g, color.b);
-			-- Set high bidder
-			if ( not highBidder ) then
-				highBidder = RED_FONT_COLOR_CODE..NO_BIDS..FONT_COLOR_CODE_CLOSE;
-			end
-			getglobal(buttonName.."HighBidder"):SetText(highBidder);
-			-- Set closing time
-			getglobal(buttonName.."ClosingTimeText"):SetText(AuctionFrame_GetTimeLeftText(duration));
-			getglobal(buttonName.."ClosingTime").tooltip = AuctionFrame_GetTimeLeftTooltipText(duration);
-			-- Set item texture, count, and usability
 			iconTexture = getglobal(buttonName.."ItemIconTexture");
 			iconTexture:SetTexture(texture);
-			if ( not canUse ) then
-				iconTexture:SetVertexColor(1.0, 0.1, 0.1);
-			else
-				iconTexture:SetVertexColor(1.0, 1.0, 1.0);
-			end
 			itemCount = getglobal(buttonName.."ItemCount");
-			if ( count > 1 ) then
-				itemCount:SetText(count);
-				itemCount:Show();
-			else
-				itemCount:Hide();
-			end
-			
-			-- Handle bid amount
 			bidAmountMoneyFrame = getglobal(buttonName.."MoneyFrame");
-			if ( bidAmount > 0 ) then
-				-- Set high bid
+			bidAmountMoneyFrameLabel = getglobal(buttonName.."MoneyFrameLabel");
+			if ( saleStatus == 1 ) then
+				-- Sold item
+				itemName:SetText(format(AUCTION_ITEM_SOLD, name));
+				itemName:SetVertexColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
+				highBidder = GREEN_FONT_COLOR_CODE..highBidder..FONT_COLOR_CODE_CLOSE;
+				getglobal(buttonName.."ClosingTimeText"):SetText(format(AUCTION_ITEM_TIME_UNTIL_DELIVERY, SecondsToTime(duration)));
+				getglobal(buttonName.."ClosingTime").tooltip = format(AUCTION_ITEM_TIME_UNTIL_DELIVERY, SecondsToTime(duration));
+			
+				iconTexture:SetVertexColor(0.5, 0.5, 0.5);
+				itemCount:Hide();
+
 				MoneyFrame_Update(buttonName.."MoneyFrame", bidAmount);
 				bidAmountMoneyFrame:SetAlpha(1);
-				-- Set cancel price
-				auction.cancelPrice = floor(bidAmount * 0.05);
-				button.bidAmount = bidAmount;
+				bidAmountMoneyFrame:SetPoint("RIGHT", button, "RIGHT", 10, -4);
+				bidAmountMoneyFrameLabel:Show();
+				getglobal(buttonName.."BuyoutFrame"):Hide();
 			else
-				-- No bids so show minBid and gray it out
-				MoneyFrame_Update(buttonName.."MoneyFrame", minBid);
-				bidAmountMoneyFrame:SetAlpha(0.5);
-				-- No cancel price
-				auction.cancelPrice = 0;
-				button.bidAmount = minBid;
-			end
+				-- Normal item
+				itemName:SetText(name);
+				itemName:SetVertexColor(color.r, color.g, color.b);
+				if ( not highBidder ) then
+					highBidder = RED_FONT_COLOR_CODE..NO_BIDS..FONT_COLOR_CODE_CLOSE;
+				end
+				getglobal(buttonName.."ClosingTimeText"):SetText(AuctionFrame_GetTimeLeftText(duration));
+				getglobal(buttonName.."ClosingTime").tooltip = AuctionFrame_GetTimeLeftTooltipText(duration);
 			
-			-- Set buyout price and adjust bid amount accordingly
-			if ( buyoutPrice > 0 ) then
-				bidAmountMoneyFrame:SetPoint("RIGHT", buttonName, "RIGHT", 0, 10);
-				getglobal(buttonName.."BuyoutMoneyFrame"):Show();
-			else
-				bidAmountMoneyFrame:SetPoint("RIGHT", buttonName, "RIGHT", 0, 3);
-				getglobal(buttonName.."BuyoutMoneyFrame"):Hide();
-			end
-			MoneyFrame_Update(buttonName.."BuyoutMoneyFrame", buyoutPrice);
+				if ( not canUse ) then
+					iconTexture:SetVertexColor(1.0, 0.1, 0.1);
+				else
+					iconTexture:SetVertexColor(1.0, 1.0, 1.0);
+				end
+				
+				if ( count > 1 ) then
+					itemCount:SetText(count);
+					itemCount:Show();
+				else
+					itemCount:Hide();
+				end
 
-			button.buyoutPrice = buyoutPrice;
-			button.itemCount = count;
+				bidAmountMoneyFrameLabel:Hide();
+				if ( bidAmount > 0 ) then
+					-- Set high bid
+					MoneyFrame_Update(buttonName.."MoneyFrame", bidAmount);
+					bidAmountMoneyFrame:SetAlpha(1);
+					-- Set cancel price
+					auction.cancelPrice = floor(bidAmount * 0.05);
+					button.bidAmount = bidAmount;
+				else
+					-- No bids so show minBid and gray it out
+					MoneyFrame_Update(buttonName.."MoneyFrame", minBid);
+					bidAmountMoneyFrame:SetAlpha(0.5);
+					-- No cancel price
+					auction.cancelPrice = 0;
+					button.bidAmount = minBid;
+				end
+				
+				-- Set buyout price and adjust bid amount accordingly
+				buttonBuyoutFrame = getglobal(buttonName.."BuyoutFrame");
+				if ( buyoutPrice > 0 ) then
+					bidAmountMoneyFrame:SetPoint("RIGHT", buttonName, "RIGHT", 10, 10);
+					buttonBuyoutMoney = getglobal(buttonName.."BuyoutFrameMoney");
+					MoneyFrame_Update(buttonBuyoutMoney, buyoutPrice);
+					buttonBuyoutFrame:Show();
+				else
+					bidAmountMoneyFrame:SetPoint("RIGHT", buttonName, "RIGHT", 10, 3);
+					buttonBuyoutFrame:Hide();
+				end
+
+				button.buyoutPrice = buyoutPrice;
+				button.itemCount = count;
+			end
+			getglobal(buttonName.."HighBidder"):SetText(highBidder);
 
 			-- Enable/Disable cancel auction button
-			if ( GetSelectedAuctionItem("owner") > 0 ) then
+			if ( (GetSelectedAuctionItem("owner") > 0) and (saleStatus == 0) ) then
 				AuctionsCancelAuctionButton:Enable();
 			else
 				AuctionsCancelAuctionButton:Disable();
@@ -1264,7 +1266,7 @@ function AuctionFrameAuctions_Update()
 		AuctionsSearchCountText:Hide();
 	end
 
-	if ( GetSelectedAuctionItem("owner") and (GetSelectedAuctionItem("owner") > 0) ) then
+	if ( GetSelectedAuctionItem("owner") and (GetSelectedAuctionItem("owner") > 0) and CanCancelAuction(GetSelectedAuctionItem("owner")) ) then
 		AuctionsCancelAuctionButton:Enable();
 	else
 		AuctionsCancelAuctionButton:Disable();
@@ -1275,10 +1277,9 @@ function AuctionFrameAuctions_Update()
 end
 
 function AuctionsButton_OnClick(button)
-	if ( not button ) then
-		button = this;
-	end
-	if ( AUCTION_DISPLAY_ON_CHARACTER == "1" ) then
+	assert(button);
+	
+	if ( GetCVarBool("auctionDisplayOnCharacter") ) then
 		DressUpItemLink(GetAuctionItemLink("owner", button:GetID() + FauxScrollFrame_GetOffset(AuctionsScrollFrame)));
 	end
 	SetSelectedAuctionItem("owner", button:GetID() + FauxScrollFrame_GetOffset(AuctionsScrollFrame));
@@ -1296,7 +1297,7 @@ function AuctionsRadioButton_OnClick(index)
 	if ( index == 1 ) then
 		AuctionsShortAuctionButton:SetChecked(1);
 		AuctionFrameAuctions.duration = 720;
-	elseif ( index ==2 ) then
+	elseif ( index == 2 ) then
 		AuctionsMediumAuctionButton:SetChecked(1);
 		AuctionFrameAuctions.duration = 1440;
 	else
@@ -1310,7 +1311,7 @@ function UpdateDeposit()
 	MoneyFrame_Update("AuctionsDepositMoneyFrame", CalculateAuctionDeposit(AuctionFrameAuctions.duration));
 end
 
-function AuctionSellItemButton_OnEvent()
+function AuctionSellItemButton_OnEvent(self, event, ...)
 	if ( event == "NEW_AUCTION_UPDATE") then
 		local name, texture, count, quality, canUse, price = GetAuctionSellItemInfo();
 		AuctionsItemButton:SetNormalTexture(texture);
@@ -1359,12 +1360,12 @@ end
 
 --[[
 function AuctionFrame_UpdateTimeLeft(elapsed, type)
-	if ( not this.updateCounter ) then
-		this.updateCounter = 0;
+	if ( not self.updateCounter ) then
+		self.updateCounter = 0;
 	end
-	if ( this.updateCounter > AUCTION_TIMER_UPDATE_DELAY ) then
-		this.updateCounter = 0;	
-		local index = this:GetID();
+	if ( self.updateCounter > AUCTION_TIMER_UPDATE_DELAY ) then
+		self.updateCounter = 0;	
+		local index = self:GetID();
 		if ( type == "list" ) then
 			index = index + FauxScrollFrame_GetOffset(BrowseScrollFrame);
 		elseif ( type == "bidder" ) then
@@ -1372,9 +1373,9 @@ function AuctionFrame_UpdateTimeLeft(elapsed, type)
 		elseif ( type == "owner" ) then
 			index = index + FauxScrollFrame_GetOffset(AuctionsScrollFrame);
 		end
-		getglobal(this:GetName().."ClosingTime"):SetText(SecondsToTime(GetAuctionItemTimeLeft(type, index)));
+		getglobal(self:GetName().."ClosingTime"):SetText(SecondsToTime(GetAuctionItemTimeLeft(type, index)));
 	else
-		this.updateCounter = this.updateCounter + elapsed;
+		self.updateCounter = self.updateCounter + elapsed;
 	end
 end
 ]]
@@ -1387,18 +1388,18 @@ function AuctionFrame_GetTimeLeftTooltipText(id)
 	return getglobal("AUCTION_TIME_LEFT"..id.."_DETAIL");
 end
 
-function AuctionFrameItem_OnEnter(type, index)
-	GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+function AuctionFrameItem_OnEnter(self, type, index)
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 	GameTooltip:SetAuctionItem(type, index);
 
 	-- add price per unit info
 	local button;
 	if ( type == "owner" ) then
-		button = getglobal("AuctionsButton"..this:GetParent():GetID());
+		button = getglobal("AuctionsButton"..self:GetParent():GetID());
 	elseif ( type == "bidder" ) then
-		button = getglobal("BidButton"..this:GetParent():GetID());
+		button = getglobal("BidButton"..self:GetParent():GetID());
 	elseif ( type == "list" ) then
-		button = getglobal("BrowseButton"..this:GetParent():GetID());
+		button = getglobal("BrowseButton"..self:GetParent():GetID());
 	end
 	if ( button and button.itemCount > 1 ) then
 		if ( button.bidAmount > 0 ) then

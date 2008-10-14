@@ -22,43 +22,47 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Model name="$parentAutoCast" file="Interface\Buttons\UI-AutoCastButton.mdx" scale="1.2" hidden="true" setAllPoints="true">
-				<Scripts>
-					<OnLoad>
-						this:SetSequence(0);
-						this:SetSequenceTime(0, 0);
-					</OnLoad>
-				</Scripts>
-			</Model>
+			<Frame name="$parentShine" inherits="AutoCastShineTemplate">
+				<Anchors>
+					<Anchor point="CENTER">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Size>
+					<AbsDimension x="28" y="28"/>
+				</Size>
+			</Frame>
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				PetActionButton_OnLoad();
+				PetActionButton_OnLoad(self); 
 			</OnLoad>
 			<OnEvent>
-				PetActionButton_OnEvent();
+				PetActionButton_OnEvent(self, event, ...);
 			</OnEvent>
 			<PreClick>
-				this:SetChecked(0);
+				self:SetChecked(0);
 			</PreClick>
 			<OnClick>
 				if ( IsModifiedClick() ) then
-					PetActionButton_OnModifiedClick(arg1);
+					PetActionButton_OnModifiedClick(self, button);
 				else
-					PetActionButton_OnClick(arg1);
+					PetActionButton_OnClick(self, button);
 				end
 			</OnClick>
 			<OnDragStart>
-				PetActionButton_OnDragStart();
+				PetActionButton_OnDragStart(self);
 			</OnDragStart>
 			<OnReceiveDrag>
-				PetActionButton_OnReceiveDrag();
+				PetActionButton_OnReceiveDrag(self);
 			</OnReceiveDrag>
 			<OnEnter>
-				PetActionButton_OnEnter();
+				PetActionButton_OnEnter(self);
 			</OnEnter>
 			<OnLeave>
-				PetActionButton_OnLeave();
+				PetActionButton_OnLeave(self);
 			</OnLeave>
 		</Scripts>
 		<NormalTexture name="$parentNormalTexture2" file="Interface\Buttons\UI-Quickslot2">
@@ -201,13 +205,13 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
-				PetActionBar_OnLoad();
+				PetActionBar_OnLoad(self);
 			</OnLoad>
 			<OnEvent>
-				PetActionBar_OnEvent();
+				PetActionBar_OnEvent(self, event, ...);
 			</OnEvent>
 			<OnUpdate>
-				PetActionBarFrame_OnUpdate(arg1);
+				PetActionBarFrame_OnUpdate(self, elapsed);
 			</OnUpdate>
 			<OnShow>
 				UIParent_ManageFramePositions();

@@ -2,7 +2,7 @@
 ..\FrameXML\UI.xsd">
     <Button name="CharacterFrameTabButtonTemplate" virtual="true">
         <Size>
-            <AbsDimension x="115" y="32"/>
+            <AbsDimension x="10" y="32"/>
         </Size>
         <Layers>
         	<Layer level="BACKGROUND">
@@ -68,15 +68,15 @@
         </Layers>
 		<Scripts>
 			<OnLoad>
-				this:SetFrameLevel(this:GetFrameLevel() + 4);
+				self:SetFrameLevel(self:GetFrameLevel() + 4);
 			</OnLoad>
 			<OnClick>
-				PanelTemplates_Tab_OnClick(CharacterFrame);
-				CharacterFrameTab_OnClick();
+				PanelTemplates_Tab_OnClick(self, CharacterFrame);
+				CharacterFrameTab_OnClick(self, button);
 			</OnClick>
 			<OnShow>
-				PanelTemplates_TabResize(0);
-				getglobal(this:GetName().."HighlightTexture"):SetWidth(this:GetTextWidth() + 30);
+				PanelTemplates_TabResize(self, 0);
+				CharacterFrame_TabBoundsCheck(self);
 			</OnShow>
 		</Scripts>
 		<ButtonText name="$parentText">
@@ -88,9 +88,9 @@
 				</Anchor>
 			</Anchors>
 		</ButtonText>
-		<NormalFont inherits="GameFontNormalSmall"/>
-		<HighlightFont inherits="GameFontHighlightSmall"/>
-		<DisabledFont inherits="GameFontHighlightSmall"/>
+		<NormalFont style="GameFontNormalSmall"/>
+		<HighlightFont style="GameFontHighlightSmall"/>
+		<DisabledFont style="GameFontHighlightSmall"/>
 		<HighlightTexture name="$parentHighlightTexture" file="Interface\PaperDollInfoFrame\UI-Character-Tab-Highlight" alphaMode="ADD">
 			<Anchors>
 				<Anchor point="LEFT">

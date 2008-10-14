@@ -30,8 +30,6 @@ FILTERED_BG_CHAT_END = {};
 ADDED_PLAYERS = {};
 SUBTRACTED_PLAYERS = {};
 
-SHOW_BATTLEFIELD_MINIMAP = "0";
-
 CLASS_BUTTONS = {
 	["WARRIOR"]	= {0, 0.25, 0, 0.25},
 	["MAGE"]		= {0.25, 0.49609375, 0, 0.25},
@@ -42,23 +40,23 @@ CLASS_BUTTONS = {
 	["PRIEST"]		= {0.49609375, 0.7421875, 0.25, 0.5},
 	["WARLOCK"]	= {0.7421875, 0.98828125, 0.25, 0.5},
 	["PALADIN"]		= {0, 0.25, 0.5, 0.75},
+	["DEATHKNIGHT"]	= {0.25, 0.49609375, 0.5, 0.75},
 };
 
 
 ExtendedUI = {};
 
 -- Always up stuff (i.e. capture the flag indicators)
-function WorldStateAlwaysUpFrame_OnLoad()
-	this:RegisterEvent("UPDATE_WORLD_STATES");
-	this:RegisterEvent("UPDATE_BATTLEFIELD_SCORE");
-	RegisterForSavePerCharacter("SHOW_BATTLEFIELD_MINIMAP");
+function WorldStateAlwaysUpFrame_OnLoad(self)
+	self:RegisterEvent("UPDATE_WORLD_STATES");
+	self:RegisterEvent("UPDATE_BATTLEFIELD_SCORE");
 	WorldStateAlwaysUpFrame_Update();
-	this:RegisterEvent("PLAYER_ENTERING_WORLD");
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
 
-	this:RegisterEvent("ZONE_CHANGED");
-	this:RegisterEvent("ZONE_CHANGED_INDOORS");
-	this:RegisterEvent("ZONE_CHANGED_NEW_AREA");
-	this:RegisterEvent("PLAYER_ENTERING_BATTLEGROUND");
+	self:RegisterEvent("ZONE_CHANGED");
+	self:RegisterEvent("ZONE_CHANGED_INDOORS");
+	self:RegisterEvent("ZONE_CHANGED_NEW_AREA");
+	self:RegisterEvent("PLAYER_ENTERING_BATTLEGROUND");
 		
 	FILTERED_BG_CHAT_ADD = {};
 	FILTERED_BG_CHAT_SUBTRACT = {};
@@ -102,14 +100,11 @@ function WorldStateAlwaysUpFrame_OnEvent(self, event, ...)
 	if ( event == "PLAYER_ENTERING_WORLD" ) then
 		WorldStateFrame_ToggleBattlefieldMinimap();
 		WorldStateAlwaysUpFrame_StopBGChatFilter(self);	
-		return;
 	elseif ( event == "PLAYER_ENTERING_BATTLEGROUND" ) then
 		WorldStateAlwaysUpFrame_StartBGChatFilter(self);
-		return;
-	elseif ( event == "UPDATE_BATTLEFIELD_SCORE" or event == "UPDATE_WORLD_STATES" ) then
-
+	else
+		WorldStateAlwaysUpFrame_Update();
 	end
-	WorldStateAlwaysUpFrame_Update();
 end
 
 function WorldStateAlwaysUpFrame_Update()
@@ -200,7 +195,6 @@ function WorldStateAlwaysUpFrame_Update()
 			frame:Hide();
 		end
 	end
-	UIParent_ManageFramePositions();
 end
 
 function WorldStateAlwaysUpFrame_OnUpdate(self, elapsed)
@@ -376,11 +370,11 @@ function WorldStateFrame_CanShowBattlefieldMinimap()
 	local _, instanceType = IsInInstance();
 
 	if ( instanceType == "pvp" ) then
-		return SHOW_BATTLEFIELD_MINIMAP == "1";
+		return GetCVar("showBattlefieldMinimap") == "1";
 	end
 
 	if ( instanceType == "none" ) then
-		return SHOW_BATTLEFIELD_MINIMAP == "2";
+		return GetCVar("showBattlefieldMinimap") == "2";
 	end
 
 	return false;
@@ -447,13 +441,13 @@ ExtendedUI["CAPTUREPOINT"] = {
 
 -------------- FINAL SCORE FUNCTIONS ---------------
 
-function WorldStateScoreFrame_OnLoad()
-	this:RegisterEvent("UPDATE_BATTLEFIELD_SCORE");
-	this:RegisterEvent("UPDATE_WORLD_STATES");
-	this:RegisterEvent("PLAYER_ENTERING_WORLD");
+function WorldStateScoreFrame_OnLoad(self)
+	self:RegisterEvent("UPDATE_BATTLEFIELD_SCORE");
+	self:RegisterEvent("UPDATE_WORLD_STATES");
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
 
 	-- Tab Handling code
-	PanelTemplates_SetNumTabs(this, 3);
+	PanelTemplates_SetNumTabs(self, 3);
 
 	UIDropDownMenu_Initialize( ScorePlayerDropDown, ScorePlayerDropDown_Initialize, "MENU");
 end
@@ -478,6 +472,7 @@ function WorldStateScoreFrame_Update()
 			WorldStateScoreFrameTeam:Show();
 			WorldStateScoreFrameHonorGainedText:SetText(SCORE_RATING_CHANGE);
 			WorldStateScoreFrameHonorGained.sortType = "team";
+			WorldStateScoreFrameHonorGained.tooltip = RATING_CHANGE_TOOLTIP;
 			WorldStateScoreFrameKB:SetPoint("LEFT", "WorldStateScoreFrameTeam", "RIGHT", -10, 0);
 		else
 			WorldStateScoreFrameHonorGained:Hide();
@@ -494,6 +489,7 @@ function WorldStateScoreFrame_Update()
 		WorldStateScoreFrameHK:Show();
 		WorldStateScoreFrameHonorGained.sortType = "cp";
 		WorldStateScoreFrameHonorGainedText:SetText(SCORE_HONOR_GAINED);
+		WorldStateScoreFrameHonorGained.tooltip = HONOR_GAINED_TOOLTIP;
 		WorldStateScoreFrameHKText:SetText(SCORE_HONORABLE_KILLS);
 		WorldStateScoreFrameHonorGained:Show();
 		-- Reanchor some columns.
@@ -894,9 +890,6 @@ function WorldStateScoreFrame_Resize(width)
 end
 
 function WorldStateScoreFrameTab_OnClick(tab)
-	if ( not tab ) then
-		tab = this;
-	end
 	local faction = tab:GetID();
 	PanelTemplates_SetTab(WorldStateScoreFrame, faction);
 	if ( faction == 2 ) then
@@ -924,11 +917,11 @@ end
 -- Report AFK feature
 AFK_PLAYER_CLICKED = nil;
 
-function ScorePlayer_OnMouseUp(mouseButton)
+function ScorePlayer_OnMouseUp(self, mouseButton)
 	if ( mouseButton == "RightButton" ) then
-		if ( not UnitIsUnit(this.name,"player") and UnitInRaid(this.name)) then
-			AFK_PLAYER_CLICKED = this.name;
-			ToggleDropDownMenu(1, nil, ScorePlayerDropDown, this:GetName(), 0, -5);
+		if ( not UnitIsUnit(self.name,"player") and UnitInRaid(self.name)) then
+			AFK_PLAYER_CLICKED = self.name;
+			ToggleDropDownMenu(1, nil, ScorePlayerDropDown, self:GetName(), 0, -5);
 		end
 	end
 end

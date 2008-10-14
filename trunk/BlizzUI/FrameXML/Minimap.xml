@@ -12,22 +12,22 @@
 		</Layers>
 		<Scripts>
 			<OnUpdate>
-				AnimateTexCoords(getglobal(this:GetName().."Texture"), 512, 256, 64, 64, 29, arg1)
+				AnimateTexCoords(getglobal(self:GetName().."Texture"), 512, 256, 64, 64, 29, elapsed)
 			</OnUpdate>
 		</Scripts>
 	</Frame>
 	<Button name="MiniMapButtonTemplate" virtual="true">
 		<Scripts>
 			<OnHide>
-				if (this.isDown) then
-					MinimapButton_OnMouseUp();
+				if (self.isDown) then
+					MinimapButton_OnMouseUp(self);
 				end
 			</OnHide>
 			<OnMouseDown>
-				MinimapButton_OnMouseDown();
+				MinimapButton_OnMouseDown(self);
 			</OnMouseDown>
 			<OnMouseUp>
-				MinimapButton_OnMouseUp();
+				MinimapButton_OnMouseUp(self);
 			</OnMouseUp>
 		</Scripts>
 	</Button>
@@ -84,7 +84,7 @@
 				</Layers>
 				<Scripts>
 					<OnEnter>
-						GameTooltip:SetOwner(this, "ANCHOR_LEFT");
+						GameTooltip:SetOwner(self, "ANCHOR_LEFT");
 						local pvpType, isSubZonePvP, factionName = GetZonePVPInfo();
 						Minimap_SetTooltip( pvpType, factionName );
 						GameTooltip:Show();
@@ -110,7 +110,7 @@
 						ToggleMinimap();
 					</OnClick>
 					<OnEnter>
-						GameTooltip_AddNewbieTip(MINIMAP_LABEL, 1.0, 1.0, 1.0, NEWBIE_TOOLTIP_MINIMAPTOGGLE, 1);
+						GameTooltip_AddNewbieTip(self, MINIMAP_LABEL, 1.0, 1.0, 1.0, NEWBIE_TOOLTIP_MINIMAPTOGGLE, 1);
 					</OnEnter>
 					<OnLeave>
 						GameTooltip:Hide();
@@ -171,21 +171,24 @@
 						</Layers>
 						<Scripts>
 							<OnLoad>
-								this:RegisterEvent("UPDATE_PENDING_MAIL");
-								this:SetFrameLevel(this:GetFrameLevel()+1)
+								self:RegisterEvent("UPDATE_PENDING_MAIL");
+								self:SetFrameLevel(self:GetFrameLevel()+1)
 							</OnLoad>
 							<OnEvent>
 								if ( event == "UPDATE_PENDING_MAIL" ) then
 									if ( HasNewMail() ) then
-										this:Show();
+										self:Show();
+										if( GameTooltip:IsOwned(self) ) then
+											MinimapMailFrameUpdate();
+										end
 									else
-										this:Hide();
+										self:Hide();
 									end
 								end
 							</OnEvent>
 							<OnEnter>
-								GameTooltip:SetOwner(this, "ANCHOR_BOTTOMLEFT");
-								if( GameTooltip:IsOwned( this ) ) then
+								GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT");
+								if( GameTooltip:IsOwned(self) ) then
 									MinimapMailFrameUpdate();
 								end
 							</OnEnter>							
@@ -250,28 +253,28 @@
 							<Frame name="MiniMapBattlefieldDropDown" inherits="UIDropDownMenuTemplate" clampedToScreen="true" id="1" hidden="true">
 								<Scripts>
 									<OnLoad>
-										MiniMapBattlefieldDropDown_OnLoad();
+										MiniMapBattlefieldDropDown_OnLoad(self);
 									</OnLoad>
 								</Scripts>
 							</Frame>
 						</Frames>
 						<Scripts>
 							<OnLoad>
-								this:RegisterForClicks("LeftButtonUp", "RightButtonUp");
-								this:SetFrameLevel(this:GetFrameLevel()+1);
+								self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+								self:SetFrameLevel(self:GetFrameLevel()+1);
 								MiniMapBattlefieldFrame.timeInQueue = 0;
 							</OnLoad>
 							<OnEnter>
-								GameTooltip:SetOwner(this, "ANCHOR_LEFT");
-								if (this.tooltip) then
-									GameTooltip:SetText(this.tooltip);
+								GameTooltip:SetOwner(self, "ANCHOR_LEFT");
+								if (self.tooltip) then
+									GameTooltip:SetText(self.tooltip);
 								end
 							</OnEnter>
 							<OnUpdate>
-								if ( GameTooltip:IsOwned(this) ) then
+								if ( GameTooltip:IsOwned(self) ) then
 									BattlefieldFrame_UpdateStatus(1);
-									if ( this.tooltip ) then
-										GameTooltip:SetText(this.tooltip);
+									if ( self.tooltip ) then
+										GameTooltip:SetText(self.tooltip);
 									end
 								end
 							</OnUpdate>
@@ -282,14 +285,14 @@
 								-- Hide tooltip
 								GameTooltip:Hide();
 								if ( MiniMapBattlefieldFrame.status == "active") then
-									if ( arg1 == "RightButton" ) then
+									if ( button == "RightButton" ) then
 										ToggleDropDownMenu(1, nil, MiniMapBattlefieldDropDown, "MiniMapBattlefieldFrame", 0, -5);
 									elseif ( IsShiftKeyDown() ) then
 										ToggleBattlefieldMinimap();
 									else
 										ToggleWorldStateScoreFrame();
 									end
-								elseif ( arg1 == "RightButton" ) then
+								elseif ( button == "RightButton" ) then
 									ToggleDropDownMenu(1, nil, MiniMapBattlefieldDropDown, "MiniMapBattlefieldFrame", 0, -5);
 								end
 							</OnClick>
@@ -304,13 +307,13 @@
 						</Anchors>
 						<Scripts>
 							<OnLoad>
-								Minimap_OnLoad();
+								Minimap_OnLoad(self);
 							</OnLoad>
 							<OnEvent>
-								Minimap_OnEvent();
+								Minimap_OnEvent(self, event, ...);
 							</OnEvent>
 							<OnUpdate>
-								Minimap_OnUpdate(arg1);
+								Minimap_OnUpdate(Minimap, elapsed);
 							</OnUpdate>
 						</Scripts>
 					</Model>
@@ -398,28 +401,28 @@
 								</Layers>
 								<Scripts>
 									<OnLoad>
-										this.tooltipText = MicroButtonTooltipText(LFG_BUTTON, "TOGGLELFGPARENT");
-										this.newbieText = NEWBIE_TOOLTIP_LFGPARENT;
-										this:RegisterEvent("UPDATE_BINDINGS");
+										self.tooltipText = MicroButtonTooltipText(LFG_BUTTON, "TOGGLELFGPARENT");
+										self.newbieText = NEWBIE_TOOLTIP_LFGPARENT;
+										self:RegisterEvent("UPDATE_BINDINGS");
 									</OnLoad>
 									<OnEnter>
-										GameTooltip_AddNewbieTip(this.tooltipText, 1.0, 1.0, 1.0, this.newbieText);
+										GameTooltip_AddNewbieTip(self, self.tooltipText, 1.0, 1.0, 1.0, self.newbieText);
 									</OnEnter>
 									<OnLeave>
 										GameTooltip:Hide();
 									</OnLeave>
 									<OnEvent>
-										this.tooltipText = MicroButtonTooltipText(WORLDMAP_BUTTON, "TOGGLEWORLDMAP");
-										this.newbieText = NEWBIE_TOOLTIP_WORLDMAP;
+										self.tooltipText = MicroButtonTooltipText(WORLDMAP_BUTTON, "TOGGLEWORLDMAP");
+										self.newbieText = NEWBIE_TOOLTIP_WORLDMAP;
 									</OnEvent>
 									<OnClick>
-										ToggleWorldMap();
+										ToggleFrame(WorldMapFrame);
 									</OnClick>
 								</Scripts>
 								<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
 							</Button>
-							<Button name="MiniMapTracking" enableMouse="true">
-								<Size x="33" y="33"/>
+							<Frame name="MiniMapTracking">
+								<Size x="38" y="38"/>
 								<Anchors>
 									<Anchor point="TOPLEFT">
 										<Offset x="11" y="-26"/>
@@ -430,79 +433,99 @@
 										<Texture name="$parentBackground" file="Interface\Minimap\UI-Minimap-Background">
 											<Size x="30" y="30"/>
 											<Anchors>
-												<Anchor point="CENTER">
-													<Offset x="0" y="0"/>
+												<Anchor point="TOPLEFT">
+													<Offset x="2" y="-4"/>
 												</Anchor>
 											</Anchors>
-										</Texture>
-									</Layer>
-									<Layer level="BORDER">
-										<Texture name="$parentIcon">
-											<Size>
-												<AbsDimension x="24" y="24"/>
-											</Size>
-											<Anchors>
-												<Anchor point="CENTER">
-													<Offset x="2" y="-2"/>
-												</Anchor>
-											</Anchors>
+											<Color r="1" g="1" b="1" a="0.6"/>
 										</Texture>
 									</Layer>
 									<Layer level="ARTWORK">
-										<Texture name="$parentBorder" file="Interface\Minimap\MiniMap-TrackingBorder">
-											<Size x="64" y="64"/>
+										<Texture name="$parentIcon">
+											<Size x="24" y="24"/>
 											<Anchors>
-												<Anchor point="TOPLEFT"/>
+												<Anchor point="TOPLEFT">
+													<Offset x="6" y="-6"/>
+												</Anchor>
 											</Anchors>
 										</Texture>
 									</Layer>
 									<Layer level="OVERLAY">
-										<Texture name="$parentShine" file="Interface\ComboFrame\ComboPoint" alphaMode="ADD" hidden="true">
-											<Size x="32" y="32"/>
+										<Texture name="$parentIconOverlay" hidden="true">
 											<Anchors>
-												<Anchor point="CENTER">
-													<Offset x="3" y="3"/>
-												</Anchor>
+												<Anchor point="TOPLEFT" relativeTo="$parentIcon"/>
+												<Anchor point="BOTTOMRIGHT" relativeTo="$parentIcon"/>
 											</Anchors>
-											<TexCoords left="0.5625" right="1" top="0" bottom="1"/>
+											<Color r="0.0" g="0.0" b="0.0" a="0.5"/>
 										</Texture>
 									</Layer>
 								</Layers>
-								<Scripts>
-									<OnLoad>
-										this:RegisterEvent("MINIMAP_UPDATE_TRACKING");
-										MiniMapTracking_Update();
-										MiniMapTrackingBackground:SetAlpha(0.6);
-									</OnLoad>
-									<OnEvent>
-										if ( event == "MINIMAP_UPDATE_TRACKING" ) then
-											MiniMapTracking_Update();
-										end
-									</OnEvent>
-									<OnMouseUp>
-										if ( GameTooltip:GetOwner() == this ) then
-											GameTooltip:Hide();
-										end
-										ToggleDropDownMenu(1, nil, MiniMapTrackingDropDown, "MiniMapTracking", 0, -5);
-									</OnMouseUp> 
-									<OnEnter>
-										GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-										GameTooltip:SetTracking();
-									</OnEnter>							
-									<OnLeave>
-										GameTooltip:Hide();
-									</OnLeave>
-								</Scripts>
 								<Frames>
 									<Frame name="$parentDropDown" inherits="UIDropDownMenuTemplate" clampedToScreen="true" id="1" hidden="true">
 										<Scripts>
 											<OnLoad>
-												MiniMapTrackingDropDown_OnLoad();
+												MiniMapTrackingDropDown_OnLoad(self);
 											</OnLoad>
 										</Scripts>
 									</Frame>
+									<Button name="$parentButton">
+										<Size x="38" y="38"/>
+										<Anchors>
+											<Anchor point="TOPLEFT"/>
+										</Anchors>
+										<Layers>
+											<Layer level="BORDER">
+												<Texture name="$parentBorder" file="Interface\Minimap\MiniMap-TrackingBorder">
+													<Size x="64" y="64"/>
+													<Anchors>
+														<Anchor point="TOPLEFT"/>
+													</Anchors>
+												</Texture>
+											</Layer>
+											<Layer level="OVERLAY">
+												<Texture name="$parentShine" file="Interface\ComboFrame\ComboPoint" alphaMode="ADD" hidden="true">
+													<Size x="32" y="32"/>
+													<Anchors>
+														<Anchor point="TOPLEFT">
+															<Offset x="2" y="-2"/>
+														</Anchor>
+													</Anchors>
+													<TexCoords left="0.5625" right="1" top="0" bottom="1"/>
+												</Texture>
+											</Layer>
+										</Layers>
+										<Scripts>
+											<OnLoad>
+												self:RegisterEvent("MINIMAP_UPDATE_TRACKING");
+												MiniMapTracking_Update();
+											</OnLoad>
+											<OnEvent>
+												MiniMapTracking_Update();
+											</OnEvent>
+											<OnClick>
+												ToggleDropDownMenu(1, nil, MiniMapTrackingDropDown, "MiniMapTracking", 0, -5);
+												PlaySound("igMainMenuOptionCheckBoxOn");
+											</OnClick>
+											<OnMouseDown>
+												MiniMapTrackingIcon:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 8, -8);
+												MiniMapTrackingIconOverlay:Show();
+											</OnMouseDown>
+											<OnMouseUp>
+												MiniMapTrackingIcon:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 6, -6);
+												MiniMapTrackingIconOverlay:Hide();
+											</OnMouseUp>
+											<OnEnter>
+												GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+												GameTooltip:SetTracking();
+											</OnEnter>
+											<OnLeave>
+												GameTooltip:Hide();
+											</OnLeave>
+										</Scripts>
+										<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+									</Button>
 								</Frames>
-							</Button>
+							</Frame>
 							<Button name="MiniMapMeetingStoneFrame" hidden="true" inherits="MiniMapButtonTemplate">
 								<Size>
 									<AbsDimension x="33" y="33"/>
@@ -540,8 +563,8 @@
 								</Frames>
 								<Scripts>
 									<OnLoad>
-										this:RegisterEvent("MEETINGSTONE_CHANGED");
-										this:SetFrameLevel(this:GetFrameLevel()+1)
+										self:RegisterEvent("MEETINGSTONE_CHANGED");
+										self:SetFrameLevel(self:GetFrameLevel()+1)
 									</OnLoad>
 									<OnClick>
 										ToggleLFGParentFrame();
@@ -556,7 +579,7 @@
 										end
 									</OnEvent>
 									<OnEnter>
-										MiniMapMeetingStoneFrame_OnEnter();
+										MiniMapMeetingStoneFrame_OnEnter(self);
 									</OnEnter>							
 									<OnLeave>
 										GameTooltip:Hide();
@@ -673,14 +696,14 @@
 										MINIMAP_RECORDING_INDICATOR_ON = false;
 									</OnLeave>
 									<OnLoad>
-										this:RegisterEvent("MOVIE_RECORDING_PROGRESS");
+										self:RegisterEvent("MOVIE_RECORDING_PROGRESS");
 									</OnLoad>
 									<OnEvent>
 										if ( event == "MOVIE_RECORDING_PROGRESS" ) then
 											if( MovieRecording_IsRecording() and GetCVar("MovieRecordingIcon") == "1") then
-												this:Show();
+												self:Show();
 											else
-												this:Hide();
+												self:Hide();
 											end
 										end
 									</OnEvent>
@@ -696,7 +719,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseUp>
-						Minimap_OnClick();
+						Minimap_OnClick(self, button);
 					</OnMouseUp>
 				</Scripts>
 			</Minimap>
@@ -705,9 +728,9 @@
 			<OnLoad>
 				Minimap.timer = 0;
 				Minimap_Update();
-				this:RegisterEvent("ZONE_CHANGED");
-				this:RegisterEvent("ZONE_CHANGED_INDOORS");
-				this:RegisterEvent("ZONE_CHANGED_NEW_AREA");
+				self:RegisterEvent("ZONE_CHANGED");
+				self:RegisterEvent("ZONE_CHANGED_INDOORS");
+				self:RegisterEvent("ZONE_CHANGED_NEW_AREA");
 				Minimap_UpdateRotationSetting();
 			</OnLoad>
 			<OnEvent>

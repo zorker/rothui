@@ -4,134 +4,130 @@ BONUSACTIONBAR_XPOS = 4;
 NUM_BONUS_ACTION_SLOTS = 12;
 NUM_SHAPESHIFT_SLOTS = 10;
 NUM_POSSESS_SLOTS = 2;
+POSSESS_CANCEL_SLOT = 2;
 
-function BonusActionBar_OnLoad()
-	this:RegisterEvent("UPDATE_BONUS_ACTIONBAR");
-	this:RegisterEvent("ACTIONBAR_SHOWGRID");
-	this:RegisterEvent("ACTIONBAR_HIDEGRID");
-	this:SetFrameLevel(this:GetFrameLevel() + 2);
-	this.mode = "none";
-	this.completed = 1;
-	this.lastBonusBar = 1;
+function BonusActionBar_OnLoad (self)
+	self:RegisterEvent("UPDATE_BONUS_ACTIONBAR");
+	self:RegisterEvent("ACTIONBAR_SHOWGRID");
+	self:RegisterEvent("ACTIONBAR_HIDEGRID");
+	self:SetFrameLevel(self:GetFrameLevel() + 2);
+	self.mode = "none";
+	self.completed = 1;
+	self.lastBonusBar = 1;
 	if ( GetBonusBarOffset() > 0 and GetActionBarPage() == 1 ) then
 		ShowBonusActionBar();
 	end
 end
 
-function BonusActionBar_OnEvent()
+function BonusActionBar_OnEvent (self, event, ...)
 	if ( event == "UPDATE_BONUS_ACTIONBAR" ) then
 		if ( GetBonusBarOffset() > 0 ) then
-			this.lastBonusBar = GetBonusBarOffset();
-			--UnlockPetActionBar();
-			--HidePetActionBar();
+			self.lastBonusBar = GetBonusBarOffset();
 			ShowBonusActionBar();
 		else
 			HideBonusActionBar();
-			--if ( PetHasActionBar() ) then
-			--	ShowPetActionBar();
-			--	LockPetActionBar();
-			--end
 		end
 	end
 end
 
-function BonusActionBar_OnUpdate(elapsed)
+function BonusActionBar_OnUpdate(self, elapsed)
 	local yPos;
-	if ( this.slideTimer and (this.slideTimer < this.timeToSlide) ) then
+	if ( self.slideTimer and (self.slideTimer < self.timeToSlide) ) then
 		-- Animating
-		this.completed = nil;
-		if ( this.mode == "show" ) then
-			yPos = (this.slideTimer/this.timeToSlide) * BONUSACTIONBAR_YPOS;
-			this:SetPoint("TOPLEFT", this:GetParent(), "BOTTOMLEFT", BONUSACTIONBAR_XPOS, yPos);
-			this.state = "showing";
-			this:Show();
-		elseif ( this.mode == "hide" ) then
-			yPos = (1 - (this.slideTimer/this.timeToSlide)) * BONUSACTIONBAR_YPOS;
-			this:SetPoint("TOPLEFT", this:GetParent(), "BOTTOMLEFT", BONUSACTIONBAR_XPOS, yPos);
-			this.state = "hiding";
+		self.completed = nil;
+		if ( self.mode == "show" ) then
+			yPos = (self.slideTimer/self.timeToSlide) * BONUSACTIONBAR_YPOS;
+			self:SetPoint("TOPLEFT", self:GetParent(), "BOTTOMLEFT", BONUSACTIONBAR_XPOS, yPos);
+			self.state = "showing";
+			self:Show();
+		elseif ( self.mode == "hide" ) then
+			yPos = (1 - (self.slideTimer/self.timeToSlide)) * BONUSACTIONBAR_YPOS;
+			self:SetPoint("TOPLEFT", self:GetParent(), "BOTTOMLEFT", BONUSACTIONBAR_XPOS, yPos);
+			self.state = "hiding";
 		end
-		this.slideTimer = this.slideTimer + elapsed;
+		self.slideTimer = self.slideTimer + elapsed;
 	else
 		-- Animation complete
-		if ( this.completed == 1 ) then
+		if ( self.completed == 1 ) then
 			return;
 		else
-			this.completed = 1;
+			self.completed = 1;
 		end
-		BonusActionBar_SetButtonTransitionState(nil);
-		if ( this.mode == "show" ) then
-			this:SetPoint("TOPLEFT", this:GetParent(), "BOTTOMLEFT", BONUSACTIONBAR_XPOS, BONUSACTIONBAR_YPOS);
-			this.state = "top";
+		BonusActionBar_SetButtonTransitionState(self, nil);
+		if ( self.mode == "show" ) then
+			self:SetPoint("TOPLEFT", self:GetParent(), "BOTTOMLEFT", BONUSACTIONBAR_XPOS, BONUSACTIONBAR_YPOS);
+			self.state = "top";
 			PlaySound("igBonusBarOpen");
-		elseif ( this.mode == "hide" ) then
-			this:SetPoint("TOPLEFT", this:GetParent(), "BOTTOMLEFT", BONUSACTIONBAR_XPOS, 0);
-			this.state = "bottom";
-			this:Hide();
+		elseif ( self.mode == "hide" ) then
+			self:SetPoint("TOPLEFT", self:GetParent(), "BOTTOMLEFT", BONUSACTIONBAR_XPOS, 0);
+			self.state = "bottom";
+			self:Hide();
 		end
-		this.mode = "none";
+		self.mode = "none";
 	end
 end
 
-function ShowBonusActionBar()
-	BonusActionBar_SetButtonTransitionState(nil);
-	if ( BonusActionBarFrame.mode ~= "show" and BonusActionBarFrame.state ~= "top") then
-		BonusActionBarFrame:Show();
-		if ( BonusActionBarFrame.completed ) then
-			BonusActionBarFrame.slideTimer = 0;
+function ShowBonusActionBar (override)
+	if (( (not MainMenuBar.busy) and (not UnitHasVehicleUI("player")) ) or override) then	--Don't change while we're animating out MainMenuBar for vehicle UI
+		BonusActionBar_SetButtonTransitionState(nil);
+		if ( (BonusActionBarFrame.mode ~= "show" and BonusActionBarFrame.state ~= "top") or (not UIParent:IsShown())) then
+			BonusActionBarFrame:Show();
+			if ( BonusActionBarFrame.completed ) then
+				BonusActionBarFrame.slideTimer = 0;
+			end
+			BonusActionBarFrame.timeToSlide = BONUSACTIONBAR_SLIDETIME;
+			BonusActionBarFrame.mode = "show";
 		end
-		BonusActionBarFrame.timeToSlide = BONUSACTIONBAR_SLIDETIME;
-		BonusActionBarFrame.mode = "show";
 	end
 end
 
-function HideBonusActionBar()
-	if ( BonusActionBarFrame:IsShown() ) then
-		BonusActionBar_SetButtonTransitionState(1);
-		if ( BonusActionBarFrame.completed ) then
-			BonusActionBarFrame.slideTimer = 0;
+function HideBonusActionBar (override)
+	if (( (not MainMenuBar.busy) and (not UnitHasVehicleUI("player")) ) or override) then	--Don't change while we're animating out MainMenuBar for vehicle UI
+		if ( (BonusActionBarFrame:IsShown()) or (not UIParent:IsShown())) then
+			BonusActionBar_SetButtonTransitionState(1);
+			if ( BonusActionBarFrame.completed ) then
+				BonusActionBarFrame.slideTimer = 0;
+			end
+			BonusActionBarFrame.timeToSlide = BONUSACTIONBAR_SLIDETIME;
+			BonusActionBarFrame.mode = "hide";
 		end
-		BonusActionBarFrame.timeToSlide = BONUSACTIONBAR_SLIDETIME;
-		BonusActionBarFrame.mode = "hide";
 	end
 	
 end
 
-function BonusActionButtonUp(id)
+function BonusActionButtonUp (id)
 	PetActionButtonUp(id);
 end
 
-function BonusActionButtonDown(id)
+function BonusActionButtonDown (id)
 	PetActionButtonDown(id);
 end
 
-function BonusActionBar_SetButtonTransitionState(state)
+function BonusActionBar_SetButtonTransitionState (self, state)
 	local button, icon;
-	local _this = this;
 	for i=1, NUM_BONUS_ACTION_SLOTS, 1 do
 		button = getglobal("BonusActionButton"..i);
 		icon = getglobal("BonusActionButton"..i.."Icon");
 		button.inTransition = state;
 		if ( button.needsUpdate ) then
-			this = button;
-			securecall("ActionButton_Update");
+			securecall("ActionButton_Update", button);
 			button.needsUpdate = nil;
 		end
 	end
-	this = _this;
 end
 
-function ShapeshiftBar_OnLoad()
+function ShapeshiftBar_OnLoad (self)
 	ShapeshiftBar_Update();
-	this:RegisterEvent("PLAYER_ENTERING_WORLD");
-	this:RegisterEvent("UPDATE_SHAPESHIFT_FORMS");
-	this:RegisterEvent("UPDATE_INVENTORY_ALERTS");	-- Wha??
-	this:RegisterEvent("SPELL_UPDATE_COOLDOWN");
-	this:RegisterEvent("SPELL_UPDATE_USABLE");
-	this:RegisterEvent("PLAYER_AURAS_CHANGED");
-	this:RegisterEvent("ACTIONBAR_PAGE_CHANGED");
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
+	self:RegisterEvent("UPDATE_SHAPESHIFT_FORMS");
+	self:RegisterEvent("UPDATE_SHAPESHIFT_USABLE");
+	self:RegisterEvent("UPDATE_SHAPESHIFT_COOLDOWN");
+	self:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
+	self:RegisterEvent("UPDATE_INVENTORY_ALERTS");	-- Wha?? Still Wha...
+	self:RegisterEvent("ACTIONBAR_PAGE_CHANGED");
 end
 
-function ShapeshiftBar_OnEvent()
+function ShapeshiftBar_OnEvent (self, event, ...)
 	if ( event == "PLAYER_ENTERING_WORLD" or event == "UPDATE_SHAPESHIFT_FORMS" ) then
 		ShapeshiftBar_Update();
 	elseif ( event == "ACTIONBAR_PAGE_CHANGED" ) then
@@ -145,7 +141,7 @@ function ShapeshiftBar_OnEvent()
 	end
 end
 
-function ShapeshiftBar_Update()
+function ShapeshiftBar_Update ()
 	local numForms = GetNumShapeshiftForms();
 	if ( numForms > 0 ) then
 		--Setup the shapeshift bar to display the appropriate number of slots
@@ -173,7 +169,7 @@ function ShapeshiftBar_Update()
 	UIParent_ManageFramePositions();
 end
 
-function ShapeshiftBar_UpdateState()
+function ShapeshiftBar_UpdateState ()
 	local numForms = GetNumShapeshiftForms();
 	local texture, name, isActive, isCastable;
 	local button, icon, cooldown;
@@ -215,21 +211,21 @@ function ShapeshiftBar_UpdateState()
 	end
 end
 
-function ShapeshiftBar_ChangeForm(id)
+function ShapeshiftBar_ChangeForm (id)
 	ShapeshiftBarFrame.lastSelected = id;
 	local check = 1;
 	CastShapeshiftForm(id);
 end
 
-function PossessBar_OnLoad()
+function PossessBar_OnLoad (self)
 	PossessBar_Update();
-	this:RegisterEvent("PLAYER_ENTERING_WORLD");
-	this:RegisterEvent("UPDATE_BONUS_ACTIONBAR");
-	this:RegisterEvent("PLAYER_AURAS_CHANGED");
-	this:RegisterEvent("ACTIONBAR_PAGE_CHANGED");
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
+	self:RegisterEvent("UPDATE_BONUS_ACTIONBAR");
+	self:RegisterEvent("UNIT_AURA");
+	self:RegisterEvent("ACTIONBAR_PAGE_CHANGED");
 end
 
-function PossessBar_OnEvent()
+function PossessBar_OnEvent (self, event, ...)
 	if ( event == "PLAYER_ENTERING_WORLD" or event == "UPDATE_BONUS_ACTIONBAR" ) then
 		PossessBar_Update();
 	elseif ( event == "ACTIONBAR_PAGE_CHANGED" ) then
@@ -238,68 +234,89 @@ function PossessBar_OnEvent()
 		else
 			HideBonusActionBar();
 		end
-	else
-		PossessBar_UpdateState();
-	end
-end
-
-function PossessBar_Update()
-	if ( IsPossessBarVisible() ) then
-		PossessBarFrame:Show();
-		ShapeshiftBarFrame:Hide();
-	else
-		PossessBarFrame:Hide();
-		if(GetNumShapeshiftForms() > 0) then
-			ShapeshiftBarFrame:Show();
+	elseif ( event == "UNIT_AURA" ) then
+		local unit = ...;
+		if ( unit == "player" ) then
+			PossessBar_UpdateState();
 		end
 	end
-	PossessBar_UpdateState();
-	UIParent_ManageFramePositions();
 end
 
-function PossessBar_UpdateState()
+function PossessBar_Update (override)
+	if ( (not MainMenuBar.busy and not UnitHasVehicleUI("player")) or override ) then	--Don't change while we're animating out MainMenuBar for vehicle UI
+		if ( IsPossessBarVisible() ) then
+			PossessBarFrame:Show();
+			ShapeshiftBarFrame:Hide();
+			MainMenuBarVehicleLeaveButton_Update()
+			ShowPetActionBar(true);
+		else
+			PossessBarFrame:Hide();
+			if(GetNumShapeshiftForms() > 0) then
+				ShapeshiftBarFrame:Show();
+				MainMenuBarVehicleLeaveButton_Update()
+				ShowPetActionBar(true);
+			end
+		end
+		PossessBar_UpdateState();
+		UIParent_ManageFramePositions();
+	end
+end
+
+function PossessBar_UpdateState ()
 	local texture, name;
-	local button, icon, cooldown;
+	local button, background, icon, cooldown;
 
 	for i=1, NUM_POSSESS_SLOTS do
 		-- Possess Icon
 		button = getglobal("PossessButton"..i);
+		background = getglobal("PossessBackground"..i);
 		icon = getglobal("PossessButton"..i.."Icon");
-		texture, name = GetPossessInfo(i);
+		texture, name, enabled = GetPossessInfo(i);
 		icon:SetTexture(texture);
-		
+
 		--Cooldown stuffs
 		cooldown = getglobal("PossessButton"..i.."Cooldown");
 		cooldown:Hide();
-		
-		button:SetChecked(0);
+
+		button:SetChecked(nil);
 		icon:SetVertexColor(1.0, 1.0, 1.0);
 
-		button:Show();
+		if ( enabled ) then
+			button:Show();
+			background:Show();
+		else
+			button:Hide();
+			background:Hide();
+		end
 	end
 end
 
-function PossessBar_Clicked(id)
-	local button = getglobal("PossessButton"..id);
-	button:SetChecked(0);
-	
-	if (id == 2) then
-		local texture, name = GetPossessInfo(1);
-		CancelPlayerBuff(name);
+function PossessButton_OnClick (self)
+	self:SetChecked(nil);
+
+	local id = self:GetID();
+	if ( id == POSSESS_CANCEL_SLOT ) then
+		if ( UnitControllingVehicle("player") and CanExitVehicle() ) then
+			VehicleExit();
+		else
+			local texture, name = GetPossessInfo(id);
+			CancelUnitBuff("player", name);
+		end
 	end
 end
 
-function PossessBar_OnEnter(id)
-	local button = getglobal("PossessButton"..id);
+function PossessButton_OnEnter (self)
+	local id = self:GetID();
+
 	if ( GetCVar("UberTooltips") == "1" ) then
-		GameTooltip_SetDefaultAnchor(GameTooltip, this);
+		GameTooltip_SetDefaultAnchor(GameTooltip, self);
 	else
-		GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-    end
-    
-    if ( id == 2 ) then
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+	end
+
+	if ( id == POSSESS_CANCEL_SLOT ) then
 		GameTooltip:SetText(CANCEL);
-    else
-		GameTooltip:SetPossession(this:GetID());
+	else
+		GameTooltip:SetPossession(id);
 	end
 end

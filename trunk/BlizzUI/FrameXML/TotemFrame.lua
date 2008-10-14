@@ -13,17 +13,29 @@ TOTEM_PRIORITIES =
 	FIRE_TOTEM_SLOT
 };
 
-function TotemFrame_OnLoad()
-	this:RegisterEvent("PLAYER_TOTEM_UPDATE");
-	this:RegisterEvent("PLAYER_ENTERING_WORLD");
+function TotemFrame_OnLoad (self)
+	self:RegisterEvent("PLAYER_TOTEM_UPDATE");
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
 
-	TotemFrame_Update();
+	local _, class = UnitClass("player");
+	if ( class == "DEATHKNIGHT" ) then
+		self:SetPoint("TOPLEFT", PlayerFrame, "TOPLEFT", 65, -55);
+	end
 end
 
-function TotemFrame_Update()
+function TotemFrame_Update ()
+	local _, class = UnitClass("player");
 	if ( PetFrame and PetFrame:IsShown() ) then
-		TotemFrame:Hide();
-		return;
+		if ( class == "DEATHKNIGHT" ) then
+			TotemFrame:SetPoint("TOPLEFT", PlayerFrame, "TOPLEFT", 28, -75);
+		elseif ( class == "SHAMAN" ) then
+			--Nothing!
+		else
+			TotemFrame:Hide();
+			return;
+		end
+	elseif ( class == "DEATHKNIGHT" ) then
+		TotemFrame:SetPoint("TOPLEFT", PlayerFrame, "TOPLEFT", 65, -55);
 	end
 
 	local haveTotem, name, startTime, duration, icon;
@@ -57,7 +69,7 @@ function TotemFrame_Update()
 	end
 end
 
-function TotemFrame_OnEvent(self, event, ...)
+function TotemFrame_OnEvent (self, event, ...)
 	if ( event == "PLAYER_ENTERING_WORLD" ) then
 		TotemFrame_Update();
 	elseif ( event == "PLAYER_TOTEM_UPDATE" ) then
@@ -95,20 +107,20 @@ function TotemFrame_OnEvent(self, event, ...)
 	end
 end
 
-function TotemButton_OnClick(mouseButton)
+function TotemButton_OnClick (self, mouseButton)
 	if ( mouseButton == "RightButton" ) then
-		DestroyTotem(this.slot);
+		DestroyTotem(self.slot);
 	end
 end
 
-function TotemButton_OnUpdate(button, elapsed)
+function TotemButton_OnUpdate (button, elapsed)
 	BuffFrame_UpdateDuration(button, GetTotemTimeLeft(button.slot));
 	if ( GameTooltip:IsOwned(button) ) then
 		GameTooltip:SetTotem(button.slot);
 	end
 end
 
-function TotemButton_Update(button, startTime, duration, icon)
+function TotemButton_Update (button, startTime, duration, icon)
 	local buttonName = button:GetName();
 	local buttonIcon = getglobal(buttonName.."IconTexture");
 	local buttonDuration = getglobal(buttonName.."Duration");

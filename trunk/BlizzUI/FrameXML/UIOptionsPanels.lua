@@ -1,47 +1,147 @@
-CONTROLTYPE_CHECKBOX = 1;
-CONTROLTYPE_DROPDOWN = 2;
-CONTROLTYPE_SLIDER = 3;
+
+local next = next;
+local function SecureNext(elements, key)
+	return securecall(next, elements, key);
+end
+
+
+-- [[ Generic Interface Options Panel ]] --
+
+function InterfaceOptionsPanel_CheckButton_OnClick (checkButton)
+	local setting = "0";
+	if ( checkButton:GetChecked() ) then
+		if ( not checkButton.invert ) then
+			setting = "1"
+		end
+	elseif ( checkButton.invert ) then
+		setting = "1"
+	end
+
+	checkButton.value = setting;
+
+	if ( checkButton.cvar ) then
+		BlizzardOptionsPanel_SetCVarSafe(checkButton.cvar, setting, checkButton.event);
+	end
+
+	if ( checkButton.uvar ) then
+		setglobal(checkButton.uvar, setting);
+	end
+
+	if ( checkButton.dependentControls ) then
+		if ( checkButton:GetChecked() ) then
+			for _, control in SecureNext, checkButton.dependentControls do
+				control:Enable();
+			end
+		else
+			for _, control in SecureNext, checkButton.dependentControls do
+				control:Disable();
+			end
+		end
+	end
+
+	if ( checkButton.setFunc ) then
+		checkButton.setFunc(setting);
+	end
+end
+
+
+local function InterfaceOptionsPanel_CancelControl (control)
+	if ( control.oldValue ) then
+		if ( control.value and control.value ~= control.oldValue ) then
+			control:SetValue(control.oldValue);
+		end
+	elseif ( control.value ) then
+		if ( control:GetValue() ~= control.value ) then
+			control:SetValue(control.value);
+		end
+	end
+end
+
+local function InterfaceOptionsPanel_DefaultControl (control)
+	if ( control.defaultValue and control.value ~= control.defaultValue ) then
+		control:SetValue(control.defaultValue);
+		control.value = control.defaultValue;
+	end
+end
+
+local function InterfaceOptionsPanel_Okay (self)
+	for _, control in SecureNext, self.controls do
+		securecall(BlizzardOptionsPanel_OkayControl, control);
+	end
+end
+
+local function InterfaceOptionsPanel_Cancel (self)
+	for _, control in SecureNext, self.controls do
+		securecall(InterfaceOptionsPanel_CancelControl, control);
+	end
+end
+
+local function InterfaceOptionsPanel_Default (self)
+	for _, control in SecureNext, self.controls do
+		securecall(InterfaceOptionsPanel_DefaultControl, control);
+		if ( control.setFunc ) then
+			control.setFunc(control:GetValue());
+		end
+	end
+end
+
+local function InterfaceOptionsPanel_Refresh (self)
+	for _, control in SecureNext, self.controls do
+		securecall(BlizzardOptionsPanel_RefreshControl, control);
+		-- record values so we can cancel back to this state
+		control.oldValue = control.value;
+	end
+end
+
+
+function InterfaceOptionsPanel_OnLoad (self)
+	BlizzardOptionsPanel_OnLoad(self, nil, InterfaceOptionsPanel_Cancel, InterfaceOptionsPanel_Default, InterfaceOptionsPanel_Refresh);
+	InterfaceOptions_AddCategory(self);
+end
+
 
 -- [[ Controls Options Panel ]] --
 
 ControlsPanelOptions = {
 	deselectOnClick = { text = "GAMEFIELD_DESELECT_TEXT" },
-	gxFixLag = { text = "FIX_LAG" },
 	autoDismountFlying = { text = "AUTO_DISMOUNT_FLYING_TEXT" },
 	autoClearAFK = { text = "CLEAR_AFK" },
-	BlockTrades = { text="BLOCK_TRADES" },
+	blockTrades = { text = "BLOCK_TRADES" },
 	lootUnderMouse = { text = "LOOT_UNDER_MOUSE_TEXT" },
-	autoLootCorpse = { text = "AUTO_LOOT_DEFAULT_TEXT" }, -- When this gets changed, the function SetAutoLootDefault needs to get run with its value.
-	autoLootKey = { text="AUTO_LOOT_KEY_TEXT", default="NONE" },
+	autoLootDefault = { text = "AUTO_LOOT_DEFAULT_TEXT" }, -- When this gets changed, the function SetAutoLootDefault needs to get run with its value.
+	autoLootKey = { text = "AUTO_LOOT_KEY_TEXT", default = "NONE" },
 }
-
-function InterfaceOptionsControlsPanelAutoLootKeyDropDown_OnLoad()
-
-end
 
 function InterfaceOptionsControlsPanelAutoLootKeyDropDown_OnEvent (self, event, ...)
 	if ( event == "PLAYER_ENTERING_WORLD" ) then
-		self:UnregisterEvent("PLAYER_ENTERING_WORLD");
-		UIDropDownMenu_Initialize(this, InterfaceOptionsControlsPanelAutoLootKeyDropDown_Initialize);
-		UIDropDownMenu_SetSelectedValue(this, GetModifiedClick("AUTOLOOTTOGGLE"));
 		self.defaultValue = "NONE";
-		self.currValue = GetModifiedClick("AUTOLOOTTOGGLE");
-		self.value = this.currValue;
-		InterfaceOptionsControlsPanelAutoLootKeyDropDown.tooltip = getglobal("OPTION_TOOLTIP_AUTO_LOOT_"..self.value.."_KEY");
-		UIDropDownMenu_SetWidth(90, InterfaceOptionsControlsPanelAutoLootKeyDropDown);
+		self.oldValue = GetModifiedClick("AUTOLOOTTOGGLE");
+		self.value = self.oldValue or self.defaultValue;
+		self.tooltip = _G["OPTION_TOOLTIP_AUTO_LOOT_"..self.value.."_KEY"];
+
+		UIDropDownMenu_SetWidth(self, 90);
+		UIDropDownMenu_Initialize(self, InterfaceOptionsControlsPanelAutoLootKeyDropDown_Initialize);
+		UIDropDownMenu_SetSelectedValue(self, self.value);
+
 		self.SetValue = 
-			function (self, value) 
+			function (self, value)
 				self.value = value;
 				UIDropDownMenu_SetSelectedValue(self, value);
 				SetModifiedClick("AUTOLOOTTOGGLE", value);
 				SaveBindings(GetCurrentBindingSet());
-				InterfaceOptionsControlsPanelAutoLootKeyDropDown.tooltip = getglobal("OPTION_TOOLTIP_AUTO_LOOT_"..value.."_KEY");	
-			end;
+				self.tooltip = _G["OPTION_TOOLTIP_AUTO_LOOT_"..value.."_KEY"];
+			end
 		self.GetValue =
 			function (self)
 				return UIDropDownMenu_GetSelectedValue(self);
 			end
-		if ( GetCVar("autoLootCorpse") == "1" ) then
+		self.RefreshValue =
+			function (self)
+				UIDropDownMenu_Initialize(self, InterfaceOptionsControlsPanelAutoLootKeyDropDown_Initialize);
+				UIDropDownMenu_SetSelectedValue(self, self.value);
+			end
+
+		if ( GetCVar("autoLootDefault") == "1" ) then
 			InterfaceOptionsControlsPanelAutoLootKeyDropDownLabel:SetText(LOOT_KEY_TEXT);
 		else
 			InterfaceOptionsControlsPanelAutoLootKeyDropDownLabel:SetText(AUTO_LOOT_KEY_TEXT);
@@ -49,8 +149,8 @@ function InterfaceOptionsControlsPanelAutoLootKeyDropDown_OnEvent (self, event, 
 	end
 end
 
-function InterfaceOptionsControlsPanelAutoLootKeyDropDown_OnClick()
-	InterfaceOptionsControlsPanelAutoLootKeyDropDown:SetValue(this.value);
+function InterfaceOptionsControlsPanelAutoLootKeyDropDown_OnClick(self)
+	InterfaceOptionsControlsPanelAutoLootKeyDropDown:SetValue(self.value);
 end
 
 function InterfaceOptionsControlsPanelAutoLootKeyDropDown_Initialize()
@@ -106,11 +206,11 @@ function InterfaceOptionsControlsPanelAutoLootKeyDropDown_Initialize()
 	UIDropDownMenu_AddButton(info);
 end
 
-function BlizzardOptionsPanel_UpdateAutoLootDropDown (value)
+function InterfaceOptionsControlsPanelAutoLootKeyDropDown_Update (value)
 	if ( not InterfaceOptionsControlsPanelAutoLootKeyDropDownLabel ) then
 		return;
 	end
-	
+
 	if ( value == "1" ) then
 		InterfaceOptionsControlsPanelAutoLootKeyDropDownLabel:SetText(LOOT_KEY_TEXT);
 	else
@@ -126,37 +226,52 @@ CombatPanelOptions = {
 	autoSelfCast = { text = "AUTO_SELF_CAST_TEXT" },
 	stopAutoAttackOnTargetChange = { text = "STOP_AUTO_ATTACK" },
 	showTargetOfTarget = { text = "SHOW_TARGET_OF_TARGET_TEXT" },
-	ShowTargetCastbar = { text = "SHOW_TARGET_CASTBAR" },
-	ShowVKeyCastbar = { text = "SHOW_TARGET_CASTBAR_IN_V_KEY" },
+	showTargetCastbar = { text = "SHOW_TARGET_CASTBAR" },
+	showVKeyCastbar = { text = "SHOW_TARGET_CASTBAR_IN_V_KEY" },
+	ShowClassColorInNameplate = { text = "SHOW_CLASS_COLOR_IN_V_KEY" },
 }
 
-function InterfaceOptionsCombatPanelTOTDropDown_OnLoad()
-	this.defaultValue = "5";
-	this.value = GetCVar("targetOfTargetMode");
-	this.currValue = this.value;
-	setglobal(this.uvar, this.value);
-	UIDropDownMenu_Initialize(this, InterfaceOptionsCombatPanelTOTDropDown_Initialize);
-	UIDropDownMenu_SetSelectedValue(this, this.value);
-	InterfaceOptionsCombatPanelTOTDropDown.tooltip = getglobal("OPTION_TOOLTIP_TARGETOFTARGET" .. this.value);
-	UIDropDownMenu_SetWidth(110, InterfaceOptionsCombatPanelTOTDropDown);	
-	this.SetValue = function (self, value)
+function InterfaceOptionsCombatPanelTOTDropDown_OnEvent (self, event, ...)
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		self.cvar = "targetOfTargetMode";
+
+		local value = GetCVar(self.cvar);
+		self.defaultValue = GetCVarDefault(self.cvar);
 		self.value = value;
-		SetCVar("targetOfTargetMode", value);
+		self.oldValue = value;
+		self.tooltip = _G["OPTION_TOOLTIP_TARGETOFTARGET" .. value];
 		setglobal(self.uvar, value);
+
+		UIDropDownMenu_SetWidth(self, 110);	
+		UIDropDownMenu_Initialize(self, InterfaceOptionsCombatPanelTOTDropDown_Initialize);
 		UIDropDownMenu_SetSelectedValue(self, value);
-		self.tooltip = getglobal("OPTION_TOOLTIP_TARGETOFTARGET" .. value);
-	end
-	this.GetValue = function (self)
-		return UIDropDownMenu_GetSelectedValue(self);
+
+		self.SetValue =
+			function (self, value)
+				self.value = value;
+				SetCVar(self.cvar, value);
+				setglobal(self.uvar, value);
+				UIDropDownMenu_SetSelectedValue(self, value);
+				self.tooltip = _G["OPTION_TOOLTIP_TARGETOFTARGET" .. value];
+			end
+		self.GetValue =
+			function (self)
+				return UIDropDownMenu_GetSelectedValue(self);
+			end
+		self.RefreshValue =
+			function (self)
+				UIDropDownMenu_Initialize(self, InterfaceOptionsCombatPanelTOTDropDown_Initialize);
+				UIDropDownMenu_SetSelectedValue(self, self.value);
+			end
 	end
 end
 
-function InterfaceOptionsCombatPanelTOTDropDown_OnClick()
-	InterfaceOptionsCombatPanelTOTDropDown:SetValue(this.value);
+function InterfaceOptionsCombatPanelTOTDropDown_OnClick(self)
+	InterfaceOptionsCombatPanelTOTDropDown:SetValue(self.value);
 end
 
-function InterfaceOptionsCombatPanelTOTDropDown_Initialize()
-	local selectedValue = UIDropDownMenu_GetSelectedValue(InterfaceOptionsCombatPanelTOTDropDown);
+function InterfaceOptionsCombatPanelTOTDropDown_Initialize(self)
+	local selectedValue = UIDropDownMenu_GetSelectedValue(self);
 	local info = UIDropDownMenu_CreateInfo();
 
 	info.text = RAID;
@@ -191,7 +306,7 @@ function InterfaceOptionsCombatPanelTOTDropDown_Initialize()
 	else
 		info.checked = nil;
 	end
-	info.tooltipTitle = PARTY;
+	info.tooltipTitle = SOLO;
 	info.tooltipText = OPTION_TOOLTIP_TARGETOFTARGET_SOLO;
 	UIDropDownMenu_AddButton(info);
 
@@ -220,6 +335,185 @@ function InterfaceOptionsCombatPanelTOTDropDown_Initialize()
 	UIDropDownMenu_AddButton(info);
 end
 
+-- [[ Self Cast key dropdown ]] --
+function InterfaceOptionsCombatPanelSelfCastKeyDropDown_OnEvent (self, event, ...)
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		self.defaultValue = "NONE";
+		self.oldValue = GetModifiedClick("SELFCAST");
+		self.value = self.oldValue or self.defaultValue;
+		self.tooltip = _G["OPTION_TOOLTIP_AUTO_SELF_CAST_"..self.value.."_KEY"];
+
+		UIDropDownMenu_SetWidth(self, 90);
+		UIDropDownMenu_Initialize(self, InterfaceOptionsCombatPanelSelfCastKeyDropDown_Initialize);
+		UIDropDownMenu_SetSelectedValue(self, self.value);
+
+		self.SetValue = 
+			function (self, value) 
+				self.value = value;
+				UIDropDownMenu_SetSelectedValue(self, value);
+				SetModifiedClick("SELFCAST", value);
+				SaveBindings(GetCurrentBindingSet());
+				self.tooltip = _G["OPTION_TOOLTIP_AUTO_SELF_CAST_"..value.."_KEY"];
+			end;
+		self.GetValue =
+			function (self)
+				return UIDropDownMenu_GetSelectedValue(self);
+			end
+		self.RefreshValue =
+			function (self)
+				UIDropDownMenu_Initialize(self, InterfaceOptionsCombatPanelSelfCastKeyDropDown_Initialize);
+				UIDropDownMenu_SetSelectedValue(self, self.value);
+			end
+	end
+end
+
+function InterfaceOptionsCombatPanelSelfCastKeyDropDown_OnClick(self)
+	InterfaceOptionsCombatPanelSelfCastKeyDropDown:SetValue(self.value);
+end
+
+function InterfaceOptionsCombatPanelSelfCastKeyDropDown_Initialize()
+	local selectedValue = UIDropDownMenu_GetSelectedValue(InterfaceOptionsCombatPanelSelfCastKeyDropDown);
+	local info = UIDropDownMenu_CreateInfo();
+
+	info.text = ALT_KEY;
+	info.func = InterfaceOptionsCombatPanelSelfCastKeyDropDown_OnClick;
+	info.value = "ALT";
+	if ( info.value == selectedValue ) then
+		info.checked = 1;
+	else
+		info.checked = nil;
+	end
+	info.tooltipTitle = ALT_KEY;
+	info.tooltipText = OPTION_TOOLTIP_AUTO_SELF_CAST_ALT_KEY;
+	UIDropDownMenu_AddButton(info);
+
+	info.text = CTRL_KEY;
+	info.func = InterfaceOptionsCombatPanelSelfCastKeyDropDown_OnClick;
+	info.value = "CTRL";
+	if ( info.value == selectedValue ) then
+		info.checked = 1;
+	else
+		info.checked = nil;
+	end
+	info.tooltipTitle = CTRL_KEY;
+	info.tooltipText = OPTION_TOOLTIP_AUTO_SELF_CAST_CTRL_KEY;
+	UIDropDownMenu_AddButton(info);
+
+	info.text = SHIFT_KEY;
+	info.func = InterfaceOptionsCombatPanelSelfCastKeyDropDown_OnClick;
+	info.value = "SHIFT";
+	if ( info.value == selectedValue ) then
+		info.checked = 1;
+	else
+		info.checked = nil;
+	end
+	info.tooltipTitle = SHIFT_KEY;
+	info.tooltipText = OPTION_TOOLTIP_AUTO_SELF_CAST_SHIFT_KEY;
+	UIDropDownMenu_AddButton(info);
+
+	info.text = NONE_KEY;
+	info.func = InterfaceOptionsCombatPanelSelfCastKeyDropDown_OnClick;
+	info.value = "NONE";
+	if ( info.value == selectedValue ) then
+		info.checked = 1;
+	else
+		info.checked = nil;
+	end
+	info.tooltipTitle = NONE_KEY;
+	info.tooltipText = OPTION_TOOLTIP_AUTO_SELF_CAST_NONE_KEY;
+	UIDropDownMenu_AddButton(info);
+end
+
+-- [[ Focus Cast key dropdown ]] --
+function InterfaceOptionsCombatPanelFocusCastKeyDropDown_OnEvent (self, event, ...)
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		self.defaultValue = "NONE";
+		self.oldValue = GetModifiedClick("FOCUSCAST");
+		self.value = self.oldValue or self.defaultValue;
+		self.tooltip = _G["OPTION_TOOLTIP_FOCUS_CAST_"..self.value.."_KEY"];
+
+		UIDropDownMenu_SetWidth(self, 90);
+		UIDropDownMenu_Initialize(self, InterfaceOptionsCombatPanelFocusCastKeyDropDown_Initialize);
+		UIDropDownMenu_SetSelectedValue(self, self.value);
+
+		self.SetValue =
+			function (self, value)
+				self.value = value;
+				UIDropDownMenu_SetSelectedValue(self, value);
+				SetModifiedClick("FOCUSCAST", value);
+				SaveBindings(GetCurrentBindingSet());
+				self.tooltip = _G["OPTION_TOOLTIP_FOCUS_CAST_"..value.."_KEY"];
+			end;
+		self.GetValue =
+			function (self)
+				return UIDropDownMenu_GetSelectedValue(self);
+			end
+		self.RefreshValue =
+			function (self)
+				UIDropDownMenu_Initialize(self, InterfaceOptionsCombatPanelFocusCastKeyDropDown_Initialize);
+				UIDropDownMenu_SetSelectedValue(self, self.value);
+			end
+	end
+end
+
+function InterfaceOptionsCombatPanelFocusCastKeyDropDown_OnClick(self)
+	InterfaceOptionsCombatPanelFocusCastKeyDropDown:SetValue(self.value);
+end
+
+function InterfaceOptionsCombatPanelFocusCastKeyDropDown_Initialize()
+	local selectedValue = UIDropDownMenu_GetSelectedValue(InterfaceOptionsCombatPanelFocusCastKeyDropDown);
+	local info = UIDropDownMenu_CreateInfo();
+
+	info.text = ALT_KEY;
+	info.func = InterfaceOptionsCombatPanelFocusCastKeyDropDown_OnClick;
+	info.value = "ALT";
+	if ( info.value == selectedValue ) then
+		info.checked = 1;
+	else
+		info.checked = nil;
+	end
+	info.tooltipTitle = ALT_KEY;
+	info.tooltipText = OPTION_TOOLTIP_FOCUS_CAST_ALT_KEY;
+	UIDropDownMenu_AddButton(info);
+
+	info.text = CTRL_KEY;
+	info.func = InterfaceOptionsCombatPanelFocusCastKeyDropDown_OnClick;
+	info.value = "CTRL";
+	if ( info.value == selectedValue ) then
+		info.checked = 1;
+	else
+		info.checked = nil;
+	end
+	info.tooltipTitle = CTRL_KEY;
+	info.tooltipText = OPTION_TOOLTIP_FOCUS_CAST_CTRL_KEY;
+	UIDropDownMenu_AddButton(info);
+
+	info.text = SHIFT_KEY;
+	info.func = InterfaceOptionsCombatPanelFocusCastKeyDropDown_OnClick;
+	info.value = "SHIFT";
+	if ( info.value == selectedValue ) then
+		info.checked = 1;
+	else
+		info.checked = nil;
+	end
+	info.tooltipTitle = SHIFT_KEY;
+	info.tooltipText = OPTION_TOOLTIP_FOCUS_CAST_SHIFT_KEY;
+	UIDropDownMenu_AddButton(info);
+
+	info.text = NONE_KEY;
+	info.func = InterfaceOptionsCombatPanelFocusCastKeyDropDown_OnClick;
+	info.value = "NONE";
+	if ( info.value == selectedValue ) then
+		info.checked = 1;
+	else
+		info.checked = nil;
+	end
+	info.tooltipTitle = NONE_KEY;
+	info.tooltipText = OPTION_TOOLTIP_FOCUS_CAST_NONE_KEY;
+	UIDropDownMenu_AddButton(info);
+end
+
+
 -- [[ Display Options Panel ]] --
 
 DisplayPanelOptions = {
@@ -229,7 +523,26 @@ DisplayPanelOptions = {
 	showLootSpam = { text = "SHOW_LOOT_SPAM" },
 	displayFreeBagSlots = { text = "DISPLAY_FREE_BAG_SLOTS" },
 	showClock = { text = "SHOW_CLOCK" },
+	movieSubtitle = { text = "CINEMATIC_SUBTITLES" },
+	threatShowNumeric = { text = "SHOW_NUMERIC_THREAT" },
 }
+
+function InterfaceOptionsDisplayPanel_OnLoad (self)
+	self.name = DISPLAY_LABEL;
+	self.options = DisplayPanelOptions;
+	InterfaceOptionsPanel_OnLoad(self);
+
+	self:SetScript("OnEvent", InterfaceOptionsDisplayPanel_OnEvent);
+end
+
+function InterfaceOptionsDisplayPanel_OnEvent (self, event, ...)
+	BlizzardOptionsPanel_OnEvent(self, event, ...);
+
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		BuffButtons_UpdatePositions();
+		InterfaceOptionsDisplayPanelShowClock_SetFunc(GetCVar(InterfaceOptionsDisplayPanelShowClock.cvar));
+	end
+end
 
 function InterfaceOptionsDisplayPanelShowClock_SetFunc(value)
 	if ( value == "1" ) then
@@ -244,34 +557,51 @@ function InterfaceOptionsDisplayPanelShowClock_SetFunc(value)
 	end
 end
 
-function InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay_OnLoad (self)
-	UIDropDownMenu_Initialize(InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay, InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay_Initialize);
-	UIDropDownMenu_SetWidth(90, UIOptionsWorldPVPObjectiveDisplay);
-	local value = GetCVar("displayWorldPVPObjectives");
-	self.defaultValue = "1";
-	self.value = value;
-	self.currValue = value;
-	UIDropDownMenu_SetSelectedValue(InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay, value);
-	WORLD_PVP_OBJECTIVES_DISPLAY = value;
-	InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay.tooltip = getglobal("OPTION_TOOLTIP_WORLD_PVP_DISPLAY"..value);
-	self.SetValue = 
-		function (self, value)
-			UIDropDownMenu_SetSelectedValue(self, value);
-			SetCVar("displayWorldPVPObjectives", value, self.event);
-			self.value = value;
-			InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay.tooltip = getglobal("OPTION_TOOLTIP_WORLD_PVP_DISPLAY"..tostring(value));
-			WORLD_PVP_OBJECTIVES_DISPLAY = value;
-			WorldStateAlwaysUpFrame_Update();
-		end
-	self.GetValue =
-		function (self)
-			return UIDropDownMenu_GetSelectedValue(self);
-		end
-	BlizzardOptionsPanel_RegisterControl(self, InterfaceOptionsDisplayPanel);
+function InterfaceOptionsDisplayPanelShowAggroPercentage_SetFunc()
+	UnitFrame_Update(TargetFrame);
+	UnitFrame_Update(FocusFrame);
 end
 
-function InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay_OnClick()
-	InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay:SetValue(this.value);
+function InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay_OnEvent(self, event, ...)
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		self.cvar = "displayWorldPVPObjectives";
+
+		local value = GetCVar(self.cvar);
+		self.defaultValue = GetCVarDefault(self.cvar);
+		self.oldValue = value;
+		self.value = value;
+		self.tooltip = _G["OPTION_TOOLTIP_WORLD_PVP_DISPLAY"..value];
+
+		UIDropDownMenu_SetWidth(self, 90);
+		UIDropDownMenu_Initialize(self, InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay_Initialize);
+		UIDropDownMenu_SetSelectedValue(self, value);
+
+		WORLD_PVP_OBJECTIVES_DISPLAY = value;
+		WorldStateAlwaysUpFrame_Update();
+
+		self.SetValue = 
+			function (self, value)
+				self.value = value;
+				SetCVar(self.cvar, value, self.event);
+				self.tooltip = _G["OPTION_TOOLTIP_WORLD_PVP_DISPLAY"..value];
+				UIDropDownMenu_SetSelectedValue(self, value);
+				WORLD_PVP_OBJECTIVES_DISPLAY = value;
+				WorldStateAlwaysUpFrame_Update();
+			end
+		self.GetValue =
+			function (self)
+				return UIDropDownMenu_GetSelectedValue(self);
+			end
+		self.RefreshValue =
+			function (self)
+				UIDropDownMenu_Initialize(self, InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay_Initialize);
+				UIDropDownMenu_SetSelectedValue(self, self.value);
+			end
+	end
+end
+
+function InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay_OnClick(self)
+	InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay:SetValue(self.value);
 end
 
 function InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay_Initialize()
@@ -315,6 +645,97 @@ function InterfaceOptionsDisplayPanelWorldPVPObjectiveDisplay_Initialize()
 	UIDropDownMenu_AddButton(info);
 end
 
+
+function InterfaceOptionsDisplayPanelAggroWarningDisplay_OnEvent (self, event, ...)
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		self.cvar = "threatWarning";
+
+		local value = GetCVar(self.cvar);
+		self.defaultValue = GetCVarDefault(self.cvar);
+		self.value = value;
+		self.oldValue = value;
+		self.tooltip = _G["OPTION_TOOLTIP_AGGRO_WARNING_DISPLAY"..(value+1)];
+
+		UIDropDownMenu_SetWidth(self, 90);
+		UIDropDownMenu_Initialize(self, InterfaceOptionsDisplayPanelAggroWarningDisplay_Initialize);
+		UIDropDownMenu_SetSelectedValue(self, value);
+
+		self.SetValue = 
+			function (self, value)
+				self.value = value;
+				SetCVar(self.cvar, value, self.event);
+				UIDropDownMenu_SetSelectedValue(self, value);
+				self.tooltip = _G["OPTION_TOOLTIP_AGGRO_WARNING_DISPLAY"..(value+1)];
+			end
+		self.GetValue =
+			function (self)
+				return UIDropDownMenu_GetSelectedValue(self);
+			end
+		self.RefreshValue =
+			function (self)
+				UIDropDownMenu_Initialize(self, InterfaceOptionsDisplayPanelAggroWarningDisplay_Initialize);
+				UIDropDownMenu_SetSelectedValue(self, self.value);
+			end
+	end
+end
+
+function InterfaceOptionsDisplayPanelAggroWarningDisplay_OnClick(self)
+	InterfaceOptionsDisplayPanelAggroWarningDisplay:SetValue(self.value);
+end
+
+function InterfaceOptionsDisplayPanelAggroWarningDisplay_Initialize()
+	local selectedValue = UIDropDownMenu_GetSelectedValue(InterfaceOptionsDisplayPanelAggroWarningDisplay);
+	local info = UIDropDownMenu_CreateInfo();
+
+	info.text = ALWAYS;
+	info.func = InterfaceOptionsDisplayPanelAggroWarningDisplay_OnClick;
+	info.value = "3";
+	if ( info.value == selectedValue ) then
+		info.checked = 1;
+	else
+		info.checked = nil;
+	end
+	info.tooltipTitle = ALWAYS;
+	info.tooltipText = OPTION_TOOLTIP_AGGRO_WARNING_DISPLAY4;
+	UIDropDownMenu_AddButton(info);
+
+	info.text = AGGRO_WARNING_IN_INSTANCE;
+	info.func = InterfaceOptionsDisplayPanelAggroWarningDisplay_OnClick;
+	info.value = "1";
+	if ( info.value == selectedValue ) then
+		info.checked = 1;
+	else
+		info.checked = nil;
+	end
+	info.tooltipTitle = AGGRO_WARNING_IN_INSTANCE;
+	info.tooltipText = OPTION_TOOLTIP_AGGRO_WARNING_DISPLAY2;
+	UIDropDownMenu_AddButton(info);
+
+	info.text = AGGRO_WARNING_IN_PARTY;
+	info.func = InterfaceOptionsDisplayPanelAggroWarningDisplay_OnClick;
+	info.value = "2";
+	if ( info.value == selectedValue ) then
+		info.checked = 1;
+	else
+		info.checked = nil;
+	end
+	info.tooltipTitle = AGGRO_WARNING_IN_PARTY;
+	info.tooltipText = OPTION_TOOLTIP_AGGRO_WARNING_DISPLAY3;
+	UIDropDownMenu_AddButton(info);
+
+	info.text = NEVER;
+	info.func = InterfaceOptionsDisplayPanelAggroWarningDisplay_OnClick;
+	info.value = "0";
+	if ( info.value == selectedValue ) then
+		info.checked = 1;
+	else
+		info.checked = nil;
+	end
+	info.tooltipTitle = NEVER;
+	info.tooltipText = OPTION_TOOLTIP_AGGRO_WARNING_DISPLAY1;
+	UIDropDownMenu_AddButton(info);
+end
+
 -- [[ Quest Options Panel ]] --
 
 QuestPanelOptions = {
@@ -326,8 +747,8 @@ QuestPanelOptions = {
 
 SocialPanelOptions = {
 	profanityFilter = { text = "PROFANITY_FILTER" },
-	ChatBubbles = { text="CHAT_BUBBLES_TEXT" },
-	ChatBubblesParty = { text="PARTY_CHAT_BUBBLES_TEXT" },
+	chatBubbles = { text="CHAT_BUBBLES_TEXT" },
+	chatBubblesParty = { text="PARTY_CHAT_BUBBLES_TEXT" },
 	spamFilter = { text="DISABLE_SPAM_FILTER" },
 	removeChatDelay = { text="REMOVE_CHAT_DELAY_TEXT" },
 	guildMemberNotify = { text="GUILDMEMBER_ALERT" },
@@ -337,12 +758,14 @@ SocialPanelOptions = {
 	chatLocked = { text="CHAT_LOCKED_TEXT" },	
 }
 
-function InterfaceOptionsSocialPanel_OnLoad (panel)
-	panel.okay = function (self)
-		for _, control in next, self.controls do
-			securecall(BlizzardOptionsPanel_UpdateCurrentControlValue, control);
-		end
-		
+function InterfaceOptionsSocialPanel_OnLoad (self)
+	self.name = SOCIAL_LABEL;
+	self.options = SocialPanelOptions;
+	InterfaceOptionsPanel_OnLoad(self);
+
+	self.okay = function (self)
+		InterfaceOptionsPanel_Okay(self);
+
 		if ( InterfaceOptionsSocialPanelSimpleChat:GetChecked() ) then
 			SIMPLE_CHAT = "1";
 			FCF_Set_SimpleChat();
@@ -351,10 +774,13 @@ function InterfaceOptionsSocialPanel_OnLoad (panel)
 			FCF_Set_NormalChat();
 		end
 	end
-	panel:RegisterEvent("PLAYER_ENTERING_WORLD");
+
+	self:SetScript("OnEvent", InterfaceOptionsSocialPanel_OnEvent);
 end
 
 function InterfaceOptionsSocialPanel_OnEvent(self, event, ...)
+	BlizzardOptionsPanel_OnEvent(self, event, ...);
+
 	if ( event == "PLAYER_ENTERING_WORLD" ) then
 		SIMPLE_CHAT = (GetCVar("useSimpleChat") == "1" and "1") or "0";
 		-- bug 110191: The combat log overlaps the chat log after relogging with Simple Chat toggled.
@@ -363,9 +789,6 @@ function InterfaceOptionsSocialPanel_OnEvent(self, event, ...)
 		if ( SIMPLE_CHAT == "1" ) then
 			FCF_Set_SimpleChat();
 		end
-
-		BlizzardOptionsPanel_OnEvent(self, event, ...);
-		self:UnregisterEvent(event);
 	end
 end
 
@@ -381,52 +804,48 @@ ActionBarsPanelOptions = {
 	secureAbilityToggle = { text = "SECURE_ABILITY_TOGGLE" },
 }
 
-function InterfaceOptionsActionBarsPanel_OnLoad (panel)
-	panel:RegisterEvent("PLAYER_ENTERING_WORLD");
+function InterfaceOptionsActionBarsPanel_OnLoad (self)
+	self.name = ACTIONBARS_LABEL;
+	self.options = ActionBarsPanelOptions;
+	InterfaceOptionsPanel_OnLoad(self);
+
+	self:SetScript("OnEvent", InterfaceOptionsActionBarsPanel_OnEvent);
 end
 
 function InterfaceOptionsActionBarsPanel_OnEvent (self, event, ...)
-	if ( event == "PLAYER_ENTERING_WORLD" ) then
-		SHOW_MULTI_ACTIONBAR_1, SHOW_MULTI_ACTIONBAR_2, SHOW_MULTI_ACTIONBAR_3, SHOW_MULTI_ACTIONBAR_4 = GetActionBarToggles();
-		ALWAYS_SHOW_MULTIBARS = (GetCVar("alwaysShowActionBars") == "1" and "1") or "0";
-		MultiActionBar_Update();
-		UIParent_ManageFramePositions();
+	BlizzardOptionsPanel_OnEvent(self, event, ...);
 
-		BlizzardOptionsPanel_OnEvent(self, event, ...);
-		self:UnregisterEvent(event);
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		ALWAYS_SHOW_MULTIBARS = GetCVar("alwaysShowActionBars");
+		InterfaceOptionsActionBarsPanelAlwaysShowActionBars.setFunc();
 	end
 end
 
 function InterfaceOptions_UpdateMultiActionBars ()
-	--Clean up "0" values so they evaluate as false.
-	if ( InterfaceOptionsActionBarsPanel:IsEventRegistered("PLAYER_ENTERING_WORLD") ) then
-		return;
-	end
-		
 	if ( SHOW_MULTI_ACTIONBAR_1 == "0" ) then
 		SHOW_MULTI_ACTIONBAR_1 = nil;
 	end
-	
+
 	if ( SHOW_MULTI_ACTIONBAR_2 == "0" ) then
 		SHOW_MULTI_ACTIONBAR_2 = nil;
 	end
-	
+
 	if ( SHOW_MULTI_ACTIONBAR_3 == "0" ) then
 		SHOW_MULTI_ACTIONBAR_3 = nil;
 	end
-	
+
 	if ( SHOW_MULTI_ACTIONBAR_4 == "0" ) then
 		SHOW_MULTI_ACTIONBAR_4 = nil;
 	end
-	
+
 	if ( ALWAYS_SHOW_MULTIBARS == "0" ) then
 		ALWAYS_SHOW_MULTIBARS = nil;
 	end
-	
+
 	if ( LOCK_ACTIONBAR == "0" ) then
 		LOCK_ACTIONBAR = nil;
 	end
-	
+
 	SetActionBarToggles(SHOW_MULTI_ACTIONBAR_1, SHOW_MULTI_ACTIONBAR_2, SHOW_MULTI_ACTIONBAR_3, SHOW_MULTI_ACTIONBAR_4, ALWAYS_SHOW_MULTIBARS);
 	MultiActionBar_Update();
 	UIParent_ManageFramePositions();
@@ -460,13 +879,16 @@ FCTPanelOptions = {
 	fctFriendlyHealers = { text = "COMBAT_TEXT_SHOW_FRIENDLY_NAMES_TEXT" },
 	fctComboPoints = { text = "COMBAT_TEXT_SHOW_COMBO_POINTS_TEXT" },
 	fctLowManaHealth = { text = "COMBAT_TEXT_SHOW_LOW_HEALTH_MANA_TEXT" },
-	fctEnergyGains = { text = "COMBAT_TEXT_SHOW_MANA_TEXT" },
+	fctEnergyGains = { text = "COMBAT_TEXT_SHOW_ENERGIZE_TEXT" },
+	fctPeriodicEnergyGains = { text = "COMBAT_TEXT_SHOW_PERIODIC_ENERGIZE_TEXT" },
 	fctHonorGains = { text = "COMBAT_TEXT_SHOW_HONOR_GAINED_TEXT" },
 	fctAuras = { text = "COMBAT_TEXT_SHOW_AURAS_TEXT" },
 	CombatDamage = { text = "SHOW_DAMAGE_TEXT" },
 	CombatLogPeriodicSpells = { text = "LOG_PERIODIC_EFFECTS" },
 	PetMeleeDamage = { text = "SHOW_PET_MELEE_DAMAGE" },
 	CombatHealing = { text = "SHOW_COMBAT_HEALING" },
+	fctSpellMechanics = { text = "SHOW_TARGET_EFFECTS" },
+	fctSpellMechanicsOther = { text = "SHOW_OTHER_TARGET_EFFECTS" },
 }
 
 function BlizzardOptionsPanel_UpdateCombatText ()
@@ -477,47 +899,86 @@ function BlizzardOptionsPanel_UpdateCombatText ()
 	end
 end
 
-function InterfaceOptionsCombatTextPanelFCTDropDown_OnLoad (self)
-	UIDropDownMenu_Initialize(self, InterfaceOptionsCombatTextPanelFCTDropDown_Initialize);
-	self.defaultValue = "1";
-	local value = GetCVar("combatTextFloatMode");
-	self.value = value;
-	COMBAT_TEXT_FLOAT_MODE = value;
-	
-	if ( CombatText_UpdateDisplayedMessages ) then
-		-- If the CombatText AddOn has already been loaded, we need to reinit it to pick up the previous COMBAT_TEXT_FLOAT_MODE.
-		CombatText_UpdateDisplayedMessages();
-	end
-	self.currValue = value;
-	UIDropDownMenu_SetSelectedValue(self, value);
-	InterfaceOptionsCombatTextPanelFCTDropDown.tooltip = OPTION_TOOLTIP_COMBAT_TEXT_MODE;
-	UIDropDownMenu_SetWidth(110, InterfaceOptionsCombatTextPanelFCTDropDown);
-	self.SetValue = 
-		function (self, value) 
-			self.value = value;
-			UIDropDownMenu_SetSelectedValue(self, value);
-			SetCVar("combatTextFloatMode", value, self.event);
-			COMBAT_TEXT_FLOAT_MODE = value;
-			
-			if ( CombatText_UpdateDisplayedMessages ) then
-				CombatText_UpdateDisplayedMessages();
-			else
-				UIParentLoadAddOn("Blizzard_CombatText");
-				CombatText_UpdateDisplayedMessages();
+function InterfaceOptionsCombatTextPanel_OnLoad (self)
+	self.name = COMBATTEXT_LABEL;
+	self.options = FCTPanelOptions;
+	InterfaceOptionsPanel_OnLoad(self);
+
+	self:SetScript("OnEvent", InterfaceOptionsCombatTextPanel_OnEvent);
+end
+
+function InterfaceOptionsCombatTextPanel_OnEvent (self, event, ...)
+	BlizzardOptionsPanel_OnEvent(self, event, ...);
+
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		-- run the enable FCT button's set func to refresh floating combat text and make sure the addon is loaded
+		InterfaceOptionsCombatTextPanelEnableFCT.setFunc(GetCVar(InterfaceOptionsCombatTextPanelEnableFCT.cvar));
+
+		-- fix for bug 106687: self button can no longer be enabled if you're not a rogue or a druid
+		InterfaceOptionsCombatTextPanelComboPoints.Enable =
+			function (self) 
+				local _, class = UnitClass("player");
+				if ( class ~= "ROGUE" and class ~= "DRUID" ) then
+					return;
+				end
+				getmetatable(self).__index.Enable(self);
 			end
-		end;	
-	self.GetValue =
-		function (self)
-			return UIDropDownMenu_GetSelectedValue(self);
+		InterfaceOptionsCombatTextPanelComboPoints.setFunc(GetCVar(InterfaceOptionsCombatTextPanelComboPoints.cvar));
+	end
+end
+
+function InterfaceOptionsCombatTextPanelFCTDropDown_OnEvent (self, event, ...)
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		self.cvar = "combatTextFloatMode";
+
+		local value = GetCVar(self.cvar);
+		self.defaultValue = GetCVarDefault(self.cvar);
+		self.oldValue = value;
+		self.value = value;
+		self.tooltip = OPTION_TOOLTIP_COMBAT_TEXT_MODE;
+
+		UIDropDownMenu_SetWidth(self, 110);
+		UIDropDownMenu_Initialize(self, InterfaceOptionsCombatTextPanelFCTDropDown_Initialize);
+		UIDropDownMenu_SetSelectedValue(self, value);
+
+		COMBAT_TEXT_FLOAT_MODE = value;
+		if ( CombatText_UpdateDisplayedMessages ) then
+			-- If the CombatText AddOn has already been loaded, we need to reinit it to pick up the previous COMBAT_TEXT_FLOAT_MODE.
+			CombatText_UpdateDisplayedMessages();
 		end
+
+		self.SetValue = 
+			function (self, value) 
+				self.value = value;
+				SetCVar(self.cvar, value, self.event);
+				UIDropDownMenu_SetSelectedValue(self, value);
+
+				COMBAT_TEXT_FLOAT_MODE = value;
+				if ( CombatText_UpdateDisplayedMessages ) then
+					CombatText_UpdateDisplayedMessages();
+				else
+					UIParentLoadAddOn("Blizzard_CombatText");
+					CombatText_UpdateDisplayedMessages();
+				end
+			end;	
+		self.GetValue =
+			function (self)
+				return UIDropDownMenu_GetSelectedValue(self);
+			end
+		self.RefreshValue =
+			function (self)
+				UIDropDownMenu_Initialize(self, InterfaceOptionsCombatTextPanelFCTDropDown_Initialize);
+				UIDropDownMenu_SetSelectedValue(self, self.value);
+			end
+	end
 end
 
-function InterfaceOptionsCombatTextPanelFCTDropDown_OnClick()
-	InterfaceOptionsCombatTextPanelFCTDropDown:SetValue(this.value);
+function InterfaceOptionsCombatTextPanelFCTDropDown_OnClick(self)
+	InterfaceOptionsCombatTextPanelFCTDropDown:SetValue(self.value);
 end
 
-function InterfaceOptionsCombatTextPanelFCTDropDown_Initialize()
-	local selectedValue = UIDropDownMenu_GetSelectedValue(InterfaceOptionsCombatTextPanelFCTDropDown);
+function InterfaceOptionsCombatTextPanelFCTDropDown_Initialize(self)
+	local selectedValue = UIDropDownMenu_GetSelectedValue(self);
 	local info = UIDropDownMenu_CreateInfo();
 
 	info.text = COMBAT_TEXT_SCROLL_UP;
@@ -574,8 +1035,8 @@ PartyRaidPanelOptions = {
 	showPartyBackground = { text = "SHOW_PARTY_BACKGROUND_TEXT" },
 	hidePartyInRaid = { text = "HIDE_PARTY_INTERFACE_TEXT" },
 	showPartyPets = { text = "SHOW_PARTY_PETS_TEXT" },
-	showPartyDebuffs = { text = "SHOW_DISPELLABLE_DEBUFFS_TEXT" },
-	showPartyBuffs = { text = "SHOW_CASTABLE_BUFFS_TEXT" },
+	showDispelDebuffs = { text = "SHOW_DISPELLABLE_DEBUFFS_TEXT" },
+	showCastableBuffs = { text = "SHOW_CASTABLE_BUFFS_TEXT" },
 	showRaidRange = { text = "SHOW_RAID_RANGE_TEXT" },
 }
 
@@ -586,7 +1047,7 @@ function BlizzardOptionsPanel_UpdateRaidPullouts ()
 
 	local frame;
 	for i = 1, NUM_RAID_PULLOUT_FRAMES do
-		frame = getglobal("RaidPullout" .. i);
+		frame = _G["RaidPullout" .. i];
 		if ( frame and frame:IsShown() ) then
 			RaidPullout_Update(frame);
 		end
@@ -604,40 +1065,78 @@ CameraPanelOptions = {
 	cameraDistanceMaxFactor = { text = "MAX_FOLLOW_DIST", minValue = 1, maxValue = 2, valueStep = 0.1 },
 }
 
-function InterfaceOptionsCameraPanelStyleDropDown_OnLoad()
-	UIDropDownMenu_Initialize(this, InterfaceOptionsCameraPanelStyleDropDown_Initialize);
-	UIDropDownMenu_SetSelectedValue(this, GetCVar("cameraSmoothStyle"));
-	InterfaceOptionsCameraPanelStyleDropDown.tooltip = getglobal("OPTION_TOOLTIP_CAMERA"..UIDropDownMenu_GetSelectedID(InterfaceOptionsCameraPanelStyleDropDown));
-	UIDropDownMenu_SetWidth(144, InterfaceOptionsCameraPanelStyleDropDown);
-	this.defaultValue = "1";
-	this.value = GetCVar("cameraSmoothStyle");
-	this.currValue = this.value;
-	this.SetValue = 
-		function (self, value)
-			UIDropDownMenu_SetSelectedValue(self, value);
-			SetCVar("cameraSmoothStyle", value, self.event);
-			self.value = value;
-			if ( tostring(value) == "0" ) then
-				--For the purposes of tooltips and the dropdown list, value "0" in the CVar cameraSmoothStyle is actually "3".
-				InterfaceOptionsCameraPanelStyleDropDown.tooltip = OPTION_TOOLTIP_CAMERA3;
-				OptionsFrame_DisableSlider(InterfaceOptionsCameraPanelFollowSpeedSlider);
-			else
-				InterfaceOptionsCameraPanelStyleDropDown.tooltip = getglobal("OPTION_TOOLTIP_CAMERA" .. tostring(value));
-				OptionsFrame_EnableSlider(InterfaceOptionsCameraPanelFollowSpeedSlider);
-			end	
-		end
-	this.GetValue =
-		function (self)
-			return UIDropDownMenu_GetSelectedValue(self);
-		end
+function InterfaceOptionsCameraPanel_OnLoad (self)
+	self.name = CAMERA_LABEL;
+	self.options = CameraPanelOptions;
+	InterfaceOptionsPanel_OnLoad(self)
+
+	self:SetScript("OnEvent", InterfaceOptionsCameraPanel_OnEvent);
 end
 
-function InterfaceOptionsCameraPanelStyleDropDown_OnClick()
-	InterfaceOptionsCameraPanelStyleDropDown:SetValue(this.value);
+function InterfaceOptionsCameraPanel_OnEvent (self, event, ...)
+	BlizzardOptionsPanel_OnEvent(self, event, ...);
+
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		if ( GetCVar("cameraSmoothStyle") == "0" ) then
+			BlizzardOptionsPanel_Slider_Disable(InterfaceOptionsCameraPanelFollowSpeedSlider);
+			InterfaceOptionsCameraPanelFollowTerrain:Disable();
+		end
+	end
 end
 
-function InterfaceOptionsCameraPanelStyleDropDown_Initialize()
-	local selectedValue = UIDropDownMenu_GetSelectedValue(InterfaceOptionsCameraPanelStyleDropDown);
+function InterfaceOptionsCameraPanelStyleDropDown_OnEvent(self, event, ...)
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		self.cvar = "cameraSmoothStyle";
+
+		local value = GetCVar(self.cvar);
+		self.defaultValue = GetCVarDefault(self.cvar);
+		self.value = value;
+		self.oldValue = value;
+		if ( value == "0" ) then
+			--For the purposes of tooltips and the dropdown list, value "0" in the CVar cameraSmoothStyle is actually "3".
+			self.tooltip = OPTION_TOOLTIP_CAMERA3;
+		else
+			self.tooltip = _G["OPTION_TOOLTIP_CAMERA"..value];
+		end	
+
+		UIDropDownMenu_SetWidth(self, 144);
+		UIDropDownMenu_Initialize(self, InterfaceOptionsCameraPanelStyleDropDown_Initialize);
+		UIDropDownMenu_SetSelectedValue(self, value);
+
+		self.SetValue = 
+			function (self, value)
+				self.value = value;
+				SetCVar(self.cvar, value, self.event);
+				UIDropDownMenu_SetSelectedValue(self, value);
+				if ( value == "0" ) then
+					--For the purposes of tooltips and the dropdown list, value "0" in the CVar cameraSmoothStyle is actually "3".
+					self.tooltip = OPTION_TOOLTIP_CAMERA3;
+					BlizzardOptionsPanel_Slider_Disable(InterfaceOptionsCameraPanelFollowSpeedSlider);
+					InterfaceOptionsCameraPanelFollowTerrain:Disable();
+				else
+					self.tooltip = _G["OPTION_TOOLTIP_CAMERA"..value];
+					BlizzardOptionsPanel_Slider_Enable(InterfaceOptionsCameraPanelFollowSpeedSlider);
+					InterfaceOptionsCameraPanelFollowTerrain:Enable();
+				end	
+			end
+		self.GetValue =
+			function (self)
+				return UIDropDownMenu_GetSelectedValue(self);
+			end
+		self.RefreshValue =
+			function (self)
+				UIDropDownMenu_Initialize(self, InterfaceOptionsCameraPanelStyleDropDown_Initialize);
+				UIDropDownMenu_SetSelectedValue(self, self.value);
+			end
+	end
+end
+
+function InterfaceOptionsCameraPanelStyleDropDown_OnClick(self)
+	InterfaceOptionsCameraPanelStyleDropDown:SetValue(self.value);
+end
+
+function InterfaceOptionsCameraPanelStyleDropDown_Initialize(self)
+	local selectedValue = UIDropDownMenu_GetSelectedValue(self);
 	local info = UIDropDownMenu_CreateInfo();
 
 	info.text = CAMERA_SMART;
@@ -682,42 +1181,59 @@ end
 MousePanelOptions = {
 	mouseInvertPitch = { text = "INVERT_MOUSE" },
 	autointeract = { text = "CLICK_TO_MOVE" },
-	mousespeed = { text = "MOUSE_SENSITIVITY", minValue = 0.5, maxValue = 1.5, valueStep = 0.05 },
+	mouseSpeed = { text = "MOUSE_SENSITIVITY", minValue = 0.5, maxValue = 1.5, valueStep = 0.05 },
 	cameraYawMoveSpeed = { text = "MOUSE_LOOK_SPEED", minValue = 90, maxValue = 270, valueStep = 10 },
 }
 
-function InterfaceOptionsMousePanelClickMoveStyleDropDown_OnLoad()
-	UIDropDownMenu_Initialize(this, InterfaceOptionsMousePanelClickMoveStyleDropDown_Initialize);
-	UIDropDownMenu_SetSelectedValue(this, GetCVar("cameraSmoothTrackingStyle"));
-	InterfaceOptionsMousePanelClickMoveStyleDropDown.tooltip = getglobal("OPTION_TOOLTIP_CLICK_CAMERA"..UIDropDownMenu_GetSelectedID(InterfaceOptionsMousePanelClickMoveStyleDropDown));
-	UIDropDownMenu_SetWidth(140, InterfaceOptionsMousePanelClickMoveStyleDropDown);
-	this.defaultValue = "1";
-	this.value = GetCVar("cameraSmoothTrackingStyle");
-	this.currValue = this.value;
-	this.SetValue = 
-		function (self, value)
-			UIDropDownMenu_SetSelectedValue(self, value);
-			SetCVar("cameraSmoothTrackingStyle", value, self.event);
-			self.value = value;
-			if ( tostring(value) == "0" ) then
-				--For the purposes of tooltips and dropdown lists, "0" in the CVar cameraSmoothTrackingStyle is "3".
-				InterfaceOptionsMousePanelClickMoveStyleDropDown.tooltip = OPTION_TOOLTIP_CLICK_CAMERA3;
-			else
-				InterfaceOptionsMousePanelClickMoveStyleDropDown.tooltip = getglobal("OPTION_TOOLTIP_CLICK_CAMERA" .. tostring(value));
+function InterfaceOptionsMousePanelClickMoveStyleDropDown_OnEvent(self, event, ...)
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		self.cvar = "cameraSmoothTrackingStyle";
+
+		local value = GetCVar(self.cvar);
+		self.defaultValue = GetCVarDefault(self.cvar);
+		self.oldValue = value;
+		self.value = value;
+		if ( value == "0" ) then
+			--For the purposes of tooltips and dropdown lists, "0" in the CVar cameraSmoothTrackingStyle is "3".
+			self.tooltip = OPTION_TOOLTIP_CLICK_CAMERA3;
+		else
+			self.tooltip = _G["OPTION_TOOLTIP_CLICK_CAMERA"..value];
+		end
+
+		UIDropDownMenu_SetWidth(self, 140);
+		UIDropDownMenu_Initialize(self, InterfaceOptionsMousePanelClickMoveStyleDropDown_Initialize);
+		UIDropDownMenu_SetSelectedValue(self, value);
+
+		self.SetValue = 
+			function (self, value)
+				self.value = value;
+				SetCVar(self.cvar, value, self.event);
+				UIDropDownMenu_SetSelectedValue(self, value);
+				if ( value == "0" ) then
+					--For the purposes of tooltips and dropdown lists, "0" in the CVar cameraSmoothTrackingStyle is "3".
+					self.tooltip = OPTION_TOOLTIP_CLICK_CAMERA3;
+				else
+					self.tooltip = _G["OPTION_TOOLTIP_CLICK_CAMERA"..value];
+				end
 			end
-		end
-	this.GetValue =
-		function (self)
-			return UIDropDownMenu_GetSelectedValue(self);
-		end
+		self.GetValue =
+			function (self)
+				return UIDropDownMenu_GetSelectedValue(self);
+			end
+		self.RefreshValue =
+			function (self)
+				UIDropDownMenu_Initialize(self, InterfaceOptionsMousePanelClickMoveStyleDropDown_Initialize);
+				UIDropDownMenu_SetSelectedValue(self, self.value);
+			end
+	end
 end
 
-function InterfaceOptionsMousePanelClickMoveStyleDropDown_OnClick()
-	InterfaceOptionsMousePanelClickMoveStyleDropDown:SetValue(this.value);
+function InterfaceOptionsMousePanelClickMoveStyleDropDown_OnClick(self)
+	InterfaceOptionsMousePanelClickMoveStyleDropDown:SetValue(self.value);
 end
 
-function InterfaceOptionsMousePanelClickMoveStyleDropDown_Initialize()
-	local selectedValue = UIDropDownMenu_GetSelectedValue(InterfaceOptionsMousePanelClickMoveStyleDropDown);
+function InterfaceOptionsMousePanelClickMoveStyleDropDown_Initialize(self)
+	local selectedValue = UIDropDownMenu_GetSelectedValue(self);
 	local info = UIDropDownMenu_CreateInfo();
 
 	info.text = CAMERA_SMART;
@@ -760,24 +1276,19 @@ end
 -- [[ Help Options Panel ]] --
 
 HelpPanelOptions = {
-	showTutorials = { text = "SHOW_TUTORIALS" },
+	showTutorials = { text = "SHOW_TUTORIALS", default = "1", tooltipText = OPTION_TOOLTIP_SHOW_TUTORIALS },
 	showGameTips = { text = "SHOW_TIPOFTHEDAY_TEXT" },
 	UberTooltips = { text = "USE_UBERTOOLTIPS" },
 	showNewbieTips = { text = "SHOW_NEWBIE_TIPS_TEXT" },
 	scriptErrors = { text = "SHOW_LUA_ERRORS" },
 }
 
-function InterfaceOptionsHelpPanel_OnLoad (panel)
-	panel.okay = function (self)
-		for _, control in next, self.controls do
-			securecall(BlizzardOptionsPanel_UpdateCurrentControlValue, control);
-		end
-		if ( InterfaceOptionsHelpPanelTutorials:GetChecked() and not TutorialsEnabled() ) then
-			ResetTutorials();
-		elseif ( ( not InterfaceOptionsHelpPanelTutorials:GetChecked() ) and TutorialsEnabled() ) then
-			ClearTutorials();
-			TutorialFrame_HideAllAlerts();
-		end
+function InterfaceOptionsHelpPanel_SetTutorials (value)
+	if ( value == "1" and not TutorialsEnabled() ) then
+		ResetTutorials();
+	elseif ( value == "0" and TutorialsEnabled() ) then
+		ClearTutorials();
+		TutorialFrame_HideAllAlerts();
 	end
 end
 
@@ -785,44 +1296,54 @@ end
 
 function InterfaceOptionsLanguagesPanel_OnLoad (panel)
 	-- Check and see if we have more than one locale. If we don't, then don't register this panel.
-	if ( #({GetExistingLocales()}) <= 1 ) then				
+	if ( #({GetExistingLocales()}) <= 1 ) then
 		return;
 	end
-	
-	BlizzardOptionsPanel_OnLoad(panel);
+
+	InterfaceOptionsPanel_OnLoad(panel);
 end
 
-function InterfaceOptionsLanguagesPanelLocaleDropDown_OnLoad ()
-	UIDropDownMenu_Initialize(this, InterfaceOptionsLanguagesPanelLocaleDropDown_Initialize);
-	UIDropDownMenu_SetSelectedValue(this, GetCVar("locale"));
-	InterfaceOptionsLanguagesPanelLocaleDropDown.tooltip = OPTION_TOOLTIP_LOCALE;
-	UIDropDownMenu_SetWidth(120, InterfaceOptionsLanguagesPanelLocaleDropDown);
-	
-	this.defaultValue = GetCVar("locale");
-	this.value = GetCVar("locale");
-	this.origValue = this.value;
-	this.currValue = this.value;
-	this.SetValue = 
-		function (self, value)
-			UIDropDownMenu_SetSelectedValue(self, value);
-			SetCVar("locale", value, self.event);
-			self.value = value;
-			if ( this.origValue ~= value ) then
-				StaticPopup_Show("CLIENT_RESTART_ALERT");
+function InterfaceOptionsLanguagesPanelLocaleDropDown_OnEvent (self, event, ...)
+	if ( event == "PLAYER_ENTERING_WORLD" ) then
+		self.cvar = "locale";
+
+		local value = GetCVar(self.cvar);
+		self.defaultValue = GetCVarDefault(self.cvar);
+		self.oldValue = value;
+		self.value = value;
+		self.tooltip = OPTION_TOOLTIP_LOCALE;
+
+		UIDropDownMenu_SetWidth(self, 120);
+		UIDropDownMenu_Initialize(self, InterfaceOptionsLanguagesPanelLocaleDropDown_Initialize);
+		UIDropDownMenu_SetSelectedValue(self, value);
+
+		self.SetValue = 
+			function (self, value)
+				UIDropDownMenu_SetSelectedValue(self, value);
+				SetCVar("locale", value, self.event);
+				self.value = value;
+				if ( self.oldValue ~= value ) then
+					InterfaceOptionsFrame.gameRestart = true;
+				end
 			end
-		end
-	this.GetValue =
-		function (self)
-			return UIDropDownMenu_GetSelectedValue(self);
-		end
+		self.GetValue =
+			function (self)
+				return UIDropDownMenu_GetSelectedValue(self);
+			end
+		self.RefreshValue =
+			function (self)
+				UIDropDownMenu_Initialize(self, InterfaceOptionsLanguagesPanelLocaleDropDown_Initialize);
+				UIDropDownMenu_SetSelectedValue(self, self.value);
+			end
+	end
 end
 
-function InterfaceOptionsLanguagesPanelLocaleDropDown_OnClick ()
-	InterfaceOptionsLanguagesPanelLocaleDropDown:SetValue(this.value);
+function InterfaceOptionsLanguagesPanelLocaleDropDown_OnClick (self)
+	InterfaceOptionsLanguagesPanelLocaleDropDown:SetValue(self.value);
 end
 
-function InterfaceOptionsLanguagesPanelLocaleDropDown_Initialize ()
-	local selectedValue = UIDropDownMenu_GetSelectedValue(InterfaceOptionsLanguagesPanelLocaleDropDown);
+function InterfaceOptionsLanguagesPanelLocaleDropDown_Initialize (self)
+	local selectedValue = UIDropDownMenu_GetSelectedValue(self);
 	local info = UIDropDownMenu_CreateInfo();
 
 	InterfaceOptionsLanguagesPanelLocaleDropDown_InitializeHelper(info, selectedValue, GetExistingLocales());
@@ -832,7 +1353,7 @@ function InterfaceOptionsLanguagesPanelLocaleDropDown_InitializeHelper (createIn
 	for i = 1, select("#", ...) do
 		local value = select(i, ...);
 		if (value) then
-			createInfo.text = getglobal(strupper(value));
+			createInfo.text = _G[strupper(value)];
 			createInfo.func = InterfaceOptionsLanguagesPanelLocaleDropDown_OnClick;
 			createInfo.value = value;
 			if ( createInfo.value == selectedValue ) then
@@ -842,227 +1363,5 @@ function InterfaceOptionsLanguagesPanelLocaleDropDown_InitializeHelper (createIn
 			end
 			UIDropDownMenu_AddButton(createInfo);
 		end
-	end
-end
--- [[ General functions ]] --
-
-local ALT_KEY = "altkey";
-local CONTROL_KEY = "controlkey";
-local SHIFT_KEY = "shiftkey";
-local NO_KEY = "none";
-
-function BlizzardOptionsPanel_OnEvent (self, event, ...)
-	if ( event == "PLAYER_ENTERING_WORLD" ) then
-		for i, control in next, self.controls do
-			if ( control.setFunc ) then
-				control.setFunc(control.value);
-			end
-		end
-		self:UnregisterEvent(event);
-	end
-end
-
-function BlizzardOptionsPanel_OnLoad (frame)
-	InterfaceOptionsFrame_SetupBlizzardPanel(frame);
-	InterfaceOptions_AddCategory(frame);
-	frame:RegisterEvent("PLAYER_ENTERING_WORLD");
-	if ( not frame:GetScript("OnEvent") ) then
-		frame:SetScript("OnEvent", BlizzardOptionsPanel_OnEvent);
-	end
-	
-	if ( frame.options and frame.controls ) then
-		local entry;
-		for i, control in next, frame.controls do
-			entry = frame.options[(control.cvar or control.label)];
-			if ( entry ) then
-				if ( entry.text ) then
-					control.tooltipText = (getglobal("OPTION_TOOLTIP_" .. gsub(entry.text, "_TEXT$", "")) or entry.tooltip);
-					getglobal(control:GetName() .. "Text"):SetText(getglobal(entry.text) or entry.text);
-				end
-				
-				if ( control.cvar ) then
-					control.defaultValue = GetCVarDefault(control.cvar);
-				else
-					control.defaultValue = control.defaultValue or entry.default;
-				end
-				
-				control.event = entry.event or entry.text;
-				
-				if ( control.type == CONTROLTYPE_SLIDER ) then
-					OptionsFrame_EnableSlider(control);
-					control:SetMinMaxValues(entry.minValue, entry.maxValue);
-					control:SetValueStep(entry.valueStep);
-					control:SetValue(GetCVar(control.cvar));
-				end
-			end
-		end
-	end
-end
-
-function BlizzardOptionsPanel_OnShow (panel)
-	-- This function needs to be reworked.
-
-	local value;
-	
-	for _, control in next, panel.controls do
-		if ( control.cvar ) then
-			if ( control.type == CONTROLTYPE_CHECKBOX ) then
-				value = GetCVar(control.cvar);
-				
-				if ( not control.invert ) then
-					if ( value == "1" ) then
-						control:SetChecked(true);
-					else
-						control:SetChecked(false);
-					end
-				else
-					if ( value == "0" ) then
-						control:SetChecked(true);
-					else
-						control:SetChecked(false);
-					end
-				end
-				
-				if ( control.dependentControls ) then
-					if ( control:GetChecked() ) then
-						for _, depControl in next, control.dependentControls do
-							depControl:Enable();
-						end
-					else
-						for _, depControl in next, control.dependentControls do
-							depControl:Disable();
-						end
-					end
-				end
-			elseif ( control.type == CONTROLTYPE_SLIDER ) then
-				-- Don't do anything.
-			end
-		elseif ( control.GetValue ) then
-			if ( control.type == CONTROLTYPE_CHECKBOX ) then
-				value = tostring(control:GetValue());
-				
-				if ( not control.invert ) then
-					if ( value == "1" ) then
-						control:SetChecked(true);
-					else
-						control:SetChecked(false);
-					end
-				else
-					if ( value == "0" ) then
-						control:SetChecked(true);
-					else
-						control:SetChecked(false);
-					end
-				end
-				
-				if ( control.dependentControls ) then
-					if ( control:GetChecked() ) then
-						for _, depControl in next, control.dependentControls do
-							depControl:Enable();
-						end
-					else
-						for _, depControl in next, control.dependentControls do
-							depControl:Disable();
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-function BlizzardOptionsPanel_RegisterControl (control, parentFrame)
-	if ( ( not parentFrame ) or ( not control ) ) then
-		return;
-	end
-	
-	parentFrame.controls = parentFrame.controls or {};
-	
-	tinsert(parentFrame.controls, control);
-	
-	local value;
-	if ( control.cvar ) then
-		if ( control.type == CONTROLTYPE_CHECKBOX ) then
-			value = GetCVar(control.cvar);
-			control.currValue = value;
-			control.value = value;
-			if ( control.uvar ) then
-				setglobal(control.uvar, value);
-			end
-			
-			control.GetValue = function(self) return GetCVar(self.cvar); end
-			control.SetValue = function(self, value) self.value = value; SetCVar(self.cvar, value, self.event); if ( self.uvar ) then setglobal(self.uvar, value) end if ( self.setFunc ) then self.setFunc(value) end end
-		elseif ( control.type == CONTROLTYPE_SLIDER ) then
-			control.currValue = GetCVar(control.cvar);
-		end
-	elseif ( control.GetValue ) then
-		if ( control.type == CONTROLTYPE_CHECKBOX ) then
-			value = ((control:GetValue() and "1") or "0");
-			control.currValue = value;
-			control.value = value;
-			if ( control.uvar ) then
-				setglobal(control.uvar, value);
-			end
-			
-			control.SetValue = function(self, value) self.value = value; if ( self.uvar ) then setglobal(self.uvar, value); end if ( self.setFunc ) then self.setFunc(value) end end;
-		end
-	end
-end
-
-function BlizzardOptionsPanel_SetupDependentControl (dependency, control)
-	if ( not dependency ) then
-		return;
-	end
-	
-	control = control or this;
-	
-	dependency.dependentControls = dependency.dependentControls or {};
-	tinsert(dependency.dependentControls, control);
-	
-	if ( control.type ~= CONTROLTYPE_DROPDOWN ) then
-		control.oldDisable = control.Disable;
-		control.oldEnable = control.Enable;
-		control.Disable = function (self) self:oldDisable() getglobal(self:GetName().."Text"):SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b) end;
-		control.Enable = function (self) self:oldEnable() getglobal(self:GetName().."Text"):SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b) end;
-	else
-		control.Disable = function (self) UIDropDownMenu_DisableDropDown(self) end;
-		control.Enable = function (self) UIDropDownMenu_EnableDropDown(self) end;
-	end
-end
-
-function BlizzardOptionsPanel_CheckButton_OnClick (checkButton)
-	local setting = "0";
-	if ( checkButton:GetChecked() ) then
-		if ( not checkButton.invert ) then
-			setting = "1"
-		end
-	elseif ( checkButton.invert ) then
-		setting = "1"
-	end 
-	
-	checkButton.value = setting;
-	
-	if ( checkButton.cvar ) then
-		SetCVar(checkButton.cvar, setting, checkButton.event);
-	end
-
-	if ( checkButton.uvar ) then
-		setglobal(checkButton.uvar, setting);
-	end
-
-	if ( checkButton.dependentControls ) then
-		if ( checkButton:GetChecked() ) then
-			for _, control in next, checkButton.dependentControls do
-				control:Enable();
-			end
-		else
-			for _, control in next, checkButton.dependentControls do
-				control:Disable();
-			end
-		end
-	end
-	
-	if ( checkButton.setFunc ) then	
-		checkButton.setFunc(checkButton.value);
 	end
 end

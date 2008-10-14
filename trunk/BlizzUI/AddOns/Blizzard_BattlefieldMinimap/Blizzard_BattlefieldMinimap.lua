@@ -13,33 +13,36 @@ BattlefieldMinimapDefaults = {
 	showPlayers = true,
 };
 
+BG_VEHICLES = {};
+
+
 function BattlefieldMinimap_Toggle()
 	if ( BattlefieldMinimap:IsShown() ) then
-		SHOW_BATTLEFIELD_MINIMAP = "0";
+		SetCVar("showBattlefieldMinimap", "0");
 		BattlefieldMinimap:Hide();
 		WorldMapZoneMinimapDropDown_Update();
 	else
 		local _, instanceType = IsInInstance();
 		if ( instanceType == "pvp" ) then
-			SHOW_BATTLEFIELD_MINIMAP = "1";
+			SetCVar("showBattlefieldMinimap", "1");
 			BattlefieldMinimap:Show();
 			WorldMapZoneMinimapDropDown_Update();
 		elseif ( instanceType == "none" ) then
-			SHOW_BATTLEFIELD_MINIMAP = "2";
+			SetCVar("showBattlefieldMinimap", "2");
 			BattlefieldMinimap:Show();
 			WorldMapZoneMinimapDropDown_Update();
 		end
 	end
 end
 
-function BattlefieldMinimap_OnLoad()
-	this:RegisterEvent("ADDON_LOADED");
-	this:RegisterEvent("PLAYER_ENTERING_WORLD");
-	this:RegisterEvent("ZONE_CHANGED");
-	this:RegisterEvent("ZONE_CHANGED_NEW_AREA");
-	this:RegisterEvent("PLAYER_LOGOUT");
-	this:RegisterEvent("WORLD_MAP_UPDATE");
-	this:RegisterEvent("ZONE_CHANGED_NEW_AREA");
+function BattlefieldMinimap_OnLoad (self)
+	self:RegisterEvent("ADDON_LOADED");
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
+	self:RegisterEvent("ZONE_CHANGED");
+	self:RegisterEvent("ZONE_CHANGED_NEW_AREA");
+	self:RegisterEvent("PLAYER_LOGOUT");
+	self:RegisterEvent("WORLD_MAP_UPDATE");
+	self:RegisterEvent("ZONE_CHANGED_NEW_AREA");
 
 	CreateMiniWorldMapArrowFrame(BattlefieldMinimap);
 
@@ -49,8 +52,9 @@ function BattlefieldMinimap_OnLoad()
 	PlayerMiniArrowEffectFrame:SetAlpha(0.65);
 end
 
-function BattlefieldMinimap_OnEvent(event)
+function BattlefieldMinimap_OnEvent(self, event, ...)
 	if ( event == "ADDON_LOADED" ) then
+		local arg1 = ...;
 		if ( arg1 == "Blizzard_BattlefieldMinimap" ) then
 			if ( not BattlefieldMinimapOptions ) then
 				BattlefieldMinimapOptions = BattlefieldMinimapDefaults;
@@ -96,14 +100,21 @@ function BattlefieldMinimap_Update()
 	if ( not mapFileName ) then
 		return;
 	end
-	
+	local iconSize = DEFAULT_POI_ICON_SIZE * GetBattlefieldMapIconScale();
+	local texName;
+	local dungeonLevel = GetCurrentMapDungeonLevel();
 	for i=1, NUM_WORLDMAP_DETAIL_TILES do
-		getglobal("BattlefieldMinimap"..i):SetTexture("Interface\\WorldMap\\"..mapFileName.."\\"..mapFileName..i);
+		if ( dungeonLevel > 0 ) then
+			texName = "Interface\\WorldMap\\"..mapFileName.."\\"..mapFileName..dungeonLevel.."_"..i;
+		else
+			texName = "Interface\\WorldMap\\"..mapFileName.."\\"..mapFileName..i;
+		end
+		getglobal("BattlefieldMinimap"..i):SetTexture(texName);
 	end
 
 	-- Setup the POI's
 	local numPOIs = GetNumMapLandmarks();
-	local name, description, textureIndex, x, y;
+	local name, description, textureIndex, x, y, maplinkID,showInBattleMap;
 	local battlefieldPOI;
 	local x1, x2, y1, y2;
 	if ( NUM_BATTLEFIELDMAP_POIS < numPOIs ) then
@@ -115,15 +126,19 @@ function BattlefieldMinimap_Update()
 	for i=1, NUM_BATTLEFIELDMAP_POIS, 1 do
 		battlefieldPOI = getglobal("BattlefieldMinimapPOI"..i);
 		if ( i <= numPOIs ) then
-			name, description, textureIndex, x, y = GetMapLandmarkInfo(i);
-			x1, x2, y1, y2 = WorldMap_GetPOITextureCoords(textureIndex);
-			getglobal(battlefieldPOI:GetName().."Texture"):SetTexCoord(x1, x2, y1, y2);
-			x = x * BattlefieldMinimap:GetWidth();
-			y = -y * BattlefieldMinimap:GetHeight();
-			battlefieldPOI:SetPoint("CENTER", "BattlefieldMinimap", "TOPLEFT", x, y );
-			battlefieldPOI:SetWidth(DEFAULT_POI_ICON_SIZE * GetBattlefieldMapIconScale());
-			battlefieldPOI:SetHeight(DEFAULT_POI_ICON_SIZE * GetBattlefieldMapIconScale());
-			battlefieldPOI:Show();
+			name, description, textureIndex, x, y, maplinkID,showInBattleMap = GetMapLandmarkInfo(i);
+			if ( showInBattleMap ) then
+				x1, x2, y1, y2 = WorldMap_GetPOITextureCoords(textureIndex);
+				getglobal(battlefieldPOI:GetName().."Texture"):SetTexCoord(x1, x2, y1, y2);
+				x = x * BattlefieldMinimap:GetWidth();
+				y = -y * BattlefieldMinimap:GetHeight();
+				battlefieldPOI:SetPoint("CENTER", "BattlefieldMinimap", "TOPLEFT", x, y );
+				battlefieldPOI:SetWidth(iconSize);
+				battlefieldPOI:SetHeight(iconSize);
+				battlefieldPOI:Show();
+			else
+				battlefieldPOI:Hide();
+			end
 		else
 			battlefieldPOI:Hide();
 		end
@@ -206,7 +221,7 @@ function BattlefieldMinimap_CreatePOI(index)
 	texture:SetTexture("Interface\\Minimap\\POIIcons");
 end
 
-function BattlefieldMinimap_OnUpdate(elapsed)
+function BattlefieldMinimap_OnUpdate(self, elapsed)
 	-- Throttle updates
 	if ( BattlefieldMinimap.updateTimer < 0 ) then
 		BattlefieldMinimap.updateTimer = BATTLEFIELD_MINIMAP_UPDATE_RATE;
@@ -217,6 +232,10 @@ function BattlefieldMinimap_OnUpdate(elapsed)
 	--Position player
 	UpdateWorldMapArrowFrames();
 	local playerX, playerY = GetPlayerMapPosition("player");
+	if ( playerX == 0 and playerY == 0 ) then
+		SetMapToCurrentZone();
+		playerX, playerY = GetPlayerMapPosition("player");
+	end
 	if ( playerX == 0 and playerY == 0 ) then
 		ShowMiniWorldMapArrowFrame(nil);
 	else
@@ -230,28 +249,30 @@ function BattlefieldMinimap_OnUpdate(elapsed)
 	if ( BattlefieldMinimap.resizing ) then
 		local sizeUnit = BattlefieldMinimap:GetWidth()/4;
 		local mapPiece;
-		for i=1, 12 do
+		for i=1, NUM_WORLDMAP_DETAIL_TILES do
 			mapPiece = getglobal("BattlefieldMinimap"..i);
 			mapPiece:SetWidth(sizeUnit);
 			mapPiece:SetHeight(sizeUnit);
 		end
 		local numPOIs = GetNumMapLandmarks();
-		local name, description, textureIndex, x, y;
+		local name, description, textureIndex, x, y, maplinkID, showInBattleMap;
 		local battlefieldPOI;
 		local x1, x2, y1, y2;
 		local battlefieldPOI;
 		for i=1, NUM_BATTLEFIELDMAP_POIS, 1 do
 			battlefieldPOI = getglobal("BattlefieldMinimapPOI"..i);
 			if ( i <= numPOIs ) then
-				name, description, textureIndex, x, y = GetMapLandmarkInfo(i);
-				x1, x2, y1, y2 = WorldMap_GetPOITextureCoords(textureIndex);
-				getglobal(battlefieldPOI:GetName().."Texture"):SetTexCoord(x1, x2, y1, y2);
-				x = x * BattlefieldMinimap:GetWidth();
-				y = -y * BattlefieldMinimap:GetHeight();
-				battlefieldPOI:SetPoint("CENTER", "BattlefieldMinimap", "TOPLEFT", x, y );
-				battlefieldPOI:SetWidth(DEFAULT_POI_ICON_SIZE * GetBattlefieldMapIconScale());
-				battlefieldPOI:SetHeight(DEFAULT_POI_ICON_SIZE * GetBattlefieldMapIconScale());
-				battlefieldPOI:Show();
+				name, description, textureIndex, x, y, maplinkID,showInBattleMap = GetMapLandmarkInfo(i);
+				if ( showInBattleMap ) then
+					x1, x2, y1, y2 = WorldMap_GetPOITextureCoords(textureIndex);
+					getglobal(battlefieldPOI:GetName().."Texture"):SetTexCoord(x1, x2, y1, y2);
+					x = x * BattlefieldMinimap:GetWidth();
+					y = -y * BattlefieldMinimap:GetHeight();
+					battlefieldPOI:SetPoint("CENTER", "BattlefieldMinimap", "TOPLEFT", x, y );
+					battlefieldPOI:Show();
+				else
+					battlefieldPOI:Hide();
+				end
 			else
 				battlefieldPOI:Hide();
 			end
@@ -265,6 +286,7 @@ function BattlefieldMinimap_OnUpdate(elapsed)
 		for i=1, MAX_RAID_MEMBERS do
 			getglobal("BattlefieldMinimapRaid"..i):Hide();
 		end
+		wipe(BG_VEHICLES);
 	else
 		--Position groupmates
 		local partyX, partyY, partyMemberFrame;
@@ -337,6 +359,37 @@ function BattlefieldMinimap_OnUpdate(elapsed)
 				flagFrame:Hide();
 			end
 		end
+		
+		-- position vehicles
+		local numVehicles = GetNumBattlefieldVehicles();
+		local totalVehicles = #BG_VEHICLES;
+		local index = 0;
+		for i=1, numVehicles do
+			if (i > totalVehicles) then
+				BG_VEHICLES[i] = CreateFrame("FRAME", "BattlefieldMinimap"..i, BattlefieldMinimap, "WorldMapVehicleTemplate");
+				BG_VEHICLES[i].texture = getglobal("BattlefieldMinimap"..i.."Texture");
+				BG_VEHICLES[i]:SetWidth(30 * GetBattlefieldMapIconScale());
+				BG_VEHICLES[i]:SetHeight(30 * GetBattlefieldMapIconScale());
+			end
+			local vehicleX, vehicleY, unitName, isPossessed, vehicleType, orientation, isPlayer = GetBattlefieldVehicleInfo(i);
+			-- If vehicle has position and isn't the player
+			if ( vehicleX and not isPlayer)  then
+				vehicleX = vehicleX * BattlefieldMinimap:GetWidth();
+				vehicleY = -vehicleY * BattlefieldMinimap:GetHeight();
+				BG_VEHICLES[i].texture:SetTexture(GetMapVehicleTexture(vehicleType, isPossessed));
+				BG_VEHICLES[i].texture:SetRotation( orientation );
+				BG_VEHICLES[i]:SetPoint("CENTER", "BattlefieldMinimap", "TOPLEFT", vehicleX, vehicleY);
+				BG_VEHICLES[i]:Show();
+				index = i;	-- save for later
+			else
+				BG_VEHICLES[i]:Hide();
+			end
+		end
+		if (index < totalVehicles) then
+			for i=index+1, totalVehicles do
+				BG_VEHICLES[i]:Hide();
+			end
+		end	
 	end
 
 	-- Fadein tab if mouse is over
@@ -428,10 +481,10 @@ function BattlefieldMinimapDropDown_Initialize()
 	UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL);
 end
 
-function BattlefieldMinimapTab_OnClick(button)
+function BattlefieldMinimapTab_OnClick(self, button)
 	-- If Rightclick bring up the options menu
 	if ( button == "RightButton" ) then
-		ToggleDropDownMenu(1, nil, BattlefieldMinimapTabDropDown, this:GetName(), 0, 0);
+		ToggleDropDownMenu(1, nil, BattlefieldMinimapTabDropDown, self:GetName(), 0, 0);
 		return;
 	end
 
@@ -439,7 +492,7 @@ function BattlefieldMinimapTab_OnClick(button)
 	CloseDropDownMenus();
 
 	-- If frame is not locked then allow the frame to be dragged or dropped
-	if ( this:GetButtonState() == "PUSHED" ) then
+	if ( self:GetButtonState() == "PUSHED" ) then
 		BattlefieldMinimapTab:StopMovingOrSizing();
 	else
 		-- If locked don't allow any movement
@@ -460,14 +513,14 @@ function BattlefieldMinimap_TogglePlayers()
 	BattlefieldMinimapOptions.showPlayers = not BattlefieldMinimapOptions.showPlayers;
 end
 
-function BattlefieldMinimapUnit_OnEnter()
+function BattlefieldMinimapUnit_OnEnter(self)
 	-- Adjust the tooltip based on which side the unit button is on
-	local x, y = this:GetCenter();
-	local parentX, parentY = this:GetParent():GetCenter();
+	local x, y = self:GetCenter();
+	local parentX, parentY = self:GetParent():GetCenter();
 	if ( x > parentX ) then
-		GameTooltip:SetOwner(this, "ANCHOR_LEFT");
+		GameTooltip:SetOwner(self, "ANCHOR_LEFT");
 	else
-		GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
 	end
 	
 	-- See which POI's are in the same region and include their names in the tooltip
@@ -510,4 +563,13 @@ function BattlefieldMinimapUnit_OnEnter()
 	end
 	GameTooltip:SetText(tooltipText);
 	GameTooltip:Show();
+end
+
+function BattlefieldMinimap_ClearTextures()
+	for i=1, NUM_BATTLEFIELDMAP_OVERLAYS do
+		getglobal("BattlefieldMinimapOverlay"..i):SetTexture(nil);
+	end
+	for i=1, NUM_WORLDMAP_DETAIL_TILES do
+		getglobal("BattlefieldMinimap"..i):SetTexture(nil);
+	end
 end

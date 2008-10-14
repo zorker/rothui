@@ -10,7 +10,6 @@ MAX_IGNORE = 50;
 MAX_WHOS_FROM_SERVER = 50;
 MAX_GUILDCONTROL_OPTIONS = 12;
 CURRENT_GUILD_MOTD = "";
-SHOW_OFFLINE_GUILD_MEMBERS = 1;	-- This variable is saved
 GUILD_DETAIL_NORM_HEIGHT = 195
 GUILD_DETAIL_OFFICER_HEIGHT = 255
 MAX_GUILDBANK_TABS = 6;
@@ -90,26 +89,26 @@ function FriendsFrameDropDown_Initialize()
 	UnitPopup_ShowMenu(getglobal(UIDROPDOWNMENU_OPEN_MENU), "FRIEND", nil, FriendsDropDown.name);
 end
 
-function FriendsFrame_OnLoad()
-	PanelTemplates_SetNumTabs(this, 5);
-	FriendsFrame.selectedTab = 1;
-	PanelTemplates_UpdateTabs(this);
-	this:RegisterEvent("FRIENDLIST_SHOW");
-	this:RegisterEvent("FRIENDLIST_UPDATE");
-	this:RegisterEvent("PARTY_MEMBERS_CHANGED")
-	this:RegisterEvent("IGNORELIST_UPDATE");
-	this:RegisterEvent("MUTELIST_UPDATE");
-	this:RegisterEvent("WHO_LIST_UPDATE");
-	this:RegisterEvent("GUILD_ROSTER_UPDATE");
-	this:RegisterEvent("PLAYER_GUILD_UPDATE");
-	this:RegisterEvent("GUILD_MOTD");
-	this:RegisterEvent("VOICE_CHAT_ENABLED_UPDATE");
-	FriendsFrame.playersInBotRank = 0;
-	FriendsFrame.playerStatusFrame = 1;
-	FriendsFrame.selectedFriend = 1;
-	FriendsFrame.selectedIgnore = 1;
-	FriendsFrame.guildStatus = 0;
-	FriendsFrame.showFriendsList = 1;
+function FriendsFrame_OnLoad(self)
+	PanelTemplates_SetNumTabs(self, 5);
+	self.selectedTab = 1;
+	PanelTemplates_UpdateTabs(self);
+	self:RegisterEvent("FRIENDLIST_SHOW");
+	self:RegisterEvent("FRIENDLIST_UPDATE");
+	self:RegisterEvent("IGNORELIST_UPDATE");
+	self:RegisterEvent("MUTELIST_UPDATE");
+	self:RegisterEvent("WHO_LIST_UPDATE");
+	self:RegisterEvent("GUILD_ROSTER_UPDATE");
+	self:RegisterEvent("PLAYER_GUILD_UPDATE");
+	self:RegisterEvent("GUILD_MOTD");
+	self:RegisterEvent("VOICE_CHAT_ENABLED_UPDATE");
+	self:RegisterEvent("PARTY_MEMBERS_CHANGED");
+	self.playersInBotRank = 0;
+	self.playerStatusFrame = 1;
+	self.selectedFriend = 1;
+	self.selectedIgnore = 1;
+	self.guildStatus = 0;
+	self.showFriendsList = 1;
 	GuildFrame.notesToggle = 1;
 	GuildFrame.selectedGuildMember = 0;
 	SetGuildRosterSelection(0);
@@ -402,7 +401,7 @@ end
 function WhoList_Update()
 	local numWhos, totalCount = GetNumWhoResults();
 	local name, guild, level, race, class, zone;
-	local button, buttonText, classTextColor;
+	local button, buttonText, classTextColor, classFileName;
 	local columnTable;
 	local whoOffset = FauxScrollFrame_GetOffset(WhoListScrollFrame);
 	local whoIndex;
@@ -469,11 +468,11 @@ function WhoList_Update()
 
 	-- If need scrollbar resize columns
 	if ( showScrollBar ) then
-		WhoFrameColumn_SetWidth(105, WhoFrameColumnHeader2);
-		UIDropDownMenu_SetWidth(80, WhoFrameDropDown);
+		WhoFrameColumn_SetWidth(WhoFrameColumnHeader2, 105);
+		UIDropDownMenu_SetWidth(WhoFrameDropDown, 80);
 	else
-		WhoFrameColumn_SetWidth(120, WhoFrameColumnHeader2);
-		UIDropDownMenu_SetWidth(95, WhoFrameDropDown);
+		WhoFrameColumn_SetWidth(WhoFrameColumnHeader2, 120);
+		UIDropDownMenu_SetWidth(WhoFrameDropDown, 95);
 	end
 
 	-- ScrollFrame update
@@ -697,10 +696,10 @@ function GuildStatus_Update()
 		GuildFrameGuildListToggleButton:SetText(PLAYER_STATUS);
 		-- If need scrollbar resize column headers
 		if ( showScrollBar ) then
-			WhoFrameColumn_SetWidth(105, GuildFrameColumnHeader2);
+			WhoFrameColumn_SetWidth(GuildFrameColumnHeader2, 105);
 			GuildFrameGuildListToggleButton:SetPoint("LEFT", "GuildFrame", "LEFT", 284, -67);
 		else
-			WhoFrameColumn_SetWidth(120, GuildFrameColumnHeader2);
+			WhoFrameColumn_SetWidth(GuildFrameColumnHeader2, 120);
 			GuildFrameGuildListToggleButton:SetPoint("LEFT", "GuildFrame", "LEFT", 307, -67);
 		end
 		-- ScrollFrame update
@@ -713,7 +712,8 @@ function GuildStatus_Update()
 		local year, month, day, hour;
 		local yearlabel, monthlabel, daylabel, hourlabel;
 		local guildOffset = FauxScrollFrame_GetOffset(GuildListScrollFrame);
-
+		local classFileName;
+		
 		for i=1, GUILDMEMBERS_TO_DISPLAY, 1 do
 			guildIndex = guildOffset + i;
 			button = getglobal("GuildFrameGuildStatusButton"..i);
@@ -772,10 +772,10 @@ function GuildStatus_Update()
 		GuildFrameGuildListToggleButton:SetText(GUILD_STATUS);
 		-- If need scrollbar resize columns
 		if ( showScrollBar ) then
-			WhoFrameColumn_SetWidth(75, GuildFrameGuildStatusColumnHeader3);
+			WhoFrameColumn_SetWidth(GuildFrameGuildStatusColumnHeader3, 75);
 			GuildFrameGuildListToggleButton:SetPoint("LEFT", "GuildFrame", "LEFT", 284, -67);
 		else
-			WhoFrameColumn_SetWidth(90, GuildFrameGuildStatusColumnHeader3);
+			WhoFrameColumn_SetWidth(GuildFrameGuildStatusColumnHeader3, 90);
 			GuildFrameGuildListToggleButton:SetPoint("LEFT", "GuildFrame", "LEFT", 307, -67);
 		end
 		
@@ -787,10 +787,8 @@ function GuildStatus_Update()
 	end
 end
 
-function WhoFrameColumn_SetWidth(width, frame)
-	if ( not frame ) then
-		frame = this;
-	end
+function WhoFrameColumn_SetWidth(frame, width)
+	assert(frame)
 	frame:SetWidth(width);
 	getglobal(frame:GetName().."Middle"):SetWidth(width - 9);
 end
@@ -805,19 +803,19 @@ function WhoFrameDropDown_Initialize()
 	end
 end
 
-function WhoFrameDropDown_OnLoad()
-	UIDropDownMenu_Initialize(this, WhoFrameDropDown_Initialize);
-	UIDropDownMenu_SetWidth(80);
-	UIDropDownMenu_SetButtonWidth(24);
-	UIDropDownMenu_JustifyText("LEFT", WhoFrameDropDown)
+function WhoFrameDropDown_OnLoad(self)
+	UIDropDownMenu_Initialize(self, WhoFrameDropDown_Initialize);
+	UIDropDownMenu_SetWidth(self, 80);
+	UIDropDownMenu_SetButtonWidth(self, 24);
+	UIDropDownMenu_JustifyText(WhoFrameDropDown, "LEFT")
 end
 
-function WhoFrameDropDownButton_OnClick()
-	UIDropDownMenu_SetSelectedID(WhoFrameDropDown, this:GetID());
+function WhoFrameDropDownButton_OnClick(self)
+	UIDropDownMenu_SetSelectedID(WhoFrameDropDown, self:GetID());
 	WhoList_Update();
 end
 
-function FriendsFrame_OnEvent()
+function FriendsFrame_OnEvent(self, event, ...)
 	if ( event == "FRIENDLIST_SHOW" ) then
 		FriendsList_Update();
 		FriendsFrame_Update();
@@ -832,6 +830,7 @@ function FriendsFrame_OnEvent()
 		FriendsFrame_Update();
 	elseif ( event == "GUILD_ROSTER_UPDATE" ) then
 		if ( GuildFrame:IsShown() ) then
+			local arg1 = ...;
 			if ( arg1 ) then
 				GuildRoster();
 			end
@@ -844,49 +843,49 @@ function FriendsFrame_OnEvent()
 			InGuildCheck();
 		end
 	elseif ( event == "GUILD_MOTD") then
-		CURRENT_GUILD_MOTD = arg1;
+		CURRENT_GUILD_MOTD = ...;
 		GuildFrameNotesText:SetText(CURRENT_GUILD_MOTD);
 	elseif ( event == "VOICE_CHAT_ENABLED_UPDATE" ) then
 		VoiceChat_Toggle();
 	end
 end
 
-function FriendsFrameFriendButton_OnClick(button)
+function FriendsFrameFriendButton_OnClick(self, button)
 	if ( button == "LeftButton" ) then
-		SetSelectedFriend(this:GetID());
+		SetSelectedFriend(self:GetID());
 		FriendsList_Update();
 	else
-		local name, level, class, area, connected = GetFriendInfo(this:GetID());
+		local name, level, class, area, connected = GetFriendInfo(self:GetID());
 		FriendsFrame_ShowDropdown(name, connected);
 	end
 end
 
-function FriendsFrameIgnoreButton_OnClick()
-	SetSelectedIgnore(this:GetID());
+function FriendsFrameIgnoreButton_OnClick(self)
+	SetSelectedIgnore(self:GetID());
 	IgnoreList_Update();
 end
 
-function FriendsFrameMuteButton_OnClick()
-	SetSelectedMute(this:GetID());
+function FriendsFrameMuteButton_OnClick(self)
+	SetSelectedMute(self:GetID());
 	MutedList_Update();
 end
 
-function FriendsFrameWhoButton_OnClick(button)
+function FriendsFrameWhoButton_OnClick(self, button)
 	if ( button == "LeftButton" ) then
-		WhoFrame.selectedWho = getglobal("WhoFrameButton"..this:GetID()).whoIndex;
-		WhoFrame.selectedName = getglobal("WhoFrameButton"..this:GetID().."Name"):GetText();
+		WhoFrame.selectedWho = getglobal("WhoFrameButton"..self:GetID()).whoIndex;
+		WhoFrame.selectedName = getglobal("WhoFrameButton"..self:GetID().."Name"):GetText();
 		WhoList_Update();
 	else
-		local name = getglobal("WhoFrameButton"..this:GetID().."Name"):GetText();
+		local name = getglobal("WhoFrameButton"..self:GetID().."Name"):GetText();
 		FriendsFrame_ShowDropdown(name, 1);
 	end
 end
 
-function FriendsFrameGuildStatusButton_OnClick(button)
+function FriendsFrameGuildStatusButton_OnClick(self, button)
 	if ( button == "LeftButton" ) then
 		GuildFrame.previousSelectedGuildMember = GuildFrame.selectedGuildMember;
-		GuildFrame.selectedGuildMember = this.guildIndex;
-		GuildFrame.selectedName = getglobal(this:GetName().."Name"):GetText();
+		GuildFrame.selectedGuildMember = self.guildIndex;
+		GuildFrame.selectedName = getglobal(self:GetName().."Name"):GetText();
 		SetGuildRosterSelection(GuildFrame.selectedGuildMember);
 		-- Toggle guild details frame
 		if ( GuildMemberDetailFrame:IsShown() and (GuildFrame.previousSelectedGuildMember and (GuildFrame.previousSelectedGuildMember == GuildFrame.selectedGuildMember)) ) then
@@ -898,7 +897,7 @@ function FriendsFrameGuildStatusButton_OnClick(button)
 		end
 		GuildStatus_Update();
 	else
-		local guildIndex = this.guildIndex;
+		local guildIndex = self.guildIndex;
 		local name, rank, rankIndex, level, class, zone, note, officernote, online = GetGuildRosterInfo(guildIndex);
 		FriendsFrame_ShowDropdown(name, online);
 	end
@@ -962,9 +961,9 @@ function ToggleFriendsFrame(tab)
 	end
 end
 
-function WhoFrameEditBox_OnEnterPressed()
-	SendWho(WhoFrameEditBox:GetText());
-	WhoFrameEditBox:ClearFocus();
+function WhoFrameEditBox_OnEnterPressed(self)
+	SendWho(self:GetText());
+	self:ClearFocus();
 end
 
 function ToggleFriendsPanel()
@@ -1020,7 +1019,7 @@ end
 
 function GuildControlPopupFrame_OnLoad()
 	local buttonText;
-	for i=1, 16 do	
+	for i=1, 17 do	
 		buttonText = getglobal("GuildControlPopupFrameCheckbox"..i.."Text");
 		if ( buttonText ) then
 			buttonText:SetText(getglobal("GUILDCONTROL_OPTION"..i));
@@ -1039,7 +1038,7 @@ function GuildControlPopupFrame_Initialize()
 	end
 	GuildControlSetRank(1);
 	UIDropDownMenu_SetSelectedID(GuildControlPopupFrameDropDown, 1);
-	UIDropDownMenu_SetText(GuildControlGetRankName(1), GuildControlPopupFrameDropDown);
+	UIDropDownMenu_SetText(GuildControlPopupFrameDropDown, GuildControlGetRankName(1));
 	-- Select tab 1
 	GuildBankTabPermissionsTab_OnClick(1);
 
@@ -1056,7 +1055,7 @@ function GuildControlPopupFrame_OnShow()
 
 	UIPanelWindows["FriendsFrame"].width = FriendsFrame:GetWidth() + GuildControlPopupFrame:GetWidth();
 	UpdateUIPanelPositions(FriendsFrame);
-	GuildControlPopupFrame:RegisterEvent("GUILD_ROSTER_UPDATE");
+	--GuildControlPopupFrame:RegisterEvent("GUILD_ROSTER_UPDATE"); --It was decided that having a risk of conflict when two people are editing the guild permissions at once is better than resetting whenever someone joins the guild or changes ranks.
 end
 
 function GuildControlPopupFrame_OnEvent (self, event, ...)
@@ -1070,7 +1069,7 @@ function GuildControlPopupFrame_OnEvent (self, event, ...)
 		rank = GuildControlGetRankName(i);
 		if ( GuildControlPopupFrame.rank and rank == GuildControlPopupFrame.rank ) then
 			UIDropDownMenu_SetSelectedID(GuildControlPopupFrameDropDown, i);
-			UIDropDownMenu_SetText(rank, GuildControlPopupFrameDropDown);
+			UIDropDownMenu_SetText(GuildControlPopupFrameDropDown, rank);
 		end
 	end
 	
@@ -1107,9 +1106,9 @@ function GuildControlPopupframe_Update(loadPendingTabPermissions, skipCheckboxUp
 		GuildControlTabPermissionsDepositItems:SetChecked(1);
 		GuildControlTabPermissionsViewTab:SetChecked(1);
 		GuildControlTabPermissionsUpdateText:SetChecked(1);
-		OptionsFrame_DisableCheckBox(GuildControlTabPermissionsDepositItems);
-		OptionsFrame_DisableCheckBox(GuildControlTabPermissionsViewTab);
-		OptionsFrame_DisableCheckBox(GuildControlTabPermissionsUpdateText);
+		BlizzardOptionsPanel_CheckButton_Disable(GuildControlTabPermissionsDepositItems);
+		BlizzardOptionsPanel_CheckButton_Disable(GuildControlTabPermissionsViewTab);
+		BlizzardOptionsPanel_CheckButton_Disable(GuildControlTabPermissionsUpdateText);
 		GuildControlTabPermissionsWithdrawItemsText:SetVertexColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
 		GuildControlWithdrawItemsEditBox:SetNumeric(nil);
 		GuildControlWithdrawItemsEditBox:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
@@ -1124,22 +1123,22 @@ function GuildControlPopupframe_Update(loadPendingTabPermissions, skipCheckboxUp
 		GuildControlWithdrawGoldEditBox:SetText(UNLIMITED);
 		GuildControlWithdrawGoldEditBox:ClearFocus();
 		GuildControlWithdrawGoldEditBoxMask:Show();
-		OptionsFrame_DisableCheckBox(GuildControlPopupFrameCheckbox15);
-		OptionsFrame_DisableCheckBox(GuildControlPopupFrameCheckbox16);
+		BlizzardOptionsPanel_CheckButton_Disable(GuildControlPopupFrameCheckbox15);
+		BlizzardOptionsPanel_CheckButton_Disable(GuildControlPopupFrameCheckbox16);
 	else
 		if ( GetNumGuildBankTabs() == 0 ) then
 			-- No tabs, no permissions! Disable the tab related doohickies
 			GuildBankTabLabel:SetVertexColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
-			OptionsFrame_DisableCheckBox(GuildControlTabPermissionsViewTab);
-			OptionsFrame_DisableCheckBox(GuildControlTabPermissionsDepositItems);
-			OptionsFrame_DisableCheckBox(GuildControlTabPermissionsUpdateText);
+			BlizzardOptionsPanel_CheckButton_Disable(GuildControlTabPermissionsViewTab);
+			BlizzardOptionsPanel_CheckButton_Disable(GuildControlTabPermissionsDepositItems);
+			BlizzardOptionsPanel_CheckButton_Disable(GuildControlTabPermissionsUpdateText);
 			GuildControlTabPermissionsWithdrawItemsText:SetVertexColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
 			GuildControlWithdrawItemsEditBox:SetText(UNLIMITED);
 			GuildControlWithdrawItemsEditBox:ClearFocus();
 			GuildControlWithdrawItemsEditBoxMask:Show();
 		else
 			GuildBankTabLabel:SetVertexColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
-			OptionsFrame_EnableCheckBox(GuildControlTabPermissionsViewTab);
+			BlizzardOptionsPanel_CheckButton_Enable(GuildControlTabPermissionsViewTab);
 			GuildControlTabPermissionsWithdrawItemsText:SetVertexColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
 			GuildControlWithdrawItemsEditBox:SetNumeric(1);
 			GuildControlWithdrawItemsEditBox:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
@@ -1152,8 +1151,8 @@ function GuildControlPopupframe_Update(loadPendingTabPermissions, skipCheckboxUp
 		GuildControlWithdrawGoldEditBox:SetMaxLetters(MAX_GOLD_WITHDRAW_DIGITS);
 		GuildControlWithdrawGoldEditBox:SetTextColor(HIGHLIGHT_FONT_COLOR.r, HIGHLIGHT_FONT_COLOR.g, HIGHLIGHT_FONT_COLOR.b);
 		GuildControlWithdrawGoldEditBoxMask:Hide();
-		OptionsFrame_EnableCheckBox(GuildControlPopupFrameCheckbox15);
-		OptionsFrame_EnableCheckBox(GuildControlPopupFrameCheckbox16);
+		BlizzardOptionsPanel_CheckButton_Enable(GuildControlPopupFrameCheckbox15);
+		BlizzardOptionsPanel_CheckButton_Enable(GuildControlPopupFrameCheckbox16);
 
 		-- Update tab specific info
 		local viewTab, canDeposit, canUpdateText, numWithdrawals = GetGuildBankTabPermissions(GuildControlPopupFrameTabPermissions.selectedTab);
@@ -1225,10 +1224,8 @@ function GuildControlPopupframe_Update(loadPendingTabPermissions, skipCheckboxUp
 			end
 			if ( IsGuildLeader() and rankID == 1 ) then
 				tab:Disable();
-				tab:SetDisabledTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
 			else
 				tab:Enable();
-				tab:SetDisabledTextColor(nil, nil, nil);
 			end
 		else
 			tab:Hide();
@@ -1260,16 +1257,16 @@ function GuildControlPopupAcceptButton_OnClick()
 	GuildControlSaveRank(GuildControlPopupFrameEditBox:GetText());
 	GuildStatus_Update();
 	GuildControlPopupAcceptButton:Disable();
-	UIDropDownMenu_SetText(GuildControlPopupFrameEditBox:GetText(), GuildControlPopupFrameDropDown);
+	UIDropDownMenu_SetText(GuildControlPopupFrameDropDown, GuildControlPopupFrameEditBox:GetText());
 	GuildControlPopupFrame:Hide();
 	ClearPendingGuildBankPermissions();
 end
 
-function GuildControlPopupFrameDropDown_OnLoad()
+function GuildControlPopupFrameDropDown_OnLoad(self)
 	UIDropDownMenu_Initialize(GuildControlPopupFrameDropDown, GuildControlPopupFrameDropDown_Initialize);
-	UIDropDownMenu_SetWidth(160);
-	UIDropDownMenu_SetButtonWidth(54);
-	UIDropDownMenu_JustifyText("LEFT", GuildControlPopupFrameDropDown);
+	UIDropDownMenu_SetWidth(self, 160);
+	UIDropDownMenu_SetButtonWidth(self, 54);
+	UIDropDownMenu_JustifyText(GuildControlPopupFrameDropDown, "LEFT");
 end
 
 function GuildControlPopupFrameDropDown_Initialize()
@@ -1282,15 +1279,15 @@ function GuildControlPopupFrameDropDown_Initialize()
 	end
 end
 
-function GuildControlPopupFrameDropDownButton_OnClick()
-	local rank = this:GetID();
+function GuildControlPopupFrameDropDownButton_OnClick(self)
+	local rank = self:GetID();
 	UIDropDownMenu_SetSelectedID(GuildControlPopupFrameDropDown, rank);	
 	GuildControlSetRank(rank);
 	GuildControlPopupFrame.rank = GuildControlGetRankName(rank);
 	GuildControlPopupFrame.goldChanged = nil;
 	GuildControlPopupframe_Update();
-	GuildControlPopupFrameAddRankButton_OnUpdate();
-	GuildControlPopupFrameRemoveRankButton_OnUpdate();
+	GuildControlPopupFrameAddRankButton_OnUpdate(GuildControlPopupFrameAddRankButton);
+	GuildControlPopupFrameRemoveRankButton_OnUpdate(GuildControlPopupFrameRemoveRankButton);
 	GuildControlPopupAcceptButton:Disable();
 end
 
@@ -1307,11 +1304,11 @@ function GuildControlCheckboxUpdate(...)
 	end
 end
 
-function GuildControlPopupFrameAddRankButton_OnUpdate()
+function GuildControlPopupFrameAddRankButton_OnUpdate(self)
 	if ( GuildControlGetNumRanks() >= 10 ) then
-		GuildControlPopupFrameAddRankButton:Disable();
+		self:Disable();
 	else
-		GuildControlPopupFrameAddRankButton:Enable();
+		self:Enable();
 	end
 end
 
@@ -1329,26 +1326,27 @@ function GuildControlPopupFrameRemoveRankButton_OnClick()
 	--GuildControlPopupFrame.update = 1;
 end
 
-function GuildControlPopupFrameRemoveRankButton_OnUpdate()
-	if ( (UIDropDownMenu_GetSelectedID(GuildControlPopupFrameDropDown) == GuildControlGetNumRanks()) and (GuildControlGetNumRanks() > 5) ) then
-		GuildControlPopupFrameRemoveRankButton:Show();
+function GuildControlPopupFrameRemoveRankButton_OnUpdate(self)
+	local numRanks = GuildControlGetNumRanks()
+	if ( (UIDropDownMenu_GetSelectedID(GuildControlPopupFrameDropDown) == numRanks) and (numRanks > 5) ) then
+		self:Show();
 		if ( FriendsFrame.playersInBotRank > 0 ) then
-			GuildControlPopupFrameRemoveRankButton:Disable();
+			self:Disable();
 		else
-			GuildControlPopupFrameRemoveRankButton:Enable();
+			self:Enable();
 		end
 	else
-		GuildControlPopupFrameRemoveRankButton:Hide();
+		self:Hide();
 	end
 end
 
 function GuildControlPopup_UpdateDepositCheckBox()
 	if(GuildControlTabPermissionsViewTab:GetChecked()) then
-		OptionsFrame_EnableCheckBox(GuildControlTabPermissionsDepositItems);
-		OptionsFrame_EnableCheckBox(GuildControlTabPermissionsUpdateText);
+		BlizzardOptionsPanel_CheckButton_Enable(GuildControlTabPermissionsDepositItems);
+		BlizzardOptionsPanel_CheckButton_Enable(GuildControlTabPermissionsUpdateText);
 	else
-		OptionsFrame_DisableCheckBox(GuildControlTabPermissionsDepositItems);
-		OptionsFrame_DisableCheckBox(GuildControlTabPermissionsUpdateText);
+		BlizzardOptionsPanel_CheckButton_Disable(GuildControlTabPermissionsDepositItems);
+		BlizzardOptionsPanel_CheckButton_Disable(GuildControlTabPermissionsUpdateText);
 	end
 end
 

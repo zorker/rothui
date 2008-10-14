@@ -1,9 +1,12 @@
 # Do not delete the following line!
-## Interface: 20400
+## Interface: 30000
 GlobalStrings.lua
 Constants.lua
 Fonts.xml
+FontStyles.xml
 Localization.xml
+## add new modules below here
+
 BasicControls.xml
 WorldFrame.xml
 UIParent.xml
@@ -17,22 +20,33 @@ UIDropDownMenu.xml
 UIPanelTemplates.lua
 UIPanelTemplates.xml
 SecureTemplates.xml
+SecureHandlerTemplates.xml
 ItemButtonTemplate.xml
-AudioOptionsFrame.xml
+SparkleFrame.xml
+HybridScrollFrame.lua
+HybridScrollFrame.xml
 GameMenuFrame.xml
-OptionsFrame.xml
 CharacterFrameTemplates.xml
-UIOptionsFrame.xml
+TextStatusBar.lua
+TextStatusBar.xml
 UIErrorsFrame.xml
 StaticPopup.xml
+Sound.lua
+OptionsFrameTemplates.xml
+OptionsPanelTemplates.xml
+VideoOptionsFrame.xml
+VideoOptionsPanels.xml
+AudioOptionsFrame.xml
+AudioOptionsPanels.xml
+UIOptionsFrame.xml
+UIOptionsPanels.xml
+AlertFrames.xml
 MirrorTimer.xml
 CoinPickupFrame.xml
 StackSplitFrame.xml
 FadingFrame.xml
 ZoneText.xml
 BattlefieldFrame.xml
-TextStatusBar.lua
-TextStatusBar.xml
 MainMenuBar.xml
 MainMenuBarMicroButtons.xml
 Minimap.xml
@@ -48,13 +62,12 @@ UnitPopup.xml
 UnitFrame.xml
 ChatFrame.xml
 FloatingChatFrame.xml
-SoundOptionsFrame.xml
-VoiceOptionsFrame.xml
 VoiceChat.xml
 ReadyCheck.xml
 PlayerFrame.xml
 PartyFrame.xml
 TargetFrame.xml
+FocusFrame.xml
 TotemFrame.xml
 PetFrame.xml
 StatsFrame.xml
@@ -109,7 +122,12 @@ MacOptionsFrame.xml
 RatingMenuFrame.xml
 TalentFrameBase.lua
 Blizzard_TalentUITemplates.xml
+RuneFrame.xml
 EasyMenu.lua
 ChatConfigFrame.xml
-UIOptionsPanels.xml
+MovieFrame.xml
+VehicleMenuBar.xml
+AnimationSystem.lua
+
+## add new modules above here
 LocalizationPost.xml

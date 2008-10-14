@@ -3,11 +3,11 @@ MINIMAPPING_FADE_TIMER = 0.5;
 
 MINIMAP_RECORDING_INDICATOR_ON = false;
 
-function Minimap_OnLoad()
+function Minimap_OnLoad(self)
 	MiniMapPing.fadeOut = nil;
-	this:SetSequence(0);
-	this:RegisterEvent("MINIMAP_PING");
-	this:RegisterEvent("MINIMAP_UPDATE_ZOOM");
+	self:SetSequence(0);
+	self:RegisterEvent("MINIMAP_PING");
+	self:RegisterEvent("MINIMAP_UPDATE_ZOOM");
 end
 
 function ToggleMinimap()
@@ -66,6 +66,9 @@ function Minimap_SetTooltip( pvpType, factionName )
 		elseif ( pvpType == "contested" ) then
 			GameTooltip:AddLine( subzoneName, 1.0, 0.7, 0.0 );	
 			GameTooltip:AddLine(CONTESTED_TERRITORY, 1.0, 0.7, 0.0);
+		elseif ( pvpType == "combat" ) then
+			GameTooltip:AddLine( subzoneName, 1.0, 0.1, 0.1 );	
+			GameTooltip:AddLine(COMBAT_ZONE, 1.0, 0.1, 0.1);
 		else
 			GameTooltip:AddLine( subzoneName, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b );	
 		end
@@ -73,8 +76,9 @@ function Minimap_SetTooltip( pvpType, factionName )
 	end
 end
 
-function Minimap_OnEvent()
+function Minimap_OnEvent(self, event, ...)
 	if ( event == "MINIMAP_PING" ) then
+		local arg1, arg2, arg3 = ...;
 		Minimap_SetPing(arg2, arg3, 1);
 		Minimap.timer = MINIMAPPING_TIMER;
 	elseif ( event == "MINIMAP_UPDATE_ZOOM" ) then
@@ -89,19 +93,20 @@ function Minimap_OnEvent()
 	end
 end
 
-function Minimap_OnUpdate(elapsed)
-	if ( Minimap.timer > 0 ) then
-		Minimap.timer = Minimap.timer - elapsed;
-		if ( Minimap.timer <= 0 ) then
+function Minimap_OnUpdate(self, elapsed)
+	self.timer = self.timer or 0;
+	if ( self.timer > 0 ) then
+		self.timer = self.timer - elapsed;
+		if ( self.timer <= 0 ) then
 			MiniMapPing_FadeOut();
 		else
-			Minimap_SetPing(Minimap:GetPingPosition());
+			Minimap_SetPing(self:GetPingPosition());
 		end
 	elseif ( MiniMapPing.fadeOut ) then
 		MiniMapPing.fadeOutTimer = MiniMapPing.fadeOutTimer - elapsed;
 		if ( MiniMapPing.fadeOutTimer > 0 ) then
 			MiniMapPing:SetAlpha((255 * (MiniMapPing.fadeOutTimer/MINIMAPPING_FADE_TIMER)) / 255);
-			Minimap_SetPing(Minimap:GetPingPosition());
+			Minimap_SetPing(self:GetPingPosition());
 		else
 			MiniMapPing.fadeOut = nil;
 			MiniMapPing:Hide();
@@ -148,15 +153,15 @@ function Minimap_ZoomOutClick()
 	end
 end
 
-function Minimap_OnClick()
+function Minimap_OnClick(self)
 	local x, y = GetCursorPosition();
-	x = x / this:GetEffectiveScale();
-	y = y / this:GetEffectiveScale();
+	x = x / self:GetEffectiveScale();
+	y = y / self:GetEffectiveScale();
 
-	local cx, cy = this:GetCenter();
+	local cx, cy = self:GetCenter();
 	x = x - cx;
 	y = y - cy;
-	if ( sqrt(x * x + y * y) < (this:GetWidth() / 2) ) then
+	if ( sqrt(x * x + y * y) < (self:GetWidth() / 2) ) then
 		Minimap:PingLocation(x, y);
 	end
 end
@@ -169,8 +174,8 @@ function Minimap_ZoomOut()
 	MinimapZoomOut:Click();
 end
 
-function MiniMapMeetingStoneFrame_OnEnter()
-	GameTooltip:SetOwner(this, "ANCHOR_BOTTOMLEFT");
+function MiniMapMeetingStoneFrame_OnEnter(self)
+	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT");
 	MiniMapMeetingStoneFrame_FormatTooltip(GetLFGStatusText());
 end
 
@@ -195,23 +200,23 @@ function MiniMapMeetingStoneFrame_FormatTooltip(...)
 	GameTooltip:Show();
 end
 
-function MinimapButton_OnMouseDown()
-	if ( this.isDown ) then
+function MinimapButton_OnMouseDown(self, button)
+	if ( self.isDown ) then
 		return;
 	end
-	local button = getglobal(this:GetName().."Icon");
+	local button = getglobal(self:GetName().."Icon");
 	local point, relativeTo, relativePoint, offsetX, offsetY = button:GetPoint();
 	button:SetPoint(point, relativeTo, relativePoint, offsetX+1, offsetY-1);
-	this.isDown = 1;
+	self.isDown = 1;
 end
-function MinimapButton_OnMouseUp()
-	if ( not this.isDown ) then
+function MinimapButton_OnMouseUp(self)
+	if ( not self.isDown ) then
 		return;
 	end
-	local button = getglobal(this:GetName().."Icon");
+	local button = getglobal(self:GetName().."Icon");
 	local point, relativeTo, relativePoint, offsetX, offsetY = button:GetPoint();
 	button:SetPoint(point, relativeTo, relativePoint, offsetX-1, offsetY+1);
-	this.isDown = nil;
+	self.isDown = nil;
 end
 
 function Minimap_UpdateRotationSetting()
@@ -264,8 +269,12 @@ function MiniMapTracking_Update()
 	end
 end
 
-function MiniMapTrackingDropDown_OnLoad()
-	UIDropDownMenu_Initialize(MiniMapTrackingDropDown, MiniMapTrackingDropDown_Initialize, "MENU");
+function MiniMapTrackingDropDown_OnLoad(self)
+	UIDropDownMenu_Initialize(self, MiniMapTrackingDropDown_Initialize, "MENU");
+end
+
+function MiniMapTracking_SetTracking (self, id)
+	SetTracking(id);
 end
 
 function MiniMapTrackingDropDown_Initialize()
@@ -278,7 +287,7 @@ function MiniMapTrackingDropDown_Initialize()
 		info = UIDropDownMenu_CreateInfo();
 		info.text = name;
 		info.checked = active;
-		info.func = SetTracking;
+		info.func = MiniMapTracking_SetTracking;
 		info.icon = texture;
 		info.arg1 = id;
 		if ( category == "spell" ) then
@@ -307,7 +316,7 @@ function MiniMapTrackingDropDown_Initialize()
 	info = UIDropDownMenu_CreateInfo();
 	info.text = NONE;
 	info.checked = checked;
-	info.func = SetTracking;
+	info.func = MiniMapTracking_SetTracking;
 	info.arg1 = nil;
 	UIDropDownMenu_AddButton(info);
 
@@ -319,9 +328,9 @@ function MiniMapTrackingShineFadeIn()
 	fadeInfo.mode = "IN";
 	fadeInfo.timeToFade = 0.5;
 	fadeInfo.finishedFunc = MiniMapTrackingShineFadeOut;
-	UIFrameFade(MiniMapTrackingShine, fadeInfo);
+	UIFrameFade(MiniMapTrackingButtonShine, fadeInfo);
 end
 
 function MiniMapTrackingShineFadeOut()
-	UIFrameFadeOut(MiniMapTrackingShine, 0.5);
+	UIFrameFadeOut(MiniMapTrackingButtonShine, 0.5);
 end

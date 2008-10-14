@@ -3,8 +3,6 @@ HELPFRAME_SECTION_SPACING = -20;
 GMTICKET_CHECK_INTERVAL = 600;		-- 10 Minutes
 HELPFRAME_START_PAGE = "KBase";
 
--- "name" is the name of the frame to open, the index is the trouble ticket category associated with that frame
--- if a tickettype is mapped to HelpFrameGeneral then it should have an entry in the GENERAL_HELPFRAME table so it can configure itself
 HELPFRAME_FRAMES = {};
 HELPFRAME_FRAMES["GMTalk"] = { name = "HelpFrameGMTalk" };
 HELPFRAME_FRAMES["Stuck"] = { name = "HelpFrameStuck" };
@@ -116,9 +114,9 @@ function HelpFrame_PopAllFrames()
 	end
 end
 
-function HelpFrameOpenTicketDropDown_OnLoad()
-	UIDropDownMenu_Initialize(this, HelpFrameOpenTicketDropDown_Initialize);
-	UIDropDownMenu_SetWidth(335, HelpFrameOpenTicketDropDown);
+function HelpFrameOpenTicketDropDown_OnLoad(self)
+	UIDropDownMenu_Initialize(self, HelpFrameOpenTicketDropDown_Initialize);
+	UIDropDownMenu_SetWidth(HelpFrameOpenTicketDropDown, 335);
 end
 
 function HelpFrameOpenTicketDropDown_Initialize()
@@ -134,8 +132,8 @@ function HelpFrameOpenTicketDropDown_Initialize()
 	end
 end
 
-function HelpFrameOpenTicketDropDown_OnClick()
-	UIDropDownMenu_SetSelectedID(HelpFrameOpenTicketDropDown, this:GetID());
+function HelpFrameOpenTicketDropDown_OnClick(self)
+	UIDropDownMenu_SetSelectedID(HelpFrameOpenTicketDropDown, self:GetID());
 end
 
 function HelpFrameOpenTicketDropDown_OnShow()
@@ -267,11 +265,9 @@ function TicketStatusFrame_OnEvent(self, event, ...)
 		local category = ...;
 		if ( category ) then
 			self:Show();
-			TemporaryEnchantFrame:SetPoint("TOPRIGHT", self:GetParent(), "TOPRIGHT", -205, (-self:GetHeight()));
 			refreshTime = GMTICKET_CHECK_INTERVAL;
 		else
 			self:Hide();
-			TemporaryEnchantFrame:SetPoint("TOPRIGHT", "UIParent", "TOPRIGHT", -180, -13);
 		end
 	end
 end

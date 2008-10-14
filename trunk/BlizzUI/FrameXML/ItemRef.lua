@@ -62,8 +62,20 @@ function SetItemRef(link, text, button)
 			end
 		end
 		return;
-	end
-
+	elseif ( strsub(link, 1, 7) == "channel" ) then
+		if ( IsModifiedClick("CHATLINK") ) then
+			ToggleFriendsFrame(4);
+		elseif ( button == "LeftButton" ) then
+			local chan = strsub(link, 9);
+			local channum = tonumber(chan)
+			if ( (not channum) or GetChannelName(channum)~=0 ) then
+				--Open chat for channel
+				ChatFrame_OpenChat("/"..chan, DEFAULT_CHAT_FRAME);
+			end
+		end
+		return;
+    end
+    
 	if ( IsModifiedClick() ) then
 		HandleModifiedItemClick(text);
 	else

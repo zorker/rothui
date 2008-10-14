@@ -17,48 +17,106 @@ function ShowPartyFrame()
 	end
 end
 
-function PartyMemberFrame_OnLoad()
-	this.statusCounter = 0;
-	this.statusSign = -1;
-	this.unitHPPercent = 1;
-	PartyMemberFrame_UpdateMember();
-	PartyMemberFrame_UpdateLeader();
-	this:RegisterEvent("PLAYER_ENTERING_WORLD");
-	this:RegisterEvent("PARTY_MEMBERS_CHANGED");
-	this:RegisterEvent("PARTY_LEADER_CHANGED");
-	this:RegisterEvent("PARTY_LOOT_METHOD_CHANGED");
-	this:RegisterEvent("MUTELIST_UPDATE");
-	this:RegisterEvent("IGNORELIST_UPDATE");
-	this:RegisterEvent("UNIT_FACTION");
-	this:RegisterEvent("UNIT_AURA");
-	this:RegisterEvent("UNIT_PET");
-	this:RegisterEvent("VOICE_START");
-	this:RegisterEvent("VOICE_STOP");
-	this:RegisterEvent("VARIABLES_LOADED");
-	this:RegisterEvent("VOICE_STATUS_UPDATE");
-	this:RegisterEvent("READY_CHECK");
-	this:RegisterEvent("READY_CHECK_CONFIRM");
-	this:RegisterEvent("READY_CHECK_FINISHED");
-
-	local showmenu = function()
-		ToggleDropDownMenu(1, nil, getglobal("PartyMemberFrame"..this:GetID().."DropDown"), this:GetName(), 47, 15);
-	end
-	SecureUnitButton_OnLoad(this, "party"..this:GetID(), showmenu);
+function PartyMemberFrame_ToPlayerArt(self)
+	self.state = "player";
+	local prefix = self:GetName();
+	_G[prefix.."VehicleTexture"]:Hide();
+	_G[prefix.."Texture"]:Show();
+	_G[prefix.."Portrait"]:SetPoint("TOPLEFT", 7, -6);
+	_G[prefix.."LeaderIcon"]:SetPoint("TOPLEFT", 0, 0);
+	_G[prefix.."MasterIcon"]:SetPoint("TOPLEFT", 32, 0);
+	_G[prefix.."PVPIcon"]:SetPoint("TOPLEFT", -9, -15);
+	_G[prefix.."Disconnect"]:SetPoint("LEFT", -7, -1);
+	
+	self.overrideName = nil;
+	
+	self.portraitType = nil;
+	
+	UnitFrame_SetUnit(self, "party"..self:GetID(), _G[prefix.."HealthBar"], _G[prefix.."ManaBar"]);
+	UnitFrame_SetUnit(_G[prefix.."PetFrame"], "partypet"..self:GetID(), _G[prefix.."PetFrameHealthBar"], nil);
+	PartyMemberFrame_UpdateMember(self);
+	
+	UnitFrame_Update(self)
 end
 
-function PartyMemberFrame_UpdateMember()
+function PartyMemberFrame_ToVehicleArt(self, vehicleType)
+	self.state = "vehicle";
+	local prefix = self:GetName();
+	_G[prefix.."Texture"]:Hide();
+	if ( vehicleType == "Natural" ) then
+		_G[prefix.."VehicleTexture"]:SetTexture("Interface\\Vehicles\\UI-Vehicles-PartyFrame-Organic");
+	else
+		_G[prefix.."VehicleTexture"]:SetTexture("Interface\\Vehicles\\UI-Vehicles-PartyFrame");
+	end
+	_G[prefix.."VehicleTexture"]:Show();
+	_G[prefix.."Portrait"]:SetPoint("TOPLEFT", 4, -9);
+	_G[prefix.."LeaderIcon"]:SetPoint("TOPLEFT", -3, 0);
+	_G[prefix.."MasterIcon"]:SetPoint("TOPLEFT", 29, 0);
+	_G[prefix.."PVPIcon"]:SetPoint("TOPLEFT", -12, -15);
+	_G[prefix.."Disconnect"]:SetPoint("LEFT", -10, -1);
+	
+	self.overrideName = "party"..self:GetID();
+	
+	self.portraitType = vehicleType;
+	
+	UnitFrame_SetUnit(self, "partypet"..self:GetID(), _G[prefix.."HealthBar"], _G[prefix.."ManaBar"]);
+	UnitFrame_SetUnit(_G[prefix.."PetFrame"], "party"..self:GetID(), _G[prefix.."PetFrameHealthBar"], nil);
+	PartyMemberFrame_UpdateMember(self);
+	
+	UnitFrame_Update(self)
+end
+
+function PartyMemberFrame_OnLoad (self)
+	self.statusCounter = 0;
+	self.statusSign = -1;
+	self.unitHPPercent = 1;
+	PartyMemberFrame_UpdateMember(self);
+	PartyMemberFrame_UpdateLeader(self);
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
+	self:RegisterEvent("PARTY_MEMBERS_CHANGED");
+	self:RegisterEvent("PARTY_LEADER_CHANGED");
+	self:RegisterEvent("PARTY_LOOT_METHOD_CHANGED");
+	self:RegisterEvent("MUTELIST_UPDATE");
+	self:RegisterEvent("IGNORELIST_UPDATE");
+	self:RegisterEvent("UNIT_FACTION");
+	self:RegisterEvent("UNIT_AURA");
+	self:RegisterEvent("UNIT_PET");
+	self:RegisterEvent("VOICE_START");
+	self:RegisterEvent("VOICE_STOP");
+	self:RegisterEvent("VARIABLES_LOADED");
+	self:RegisterEvent("VOICE_STATUS_UPDATE");
+	self:RegisterEvent("READY_CHECK");
+	self:RegisterEvent("READY_CHECK_CONFIRM");
+	self:RegisterEvent("READY_CHECK_FINISHED");
+	self:RegisterEvent("UNIT_ENTERED_VEHICLE");
+	self:RegisterEvent("UNIT_EXITED_VEHICLE");
+	self:RegisterEvent("UNIT_HEALTH");
+
+	local showmenu = function()
+		ToggleDropDownMenu(1, nil, getglobal("PartyMemberFrame"..self:GetID().."DropDown"), self:GetName(), 47, 15);
+	end
+	SecureUnitButton_OnLoad(self, "party"..self:GetID(), showmenu);
+	
+	if ( UnitHasVehicleUI("party"..self:GetID()) ) then
+		local vehicleType = UnitVehicleSkin("party"..self:GetID());
+		PartyMemberFrame_ToVehicleArt(self, vehicleType);
+	else
+		PartyMemberFrame_ToPlayerArt(self);
+	end
+end
+
+function PartyMemberFrame_UpdateMember (self)
 	if ( HIDE_PARTY_INTERFACE == "1" and GetNumRaidMembers() > 0 ) then
-		this:Hide();
+		self:Hide();
 		return;
 	end
-	local id = this:GetID();
+	local id = self:GetID();
 	if ( GetPartyMember(id) ) then
-		this:Show();
+		self:Show();
 
-		UnitFrame_UpdateManaType();
-		UnitFrame_Update();
+		UnitFrame_Update(self);
 
-		local masterIcon = getglobal(this:GetName().."MasterIcon");
+		local masterIcon = getglobal(self:GetName().."MasterIcon");
 		local lootMethod;
 		local lootMaster;
 		lootMethod, lootMaster = GetLootMethod();
@@ -68,19 +126,19 @@ function PartyMemberFrame_UpdateMember()
 			masterIcon:Hide();
 		end
 	else
-		this:Hide();
+		self:Hide();
 	end
-	PartyMemberFrame_UpdatePvPStatus();
-	RefreshBuffs(this, 0, "party"..id);
-	PartyMemberFrame_UpdateVoiceStatus();
-	PartyMemberFrame_UpdatePet();
-	PartyMemberFrame_UpdateReadyCheck();
+	PartyMemberFrame_UpdatePvPStatus(self);
+	RefreshBuffs(self, 0, "party"..id);
+	PartyMemberFrame_UpdateVoiceStatus(self);
+	PartyMemberFrame_UpdatePet(self);
+	PartyMemberFrame_UpdateReadyCheck(self);
 	UpdatePartyMemberBackground();
 end
 
-function PartyMemberFrame_UpdatePet(id)
+function PartyMemberFrame_UpdatePet (self, id)
 	if ( not id ) then
-		id = this:GetID();
+		id = self:GetID();
 	end
 	
 	local frameName = "PartyMemberFrame"..id;
@@ -93,34 +151,37 @@ function PartyMemberFrame_UpdatePet(id)
 		petFrame:Hide();
 		petFrame:SetPoint("TOPLEFT", frameName, "TOPLEFT", 23, -27);
 	end
-	PartyMemberFrame_RefreshPetBuffs(id);
+	
+	petFrame.portraitType = UnitVehicleSkin("party"..id);
+	
+	PartyMemberFrame_RefreshPetBuffs(self, id);
 	UpdatePartyMemberBackground();
 end
 
-function PartyMemberFrame_UpdateMemberHealth(elapsed)
-	if ( (this.unitHPPercent > 0) and (this.unitHPPercent <= 0.2) ) then
+function PartyMemberFrame_UpdateMemberHealth (self, elapsed)
+	if ( (self.unitHPPercent > 0) and (self.unitHPPercent <= 0.2) ) then
 		local alpha = 255;
-		local counter = this.statusCounter + elapsed;
-		local sign    = this.statusSign;
+		local counter = self.statusCounter + elapsed;
+		local sign    = self.statusSign;
 
 		if ( counter > 0.5 ) then
 			sign = -sign;
-			this.statusSign = sign;
+			self.statusSign = sign;
 		end
 		counter = mod(counter, 0.5);
-		this.statusCounter = counter;
+		self.statusCounter = counter;
 
 		if ( sign == 1 ) then
 			alpha = (127  + (counter * 256)) / 255;
 		else
 			alpha = (255 - (counter * 256)) / 255;
 		end
-		getglobal(this:GetName().."Portrait"):SetAlpha(alpha);
+		getglobal(self:GetName().."Portrait"):SetAlpha(alpha);
 	end
 end
 
-function PartyMemberFrame_UpdateLeader()
-	local id = this:GetID();
+function PartyMemberFrame_UpdateLeader (self)
+	local id = self:GetID();
 	local icon = getglobal("PartyMemberFrame"..id.."LeaderIcon");
 	if( GetPartyLeaderIndex() == id ) then
 		icon:Show();
@@ -129,8 +190,8 @@ function PartyMemberFrame_UpdateLeader()
 	end
 end
 
-function PartyMemberFrame_UpdatePvPStatus()
-	local id = this:GetID();
+function PartyMemberFrame_UpdatePvPStatus (self)
+	local id = self:GetID();
 	local unit = "party"..id;
 	local icon = getglobal("PartyMemberFrame"..id.."PVPIcon");
 	local factionGroup = UnitFactionGroup(unit);
@@ -145,8 +206,8 @@ function PartyMemberFrame_UpdatePvPStatus()
 	end
 end
 
-function PartyMemberFrame_UpdateVoiceStatus()
-	local id = this:GetID();
+function PartyMemberFrame_UpdateVoiceStatus (self)
+	local id = self:GetID();
 	if ( not UnitName("party"..id) ) then
 		--No need to update if the frame doesn't have a unit.
 		return;
@@ -190,8 +251,8 @@ function PartyMemberFrame_UpdateVoiceStatus()
 	end
 end
 
-function PartyMemberFrame_UpdateReadyCheck()
-	local id = this:GetID();
+function PartyMemberFrame_UpdateReadyCheck (self)
+	local id = self:GetID();
 	local partyID = "party"..id;
 
 	local readyCheckFrame = getglobal("PartyMemberFrame"..id.."ReadyCheck");
@@ -209,23 +270,27 @@ function PartyMemberFrame_UpdateReadyCheck()
 	end
 end
 
-function PartyMemberFrame_OnEvent(event)
-	UnitFrame_OnEvent(event);
- 
+function PartyMemberFrame_OnEvent(self, event, ...)
+	UnitFrame_OnEvent(self, event, ...);
+	
+	local arg1, arg2, arg3 = ...;
+	local selfID = self:GetID();
+	
 	if ( event == "PLAYER_ENTERING_WORLD" ) then
-		if ( GetPartyMember(this:GetID()) ) then
-			PartyMemberFrame_UpdateMember();
+		if ( GetPartyMember(self:GetID()) ) then
+			PartyMemberFrame_UpdateMember(self);
+			PartyMemberFrame_UpdateOnlineStatus(self);
 			return;
 		end
 	end
 
 	if ( event == "PARTY_MEMBERS_CHANGED" ) then
-		PartyMemberFrame_UpdateMember();
+		PartyMemberFrame_UpdateMember(self);
 		return;
 	end
 	
 	if ( event == "PARTY_LEADER_CHANGED" ) then
-		PartyMemberFrame_UpdateLeader();
+		PartyMemberFrame_UpdateLeader(self);
 		return;
 	end
 
@@ -233,38 +298,38 @@ function PartyMemberFrame_OnEvent(event)
 		local lootMethod;
 		local lootMaster;
 		lootMethod, lootMaster = GetLootMethod();
-		if ( this:GetID() == lootMaster ) then
-			getglobal(this:GetName().."MasterIcon"):Show();
+		if ( selfID == lootMaster ) then
+			getglobal(self:GetName().."MasterIcon"):Show();
 		else
-			getglobal(this:GetName().."MasterIcon"):Hide();
+			getglobal(self:GetName().."MasterIcon"):Hide();
 		end
 		return;
 	end
 
 	if ( event == "MUTELIST_UPDATE" or event == "IGNORELIST_UPDATE" ) then
-		PartyMemberFrame_UpdateVoiceStatus();
+		PartyMemberFrame_UpdateVoiceStatus(self);
 	end
 
-	local unit = "party"..this:GetID();
-	local unitPet = "partypet"..this:GetID();
+	local unit = "party"..self:GetID();
+	local unitPet = "partypet"..self:GetID();
 
 	if ( event == "UNIT_FACTION" ) then
 		if ( arg1 == unit ) then
-			PartyMemberFrame_UpdatePvPStatus();
+			PartyMemberFrame_UpdatePvPStatus(self);
 		end
 		return;
 	end
 
 	if ( event =="UNIT_AURA" ) then
 		if ( arg1 == unit ) then
-			RefreshBuffs(this, 0, unit);
+			RefreshBuffs(self, 0, unit);
 			if ( PartyMemberBuffTooltip:IsShown() and
-			     this:GetID() == PartyMemberBuffTooltip:GetID() ) then
-				PartyMemberBuffTooltip_Update(this:GetID());
+				selfID == PartyMemberBuffTooltip:GetID() ) then
+				PartyMemberBuffTooltip_Update(self);
 			end
 		else
 			if ( arg1 == unitPet ) then
-				PartyMemberFrame_RefreshPetBuffs();
+				PartyMemberFrame_RefreshPetBuffs(self);
 			end
 		end
 		return;
@@ -272,23 +337,23 @@ function PartyMemberFrame_OnEvent(event)
 
 	if ( event =="UNIT_PET" ) then
 		if ( arg1 == unit ) then
-			PartyMemberFrame_UpdatePet();
+			PartyMemberFrame_UpdatePet(self);
 		end
 		return;
 	end
 
 	if ( event == "READY_CHECK" or
 		 event == "READY_CHECK_CONFIRM" ) then
-		PartyMemberFrame_UpdateReadyCheck();
+		PartyMemberFrame_UpdateReadyCheck(self);
 		return;
 	elseif ( event == "READY_CHECK_FINISHED" ) then
-		if (GetPartyMember(this:GetID())) then
-			ReadyCheck_Finish(getglobal("PartyMemberFrame"..this:GetID().."ReadyCheck"));
+		if (GetPartyMember(self:GetID())) then
+			ReadyCheck_Finish(getglobal("PartyMemberFrame"..self:GetID().."ReadyCheck"));
 		end
 		return;
 	end
 
-	local speaker = getglobal(this:GetName().."SpeakerFrame");
+	local speaker = getglobal(self:GetName().."SpeakerFrame");
 	if ( event == "VOICE_START") then
 		if ( arg1 == unit ) then
 			speaker.timer = nil;
@@ -300,24 +365,36 @@ function PartyMemberFrame_OnEvent(event)
 			speaker.timer = VOICECHAT_DELAY;
 			VoiceChat_Animate(speaker, nil);
 		end
-	end
-	if ( event == "VARIABLES_LOADED" ) then
-		PartyMemberFrame_UpdatePet();
-		PartyMemberFrame_UpdateVoiceStatus();
-	end
-	if ( event == "VOICE_STATUS_UPDATE" ) then
-		PartyMemberFrame_UpdateVoiceStatus();
+	elseif ( event == "VARIABLES_LOADED" ) then
+		PartyMemberFrame_UpdatePet(self);
+		PartyMemberFrame_UpdateVoiceStatus(self);
+	elseif ( event == "VOICE_STATUS_UPDATE" ) then
+		PartyMemberFrame_UpdateVoiceStatus(self);
+	elseif ( event == "UNIT_ENTERED_VEHICLE" ) then
+		if ( arg1 == "party"..selfID ) then
+			if ( arg2 ) then
+				PartyMemberFrame_ToVehicleArt(self, arg3);
+			else
+				PartyMemberFrame_ToPlayerArt(self);
+			end
+		end
+	elseif ( event == "UNIT_EXITED_VEHICLE" ) then
+		if ( arg1 == "party"..selfID ) then
+			PartyMemberFrame_ToPlayerArt(self);
+		end
+	elseif ( event == "UNIT_HEALTH" ) and ( arg1 == "party"..selfID ) then
+		PartyMemberFrame_UpdateOnlineStatus(self);
 	end
 end
 
-function PartyMemberFrame_OnUpdate(elapsed)
-	PartyMemberFrame_UpdateMemberHealth(arg1);
-	local partyStatus = getglobal(this:GetName().."Status");
-	if ( this.hasDispellable ) then
+function PartyMemberFrame_OnUpdate (self, elapsed)
+	PartyMemberFrame_UpdateMemberHealth(self, elapsed);
+	local partyStatus = getglobal(self:GetName().."Status");
+	if ( self.hasDispellable ) then
 		partyStatus:Show();
 		partyStatus:SetAlpha(BuffFrame.BuffAlphaValue);
-		if ( this.debuffCountdown and this.debuffCountdown > 0 ) then
-			this.debuffCountdown = this.debuffCountdown - elapsed;
+		if ( self.debuffCountdown and self.debuffCountdown > 0 ) then
+			self.debuffCountdown = self.debuffCountdown - elapsed;
 		else
 			partyStatus:Hide();
 		end
@@ -326,27 +403,23 @@ function PartyMemberFrame_OnUpdate(elapsed)
 	end
 end
 
-function PartyMemberFrame_RefreshPetBuffs(id)
+function PartyMemberFrame_RefreshPetBuffs (self, id)
 	if ( not id ) then
-		id = this:GetID();
+		id = self:GetID();
 	end
 	RefreshBuffs(getglobal("PartyMemberFrame"..id.."PetFrame"), 0, "partypet"..id)
 end
 
-function PartyMemberBuffTooltip_Update(id, isPet)
+function PartyMemberBuffTooltip_Update (self)
 	local name, rank, icon;
 	local numBuffs = 0;
 	local numDebuffs = 0;
 	local index = 1;
 	
-	PartyMemberBuffTooltip:SetID(id);
+	PartyMemberBuffTooltip:SetID(self:GetID());
 	
 	for i=1, MAX_PARTY_TOOLTIP_BUFFS do
-		if ( isPet ) then
-			name, rank, icon = UnitBuff("pet", i);		
-		else
-			name, rank, icon = UnitBuff("party"..this:GetID(), i);
-		end
+		name, rank, icon = UnitBuff(self.unit, i);
 		if ( icon ) then
 			getglobal("PartyMemberBuffTooltipBuff"..index.."Icon"):SetTexture(icon);
 			getglobal("PartyMemberBuffTooltipBuff"..index.."Border"):Hide();
@@ -373,12 +446,7 @@ function PartyMemberBuffTooltip_Update(id, isPet)
 	for i=1, MAX_PARTY_TOOLTIP_DEBUFFS do
 		local debuffBorder = getglobal("PartyMemberBuffTooltipDebuff"..index.."Border")
 		local partyDebuff = getglobal("PartyMemberBuffTooltipDebuff"..index.."Icon");
-		if ( isPet ) then
-			name, rank, icon, debuffStack, debuffType = UnitDebuff("pet", i);
-		else
-			name, rank, icon, debuffStack, debuffType = UnitDebuff("party"..this:GetID(), i);
-		end
-		
+		name, rank, icon, debuffStack, debuffType = UnitDebuff(self.unit, i);		
 		if ( icon ) then
 			partyDebuff:SetTexture(icon);
 			if ( debuffType ) then
@@ -408,55 +476,44 @@ function PartyMemberBuffTooltip_Update(id, isPet)
 	end
 end
 
-function PartyMemberHealthCheck()
-	local prefix = this:GetParent():GetName();
+function PartyMemberHealthCheck (self, value)
+	local prefix = self:GetParent():GetName();
 	local unitHPMin, unitHPMax, unitCurrHP;
-	unitHPMin, unitHPMax = this:GetMinMaxValues();
-	-- Handle disconnected state
-	if ( not UnitIsConnected("party"..this:GetParent():GetID()) ) then
-		this:SetValue(unitHPMax);
-		this:SetStatusBarColor(0.5, 0.5, 0.5);
-		SetDesaturation(getglobal(this:GetParent():GetName().."Portrait"), 1);
-		getglobal(this:GetParent():GetName().."Disconnect"):Show();
-		getglobal(this:GetParent():GetName().."PetFrame"):Hide();
-		return;
-	else
-		SetDesaturation(getglobal(this:GetParent():GetName().."Portrait"), nil);
-		getglobal(this:GetParent():GetName().."Disconnect"):Hide();
-	end
+	unitHPMin, unitHPMax = self:GetMinMaxValues();
+	local parentName = self:GetParent():GetName();
 	
-	unitCurrHP = this:GetValue();
+	unitCurrHP = self:GetValue();
 	if ( unitHPMax > 0 ) then
-		this:GetParent().unitHPPercent = unitCurrHP / unitHPMax;
+		self:GetParent().unitHPPercent = unitCurrHP / unitHPMax;
 	else
-		this:GetParent().unitHPPercent = 0;
+		self:GetParent().unitHPPercent = 0;
 	end
-	if ( UnitIsDead("party"..this:GetParent():GetID()) ) then
+	if ( UnitIsDead("party"..self:GetParent():GetID()) ) then
 		getglobal(prefix.."Portrait"):SetVertexColor(0.35, 0.35, 0.35, 1.0);
-	elseif ( UnitIsGhost("party"..this:GetParent():GetID()) ) then
+	elseif ( UnitIsGhost("party"..self:GetParent():GetID()) ) then
 		getglobal(prefix.."Portrait"):SetVertexColor(0.2, 0.2, 0.75, 1.0);
-	elseif ( (this:GetParent().unitHPPercent > 0) and (this:GetParent().unitHPPercent <= 0.2) ) then
+	elseif ( (self:GetParent().unitHPPercent > 0) and (self:GetParent().unitHPPercent <= 0.2) ) then
 		getglobal(prefix.."Portrait"):SetVertexColor(1.0, 0.0, 0.0);
 	else
 		getglobal(prefix.."Portrait"):SetVertexColor(1.0, 1.0, 1.0, 1.0);
 	end
 end
 
-function PartyFrameDropDown_OnLoad()
-	UIDropDownMenu_Initialize(this, PartyFrameDropDown_Initialize, "MENU");
+function PartyFrameDropDown_OnLoad (self)
+	UIDropDownMenu_Initialize(self, PartyFrameDropDown_Initialize, "MENU");
 end
 
-function PartyFrameDropDown_Initialize()
+function PartyFrameDropDown_Initialize (self)
 	local dropdown;
 	if ( UIDROPDOWNMENU_OPEN_MENU ) then
 		dropdown = getglobal(UIDROPDOWNMENU_OPEN_MENU);
 	else
-		dropdown = this;
+		dropdown = self;
 	end
 	UnitPopup_ShowMenu(dropdown, "PARTY", "party"..dropdown:GetParent():GetID());
 end
 
-function UpdatePartyMemberBackground()
+function UpdatePartyMemberBackground ()
 	if ( not PartyMemberBackground ) then
 		return;
 	end
@@ -472,7 +529,7 @@ function UpdatePartyMemberBackground()
 	end
 end
 
-function PartyMemberBackground_ToggleOpacity()
+function PartyMemberBackground_ToggleOpacity ()
 	if ( OpacityFrame:IsShown() ) then
 		OpacityFrame:Hide();
 		return;
@@ -484,16 +541,16 @@ function PartyMemberBackground_ToggleOpacity()
 	OpacityFrame:Show();
 end
 
-function PartyMemberBackground_SetOpacity()
+function PartyMemberBackground_SetOpacity ()
 	local alpha = 1.0 - OpacityFrameSlider:GetValue();
 	PartyMemberBackground:SetAlpha(alpha);
 end
 
-function PartyMemberBackground_SaveOpacity()
+function PartyMemberBackground_SaveOpacity ()
 	PARTYBACKGROUND_OPACITY = OpacityFrameSlider:GetValue();
 end
 
-function PartyMemberFrame_UpdateStatusBarText()
+function PartyMemberFrame_UpdateStatusBarText ()
 	local lockText = nil;
 	if ( SHOW_PARTY_TEXT == "1" ) then
 		lockText = 1;	
@@ -505,5 +562,25 @@ function PartyMemberFrame_UpdateStatusBarText()
 			getglobal("PartyMemberFrame"..i.."HealthBarText"):Show();
 			getglobal("PartyMemberFrame"..i.."ManaBarText"):Show();
 		end
+	end
+end
+
+function PartyMemberFrame_UpdateOnlineStatus(self)
+	if ( not UnitIsConnected("party"..self:GetID()) ) then
+		-- Handle disconnected state
+		local selfName = self:GetName();
+		local healthBar = _G[selfName.."HealthBar"];
+		local unitHPMin, unitHPMax = healthBar:GetMinMaxValues();
+		
+		healthBar:SetValue(unitHPMax);
+		healthBar:SetStatusBarColor(0.5, 0.5, 0.5);
+		SetDesaturation(getglobal(selfName.."Portrait"), 1);
+		getglobal(selfName.."Disconnect"):Show();
+		getglobal(selfName.."PetFrame"):Hide();
+		return;
+	else
+		local selfName = self:GetName();
+		SetDesaturation(getglobal(selfName.."Portrait"), nil);
+		getglobal(selfName.."Disconnect"):Hide();
 	end
 end

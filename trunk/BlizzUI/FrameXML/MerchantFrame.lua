@@ -2,32 +2,32 @@ MERCHANT_ITEMS_PER_PAGE = 10;
 BUYBACK_ITEMS_PER_PAGE = 12;
 MAX_ITEM_COST = 3;
 
-function MerchantFrame_OnLoad()
-	this:RegisterEvent("MERCHANT_UPDATE");
-	this:RegisterEvent("MERCHANT_CLOSED");
-	this:RegisterEvent("MERCHANT_SHOW");
-	this:RegisterEvent("GUILDBANK_UPDATE_MONEY");
-	this:RegisterForDrag("LeftButton");
-	this.page = 1;
+function MerchantFrame_OnLoad(self)
+	self:RegisterEvent("MERCHANT_UPDATE");
+	self:RegisterEvent("MERCHANT_CLOSED");
+	self:RegisterEvent("MERCHANT_SHOW");
+	self:RegisterEvent("GUILDBANK_UPDATE_MONEY");
+	self:RegisterForDrag("LeftButton");
+	self.page = 1;
 	-- Tab Handling code
-	PanelTemplates_SetNumTabs(this, 2);
-	PanelTemplates_SetTab(this, 1);
+	PanelTemplates_SetNumTabs(self, 2);
+	PanelTemplates_SetTab(self, 1);
 end
 
-function MerchantFrame_OnEvent()
+function MerchantFrame_OnEvent(self, event, ...)
 	if ( event == "MERCHANT_UPDATE" ) then
-		if ( MerchantFrame:IsVisible() ) then
+		if ( self:IsVisible() ) then
 			MerchantFrame_Update();
 		end
 	elseif ( event == "MERCHANT_CLOSED" ) then
-		HideUIPanel(this);
+		HideUIPanel(self);
 	elseif ( event == "MERCHANT_SHOW" ) then
-		ShowUIPanel(this);
-		if ( not this:IsShown() ) then
+		ShowUIPanel(self);
+		if ( not self:IsShown() ) then
 			CloseMerchant();
 			return;
 		end
-		this.page = 1;
+		self.page = 1;
 		MerchantFrame_Update();
 	elseif ( event == "PLAYER_MONEY" or event == "GUILDBANK_UPDATE_MONEY" or event == "GUILDBANK_UPDATE_WITHDRAWMONEY" ) then
 		MerchantFrame_UpdateCanRepairAll();
@@ -215,26 +215,10 @@ function MerchantFrame_UpdateMerchantInfo()
 end
 
 function MerchantFrame_UpdateAltCurrency(index, i)
-	local itemTexture, itemValue, pointsTexture, button;
+	local itemTexture, itemValue, button;
 	local honorPoints, arenaPoints, itemCount = GetMerchantItemCostInfo(index);
 	local frameName = "MerchantItem"..i.."AltCurrencyFrame";
-	button = getglobal(frameName.."Points");
-	-- update Alt Currency Frame with pointsValues
-	if ( honorPoints and honorPoints ~= 0 ) then
-		local factionGroup = UnitFactionGroup("player");
-		if ( factionGroup ) then
-			pointsTexture = "Interface\\TargetingFrame\\UI-PVP-"..factionGroup;
-		end
-		button.pointType = HONOR_POINTS;
-		AltCurrencyFrame_Update(frameName.."Points", pointsTexture, honorPoints);
-		button:Show();
-	elseif ( arenaPoints and arenaPoints ~= 0 ) then
-		button.pointType = ARENA_POINTS;
-		AltCurrencyFrame_Update(frameName.."Points", "Interface\\PVPFrame\\PVP-ArenaPoints-Icon", arenaPoints);
-		button:Show();
-	else
-		button:Hide();
-	end
+	local frameAnchor = AltCurrencyFrame_PointsUpdate( frameName, honorPoints, arenaPoints );
 
 	-- update Alt Currency Frame with itemValues
 	if ( itemCount > 0 ) then
@@ -251,9 +235,9 @@ function MerchantFrame_UpdateAltCurrency(index, i)
 			if ( i > 1 ) then
 				button:SetPoint("LEFT", frameName.."Item"..i-1, "RIGHT", 4, 0);
 			elseif ( i == 1 and ( arenaPoints and honorPoints == 0 ) ) then
-				button:SetPoint("LEFT", frameName.."Points", "LEFT", 0, 0);	
+				button:SetPoint("LEFT", frameAnchor, "LEFT", 0, 0);	
 			else
-				button:SetPoint("LEFT", frameName.."Points", "RIGHT", 4, 0);
+				button:SetPoint("LEFT", frameAnchor, "RIGHT", 4, 0);
 			end
 			if ( not itemTexture ) then
 				button:Hide();
@@ -362,22 +346,22 @@ function MerchantNextPageButton_OnClick()
 	MerchantFrame_Update();
 end
 
-function MerchantItemBuybackButton_OnLoad()
-	this:RegisterForClicks("LeftButtonUp","RightButtonUp");
-	this:RegisterForDrag("LeftButton");
+function MerchantItemBuybackButton_OnLoad(self)
+	self:RegisterForClicks("LeftButtonUp","RightButtonUp");
+	self:RegisterForDrag("LeftButton");
 	
-	this.SplitStack = function(button, split)
+	self.SplitStack = function(button, split)
 		if ( split > 0 ) then
 			BuyMerchantItem(button:GetID(), split);
 		end
 	end
 end
 
-function MerchantItemButton_OnLoad()
-	this:RegisterForClicks("LeftButtonUp","RightButtonUp");
-	this:RegisterForDrag("LeftButton");
+function MerchantItemButton_OnLoad(self)
+	self:RegisterForClicks("LeftButtonUp","RightButtonUp");
+	self:RegisterForDrag("LeftButton");
 	
-	this.SplitStack = function(button, split)
+	self.SplitStack = function(button, split)
 		if ( button.extendedCost ) then
 			MerchantFrame_ConfirmExtendedItemCost(button, split)
 		elseif ( split > 0 ) then
@@ -385,40 +369,40 @@ function MerchantItemButton_OnLoad()
 		end
 	end
 	
-	this.UpdateTooltip = MerchantItemButton_OnEnter;
+	self.UpdateTooltip = MerchantItemButton_OnEnter;
 end
 
-function MerchantItemButton_OnClick(button)
+function MerchantItemButton_OnClick(self, button)
 	MerchantFrame.extendedCost = nil;
 	
 	if ( MerchantFrame.selectedTab == 1 ) then
 		-- Is merchant frame
 		if ( button == "LeftButton" ) then
-			PickupMerchantItem(this:GetID());
-			if ( this.extendedCost ) then
-				MerchantFrame.extendedCost = this;
+			PickupMerchantItem(self:GetID());
+			if ( self.extendedCost ) then
+				MerchantFrame.extendedCost = self;
 			end
 		else
-			if ( this.extendedCost ) then
-				MerchantFrame_ConfirmExtendedItemCost(this);
+			if ( self.extendedCost ) then
+				MerchantFrame_ConfirmExtendedItemCost(self);
 			else
-				BuyMerchantItem(this:GetID());
+				BuyMerchantItem(self:GetID());
 			end
 		end
 	else
 		-- Is buyback item
-		BuybackItem(this:GetID());
+		BuybackItem(self:GetID());
 	end
 end
 
-function MerchantItemButton_OnModifiedClick(button)
+function MerchantItemButton_OnModifiedClick(self, button)
 	if ( MerchantFrame.selectedTab == 1 ) then
 		-- Is merchant frame
-		if ( HandleModifiedItemClick(GetMerchantItemLink(this:GetID())) ) then
+		if ( HandleModifiedItemClick(GetMerchantItemLink(self:GetID())) ) then
 			return;
 		end
 		if ( IsModifiedClick("SPLITSTACK") ) then
-			local maxStack = GetMerchantItemMaxStack(this:GetID());
+			local maxStack = GetMerchantItemMaxStack(self:GetID());
 			if ( maxStack > 1 ) then
 				if ( price and (price > 0) ) then
 					local canAfford = floor(GetMoney() / price);
@@ -426,12 +410,12 @@ function MerchantItemButton_OnModifiedClick(button)
 						maxStack = canAfford;
 					end
 				end
-				OpenStackSplitFrame(maxStack, this, "BOTTOMLEFT", "TOPLEFT");
+				OpenStackSplitFrame(maxStack, self, "BOTTOMLEFT", "TOPLEFT");
 			end
 			return;
 		end
 	else
-		HandleModifiedItemClick(GetBuybackItemLink(this:GetID()));
+		HandleModifiedItemClick(GetBuybackItemLink(self:GetID()));
 	end
 end
 

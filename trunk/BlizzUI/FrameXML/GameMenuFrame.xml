@@ -56,7 +56,8 @@
 				<Scripts>
 					<OnClick>
 						PlaySound("igMainMenuOption");
-						ShowUIPanel(OptionsFrame);
+						ShowUIPanel(VideoOptionsFrame);
+						VideoOptionsFrame.lastFrame = GameMenuFrame;
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -71,7 +72,8 @@
 				<Scripts>
 					<OnClick>
 						PlaySound("igMainMenuOption");
-						ToggleAudioOption("SoundOptionsFrame");
+						ShowUIPanel(AudioOptionsFrame);
+						AudioOptionsFrame.lastFrame = GameMenuFrame;
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -179,9 +181,9 @@
 							self:SetPoint("TOP", GameMenuButtonRatings, "BOTTOM", 0, -1);
 						end;
 						if ( not StaticPopup_Visible("CAMP") and not StaticPopup_Visible("QUIT") ) then
-							this:Enable();
+							self:Enable();
 						else
-							this:Disable();
+							self:Disable();
 						end
 					</OnShow>
 					<OnClick>
@@ -202,9 +204,9 @@
 				<Scripts>
 					<OnShow>
 						if ( not StaticPopup_Visible("CAMP") and not StaticPopup_Visible("QUIT") ) then
-							this:Enable();
+							self:Enable();
 						else
-							this:Disable();
+							self:Disable();
 						end
 					</OnShow>
 					<OnClick>

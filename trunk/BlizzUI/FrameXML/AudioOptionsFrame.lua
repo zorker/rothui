@@ -1,66 +1,87 @@
-AUDIOOPTIONSFRAME_SUBFRAMES = { "VoiceOptionsFrame", "SoundOptionsFrame" };
+-- if you change something here you probably want to change the glue version too
 
-function ToggleAudioOption(tab)
-	local subFrame = getglobal(tab);
-	if ( subFrame ) then
-		PanelTemplates_SetTab(AudioOptionsFrame, subFrame:GetID());
-		if ( AudioOptionsFrame:IsShown() ) then
-			PlaySound("igCharacterInfoTab");
-			AudioOptionsFrame_ShowSubFrame(tab);
-		else
-			ShowUIPanel(AudioOptionsFrame);
-			AudioOptionsFrame_ShowSubFrame(tab);
-		end
+function AudioOptionsFrame_Toggle ()
+	if ( AudioOptionsFrame:IsShown() ) then
+		AudioOptionsFrame:Hide();
+	else
+		AudioOptionsFrame:Show();
 	end
 end
 
-function AudioOptionsFrame_ShowSubFrame(frameName)
-	for index, value in pairs(AUDIOOPTIONSFRAME_SUBFRAMES) do
-		if ( value == frameName ) then
-			getglobal(frameName):Show()
-		else
-			getglobal(value):Hide();	
-		end	
-	end 
-end
+function AudioOptionsFrame_SetAllToDefaults ()
+	OptionsFrame_SetAllToDefaults(AudioOptionsFrame);
 
-function AudioOptionsFrameTab_OnClick()
-	if ( this:GetName() == "AudioOptionsFrameTab1" ) then
-		ToggleAudioOption("SoundOptionsFrame");
-	elseif ( this:GetName() == "AudioOptionsFrameTab2" ) then
-		ToggleAudioOption("VoiceOptionsFrame");
-	end
-	PlaySound("igCharacterInfoTab");
-end
-
-function AudioOptionsFrame_DisableSlider(slider)
-	local name = slider:GetName();
-	local value = getglobal(name.."Value");
-	slider:EnableMouse(false);
-	getglobal(name.."Thumb"):Hide();
-	getglobal(name.."Text"):SetVertexColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
-	if ( value ) then
-		value:SetVertexColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b);
+	if ( AudioOptionsFrame.audioRestart ) then
+		AudioOptionsFrame_AudioRestart();
 	end
 end
 
-function AudioOptionsFrame_EnableSlider(slider)
-	local name = slider:GetName();
-	local value = getglobal(name.."Value");
-	slider:EnableMouse(true);
-	getglobal(name.."Thumb"):Show();
-	getglobal(name.."Text"):SetVertexColor(NORMAL_FONT_COLOR.r , NORMAL_FONT_COLOR.g , NORMAL_FONT_COLOR.b);
-	if ( value ) then
-		value:SetVertexColor(NORMAL_FONT_COLOR.r , NORMAL_FONT_COLOR.g , NORMAL_FONT_COLOR.b);
+function AudioOptionsFrame_SetCurrentToDefaults ()
+	OptionsFrame_SetCurrentToDefaults(AudioOptionsFrame);
+
+	if ( AudioOptionsFrame.audioRestart ) then
+		AudioOptionsFrame_AudioRestart();
 	end
 end
 
-function AudioOptionsFrame_Load()
-	SoundOptionsFrame_Load();
-	VoiceOptionsFrame_Load();
-end
-
-function AudioOptionsFrame_RestartEngine()
-	AudioOptionsFrame.SoundRestart = nil;
+function AudioOptionsFrame_AudioRestart ()
+	AudioOptionsFrame.audioRestart = nil;
 	Sound_GameSystem_RestartSoundSystem();
+end
+
+function AudioOptionsFrame_OnLoad (self)
+	OptionsFrame_OnLoad(self);
+
+	self:RegisterEvent("PLAYER_ENTERING_WORLD");
+end
+
+function AudioOptionsFrame_OnEvent (self, event, ...)
+	if ( IsVoiceChatAllowedByServer() ) then
+		_G[self:GetName().."HeaderText"]:SetText(SOUNDOPTIONS_MENU);
+	else
+		_G[self:GetName().."HeaderText"]:SetText(VOICE_SOUND);
+	end
+end
+
+function AudioOptionsFrame_OnHide (self)
+	OptionsFrame_OnHide(self);
+
+	if ( AudioOptionsFrame.gameRestart ) then
+		StaticPopup_Show("CLIENT_RESTART_ALERT");
+		AudioOptionsFrame.gameRestart = nil;
+	elseif ( AudioOptionsFrame.logout ) then
+		StaticPopup_Show("CLIENT_LOGOUT_ALERT");
+		AudioOptionsFrame.logout = nil;
+	end
+end
+
+function AudioOptionsFrameCancel_OnClick ()
+	OptionsFrameCancel_OnClick(AudioOptionsFrame);
+
+	if ( AudioOptionsFrame.audioRestart ) then
+		AudioOptionsFrame_AudioRestart();
+	end
+
+	AudioOptionsFrame.gameRestart = nil;
+	AudioOptionsFrame.logout = nil;
+
+	AudioOptionsFrame_Toggle();
+end
+
+function AudioOptionsFrameOkay_OnClick (apply)
+	OptionsFrameOkay_OnClick(AudioOptionsFrame, apply);
+
+	if ( AudioOptionsFrame.audioRestart ) then
+		AudioOptionsFrame_AudioRestart();
+	end
+
+	if ( not apply ) then
+		AudioOptionsFrame_Toggle();
+	end
+end
+
+function AudioOptionsFrameDefault_OnClick ()
+	OptionsFrameDefault_OnClick(AudioOptionsFrame);
+
+	StaticPopup_Show("CONFIRM_RESET_AUDIO_SETTINGS");
 end

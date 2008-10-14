@@ -1,0 +1,41 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="GameTime.lua"/>
+	<Button name="GameTimeFrame" parent="Minimap">
+		<Size>
+			<AbsDimension x="50" y="50"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPRIGHT">
+				<Offset>
+					<AbsDimension x="21" y="2"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<HitRectInsets>
+			<AbsInset left="6" right="0" top="5" bottom="10"/>
+		</HitRectInsets>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="GameTimeTexture" file="Interface\Minimap\UI-TOD-Indicator"/>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				GameTimeFrame_OnLoad(self);
+			</OnLoad>
+			<OnEnter>
+				GameTimeFrame_OnEnter(self);
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnUpdate>
+				GameTimeFrame_Update(self);
+			</OnUpdate>
+			<OnClick>
+				GameTimeFrame_OnClick(self, button);
+			</OnClick>
+		</Scripts>
+	</Button>
+</Ui>

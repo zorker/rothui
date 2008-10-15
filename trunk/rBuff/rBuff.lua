@@ -16,11 +16,11 @@
       TemporaryEnchantFrame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -190, -20)
       TemporaryEnchantFrame.SetPoint = function() end
     end
-  	if ( event == "UNIT_AURA" ) then
-  		if ( unit == PlayerFrame.unit ) then
-  			addon:runthroughicons()
-  		end
-  	end
+    if ( event == "UNIT_AURA" ) then
+      if ( unit == PlayerFrame.unit ) then
+        addon:runthroughicons()
+      end
+    end
   end)
   
   function addon:runthroughicons()

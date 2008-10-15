@@ -10,11 +10,12 @@
   
   addon:SetScript("OnEvent", function(self, event, ...)
     local unit = ...;
-    if(event=="PLAYER_LOGIN") 
+    if(event=="PLAYER_ENTERING_WORLD") 
     then
       TemporaryEnchantFrame:ClearAllPoints()
       TemporaryEnchantFrame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -190, -20)
       TemporaryEnchantFrame.SetPoint = function() end
+      addon:runthroughicons()
     end
     if ( event == "UNIT_AURA" ) then
       if ( unit == PlayerFrame.unit ) then
@@ -77,4 +78,4 @@
 
   
   addon:RegisterEvent("UNIT_AURA");
-  addon:RegisterEvent("PLAYER_LOGIN");
+  addon:RegisterEvent("PLAYER_ENTERING_WORLD");

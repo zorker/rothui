@@ -3,30 +3,30 @@
   local _G = getfenv(0)
   local dummy = function() end
   
-  RANGE_INDICATOR = "";
-  
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarRight"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarLeft"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomRight"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBar"] = nil
 
-  a:RegisterEvent("PLAYER_LOGIN")
+  a:RegisterEvent("PLAYER_ENTERING_WORLD")
   
   a:SetScript("OnEvent", function (self,event,arg1)
-    if(event=="PLAYER_LOGIN") then
+    if(event=="PLAYER_ENTERING_WORLD") then
       a:cre_actionbarframe1()
     end 
   end)
 
   function a:cre_actionbarframe1()
+  
+    RANGE_INDICATOR = "";
     
     --creating a helper frame to hold the actionbuttons
     local f = CreateFrame("Frame",nil,UIParent)
     f:SetWidth(498)
     f:SetHeight(100)
     --f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
-    f:SetPoint("BOTTOM",0,20)
+    f:SetPoint("BOTTOM",0,30)
     f:Show()
     
     -- hack to fix the bonusactionbar when hiding the mainmenubar
@@ -34,6 +34,7 @@
     
     -- since I am reanchoring all the buttons I can hide the MainMenuBar
     MainMenuBar:Hide()  
+    MainMenuBar.show = dummy
     
     local j
     for j=1,12 do
@@ -71,8 +72,8 @@
     MultiBarBottomRightButton1:ClearAllPoints()  
     MultiBarBottomRightButton1:SetPoint("BOTTOMLEFT",ActionButton7,"TOPLEFT",0,15);
   
-    MultiBarRight:ClearAllPoints()
-    MultiBarRight:SetPoint("RIGHT",UIParent,"RIGHT",-10, 0)
+    MultiBarRightButton1:ClearAllPoints()
+    MultiBarRightButton1:SetPoint("RIGHT",UIParent,"RIGHT",-30, 150)
     
     ShapeshiftButton1:ClearAllPoints()
     ShapeshiftBarFrame:SetParent(f)
@@ -223,12 +224,17 @@
     end
     ActionButton_UpdateCount(self);  
     
+    local border = getglobal(name.."Border");
+    border:Hide();
+    
     -- give equipped items a green border texture
+    --[[
     if ( IsEquippedAction(action) ) then
       self:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss_green");
     else
       self:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss");
     end    
+    ]]--
     
     -- Update tooltip
     if ( GameTooltip:GetOwner() == self ) then
@@ -240,26 +246,59 @@
 
 
   -- update usable no make funky colors
-  ActionButton_UpdateUsable = function()
-    local icon = getglobal(this:GetName().."Icon");
-    local normalTexture = getglobal(this:GetName().."NormalTexture");
-    if ( IsActionInRange(ActionButton_GetPagedID(this)) == 0 ) 
-    then
-      icon:SetVertexColor(0.7,0.1,0.1);
-      normalTexture:SetVertexColor(1,1,1);
-    else
-      local isUsable, notEnoughMana = IsUsableAction(ActionButton_GetPagedID(this));
-      if ( notEnoughMana ) then
-        icon:SetVertexColor(0.1,0.1,0.7);
-        normalTexture:SetVertexColor(1,1,1);
-      elseif ( isUsable ) then
-        icon:SetVertexColor(1, 1, 1);
-        normalTexture:SetVertexColor(1,1,1);
-      else
-        icon:SetVertexColor(0.3,0.3,0.3);
-        normalTexture:SetVertexColor(1,1,1);
-      end
-    end
+
+  ActionButton_UpdateUsable = function (self)
+  	local name = self:GetName();
+  	local icon = getglobal(name.."Icon");
+  	local normalTexture = getglobal(name.."NormalTexture");
+  	local isUsable, notEnoughMana = IsUsableAction(self.action);
+		local valid = IsActionInRange(self.action);
+		if ( valid == 0 ) then
+			icon:SetVertexColor(1.0, 0.1, 0.1);
+  	elseif ( isUsable ) then
+  		icon:SetVertexColor(1.0, 1.0, 1.0);
+  	elseif ( notEnoughMana ) then
+  		icon:SetVertexColor(0.25, 0.25, 1.0);
+  	else
+  		icon:SetVertexColor(0.4, 0.4, 0.4);
+  	end
+  end
+  
+  ActionButton_OnUpdate = function (self, elapsed)
+  	if ( ActionButton_IsFlashing(self) ) then
+  		local flashtime = self.flashtime;
+  		flashtime = flashtime - elapsed;
+  		
+  		if ( flashtime <= 0 ) then
+  			local overtime = -flashtime;
+  			if ( overtime >= ATTACK_BUTTON_FLASH_TIME ) then
+  				overtime = 0;
+  			end
+  			flashtime = ATTACK_BUTTON_FLASH_TIME - overtime;
+  
+  			local flashTexture = getglobal(self:GetName().."Flash");
+  			if ( flashTexture:IsShown() ) then
+  				flashTexture:Hide();
+  			else
+  				flashTexture:Show();
+  			end
+  		end
+  		
+  		self.flashtime = flashtime;
+  	end
+  	
+  	-- Handle range indicator
+  	local rangeTimer = self.rangeTimer;
+  	if ( rangeTimer ) then
+  		rangeTimer = rangeTimer - elapsed;
+  
+  		if ( rangeTimer <= 0 ) then
+  			ActionButton_UpdateUsable(self);
+  			rangeTimer = TOOLTIP_UPDATE_TIME;
+  		end
+  		
+  		self.rangeTimer = rangeTimer;
+  	end
   end
   
   -- hack to fix the grid alpha. by default the NormalTexture gets 0.5 alpha when you move a button and it keeps this alpha

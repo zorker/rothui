@@ -73,7 +73,7 @@
     MultiBarBottomRightButton1:SetPoint("BOTTOMLEFT",ActionButton7,"TOPLEFT",0,15);
   
     MultiBarRightButton1:ClearAllPoints()
-    MultiBarRightButton1:SetPoint("RIGHT",UIParent,"RIGHT",-30, 150)
+    MultiBarRightButton1:SetPoint("RIGHT",UIParent,"RIGHT",-30, 190)
     
     ShapeshiftButton1:ClearAllPoints()
     ShapeshiftBarFrame:SetParent(f)
@@ -254,13 +254,17 @@
   	local isUsable, notEnoughMana = IsUsableAction(self.action);
 		local valid = IsActionInRange(self.action);
 		if ( valid == 0 ) then
-			icon:SetVertexColor(1.0, 0.1, 0.1);
+			icon:SetVertexColor(1.0, 0.1, 0.1, 0.5);
+			normalTexture:SetAlpha(0.5)
   	elseif ( isUsable ) then
-  		icon:SetVertexColor(1.0, 1.0, 1.0);
+  		icon:SetVertexColor(1.0, 1.0, 1.0, 1.0);
+  		normalTexture:SetAlpha(1)
   	elseif ( notEnoughMana ) then
-  		icon:SetVertexColor(0.25, 0.25, 1.0);
+  		icon:SetVertexColor(0.25, 0.25, 1.0, 0.5);
+  		normalTexture:SetAlpha(0.5)
   	else
-  		icon:SetVertexColor(0.4, 0.4, 0.4);
+  		icon:SetVertexColor(0.4, 0.4, 0.4, 0.5);
+  		normalTexture:SetAlpha(0.5)
   	end
   end
   

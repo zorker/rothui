@@ -13,9 +13,7 @@
   -- HIDE STUFF
   ---------------------------------------
 
-  --cannot hide art frame it will hide the mainbar too..trying to repoint mainbar though...
-  --MainMenuBarArtFrame:Hide()
-  MainMenuBar:Hide()  
+
 
   a:RegisterEvent("PLAYER_LOGIN")
   
@@ -33,6 +31,12 @@
     f:SetPoint("BOTTOM",0,20)
     f:Show()
     
+    BonusActionBarFrame:SetParent(f)
+
+    --cannot hide art frame it will hide the mainbar too..trying to repoint mainbar though...
+    --MainMenuBarArtFrame:Hide()
+    MainMenuBar:Hide()  
+    
     local j
     for j=1,12 do
       a:dostuff("ActionButton", j, f)
@@ -47,6 +51,10 @@
     ActionButton1:ClearAllPoints()
     ActionButton1:SetParent(f)
     ActionButton1:SetPoint("BOTTOMLEFT",f,"BOTTOMLEFT",0,0);
+    
+
+    BonusActionBarTexture0:Hide()
+    BonusActionBarTexture1:Hide()
     
     BonusActionButton1:ClearAllPoints()
     BonusActionButton1:SetPoint("BOTTOMLEFT",f,"BOTTOMLEFT",0,0);
@@ -73,6 +81,7 @@
     ShapeshiftBarFrame:SetParent(f)
     ShapeshiftButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",5,15);
     ShapeshiftBarFrame:Hide()
+    ShapeshiftBarFrame.Show = dummy
     
     PetActionButton1:ClearAllPoints()
     PetActionBarFrame:SetParent(f)
@@ -98,6 +107,30 @@
     
     
   end
+  
+  -------------------
+  -- cpt HOOK --
+  -----------------
+  
+  local bonushooks = {};
+  local i;
+  
+  bonushooks["onshow"] = BonusActionBarFrame:GetScript("OnShow");
+  bonushooks["onshide"] = BonusActionBarFrame:GetScript("OnHide");
+  
+  BonusActionBarFrame:SetScript("OnShow", function(self,...)
+    if ( bonushooks["onshow"] ) then bonushooks["onshow"](self,...); end;
+    for i = 1, 12, 1 do
+      _G["ActionButton"..i]:SetAlpha(0);
+    end;
+  end);
+  
+  BonusActionBarFrame:SetScript("OnHide", function(self,...)
+    if ( bonushooks["onhide"] ) then bonushooks["onhide"](self,...); end;
+    for i = 1, 12, 1 do
+      _G["ActionButton"..i]:SetAlpha(1);
+    end;
+  end);
   
   ActionButton_Update = function(self)
   	-- Special case code for bonus bar buttons
@@ -164,10 +197,12 @@
   	-- Add a green border if button is an equipped item
   	local border = getglobal(name.."Border");
   	if ( IsEquippedAction(action) ) then
-  		border:SetVertexColor(0, 1.0, 0, 0.35);
-  		border:Show();
+  		--border:SetVertexColor(0, 1.0, 0, 0.35);
+  		--border:Show();
+  		--self:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss_red");
   	else
-  		border:Hide();
+  		--border:Hide();
+  		--self:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss");
   	end
   
   	-- Update Macro Text

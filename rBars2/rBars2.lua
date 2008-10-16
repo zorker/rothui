@@ -191,26 +191,15 @@
       end
     end
   
-    -- Add a green border if button is an equipped item
-    local border = getglobal(name.."Border");
-    
-    -- This does not change the normaltexture, I have no clue why, so I commented it out
-    if ( IsEquippedAction(action) ) then
-      --border:SetVertexColor(0, 1.0, 0, 0.35);
-      --border:Show();
-      --self:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss_red");
-    else
-      --border:Hide();
-      --self:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss");
-    end
-  
     -- Update Macro Text
+    --[[
     local macroName = getglobal(name.."Name");
     if ( not IsConsumableAction(action) and not IsStackableAction(action) ) then
       macroName:SetText(GetActionText(action));
     else
       macroName:SetText("");
     end
+    ]]--
   
     -- Update icon and hotkey text
     if ( texture ) then
@@ -223,14 +212,23 @@
       buttonCooldown:Hide();
       self.rangeTimer = nil;
       self:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss");
+      --[[
       local hotkey = getglobal(name.."HotKey");
-          if ( hotkey:GetText() == RANGE_INDICATOR ) then
+      if ( hotkey:GetText() == RANGE_INDICATOR ) then
         hotkey:Hide();
       else
         hotkey:SetVertexColor(0.6, 0.6, 0.6);
       end
+      ]]--
     end
     ActionButton_UpdateCount(self);  
+    
+    -- give equipped items a green border texture
+    if ( IsEquippedAction(action) ) then
+      self:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss_green");
+    else
+      self:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss");
+    end    
     
     -- Update tooltip
     if ( GameTooltip:GetOwner() == self ) then
@@ -265,7 +263,7 @@
   end
   
   -- hack to fix the grid alpha. by default the NormalTexture gets 0.5 alpha when you move a button and it keeps this alpha
-  -- this fixes this issue 
+  -- fixes this issue 
   ActionButton_ShowGrid = function (button)
     button:SetAttribute("showgrid", button:GetAttribute("showgrid") + 1);
     getglobal(button:GetName().."NormalTexture"):SetVertexColor(1.0, 1.0, 1.0, 1);

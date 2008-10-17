@@ -27,7 +27,7 @@
   GameTooltip_UnitColor = function(unit)
     local r, g, b;
     if (UnitIsPlayer(unit)) then
-      _, englishClass = UnitClass(unit)
+      local _, englishClass = UnitClass(unit)
       r = RAID_CLASS_COLORS[englishClass].r;
       g = RAID_CLASS_COLORS[englishClass].g;
       b = RAID_CLASS_COLORS[englishClass].b;
@@ -35,16 +35,6 @@
       if ( UnitCanAttack(unit, "player") ) then
         -- Hostile players are red
         if ( not UnitCanAttack("player", unit) ) then
-          --[[
-          r = 1.0;
-          g = 0.5;
-          b = 0.5;
-          ]]
-          --[[
-          r = 0.0;
-          g = 0.0;
-          b = 1.0;
-          ]]
           r = 1.0;
           g = 1.0;
           b = 1.0;
@@ -64,12 +54,6 @@
         g = FACTION_BAR_COLORS[6].g;
         b = FACTION_BAR_COLORS[6].b;
       else
-        -- All other players are blue (the usual state on the "blue" server)
-        --[[
-        r = 0.0;
-        g = 0.0;
-        b = 1.0;
-        ]]
         r = 1.0;
         g = 1.0;
         b = 1.0;
@@ -81,11 +65,6 @@
         g = FACTION_BAR_COLORS[reaction].g;
         b = FACTION_BAR_COLORS[reaction].b;
       else
-        --[[
-        r = 0.0;
-        g = 0.0;
-        b = 1.0;
-        ]]
         r = 1.0;
         g = 1.0;
         b = 1.0;

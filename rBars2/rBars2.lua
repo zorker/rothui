@@ -1,7 +1,20 @@
+   
+  -----------------------------
+  -- configure textures here --
+  -----------------------------
+  
+  local rb2_normal_texture    = "Interface\\AddOns\\rTextures\\gloss";
+  local rb2_flash_texture     = "Interface\\AddOns\\rTextures\\flash";
+  local rb2_hover_texture     = "Interface\\AddOns\\rTextures\\hover";    
+  local rb2_pushed_texture    = "Interface\\AddOns\\rTextures\\pushed";
+  local rb2_checked_texture   = "Interface\\AddOns\\rTextures\\checked"; 
+  local rb2_equipped_texture  = "Interface\\AddOns\\rTextures\\gloss_green";
+
+  -- end config --
 
   local a = CreateFrame("Frame", nil, UIParent)
   local _G = getfenv(0)
-  local dummy = function() end
+  local dummy = function() end    
   
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarRight"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarLeft"] = nil
@@ -229,12 +242,12 @@
       icon:SetTexture(texture);
       icon:Show();
       self.rangeTimer = -1;
-      self:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss");
+      self:SetNormalTexture(rb2_normal_texture);
     else
       icon:Hide();
       buttonCooldown:Hide();
       self.rangeTimer = nil;
-      self:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss");
+      self:SetNormalTexture(rb2_normal_texture);
       --[[
       local hotkey = getglobal(name.."HotKey");
       if ( hotkey:GetText() == RANGE_INDICATOR ) then
@@ -252,9 +265,9 @@
     -- give equipped items a green border texture
     --[[
     if ( IsEquippedAction(action) ) then
-      self:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss_green");
+      self:SetNormalTexture(rb2_equipped_texture);
     else
-      self:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss");
+      self:SetNormalTexture(rb2_normal_texture);
     end    
     ]]--
     
@@ -363,10 +376,10 @@
     ho:Hide()
     na:Hide()
     
-    fl:SetTexture("Interface\\AddOns\\rTextures\\flash")
-    bu:SetHighlightTexture("Interface\\AddOns\\rTextures\\hover")    
-    bu:SetPushedTexture("Interface\\AddOns\\rTextures\\pushed")
-    bu:SetCheckedTexture("Interface\\AddOns\\rTextures\\checked") 
+    fl:SetTexture(rb2_flash_texture)
+    bu:SetHighlightTexture(rb2_hover_texture)
+    bu:SetPushedTexture(rb2_pushed_texture)
+    bu:SetCheckedTexture(rb2_checked_texture)
 
     nt:SetHeight(36)
     nt:SetWidth(36)

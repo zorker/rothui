@@ -45,7 +45,7 @@
         _G["MultiBarRightButton"..i]:SetAlpha(1);
       end
     elseif event == "PLAYER_REGEN_DISABLED" then
-      for i = 25, 36 do
+      for i = 1, 12 do
         _G["MultiBarRightButton"..i]:SetAlpha(0);
       end
     end

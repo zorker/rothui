@@ -69,6 +69,7 @@
   	MiniMapMeetingStoneFrame:SetAlpha(0)
   	MinimapNorthTag:SetAlpha(0)
   
+    Minimap:SetMaskTexture("Interface\\AddOns\\rMinimap\\mask")
 	
     local t = Minimap:CreateTexture(nil,"Overlay")
     t:SetTexture("Interface\\AddOns\\rTextures\\minigloss")

@@ -19,7 +19,8 @@
     if(event=="PLAYER_LOGIN") then
       a:cre_actionbarframe1()
     elseif(event=="PLAYER_ENTERING_WORLD") then
-      a:cre_actionbarframe1()
+      --TEST, will try this later
+      MainMenuBar:Hide()
     end 
     
     --to fade the right button bar ooc/ic

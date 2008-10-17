@@ -244,30 +244,36 @@
     self.feedback_action = action;
   end
 
-
-  -- update usable no make funky colors
-
+  -- update usable to make funky colors
   ActionButton_UpdateUsable = function (self)
     local name = self:GetName();
+    --make buttons use this alpha when out of range, out of mana etc. range 0-1.
+    local fade_alpha = 0.5;
     local icon = getglobal(name.."Icon");
     local normalTexture = getglobal(name.."NormalTexture");
     local isUsable, notEnoughMana = IsUsableAction(self.action);
     local valid = IsActionInRange(self.action);
     if ( valid == 0 ) then
-      icon:SetVertexColor(1.0, 0.1, 0.1, 0.5);
-      normalTexture:SetAlpha(0.5)
+      --red
+      icon:SetVertexColor(1.0, 0.1, 0.1);
+      self:SetAlpha(fade_alpha)
     elseif ( isUsable ) then
-      icon:SetVertexColor(1.0, 1.0, 1.0, 1.0);
-      normalTexture:SetAlpha(1)
+      --white
+      icon:SetVertexColor(1.0, 1.0, 1.0);
+      self:SetAlpha(1)
     elseif ( notEnoughMana ) then
-      icon:SetVertexColor(0.25, 0.25, 1.0, 0.5);
-      normalTexture:SetAlpha(0.5)
+      --blue
+      icon:SetVertexColor(0.25, 0.25, 1.0);
+      self:SetAlpha(fade_alpha)
     else
-      icon:SetVertexColor(0.4, 0.4, 0.4, 0.5);
-      normalTexture:SetAlpha(0.5)
+      --grey
+      icon:SetVertexColor(0.4, 0.4, 0.4);
+      self:SetAlpha(fade_alpha)
     end
   end
   
+  -- had to rewrite this to call the ActionButton_UpdateUsable function, this finally makes it possible to
+  -- bring range and manacoloring together in one function
   ActionButton_OnUpdate = function (self, elapsed)
     if ( ActionButton_IsFlashing(self) ) then
       local flashtime = self.flashtime;
@@ -294,9 +300,9 @@
     -- Handle range indicator
     local rangeTimer = self.rangeTimer;
     if ( rangeTimer ) then
-      rangeTimer = rangeTimer - elapsed;
-  
+      rangeTimer = rangeTimer - elapsed;  
       if ( rangeTimer <= 0 ) then
+        --call UpdateUsable when timer is OK
         ActionButton_UpdateUsable(self);
         rangeTimer = TOOLTIP_UPDATE_TIME;
       end

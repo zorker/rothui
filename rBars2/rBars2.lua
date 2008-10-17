@@ -10,6 +10,7 @@
   UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBar"] = nil
 
   a:RegisterEvent("PLAYER_ENTERING_WORLD")
+  a:RegisterEvent("PLAYER_LOGIN")
   
   --to hide the right bar in combat and show it out of combat
   --a:RegisterEvent("PLAYER_REGEN_ENABLED")

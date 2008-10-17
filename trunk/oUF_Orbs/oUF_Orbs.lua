@@ -152,9 +152,8 @@
       end
 
       if d == 0 or d == 100 then
-        bar.value:Hide()
+        bar.value:SetText("")
       else
-        bar.value:Show()
         bar.value:SetText(d)
       end
 

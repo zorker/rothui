@@ -28,29 +28,30 @@
     local i = 1
     while _G["BuffButton"..i] 
     do 
-      addon:checkgloss("BuffButton"..i) 
+      addon:checkgloss("BuffButton"..i,1) 
       i = i + 1 
     end
     i = 1
     while _G["DebuffButton"..i] 
     do 
-      addon:checkgloss("DebuffButton"..i) 
+      addon:checkgloss("DebuffButton"..i,2) 
       i = i + 1 
     end
     i = 1
     while _G["TempEnchant"..i] 
     do 
-      addon:checkgloss("TempEnchant"..i) 
+      addon:checkgloss("TempEnchant"..i,3) 
       i = i + 1 
     end
   end
 
-  function addon:checkgloss(name)
+  function addon:checkgloss(name,icontype)
     local b = _G[name.."Border"]
     local i = _G[name.."Icon"]
     local f = _G[name]
     local c = _G[name.."Gloss"]
     local ff = _G[name.."Duration"]
+    
     ff:SetFont(NAMEPLATE_FONT, 14, "THINOUTLINE")
     ff:ClearAllPoints()
     ff:SetPoint("TOP",f,"BOTTOM",0,0)
@@ -60,11 +61,10 @@
       local fg = CreateFrame("Frame", name.."Gloss", f)
       fg:SetAllPoints(f)
 
-      local t = f:CreateTexture(nil,"ARTWORK")
+      local t = f:CreateTexture(name.."GlossTexture","ARTWORK")
       t:SetTexture("Interface\\AddOns\\rTextures\\gloss")
       t:SetPoint("TOPLEFT", fg, "TOPLEFT", -0, 0)
       t:SetPoint("BOTTOMRIGHT", fg, "BOTTOMRIGHT", 0, -0)
-      fg.texture = t
       
       i:SetTexCoord(0.1,0.9,0.1,0.9)
       i:SetPoint("TOPLEFT", fg, "TOPLEFT", 2, -2)
@@ -72,7 +72,19 @@
         
     end
 
-    if b then b:Hide() end
+    local tex = _G[name.."GlossTexture"]    
+    
+    if icontype == 2 and b then
+      local red,green,blue = b:GetVertexcolor();    
+      tex:SetTexture("Interface\\AddOns\\rTextures\\gloss_grey")
+      tex:SetVertexColor(red,green,blue)
+    else
+      tex:SetTexture("Interface\\AddOns\\rTextures\\gloss")
+      tex:SetVertexColor(1,1,1)      
+    end  
+    
+    b:SetAlpha(0)
+    --if b then b:Hide() end
   
   end
 

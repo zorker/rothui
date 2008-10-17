@@ -116,6 +116,9 @@
     MultiBarRightButton1:ClearAllPoints()
     MultiBarRightButton1:SetPoint("RIGHT",UIParent,"RIGHT",-30, 190)
     
+    MultiBarLeftButton1:ClearAllPoints()
+    MultiBarLeftButton1:SetPoint("TOPLEFT",MultiBarRightButton1,"TOPLEFT",-43, 0)
+    
     ShapeshiftButton1:ClearAllPoints()
     ShapeshiftBarFrame:SetParent(f)
     ShapeshiftButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",5,15);

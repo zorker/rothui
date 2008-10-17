@@ -53,7 +53,6 @@
     
     -- since I am reanchoring all the buttons I can hide the MainMenuBar
     MainMenuBar:Hide()  
-    MainMenuBar.show = dummy
     
     local j
     for j=1,12 do

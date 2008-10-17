@@ -43,7 +43,7 @@
     RANGE_INDICATOR = "";
     
     --creating a helper frame to hold the actionbuttons
-    local f = CreateFrame("Frame",nil,UIParent)
+    local f = CreateFrame("Frame","rBars2_Button_Holder_Frame",UIParent)
     f:SetWidth(498)
     f:SetHeight(100)
     --f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});

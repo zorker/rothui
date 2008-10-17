@@ -248,61 +248,61 @@
   -- update usable no make funky colors
 
   ActionButton_UpdateUsable = function (self)
-  	local name = self:GetName();
-  	local icon = getglobal(name.."Icon");
-  	local normalTexture = getglobal(name.."NormalTexture");
-  	local isUsable, notEnoughMana = IsUsableAction(self.action);
-		local valid = IsActionInRange(self.action);
-		if ( valid == 0 ) then
-			icon:SetVertexColor(1.0, 0.1, 0.1, 0.5);
-			normalTexture:SetAlpha(0.5)
-  	elseif ( isUsable ) then
-  		icon:SetVertexColor(1.0, 1.0, 1.0, 1.0);
-  		normalTexture:SetAlpha(1)
-  	elseif ( notEnoughMana ) then
-  		icon:SetVertexColor(0.25, 0.25, 1.0, 0.5);
-  		normalTexture:SetAlpha(0.5)
-  	else
-  		icon:SetVertexColor(0.4, 0.4, 0.4, 0.5);
-  		normalTexture:SetAlpha(0.5)
-  	end
+    local name = self:GetName();
+    local icon = getglobal(name.."Icon");
+    local normalTexture = getglobal(name.."NormalTexture");
+    local isUsable, notEnoughMana = IsUsableAction(self.action);
+    local valid = IsActionInRange(self.action);
+    if ( valid == 0 ) then
+      icon:SetVertexColor(1.0, 0.1, 0.1, 0.5);
+      normalTexture:SetAlpha(0.5)
+    elseif ( isUsable ) then
+      icon:SetVertexColor(1.0, 1.0, 1.0, 1.0);
+      normalTexture:SetAlpha(1)
+    elseif ( notEnoughMana ) then
+      icon:SetVertexColor(0.25, 0.25, 1.0, 0.5);
+      normalTexture:SetAlpha(0.5)
+    else
+      icon:SetVertexColor(0.4, 0.4, 0.4, 0.5);
+      normalTexture:SetAlpha(0.5)
+    end
   end
   
   ActionButton_OnUpdate = function (self, elapsed)
-  	if ( ActionButton_IsFlashing(self) ) then
-  		local flashtime = self.flashtime;
-  		flashtime = flashtime - elapsed;
-  		
-  		if ( flashtime <= 0 ) then
-  			local overtime = -flashtime;
-  			if ( overtime >= ATTACK_BUTTON_FLASH_TIME ) then
-  				overtime = 0;
-  			end
-  			flashtime = ATTACK_BUTTON_FLASH_TIME - overtime;
+    if ( ActionButton_IsFlashing(self) ) then
+      local flashtime = self.flashtime;
+      flashtime = flashtime - elapsed;
+      
+      if ( flashtime <= 0 ) then
+        local overtime = -flashtime;
+        if ( overtime >= ATTACK_BUTTON_FLASH_TIME ) then
+          overtime = 0;
+        end
+        flashtime = ATTACK_BUTTON_FLASH_TIME - overtime;
   
-  			local flashTexture = getglobal(self:GetName().."Flash");
-  			if ( flashTexture:IsShown() ) then
-  				flashTexture:Hide();
-  			else
-  				flashTexture:Show();
-  			end
-  		end
-  		
-  		self.flashtime = flashtime;
-  	end
-  	
-  	-- Handle range indicator
-  	local rangeTimer = self.rangeTimer;
-  	if ( rangeTimer ) then
-  		rangeTimer = rangeTimer - elapsed;
+        local flashTexture = getglobal(self:GetName().."Flash");
+        if ( flashTexture:IsShown() ) then
+          flashTexture:Hide();
+        else
+          flashTexture:Show();
+        end
+      end
+      
+      self.flashtime = flashtime;
+    end
+    
+    -- Handle range indicator
+    local rangeTimer = self.rangeTimer;
+    if ( rangeTimer ) then
+      rangeTimer = rangeTimer - elapsed;
   
-  		if ( rangeTimer <= 0 ) then
-  			ActionButton_UpdateUsable(self);
-  			rangeTimer = TOOLTIP_UPDATE_TIME;
-  		end
-  		
-  		self.rangeTimer = rangeTimer;
-  	end
+      if ( rangeTimer <= 0 ) then
+        ActionButton_UpdateUsable(self);
+        rangeTimer = TOOLTIP_UPDATE_TIME;
+      end
+      
+      self.rangeTimer = rangeTimer;
+    end
   end
   
   -- hack to fix the grid alpha. by default the NormalTexture gets 0.5 alpha when you move a button and it keeps this alpha

@@ -10,6 +10,12 @@
   local rb2_checked_texture   = "Interface\\AddOns\\rTextures\\checked"; 
   local rb2_equipped_texture  = "Interface\\AddOns\\rTextures\\gloss_green";
 
+  --make buttons use this alpha when out of range, out of mana etc. range 0-1.
+  local fade_alpha = 0.8;
+
+  -- scale, SCALE your buttons here. range 0-1, 0.7 = 70%
+  local myscale = 0.75
+
   -- end config --
 
   local a = CreateFrame("Frame", nil, UIParent)
@@ -127,8 +133,6 @@
     PossessBarFrame:SetParent(f)
     PossessButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",5,15);
   
-    -- scaling
-    local myscale = 0.8
     MainMenuBar:SetScale(myscale)
     f:SetScale(myscale)
     BonusActionBarFrame:SetScale(1)
@@ -136,7 +140,7 @@
     MultiBarBottomRight:SetScale(myscale)
     MultiBarRight:SetScale(myscale)
     MultiBarLeft:SetScale(myscale)
-    PetActionBarFrame:SetScale(0.85)
+    PetActionBarFrame:SetScale(myscale*1.09)
     
   end
   
@@ -282,8 +286,6 @@
   -- update usable to make funky colors
   ActionButton_UpdateUsable = function (self)
     local name = self:GetName();
-    --make buttons use this alpha when out of range, out of mana etc. range 0-1.
-    local fade_alpha = 0.5;
     local icon = getglobal(name.."Icon");
     local normalTexture = getglobal(name.."NormalTexture");
     local isUsable, notEnoughMana = IsUsableAction(self.action);

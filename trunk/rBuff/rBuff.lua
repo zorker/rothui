@@ -75,7 +75,7 @@
     local tex = _G[name.."GlossTexture"]    
     
     if icontype == 2 and b then
-      local red,green,blue = b:GetVertexcolor();    
+      local red,green,blue = b:GetVertexColor();    
       tex:SetTexture("Interface\\AddOns\\rTextures\\gloss_grey")
       tex:SetVertexColor(red,green,blue)
     else

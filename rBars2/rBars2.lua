@@ -11,10 +11,29 @@
 
   a:RegisterEvent("PLAYER_ENTERING_WORLD")
   
+  --to hide the right bar in combat and show it out of combat
+  --a:RegisterEvent("PLAYER_REGEN_ENABLED")
+  --a:RegisterEvent("PLAYER_REGEN_DISABLED")
+  
   a:SetScript("OnEvent", function (self,event,arg1)
     if(event=="PLAYER_ENTERING_WORLD") then
       a:cre_actionbarframe1()
     end 
+    
+    --to fade the right button bar ooc/ic
+    --need to test this later
+    --[[
+    if event == "PLAYER_REGEN_ENABLED" then
+      for i = 1, 12 do
+        _G["MultiBarRightButton"..i]:SetAlpha(1);
+      end
+    elseif event == "PLAYER_REGEN_DISABLED" then
+      for i = 25, 36 do
+        _G["MultiBarRightButton"..i]:SetAlpha(0);
+      end
+    end
+    ]]--
+    
   end)
 
   function a:cre_actionbarframe1()

@@ -16,7 +16,9 @@
   --a:RegisterEvent("PLAYER_REGEN_DISABLED")
   
   a:SetScript("OnEvent", function (self,event,arg1)
-    if(event=="PLAYER_ENTERING_WORLD") then
+    if(event=="PLAYER_LOGIN") then
+      a:cre_actionbarframe1()
+    elseif(event=="PLAYER_ENTERING_WORLD") then
       a:cre_actionbarframe1()
     end 
     

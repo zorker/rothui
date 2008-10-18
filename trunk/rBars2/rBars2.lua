@@ -11,7 +11,7 @@
   local rb2_equipped_texture  = "Interface\\AddOns\\rTextures\\gloss_green";
 
   --make buttons use this alpha when out of range, out of mana etc. range 0-1.
-  local fade_alpha = 0.8;
+  local fade_alpha = 0.5;
 
   -- scale, SCALE your buttons here. range 0-1, 0.7 = 70%
   local myscale = 0.75
@@ -314,27 +314,33 @@
 
   -- update usable to make funky colors
   ActionButton_UpdateUsable = function (self)
-    local name = self:GetName();
-    local icon = getglobal(name.."Icon");
-    local normalTexture = getglobal(name.."NormalTexture");
-    local isUsable, notEnoughMana = IsUsableAction(self.action);
-    local valid = IsActionInRange(self.action);
-    if ( valid == 0 ) then
-      --red
-      icon:SetVertexColor(1.0, 0.1, 0.1);
-      normalTexture:SetAlpha(fade_alpha)
-    elseif ( isUsable ) then
-      --white
-      icon:SetVertexColor(1.0, 1.0, 1.0);
-      normalTexture:SetAlpha(1)
-    elseif ( notEnoughMana ) then
-      --blue
-      icon:SetVertexColor(0.25, 0.25, 1.0);
-      normalTexture:SetAlpha(fade_alpha)
+    if ( self:GetAttribute("showgrid") == 0 ) then
+      local name = self:GetName();
+      local icon = getglobal(name.."Icon");
+      local normalTexture = getglobal(name.."NormalTexture");
+      local isUsable, notEnoughMana = IsUsableAction(self.action);
+      local valid = IsActionInRange(self.action);
+      if ( valid == 0 ) then
+        --red
+        icon:SetVertexColor(1.0, 0.1, 0.1,fade_alpha);
+        normalTexture:SetAlpha(fade_alpha)
+      elseif ( isUsable ) then
+        --white
+        icon:SetVertexColor(1.0, 1.0, 1.0, 1);
+        normalTexture:SetAlpha(1)
+      elseif ( notEnoughMana ) then
+        --blue
+        icon:SetVertexColor(0.25, 0.25, 1.0,fade_alpha);
+        normalTexture:SetAlpha(fade_alpha)
+      else
+        --grey
+        icon:SetVertexColor(0.4, 0.4, 0.4,fade_alpha);
+        normalTexture:SetAlpha(fade_alpha)
+      end
     else
-      --grey
-      icon:SetVertexColor(0.4, 0.4, 0.4);
-      normalTexture:SetAlpha(fade_alpha)
+      local name = self:GetName();
+      local icon = getglobal(name.."Icon");
+      icon:SetVertexColor(1.0, 1.0, 1.0, 1);
     end
   end
   

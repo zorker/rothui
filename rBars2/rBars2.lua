@@ -19,7 +19,7 @@
   --button system for bar 1 and bar 2
   -- 0 = 1x12 layout
   -- 1 = 2x6  layout
-  local button_system = 0
+  local button_system = 1
   
   -- hide shapeshift frame
   -- 0 = not hidden
@@ -75,6 +75,8 @@
   
     RANGE_INDICATOR = "";
     
+
+    
     --creating a helper frame to hold the actionbuttons
     local f = CreateFrame("Frame","rBars2_Button_Holder_Frame",UIParent)
     f:SetWidth(498)
@@ -98,6 +100,11 @@
       a:dostuff("MultiBarBottomLeftButton", j, f)
       a:dostuff("MultiBarLeftButton", j, f)
       a:dostuff("MultiBarRightButton", j, f)
+    end
+    
+    local k
+    for k=1,10 do
+      a:dopeticons("PetActionButton", k)
     end
     
     ActionButton1:ClearAllPoints()
@@ -428,3 +435,18 @@
     
     
   end
+  
+  
+  function a:dopeticons(name, i)
+    
+    local bu  = _G[name..i]
+    local ic  = _G[name..i.."Icon"]
+    local nt  = _G[name..i.."NormalTexture2"]
+    
+    ic:SetTexCoord(0.1,0.9,0.1,0.9)
+    bu:SetNormalTexture(rb2_normal_texture)
+    bu.SetNormalTexture = dummy
+    nt:SetPoint("TOPLEFT", bu, "TOPLEFT", -2, 2);
+    nt:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 2, -2);  
+  end
+  

@@ -1,3 +1,31 @@
+   
+  -----------------------------
+  -- configure map style here --
+  -----------------------------
+  
+  -- anchor1
+  local anchor1 = "TOPRIGHT"
+  
+  -- anchor2
+  local anchor2 = "TOPRIGHT"
+  
+  -- anchorframe
+  local anchorframe = UIParent
+  
+  -- pos_x
+  local pos_x = -30
+  
+  -- pos y
+  local pos_y = -30
+  
+  -- map_style
+  -- 0 = diablo3
+  -- 1 = futuristic orb rotating
+  -- 2 = square runits style
+  local map_style = 0
+
+  -- end config --
+  
   
   local a = CreateFrame("Frame", nil, UIParent)
   local _G = getfenv(0)
@@ -7,16 +35,24 @@
   
   a:SetScript("OnEvent", function (self,event,arg1)
     if(event=="PLAYER_LOGIN") then
-      a:dostuff()
-      a:rotateme()
+      
+      if map_style == 0 then
+        a:dostuff0()
+      elseif map_style == 1 then
+        a:dostuff1()
+        a:rotateme()
+      elseif map_style == 2 then
+        a:dostuff2()
+      end
     end
   end)
   
-  function a:dostuff()
+  
+  function a:dostuff0()
   
     Minimap:SetScale(1)
     Minimap:ClearAllPoints()
-    Minimap:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -20, -20)
+    Minimap:SetPoint(anchor1, anchorframe, anchor1, pos_x, pos_y)
   
     MinimapBorder:SetTexture()
     MinimapBorderTop:Hide()
@@ -39,10 +75,11 @@
     MiniMapTrackingButtonBorder:SetTexture()
     MiniMapTrackingBackground:Hide()
     MiniMapTrackingIconOverlay:SetAlpha(0)
-    MiniMapTrackingIcon:SetTexCoord(0.065, 0.935, 0.065, 0.935)
+    MiniMapTrackingIcon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
     MiniMapTracking:SetParent(Minimap)
     MiniMapTracking:ClearAllPoints()
-    MiniMapTracking:SetPoint('TOPLEFT', -2, 2)
+    MiniMapTracking:SetPoint('BOTTOMRIGHT', 24, -10)
+    MiniMapTracking:SetScale(0.8)
   
     BattlegroundShine:Hide()
     MiniMapBattlefieldBorder:SetTexture()
@@ -70,13 +107,142 @@
     MiniMapMeetingStoneFrame:SetAlpha(0)
     MinimapNorthTag:SetAlpha(0)
   
-    --Minimap:SetMaskTexture("Interface\\AddOns\\rMinimap\\mask")
-    --[[
     local t = Minimap:CreateTexture(nil,"Overlay")
-    t:SetTexture("Interface\\AddOns\\rTextures\\minigloss")
+    t:SetTexture("Interface\\AddOns\\rMinimap\\d3_map2")
+    local d3mapscale = 1.3
+    t:SetPoint("CENTER", Minimap, "CENTER", 0, -10*d3mapscale)
+    --t:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 1, -1)
+    t:SetWidth(Minimap:GetHeight()*2*d3mapscale)
+    t:SetHeight(Minimap:GetHeight()*d3mapscale)
+  
+  end
+  
+  
+  function a:dostuff2()
+  
+    Minimap:SetScale(1)
+    Minimap:ClearAllPoints()
+    Minimap:SetPoint(anchor1, anchorframe, anchor1, pos_x, pos_y)
+  
+    MinimapBorder:SetTexture()
+    MinimapBorderTop:Hide()
+    MinimapToggleButton:Hide()
+  
+    MinimapZoomIn:Hide()
+    MinimapZoomOut:Hide()
+    Minimap:EnableMouseWheel()
+    Minimap:SetScript('OnMouseWheel', function(self, dir)
+      if(dir > 0) then
+        Minimap_ZoomIn()
+      else
+        Minimap_ZoomOut()
+      end
+    end)
+  
+    MinimapZoneText:Hide()
+    MinimapZoneTextButton:Hide()
+  
+    MiniMapTrackingButtonBorder:SetTexture()
+    MiniMapTrackingBackground:Hide()
+    MiniMapTrackingIconOverlay:SetAlpha(0)
+    MiniMapTrackingIcon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+    MiniMapTracking:SetParent(Minimap)
+    MiniMapTracking:ClearAllPoints()
+    MiniMapTracking:SetPoint('TOPLEFT', 0, 0)
+    MiniMapTracking:SetScale(0.8)
+  
+    BattlegroundShine:Hide()
+    MiniMapBattlefieldBorder:SetTexture()
+    MiniMapBattlefieldFrame:SetParent(Minimap)
+    MiniMapBattlefieldFrame:ClearAllPoints()
+    MiniMapBattlefieldFrame:SetPoint('TOPRIGHT', -2, -2)
+  
+    MiniMapMailBorder:SetTexture()
+    MiniMapMailIcon:Hide()
+    MiniMapMailFrame:SetParent(Minimap)
+    MiniMapMailFrame:ClearAllPoints()
+    MiniMapMailFrame:SetPoint('TOP')
+    MiniMapMailFrame:SetHeight(8)
+  
+    MiniMapMailText = MiniMapMailFrame:CreateFontString(nil, 'OVERLAY')
+    MiniMapMailText:SetFont("FONTS\\ARIALN.TTF", 13, 'OUTLINE')
+    MiniMapMailText:SetPoint('BOTTOM', 0, 2)
+    MiniMapMailText:SetText('New Mail!')
+    MiniMapMailText:SetTextColor(1, 1, 1)
+  
+    GameTimeFrame:Hide()
+    MiniMapWorldMapButton:Hide()
+    MiniMapVoiceChatFrame:Hide()
+    MiniMapMeetingStoneFrame:Hide()
+    MiniMapMeetingStoneFrame:SetAlpha(0)
+    MinimapNorthTag:SetAlpha(0)
+  
+    Minimap:SetMaskTexture("Interface\\AddOns\\rMinimap\\mask")
+    local t = Minimap:CreateTexture(nil,"Overlay")
+    t:SetTexture("Interface\\AddOns\\rMinimap\\minigloss")
     t:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -1, 1)
     t:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 1, -1)
-    ]]--
+  
+  end
+  
+  function a:dostuff1()
+  
+    Minimap:SetScale(1)
+    Minimap:ClearAllPoints()
+    Minimap:SetPoint(anchor1, anchorframe, anchor1, pos_x, pos_y)
+  
+    MinimapBorder:SetTexture()
+    MinimapBorderTop:Hide()
+    MinimapToggleButton:Hide()
+  
+    MinimapZoomIn:Hide()
+    MinimapZoomOut:Hide()
+    Minimap:EnableMouseWheel()
+    Minimap:SetScript('OnMouseWheel', function(self, dir)
+      if(dir > 0) then
+        Minimap_ZoomIn()
+      else
+        Minimap_ZoomOut()
+      end
+    end)
+  
+    MinimapZoneText:Hide()
+    MinimapZoneTextButton:Hide()
+  
+    MiniMapTrackingButtonBorder:SetTexture()
+    MiniMapTrackingBackground:Hide()
+    MiniMapTrackingIconOverlay:SetAlpha(0)
+    MiniMapTrackingIcon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+    MiniMapTracking:SetParent(Minimap)
+    MiniMapTracking:ClearAllPoints()
+    MiniMapTracking:SetPoint('TOPRIGHT', 30, 30)
+    MiniMapTracking:SetScale(0.8)
+  
+    BattlegroundShine:Hide()
+    MiniMapBattlefieldBorder:SetTexture()
+    MiniMapBattlefieldFrame:SetParent(Minimap)
+    MiniMapBattlefieldFrame:ClearAllPoints()
+    MiniMapBattlefieldFrame:SetPoint('TOPRIGHT', -2, -2)
+  
+    MiniMapMailBorder:SetTexture()
+    MiniMapMailIcon:Hide()
+    MiniMapMailFrame:SetParent(Minimap)
+    MiniMapMailFrame:ClearAllPoints()
+    MiniMapMailFrame:SetPoint('TOP')
+    MiniMapMailFrame:SetHeight(8)
+  
+    MiniMapMailText = MiniMapMailFrame:CreateFontString(nil, 'OVERLAY')
+    MiniMapMailText:SetFont("FONTS\\ARIALN.TTF", 13, 'OUTLINE')
+    MiniMapMailText:SetPoint('BOTTOM', 0, 2)
+    MiniMapMailText:SetText('New Mail!')
+    MiniMapMailText:SetTextColor(1, 1, 1)
+  
+    GameTimeFrame:Hide()
+    MiniMapWorldMapButton:Hide()
+    MiniMapVoiceChatFrame:Hide()
+    MiniMapMeetingStoneFrame:Hide()
+    MiniMapMeetingStoneFrame:SetAlpha(0)
+    MinimapNorthTag:SetAlpha(0)
   
   end
   
@@ -93,21 +259,9 @@
     f:Show()
     
     local t = f:CreateTexture(nil,"BACKGROUND")
-    t:SetTexture("Interface\\AddOns\\rTextures\\map_texture.tga")
-    --t:SetTexCoord(0.1,0.9,0.1,0.9)
+    t:SetTexture("Interface\\AddOns\\rMinimap\\map_texture.tga")
     t:SetAllPoints(f)
     t:SetVertexColor(0.8,0.8,0.8,1)
-    
-    local f2 = CreateFrame("Frame",nil,f)
-    f2:SetPoint("TOPLEFT",f,"TOPLEFT",20,-20)
-    f2:SetPoint("BOTTOMRIGHT",f,"BOTTOMRIGHT",-20,20)
-    --f2:SetFrameStrata("DIALOG")
-    f2:Show()
-    
-  	t2 = f2:CreateTexture(nil, "OVERLAY")
-    --t2:SetTexture("Interface\\AddOns\\oUF_Orbs\\textures\\orb_gloss.tga")
-    t2:SetAllPoints(f2)  
-    t2:SetAlpha(0.5)
     
     local totalElapsed = 0
     local degrees = 0

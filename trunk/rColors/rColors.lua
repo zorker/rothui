@@ -10,6 +10,17 @@
     [8] = {r = 0, g = 0.6, b = 0.1},
   };
   
+  PowerBarColor["MANA"] = { r = 0.00, g = 0.00, b = 1.00 };
+  PowerBarColor["RAGE"] = { r = 1.00, g = 0.00, b = 0.00 };
+  PowerBarColor["FOCUS"] = { r = 1.00, g = 0.50, b = 0.25 };
+  PowerBarColor["ENERGY"] = { r = 1.00, g = 1.00, b = 0.00 };
+  PowerBarColor["HAPPINESS"] = { r = 0.00, g = 1.00, b = 1.00 };
+  PowerBarColor["RUNES"] = { r = 0.50, g = 0.50, b = 0.50 };
+  PowerBarColor["RUNIC_POWER"] = { r = 0.00, g = 0.82, b = 1.00 };
+  -- vehicle colors
+  PowerBarColor["AMMOSLOT"] = { r = 0.80, g = 0.60, b = 0.00 };
+  PowerBarColor["FUEL"] = { r = 0.0, g = 0.55, b = 0.5 };
+  
   RAID_CLASS_COLORS = {
     ["HUNTER"] = { r = 0.67, g = 0.83, b = 0.45 },
     ["WARLOCK"] = { r = 0.58, g = 0.51, b = 0.79 },

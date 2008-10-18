@@ -1,6 +1,6 @@
 ## Interface: 21337
 ## Author: roth
 ## Title: rMinimap
-## Notes: simple minimap based on pMinimap by p3lim
+## Notes: rather simple Minimap
 
 rMinimap.lua

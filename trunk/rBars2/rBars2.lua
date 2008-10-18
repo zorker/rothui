@@ -75,10 +75,6 @@
   
     RANGE_INDICATOR = "";
     
-
-    DEFAULT_CHAT_FRAME:AddMessage(ShapeshiftButton1:GetWidth())
-    DEFAULT_CHAT_FRAME:AddMessage(ShapeshiftButton1NormalTexture:GetWidth())
-    
     --creating a helper frame to hold the actionbuttons
     local f = CreateFrame("Frame","rBars2_Button_Holder_Frame",UIParent)
     f:SetWidth(498)

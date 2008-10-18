@@ -106,12 +106,12 @@
         0.5+r2*cos(degrees+45), 0.5+r2*sin(degrees+45),
         0.5+r2*cos(degrees-45), 0.5+r2*sin(degrees-45)
         )
-	      
-	      degrees = degrees+1
-	      
-	      if degrees > 360 then
-	        degrees = 0
-	      end
+        
+        degrees = degrees+1
+        
+        if degrees > 360 then
+          degrees = 0
+        end
 
       end
     end

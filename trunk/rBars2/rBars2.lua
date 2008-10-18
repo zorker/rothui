@@ -15,6 +15,18 @@
 
   -- scale, SCALE your buttons here. range 0-1, 0.7 = 70%
   local myscale = 0.75
+  
+  --button system for bar 1 and bar 2
+  -- 0 = 1x12 layout
+  -- 1 = 2x6  layout
+  local button_system = 0
+  
+  -- hide shapeshift frame
+  -- 0 = not hidden
+  -- 1 = hidden
+  -- IMPORTANT, you will need my transparent textures to hide the background stuff
+  -- http://code.google.com/p/rothui/source/browse/#svn/trunk/Interface/ShapeshiftBar
+  local hide_shapeshift = 1
 
   -- end config --
 
@@ -98,20 +110,32 @@
     BonusActionButton1:ClearAllPoints()
     BonusActionButton1:SetPoint("BOTTOMLEFT",f,"BOTTOMLEFT",0,0);
     
-    ActionButton7:ClearAllPoints()  
-    ActionButton7:SetPoint("BOTTOMLEFT",ActionButton1,"TOPLEFT",0,5);
+    if button_system == 0 then
+
+      MultiBarBottomLeftButton1:ClearAllPoints()  
+      MultiBarBottomLeftButton1:SetPoint("BOTTOMLEFT",ActionButton1,"TOPLEFT",0,5);
+
+      MultiBarBottomRightButton1:ClearAllPoints()  
+      MultiBarBottomRightButton1:SetPoint("BOTTOMLEFT",MultiBarBottomLeftButton1,"TOPLEFT",0,15);
     
-    BonusActionButton7:ClearAllPoints()  
-    BonusActionButton7:SetPoint("BOTTOMLEFT",BonusActionButton1,"TOPLEFT",0,5);
+    else
+
+      ActionButton7:ClearAllPoints()  
+      ActionButton7:SetPoint("BOTTOMLEFT",ActionButton1,"TOPLEFT",0,5);
     
-    MultiBarBottomLeftButton1:ClearAllPoints()  
-    MultiBarBottomLeftButton1:SetPoint("BOTTOMLEFT",ActionButton6,"BOTTOMRIGHT",5,0);
-  
-    MultiBarBottomLeftButton7:ClearAllPoints()  
-    MultiBarBottomLeftButton7:SetPoint("BOTTOMLEFT",MultiBarBottomLeftButton1,"TOPLEFT",0,5);
-  
-    MultiBarBottomRightButton1:ClearAllPoints()  
-    MultiBarBottomRightButton1:SetPoint("BOTTOMLEFT",ActionButton7,"TOPLEFT",0,15);
+      BonusActionButton7:ClearAllPoints()  
+      BonusActionButton7:SetPoint("BOTTOMLEFT",BonusActionButton1,"TOPLEFT",0,5);
+      
+      MultiBarBottomLeftButton1:ClearAllPoints()  
+      MultiBarBottomLeftButton1:SetPoint("BOTTOMLEFT",ActionButton6,"BOTTOMRIGHT",5,0);
+    
+      MultiBarBottomLeftButton7:ClearAllPoints()  
+      MultiBarBottomLeftButton7:SetPoint("BOTTOMLEFT",MultiBarBottomLeftButton1,"TOPLEFT",0,5);
+    
+      MultiBarBottomRightButton1:ClearAllPoints()  
+      MultiBarBottomRightButton1:SetPoint("BOTTOMLEFT",ActionButton7,"TOPLEFT",0,15);
+    
+    end
   
     MultiBarRightButton1:ClearAllPoints()
     MultiBarRightButton1:SetPoint("RIGHT",UIParent,"RIGHT",-30, 190)
@@ -124,8 +148,10 @@
     ShapeshiftButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",5,15);
     
     -- hide the shapeshift 
-    ShapeshiftBarFrame:Hide()
-    ShapeshiftBarFrame.Show = dummy
+    if hide_shapeshift == 1 then
+      ShapeshiftBarFrame:Hide()
+      ShapeshiftBarFrame.Show = dummy
+    end
     
     PetActionButton1:ClearAllPoints()
     PetActionBarFrame:SetParent(f)
@@ -296,19 +322,19 @@
     if ( valid == 0 ) then
       --red
       icon:SetVertexColor(1.0, 0.1, 0.1);
-      self:SetAlpha(fade_alpha)
+      normalTexture:SetAlpha(fade_alpha)
     elseif ( isUsable ) then
       --white
       icon:SetVertexColor(1.0, 1.0, 1.0);
-      self:SetAlpha(1)
+      normalTexture:SetAlpha(1)
     elseif ( notEnoughMana ) then
       --blue
       icon:SetVertexColor(0.25, 0.25, 1.0);
-      self:SetAlpha(fade_alpha)
+      normalTexture:SetAlpha(fade_alpha)
     else
       --grey
       icon:SetVertexColor(0.4, 0.4, 0.4);
-      self:SetAlpha(fade_alpha)
+      normalTexture:SetAlpha(fade_alpha)
     end
   end
   

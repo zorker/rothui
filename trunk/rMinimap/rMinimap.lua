@@ -22,7 +22,7 @@
   -- 0 = diablo3
   -- 1 = futuristic orb rotating
   -- 2 = square runits style
-  local map_style = 0
+  local map_style = 2
 
   -- end config --
   

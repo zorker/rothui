@@ -26,7 +26,7 @@
   -- 1 = hidden
   -- IMPORTANT, you will need my transparent textures to hide the background stuff
   -- http://code.google.com/p/rothui/source/browse/#svn/trunk/Interface/ShapeshiftBar
-  local hide_shapeshift = 1
+  local hide_shapeshift = 0
 
   -- end config --
 
@@ -76,6 +76,8 @@
     RANGE_INDICATOR = "";
     
 
+    DEFAULT_CHAT_FRAME:AddMessage(ShapeshiftButton1:GetWidth())
+    DEFAULT_CHAT_FRAME:AddMessage(ShapeshiftButton1NormalTexture:GetWidth())
     
     --creating a helper frame to hold the actionbuttons
     local f = CreateFrame("Frame","rBars2_Button_Holder_Frame",UIParent)
@@ -105,6 +107,7 @@
     local k
     for k=1,10 do
       a:dopeticons("PetActionButton", k)
+      a:doshapeshift("ShapeshiftButton", k)
     end
     
     ActionButton1:ClearAllPoints()
@@ -448,5 +451,25 @@
     bu.SetNormalTexture = dummy
     nt:SetPoint("TOPLEFT", bu, "TOPLEFT", -2, 2);
     nt:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 2, -2);  
+  end
+  
+  function a:doshapeshift(name, i)
+    
+    local bu  = _G[name..i]
+    local ic  = _G[name..i.."Icon"]
+    local nt  = _G[name..i.."NormalTexture"]
+    local fl  = _G[name..i.."Flash"]
+    
+    ic:SetTexCoord(0.1,0.9,0.1,0.9)
+    bu:SetNormalTexture(rb2_normal_texture)
+    bu.SetNormalTexture = dummy
+    nt:SetPoint("TOPLEFT", bu, "TOPLEFT", -2, 2)
+    nt:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 2, -2)
+    
+    fl:SetTexture(rb2_flash_texture)
+    bu:SetHighlightTexture(rb2_hover_texture)
+    bu:SetPushedTexture(rb2_pushed_texture)
+    --bu:SetCheckedTexture(rb2_pushed_texture)
+    
   end
   

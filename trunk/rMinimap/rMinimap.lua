@@ -127,7 +127,7 @@
     if map_style == 1 then
       move_y = 30
     else
-      lmove_y = 10
+      move_y = 10
     end
     
     MiniMapWorldMapButton:Hide()

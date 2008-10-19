@@ -1,4 +1,4 @@
-## Interface: 21337
+## Interface: 20400
 ## Author: Rothar
 ## Title: rFilter2
 ## Notes: addon of awesomeness...lol

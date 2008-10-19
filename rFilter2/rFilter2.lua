@@ -47,7 +47,7 @@
   --values between 0 and one are allowed
   local alpha_when_not_active = 0
   
-  local alpha_when_in_combat = 0
+  local alpha_when_in_combat = 0.3
   
   --make icon grey when buff noch active
   --0 = off // 1 = on
@@ -76,26 +76,26 @@
   elseif rf2_player_name == "Rothar" and rf2_player_class == "WARRIOR" then
     rf2_spell_list = {
       buffs = {
-        [1] = { tag = "commanding", spellid = 469,  unit = "player", size = 18, fontsize = 16, posx = -90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
-        [2] = { tag = "battle",     spellid = 2048, unit = "player", size = 18, fontsize = 16, posx = -60, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [1] = { tag = "commanding", spellid = 469,  unit = "player", size = 24, fontsize = 18, posx = -298, posy = -134, framestrata = "LOW", anchor = "UIParent"},
+        [2] = { tag = "battle",     spellid = 2048, unit = "player", size = 24, fontsize = 18, posx = -268, posy = -134, framestrata = "LOW", anchor = "UIParent"},
         --[3] = { tag = "block", spellid = 2565, size = 20, fontsize = 15, posx = 30, posy = -260, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[3] = { tag = "rampage", spellid = 30033, size = 18, fontsize = 14, posx = -25, posy = -260, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[3] = { tag = "berserker", spellid = 18499, size = 32, fontsize = 24, posx = 160, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[5] = { tag = "block", spellid = 2565, size = 32, fontsize = 24, posx = 80, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       debuffs = {
-        [1] = { tag = "sunder",       spellid = 25225,  unit = "target", size = 18, fontsize = 16, posx = -30, posy = -300, framestrata = "LOW", anchor = "UIParent"},
-        [2] = { tag = "demo",         spellid = 25203,  unit = "target", size = 18, fontsize = 16, posx = -0, posy = -300, framestrata = "LOW", anchor = "UIParent"},
-        [3] = { tag = "clap",         spellid = 25264,  unit = "target", size = 18, fontsize = 16, posx = 30, posy = -300, framestrata = "LOW", anchor = "UIParent"},
-        [4] = { tag = "scorpid",      spellid = 3043,   unit = "target", size = 18, fontsize = 16, posx = 60, posy = -300, framestrata = "LOW", anchor = "UIParent"},
-        [5] = { tag = "fearie",       spellid = 26993,  unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
-        [6] = { tag = "fearieferal",  spellid = 27011,  unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [1] = { tag = "sunder",       spellid = 25225,  unit = "target", size = 24, fontsize = 18, posx = -230, posy = -134, framestrata = "LOW", anchor = "UIParent"},
+        [2] = { tag = "demo",         spellid = 25203,  unit = "target", size = 24, fontsize = 18, posx = -200, posy = -134, framestrata = "LOW", anchor = "UIParent"},
+        [3] = { tag = "clap",         spellid = 25264,  unit = "target", size = 24, fontsize = 18, posx = -170, posy = -134, framestrata = "LOW", anchor = "UIParent"},
+        --[4] = { tag = "scorpid",      spellid = 3043,   unit = "target", size = 18, fontsize = 16, posx = 60, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        --[5] = { tag = "fearie",       spellid = 26993,  unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        --[6] = { tag = "fearieferal",  spellid = 27011,  unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
         --[7] = { tag = "curseofreck", spellid = 27226, size = 18, fontsize = 14, posx = 50, posy = -230, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[8] = { tag = "curseoftong", spellid = 11719, size = 18, fontsize = 14, posx = 75, posy = -230, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       cooldowns = {
-        --[1] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = -140, posy = -225, framestrata = "BACKGROUND", anchor = "UIParent"},
-        --[2] = { tag = "berserkercool", spellid = 18499, size = 32, fontsize = 24, posx = -180, posy = -225, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[1] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[2] = { tag = "berserkercool", spellid = 18499, size = 32, fontsize = 24, posx = 50, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[1] = { tag = "revenge", spellid = 30357, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[2] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
@@ -230,11 +230,18 @@
     end
     
     for i = 1, 40 do
-      local name, rank, texture, applications, duration, timeleft = UnitBuff(unit, i)
+      local name, rank, texture, applications, debuffType, duration, timeleft, isMine, isStealable = UnitBuff(unit, i)
+      --local name, rank, texture, applications, duration, timeleft = UnitBuff(unit, i)
       if name == spellName then
         local floortime = ""
         if timeleft ~= nil then
-          floortime = floor(timeleft)
+          if timeleft >= 60 then 
+            floortime = floor(timeleft/60).."m"
+          elseif timeleft <= 1.5 then
+            floortime = floor(timeleft*10)/10
+          else
+            floortime = floor(timeleft+0.5)  
+          end
         end
         local floornum = ""
         if applications ~= nil then
@@ -295,7 +302,13 @@
       if name == spellName then
         local floortime = ""
         if timeleft ~= nil then
-          floortime = floor(timeleft)
+          if timeleft >= 60 then 
+            floortime = floor(timeleft/60).."m"
+          elseif timeleft <= 1.5 then
+            floortime = floor(timeleft*10)/10
+          else
+            floortime = floor(timeleft+0.5)  
+          end
         end
         local floornum = ""
         if applications ~= nil then
@@ -348,12 +361,12 @@
     
     local localstartime = 0
     if spellCooldownStartTime ~= nil then
-      localstartime = floor(spellCooldownStartTime)
+      localstartime = spellCooldownStartTime
     end
     
     local floortime = 0
     if spellCooldownDuration ~= nil then
-      floortime = floor(spellCooldownDuration)
+      floortime = spellCooldownDuration
     end
     
     local floornum = ""
@@ -366,9 +379,11 @@
       end
     end
     
-    local now = floor(GetTime())
+    local now = GetTime()
     local cooldown = (localstartime+floortime-now)
-    if cooldown > 1 then
+    cooldown = floor(cooldown+0.5)
+    
+    if cooldown > 0 then
       f:SetAlpha(1)
       f2:SetText(cooldown)
       f3:SetText(floornum)

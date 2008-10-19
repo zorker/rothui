@@ -22,7 +22,7 @@
   -- 0 = diablo3
   -- 1 = futuristic orb rotating
   -- 2 = square runits style
-  local map_style = 0
+  local map_style = 2
 
   -- end config --
   
@@ -122,7 +122,11 @@
   
   function a:showhidestuff()
   
-  local move_y
+    Minimap:ClearAllPoints()
+    Minimap:SetPoint(anchor1,anchorframe,anchor2,pos_x,pos_y)
+    Minimap.SetPoint = dummy
+    
+    local move_y
   
     if map_style == 1 then
       move_y = 30

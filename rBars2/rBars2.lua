@@ -19,7 +19,7 @@
   --button system for bar 1 and bar 2
   -- 0 = 1x12 layout
   -- 1 = 2x6  layout
-  local button_system = 1
+  local button_system = 0
   
   -- hide shapeshift frame
   -- 0 = not hidden
@@ -152,6 +152,7 @@
     ShapeshiftButton1:ClearAllPoints()
     ShapeshiftBarFrame:SetParent(f)
     ShapeshiftButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",5,15);
+    ShapeshiftButton1.SetPoint = dummy
     
     -- hide the shapeshift 
     if hide_shapeshift == 1 then

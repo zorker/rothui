@@ -232,11 +232,16 @@
     for i = 1, 40 do
       local name, rank, texture, applications, debuffType, duration, timeleft, isMine, isStealable = UnitBuff(unit, i)
       --local name, rank, texture, applications, duration, timeleft = UnitBuff(unit, i)
+      
       if name == spellName then
+
+        timeleft = timeleft-GetTime()
+        --DEFAULT_CHAT_FRAME:AddMessage("found "..name.." timeleft "..timeleft-GetTime().." duration "..duration.." now "..GetTime())
+
         local floortime = ""
         if timeleft ~= nil then
           if timeleft >= 60 then 
-            floortime = floor(timeleft/60).."m"
+            floortime = floor((timeleft/60)+1).."m"
           elseif timeleft <= 1.5 then
             floortime = floor(timeleft*10)/10
           else
@@ -300,10 +305,14 @@
     for i = 1, 40 do
       local name, _, texture, applications, debufftype, duration, timeleft = UnitDebuff(unit, i)
       if name == spellName then
+      
+        timeleft = timeleft-GetTime()
+        --DEFAULT_CHAT_FRAME:AddMessage("found "..name.." timeleft "..timeleft.." duration "..duration.." now "..GetTime())
+      
         local floortime = ""
         if timeleft ~= nil then
           if timeleft >= 60 then 
-            floortime = floor(timeleft/60).."m"
+            floortime = floor((timeleft/60)+1).."m"
           elseif timeleft <= 1.5 then
             floortime = floor(timeleft*10)/10
           else

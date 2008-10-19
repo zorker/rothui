@@ -51,18 +51,15 @@
   end)  
   
   function a:dostuff0()
-    --MiniMapTracking:SetPoint("BOTTOMRIGHT", 24, -10)
     local t = Minimap:CreateTexture(nil,"Overlay")
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_map2")
     local d3mapscale = 1.3
     t:SetPoint("CENTER", Minimap, "CENTER", 0, -10*d3mapscale)
-    --t:SetPoint("BOTTOMRIGHT", Minimap, "BOTTOMRIGHT", 1, -1)
     t:SetWidth(Minimap:GetHeight()*2*d3mapscale)
     t:SetHeight(Minimap:GetHeight()*d3mapscale)
   end
   
   function a:dostuff2()
-    --MiniMapTracking:SetPoint("TOPLEFT", 0, 0)
     Minimap:SetMaskTexture("Interface\\AddOns\\rMinimap\\mask")
     local t = Minimap:CreateTexture(nil,"Overlay")
     t:SetTexture("Interface\\AddOns\\rTextures\\minigloss")
@@ -71,11 +68,13 @@
   end
   
   function a:dostuff1()
-    --MiniMapTracking:SetPoint("TOPRIGHT", 30, 30)  
+    --nothing
   end
   
   function a:rotateme()
+  
     --DEFAULT_CHAT_FRAME:AddMessage("ping")
+    
     local r2, r42, realUpdate, colorTable = math.sqrt(0.5^2+0.5^2), math.sqrt(42), true, {[4]=0.9};
     
     local f = CreateFrame("Frame",nil,Minimap)

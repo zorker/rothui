@@ -2,30 +2,28 @@
   -----------------------------
   -- configure map style here --
   -----------------------------
-  
-  -- anchor1
-  local anchor1 = "TOPRIGHT"
-  
-  -- anchor2
-  local anchor2 = "TOPRIGHT"
-  
-  -- anchorframe
-  local anchorframe = UIParent
-  
-  -- pos_x
+
+  -- map position x-axis
   local pos_x = -20
-  
-  -- pos y
+  -- map position y-axis
   local pos_y = -20
-  
+
   -- map_style
   -- 0 = diablo3
   -- 1 = futuristic orb rotating
   -- 2 = square runits style
   local map_style = 2
 
+  -- map anchor1
+  local anchor1 = "TOPRIGHT"
+  -- map anchor2
+  local anchor2 = "TOPRIGHT"
+  -- map anchorframe
+  local anchorframe = UIParent
+
+  ----------------
   -- end config --
-  
+  ----------------
   
   local a = CreateFrame("Frame", nil, UIParent)
   local _G = getfenv(0)

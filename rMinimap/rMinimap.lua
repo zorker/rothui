@@ -7,7 +7,7 @@
   -- 0 = diablo3
   -- 1 = futuristic orb rotating
   -- 2 = square runits style
-  local map_style = 2
+  local map_style = 0
 
   -- map scale
   local mapscale = 1
@@ -28,7 +28,7 @@
       },
     }
   else
-    local map_positions = {
+    map_positions = {
       position = {
         [1] = { frame = "Minimap",                  anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",   anchorframe = "UIParent",   posx = -20,   posy = -20 },
         [2] = { frame = "MiniMapTracking",          anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 0,     posy = -20 },

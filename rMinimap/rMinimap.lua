@@ -3,23 +3,43 @@
   -- configure map style here --
   -----------------------------
 
-  -- map position x-axis
-  local pos_x = -20
-  -- map position y-axis
-  local pos_y = -20
-
   -- map_style
   -- 0 = diablo3
   -- 1 = futuristic orb rotating
   -- 2 = square runits style
   local map_style = 2
 
-  -- map anchor1
-  local anchor1 = "TOPRIGHT"
-  -- map anchor2
-  local anchor2 = "TOPRIGHT"
-  -- map anchorframe
-  local anchorframe = UIParent
+  -- map scale
+  local mapscale = 1
+  
+  -- size of icons (tracking icon for example)
+  local iconsize = 20
+
+  -- position map and symbols here
+  local map_positions
+  if map_style == 2 then
+    map_positions = {
+      position = {
+        [1] = { frame = "Minimap",                  anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",     anchorframe = "UIParent",   posx = -20,   posy = -20 },
+        [2] = { frame = "MiniMapTracking",          anchor1 = "TOPLEFT",      anchor2 = "TOPLEFT",      anchorframe = "Minimap",    posx = 5,     posy = -5 },
+        [3] = { frame = "MiniMapMailFrame",         anchor1 = "BOTTOMRIGHT",  anchor2 = "BOTTOMRIGHT",  anchorframe = "Minimap",    posx = -5,    posy = 5 },
+        [4] = { frame = "MiniMapBattlefieldFrame",  anchor1 = "BOTTOMLEFT",   anchor2 = "BOTTOMLEFT",   anchorframe = "Minimap",    posx = 5,     posy = 5 },
+        [5] = { frame = "GameTimeFrame",            anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",     anchorframe = "Minimap",    posx = -5,    posy = -5 },
+      },
+    }
+  else
+    local map_positions = {
+      position = {
+        [1] = { frame = "Minimap",                  anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",   anchorframe = "UIParent",   posx = -20,   posy = -20 },
+        [2] = { frame = "MiniMapTracking",          anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 0,     posy = -20 },
+        [3] = { frame = "MiniMapMailFrame",         anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 50,    posy = -20 },
+        [4] = { frame = "MiniMapBattlefieldFrame",  anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = -25,   posy = -20 },
+        [5] = { frame = "GameTimeFrame",            anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 25,    posy = -20 },
+      },
+    }
+  end
+
+
 
   ----------------
   -- end config --
@@ -34,6 +54,7 @@
   a:SetScript("OnEvent", function (self,event,arg1)
     if(event=="PLAYER_LOGIN") then
       a:showhidestuff()
+
       if map_style == 0 then
         a:dostuff0()
       elseif map_style == 1 then
@@ -45,6 +66,13 @@
       --zoomscript taken from pminimap by p3lim
       --http://www.wowinterface.com/downloads/info8389-pMinimap.html
       a:zoomscript()
+      
+      for index,value in ipairs(map_positions.position) do 
+        local var = map_positions.position[index]
+        a:positionme(var.frame,var.anchor1,var.anchorframe,var.anchor2,var.posx,var.posy)
+      end
+
+      Minimap:SetScale(mapscale)
     end
   end)  
   
@@ -119,50 +147,31 @@
   
   function a:showhidestuff()
   
-    Minimap:ClearAllPoints()
-    Minimap:SetPoint(anchor1,anchorframe,anchor2,pos_x,pos_y)
-    Minimap.SetPoint = dummy
-    
-    local move_y
-  
-    if map_style == 1 then
-      move_y = 30
-    else
-      move_y = 10
-    end
-    
     MiniMapWorldMapButton:Hide()
     
     MiniMapTrackingBackground:Hide()
     MiniMapTrackingButtonBorder:Hide()
     MiniMapTrackingButton:SetHighlightTexture("")
     
-    MiniMapTracking:SetWidth(20)
-    MiniMapTracking:SetHeight(20)
+    MiniMapTracking:SetWidth(iconsize)
+    MiniMapTracking:SetHeight(iconsize)
     
-    MiniMapTrackingButton:ClearAllPoints()
-    MiniMapTrackingButton:SetFrameLevel(1)
     MiniMapTrackingButton:SetAllPoints(MiniMapTracking)
-    --MiniMapTrackingButton:SetWidth(20)
-    --MiniMapTrackingButton:SetHeight(20)
     
-    MiniMapTracking:ClearAllPoints()
-    MiniMapTracking:SetPoint("TOP",Minimap,"BOTTOM",0,-move_y)
-    
-    local tftb = MiniMapTrackingButton:CreateTexture(nil,"BACKGROUND")
+    local tftb = MiniMapTracking:CreateTexture(nil,"BACKGROUND")
     tftb:SetTexture("Interface\\AddOns\\rMinimap\\mask")
     tftb:SetVertexColor(0,0,0,1)
-    tftb:SetPoint("TOPLEFT", MiniMapTrackingButton, "TOPLEFT", 1, -1)
-    tftb:SetPoint("BOTTOMRIGHT", MiniMapTrackingButton, "BOTTOMRIGHT", -1, 1)
+    tftb:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 1, -1)
+    tftb:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", -1, 1)
         
-    local tft = MiniMapTrackingButton:CreateTexture(nil,"ARTWORK")
+    local tft = MiniMapTracking:CreateTexture(nil,"ARTWORK")
     tft:SetTexture("Interface\\AddOns\\rTextures\\gloss")
-    tft:SetPoint("TOPLEFT", MiniMapTrackingButton, "TOPLEFT", -0, 0)
-    tft:SetPoint("BOTTOMRIGHT", MiniMapTrackingButton, "BOTTOMRIGHT", 0, -0)
+    tft:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", -0, 0)
+    tft:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", 0, -0)
     
     MiniMapTrackingIcon:ClearAllPoints()
-    MiniMapTrackingIcon:SetPoint("TOPLEFT", MiniMapTrackingButton, "TOPLEFT", 1, -1)
-    MiniMapTrackingIcon:SetPoint("BOTTOMRIGHT", MiniMapTrackingButton, "BOTTOMRIGHT", -1, 1)
+    MiniMapTrackingIcon:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 2, -2)
+    MiniMapTrackingIcon:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", -2, 2)
     MiniMapTrackingIcon.SetPoint = dummy
     MiniMapTrackingIcon:SetTexCoord(0.07,0.93,0.07,0.93)
     
@@ -170,8 +179,8 @@
     MinimapZoomIn:Hide()
 
     MiniMapMailBorder:Hide()
-    MiniMapMailFrame:SetWidth(20)
-    MiniMapMailFrame:SetHeight(20)
+    MiniMapMailFrame:SetWidth(iconsize)
+    MiniMapMailFrame:SetHeight(iconsize)
     
     local mft = MiniMapMailFrame:CreateTexture(nil,"ARTWORK")
     mft:SetTexture("Interface\\AddOns\\rTextures\\gloss")
@@ -183,13 +192,8 @@
     MiniMapMailIcon:SetPoint("BOTTOMRIGHT", MiniMapMailFrame, "BOTTOMRIGHT", -1, 1)
     MiniMapMailIcon:SetTexCoord(0.07,0.93,0.07,0.93)
     
-    MiniMapMailFrame:ClearAllPoints()
-    MiniMapMailFrame:SetPoint("TOP",Minimap,"BOTTOM",50,-move_y)
-
-    MiniMapBattlefieldFrame:ClearAllPoints()
-    MiniMapBattlefieldFrame:SetPoint("TOP",Minimap,"BOTTOM",25,-move_y)
-    MiniMapBattlefieldFrame:SetWidth(20)
-    MiniMapBattlefieldFrame:SetHeight(20)
+    MiniMapBattlefieldFrame:SetWidth(iconsize)
+    MiniMapBattlefieldFrame:SetHeight(iconsize)
     
     MiniMapBattlefieldBorder:Hide()
     
@@ -207,7 +211,6 @@
     MiniMapBattlefieldIcon:ClearAllPoints()
     MiniMapBattlefieldIcon:SetAllPoints(MiniMapBattlefieldFrame)    
     MiniMapBattlefieldIcon:SetTexCoord(0.07,0.93,0.07,0.93)
-
     
     MinimapToggleButton:Hide()
     MinimapZoneTextButton:Hide()
@@ -222,10 +225,8 @@
     
     -- hack for the calendartime frame
     local bu = _G["GameTimeFrame"]
-    bu:SetWidth(20)
-    bu:SetHeight(20)
-    bu:ClearAllPoints()
-    bu:SetPoint("TOP",Minimap,"BOTTOM",-25,-move_y)
+    bu:SetWidth(iconsize)
+    bu:SetHeight(iconsize)
     bu:SetHitRectInsets(0, 0, 0, 0)
     
     local gtftb = bu:CreateTexture(nil,"BACKGROUND")
@@ -254,6 +255,14 @@
     
     MiniMapMeetingStoneFrame:Hide()
 
+  end
+  
+  function a:positionme(f,a1,af,a2,px,py)
+    f = _G[f]
+    af = _G[af]
+    f:ClearAllPoints()
+    f:SetPoint(a1,af,a2,px,py)
+    f.SetPoint = dummy
   end
   
   function a:zoomscript()

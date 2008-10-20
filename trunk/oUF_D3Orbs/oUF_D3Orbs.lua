@@ -53,7 +53,7 @@
     end)
   
     self.ButtonOverlay = button:CreateTexture(nil, "OVERLAY")
-    self.ButtonOverlay:SetTexture("Interface\\AddOns\\oUF_Orbs\\textures\\gloss.tga")
+    self.ButtonOverlay:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\gloss.tga")
     self.ButtonOverlay:SetParent(button)
     self.ButtonOverlay:SetPoint("TOPLEFT", -1, 1)
     self.ButtonOverlay:SetPoint("BOTTOMRIGHT", 1, -1)
@@ -111,33 +111,33 @@
   
     if unit == "player" then
       self.Health = CreateFrame("StatusBar", nil, self)
-      self.Health:SetStatusBarTexture("Interface\\AddOns\\oUF_Orbs\\textures\\orb_transparent.tga")
+      self.Health:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_transparent.tga")
       self.Health:SetHeight(orbsize)
       self.Health:SetWidth(orbsize)
       self.Health:SetPoint("TOPLEFT", 0, 0)
     else
       self.Health = CreateFrame("StatusBar", nil, self)
       --want non-transparent background? comment this in.
-      --self.Health:SetBackdrop({bgFile = "Interface\\AddOns\\oUF_Orbs\\textures\\orb_back_flat.tga", insets = {top = 0, left = 0, bottom = 0, right = 0}})
-      self.Health:SetStatusBarTexture("Interface\\AddOns\\oUF_Orbs\\textures\\orb_transparent.tga")
+      --self.Health:SetBackdrop({bgFile = "Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back_flat.tga", insets = {top = 0, left = 0, bottom = 0, right = 0}})
+      self.Health:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_transparent.tga")
       self.Health:SetHeight(orbsize)
       self.Health:SetWidth(orbsize)
       self.Health:SetPoint("TOPLEFT",0,0)
     end
     
     self.Health.bg = self.Health:CreateTexture(nil, "BACKGROUND")
-    self.Health.bg:SetTexture("Interface\\AddOns\\oUF_Orbs\\textures\\orb_back.tga")
+    self.Health.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back.tga")
     self.Health.bg:SetAllPoints(self.Health)
     
     self.Health.Filling = self.Health:CreateTexture(nil, "ARTWORK")
-    self.Health.Filling:SetTexture("Interface\\AddOns\\oUF_Orbs\\textures\\orb_filling4.tga")
+    self.Health.Filling:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_filling4.tga")
     self.Health.Filling:SetPoint("BOTTOMLEFT",0,0)
     self.Health.Filling:SetWidth(orbsize)
     self.Health.Filling:SetHeight(orbsize)
     self.Health.Filling:SetVertexColor(0.4,0,0,1)
     
     self.Health.Gloss = self.Health:CreateTexture(nil, "OVERLAY")
-    self.Health.Gloss:SetTexture("Interface\\AddOns\\oUF_Orbs\\textures\\orb_gloss.tga")
+    self.Health.Gloss:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_gloss.tga")
     self.Health.Gloss:SetAllPoints(self.Health)
   
     self.pm1 = CreateFrame("PlayerModel", nil,self.Health)
@@ -181,16 +181,16 @@
     if unit == "player" then
       self.Power = CreateFrame("StatusBar", nil, self)
       --want non-transparent background? comment this in.
-      --self.Power:SetBackdrop({bgFile = "Interface\\AddOns\\oUF_Orbs\\textures\\orb_back_flat.tga", insets = {top = 0, left = 0, bottom = 0, right = 0}})
-      self.Power:SetStatusBarTexture("Interface\\AddOns\\oUF_Orbs\\textures\\orb_transparent.tga")
+      --self.Power:SetBackdrop({bgFile = "Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back_flat.tga", insets = {top = 0, left = 0, bottom = 0, right = 0}})
+      self.Power:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_transparent.tga")
       self.Power:SetHeight(orbsize)
       self.Power:SetWidth(orbsize)
       self.Power:SetPoint("BOTTOM", UIParent, "BOTTOM", 224, -8)
     else
       self.Power = CreateFrame("StatusBar", nil, self)
       --want non-transparent background? comment this in.
-      --self.Power:SetBackdrop({bgFile = "Interface\\AddOns\\oUF_Orbs\\textures\\orb_back_flat.tga", insets = {top = 0, left = 0, bottom = 0, right = 0}})
-      self.Power:SetStatusBarTexture("Interface\\AddOns\\oUF_Orbs\\textures\\orb_transparent.tga")
+      --self.Power:SetBackdrop({bgFile = "Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back_flat.tga", insets = {top = 0, left = 0, bottom = 0, right = 0}})
+      self.Power:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_transparent.tga")
       self.Power:SetHeight(orbsize/1.5)
       self.Power:SetWidth(orbsize/1.5)
       self.Power:SetPoint("CENTER", self.Health, "CENTER", orbsize/2.5, -orbsize/3)
@@ -198,19 +198,19 @@
     end
     
     self.Power.bg = self.Power:CreateTexture(nil, "BACKGROUND")
-    self.Power.bg:SetTexture("Interface\\AddOns\\oUF_Orbs\\textures\\orb_back.tga")
+    self.Power.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back.tga")
     self.Power.bg:SetAllPoints(self.Power)
 
     if unit == "player" then
       self.Power.Filling = self.Power:CreateTexture(nil, "ARTWORK")
-      self.Power.Filling:SetTexture("Interface\\AddOns\\oUF_Orbs\\textures\\orb_filling4.tga")
+      self.Power.Filling:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_filling4.tga")
       self.Power.Filling:SetPoint("BOTTOMLEFT",0,0)
       self.Power.Filling:SetWidth(orbsize)
       self.Power.Filling:SetHeight(orbsize)
       self.Power.Filling:SetVertexColor(0,0,0.4,1)
     else
       self.Power.Filling = self.Power:CreateTexture(nil, "ARTWORK")
-      self.Power.Filling:SetTexture("Interface\\AddOns\\oUF_Orbs\\textures\\orb_filling4.tga")
+      self.Power.Filling:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_filling4.tga")
       self.Power.Filling:SetPoint("BOTTOMLEFT",0,0)
       self.Power.Filling:SetWidth(orbsize/1.5)
       self.Power.Filling:SetHeight(orbsize/1.5)
@@ -218,7 +218,7 @@
     end
     
     self.Power.Gloss = self.Power:CreateTexture(nil, "OVERLAY")
-    self.Power.Gloss:SetTexture("Interface\\AddOns\\oUF_Orbs\\textures\\orb_gloss.tga")
+    self.Power.Gloss:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_gloss.tga")
     self.Power.Gloss:SetAllPoints(self.Power)
   
     self.pm3 = CreateFrame("PlayerModel", nil,self.Power)
@@ -262,8 +262,8 @@
       self.Castbar = CreateFrame("StatusBar", nil, self.Health)
       self.Castbar:SetWidth(orbsize*1.2)
       self.Castbar:SetHeight(orbsize*1.2)
-      self.Castbar:SetBackdrop({bgFile = "Interface\\AddOns\\oUF_Orbs\\textures\\orb_back.tga", insets = {top = 0, left = 0, bottom = 0, right = 0}})
-      self.Castbar:SetStatusBarTexture("Interface\\AddOns\\oUF_Orbs\\textures\\orb_filling2.tga")
+      self.Castbar:SetBackdrop({bgFile = "Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back.tga", insets = {top = 0, left = 0, bottom = 0, right = 0}})
+      self.Castbar:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_filling2.tga")
       self.Castbar:SetStatusBarColor(1,0.8,0,1)
       self.Castbar:SetPoint("CENTER",0,0)
       
@@ -305,7 +305,7 @@
   d3f:SetPoint("BOTTOM",280,0)
   d3f:Show()
   local d3t = d3f:CreateTexture(nil,"BACKGROUND")
-  d3t:SetTexture("Interface\\AddOns\\oUF_Orbs\\textures\\d3_angel")
+  d3t:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_angel")
   d3t:SetAllPoints(d3f)
 
   local d3f2 = CreateFrame("Frame",nil,UIParent)
@@ -315,7 +315,7 @@
   d3f2:SetPoint("BOTTOM",-287,0)
   d3f2:Show()
   local d3t2 = d3f2:CreateTexture(nil,"HIGHLIGHT ")
-  d3t2:SetTexture("Interface\\AddOns\\oUF_Orbs\\textures\\d3_demon")
+  d3t2:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_demon")
   d3t2:SetAllPoints(d3f2)
   
   local d3f3 = CreateFrame("Frame",nil,UIParent)
@@ -325,7 +325,7 @@
   d3f3:SetPoint("BOTTOM",0,-3)
   d3f3:Show()
   local d3t3 = d3f3:CreateTexture(nil,"BACKGROUND")
-  d3t3:SetTexture("Interface\\AddOns\\oUF_Orbs\\textures\\d3_bottom")
+  d3t3:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bottom")
   d3t3:SetAllPoints(d3f3)
   
   local d3f4 = CreateFrame("Frame",nil,UIParent)
@@ -336,6 +336,6 @@
   d3f4:Show()
       
   local d3t4 = d3f4:CreateTexture(nil,"BACKGROUND")
-  d3t4:SetTexture("Interface\\AddOns\\oUF_Orbs\\textures\\d3_bar4")
+  d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar4")
   d3t4:SetAllPoints(d3f4)
     

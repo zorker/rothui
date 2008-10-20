@@ -7,7 +7,7 @@
   -- 0 = diablo3
   -- 1 = futuristic orb rotating
   -- 2 = square runits style
-  local map_style = 0
+  local map_style = 2
 
   -- map scale
   local mapscale = 1
@@ -25,6 +25,7 @@
         [3] = { frame = "MiniMapMailFrame",         anchor1 = "BOTTOMRIGHT",  anchor2 = "BOTTOMRIGHT",  anchorframe = "Minimap",    posx = -5,    posy = 5 },
         [4] = { frame = "MiniMapBattlefieldFrame",  anchor1 = "BOTTOMLEFT",   anchor2 = "BOTTOMLEFT",   anchorframe = "Minimap",    posx = 5,     posy = 5 },
         [5] = { frame = "GameTimeFrame",            anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",     anchorframe = "Minimap",    posx = -5,    posy = -5 },
+        [6] = { frame = "TimeManagerClockButton",   anchor1 = "BOTTOM",       anchor2 = "BOTTOM",       anchorframe = "Minimap",    posx = 0,    posy = -2 },
       },
     }
   else
@@ -35,6 +36,7 @@
         [3] = { frame = "MiniMapMailFrame",         anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 50,    posy = -20 },
         [4] = { frame = "MiniMapBattlefieldFrame",  anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = -25,   posy = -20 },
         [5] = { frame = "GameTimeFrame",            anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 25,    posy = -20 },
+        [6] = { frame = "TimeManagerClockButton",   anchor1 = "BOTTOM",       anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 0,    posy = 0 },
       },
     }
   end
@@ -53,6 +55,9 @@
   
   a:SetScript("OnEvent", function (self,event,arg1)
     if(event=="PLAYER_LOGIN") then
+      
+      LoadAddOn("Blizzard_TimeManager")
+      
       a:showhidestuff()
 
       if map_style == 0 then
@@ -146,6 +151,14 @@
   end
   
   function a:showhidestuff()
+    
+    if TimeManagerClockButton then
+      local timerframe = _G["TimeManagerClockButton"]
+      local region1 = timerframe:GetRegions()
+      region1:Hide()
+      TimeManagerClockTicker:SetFont(NAMEPLATE_FONT, 14, "THINOUTLINE")
+
+    end
   
     MiniMapWorldMapButton:Hide()
     

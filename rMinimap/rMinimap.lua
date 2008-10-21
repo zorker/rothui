@@ -1,3 +1,6 @@
+  
+  local rm_player_name, _ = UnitName("player")
+  local _, rm_player_class = UnitClass("player")
    
   -----------------------------
   -- configure map style here --
@@ -7,7 +10,12 @@
   -- 0 = diablo3
   -- 1 = futuristic orb rotating
   -- 2 = square runits style
-  local map_style = 2
+  local map_style
+  if rm_player_name == "Astone" and rm_player_class == "WARLOCK" then
+    map_style = 0
+  else
+    map_style = 2
+  end
 
   -- map scale
   local mapscale = 1

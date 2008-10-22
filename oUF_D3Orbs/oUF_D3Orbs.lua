@@ -1,5 +1,45 @@
+    
+  ----------------
+  -- CONFIG
+  ---------------- 
+  
+  -- myscale sets scaling. range 0-1, 0.7 = 70%.  
+  local myscale = 1
+  
+  -- usebar defines what actionbar texture will be used. 
+  -- usebar = 1 -> 24 button texture
+  -- usebar = 2 -> 36 button texture
+  local usebar = 1
+  
+  
+  --stuff I need later for target classification text
+  --[[
+  
+  -- http://www.wowwiki.com/World_of_Warcraft_API#Unit_Functions
+  
+  local localizedClass, englishClass = UnitClass("unit")    -- shaman etc
+  local classification = UnitClassification(unit)           -- elite/worldboss
+  local creatureFamily = UnitCreatureFamily(unit)           -- crab/wolf
+  local creatureType = UnitCreatureType(unit)               -- humanoid, demon, beast or nil
+  local isenemy = UnitIsEnemy("player", unit)               -- Returns true if the specified units are enemies, false otherwise. 
+  local isplusmob = UnitIsPlusMob("unit")                   -- return 0 or 1 is mob is elite
+  local unitlevel = UnitLevel("unit")                       -- return unitlevel
+  local race = UnitRace("unit")                             -- race Troll, Human etc
+  local reaction = UnitReaction("player", unit)             -- http://www.wowwiki.com/API_UnitReaction  
+  
+  ]]--
+
+
+  ----------------
+  -- CONFIG END
+  ----------------  
+  
+  -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
-  -- Colors
+  ----------------
+  -- COLRORS
+  ---------------- 
+  
   local colors2 = {
     power = {
       [0] = { r = 48/255, g = 113/255, b = 191/255}, -- Mana
@@ -20,6 +60,10 @@
       [3] = {r = 0, g = 1, b = 0}, -- colors.. | happy
     },
   }
+  
+  ----------------
+  -- FUNCTIONS
+  ---------------- 
   
   local function menu(self)
     local unit = self.unit:sub(1, -2)
@@ -42,9 +86,9 @@
   local function auraIcon(self, button, icons, index, debuff)
     icons.showDebuffType = false
     button.cd:SetReverse()
-    button.icon:SetTexCoord(.07, .93, .07, .93)
+    button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
     button.count:SetPoint("BOTTOMRIGHT", button, 1, 0)
-    button.count:SetTextColor(.84,.75,.65)
+    button.count:SetTextColor(0.7,0.7,0.7)
     button:SetScript("OnMouseUp", function(self, mouseButton)
       if mouseButton == "RightButton" then
         local name, rank = UnitBuff("player", index)
@@ -57,12 +101,8 @@
     self.ButtonOverlay:SetParent(button)
     self.ButtonOverlay:SetPoint("TOPLEFT", -1, 1)
     self.ButtonOverlay:SetPoint("BOTTOMRIGHT", 1, -1)
-    --self.ButtonOverlay:SetVertexColor(.31,.45,.63,1)
-    --self.ButtonOverlay:SetBlendMode("BLEND")
   
   end
-  
-  -- yyyyyyyyyyyyyyyyyyyyyyy
   
   local function updateHealth(self, event, unit, bar, min, max)
     local lifeact = UnitHealth(unit)
@@ -147,6 +187,9 @@
     end
   end
   
+  ----------------
+  -- STYLEFUNC
+  ---------------- 
  
   local function styleFunc1(self, unit)
     local _, class = UnitClass("player")
@@ -158,8 +201,11 @@
     
     self:SetFrameStrata("BACKGROUND")
     
-    local orbsize = 130
+    ----------------
+    -- SELF
+    ----------------
     
+    local orbsize = 130
     if unit == "player" then
       self:SetHeight(orbsize)
       self:SetWidth(orbsize)
@@ -170,7 +216,11 @@
       self:SetHeight(20)
       self:SetWidth(110)
     end
-  
+    
+    ----------------
+    -- HEALTH
+    ----------------
+    
     if unit == "player" then
       self.Health = CreateFrame("StatusBar", nil, self)
       self.Health:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_transparent.tga")
@@ -185,22 +235,23 @@
       self.Health:SetPoint("TOPLEFT",0,-1)
     end
     
+    ----------------------
+    -- HEALTH BACKGROUND
+    ----------------------
+    
     if unit == "player" then
       self.Health.bg = self.Health:CreateTexture(nil, "BACKGROUND")
       self.Health.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back.tga")
       self.Health.bg:SetAllPoints(self.Health)
-      
       self.Health.Filling = self.Health:CreateTexture(nil, "ARTWORK")
       self.Health.Filling:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_filling4.tga")
       self.Health.Filling:SetPoint("BOTTOMLEFT",0,0)
       self.Health.Filling:SetWidth(orbsize)
       self.Health.Filling:SetHeight(orbsize)
       self.Health.Filling:SetVertexColor(0.6,0,0,1)
-
       self.Health.Gloss = self.Health:CreateTexture(nil, "OVERLAY")
       self.Health.Gloss:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_gloss.tga")
       self.Health.Gloss:SetAllPoints(self.Health)
-
     elseif unit == "target" then
       self.bg = self:CreateTexture(nil, "BACKGROUND")
       self.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_targetframe.tga")
@@ -221,12 +272,12 @@
       self.Health.bg:SetAllPoints(self.Health)
     end
     
-
+    ----------------
+    -- POWER
+    ----------------
     
     if unit == "player" then
       self.Power = CreateFrame("StatusBar", nil, self)
-      --want non-transparent background? comment this in.
-      --self.Power:SetBackdrop({bgFile = "Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back_flat.tga", insets = {top = 0, left = 0, bottom = 0, right = 0}})
       self.Power:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_transparent.tga")
       self.Power:SetHeight(orbsize)
       self.Power:SetWidth(orbsize)
@@ -254,7 +305,10 @@
       --self.Power.bg:SetAllPoints(self.Power)
     end
 
-  
+    ----------------
+    -- CASTBAR
+    ----------------
+    
     if unit == "player" or unit == "target" then
       self.Castbar = CreateFrame("StatusBar", nil, UIParent)
       self.Castbar:SetWidth(226)
@@ -283,6 +337,9 @@
       Castbar = self.Castbar
     end
     
+    ---------------------
+    -- NAMES and VALUES
+    ---------------------
     
     if unit == "player" then
       self.Health.value = SetFontString(self.Health, NAMEPLATE_FONT, 24, "THINOUTLINE")
@@ -314,12 +371,14 @@
     self.UNIT_HAPPINESS = updateName
     self.PLAYER_TARGET_CHANGED = updateTarget
     
-    if unit == "pet" or unit == "focus" then
-      --self:SetScale(1)
-    end
+    self:SetScale(myscale)
   
     return self
   end
+
+  -------------------------------------------------------
+  -- REGISTER STYLE, CALL STYLEFUNC and SPAWN UNITS
+  -------------------------------------------------------
   
   actstyle = "d3orb"
   --oUF:RegisterSubTypeMapping("UNIT_LEVEL")
@@ -331,12 +390,18 @@
   oUF:Spawn("focus"):SetPoint("BOTTOM", UIParent, "BOTTOM", 500, 50)
   oUF:Spawn("targettarget"):SetPoint("RIGHT", oUF.units.target, "LEFT", -80, 0)
 
+
+  -----------------------------
+  -- CREATING D3 ART FRAMES
+  -----------------------------
+
   local d3f = CreateFrame("Frame",nil,UIParent)
   d3f:SetFrameStrata("TOOLTIP")
   d3f:SetWidth(155)
   d3f:SetHeight(155)
   d3f:SetPoint("BOTTOM",305,0)
   d3f:Show()
+  d3f:SetScale(myscale)
   local d3t = d3f:CreateTexture(nil,"BACKGROUND")
   d3t:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_angel")
   d3t:SetAllPoints(d3f)
@@ -347,6 +412,7 @@
   d3f2:SetHeight(155)
   d3f2:SetPoint("BOTTOM",-312,0)
   d3f2:Show()
+  d3f2:SetScale(myscale)
   local d3t2 = d3f2:CreateTexture(nil,"HIGHLIGHT ")
   d3t2:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_demon")
   d3t2:SetAllPoints(d3f2)
@@ -357,6 +423,7 @@
   d3f3:SetHeight(112)
   d3f3:SetPoint("BOTTOM",0,-3)
   d3f3:Show()
+  d3f3:SetScale(myscale)
   local d3t3 = d3f3:CreateTexture(nil,"BACKGROUND")
   d3t3:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bottom")
   d3t3:SetAllPoints(d3f3)
@@ -367,8 +434,12 @@
   d3f4:SetHeight(256)
   d3f4:SetPoint("BOTTOM",1,0)
   d3f4:Show()
-      
+  d3f4:SetScale(myscale)
   local d3t4 = d3f4:CreateTexture(nil,"BACKGROUND")
-  d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar6")
+  if usebar == 1 then
+    d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar6")
+  else
+    d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar5")
+  end
   d3t4:SetAllPoints(d3f4)
     

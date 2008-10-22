@@ -3,31 +3,19 @@
   -- CONFIG
   ---------------- 
   
+  --font
+  local d3font = "Interface\\AddOns\\oUF_D3Orbs\\avqest.ttf"
+  
   -- myscale sets scaling. range 0-1, 0.7 = 70%.  
   local myscale = 1
   
   -- usebar defines what actionbar texture will be used. 
   -- usebar = 1 -> 24 button texture
   -- usebar = 2 -> 36 button texture
-  local usebar = 1
+  local usebar = 2
   
   
-  --stuff I need later for target classification text
-  --[[
-  
-  -- http://www.wowwiki.com/World_of_Warcraft_API#Unit_Functions
-  
-  local localizedClass, englishClass = UnitClass("unit")    -- shaman etc
-  local classification = UnitClassification(unit)           -- elite/worldboss
-  local creatureFamily = UnitCreatureFamily(unit)           -- crab/wolf
-  local creatureType = UnitCreatureType(unit)               -- humanoid, demon, beast or nil
-  local isenemy = UnitIsEnemy("player", unit)               -- Returns true if the specified units are enemies, false otherwise. 
-  local isplusmob = UnitIsPlusMob("unit")                   -- return 0 or 1 is mob is elite
-  local unitlevel = UnitLevel("unit")                       -- return unitlevel
-  local race = UnitRace("unit")                             -- race Troll, Human etc
-  local reaction = UnitReaction("player", unit)             -- http://www.wowwiki.com/API_UnitReaction  
-  
-  ]]--
+
 
 
   ----------------
@@ -42,7 +30,7 @@
   
   local colors2 = {
     power = {
-      [0] = { r = 48/255, g = 113/255, b = 191/255}, -- Mana
+      [0] = { r = 90/255, g = 180/255, b = 200/255}, -- Mana
       [1] = { r = 255/255, g = 1/255, b = 1/255}, -- Rage
       [2] = { r = 255/255, g = 178/255, b = 0}, -- Focus
       [3] = { r = 1, g = 1, b = 34/255}, -- Energy
@@ -104,85 +92,214 @@
   
   end
   
+  -- creates classtext for target
+  local function do_classtext(self,unit)
+
+    --stuff I need later for target classification text
+    --[[
+    -- http://www.wowwiki.com/World_of_Warcraft_API#Unit_Functions
+    local localizedClass, englishClass = UnitClass("unit")    -- shaman etc
+    local classification = UnitClassification(unit)           -- elite/worldboss
+    local creatureFamily = UnitCreatureFamily(unit)           -- crab/wolf
+    local creatureType = UnitCreatureType(unit)               -- humanoid, demon, beast or nil
+    local isenemy = UnitIsEnemy("player", unit)               -- Returns true if the specified units are enemies, false otherwise. 
+    local isplusmob = UnitIsPlusMob("unit")                   -- return 0 or 1 is mob is elite
+    local unitlevel = UnitLevel("unit")                       -- return unitlevel
+    local race = UnitRace("unit")                             -- race Troll, Human etc
+    local reaction = UnitReaction("player", unit)             -- http://www.wowwiki.com/API_UnitReaction  
+    ]]--
+    
+    local string = ""
+    local tmpstring = ""
+    local sp = " "
+    
+    if UnitLevel(unit) ~= -1 then
+      string = UnitLevel(unit)
+    else
+      string = (UnitLevel("player")+3)
+    end
+    
+    string = string..sp
+    
+
+    local unitrace = UnitRace(unit)
+    local creatureType = UnitCreatureType(unit)
+    
+    if unitrace and UnitIsPlayer(unit) then
+      string = string..unitrace..sp
+    end
+    
+    if creatureType and not UnitIsPlayer(unit) then
+      string = string..creatureType..sp
+    end
+    
+    local unit_classification = UnitClassification(unit)
+    
+    if unit_classification == "worldboss" then
+      tmpstring = "Boss"
+    elseif unit_classification == "rare" then
+      tmpstring = "Rare"
+      if UnitIsPlusMob(unit) then
+        tmpstring = tmpstring.." ELITE"
+      end
+    elseif unit_classification == "elite" then
+      tmpstring = "Elite"
+    end
+    
+    if tmpstring ~= "" then
+      tmpstring = tmpstring..sp  
+    end
+    
+    string = string..tmpstring
+    tmpstring = ""
+    
+    local localizedClass, englishClass = UnitClass(unit)
+    
+    if localizedClass and UnitIsPlayer(unit) then
+      string = string..localizedClass..sp
+    end
+    
+    
+    self.Classtext:SetText(string)
+
+  end
+  
   local function updateHealth(self, event, unit, bar, min, max)
     local lifeact = UnitHealth(unit)
     local lifemax = UnitHealthMax(unit)
     
+    local checkplayer = 0
+    if UnitIsPlayer(unit) then
+      checkplayer = 1
+    end
+    
     local c = max - min
     local d = floor(min/max*100)
     
+    if d <= 25 and d > 0 and min > 1 then
+      self.LowHP:Show()
+    else
+      self.LowHP:Hide()
+    end
+    
     if unit == "player" then
-      if d == 0 or d == 100 then
+      if d == 0 or d == 100 or min == 1 then
         bar.value:SetText("")
       else
-        bar.value:Show()
         bar.value:SetText(d)
       end
     elseif unit == "target" then
-      if d == 0 or d == 100 then
+      if d == 0 or d == 100 or min == 1 then
         bar.value:SetText("")
       else
-        bar.value:Show()
         bar.value:SetText(d)
       end
     else
-      if d == 0 or d == 100 then
+      if d == 0 or d == 100 or min == 1 then
         bar.value:SetText("")
       else
-        bar.value:Show()
         bar.value:SetText(d)
       end    
+    end
+    
+    if unit == "target" then
+      do_classtext(self,unit)
     end
     
     if unit == "player" then
       self.Health.Filling:SetHeight((lifeact / lifemax) * self.Health:GetWidth())
       self.Health.Filling:SetTexCoord(0,1,  math.abs(lifeact / lifemax - 1),1)
-      --self.pm1:SetAlpha((lifeact / lifemax)/2)
-      --self.pm2:SetAlpha((lifeact / lifemax)/2)
+      self.pm1:SetAlpha((lifeact / lifemax))
+      self.pm2:SetAlpha((lifeact / lifemax))
     else
+  		
   		self.Health:SetStatusBarColor(0.2,0,0,1)
+  		if min > 1 then
+  		  self.Health.bg:SetVertexColor(0.5,0,0,1)
+  		else
+  		  self.Health.bg:SetVertexColor(0.15,0.15,0.15,1)
+  		end
+
+  		local tmpunitname = UnitName(unit)  		
+  		if unit == "target" then
+    		if tmpunitname:len() > 24 then
+    		  tmpunitname = tmpunitname:sub(1, 24).."..."
+    		  self.Name:SetText(tmpunitname)
+    		end
+  		else
+    		if tmpunitname:len() > 16 then
+    		  tmpunitname = tmpunitname:sub(1, 16).."..."
+    		  self.Name:SetText(tmpunitname)
+    		end
+  		end
+  		
   		if UnitIsPlayer(unit) then
         if RAID_CLASS_COLORS[select(2, UnitClass(unit))] then
           local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
-          self.Health.bg:SetVertexColor(color.r, color.g, color.b,1)
+          --self.Health.bg:SetVertexColor(color.r, color.g, color.b,1)
+          self.Name:SetTextColor(color.r, color.g, color.b,1)
         end
       elseif unit == "pet" and UnitExists("pet") and GetPetHappiness() then
         local happiness, _, _ = GetPetHappiness()
         local color = colors2.happiness[happiness]
-        self.Health.bg:SetVertexColor(color.r, color.g, color.b,1)
+        --self.Health.bg:SetVertexColor(color.r, color.g, color.b,1)
+        self.Name:SetTextColor(color.r, color.g, color.b,1)
       else
         local color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
         if color then
-          self.Health.bg:SetVertexColor(color.r, color.g, color.b,1)
+          --self.Health.bg:SetVertexColor(color.r, color.g, color.b,1)
+          self.Name:SetTextColor(color.r, color.g, color.b,1)
         else
-          self.Health.bg:SetVertexColor(0,1,0,1)
+          --self.Health.bg:SetVertexColor(0,1,0,1)
+          self.Name:SetTextColor(0.9, 0.8, 0)
         end
       end
     end
   end
   
   local function updatePower(self, event, unit, bar, min, max)
+
+    local c, d
+    
+    if max == 0 then
+      d = 0
+    else
+      c = max - min
+      d = floor(min/max*100)
+    end
+    
+    if unit == "player" then
+      if d == 0 or d == 100 then
+        bar.value:SetText("")
+      else
+        bar.value:SetText(d)
+      end
+    end
+
+
     local manaact = UnitMana(unit)
     local manamax = UnitManaMax(unit)
     if (manamax == 0) then
       if unit == "player" then
         self.Power.Filling:SetHeight(0)
         self.Power.Filling:SetTexCoord(0,1,1,1)
-        --self.pm3:SetAlpha(0)
-        --self.pm4:SetAlpha(0)
+        self.pm3:SetAlpha(0)
+        self.pm4:SetAlpha(0)
       else
         local color = colors2.power[UnitPowerType(unit)]
         bar:SetStatusBarColor(color.r, color.g, color.b)
+        bar.bg:SetVertexColor(color.r, color.g, color.b,0.3)
       end
     else
       if unit == "player" then
         self.Power.Filling:SetHeight((manaact / manamax) * self.Power:GetWidth())
         self.Power.Filling:SetTexCoord(0,1,  math.abs(manaact / manamax - 1),1)
-        --self.pm3:SetAlpha((manaact / manamax)/2)
-        --self.pm4:SetAlpha((manaact / manamax)/2)
+        self.pm3:SetAlpha((manaact / manamax))
+        self.pm4:SetAlpha((manaact / manamax))
       else
         local color = colors2.power[UnitPowerType(unit)]
         bar:SetStatusBarColor(color.r, color.g, color.b)
+        bar.bg:SetVertexColor(color.r, color.g, color.b,0.3)
       end
     end
   end
@@ -230,7 +347,7 @@
     else
       self.Health = CreateFrame("StatusBar", nil, self)
       self.Health:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
-      self.Health:SetHeight(18)
+      self.Health:SetHeight(16)
       self.Health:SetWidth(self:GetWidth())
       self.Health:SetPoint("TOPLEFT",0,-1)
     end
@@ -252,6 +369,37 @@
       self.Health.Gloss = self.Health:CreateTexture(nil, "OVERLAY")
       self.Health.Gloss:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_gloss.tga")
       self.Health.Gloss:SetAllPoints(self.Health)
+      
+      self.pm1 = CreateFrame("PlayerModel", nil,self.Health)
+      self.pm1:SetFrameStrata("BACKGROUND")
+      self.pm1:SetAllPoints(self.Health)
+      self.pm1:SetModel("SPELLS\\RedRadiationFog.m2")
+      self.pm1:SetModelScale(-.85)
+      self.pm1:SetPosition(-12, 1, -1.4) 
+      self.pm1:SetAlpha(1)
+      
+      self.pm1:SetScript("OnShow",function() 
+        self.pm1:ClearModel()
+        self.pm1:SetModel("SPELLS\\RedRadiationFog.m2")
+        self.pm1:SetModelScale(-.85)
+        self.pm1:SetPosition(-12, 1, -1.4) 
+      end)
+      
+      self.pm2 = CreateFrame("PlayerModel", nil,self.Health)
+      self.pm2:SetFrameStrata("BACKGROUND")
+      self.pm2:SetAllPoints(self.Health)
+      self.pm2:SetModel("SPELLS\\RedRadiationFog.m2")
+      self.pm2:SetModelScale(-.75)
+      self.pm2:SetPosition(-12, 1.2, 0) 
+      self.pm2:SetAlpha(1)
+      
+      self.pm2:SetScript("OnShow",function() 
+        self.pm2:ClearModel()
+        self.pm2:SetModel("SPELLS\\RedRadiationFog.m2")
+        self.pm2:SetModelScale(.75)
+        self.pm2:SetPosition(-12, 1.2, 0) 
+      end)
+      
     elseif unit == "target" then
       self.bg = self:CreateTexture(nil, "BACKGROUND")
       self.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_targetframe.tga")
@@ -290,19 +438,50 @@
       self.Power.Filling:SetPoint("BOTTOMLEFT",0,0)
       self.Power.Filling:SetWidth(orbsize)
       self.Power.Filling:SetHeight(orbsize)
-      self.Power.Filling:SetVertexColor(0.1,0.5,0.5,1)
+      self.Power.Filling:SetVertexColor(0.1,0.1,0.5,1)
       self.Power.Gloss = self.Power:CreateTexture(nil, "OVERLAY")
       self.Power.Gloss:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_gloss.tga")
       self.Power.Gloss:SetAllPoints(self.Power)
+      
+      self.pm3 = CreateFrame("PlayerModel", nil,self.Power)
+      self.pm3:SetFrameStrata("BACKGROUND")
+      self.pm3:SetAllPoints(self.Power)
+      self.pm3:SetModel("SPELLS\\BlueRadiationFog.m2")
+      self.pm3:SetModelScale(-.75)
+      self.pm3:SetPosition(-12, 1.5, -1) 
+      self.pm3:SetAlpha(1)
+      
+      self.pm3:SetScript("OnShow",function() 
+        self.pm3:ClearModel()
+        self.pm3:SetModel("SPELLS\\BlueRadiationFog.m2")
+        self.pm3:SetModelScale(.75)
+        self.pm3:SetPosition(-12, 1.5, -1) 
+      end)
+      
+      self.pm4 = CreateFrame("PlayerModel", nil,self.Power)
+      self.pm4:SetFrameStrata("BACKGROUND")
+      self.pm4:SetAllPoints(self.Power)
+      self.pm4:SetModel("SPELLS\\BlueRadiationFog.m2")
+      self.pm4:SetModelScale(-.75)
+      self.pm4:SetPosition(-12, 1.5, 0.5) 
+      self.pm4:SetAlpha(1)
+      
+      self.pm4:SetScript("OnShow",function() 
+        self.pm4:ClearModel()
+        self.pm4:SetModel("SPELLS\\BlueRadiationFog.m2")
+        self.pm4:SetModelScale(.75)
+        self.pm4:SetPosition(-12, 1.5, 0.5) 
+      end)  
+      
     else
       self.Power = CreateFrame("StatusBar", nil, self.Health)
       self.Power:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
-      self.Power:SetHeight(1)
+      self.Power:SetHeight(4)
       self.Power:SetWidth(self:GetWidth())
-      self.Power:SetPoint("BOTTOM", self.Health, "BOTTOM", 0, 0)
-      --self.Power.bg = self.Power:CreateTexture(nil, "BACKGROUND")
-      --self.Power.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
-      --self.Power.bg:SetAllPoints(self.Power)
+      self.Power:SetPoint("TOP", self.Health, "BOTTOM", 0, 0)
+      self.Power.bg = self.Power:CreateTexture(nil, "BACKGROUND")
+      self.Power.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
+      self.Power.bg:SetAllPoints(self.Power)
     end
 
     ----------------
@@ -314,27 +493,31 @@
       self.Castbar:SetWidth(226)
       self.Castbar:SetHeight(18)
       self.Castbar:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
-      self.Castbar:SetStatusBarColor(1,0.8,0,1)
-      self.Castbar:SetPoint("BOTTOM",0,350)
+      self.Castbar:SetStatusBarColor(120/255,110/255,20/255,1)
       self.Castbar.bg = self.Castbar:CreateTexture(nil, "BACKGROUND")
-      self.Castbar.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_targetframe.tga")
-      self.Castbar.bg:SetWidth(512)
-      self.Castbar.bg:SetHeight(128)
-      self.Castbar.bg:SetPoint("CENTER",-3,0)
+      self.Castbar.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
+      self.Castbar.bg:SetAllPoints(self.Castbar)
+      self.Castbar.bg:SetVertexColor(0.15,0.15,0.15,1)
+      self.Castbar.bg2 = self.Castbar:CreateTexture(nil, "BACKGROUND")
+      self.Castbar.bg2:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_targetframe.tga")
+      self.Castbar.bg2:SetWidth(512)
+      self.Castbar.bg2:SetHeight(128)
+      self.Castbar.bg2:SetPoint("CENTER",-3,0)
       if unit == "player" then
-        self.Castbar:SetPoint("BOTTOM",0,250)
+        self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-200)
       elseif unit == "target" then
-        self.Castbar:SetPoint("BOTTOM",0,350)
+        self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-100)
       end
       
-      self.Castbar.Text = SetFontString(self.Castbar, NAMEPLATE_FONT, 16, "THINOUTLINE")
+      self.Castbar.Text = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
       self.Castbar.Text:SetPoint("LEFT", 2, 0)
       
-      self.Castbar.Time = SetFontString(self.Castbar, NAMEPLATE_FONT, 16, "THINOUTLINE")
+      self.Castbar.Time = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
       self.Castbar.Time:SetPoint("RIGHT", -2, 0)
       
       self.Castbar:Hide()
-      Castbar = self.Castbar
+      self.Castbar:SetScale(myscale)
+      --Castbar = self.Castbar
     end
     
     ---------------------
@@ -342,22 +525,136 @@
     ---------------------
     
     if unit == "player" then
-      self.Health.value = SetFontString(self.Health, NAMEPLATE_FONT, 24, "THINOUTLINE")
+      self.Health.value = SetFontString(self.Health, d3font, 24, "THINOUTLINE")
       self.Health.value:SetPoint("CENTER", 0, 0)
+      self.Power.value = SetFontString(self.Power, d3font, 24, "THINOUTLINE")
+      self.Power.value:SetPoint("CENTER", 0, 0)
     elseif unit == "target" then
-      self.Name = SetFontString(self.Health, "Interface\\AddOns\\oUF_D3Orbs\\avqest.ttf", 20, "THINOUTLINE")
+      self.Name = SetFontString(self, d3font, 20, "THINOUTLINE")
       self.Name:SetPoint("BOTTOM", self, "TOP", 0, 30)
-      self.Name:SetTextColor(0.9, 0.8, 0)
-      self.Health.value = SetFontString(self.Health, NAMEPLATE_FONT, 16, "THINOUTLINE")
-      self.Health.value:SetPoint("RIGHT", -2, 0)
+      self.Health.value = SetFontString(self.Health, d3font, 16, "THINOUTLINE")
+      self.Health.value:SetPoint("RIGHT", self, "RIGHT", -2, 0)
+      self.Classtext = SetFontString(self, d3font, 16, "THINOUTLINE")
+      self.Classtext:SetPoint("BOTTOM", self, "TOP", 0, 13)
     else
-      self.Name = SetFontString(self.Health, "Interface\\AddOns\\oUF_D3Orbs\\avqest.ttf", 18, "THINOUTLINE")
+      self.Name = SetFontString(self, d3font, 18, "THINOUTLINE")
       self.Name:SetPoint("BOTTOM", self, "TOP", 0, 15)
       self.Name:SetTextColor(0.9, 0.8, 0)
-      self.Health.value = SetFontString(self.Health, NAMEPLATE_FONT, 16, "THINOUTLINE")
-      self.Health.value:SetPoint("RIGHT", -2, 0)
+      self.Health.value = SetFontString(self.Health, d3font, 16, "THINOUTLINE")
+      self.Health.value:SetPoint("RIGHT", self, "RIGHT", -2, 0)
     end
     
+    ---------------------
+    -- DEBUFFS
+    ---------------------
+    
+    if unit == "player" then
+      -- nothing
+    elseif unit == "target" then
+      self.Debuffs = CreateFrame("Frame", nil, self)
+      self.Debuffs.spacing = 5
+      self.Debuffs:SetHeight(20)
+      self.Debuffs:SetWidth(self:GetWidth())
+      self.Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -15)
+      self.Debuffs.initialAnchor = "TOPLEFT"
+      self.Debuffs["growth-y"] = "DOWN"
+      self.Debuffs.showDebuffType = true
+      self.Debuffs.size = math.floor(self.Debuffs:GetHeight())
+      self.Debuffs.num = 40
+    else
+      self.Debuffs = CreateFrame("Frame", nil, self)
+      self.Debuffs.spacing = 4
+      self.Debuffs:SetHeight(18)
+      self.Debuffs:SetWidth(self:GetWidth())
+      self.Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -15)
+      self.Debuffs.initialAnchor = "TOPLEFT"
+      self.Debuffs["growth-y"] = "DOWN"
+      self.Debuffs.showDebuffType = true
+      self.Debuffs.size = math.floor(self.Debuffs:GetHeight())
+      self.Debuffs.num = 4
+    end
+    
+    ---------------------
+    -- Buffs
+    ---------------------
+    
+    if unit == "player" then
+      -- nothing
+    elseif unit == "target" then
+      self.Buffs = CreateFrame("Frame", nil, self)
+      self.Buffs.spacing = 5
+      self.Buffs:SetHeight(20)
+      self.Buffs:SetWidth(self:GetWidth())
+      self.Buffs:SetPoint("BOTTOM", self, "TOP", 0, 55)
+      self.Buffs.initialAnchor = "TOPLEFT"
+      self.Buffs["growth-y"] = "UP"
+      self.Buffs.size = math.floor(self.Buffs:GetHeight())
+      self.Buffs.num = 8
+    else
+      -- nothing
+    end
+
+
+    ---------------------
+    -- Debuff Highlight
+    ---------------------    
+
+    if unit == "player" then
+      self.DebuffHighlight = self:CreateTexture(nil, "BACKGROUND")
+      --self.DebuffHighlight:SetAllPoints(self)
+      self.DebuffHighlight:SetWidth(self:GetWidth()*1.1)
+      self.DebuffHighlight:SetHeight(self:GetWidth()*1.1)
+      self.DebuffHighlight:SetPoint("CENTER",0,0)
+      self.DebuffHighlight:SetBlendMode("BLEND")
+      self.DebuffHighlight:SetVertexColor(1, 0, 0, 0) -- set alpha to 0 to hide the texture
+      self.DebuffHighlightAlpha = 0.5
+      self.DebuffHighlightFilter = false
+      self.DebuffHighlight:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_debuff_glow.tga")
+    elseif unit == "target" then
+      --big mama
+    else
+      self.DebuffHighlight = self:CreateTexture(nil, "OVERLAY")
+      self.DebuffHighlight:SetWidth(250)
+      self.DebuffHighlight:SetHeight(115)
+      self.DebuffHighlight:SetPoint("CENTER",-2,0)
+      self.DebuffHighlight:SetBlendMode("BLEND")
+      self.DebuffHighlight:SetVertexColor(1, 0, 0, 0) -- set alpha to 0 to hide the texture
+      self.DebuffHighlightAlpha = 0.4
+      self.DebuffHighlightFilter = false
+      self.DebuffHighlight:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3totframe_debuff.tga")
+    end
+
+
+    ---------------------
+    -- Low HP
+    ---------------------    
+    
+    if unit == "player" then
+      self.LowHP = self.Health:CreateTexture(nil, "OVERLAY")
+      self.LowHP:SetAllPoints(self.Health)
+      self.LowHP:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_lowhp_glow.tga")
+      self.LowHP:SetBlendMode("BLEND")
+      self.LowHP:SetVertexColor(1, 0, 0, 1)
+      self.LowHP:Hide()
+    elseif unit == "target" then
+      self.LowHP = self.Health:CreateTexture(nil, "OVERLAY")
+      self.LowHP:SetWidth(505)
+      self.LowHP:SetHeight(115)
+      self.LowHP:SetPoint("CENTER",-3,0)
+      self.LowHP:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_targetframe_lowhp.tga")
+      self.LowHP:SetBlendMode("BLEND")
+      self.LowHP:SetVertexColor(1, 0, 0, 1)
+      self.LowHP:Hide()    
+    else
+      self.LowHP = self.Health:CreateTexture(nil, "OVERLAY")
+      self.LowHP:SetWidth(250)
+      self.LowHP:SetHeight(115)
+      self.LowHP:SetPoint("CENTER",-2,0)
+      self.LowHP:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3totframe_lowhp.tga")
+      self.LowHP:SetBlendMode("BLEND")
+      self.LowHP:SetVertexColor(1, 0, 0, 1)
+      self.LowHP:Hide()
+    end
     
     
     self.outsideRangeAlpha = 1
@@ -371,7 +668,9 @@
     self.UNIT_HAPPINESS = updateName
     self.PLAYER_TARGET_CHANGED = updateTarget
     
-    self:SetScale(myscale)
+    if unit ~= "player" then
+      self:SetScale(myscale)
+    end
   
     return self
   end
@@ -389,6 +688,29 @@
   oUF:Spawn("pet"):SetPoint("BOTTOM", UIParent, "BOTTOM",-500, 50)
   oUF:Spawn("focus"):SetPoint("BOTTOM", UIParent, "BOTTOM", 500, 50)
   oUF:Spawn("targettarget"):SetPoint("RIGHT", oUF.units.target, "LEFT", -80, 0)
+  
+  local party  = oUF:Spawn("header", "oUF_Party")
+  party:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 45, -50)
+  party:SetManyAttributes("showParty", true, "yOffset", 50, "point", "BOTTOM", "showPlayer", false)
+  
+  local partyToggle = CreateFrame("Frame")
+  partyToggle:RegisterEvent("PLAYER_LOGIN")
+  partyToggle:RegisterEvent("RAID_ROSTER_UPDATE")
+  partyToggle:RegisterEvent("PARTY_LEADER_CHANGED")
+  partyToggle:RegisterEvent("PARTY_MEMBER_CHANGED")
+  partyToggle:SetScript("OnEvent", function(self)
+    if(InCombatLockdown()) then
+      self:RegisterEvent("PLAYER_REGEN_ENABLED")
+    else
+      self:UnregisterEvent("PLAYER_REGEN_ENABLED")
+      if(GetNumRaidMembers() > 0) then
+        --party:Hide()
+        party:Show()
+      else
+        party:Show()
+      end
+    end
+  end)
 
 
   -----------------------------
@@ -401,7 +723,7 @@
   d3f:SetHeight(155)
   d3f:SetPoint("BOTTOM",305,0)
   d3f:Show()
-  d3f:SetScale(myscale)
+  --d3f:SetScale(myscale)
   local d3t = d3f:CreateTexture(nil,"BACKGROUND")
   d3t:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_angel")
   d3t:SetAllPoints(d3f)
@@ -412,7 +734,7 @@
   d3f2:SetHeight(155)
   d3f2:SetPoint("BOTTOM",-312,0)
   d3f2:Show()
-  d3f2:SetScale(myscale)
+  --d3f2:SetScale(myscale)
   local d3t2 = d3f2:CreateTexture(nil,"HIGHLIGHT ")
   d3t2:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_demon")
   d3t2:SetAllPoints(d3f2)
@@ -423,7 +745,7 @@
   d3f3:SetHeight(112)
   d3f3:SetPoint("BOTTOM",0,-3)
   d3f3:Show()
-  d3f3:SetScale(myscale)
+  --d3f3:SetScale(myscale)
   local d3t3 = d3f3:CreateTexture(nil,"BACKGROUND")
   d3t3:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bottom")
   d3t3:SetAllPoints(d3f3)
@@ -434,7 +756,7 @@
   d3f4:SetHeight(256)
   d3f4:SetPoint("BOTTOM",1,0)
   d3f4:Show()
-  d3f4:SetScale(myscale)
+  --d3f4:SetScale(myscale)
   local d3t4 = d3f4:CreateTexture(nil,"BACKGROUND")
   if usebar == 1 then
     d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar6")

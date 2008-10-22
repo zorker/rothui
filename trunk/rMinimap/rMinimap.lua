@@ -14,7 +14,7 @@
   if rm_player_name == "Astone" and rm_player_class == "WARLOCK" then
     map_style = 0
   else
-    map_style = 2
+    map_style = 0
   end
 
   -- map scale
@@ -91,7 +91,7 @@
   
   function a:dostuff0()
     local t = Minimap:CreateTexture(nil,"Overlay")
-    t:SetTexture("Interface\\AddOns\\rTextures\\d3_map2")
+    t:SetTexture("Interface\\AddOns\\rTextures\\d3_map")
     local d3mapscale = 1.3
     t:SetPoint("CENTER", Minimap, "CENTER", 0, -10*d3mapscale)
     t:SetWidth(Minimap:GetHeight()*2*d3mapscale)

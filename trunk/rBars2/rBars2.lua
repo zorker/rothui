@@ -11,7 +11,7 @@
   local rb2_equipped_texture  = "Interface\\AddOns\\rTextures\\gloss_green";
 
   --make buttons use this alpha when out of range, out of mana etc. range 0-1.
-  local fade_alpha = 0.5;
+  local fade_alpha = 1;
 
   -- scale, SCALE your buttons here. range 0-1, 0.7 = 70%
   local myscale = 0.75
@@ -34,6 +34,8 @@
   local _G = getfenv(0)
   local dummy = function() end    
   
+  local check_combat = 0
+  
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarRight"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarLeft"] = nil
   UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = nil
@@ -42,6 +44,10 @@
 
   a:RegisterEvent("PLAYER_ENTERING_WORLD")
   a:RegisterEvent("PLAYER_LOGIN")
+  a:RegisterEvent("PLAYER_REGEN_ENABLED")
+  a:RegisterEvent("PLAYER_REGEN_DISABLED")
+  
+  
   
   --to hide the right bar in combat and show it out of combat
   --a:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -53,6 +59,11 @@
     elseif(event=="PLAYER_ENTERING_WORLD") then
       --TEST, will try this later
       MainMenuBar:Hide()
+    elseif(event=="PLAYER_REGEN_ENABLED") then
+      check_combat = 0
+      ShowPetActionBar()
+    elseif(event=="PLAYER_REGEN_DISABLED") then
+      check_combat = 1
     end 
     
     --to fade the right button bar ooc/ic
@@ -470,3 +481,38 @@
     
   end
   
+  
+  -- trying to overtake the blizzard petbar
+  -- what a beast
+  
+PetActionBar_OnEvent = function (self, event, ...)
+	local arg1 = ...;
+	
+	if not UnitAffectingCombat("player") and check_combat == 0 then
+
+  	if ( event == "PET_BAR_UPDATE" or (event == "UNIT_PET" and arg1 == "player") ) then
+  		PetActionBar_Update(self);
+  		if ( PetHasActionBar() and UnitIsVisible("pet") ) then
+  			ShowPetActionBar();
+  			LockPetActionBar();
+  		else
+  			UnlockPetActionBar();
+  			HidePetActionBar();
+  		end
+  	elseif ( event == "PLAYER_CONTROL_LOST" or event == "PLAYER_CONTROL_GAINED" or event == "PLAYER_FARSIGHT_FOCUS_CHANGED" ) then
+  		PetActionBar_Update(self);
+  	elseif ( (event == "UNIT_FLAGS") or (event == "UNIT_AURA") ) then
+  		if ( arg1 == "pet" ) then
+  			PetActionBar_Update(self);
+  		end
+  	elseif ( event =="PET_BAR_UPDATE_COOLDOWN" ) then
+  		PetActionBar_UpdateCooldowns();
+  	elseif ( event =="PET_BAR_SHOWGRID" ) then
+  		PetActionBar_ShowGrid();
+  	elseif ( event =="PET_BAR_HIDEGRID" ) then
+  		PetActionBar_HideGrid();
+  	elseif ( event =="PET_BAR_HIDE" ) then
+  		HidePetActionBar();
+  	end
+	end
+end

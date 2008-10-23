@@ -20,7 +20,7 @@
   -- 2 = green
   -- 3 = blue
   -- 4 = yellow
-  local healthcolor = 4
+  local healthcolor = 2
 
   -- healthcolor defines what healthcolor will be used
   -- 1 = red
@@ -315,7 +315,7 @@
     end
     
     if unit == "player" then
-      if d == 0 or d == 100 then
+      if d == 0 or d == 100 or max == 1 then
         bar.value:SetText("")
       else
         bar.value:SetText(d)
@@ -544,7 +544,6 @@
       self.Castbar:SetWidth(226)
       self.Castbar:SetHeight(18)
       self.Castbar:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
-      self.Castbar:SetStatusBarColor(120/255,110/255,20/255,1)
       self.Castbar.bg = self.Castbar:CreateTexture(nil, "BACKGROUND")
       self.Castbar.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
       self.Castbar.bg:SetAllPoints(self.Castbar)
@@ -556,8 +555,10 @@
       self.Castbar.bg2:SetPoint("CENTER",-3,0)
       if unit == "player" then
         self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-200)
+        self.Castbar:SetStatusBarColor(1,0.5,0,1)
       elseif unit == "target" then
         self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-100)
+        self.Castbar:SetStatusBarColor(1,0,0,1)
       end
       
       self.Castbar.Text = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")

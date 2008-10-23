@@ -44,7 +44,7 @@
     if(event=="PLAYER_ENTERING_WORLD") 
     then
       TemporaryEnchantFrame:ClearAllPoints()
-      TemporaryEnchantFrame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -180, -20)
+      TemporaryEnchantFrame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -200, -20)
       TemporaryEnchantFrame.SetPoint = function() end
       addon:runthroughicons()
       

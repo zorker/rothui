@@ -39,7 +39,7 @@
   else
     map_positions = {
       position = {
-        [1] = { frame = "Minimap",                  anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",   anchorframe = "UIParent",   posx = -20,   posy = -20 },
+        [1] = { frame = "Minimap",                  anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",   anchorframe = "UIParent",   posx = -30,   posy = -10 },
         [2] = { frame = "MiniMapTracking",          anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 0,     posy = -20 },
         [3] = { frame = "MiniMapMailFrame",         anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 50,    posy = -20 },
         [4] = { frame = "MiniMapBattlefieldFrame",  anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = -25,   posy = -20 },
@@ -90,12 +90,19 @@
   end)  
   
   function a:dostuff0()
-    local t = Minimap:CreateTexture(nil,"Overlay")
-    t:SetTexture("Interface\\AddOns\\rTextures\\d3_map")
+    local t = Minimap:CreateTexture(nil,"ARTWORK")
+    t:SetTexture("Interface\\AddOns\\rTextures\\d3_map2")
     local d3mapscale = 1.3
-    t:SetPoint("CENTER", Minimap, "CENTER", 0, -10*d3mapscale)
+    t:SetPoint("CENTER", Minimap, "CENTER", -2*d3mapscale, -13*d3mapscale)
     t:SetWidth(Minimap:GetHeight()*2*d3mapscale)
     t:SetHeight(Minimap:GetHeight()*d3mapscale)
+    
+    local t2 = Minimap:CreateTexture(nil,"OVERLAY")
+    t2:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_gloss")
+    t2:SetPoint("CENTER",0,0)
+    t2:SetWidth(Minimap:GetHeight()*1.1)
+    t2:SetHeight(Minimap:GetHeight()*1.1)
+    t2:SetBlendMode("BLEND")
   end
   
   function a:dostuff2()

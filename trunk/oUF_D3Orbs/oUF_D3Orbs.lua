@@ -7,17 +7,28 @@
   local d3font = "Interface\\AddOns\\oUF_D3Orbs\\avqest.ttf"
   
   -- myscale sets scaling. range 0-1, 0.7 = 70%.  
+  -- scales all units except orbs and actionbar
   local myscale = 1
   
   -- usebar defines what actionbar texture will be used. 
   -- usebar = 1 -> 24 button texture
   -- usebar = 2 -> 36 button texture
   local usebar = 2
+
+  -- healthcolor defines what healthcolor will be used
+  -- 1 = red
+  -- 2 = green
+  -- 3 = blue
+  -- 4 = yellow
+  local healthcolor = 4
+
+  -- healthcolor defines what healthcolor will be used
+  -- 1 = red
+  -- 2 = green
+  -- 3 = blue
+  -- 4 = yellow
+  local manacolor = 1
   
-  
-
-
-
   ----------------
   -- CONFIG END
   ----------------  
@@ -27,6 +38,29 @@
   ----------------
   -- COLRORS
   ---------------- 
+  
+  local healthfog
+  
+  if healthcolor == 2 then
+    healthfog = "SPELLS\\GreenRadiationFog.m2"
+  elseif healthcolor == 3 then
+    healthfog = "SPELLS\\BlueRadiationFog.m2"
+  elseif healthcolor == 4 then
+    healthfog = "SPELLS\\OrangeRadiationFog.m2"
+  else
+    healthfog = "SPELLS\\RedRadiationFog.m2"
+  end
+
+  local manafog
+  if manacolor == 2 then
+    manafog = "SPELLS\\GreenRadiationFog.m2"
+  elseif manacolor == 3 then
+    manafog = "SPELLS\\BlueRadiationFog.m2"
+  elseif manacolor == 4 then
+    manafog = "SPELLS\\OrangeRadiationFog.m2"
+  else
+    manafog = "SPELLS\\RedRadiationFog.m2"
+  end  
   
   local colors2 = {
     power = {
@@ -44,9 +78,21 @@
     happiness = {
       [0] = {r = 1, g = 1, b = 1}, -- bla test
       [1] = {r = 1, g = 0, b = 0}, -- need.... | unhappy
-      [2] = {r = 1 ,g = 1, b = 0}, -- new..... | content
+      [2] = {r = 1, g = 1, b = 0}, -- new..... | content
       [3] = {r = 0, g = 1, b = 0}, -- colors.. | happy
     },
+    orbcolors = {
+      [1] = {r = 0.3, g = 0, b = 0}, -- red
+      [2] = {r = 0, g = 0.3, b = 0}, -- green
+      [3] = {r = 0, g = 0,   b = 0.3}, -- blue
+      [4] = {r = 0.4, g = 0.3, b = 0}, -- yellow
+    },
+    orbpos = {
+      [1] = {scale = 0.8, z = -12, x = 0.8, y = -1}, -- red
+      [2] = {scale = 0.75, z = -12, x = 0, y = -0.5}, -- green
+      [3] = {scale = 0.75, z = -12, x = 1.2, y = -0.5}, -- blue
+      [4] = {scale = 0.7, z = -12, x = 0, y = -0.7}, -- yellow
+    }
   }
   
   ----------------
@@ -292,6 +338,7 @@
       end
     else
       if unit == "player" then
+        self.Power.Filling:SetVertexColor(colors2.orbcolors[manacolor].r,colors2.orbcolors[manacolor].g,colors2.orbcolors[manacolor].b,1)
         self.Power.Filling:SetHeight((manaact / manamax) * self.Power:GetWidth())
         self.Power.Filling:SetTexCoord(0,1,  math.abs(manaact / manamax - 1),1)
         self.pm3:SetAlpha((manaact / manamax))
@@ -365,7 +412,10 @@
       self.Health.Filling:SetPoint("BOTTOMLEFT",0,0)
       self.Health.Filling:SetWidth(orbsize)
       self.Health.Filling:SetHeight(orbsize)
-      self.Health.Filling:SetVertexColor(0.6,0,0,1)
+
+      self.Health.Filling:SetVertexColor(colors2.orbcolors[healthcolor].r,colors2.orbcolors[healthcolor].g,colors2.orbcolors[healthcolor].b,1)
+
+
       self.Health.Gloss = self.Health:CreateTexture(nil, "OVERLAY")
       self.Health.Gloss:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_gloss.tga")
       self.Health.Gloss:SetAllPoints(self.Health)
@@ -373,31 +423,32 @@
       self.pm1 = CreateFrame("PlayerModel", nil,self.Health)
       self.pm1:SetFrameStrata("BACKGROUND")
       self.pm1:SetAllPoints(self.Health)
-      self.pm1:SetModel("SPELLS\\RedRadiationFog.m2")
-      self.pm1:SetModelScale(-.85)
-      self.pm1:SetPosition(-12, 1, -1.4) 
+      self.pm1:SetModel(healthfog)
+      self.pm1:SetModelScale(colors2.orbpos[healthcolor].scale)
+      self.pm1:SetPosition(colors2.orbpos[healthcolor].z, colors2.orbpos[healthcolor].x, colors2.orbpos[healthcolor].y) 
+      
       self.pm1:SetAlpha(1)
       
       self.pm1:SetScript("OnShow",function() 
         self.pm1:ClearModel()
-        self.pm1:SetModel("SPELLS\\RedRadiationFog.m2")
-        self.pm1:SetModelScale(-.85)
-        self.pm1:SetPosition(-12, 1, -1.4) 
+        self.pm1:SetModel(healthfog)
+        self.pm1:SetModelScale(colors2.orbpos[healthcolor].scale)
+        self.pm1:SetPosition(colors2.orbpos[healthcolor].z, colors2.orbpos[healthcolor].x, colors2.orbpos[healthcolor].y) 
       end)
       
       self.pm2 = CreateFrame("PlayerModel", nil,self.Health)
       self.pm2:SetFrameStrata("BACKGROUND")
       self.pm2:SetAllPoints(self.Health)
-      self.pm2:SetModel("SPELLS\\RedRadiationFog.m2")
-      self.pm2:SetModelScale(-.75)
-      self.pm2:SetPosition(-12, 1.2, 0) 
+      self.pm2:SetModel(healthfog)
+      self.pm2:SetModelScale(colors2.orbpos[healthcolor].scale)
+      self.pm2:SetPosition(colors2.orbpos[healthcolor].z, colors2.orbpos[healthcolor].x, colors2.orbpos[healthcolor].y+1) 
       self.pm2:SetAlpha(1)
       
       self.pm2:SetScript("OnShow",function() 
         self.pm2:ClearModel()
-        self.pm2:SetModel("SPELLS\\RedRadiationFog.m2")
-        self.pm2:SetModelScale(.75)
-        self.pm2:SetPosition(-12, 1.2, 0) 
+        self.pm2:SetModel(healthfog)
+        self.pm2:SetModelScale(colors2.orbpos[healthcolor].scale)
+        self.pm2:SetPosition(colors2.orbpos[healthcolor].z, colors2.orbpos[healthcolor].x, colors2.orbpos[healthcolor].y+1) 
       end)
       
     elseif unit == "target" then
@@ -438,7 +489,7 @@
       self.Power.Filling:SetPoint("BOTTOMLEFT",0,0)
       self.Power.Filling:SetWidth(orbsize)
       self.Power.Filling:SetHeight(orbsize)
-      self.Power.Filling:SetVertexColor(0.1,0.1,0.5,1)
+      self.Power.Filling:SetVertexColor(colors2.orbcolors[manacolor].r,colors2.orbcolors[manacolor].g,colors2.orbcolors[manacolor].b,1)
       self.Power.Gloss = self.Power:CreateTexture(nil, "OVERLAY")
       self.Power.Gloss:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_gloss.tga")
       self.Power.Gloss:SetAllPoints(self.Power)
@@ -446,31 +497,31 @@
       self.pm3 = CreateFrame("PlayerModel", nil,self.Power)
       self.pm3:SetFrameStrata("BACKGROUND")
       self.pm3:SetAllPoints(self.Power)
-      self.pm3:SetModel("SPELLS\\BlueRadiationFog.m2")
-      self.pm3:SetModelScale(-.75)
-      self.pm3:SetPosition(-12, 1.5, -1) 
+      self.pm3:SetModel(manafog)
+      self.pm3:SetModelScale(colors2.orbpos[manacolor].scale)
+      self.pm3:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y) 
       self.pm3:SetAlpha(1)
       
       self.pm3:SetScript("OnShow",function() 
         self.pm3:ClearModel()
-        self.pm3:SetModel("SPELLS\\BlueRadiationFog.m2")
-        self.pm3:SetModelScale(.75)
-        self.pm3:SetPosition(-12, 1.5, -1) 
+        self.pm3:SetModel(manafog)
+        self.pm3:SetModelScale(colors2.orbpos[manacolor].scale)
+        self.pm3:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y) 
       end)
       
       self.pm4 = CreateFrame("PlayerModel", nil,self.Power)
       self.pm4:SetFrameStrata("BACKGROUND")
       self.pm4:SetAllPoints(self.Power)
-      self.pm4:SetModel("SPELLS\\BlueRadiationFog.m2")
-      self.pm4:SetModelScale(-.75)
-      self.pm4:SetPosition(-12, 1.5, 0.5) 
+      self.pm4:SetModel(manafog)
+      self.pm4:SetModelScale(colors2.orbpos[manacolor].scale)
+      self.pm4:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y+1) 
       self.pm4:SetAlpha(1)
       
       self.pm4:SetScript("OnShow",function() 
         self.pm4:ClearModel()
-        self.pm4:SetModel("SPELLS\\BlueRadiationFog.m2")
-        self.pm4:SetModelScale(.75)
-        self.pm4:SetPosition(-12, 1.5, 0.5) 
+        self.pm4:SetModel(manafog)
+        self.pm4:SetModelScale(colors2.orbpos[manacolor].scale)
+        self.pm4:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y+1) 
       end)  
       
     else
@@ -642,8 +693,9 @@
       self.LowHP:SetHeight(115)
       self.LowHP:SetPoint("CENTER",-3,0)
       self.LowHP:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_targetframe_lowhp.tga")
-      self.LowHP:SetBlendMode("BLEND")
+      self.LowHP:SetBlendMode("ADD")
       self.LowHP:SetVertexColor(1, 0, 0, 1)
+      self.LowHP:SetAlpha(0.8)
       self.LowHP:Hide()    
     else
       self.LowHP = self.Health:CreateTexture(nil, "OVERLAY")
@@ -651,8 +703,9 @@
       self.LowHP:SetHeight(115)
       self.LowHP:SetPoint("CENTER",-2,0)
       self.LowHP:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3totframe_lowhp.tga")
-      self.LowHP:SetBlendMode("BLEND")
+      self.LowHP:SetBlendMode("ADD")
       self.LowHP:SetVertexColor(1, 0, 0, 1)
+      self.LowHP:SetAlpha(0.8)
       self.LowHP:Hide()
     end
     

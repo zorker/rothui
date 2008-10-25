@@ -29,6 +29,14 @@
   -- 4 = yellow
   local manacolor = 1
   
+  -- use_classcolor defines if units should use class/faction coloring
+  -- this will remove animations from orbs!
+  -- 0 = no
+  -- 1 = yes
+  local use_classcolor = 1
+  
+  
+  
   ----------------
   -- CONFIG END
   ----------------  
@@ -64,7 +72,7 @@
   
   local colors2 = {
     power = {
-      [0] = { r = 90/255, g = 180/255, b = 200/255}, -- Mana
+      [0] = { r = 60/255, g = 150/255, b = 255/255}, -- Mana
       [1] = { r = 255/255, g = 1/255, b = 1/255}, -- Rage
       [2] = { r = 255/255, g = 178/255, b = 0}, -- Focus
       [3] = { r = 1, g = 1, b = 34/255}, -- Energy
@@ -88,9 +96,9 @@
       [4] = {r = 0.4, g = 0.3, b = 0}, -- yellow
     },
     orbpos = {
-      [1] = {scale = 0.8, z = -12, x = 0.8, y = -1}, -- red
-      [2] = {scale = 0.75, z = -12, x = 0, y = -0.5}, -- green
-      [3] = {scale = 0.75, z = -12, x = 1.2, y = -0.5}, -- blue
+      [1] = {scale = 0.8, z = -12, x = 0.8, y = -1.7}, -- red
+      [2] = {scale = 0.75, z = -12, x = 0, y = -1}, -- green
+      [3] = {scale = 0.75, z = -12, x = 1.2, y = -1}, -- blue
       [4] = {scale = 0.7, z = -12, x = 0, y = -0.7}, -- yellow
     }
   }
@@ -109,13 +117,20 @@
     end
   end
   
+  ----------------
+  -- SET FONT STRING
+  ---------------- 
+  
   local function SetFontString(parent, fontName, fontHeight, fontStyle)
     local fs = parent:CreateFontString(nil, "OVERLAY")
     fs:SetFont(fontName, fontHeight, fontStyle)
-    --fs:SetJustifyH("CENTER")
     fs:SetShadowColor(0,0,0,1)
     return fs
   end
+  
+  ----------------
+  -- AURA ICON
+  ---------------- 
   
   local function auraIcon(self, button, icons, index, debuff)
     icons.showDebuffType = false
@@ -137,24 +152,13 @@
     self.ButtonOverlay:SetPoint("BOTTOMRIGHT", 1, -1)
   
   end
-  
-  -- creates classtext for target
-  local function do_classtext(self,unit)
 
-    --stuff I need later for target classification text
-    --[[
-    -- http://www.wowwiki.com/World_of_Warcraft_API#Unit_Functions
-    local localizedClass, englishClass = UnitClass("unit")    -- shaman etc
-    local classification = UnitClassification(unit)           -- elite/worldboss
-    local creatureFamily = UnitCreatureFamily(unit)           -- crab/wolf
-    local creatureType = UnitCreatureType(unit)               -- humanoid, demon, beast or nil
-    local isenemy = UnitIsEnemy("player", unit)               -- Returns true if the specified units are enemies, false otherwise. 
-    local isplusmob = UnitIsPlusMob("unit")                   -- return 0 or 1 is mob is elite
-    local unitlevel = UnitLevel("unit")                       -- return unitlevel
-    local race = UnitRace("unit")                             -- race Troll, Human etc
-    local reaction = UnitReaction("player", unit)             -- http://www.wowwiki.com/API_UnitReaction  
-    ]]--
-    
+  ----------------
+  -- CLASS TEXT
+  ---------------- 
+  
+  local function do_classtext(self,unit)
+   
     local string = ""
     local tmpstring = ""
     local sp = " "
@@ -165,8 +169,7 @@
       string = (UnitLevel("player")+3)
     end
     
-    string = string..sp
-    
+    string = string..sp    
 
     local unitrace = UnitRace(unit)
     local creatureType = UnitCreatureType(unit)
@@ -210,7 +213,12 @@
 
   end
   
+  ----------------
+  -- UPDATE HEALTH
+  ---------------- 
+  
   local function updateHealth(self, event, unit, bar, min, max)
+    
     local lifeact = UnitHealth(unit)
     local lifemax = UnitHealthMax(unit)
     
@@ -222,6 +230,24 @@
     local c = max - min
     local d = floor(min/max*100)
     
+    local newmin
+    if min > 1000000 then
+      newmin = (floor((min/1000000)*10)/10).."m"
+    elseif min > 1000 then
+      newmin = (floor((min/1000)*10)/10).."k"
+    else
+      newmin = min
+    end
+    
+    local new_max
+    if max > 1000000 then
+      new_max = (floor((max/1000000)*10)/10).."m"
+    elseif max > 1000 then
+      new_max = (floor((max/1000)*10)/10).."k"
+    else
+      new_max = max
+    end
+    
     if d <= 25 and d > 0 and min > 1 then
       self.LowHP:Show()
     else
@@ -230,21 +256,35 @@
     
     if unit == "player" then
       if d == 0 or d == 100 or min == 1 then
-        bar.value:SetText("")
+        --bar.value:SetText("")
+        --bar.value2:SetText("")
+        bar.value:SetText(d)
+        bar.value2:SetText(newmin)
       else
         bar.value:SetText(d)
+        bar.value2:SetText(newmin)
       end
+      
     elseif unit == "target" then
+    
+      local mycombo = GetComboPoints("target") 
+      if mycombo >= 1 then
+        self.CPoints:SetText(mycombo)
+      end
+    
       if d == 0 or d == 100 or min == 1 then
-        bar.value:SetText("")
+        --bar.value:SetText("")
+        bar.value:SetText(newmin.." - "..d.."%")
       else
-        bar.value:SetText(d)
+        --bar.value:SetText(d)
+        bar.value:SetText(newmin.." - "..d.."%")        
       end
     else
       if d == 0 or d == 100 or min == 1 then
-        bar.value:SetText("")
+        --bar.value:SetText("")
+        bar.value:SetText(d.."%")
       else
-        bar.value:SetText(d)
+        bar.value:SetText(d.."%")
       end    
     end
     
@@ -255,16 +295,17 @@
     if unit == "player" then
       self.Health.Filling:SetHeight((lifeact / lifemax) * self.Health:GetWidth())
       self.Health.Filling:SetTexCoord(0,1,  math.abs(lifeact / lifemax - 1),1)
-      self.pm1:SetAlpha((lifeact / lifemax))
-      self.pm2:SetAlpha((lifeact / lifemax))
+      if use_classcolor == 0 then
+        self.pm1:SetAlpha((lifeact / lifemax))
+        self.pm2:SetAlpha((lifeact / lifemax))
+      else        
+    		local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+        self.Health.Filling:SetVertexColor(color.r, color.g, color.b,1)
+      end
     else
   		
-  		self.Health:SetStatusBarColor(0.2,0,0,1)
-  		if min > 1 then
-  		  self.Health.bg:SetVertexColor(0.5,0,0,1)
-  		else
-  		  self.Health.bg:SetVertexColor(0.15,0.15,0.15,1)
-  		end
+ 		  --self.Health.bg:SetVertexColor(0.15,0.15,0.15,1)
+ 		  self.Health:SetStatusBarColor(0.15,0.15,0.15,1)
 
   		local tmpunitname = UnitName(unit)  		
   		if unit == "target" then
@@ -279,29 +320,40 @@
     		end
   		end
   		
+  		local color
+  		
   		if UnitIsPlayer(unit) then
         if RAID_CLASS_COLORS[select(2, UnitClass(unit))] then
-          local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
-          --self.Health.bg:SetVertexColor(color.r, color.g, color.b,1)
-          self.Name:SetTextColor(color.r, color.g, color.b,1)
+          color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
         end
       elseif unit == "pet" and UnitExists("pet") and GetPetHappiness() then
         local happiness, _, _ = GetPetHappiness()
-        local color = colors2.happiness[happiness]
+        color = colors2.happiness[happiness]
+      else
+        color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
+      end
+
+      if color then
         --self.Health.bg:SetVertexColor(color.r, color.g, color.b,1)
+        if use_classcolor == 1 then
+          self.Health.bg:SetVertexColor(color.r*0.7, color.g*0.7, color.b*0.7,1)
+        else
+          self.Health.bg:SetVertexColor(0.4,0,0,1)
+        end
         self.Name:SetTextColor(color.r, color.g, color.b,1)
       else
-        local color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
-        if color then
-          --self.Health.bg:SetVertexColor(color.r, color.g, color.b,1)
-          self.Name:SetTextColor(color.r, color.g, color.b,1)
-        else
-          --self.Health.bg:SetVertexColor(0,1,0,1)
-          self.Name:SetTextColor(0.9, 0.8, 0)
-        end
+        --self.Health.bg:SetVertexColor(0,1,0,1)
+        self.Health.bg:SetVertexColor(0.9, 0.8, 0, 1)
+        self.Name:SetTextColor(0.9, 0.8, 0)
       end
+      
     end
+    
   end
+  
+  ----------------
+  -- UPDATE POWER
+  ---------------- 
   
   local function updatePower(self, event, unit, bar, min, max)
 
@@ -314,11 +366,38 @@
       d = floor(min/max*100)
     end
     
+    local newmin
+    if min > 1000000 then
+      newmin = (floor((min/1000000)*10)/10).."m"
+    elseif min > 1000 then
+      newmin = (floor((min/1000)*10)/10).."k"
+    else
+      newmin = min
+    end
+    
+    local new_max
+    if max > 1000000 then
+      new_max = (floor((max/1000000)*10)/10).."m"
+    elseif max > 1000 then
+      new_max = (floor((max/1000)*10)/10).."k"
+    else
+      new_max = max
+    end
+    
     if unit == "player" then
-      if d == 0 or d == 100 or max == 1 then
-        bar.value:SetText("")
+      if d == 0 or d == 100 or min == 1 or max == 1 then
+        --bar.value:SetText("")
+        --bar.value2:SetText("")
+        bar.value:SetText(d)
+        bar.value2:SetText(newmin)
       else
         bar.value:SetText(d)
+        if d == newmin then
+          --bar.value2:SetText("")
+          bar.value2:SetText(newmin)
+        else
+          bar.value2:SetText(newmin)
+        end
       end
     end
 
@@ -338,17 +417,23 @@
       end
     else
       if unit == "player" then
-        self.Power.Filling:SetVertexColor(colors2.orbcolors[manacolor].r,colors2.orbcolors[manacolor].g,colors2.orbcolors[manacolor].b,1)
         self.Power.Filling:SetHeight((manaact / manamax) * self.Power:GetWidth())
         self.Power.Filling:SetTexCoord(0,1,  math.abs(manaact / manamax - 1),1)
-        self.pm3:SetAlpha((manaact / manamax))
-        self.pm4:SetAlpha((manaact / manamax))
+        if use_classcolor == 0 then
+          self.Power.Filling:SetVertexColor(colors2.orbcolors[manacolor].r,colors2.orbcolors[manacolor].g,colors2.orbcolors[manacolor].b,1)
+          self.pm3:SetAlpha((manaact / manamax))
+          self.pm4:SetAlpha((manaact / manamax))
+        else        
+      		local color = colors2.power[UnitPowerType(unit)]
+          self.Power.Filling:SetVertexColor(color.r, color.g, color.b,1)
+        end
       else
         local color = colors2.power[UnitPowerType(unit)]
         bar:SetStatusBarColor(color.r, color.g, color.b)
         bar.bg:SetVertexColor(color.r, color.g, color.b,0.3)
       end
     end
+    
   end
   
   ----------------
@@ -413,43 +498,48 @@
       self.Health.Filling:SetWidth(orbsize)
       self.Health.Filling:SetHeight(orbsize)
 
-      self.Health.Filling:SetVertexColor(colors2.orbcolors[healthcolor].r,colors2.orbcolors[healthcolor].g,colors2.orbcolors[healthcolor].b,1)
-
-
       self.Health.Gloss = self.Health:CreateTexture(nil, "OVERLAY")
       self.Health.Gloss:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_gloss.tga")
       self.Health.Gloss:SetAllPoints(self.Health)
       
-      self.pm1 = CreateFrame("PlayerModel", nil,self.Health)
-      self.pm1:SetFrameStrata("BACKGROUND")
-      self.pm1:SetAllPoints(self.Health)
-      self.pm1:SetModel(healthfog)
-      self.pm1:SetModelScale(colors2.orbpos[healthcolor].scale)
-      self.pm1:SetPosition(colors2.orbpos[healthcolor].z, colors2.orbpos[healthcolor].x, colors2.orbpos[healthcolor].y) 
-      
-      self.pm1:SetAlpha(1)
-      
-      self.pm1:SetScript("OnShow",function() 
-        self.pm1:ClearModel()
+      if use_classcolor == 0 then
+
+        self.Health.Filling:SetVertexColor(colors2.orbcolors[healthcolor].r,colors2.orbcolors[healthcolor].g,colors2.orbcolors[healthcolor].b,1)
+        
+        self.pm1 = CreateFrame("PlayerModel", nil,self.Health)
+        self.pm1:SetFrameStrata("BACKGROUND")
+        self.pm1:SetAllPoints(self.Health)
         self.pm1:SetModel(healthfog)
         self.pm1:SetModelScale(colors2.orbpos[healthcolor].scale)
         self.pm1:SetPosition(colors2.orbpos[healthcolor].z, colors2.orbpos[healthcolor].x, colors2.orbpos[healthcolor].y) 
-      end)
-      
-      self.pm2 = CreateFrame("PlayerModel", nil,self.Health)
-      self.pm2:SetFrameStrata("BACKGROUND")
-      self.pm2:SetAllPoints(self.Health)
-      self.pm2:SetModel(healthfog)
-      self.pm2:SetModelScale(colors2.orbpos[healthcolor].scale)
-      self.pm2:SetPosition(colors2.orbpos[healthcolor].z, colors2.orbpos[healthcolor].x, colors2.orbpos[healthcolor].y+1) 
-      self.pm2:SetAlpha(1)
-      
-      self.pm2:SetScript("OnShow",function() 
-        self.pm2:ClearModel()
+        
+        self.pm1:SetAlpha(1)
+        
+        self.pm1:SetScript("OnShow",function() 
+          self.pm1:ClearModel()
+          self.pm1:SetModel(healthfog)
+          self.pm1:SetModelScale(colors2.orbpos[healthcolor].scale)
+          self.pm1:SetPosition(colors2.orbpos[healthcolor].z, colors2.orbpos[healthcolor].x, colors2.orbpos[healthcolor].y) 
+        end)
+        
+        self.pm2 = CreateFrame("PlayerModel", nil,self.Health)
+        self.pm2:SetFrameStrata("BACKGROUND")
+        self.pm2:SetAllPoints(self.Health)
         self.pm2:SetModel(healthfog)
         self.pm2:SetModelScale(colors2.orbpos[healthcolor].scale)
         self.pm2:SetPosition(colors2.orbpos[healthcolor].z, colors2.orbpos[healthcolor].x, colors2.orbpos[healthcolor].y+1) 
-      end)
+        self.pm2:SetAlpha(1)
+        
+        self.pm2:SetScript("OnShow",function() 
+          self.pm2:ClearModel()
+          self.pm2:SetModel(healthfog)
+          self.pm2:SetModelScale(colors2.orbpos[healthcolor].scale)
+          self.pm2:SetPosition(colors2.orbpos[healthcolor].z, colors2.orbpos[healthcolor].x, colors2.orbpos[healthcolor].y+1) 
+        end)
+        
+      else
+        --test     
+      end
       
     elseif unit == "target" then
       self.bg = self:CreateTexture(nil, "BACKGROUND")
@@ -481,6 +571,7 @@
       self.Power:SetHeight(orbsize)
       self.Power:SetWidth(orbsize)
       self.Power:SetPoint("BOTTOM", UIParent, "BOTTOM", 250, -8)
+      self.Power.frequentUpdates = true
       self.Power.bg = self.Power:CreateTexture(nil, "BACKGROUND")
       self.Power.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back.tga")
       self.Power.bg:SetAllPoints(self.Power)
@@ -489,40 +580,45 @@
       self.Power.Filling:SetPoint("BOTTOMLEFT",0,0)
       self.Power.Filling:SetWidth(orbsize)
       self.Power.Filling:SetHeight(orbsize)
-      self.Power.Filling:SetVertexColor(colors2.orbcolors[manacolor].r,colors2.orbcolors[manacolor].g,colors2.orbcolors[manacolor].b,1)
       self.Power.Gloss = self.Power:CreateTexture(nil, "OVERLAY")
       self.Power.Gloss:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_gloss.tga")
       self.Power.Gloss:SetAllPoints(self.Power)
       
-      self.pm3 = CreateFrame("PlayerModel", nil,self.Power)
-      self.pm3:SetFrameStrata("BACKGROUND")
-      self.pm3:SetAllPoints(self.Power)
-      self.pm3:SetModel(manafog)
-      self.pm3:SetModelScale(colors2.orbpos[manacolor].scale)
-      self.pm3:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y) 
-      self.pm3:SetAlpha(1)
+      if use_classcolor == 0 then
       
-      self.pm3:SetScript("OnShow",function() 
-        self.pm3:ClearModel()
+        self.Power.Filling:SetVertexColor(colors2.orbcolors[manacolor].r,colors2.orbcolors[manacolor].g,colors2.orbcolors[manacolor].b,1)
+
+        self.pm3 = CreateFrame("PlayerModel", nil,self.Power)
+        self.pm3:SetFrameStrata("BACKGROUND")
+        self.pm3:SetAllPoints(self.Power)
         self.pm3:SetModel(manafog)
         self.pm3:SetModelScale(colors2.orbpos[manacolor].scale)
         self.pm3:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y) 
-      end)
-      
-      self.pm4 = CreateFrame("PlayerModel", nil,self.Power)
-      self.pm4:SetFrameStrata("BACKGROUND")
-      self.pm4:SetAllPoints(self.Power)
-      self.pm4:SetModel(manafog)
-      self.pm4:SetModelScale(colors2.orbpos[manacolor].scale)
-      self.pm4:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y+1) 
-      self.pm4:SetAlpha(1)
-      
-      self.pm4:SetScript("OnShow",function() 
-        self.pm4:ClearModel()
+        self.pm3:SetAlpha(1)
+        
+        self.pm3:SetScript("OnShow",function() 
+          self.pm3:ClearModel()
+          self.pm3:SetModel(manafog)
+          self.pm3:SetModelScale(colors2.orbpos[manacolor].scale)
+          self.pm3:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y) 
+        end)
+        
+        self.pm4 = CreateFrame("PlayerModel", nil,self.Power)
+        self.pm4:SetFrameStrata("BACKGROUND")
+        self.pm4:SetAllPoints(self.Power)
         self.pm4:SetModel(manafog)
         self.pm4:SetModelScale(colors2.orbpos[manacolor].scale)
         self.pm4:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y+1) 
-      end)  
+        self.pm4:SetAlpha(1)
+        
+        self.pm4:SetScript("OnShow",function() 
+          self.pm4:ClearModel()
+          self.pm4:SetModel(manafog)
+          self.pm4:SetModelScale(colors2.orbpos[manacolor].scale)
+          self.pm4:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y+1) 
+        end)  
+      
+      end
       
     else
       self.Power = CreateFrame("StatusBar", nil, self.Health)
@@ -541,6 +637,7 @@
     
     if unit == "player" or unit == "target" then
       self.Castbar = CreateFrame("StatusBar", nil, UIParent)
+      self.Castbar:SetFrameStrata("DIALOG")
       self.Castbar:SetWidth(226)
       self.Castbar:SetHeight(18)
       self.Castbar:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
@@ -554,10 +651,10 @@
       self.Castbar.bg2:SetHeight(128)
       self.Castbar.bg2:SetPoint("CENTER",-3,0)
       if unit == "player" then
-        self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-200)
-        self.Castbar:SetStatusBarColor(1,0.5,0,1)
+        self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-275)
+        self.Castbar:SetStatusBarColor(1,0.7,0,1)
       elseif unit == "target" then
-        self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-100)
+        self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-110)
         self.Castbar:SetStatusBarColor(1,0,0,1)
       end
       
@@ -568,7 +665,7 @@
       self.Castbar.Time:SetPoint("RIGHT", -2, 0)
       
       self.Castbar:Hide()
-      self.Castbar:SetScale(myscale)
+      self.Castbar:SetScale(1)
       --Castbar = self.Castbar
     end
     
@@ -577,14 +674,26 @@
     ---------------------
     
     if unit == "player" then
-      self.Health.value = SetFontString(self.Health, d3font, 24, "THINOUTLINE")
-      self.Health.value:SetPoint("CENTER", 0, 0)
-      self.Power.value = SetFontString(self.Power, d3font, 24, "THINOUTLINE")
-      self.Power.value:SetPoint("CENTER", 0, 0)
+      self.HealthValueHolder = CreateFrame("FRAME", nil, self.Health)
+      self.HealthValueHolder:SetFrameStrata("LOW")
+      self.HealthValueHolder:SetAllPoints(self.Health)
+      self.Health.value = SetFontString(self.HealthValueHolder, d3font, 24, "THINOUTLINE")
+      self.Health.value:SetPoint("CENTER", 0, 10)
+      self.Health.value2 = SetFontString(self.HealthValueHolder, d3font, 16, "THINOUTLINE")
+      self.Health.value2:SetPoint("CENTER", 0, -10)
+      self.Health.value2:SetTextColor(0.6,0.6,0.6)
+      self.PowerValueHolder = CreateFrame("FRAME", nil, self.Power)
+      self.PowerValueHolder:SetFrameStrata("LOW")
+      self.PowerValueHolder:SetAllPoints(self.Power)
+      self.Power.value = SetFontString(self.PowerValueHolder, d3font, 24, "THINOUTLINE")
+      self.Power.value:SetPoint("CENTER", 0, 10)
+      self.Power.value2 = SetFontString(self.PowerValueHolder, d3font, 16, "THINOUTLINE")
+      self.Power.value2:SetPoint("CENTER", 0, -10)
+      self.Power.value2:SetTextColor(0.6,0.6,0.6)
     elseif unit == "target" then
       self.Name = SetFontString(self, d3font, 20, "THINOUTLINE")
       self.Name:SetPoint("BOTTOM", self, "TOP", 0, 30)
-      self.Health.value = SetFontString(self.Health, d3font, 16, "THINOUTLINE")
+      self.Health.value = SetFontString(self.Health, d3font, 14, "THINOUTLINE")
       self.Health.value:SetPoint("RIGHT", self, "RIGHT", -2, 0)
       self.Classtext = SetFontString(self, d3font, 16, "THINOUTLINE")
       self.Classtext:SetPoint("BOTTOM", self, "TOP", 0, 13)
@@ -592,7 +701,7 @@
       self.Name = SetFontString(self, d3font, 18, "THINOUTLINE")
       self.Name:SetPoint("BOTTOM", self, "TOP", 0, 15)
       self.Name:SetTextColor(0.9, 0.8, 0)
-      self.Health.value = SetFontString(self.Health, d3font, 16, "THINOUTLINE")
+      self.Health.value = SetFontString(self.Health, d3font, 14, "THINOUTLINE")
       self.Health.value:SetPoint("RIGHT", self, "RIGHT", -2, 0)
     end
     
@@ -607,7 +716,8 @@
       self.Debuffs.spacing = 5
       self.Debuffs:SetHeight(20)
       self.Debuffs:SetWidth(self:GetWidth())
-      self.Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -15)
+      --self.Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -15)
+      self.Debuffs:SetPoint("LEFT", self, "RIGHT", 20, -25)
       self.Debuffs.initialAnchor = "TOPLEFT"
       self.Debuffs["growth-y"] = "DOWN"
       self.Debuffs.showDebuffType = true
@@ -637,11 +747,12 @@
       self.Buffs.spacing = 5
       self.Buffs:SetHeight(20)
       self.Buffs:SetWidth(self:GetWidth())
-      self.Buffs:SetPoint("BOTTOM", self, "TOP", 0, 55)
+      --self.Buffs:SetPoint("BOTTOM", self, "TOP", 0, 55)
+      self.Buffs:SetPoint("LEFT", self, "RIGHT", 20, 25)
       self.Buffs.initialAnchor = "TOPLEFT"
       self.Buffs["growth-y"] = "UP"
       self.Buffs.size = math.floor(self.Buffs:GetHeight())
-      self.Buffs.num = 8
+      self.Buffs.num = 40
     else
       -- nothing
     end
@@ -672,7 +783,7 @@
       self.DebuffHighlight:SetBlendMode("BLEND")
       self.DebuffHighlight:SetVertexColor(1, 0, 0, 0) -- set alpha to 0 to hide the texture
       self.DebuffHighlightAlpha = 0.4
-      self.DebuffHighlightFilter = false
+      self.DebuffHighlightFilter = true
       self.DebuffHighlight:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3totframe_debuff.tga")
     end
 
@@ -710,6 +821,57 @@
       self.LowHP:Hide()
     end
     
+    ---------------------
+    -- Raid Icon
+    ---------------------  
+    
+    if unit == "player" then
+      --nothing   
+    elseif unit == "target" then
+      self.RaidIcon = self:CreateTexture(nil, "OVERLAY")
+      self.RaidIcon:SetHeight(24)
+      self.RaidIcon:SetWidth(24)
+      self.RaidIcon:SetPoint("RIGHT", self.Name, "LEFT", -5, 2)
+      self.RaidIcon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
+    else
+      self.RaidIcon = self:CreateTexture(nil, "OVERLAY")
+      self.RaidIcon:SetHeight(16)
+      self.RaidIcon:SetWidth(16)
+      self.RaidIcon:SetPoint("RIGHT", self.Name, "LEFT", -2, 2)
+      self.RaidIcon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
+    end
+
+    ---------------------
+    -- Leader Icon
+    ---------------------  
+    
+    if unit == "player" then
+      self.Leader = self:CreateTexture(nil, "OVERLAY")
+      self.Leader:SetHeight(16)
+      self.Leader:SetWidth(16)
+      self.Leader:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
+      self.Leader:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")    
+    elseif unit == "target" then 
+      -- nothing
+    else
+      self.Leader = self:CreateTexture(nil, "OVERLAY")
+      self.Leader:SetHeight(16)
+      self.Leader:SetWidth(16)
+      self.Leader:SetPoint("RIGHT", self, "LEFT", 4, 20)
+      self.Leader:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")      
+    end
+    
+    ---------------------
+    -- Combo Points
+    ---------------------      
+    
+    if unit == "target" then
+  	  self.CPoints = SetFontString(self.Health, d3font, 24, "THINOUTLINE")
+  	  self.CPoints:SetPoint("LEFT", self.Name, "RIGHT", 5, -1)
+  	  self.CPoints:SetTextColor(1, .5, 0)
+  	end
+  	
+  	-- -------------------  	
     
     self.outsideRangeAlpha = 1
     self.inRangeAlpha = 1
@@ -722,7 +884,7 @@
     self.UNIT_HAPPINESS = updateName
     self.PLAYER_TARGET_CHANGED = updateTarget
     
-    if unit ~= "player" then
+    if unit ~= "player" and unit ~= "target" then
       self:SetScale(myscale)
     end
   
@@ -738,14 +900,15 @@
   oUF:RegisterStyle(actstyle, styleFunc1)
   oUF:SetActiveStyle(actstyle)
   oUF:Spawn("player"):SetPoint("BOTTOM", UIParent, "BOTTOM", -250, -8)
-  oUF:Spawn("target"):SetPoint("TOP", UIParent, 0, -80)
+  --oUF:Spawn("target"):SetPoint("TOP", UIParent, 0, -80)
+  oUF:Spawn("target"):SetPoint("CENTER", UIParent, 0, -200)
   oUF:Spawn("pet"):SetPoint("BOTTOM", UIParent, "BOTTOM",-500, 50)
   oUF:Spawn("focus"):SetPoint("BOTTOM", UIParent, "BOTTOM", 500, 50)
   oUF:Spawn("targettarget"):SetPoint("RIGHT", oUF.units.target, "LEFT", -80, 0)
   
   local party  = oUF:Spawn("header", "oUF_Party")
   party:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 45, -50)
-  party:SetManyAttributes("showParty", true, "yOffset", 50, "point", "BOTTOM", "showPlayer", false)
+  party:SetManyAttributes("showParty", true, "yOffset", 73, "point", "BOTTOM", "showPlayer", false)
   
   local partyToggle = CreateFrame("Frame")
   partyToggle:RegisterEvent("PLAYER_LOGIN")

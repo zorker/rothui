@@ -109,7 +109,7 @@
     if icontype == 2 and b then
       local red,green,blue = b:GetVertexColor();    
       tex:SetTexture("Interface\\AddOns\\rTextures\\gloss_grey")
-      tex:SetVertexColor(red,green,blue)
+      tex:SetVertexColor(red*0.5,green*0.5,blue*0.5)
     else
       tex:SetTexture("Interface\\AddOns\\rTextures\\gloss")
       tex:SetVertexColor(1,1,1)      

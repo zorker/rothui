@@ -3,12 +3,8 @@
   -- CONFIG
   ---------------- 
   
-  --font
+  --font, set your font here
   local d3font = "Interface\\AddOns\\oUF_D3Orbs\\avqest.ttf"
-  
-  -- myscale sets scaling. range 0-1, 0.7 = 70%.  
-  -- scales all units except orbs and actionbar
-  local myscale = 1
   
   -- usebar defines what actionbar texture will be used. 
   -- usebar = 1 -> 24 button texture
@@ -33,9 +29,12 @@
   -- this will remove animations from orbs!
   -- 0 = no
   -- 1 = yes
-  local use_classcolor = 1
+  local use_classcolor = 0
   
-  
+  -- myscale sets scaling. range 0-1, 0.7 = 70%.  
+  -- scales all units except orbs and actionbar
+  -- be careful with this one
+  local myscale = 1  
   
   ----------------
   -- CONFIG END

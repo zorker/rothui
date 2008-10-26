@@ -29,7 +29,7 @@
   -- this will remove animations from orbs!
   -- 0 = no
   -- 1 = yes
-  local use_classcolor = 0
+  local use_classcolor = 1
   
   -- myscale sets scaling. range 0-1, 0.7 = 70%.  
   -- scales all units except orbs and actionbar
@@ -407,8 +407,10 @@
       if unit == "player" then
         self.Power.Filling:SetHeight(0)
         self.Power.Filling:SetTexCoord(0,1,1,1)
-        self.pm3:SetAlpha(0)
-        self.pm4:SetAlpha(0)
+        if use_classcolor == 0 then
+          self.pm3:SetAlpha(0)
+          self.pm4:SetAlpha(0)
+        end
       else
         local color = colors2.power[UnitPowerType(unit)]
         bar:SetStatusBarColor(color.r, color.g, color.b)

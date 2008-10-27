@@ -173,11 +173,11 @@
   ---------------- 
   
   local function do_classtext(self,unit)
-   
+    
     local string = ""
     local tmpstring = ""
     local sp = " "
-    
+
     if UnitLevel(unit) ~= -1 then
       string = UnitLevel(unit)
     else
@@ -281,11 +281,6 @@
       end
       
     elseif unit == "target" then
-    
-      local mycombo = GetComboPoints("target") 
-      if mycombo >= 1 then
-        self.CPoints:SetText(mycombo)
-      end
     
       if d == 0 or d == 100 or min == 1 then
         --bar.value:SetText("")
@@ -873,6 +868,7 @@
       self.CPoints = SetFontString(self.Health, d3font, 24, "THINOUTLINE")
       self.CPoints:SetPoint("LEFT", self.Name, "RIGHT", 5, -1)
       self.CPoints:SetTextColor(1, .5, 0)
+      self.CPoints.unit = "player"
     end
     
     

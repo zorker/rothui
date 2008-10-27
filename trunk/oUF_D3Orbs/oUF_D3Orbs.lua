@@ -191,7 +191,7 @@
     elseif unit_classification == "rare" then
       tmpstring = "Rare"
       if UnitIsPlusMob(unit) then
-        tmpstring = tmpstring.." ELITE"
+        tmpstring = tmpstring.." Elite"
       end
     elseif unit_classification == "elite" then
       tmpstring = "Elite"
@@ -215,6 +215,22 @@
   end
   
   ----------------
+  -- VALUE FORMAT
+  ---------------- 
+  
+  local function do_format(v)
+    local string = ""
+    if v > 1000000 then
+      string = (floor((v/1000000)*10)/10).."m"
+    elseif v > 1000 then
+      string = (floor((v/1000)*10)/10).."k"
+    else
+      string = v
+    end  
+    return string
+  end
+  
+  ----------------
   -- UPDATE HEALTH
   ---------------- 
   
@@ -231,23 +247,8 @@
     local c = max - min
     local d = floor(min/max*100)
     
-    local newmin
-    if min > 1000000 then
-      newmin = (floor((min/1000000)*10)/10).."m"
-    elseif min > 1000 then
-      newmin = (floor((min/1000)*10)/10).."k"
-    else
-      newmin = min
-    end
-    
-    local new_max
-    if max > 1000000 then
-      new_max = (floor((max/1000000)*10)/10).."m"
-    elseif max > 1000 then
-      new_max = (floor((max/1000)*10)/10).."k"
-    else
-      new_max = max
-    end
+    local newmin = do_format(min)
+    local newmax = do_format(max)
     
     if d <= 25 and d > 0 and min > 1 then
       self.LowHP:Show()
@@ -367,23 +368,8 @@
       d = floor(min/max*100)
     end
     
-    local newmin
-    if min > 1000000 then
-      newmin = (floor((min/1000000)*10)/10).."m"
-    elseif min > 1000 then
-      newmin = (floor((min/1000)*10)/10).."k"
-    else
-      newmin = min
-    end
-    
-    local new_max
-    if max > 1000000 then
-      new_max = (floor((max/1000000)*10)/10).."m"
-    elseif max > 1000 then
-      new_max = (floor((max/1000)*10)/10).."k"
-    else
-      new_max = max
-    end
+    local newmin = do_format(min)
+    local newmax = do_format(max)
     
     if unit == "player" then
       if d == 0 or d == 100 or min == 1 or max == 1 then
@@ -669,7 +655,8 @@
       
       self.Castbar:Hide()
       self.Castbar:SetScale(myscale)
-      --Castbar = self.Castbar
+      Castbar = self.Castbar
+      
     end
     
     ---------------------

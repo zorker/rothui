@@ -37,7 +37,7 @@
   -- myscale sets scaling. range 0-1, 0.7 = 70%.  
   -- scales all units except orbs and actionbar
   -- be careful with this one
-  local myscale = 1  
+  local myscale = 0.82
   
   ----------------
   -- CONFIG END
@@ -102,19 +102,21 @@
       [2] = {scale = 0.75, z = -12, x = 0, y = -1}, -- green
       [3] = {scale = 0.75, z = -12, x = 1.2, y = -1}, -- blue
       [4] = {scale = 0.7, z = -12, x = 0, y = -0.7}, -- yellow
-    }
+    },
     frame_positions = {
-      [1] =   { f = "PlayerPowerOrb",   a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = 250,    y = -8      },
-      [2] =   { f = "PlayerHealthOrb",  a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = -250,   y = -8      },
-      [3] =   { f = "Target",           a1 = "CENTER",  a2 = "CENTER",  af = UIParent,          x = 0,      y = -200    },
-      [4] =   { f = "ToT",              a1 = "RIGHT",   a2 = "LEFT",    af = oUF.units.target,  x = -80,    y = 0       },
-      [5] =   { f = "Pet",              a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = -500,   y = 50      },
-      [6] =   { f = "Focus",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = 500,    y = 50      },
-      [7] =   { f = "Party",            a1 = "TOPLEFT", a2 = "TOPLEFT", af = UIParent,          x = 45,     y = -50     },
-      [8] =   { f = "Angel",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = 305,    y = 0       },
-      [9] =   { f = "Demon",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = -312,   y = 0       },
-      [10] =  { f = "BottomLine",       a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = 0,      y = -3      },
-      [11] =  { f = "BarTexture",       a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = 1,      y = 0       },
+      [1] =   { f = "PlayerPowerOrb",   a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 250,    y = -8      },
+      [2] =   { f = "PlayerHealthOrb",  a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -250,   y = -8      },
+      [3] =   { f = "Target",           a1 = "CENTER",  a2 = "CENTER",  af = "UIParent",          x = 0,      y = -200    },
+      [4] =   { f = "ToT",              a1 = "RIGHT",   a2 = "LEFT",    af = "ouf_target",        x = -80,    y = 0       },
+      [5] =   { f = "Pet",              a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -475,   y = 50      },
+      [6] =   { f = "Focus",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 475,    y = 50      },
+      [7] =   { f = "Party",            a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent",          x = 45,     y = -50     },
+      [8] =   { f = "Angel",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 305,    y = 0       },
+      [9] =   { f = "Demon",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -312,   y = 0       },
+      [10] =  { f = "BottomLine",       a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 0,      y = -3      },
+      [11] =  { f = "BarTexture",       a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 1,      y = 0       },
+      [12] =  { f = "CastbarTarget",    a1 = "CENTER",  a2 = "CENTER",  af = "ouf_target",        x = 0,      y = 100     },
+      [13] =  { f = "CastbarPlayer",    a1 = "CENTER",  a2 = "CENTER",  af = "ouf_target",        x = 0,      y = -80    },
     },
   }
   
@@ -649,10 +651,12 @@
       self.Castbar.bg2:SetHeight(128)
       self.Castbar.bg2:SetPoint("CENTER",-3,0)
       if unit == "player" then
-        self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-275)
+        --self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-275)
+        self.Castbar:SetPoint(colors2.frame_positions[13].a1, colors2.frame_positions[13].af, colors2.frame_positions[13].a2, colors2.frame_positions[13].x, colors2.frame_positions[13].y)
         self.Castbar:SetStatusBarColor(1,0.7,0,1)
       elseif unit == "target" then
-        self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-110)
+        --self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-110)
+        self.Castbar:SetPoint(colors2.frame_positions[12].a1, colors2.frame_positions[12].af, colors2.frame_positions[12].a2, colors2.frame_positions[12].x, colors2.frame_positions[12].y)
         self.Castbar:SetStatusBarColor(1,0,0,1)
       end
       
@@ -911,9 +915,9 @@
   -------------------------------------------------------
   -- SPAWN UNITS and POSITION THEM
   -------------------------------------------------------
-  
-  oUF:Spawn("player"):SetPoint(colors2.frame_positions[2].a1, colors2.frame_positions[2].af, colors2.frame_positions[2].a2, colors2.frame_positions[2].x, colors2.frame_positions[2].y)
-  oUF:Spawn("target"):SetPoint(colors2.frame_positions[3].a1, colors2.frame_positions[3].af, colors2.frame_positions[3].a2, colors2.frame_positions[3].x, colors2.frame_positions[3].y)
+
+  oUF:Spawn("target","ouf_target"):SetPoint(colors2.frame_positions[3].a1, colors2.frame_positions[3].af, colors2.frame_positions[3].a2, colors2.frame_positions[3].x, colors2.frame_positions[3].y)  
+  oUF:Spawn("player","ouf_player"):SetPoint(colors2.frame_positions[2].a1, colors2.frame_positions[2].af, colors2.frame_positions[2].a2, colors2.frame_positions[2].x, colors2.frame_positions[2].y)
   oUF:Spawn("targettarget"):SetPoint(colors2.frame_positions[4].a1, colors2.frame_positions[4].af, colors2.frame_positions[4].a2, colors2.frame_positions[4].x, colors2.frame_positions[4].y)
   oUF:Spawn("pet"):SetPoint(colors2.frame_positions[5].a1, colors2.frame_positions[5].af, colors2.frame_positions[5].a2, colors2.frame_positions[5].x, colors2.frame_positions[5].y)
   oUF:Spawn("focus"):SetPoint(colors2.frame_positions[6].a1, colors2.frame_positions[6].af, colors2.frame_positions[6].a2, colors2.frame_positions[6].x, colors2.frame_positions[6].y)

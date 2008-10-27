@@ -18,7 +18,7 @@
   end
 
   -- map scale
-  local mapscale = 1
+  local mapscale = 0.82
   
   -- size of icons (tracking icon for example)
   local iconsize = 20
@@ -40,10 +40,10 @@
     map_positions = {
       position = {
         [1] = { frame = "Minimap",                  anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",   anchorframe = "UIParent",   posx = -30,   posy = -10 },
-        [2] = { frame = "MiniMapTracking",          anchor1 = "LEFT",          anchor2 = "RIGHT",     anchorframe = "Minimap",    posx = 5,     posy = 20 },
-        [3] = { frame = "MiniMapMailFrame",         anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 50,    posy = -15 },
-        [4] = { frame = "MiniMapBattlefieldFrame",  anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = -50,   posy = -15 },
-        [5] = { frame = "GameTimeFrame",            anchor1 = "LEFT",          anchor2 = "RIGHT",     anchorframe = "Minimap",    posx = 5,    posy = -20 },
+        [2] = { frame = "MiniMapTracking",          anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 0,     posy = -20 },
+        [3] = { frame = "MiniMapMailFrame",         anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 50,    posy = -20 },
+        [4] = { frame = "MiniMapBattlefieldFrame",  anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = -25,   posy = -20 },
+        [5] = { frame = "GameTimeFrame",            anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 25,    posy = -20 },
         [6] = { frame = "TimeManagerClockButton",   anchor1 = "BOTTOM",       anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 0,    posy = 0 },
       },
     }
@@ -201,7 +201,7 @@
     MiniMapTrackingIcon:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 2, -2)
     MiniMapTrackingIcon:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", -2, 2)
     MiniMapTrackingIcon.SetPoint = dummy
-    MiniMapTrackingIcon:SetTexCoord(0.1,0.9,0.1,0.9)
+    MiniMapTrackingIcon:SetTexCoord(0.07,0.93,0.07,0.93)
     
     MinimapZoomOut:Hide()
     MinimapZoomIn:Hide()

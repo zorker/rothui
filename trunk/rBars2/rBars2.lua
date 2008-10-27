@@ -14,7 +14,7 @@
   local fade_alpha = 1;
 
   -- scale, SCALE your buttons here. range 0-1, 0.7 = 70%
-  local myscale = 0.75
+  local myscale = 0.75*0.82
   
   --button system for bar 1 and bar 2
   -- 0 = 1x12 layout
@@ -56,6 +56,7 @@
   a:SetScript("OnEvent", function (self,event,arg1)
     if(event=="PLAYER_LOGIN") then
       a:cre_actionbarframe1()
+      PetActionBarFrame:SetScale(myscale*1.4)
     elseif(event=="PLAYER_ENTERING_WORLD") then
       --TEST, will try this later
       MainMenuBar:Hide()

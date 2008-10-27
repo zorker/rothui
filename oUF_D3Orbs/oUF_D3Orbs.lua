@@ -45,9 +45,9 @@
   
   -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
-  ----------------
-  -- COLRORS
-  ---------------- 
+  --------------------------------
+  -- COLOR and POSITION-TABLES
+  --------------------------------
   
   local healthfog
   
@@ -103,6 +103,19 @@
       [3] = {scale = 0.75, z = -12, x = 1.2, y = -1}, -- blue
       [4] = {scale = 0.7, z = -12, x = 0, y = -0.7}, -- yellow
     }
+    frame_positions = {
+      [1] =   { f = "PlayerPowerOrb",   a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = 250,    y = -8      },
+      [2] =   { f = "PlayerHealthOrb",  a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = -250,   y = -8      },
+      [3] =   { f = "Target",           a1 = "CENTER",  a2 = "CENTER",  af = UIParent,          x = 0,      y = -200    },
+      [4] =   { f = "ToT",              a1 = "RIGHT",   a2 = "LEFT",    af = oUF.units.target,  x = -80,    y = 0       },
+      [5] =   { f = "Pet",              a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = -500,   y = 50      },
+      [6] =   { f = "Focus",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = 500,    y = 50      },
+      [7] =   { f = "Party",            a1 = "TOPLEFT", a2 = "TOPLEFT", af = UIParent,          x = 45,     y = -50     },
+      [8] =   { f = "Angel",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = 305,    y = 0       },
+      [9] =   { f = "Demon",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = -312,   y = 0       },
+      [10] =  { f = "BottomLine",       a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = 0,      y = -3      },
+      [11] =  { f = "BarTexture",       a1 = "BOTTOM",  a2 = "BOTTOM",  af = UIParent,          x = 1,      y = 0       },
+    },
   }
   
   ----------------
@@ -559,7 +572,8 @@
       self.Power:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_transparent.tga")
       self.Power:SetHeight(orbsize)
       self.Power:SetWidth(orbsize)
-      self.Power:SetPoint("BOTTOM", UIParent, "BOTTOM", 250, -8)
+      --self.Power:SetPoint("BOTTOM", UIParent, "BOTTOM", 250, -8)
+      self.Power:SetPoint(colors2.frame_positions[1].a1, colors2.frame_positions[1].af, colors2.frame_positions[1].a2, colors2.frame_positions[1].x, colors2.frame_positions[1].y)
       self.Power.frequentUpdates = true
       self.Power.bg = self.Power:CreateTexture(nil, "BACKGROUND")
       self.Power.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back.tga")
@@ -902,19 +916,18 @@
   -- SPAWN UNITS and POSITION THEM
   -------------------------------------------------------
   
-  oUF:Spawn("player"):SetPoint("BOTTOM", UIParent, "BOTTOM", -250, -8)
-  --oUF:Spawn("target"):SetPoint("TOP", UIParent, 0, -80)
-  oUF:Spawn("target"):SetPoint("CENTER", UIParent, 0, -200)
-  oUF:Spawn("pet"):SetPoint("BOTTOM", UIParent, "BOTTOM",-500, 50)
-  oUF:Spawn("focus"):SetPoint("BOTTOM", UIParent, "BOTTOM", 500, 50)
-  oUF:Spawn("targettarget"):SetPoint("RIGHT", oUF.units.target, "LEFT", -80, 0)
+  oUF:Spawn("player"):SetPoint(colors2.frame_positions[2].a1, colors2.frame_positions[2].af, colors2.frame_positions[2].a2, colors2.frame_positions[2].x, colors2.frame_positions[2].y)
+  oUF:Spawn("target"):SetPoint(colors2.frame_positions[3].a1, colors2.frame_positions[3].af, colors2.frame_positions[3].a2, colors2.frame_positions[3].x, colors2.frame_positions[3].y)
+  oUF:Spawn("targettarget"):SetPoint(colors2.frame_positions[4].a1, colors2.frame_positions[4].af, colors2.frame_positions[4].a2, colors2.frame_positions[4].x, colors2.frame_positions[4].y)
+  oUF:Spawn("pet"):SetPoint(colors2.frame_positions[5].a1, colors2.frame_positions[5].af, colors2.frame_positions[5].a2, colors2.frame_positions[5].x, colors2.frame_positions[5].y)
+  oUF:Spawn("focus"):SetPoint(colors2.frame_positions[6].a1, colors2.frame_positions[6].af, colors2.frame_positions[6].a2, colors2.frame_positions[6].x, colors2.frame_positions[6].y)
   
   -------------------------------------------------------
   -- SPAWN PARTY and POSITION IT
   -------------------------------------------------------
   
   local party  = oUF:Spawn("header", "oUF_Party")
-  party:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 45, -50)
+  party:SetPoint(colors2.frame_positions[7].a1, colors2.frame_positions[7].af, colors2.frame_positions[7].a2, colors2.frame_positions[7].x, colors2.frame_positions[7].y)
   party:SetManyAttributes("showParty", true, "yOffset", 73, "point", "BOTTOM", "showPlayer", false)
   
   
@@ -950,7 +963,7 @@
   d3f:SetFrameStrata("TOOLTIP")
   d3f:SetWidth(155)
   d3f:SetHeight(155)
-  d3f:SetPoint("BOTTOM",305,0)
+  d3f:SetPoint(colors2.frame_positions[8].a1, colors2.frame_positions[8].af, colors2.frame_positions[8].a2, colors2.frame_positions[8].x, colors2.frame_positions[8].y)
   d3f:Show()
   d3f:SetScale(myscale)
   local d3t = d3f:CreateTexture(nil,"BACKGROUND")
@@ -961,7 +974,7 @@
   d3f2:SetFrameStrata("TOOLTIP")
   d3f2:SetWidth(155)
   d3f2:SetHeight(155)
-  d3f2:SetPoint("BOTTOM",-312,0)
+  d3f2:SetPoint(colors2.frame_positions[9].a1, colors2.frame_positions[9].af, colors2.frame_positions[9].a2, colors2.frame_positions[9].x, colors2.frame_positions[9].y)
   d3f2:Show()
   d3f2:SetScale(myscale)
   local d3t2 = d3f2:CreateTexture(nil,"HIGHLIGHT ")
@@ -972,7 +985,7 @@
   d3f3:SetFrameStrata("TOOLTIP")
   d3f3:SetWidth(500)
   d3f3:SetHeight(112)
-  d3f3:SetPoint("BOTTOM",0,-3)
+  d3f3:SetPoint(colors2.frame_positions[10].a1, colors2.frame_positions[10].af, colors2.frame_positions[10].a2, colors2.frame_positions[10].x, colors2.frame_positions[10].y)
   d3f3:Show()
   d3f3:SetScale(myscale)
   local d3t3 = d3f3:CreateTexture(nil,"BACKGROUND")
@@ -983,7 +996,7 @@
   d3f4:SetFrameStrata("BACKGROUND")
   d3f4:SetWidth(512)
   d3f4:SetHeight(256)
-  d3f4:SetPoint("BOTTOM",1,0)
+  d3f4:SetPoint(colors2.frame_positions[11].a1, colors2.frame_positions[11].af, colors2.frame_positions[11].a2, colors2.frame_positions[11].x, colors2.frame_positions[11].y)
   d3f4:Show()
   d3f4:SetScale(myscale)
   local d3t4 = d3f4:CreateTexture(nil,"BACKGROUND")

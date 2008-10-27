@@ -1,3 +1,6 @@
+
+  -- oUF_D3Orbs layout by roth - 2008
+  -- http://www.wowinterface.com/downloads/info11314-oUF_D3Orbs.html
     
   ----------------
   -- CONFIG
@@ -29,7 +32,7 @@
   -- this will remove animations from orbs!
   -- 0 = no
   -- 1 = yes
-  local use_classcolor = 1
+  local use_classcolor = 0
   
   -- myscale sets scaling. range 0-1, 0.7 = 70%.  
   -- scales all units except orbs and actionbar
@@ -205,8 +208,7 @@
     
     if localizedClass and UnitIsPlayer(unit) then
       string = string..localizedClass..sp
-    end
-    
+    end    
     
     self.Classtext:SetText(string)
 
@@ -298,30 +300,30 @@
         self.pm1:SetAlpha((lifeact / lifemax))
         self.pm2:SetAlpha((lifeact / lifemax))
       else        
-    		local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+        local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
         self.Health.Filling:SetVertexColor(color.r, color.g, color.b,1)
       end
     else
-  		
- 		  --self.Health.bg:SetVertexColor(0.15,0.15,0.15,1)
- 		  self.Health:SetStatusBarColor(0.15,0.15,0.15,1)
+      
+       --self.Health.bg:SetVertexColor(0.15,0.15,0.15,1)
+       self.Health:SetStatusBarColor(0.15,0.15,0.15,1)
 
-  		local tmpunitname = UnitName(unit)  		
-  		if unit == "target" then
-    		if tmpunitname:len() > 24 then
-    		  tmpunitname = tmpunitname:sub(1, 24).."..."
-    		  self.Name:SetText(tmpunitname)
-    		end
-  		else
-    		if tmpunitname:len() > 16 then
-    		  tmpunitname = tmpunitname:sub(1, 16).."..."
-    		  self.Name:SetText(tmpunitname)
-    		end
-  		end
-  		
-  		local color
-  		
-  		if UnitIsPlayer(unit) then
+      local tmpunitname = UnitName(unit)      
+      if unit == "target" then
+        if tmpunitname:len() > 24 then
+          tmpunitname = tmpunitname:sub(1, 24).."..."
+          self.Name:SetText(tmpunitname)
+        end
+      else
+        if tmpunitname:len() > 16 then
+          tmpunitname = tmpunitname:sub(1, 16).."..."
+          self.Name:SetText(tmpunitname)
+        end
+      end
+      
+      local color
+      
+      if UnitIsPlayer(unit) then
         if RAID_CLASS_COLORS[select(2, UnitClass(unit))] then
           color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
         end
@@ -425,7 +427,7 @@
           self.pm3:SetAlpha((manaact / manamax))
           self.pm4:SetAlpha((manaact / manamax))
         else        
-      		local color = colors2.power[UnitPowerType(unit)]
+          local color = colors2.power[UnitPowerType(unit)]
           self.Power.Filling:SetVertexColor(color.r, color.g, color.b,1)
         end
       else
@@ -666,7 +668,7 @@
       self.Castbar.Time:SetPoint("RIGHT", -2, 0)
       
       self.Castbar:Hide()
-      self.Castbar:SetScale(1)
+      self.Castbar:SetScale(myscale)
       --Castbar = self.Castbar
     end
     
@@ -867,12 +869,23 @@
     ---------------------      
     
     if unit == "target" then
-  	  self.CPoints = SetFontString(self.Health, d3font, 24, "THINOUTLINE")
-  	  self.CPoints:SetPoint("LEFT", self.Name, "RIGHT", 5, -1)
-  	  self.CPoints:SetTextColor(1, .5, 0)
-  	end
-  	
-  	-- -------------------  	
+      self.CPoints = SetFontString(self.Health, d3font, 24, "THINOUTLINE")
+      self.CPoints:SetPoint("LEFT", self.Name, "RIGHT", 5, -1)
+      self.CPoints:SetTextColor(1, .5, 0)
+    end
+    
+    
+    ---------------------
+    -- SCALING
+    ---------------------  
+    
+    --if unit ~= "player" and unit ~= "target" then
+      self:SetScale(myscale)
+    --end
+    
+    ---------------------
+    -- OTHERS
+    ---------------------    
     
     self.outsideRangeAlpha = 1
     self.inRangeAlpha = 1
@@ -884,22 +897,24 @@
     self.UNIT_NAME_UPDATE = updateName
     self.UNIT_HAPPINESS = updateName
     self.PLAYER_TARGET_CHANGED = updateTarget
-    
-    if unit ~= "player" and unit ~= "target" then
-      self:SetScale(myscale)
-    end
   
     return self
+
   end
 
   -------------------------------------------------------
-  -- REGISTER STYLE, CALL STYLEFUNC and SPAWN UNITS
+  -- REGISTER STYLE, CALL STYLEFUNC
   -------------------------------------------------------
   
   actstyle = "d3orb"
   --oUF:RegisterSubTypeMapping("UNIT_LEVEL")
   oUF:RegisterStyle(actstyle, styleFunc1)
   oUF:SetActiveStyle(actstyle)
+  
+  -------------------------------------------------------
+  -- SPAWN UNITS and POSITION THEM
+  -------------------------------------------------------
+  
   oUF:Spawn("player"):SetPoint("BOTTOM", UIParent, "BOTTOM", -250, -8)
   --oUF:Spawn("target"):SetPoint("TOP", UIParent, 0, -80)
   oUF:Spawn("target"):SetPoint("CENTER", UIParent, 0, -200)
@@ -907,9 +922,18 @@
   oUF:Spawn("focus"):SetPoint("BOTTOM", UIParent, "BOTTOM", 500, 50)
   oUF:Spawn("targettarget"):SetPoint("RIGHT", oUF.units.target, "LEFT", -80, 0)
   
+  -------------------------------------------------------
+  -- SPAWN PARTY and POSITION IT
+  -------------------------------------------------------
+  
   local party  = oUF:Spawn("header", "oUF_Party")
   party:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 45, -50)
   party:SetManyAttributes("showParty", true, "yOffset", 73, "point", "BOTTOM", "showPlayer", false)
+  
+  
+  -------------------------------------------------------
+  -- TOGGLE PARTY IN RAID (CURRENTLY NO)
+  -------------------------------------------------------
   
   local partyToggle = CreateFrame("Frame")
   partyToggle:RegisterEvent("PLAYER_LOGIN")
@@ -922,6 +946,7 @@
     else
       self:UnregisterEvent("PLAYER_REGEN_ENABLED")
       if(GetNumRaidMembers() > 0) then
+        --activate this to hide party in raid
         --party:Hide()
         party:Show()
       else
@@ -929,7 +954,6 @@
       end
     end
   end)
-
 
   -----------------------------
   -- CREATING D3 ART FRAMES
@@ -941,7 +965,7 @@
   d3f:SetHeight(155)
   d3f:SetPoint("BOTTOM",305,0)
   d3f:Show()
-  --d3f:SetScale(myscale)
+  d3f:SetScale(myscale)
   local d3t = d3f:CreateTexture(nil,"BACKGROUND")
   d3t:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_angel")
   d3t:SetAllPoints(d3f)
@@ -952,7 +976,7 @@
   d3f2:SetHeight(155)
   d3f2:SetPoint("BOTTOM",-312,0)
   d3f2:Show()
-  --d3f2:SetScale(myscale)
+  d3f2:SetScale(myscale)
   local d3t2 = d3f2:CreateTexture(nil,"HIGHLIGHT ")
   d3t2:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_demon")
   d3t2:SetAllPoints(d3f2)
@@ -963,7 +987,7 @@
   d3f3:SetHeight(112)
   d3f3:SetPoint("BOTTOM",0,-3)
   d3f3:Show()
-  --d3f3:SetScale(myscale)
+  d3f3:SetScale(myscale)
   local d3t3 = d3f3:CreateTexture(nil,"BACKGROUND")
   d3t3:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bottom")
   d3t3:SetAllPoints(d3f3)
@@ -974,7 +998,7 @@
   d3f4:SetHeight(256)
   d3f4:SetPoint("BOTTOM",1,0)
   d3f4:Show()
-  --d3f4:SetScale(myscale)
+  d3f4:SetScale(myscale)
   local d3t4 = d3f4:CreateTexture(nil,"BACKGROUND")
   if usebar == 1 then
     d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar6")

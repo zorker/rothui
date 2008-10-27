@@ -35,6 +35,9 @@
   BUFF_FLASH_TIME_ON = 0.8;
   BUFF_FLASH_TIME_OFF = 0.8;
   BUFF_MIN_ALPHA = 0.70;
+  
+  local myscale = 0.82
+  local d3font = "Interface\\AddOns\\oUF_D3Orbs\\avqest.ttf"
 
   local addon = CreateFrame("Frame")
   local _G = getfenv(0)
@@ -45,7 +48,8 @@
     then
       TemporaryEnchantFrame:ClearAllPoints()
       TemporaryEnchantFrame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -200, -20)
-      TemporaryEnchantFrame.SetPoint = function() end
+      TemporaryEnchantFrame:SetScale(myscale)
+      BuffFrame:SetScale(myscale)
       addon:runthroughicons()
       
     end
@@ -110,6 +114,9 @@
       local red,green,blue = b:GetVertexColor();    
       tex:SetTexture("Interface\\AddOns\\rTextures\\gloss_grey")
       tex:SetVertexColor(red*0.5,green*0.5,blue*0.5)
+    elseif icontype == 3 and b then
+      tex:SetTexture("Interface\\AddOns\\rTextures\\gloss_grey")
+      tex:SetVertexColor(0.5,0,0.5)
     else
       tex:SetTexture("Interface\\AddOns\\rTextures\\gloss")
       tex:SetVertexColor(1,1,1)      

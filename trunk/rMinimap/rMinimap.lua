@@ -40,10 +40,10 @@
     map_positions = {
       position = {
         [1] = { frame = "Minimap",                  anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",   anchorframe = "UIParent",   posx = -30,   posy = -10 },
-        [2] = { frame = "MiniMapTracking",          anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 0,     posy = -20 },
+        [2] = { frame = "MiniMapTracking",          anchor1 = "CENTER",       anchor2 = "CENTER",     anchorframe = "Minimap",    posx = 70,     posy = 25 },
         [3] = { frame = "MiniMapMailFrame",         anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 50,    posy = -20 },
         [4] = { frame = "MiniMapBattlefieldFrame",  anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = -25,   posy = -20 },
-        [5] = { frame = "GameTimeFrame",            anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 25,    posy = -20 },
+        [5] = { frame = "GameTimeFrame",            anchor1 = "CENTER",          anchor2 = "CENTER",     anchorframe = "Minimap",    posx = 52,    posy = 52 },
         [6] = { frame = "TimeManagerClockButton",   anchor1 = "BOTTOM",       anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 0,    posy = 0 },
       },
     }
@@ -189,19 +189,20 @@
     local tftb = MiniMapTracking:CreateTexture(nil,"BACKGROUND")
     tftb:SetTexture("Interface\\AddOns\\rMinimap\\mask")
     tftb:SetVertexColor(0,0,0,1)
-    tftb:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 1, -1)
-    tftb:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", -1, 1)
+    tftb:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 2, 0)
+    tftb:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", 0, 0)
         
-    local tft = MiniMapTracking:CreateTexture(nil,"ARTWORK")
-    tft:SetTexture("Interface\\AddOns\\rTextures\\gloss")
-    tft:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", -0, 0)
-    tft:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", 0, -0)
-    
     MiniMapTrackingIcon:ClearAllPoints()
-    MiniMapTrackingIcon:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 2, -2)
-    MiniMapTrackingIcon:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", -2, 2)
+    MiniMapTrackingIcon:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 0, -0)
+    MiniMapTrackingIcon:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", -0, 0)
     MiniMapTrackingIcon.SetPoint = dummy
-    MiniMapTrackingIcon:SetTexCoord(0.07,0.93,0.07,0.93)
+    MiniMapTrackingIcon:SetTexCoord(0.1,0.9,0.1,0.9)
+
+    local tft = MiniMapTracking:CreateTexture(nil,"OVERLAY")
+    --tft:SetTexture("Interface\\AddOns\\rTextures\\gloss")
+    tft:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+    tft:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", -5, 5)
+    tft:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", 27, -27)
     
     MinimapZoomOut:Hide()
     MinimapZoomIn:Hide()
@@ -264,9 +265,12 @@
     gtftb:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -1, 1)
     
     local gtft = bu:CreateTexture(nil,"ARTWORK")
-    gtft:SetTexture("Interface\\AddOns\\rTextures\\gloss")
-    gtft:SetPoint("TOPLEFT", bu, "TOPLEFT", -0, 0)
-    gtft:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 0, -0)
+    --gtft:SetTexture("Interface\\AddOns\\rTextures\\gloss")
+    --gtft:SetPoint("TOPLEFT", bu, "TOPLEFT", -0, 0)
+    --gtft:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 0, -0)
+    gtft:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
+    gtft:SetPoint("TOPLEFT", bu, "TOPLEFT", -5, 5)
+    gtft:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 27, -27)
    
     --the is no name for this texture so we need to workaround this
     nt = bu:GetNormalTexture()
@@ -277,9 +281,13 @@
     pu:SetTexCoord(0,1,0,1)
     pu:SetAllPoints(bu)
     
-    bu:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss")
-    bu:SetPushedTexture("Interface\\AddOns\\rTextures\\gloss")
-    bu:SetHighlightTexture("Interface\\AddOns\\rTextures\\hover")
+    --bu:SetNormalTexture("Interface\\AddOns\\rTextures\\gloss")
+    --bu:SetPushedTexture("Interface\\AddOns\\rTextures\\gloss")
+    --bu:SetHighlightTexture("Interface\\AddOns\\rTextures\\hover")
+    
+    bu:SetNormalTexture("")
+    bu:SetPushedTexture("")
+    bu:SetHighlightTexture("")
     
     MiniMapMeetingStoneFrame:Hide()
 

@@ -38,6 +38,11 @@
   
   local myscale = 0.82
   local d3font = "Interface\\AddOns\\oUF_D3Orbs\\avqest.ttf"
+  --local glosstex1 = "Interface\\AddOns\\rTextures\\d3bufficon"
+  --local glosstex2 = "Interface\\AddOns\\rTextures\\d3bufficon_white"
+
+  local glosstex1 = "Interface\\AddOns\\rTextures\\gloss"
+  local glosstex2 = "Interface\\AddOns\\rTextures\\gloss_grey"
 
   local addon = CreateFrame("Frame")
   local _G = getfenv(0)
@@ -98,7 +103,7 @@
       fg:SetAllPoints(f)
 
       local t = f:CreateTexture(name.."GlossTexture","ARTWORK")
-      t:SetTexture("Interface\\AddOns\\rTextures\\gloss")
+      t:SetTexture(glosstex1)
       t:SetPoint("TOPLEFT", fg, "TOPLEFT", -0, 0)
       t:SetPoint("BOTTOMRIGHT", fg, "BOTTOMRIGHT", 0, -0)
       
@@ -112,13 +117,13 @@
     
     if icontype == 2 and b then
       local red,green,blue = b:GetVertexColor();    
-      tex:SetTexture("Interface\\AddOns\\rTextures\\gloss_grey")
+      tex:SetTexture(glosstex2)
       tex:SetVertexColor(red*0.5,green*0.5,blue*0.5)
     elseif icontype == 3 and b then
-      tex:SetTexture("Interface\\AddOns\\rTextures\\gloss_grey")
+      tex:SetTexture(glosstex2)
       tex:SetVertexColor(0.5,0,0.5)
     else
-      tex:SetTexture("Interface\\AddOns\\rTextures\\gloss")
+      tex:SetTexture(glosstex1)
       tex:SetVertexColor(1,1,1)      
     end  
     

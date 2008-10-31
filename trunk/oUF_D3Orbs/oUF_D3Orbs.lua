@@ -38,6 +38,7 @@
   -- scales all units except orbs and actionbar
   -- be careful with this one
   local myscale = 0.82
+  local petscale = 0.6
   
   ----------------
   -- CONFIG END
@@ -104,15 +105,15 @@
       [4] = {scale = 0.7, z = -12, x = 0, y = -0.7}, -- yellow
     },
     frame_positions = {
-      [1] =   { f = "PlayerPowerOrb",   a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 250,    y = -8      },
-      [2] =   { f = "PlayerHealthOrb",  a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -250,   y = -8      },
+      [1] =   { f = "PlayerPowerOrb",   a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 260,    y = -8      },
+      [2] =   { f = "PlayerHealthOrb",  a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -260,   y = -8      },
       [3] =   { f = "Target",           a1 = "CENTER",  a2 = "CENTER",  af = "UIParent",          x = 0,      y = -200    },
       [4] =   { f = "ToT",              a1 = "RIGHT",   a2 = "LEFT",    af = "ouf_target",        x = -80,    y = 0       },
-      [5] =   { f = "Pet",              a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -475,   y = 50      },
-      [6] =   { f = "Focus",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 475,    y = 50      },
-      [7] =   { f = "Party",            a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent",          x = 45,     y = -50     },
-      [8] =   { f = "Angel",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 305,    y = 0       },
-      [9] =   { f = "Demon",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -312,   y = 0       },
+      [5] =   { f = "Pet",              a1 = "TOPLEFT",  a2 = "TOPLEFT",  af = "UIParent",          x = 30/(myscale*petscale),   y = -240/(myscale*petscale)      },
+      [6] =   { f = "Focus",            a1 = "TOPLEFT",  a2 = "TOPLEFT",  af = "UIParent",          x = 30/(myscale*petscale),    y = -380/(myscale*petscale)      },
+      [7] =   { f = "Party",            a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent",      x = 30,     y = -90     },
+      [8] =   { f = "Angel",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 325,    y = 0       },
+      [9] =   { f = "Demon",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -325,   y = 0       },
       [10] =  { f = "BottomLine",       a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 0,      y = -3      },
       [11] =  { f = "BarTexture",       a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 1,      y = 0       },
       [12] =  { f = "CastbarTarget",    a1 = "CENTER",  a2 = "CENTER",  af = "ouf_target",        x = 0,      y = 100     },
@@ -158,7 +159,7 @@
     button:SetScript("OnMouseUp", function(self, mouseButton)
       if mouseButton == "RightButton" then
         local name, rank = UnitBuff("player", index)
-        CancelPlayerBuff(name, rank)
+        CancelUnitBuff("player", name, rank)
       end
     end)
   
@@ -183,7 +184,8 @@
     if UnitLevel(unit) ~= -1 then
       string = UnitLevel(unit)
     else
-      string = (UnitLevel("player")+3)
+      --string = (UnitLevel("player")+3)
+      string = "??"
     end
     
     string = string..sp    
@@ -298,6 +300,13 @@
       else
         bar.value:SetText(d.."%")
       end    
+      
+      if unit == "player" or unit == "target" or unit == "targettarget" then
+        --nothing
+      else
+        bar.value:SetText("")
+      end
+      
     end
     
     if unit == "target" then
@@ -317,7 +326,7 @@
     else
       
        --self.Health.bg:SetVertexColor(0.15,0.15,0.15,1)
-       self.Health:SetStatusBarColor(0.15,0.15,0.15,1)
+       self.Health:SetStatusBarColor(0.15,0.15,0.15,0.9)
 
       local tmpunitname = UnitName(unit)      
       if unit == "target" then
@@ -350,13 +359,21 @@
         if use_classcolor == 1 then
           self.Health.bg:SetVertexColor(color.r*0.7, color.g*0.7, color.b*0.7,1)
         else
-          self.Health.bg:SetVertexColor(0.4,0,0,1)
+          self.Health.bg:SetVertexColor(0.7,0,0,1)
         end
         self.Name:SetTextColor(color.r, color.g, color.b,1)
       else
         --self.Health.bg:SetVertexColor(0,1,0,1)
         self.Health.bg:SetVertexColor(0.9, 0.8, 0, 1)
         self.Name:SetTextColor(0.9, 0.8, 0)
+      end
+      
+      if d <= 25 and d > 0 and min > 1 then
+        --self.Name:SetTextColor(0.7,0,0,1)
+        self.Health.bg:SetVertexColor(0.7,0,0,1)
+      end
+      if min == 0 then
+        --self.Health.bg:SetVertexColor(0.15,0.15,0.15,0.5)
       end
       
     end
@@ -453,7 +470,7 @@
     -- SELF
     ----------------
     
-    local orbsize = 130
+    local orbsize = 150
     if unit == "player" then
       self:SetHeight(orbsize)
       self:SetWidth(orbsize)
@@ -653,11 +670,11 @@
       if unit == "player" then
         --self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-275)
         self.Castbar:SetPoint(colors2.frame_positions[13].a1, colors2.frame_positions[13].af, colors2.frame_positions[13].a2, colors2.frame_positions[13].x, colors2.frame_positions[13].y)
-        self.Castbar:SetStatusBarColor(1,0.7,0,1)
+        self.Castbar:SetStatusBarColor(180/255,110/255,30/255,1)
       elseif unit == "target" then
         --self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-110)
         self.Castbar:SetPoint(colors2.frame_positions[12].a1, colors2.frame_positions[12].af, colors2.frame_positions[12].a2, colors2.frame_positions[12].x, colors2.frame_positions[12].y)
-        self.Castbar:SetStatusBarColor(1,0,0,1)
+        self.Castbar:SetStatusBarColor(160/255,20/255,140/255,1)
       end
       
       self.Castbar.Text = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
@@ -726,10 +743,21 @@
       self.Debuffs.showDebuffType = true
       self.Debuffs.size = math.floor(self.Debuffs:GetHeight())
       self.Debuffs.num = 40
-    else
+    elseif unit == "targettarget" then
       self.Debuffs = CreateFrame("Frame", nil, self)
       self.Debuffs.spacing = 4
       self.Debuffs:SetHeight(18)
+      self.Debuffs:SetWidth(self:GetWidth())
+      self.Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -15)
+      self.Debuffs.initialAnchor = "TOPLEFT"
+      self.Debuffs["growth-y"] = "DOWN"
+      self.Debuffs.showDebuffType = true
+      self.Debuffs.size = math.floor(self.Debuffs:GetHeight())
+      self.Debuffs.num = 4
+    else
+      self.Debuffs = CreateFrame("Frame", nil, self)
+      self.Debuffs.spacing = 4
+      self.Debuffs:SetHeight(24)
       self.Debuffs:SetWidth(self:GetWidth())
       self.Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -15)
       self.Debuffs.initialAnchor = "TOPLEFT"
@@ -824,6 +852,8 @@
       self.LowHP:Hide()
     end
     
+
+    
     ---------------------
     -- Raid Icon
     ---------------------  
@@ -854,15 +884,50 @@
       self.Leader:SetWidth(16)
       self.Leader:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
       self.Leader:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")    
-    elseif unit == "target" then 
+    elseif unit == "target" or unt == "targettarget" then 
       -- nothing
     else
       self.Leader = self:CreateTexture(nil, "OVERLAY")
       self.Leader:SetHeight(16)
       self.Leader:SetWidth(16)
-      self.Leader:SetPoint("RIGHT", self, "LEFT", 4, 20)
+      self.Leader:SetPoint("RIGHT", self, "LEFT", -22, 22)
       self.Leader:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")      
     end
+    
+    ---------------------
+    -- Portrait
+    --------------------- 
+    
+    if unit == "player" or unit == "target" or unit == "targettarget" then
+      --nothing
+    else
+    
+      self.Portrait_bgf = CreateFrame("Frame",nil,self)
+      self.Portrait_bgf:SetPoint("BOTTOM",self,"TOP",0,14)
+      self.Portrait_bgf:SetWidth(self:GetWidth()+10)
+      self.Portrait_bgf:SetHeight(self:GetWidth()+10)  
+      
+      self.Portrait_bgt = self.Portrait_bgf:CreateTexture(nil, "BACKGROUND")
+      self.Portrait_bgt:SetAllPoints(self.Portrait_bgf)
+      self.Portrait_bgt:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3portrait_back2.tga")
+    
+      self.Portrait = CreateFrame("PlayerModel", nil, self.Portrait_bgf)
+      self.Portrait:SetPoint("TOPLEFT",self.Portrait_bgf,"TOPLEFT",4,-4)
+      self.Portrait:SetPoint("BOTTOMRIGHT",self.Portrait_bgf,"BOTTOMRIGHT",-4,4)
+
+      self.Portrait_glossf = CreateFrame("Frame",nil,self.Portrait)
+      self.Portrait_glossf:SetAllPoints(self.Portrait_bgf)
+
+      self.Portrait_glosst = self.Portrait_glossf:CreateTexture(nil, "BACKGROUND")
+      self.Portrait_glosst:SetAllPoints(self.Portrait_glossf)
+      self.Portrait_glosst:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\gloss.tga")
+      
+
+      self.Name:SetPoint("BOTTOM", self.Portrait_bgf, "TOP", 0, 5)
+      self.Name:SetFont(d3font,22,"THINOUTLINE")
+      
+    end
+    
     
     ---------------------
     -- Combo Points
@@ -881,8 +946,11 @@
     ---------------------  
     
     --if unit ~= "player" and unit ~= "target" then
+    if unit == "player" or unit == "target" or unit == "targettarget" then
       self:SetScale(myscale)
-    --end
+    else
+      self:SetScale(myscale*petscale)
+    end
     
     ---------------------
     -- OTHERS
@@ -928,8 +996,8 @@
   
   local party  = oUF:Spawn("header", "oUF_Party")
   party:SetPoint(colors2.frame_positions[7].a1, colors2.frame_positions[7].af, colors2.frame_positions[7].a2, colors2.frame_positions[7].x, colors2.frame_positions[7].y)
-  party:SetManyAttributes("showParty", true, "yOffset", 73, "point", "BOTTOM", "showPlayer", false)
-  
+  --party:SetManyAttributes("showParty", true, "xOffset", 10, "point", "RIGHT", "showPlayer", false)
+  party:SetManyAttributes("showParty", true, "xOffset", 80, "point", "LEFT")
   
   -------------------------------------------------------
   -- TOGGLE PARTY IN RAID (CURRENTLY NO)
@@ -947,8 +1015,8 @@
       self:UnregisterEvent("PLAYER_REGEN_ENABLED")
       if(GetNumRaidMembers() > 0) then
         --activate this to hide party in raid
-        --party:Hide()
-        party:Show()
+        party:Hide()
+        --party:Show()
       else
         party:Show()
       end
@@ -1006,4 +1074,3 @@
     d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar5")
   end
   d3t4:SetAllPoints(d3f4)
-    

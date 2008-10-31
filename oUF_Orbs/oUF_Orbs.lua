@@ -274,6 +274,7 @@
     self.Power:SetWidth(orbsize)
     self.Power:SetPoint("CENTER",0,0)
     self.Power:SetStatusBarColor(0,0.5,1,1)
+    self.Power.frequentUpdates = true
     
     if unit == "player" or unit == "target" then
       self.Power.value = SetFontString(self.Power, nil, 18, "THINOUTLINE")

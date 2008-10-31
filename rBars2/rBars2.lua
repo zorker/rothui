@@ -19,7 +19,7 @@
   --button system for bar 1 and bar 2
   -- 0 = 1x12 layout
   -- 1 = 2x6  layout
-  local button_system = 1
+  local button_system = 0
   
   -- hide shapeshift frame
   -- 0 = not hidden

@@ -32,13 +32,17 @@
   -- this will remove animations from orbs!
   -- 0 = no
   -- 1 = yes
-  local use_classcolor = 0
+  local use_classcolor = 1
   
   -- myscale sets scaling. range 0-1, 0.7 = 70%.  
-  -- scales all units except orbs and actionbar
-  -- be careful with this one
   local myscale = 0.82
   local petscale = 0.6
+  
+  --use 3dportraits, else 3d portraits will be used
+  -- 0 = no
+  -- 1 = yes
+  local use_3dportraits = 1
+  
   
   ----------------
   -- CONFIG END
@@ -506,7 +510,7 @@
     
     if unit == "player" then
       self.Health.bg = self.Health:CreateTexture(nil, "BACKGROUND")
-      self.Health.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back.tga")
+      self.Health.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back2.tga")
       self.Health.bg:SetAllPoints(self.Health)
       self.Health.Filling = self.Health:CreateTexture(nil, "ARTWORK")
       self.Health.Filling:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_filling4.tga")
@@ -590,7 +594,7 @@
       self.Power:SetPoint(colors2.frame_positions[1].a1, colors2.frame_positions[1].af, colors2.frame_positions[1].a2, colors2.frame_positions[1].x, colors2.frame_positions[1].y)
       self.Power.frequentUpdates = true
       self.Power.bg = self.Power:CreateTexture(nil, "BACKGROUND")
-      self.Power.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back.tga")
+      self.Power.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back2.tga")
       self.Power.bg:SetAllPoints(self.Power)
       self.Power.Filling = self.Power:CreateTexture(nil, "ARTWORK")
       self.Power.Filling:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_filling4.tga")
@@ -796,8 +800,8 @@
     if unit == "player" then
       self.DebuffHighlight = self:CreateTexture(nil, "BACKGROUND")
       --self.DebuffHighlight:SetAllPoints(self)
-      self.DebuffHighlight:SetWidth(self:GetWidth()*1.1)
-      self.DebuffHighlight:SetHeight(self:GetWidth()*1.1)
+      self.DebuffHighlight:SetWidth(self:GetWidth())
+      self.DebuffHighlight:SetHeight(self:GetWidth())
       self.DebuffHighlight:SetPoint("CENTER",0,0)
       self.DebuffHighlight:SetBlendMode("BLEND")
       self.DebuffHighlight:SetVertexColor(1, 0, 0, 0) -- set alpha to 0 to hide the texture
@@ -911,12 +915,21 @@
       self.Portrait_bgt:SetAllPoints(self.Portrait_bgf)
       self.Portrait_bgt:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3portrait_back2.tga")
     
-      self.Portrait = CreateFrame("PlayerModel", nil, self.Portrait_bgf)
-      self.Portrait:SetPoint("TOPLEFT",self.Portrait_bgf,"TOPLEFT",4,-4)
-      self.Portrait:SetPoint("BOTTOMRIGHT",self.Portrait_bgf,"BOTTOMRIGHT",-4,4)
-
-      self.Portrait_glossf = CreateFrame("Frame",nil,self.Portrait)
-      self.Portrait_glossf:SetAllPoints(self.Portrait_bgf)
+      if use_3dportraits == 1 then
+        self.Portrait = CreateFrame("PlayerModel", nil, self.Portrait_bgf)
+        self.Portrait:SetPoint("TOPLEFT",self.Portrait_bgf,"TOPLEFT",4,-4)
+        self.Portrait:SetPoint("BOTTOMRIGHT",self.Portrait_bgf,"BOTTOMRIGHT",-4,4)
+  
+        self.Portrait_glossf = CreateFrame("Frame",nil,self.Portrait)
+        self.Portrait_glossf:SetAllPoints(self.Portrait_bgf)
+      else
+        self.Portrait = self.Portrait_bgf:CreateTexture(nil, "BACKGROUND")
+        self.Portrait:SetPoint("TOPLEFT",self.Portrait_bgf,"TOPLEFT",0,-0)
+        self.Portrait:SetPoint("BOTTOMRIGHT",self.Portrait_bgf,"BOTTOMRIGHT",-0,0)
+  
+        self.Portrait_glossf = CreateFrame("Frame",nil,self.Portrait_bgf)
+        self.Portrait_glossf:SetAllPoints(self.Portrait_bgf)
+      end
 
       self.Portrait_glosst = self.Portrait_glossf:CreateTexture(nil, "BACKGROUND")
       self.Portrait_glosst:SetAllPoints(self.Portrait_glossf)

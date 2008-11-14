@@ -19,7 +19,7 @@
   --button system for bar 1 and bar 2
   -- 0 = 1x12 layout
   -- 1 = 2x6  layout
-  local button_system = 0
+  local button_system = 1
   
   -- hide shapeshift frame
   -- 0 = not hidden
@@ -100,6 +100,9 @@
     
     -- since I am reanchoring all the buttons I can hide the MainMenuBar
     MainMenuBar:Hide()  
+    MainMenuBar.Show = dummy
+    VehicleMenuBar:Hide()
+    VehicleMenuBar.Show = dummy
     
     local j
     for j=1,12 do
@@ -365,11 +368,26 @@
   
   -- had to rewrite this to call the ActionButton_UpdateUsable function, this finally makes it possible to
   -- bring range and manacoloring together in one function
+
+  local totalElapsed = 0
+
   ActionButton_OnUpdate = function (self, elapsed)
+
+    totalElapsed = totalElapsed + elapsed
+    if (totalElapsed < 0.1) then 
+      return 
+    else
+      --totalElapsed = totalElapsed*10 - floor(totalElapsed*10)    
+      totalElapsed = 0
+      ActionButton_UpdateUsable(self);
+      
+    end
+    --[[]]--
+
+    --[[    
     if ( ActionButton_IsFlashing(self) ) then
       local flashtime = self.flashtime;
-      flashtime = flashtime - elapsed;
-      
+      flashtime = flashtime - elapsed;      
       if ( flashtime <= 0 ) then
         local overtime = -flashtime;
         if ( overtime >= ATTACK_BUTTON_FLASH_TIME ) then
@@ -383,23 +401,24 @@
         else
           flashTexture:Show();
         end
-      end
-      
+      end      
       self.flashtime = flashtime;
     end
     
-    -- Handle range indicator
     local rangeTimer = self.rangeTimer;
     if ( rangeTimer ) then
       rangeTimer = rangeTimer - elapsed;  
       if ( rangeTimer <= 0 ) then
-        --call UpdateUsable when timer is OK
         ActionButton_UpdateUsable(self);
         rangeTimer = TOOLTIP_UPDATE_TIME;
-      end
-      
+      end      
       self.rangeTimer = rangeTimer;
     end
+    ]]--
+    
+
+    
+    
   end
   
   -- hack to fix the grid alpha. by default the NormalTexture gets 0.5 alpha when you move a button and it keeps this alpha

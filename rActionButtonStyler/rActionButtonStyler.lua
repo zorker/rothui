@@ -41,7 +41,7 @@ function rActionButtonStyler_AB_style(self)
   ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
   ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
 
-	if ( IsEquippedAction(action) ) then
+  if ( IsEquippedAction(action) ) then
     bu:SetNormalTexture(rb2_equipped_texture);
     nt:SetVertexColor(0,0.5,0,1);
   else
@@ -53,12 +53,12 @@ end
 
 function rActionButtonStyler_AB_styleshapeshift()
   
-	for i=1, NUM_SHAPESHIFT_SLOTS do
-	  local name = "ShapeshiftButton"..i;
-		local bu  = _G[name]
-		local ic  = _G[name.."Icon"]
-		local fl  = _G[name.."Flash"]
-		local nt  = _G[name.."NormalTexture"]
+  for i=1, NUM_SHAPESHIFT_SLOTS do
+    local name = "ShapeshiftButton"..i;
+    local bu  = _G[name]
+    local ic  = _G[name.."Icon"]
+    local fl  = _G[name.."Flash"]
+    local nt  = _G[name.."NormalTexture"]
 
     nt:SetHeight(bu:GetHeight())
     nt:SetWidth(bu:GetWidth())
@@ -74,18 +74,18 @@ function rActionButtonStyler_AB_styleshapeshift()
     ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
     ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
 
-	end
+  end
   
 end
 
 function rActionButtonStyler_AB_stylepet()
   
-	for i=1, NUM_PET_ACTION_SLOTS do
-	  local name = "PetActionButton"..i;
-		local bu  = _G[name]
-		local ic  = _G[name.."Icon"]
-		local fl  = _G[name.."Flash"]
-		local nt  = _G[name.."NormalTexture2"]
+  for i=1, NUM_PET_ACTION_SLOTS do
+    local name = "PetActionButton"..i;
+    local bu  = _G[name]
+    local ic  = _G[name.."Icon"]
+    local fl  = _G[name.."Flash"]
+    local nt  = _G[name.."NormalTexture2"]
 
     nt:SetHeight(bu:GetHeight())
     nt:SetWidth(bu:GetWidth())
@@ -101,7 +101,7 @@ function rActionButtonStyler_AB_stylepet()
     ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
     ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
 
-	end
+  end
   
 end
 
@@ -110,7 +110,7 @@ function rActionButtonStyler_AB_fixgrid(button)
   local name = button:GetName();
   local action = button.action;
   local nt  = _G[name.."NormalTexture"]
-	if ( IsEquippedAction(action) ) then
+  if ( IsEquippedAction(action) ) then
     nt:SetVertexColor(0,0.5,0,1);
   else
     nt:SetVertexColor(1,1,1,1);
@@ -123,7 +123,7 @@ function rActionButtonStyler_AB_equipped(self)
   local name = self:GetName();
   local nt  = _G[name.."NormalTexture"]
 
-	if ( IsEquippedAction(action) ) then
+  if ( IsEquippedAction(action) ) then
     nt:SetVertexColor(0,0.5,0,1);
   else
     nt:SetVertexColor(1,1,1,1);

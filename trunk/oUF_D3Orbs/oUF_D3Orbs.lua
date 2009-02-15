@@ -12,21 +12,26 @@
   -- usebar defines what actionbar texture will be used. 
   -- usebar = 1 -> 24 button texture
   -- usebar = 2 -> 36 button texture
-  local usebar = 2
+  local usebar = 1
 
   -- healthcolor defines what healthcolor will be used
   -- 1 = red
   -- 2 = green
   -- 3 = blue
   -- 4 = yellow
-  local healthcolor = 2
+  local healthcolor = 1
 
   -- manacolor defines what manacolor will be used
   -- 1 = red
   -- 2 = green
   -- 3 = blue
   -- 4 = yellow
-  local manacolor = 1
+  local manacolor = 3
+
+  -- colorswitch will let you switch the health fore and background color
+  -- 1 = foreground: red, background: grey
+  -- 0 = foreground: grey, background: red
+  local colorswitch = 0
   
   -- use_classcolor defines if units should use class/faction coloring
   -- this will remove animations from orbs!
@@ -353,8 +358,12 @@
       end
     else
       
-       --self.Health.bg:SetVertexColor(0.15,0.15,0.15,1)
-       self.Health:SetStatusBarColor(0.15,0.15,0.15,0.9)
+      --self.Health.bg:SetVertexColor(0.15,0.15,0.15,1)
+      if colorswitch == 1 and use_classcolor ~= 1 then
+         self.Health:SetStatusBarColor(1,0,0,1)
+      else
+        self.Health:SetStatusBarColor(0.15,0.15,0.15,0.9)
+      end
 
       local tmpunitname = UnitName(unit)      
       if unit == "target" then
@@ -387,7 +396,11 @@
         if use_classcolor == 1 then
           self.Health.bg:SetVertexColor(color.r*0.7, color.g*0.7, color.b*0.7,1)
         else
-          self.Health.bg:SetVertexColor(0.7,0,0,1)
+          if colorswitch == 1 then
+            self.Health.bg:SetVertexColor(0.15,0.15,0.15,1)
+          else
+            self.Health.bg:SetVertexColor(0.7,0,0,1)
+          end
         end
         self.Name:SetTextColor(color.r, color.g, color.b,1)
       else
@@ -738,8 +751,13 @@
       self.Castbar.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
       self.Castbar.bg:SetAllPoints(self.Castbar)
       --self.Castbar.bg:SetVertexColor(0.15,0.15,0.15,1)
-      self.Castbar.bg:SetVertexColor(180/255,110/255,30/255,1)
-      self.Castbar:SetStatusBarColor(0.15,0.15,0.15,0.9)
+      if colorswitch == 1 then
+        self.Castbar.bg:SetVertexColor(0.15,0.15,0.15,1)
+        self.Castbar:SetStatusBarColor(180/255,110/255,30/255,1)      
+      else 
+        self.Castbar.bg:SetVertexColor(180/255,110/255,30/255,1)
+        self.Castbar:SetStatusBarColor(0.15,0.15,0.15,0.9)
+      end
 
       if unit == "player" then
         --self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-275)

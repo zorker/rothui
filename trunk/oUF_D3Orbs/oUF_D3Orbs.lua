@@ -9,10 +9,10 @@
   --font, set your font here
   local d3font = "FONTS\\FRIZQT__.ttf"
   
-  -- usebar defines what actionbar texture will be used. 
-  -- usebar = 1 -> 24 button texture
-  -- usebar = 2 -> 36 button texture
-  local usebar = 1
+  -- do you only want the orbs?
+  -- 1 = orbs only
+  -- 0 = normal mode
+  local orbsonly = 0
 
   -- healthcolor defines what healthcolor will be used
   -- 1 = red
@@ -50,6 +50,11 @@
   -- 1 = 3D
   local use_3dportraits = 1
   
+  -- usebar defines what actionbar texture will be used. 
+  -- not really needed anymore, 36 texture will only be used if MultiBarRight is shown
+  -- usebar = 1 -> 24 button texture
+  -- usebar = 2 -> 36 button texture
+  local usebar = 2  
   
   ----------------
   -- CONFIG END
@@ -733,54 +738,55 @@
     ----------------
     -- CASTBAR
     ----------------
-    
-    if unit == "player" or unit == "target"or unit == "focus" then
-      self.Castbar = CreateFrame("StatusBar", nil, UIParent)
-      self.Castbar:SetFrameStrata("DIALOG")
-      self.Castbar:SetWidth(224)
-      self.Castbar:SetHeight(18)
-      self.Castbar:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
-
-      self.Castbar.bg2 = self.Castbar:CreateTexture(nil, "BACKGROUND")
-      self.Castbar.bg2:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_targetframe.tga")
-      self.Castbar.bg2:SetWidth(512)
-      self.Castbar.bg2:SetHeight(128)
-      self.Castbar.bg2:SetPoint("CENTER",-3,0)
-
-      self.Castbar.bg = self.Castbar:CreateTexture(nil, "BORDER")
-      self.Castbar.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
-      self.Castbar.bg:SetAllPoints(self.Castbar)
-      --self.Castbar.bg:SetVertexColor(0.15,0.15,0.15,1)
-      if colorswitch == 1 then
-        self.Castbar.bg:SetVertexColor(0.15,0.15,0.15,1)
-        self.Castbar:SetStatusBarColor(180/255,110/255,30/255,1)      
-      else 
-        self.Castbar.bg:SetVertexColor(180/255,110/255,30/255,1)
-        self.Castbar:SetStatusBarColor(0.15,0.15,0.15,0.9)
+    if orbsonly ~= 1 then
+      if unit == "player" or unit == "target" or unit == "focus" then
+        self.Castbar = CreateFrame("StatusBar", nil, UIParent)
+        self.Castbar:SetFrameStrata("DIALOG")
+        self.Castbar:SetWidth(224)
+        self.Castbar:SetHeight(18)
+        self.Castbar:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
+  
+        self.Castbar.bg2 = self.Castbar:CreateTexture(nil, "BACKGROUND")
+        self.Castbar.bg2:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_targetframe.tga")
+        self.Castbar.bg2:SetWidth(512)
+        self.Castbar.bg2:SetHeight(128)
+        self.Castbar.bg2:SetPoint("CENTER",-3,0)
+  
+        self.Castbar.bg = self.Castbar:CreateTexture(nil, "BORDER")
+        self.Castbar.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
+        self.Castbar.bg:SetAllPoints(self.Castbar)
+        --self.Castbar.bg:SetVertexColor(0.15,0.15,0.15,1)
+        if colorswitch == 1 then
+          self.Castbar.bg:SetVertexColor(0.15,0.15,0.15,1)
+          self.Castbar:SetStatusBarColor(180/255,110/255,30/255,1)      
+        else 
+          self.Castbar.bg:SetVertexColor(180/255,110/255,30/255,1)
+          self.Castbar:SetStatusBarColor(0.15,0.15,0.15,0.9)
+        end
+  
+        if unit == "player" then
+          --self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-275)
+          self.Castbar:SetPoint(colors2.frame_positions[13].a1, colors2.frame_positions[13].af, colors2.frame_positions[13].a2, colors2.frame_positions[13].x, colors2.frame_positions[13].y)
+          --self.Castbar:SetStatusBarColor(180/255,110/255,30/255,1)
+        elseif unit == "target" then
+          --self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-110)
+          self.Castbar:SetPoint(colors2.frame_positions[12].a1, colors2.frame_positions[12].af, colors2.frame_positions[12].a2, colors2.frame_positions[12].x, colors2.frame_positions[12].y)
+          --self.Castbar:SetStatusBarColor(160/255,20/255,140/255,1)
+        elseif unit == "focus" then
+          self.Castbar:SetPoint(colors2.frame_positions[14].a1, colors2.frame_positions[14].af, colors2.frame_positions[14].a2, colors2.frame_positions[14].x, colors2.frame_positions[14].y)
+        end
+        
+        self.Castbar.Text = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
+        self.Castbar.Text:SetPoint("LEFT", 2, 0)
+        
+        --self.Castbar.Time = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
+        --self.Castbar.Time:SetPoint("RIGHT", -2, 0)
+        
+        self.Castbar:Hide()
+        self.Castbar:SetScale(myscale)
+        Castbar = self.Castbar
+        
       end
-
-      if unit == "player" then
-        --self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-275)
-        self.Castbar:SetPoint(colors2.frame_positions[13].a1, colors2.frame_positions[13].af, colors2.frame_positions[13].a2, colors2.frame_positions[13].x, colors2.frame_positions[13].y)
-        --self.Castbar:SetStatusBarColor(180/255,110/255,30/255,1)
-      elseif unit == "target" then
-        --self.Castbar:SetPoint("CENTER",UIParent,"CENTER",0,-110)
-        self.Castbar:SetPoint(colors2.frame_positions[12].a1, colors2.frame_positions[12].af, colors2.frame_positions[12].a2, colors2.frame_positions[12].x, colors2.frame_positions[12].y)
-        --self.Castbar:SetStatusBarColor(160/255,20/255,140/255,1)
-      elseif unit == "focus" then
-        self.Castbar:SetPoint(colors2.frame_positions[14].a1, colors2.frame_positions[14].af, colors2.frame_positions[14].a2, colors2.frame_positions[14].x, colors2.frame_positions[14].y)
-      end
-      
-      self.Castbar.Text = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
-      self.Castbar.Text:SetPoint("LEFT", 2, 0)
-      
-      --self.Castbar.Time = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
-      --self.Castbar.Time:SetPoint("RIGHT", -2, 0)
-      
-      self.Castbar:Hide()
-      self.Castbar:SetScale(myscale)
-      Castbar = self.Castbar
-      
     end
     
     ---------------------
@@ -1118,45 +1124,55 @@
   -- SPAWN UNITS and POSITION THEM
   -------------------------------------------------------
 
-  oUF:Spawn("target","ouf_target"):SetPoint(colors2.frame_positions[3].a1, colors2.frame_positions[3].af, colors2.frame_positions[3].a2, colors2.frame_positions[3].x, colors2.frame_positions[3].y)  
-  oUF:Spawn("player","ouf_player"):SetPoint(colors2.frame_positions[2].a1, colors2.frame_positions[2].af, colors2.frame_positions[2].a2, colors2.frame_positions[2].x, colors2.frame_positions[2].y)
-  oUF:Spawn("targettarget","ouf_tot"):SetPoint(colors2.frame_positions[4].a1, colors2.frame_positions[4].af, colors2.frame_positions[4].a2, colors2.frame_positions[4].x, colors2.frame_positions[4].y)
-  oUF:Spawn("pet","ouf_pet"):SetPoint(colors2.frame_positions[5].a1, colors2.frame_positions[5].af, colors2.frame_positions[5].a2, colors2.frame_positions[5].x, colors2.frame_positions[5].y)
-  oUF:Spawn("focus","ouf_focus"):SetPoint(colors2.frame_positions[6].a1, colors2.frame_positions[6].af, colors2.frame_positions[6].a2, colors2.frame_positions[6].x, colors2.frame_positions[6].y)
-  oUF:Spawn('focustarget'):SetPoint('CENTER', oUF.units.focus, 'CENTER', 180, 0)
+  if orbsonly ~= 1 then
+    oUF:Spawn("target","ouf_target"):SetPoint(colors2.frame_positions[3].a1, colors2.frame_positions[3].af, colors2.frame_positions[3].a2, colors2.frame_positions[3].x, colors2.frame_positions[3].y)  
+    oUF:Spawn("player","ouf_player"):SetPoint(colors2.frame_positions[2].a1, colors2.frame_positions[2].af, colors2.frame_positions[2].a2, colors2.frame_positions[2].x, colors2.frame_positions[2].y)
+    oUF:Spawn("targettarget","ouf_tot"):SetPoint(colors2.frame_positions[4].a1, colors2.frame_positions[4].af, colors2.frame_positions[4].a2, colors2.frame_positions[4].x, colors2.frame_positions[4].y)
+    oUF:Spawn("pet","ouf_pet"):SetPoint(colors2.frame_positions[5].a1, colors2.frame_positions[5].af, colors2.frame_positions[5].a2, colors2.frame_positions[5].x, colors2.frame_positions[5].y)
+    oUF:Spawn("focus","ouf_focus"):SetPoint(colors2.frame_positions[6].a1, colors2.frame_positions[6].af, colors2.frame_positions[6].a2, colors2.frame_positions[6].x, colors2.frame_positions[6].y)
+    oUF:Spawn('focustarget'):SetPoint('CENTER', oUF.units.focus, 'CENTER', 180, 0)
+  else
+    oUF:Spawn("player","ouf_player"):SetPoint(colors2.frame_positions[2].a1, colors2.frame_positions[2].af, colors2.frame_positions[2].a2, colors2.frame_positions[2].x, colors2.frame_positions[2].y)
+  end
   
   -------------------------------------------------------
   -- SPAWN PARTY and POSITION IT
   -------------------------------------------------------
   
-  local party  = oUF:Spawn("header", "oUF_Party")
-  party:SetPoint(colors2.frame_positions[7].a1, colors2.frame_positions[7].af, colors2.frame_positions[7].a2, colors2.frame_positions[7].x, colors2.frame_positions[7].y)
-  --party:SetManyAttributes("showParty", true, "xOffset", 10, "point", "RIGHT", "showPlayer", false)
-  party:SetManyAttributes("showParty", true, "xOffset", 80, "point", "LEFT")
+  local party, partytoggle
+  
+  if orbsonly ~= 1 then
+    party  = oUF:Spawn("header", "oUF_Party")
+    party:SetPoint(colors2.frame_positions[7].a1, colors2.frame_positions[7].af, colors2.frame_positions[7].a2, colors2.frame_positions[7].x, colors2.frame_positions[7].y)
+    --party:SetManyAttributes("showParty", true, "xOffset", 10, "point", "RIGHT", "showPlayer", false)
+    party:SetManyAttributes("showParty", true, "xOffset", 80, "point", "LEFT")
+  end
   
   -------------------------------------------------------
   -- TOGGLE PARTY IN RAID (CURRENTLY NO)
   -------------------------------------------------------
   
-  local partyToggle = CreateFrame("Frame")
-  partyToggle:RegisterEvent("PLAYER_LOGIN")
-  partyToggle:RegisterEvent("RAID_ROSTER_UPDATE")
-  partyToggle:RegisterEvent("PARTY_LEADER_CHANGED")
-  partyToggle:RegisterEvent("PARTY_MEMBER_CHANGED")
-  partyToggle:SetScript("OnEvent", function(self)
-    if(InCombatLockdown()) then
-      self:RegisterEvent("PLAYER_REGEN_ENABLED")
-    else
-      self:UnregisterEvent("PLAYER_REGEN_ENABLED")
-      if(GetNumRaidMembers() > 0) then
-        --activate this to hide party in raid
-        party:Hide()
-        --party:Show()
+  if orbsonly ~= 1 then
+    partyToggle = CreateFrame("Frame")
+    partyToggle:RegisterEvent("PLAYER_LOGIN")
+    partyToggle:RegisterEvent("RAID_ROSTER_UPDATE")
+    partyToggle:RegisterEvent("PARTY_LEADER_CHANGED")
+    partyToggle:RegisterEvent("PARTY_MEMBER_CHANGED")
+    partyToggle:SetScript("OnEvent", function(self)
+      if(InCombatLockdown()) then
+        self:RegisterEvent("PLAYER_REGEN_ENABLED")
       else
-        party:Show()
+        self:UnregisterEvent("PLAYER_REGEN_ENABLED")
+        if(GetNumRaidMembers() > 0) then
+          --activate this to hide party in raid
+          party:Hide()
+          --party:Show()
+        else
+          party:Show()
+        end
       end
-    end
-  end)
+    end)
+  end
 
   -----------------------------
   -- CREATING D3 ART FRAMES
@@ -1203,9 +1219,13 @@
   d3f4:Show()
   d3f4:SetScale(myscale)
   local d3t4 = d3f4:CreateTexture(nil,"BACKGROUND")
-  if usebar == 1 then
-    d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar6")
-  else
-    d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar5")
-  end
+  d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar6")
   d3t4:SetAllPoints(d3f4)
+  
+  if usebar ~= 1 then
+    if MultiBarBottomRight:IsShown() then
+      d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar5")
+    end
+    MultiBarBottomRight:HookScript("OnShow", function() d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar5") end)
+    MultiBarBottomRight:HookScript("OnHide", function() d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar6") end)
+  end

@@ -1,5 +1,5 @@
 
-  -- oUF_D3Orbs layout by roth - 2008
+  -- oUF_D3Orbs layout by roth - 2008-2009
   -- http://www.wowinterface.com/downloads/info11314-oUF_D3Orbs.html
     
   ----------------
@@ -38,6 +38,11 @@
   -- 0 = no
   -- 1 = yes
   local use_classcolor = 0
+  
+  -- hide party frames while in raid/battleground
+  -- 1 = yes
+  -- 0 = no
+  local hidepartyinraid = 1
   
   -- myscale sets scaling. range 0-1, 0.7 = 70%.  
   local myscale = 0.82
@@ -1165,8 +1170,11 @@
         self:UnregisterEvent("PLAYER_REGEN_ENABLED")
         if(GetNumRaidMembers() > 0) then
           --activate this to hide party in raid
-          party:Hide()
-          --party:Show()
+          if hidepartyinraid == 1 then
+            party:Hide()
+          else
+            party:Show()
+          end
         else
           party:Show()
         end

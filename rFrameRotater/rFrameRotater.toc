@@ -1,0 +1,6 @@
+## Interface: 31000
+## Author: roth
+## Title: rFrameRotater
+## Notes: Lets you rotate frames!
+
+rFrameRotater.lua

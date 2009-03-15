@@ -19,14 +19,19 @@
   -- 2 = green
   -- 3 = blue
   -- 4 = yellow
-  local healthcolor = 1
+  local healthcolor = 2
 
   -- manacolor defines what manacolor will be used
   -- 1 = red
   -- 2 = green
   -- 3 = blue
   -- 4 = yellow
-  local manacolor = 3
+  local manacolor = 1
+  
+  -- colors drid mana on stance
+  -- 0 = off
+  -- 1 = on
+  local druid_mana_color = 1
 
   -- colorswitch will let you switch the health fore and background color
   -- 1 = foreground: red, background: grey
@@ -165,6 +170,36 @@
     elseif(_G[cunit.."FrameDropDown"]) then
       ToggleDropDownMenu(1, nil, _G[cunit.."FrameDropDown"], "cursor", 0, 0)
     end
+  end
+  
+  ----------------------------------------
+  -- druid mana coloring func
+  ----------------------------------------
+  
+  local function check_druid_mana(a,b)
+
+    local st = GetShapeshiftForm()
+    if st == 3 then
+      manacolor = 4
+      manafog = "SPELLS\\OrangeRadiationFog.m2"
+    elseif st == 1 then
+      manacolor = 1
+      manafog = "SPELLS\\RedRadiationFog.m2"
+    else 
+      manacolor = 3
+      manafog = "SPELLS\\BlueRadiationFog.m2"
+    end
+
+    b.Power.Filling:SetVertexColor(colors2.orbcolors[manacolor].r,colors2.orbcolors[manacolor].g,colors2.orbcolors[manacolor].b,1)
+
+    b.pm3:SetModel(manafog)
+    b.pm3:SetModelScale(colors2.orbpos[manacolor].scale)
+    b.pm3:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y) 
+
+    b.pm4:SetModel(manafog)
+    b.pm4:SetModelScale(colors2.orbpos[manacolor].scale)
+    b.pm4:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y+1) 
+    
   end
   
   UnitPopupMenus["SELF"] = { "PVP_FLAG", "LOOT_METHOD", "LOOT_THRESHOLD", "OPT_OUT_LOOT_TITLE", "LOOT_PROMOTE", "DUNGEON_DIFFICULTY", "RESET_INSTANCES", "RAID_TARGET_ICON", "LEAVE", "CANCEL" }
@@ -683,7 +718,7 @@
       
         self.Power.Filling:SetVertexColor(colors2.orbcolors[manacolor].r,colors2.orbcolors[manacolor].g,colors2.orbcolors[manacolor].b,1)
 
-        self.pm3 = CreateFrame("PlayerModel", nil,self.Power)
+        self.pm3 = CreateFrame("PlayerModel","D3Orbs_PM3",self.Power)
         self.pm3:SetFrameStrata("BACKGROUND")
         self.pm3:SetAllPoints(self.Power)
         self.pm3:SetModel(manafog)
@@ -698,7 +733,7 @@
           self.pm3:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y) 
         end)
         
-        self.pm4 = CreateFrame("PlayerModel", nil,self.Power)
+        self.pm4 = CreateFrame("PlayerModel","D3Orbs_PM4",self.Power)
         self.pm4:SetFrameStrata("BACKGROUND")
         self.pm4:SetAllPoints(self.Power)
         self.pm4:SetModel(manafog)
@@ -1097,6 +1132,18 @@
       self:SetScale(myscale*petscale)
     end
     
+    ---------------------------------
+    -- DRUID MANA COLORING (NEW!)
+    ---------------------------------
+    
+    if unit == "player" and class == "DRUID" and druid_mana_color == 1 then
+      self.Power:RegisterEvent("PLAYER_ENTERING_WORLD")
+      self.Power:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+      self.Power:SetScript("OnEvent", function()
+        check_druid_mana(self.Power,self)        
+      end)
+    end    
+    
     ---------------------
     -- OTHERS
     ---------------------    
@@ -1135,7 +1182,7 @@
     oUF:Spawn("targettarget","ouf_tot"):SetPoint(colors2.frame_positions[4].a1, colors2.frame_positions[4].af, colors2.frame_positions[4].a2, colors2.frame_positions[4].x, colors2.frame_positions[4].y)
     oUF:Spawn("pet","ouf_pet"):SetPoint(colors2.frame_positions[5].a1, colors2.frame_positions[5].af, colors2.frame_positions[5].a2, colors2.frame_positions[5].x, colors2.frame_positions[5].y)
     oUF:Spawn("focus","ouf_focus"):SetPoint(colors2.frame_positions[6].a1, colors2.frame_positions[6].af, colors2.frame_positions[6].a2, colors2.frame_positions[6].x, colors2.frame_positions[6].y)
-    oUF:Spawn('focustarget'):SetPoint('CENTER', oUF.units.focus, 'CENTER', 180, 0)
+    --oUF:Spawn('focustarget'):SetPoint('CENTER', oUF.units.focus, 'CENTER', 180, 0)
   else
     oUF:Spawn("player","ouf_player"):SetPoint(colors2.frame_positions[2].a1, colors2.frame_positions[2].af, colors2.frame_positions[2].a2, colors2.frame_positions[2].x, colors2.frame_positions[2].y)
   end

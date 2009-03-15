@@ -103,6 +103,8 @@
     manafog = "SPELLS\\RedRadiationFog.m2"
   end  
   
+  local dudustance
+  
   local colors2 = {
     power = {
       [-2] = PowerBarColor["AMMO"], -- fuel
@@ -178,6 +180,8 @@
   
   local function check_druid_mana(a,b)
 
+    --DEFAULT_CHAT_FRAME:AddMessage("ping")
+    
     local st = GetShapeshiftForm()
     if st == 3 then
       manacolor = 4
@@ -189,16 +193,20 @@
       manacolor = 3
       manafog = "SPELLS\\BlueRadiationFog.m2"
     end
-
-    b.Power.Filling:SetVertexColor(colors2.orbcolors[manacolor].r,colors2.orbcolors[manacolor].g,colors2.orbcolors[manacolor].b,1)
-
-    b.pm3:SetModel(manafog)
-    b.pm3:SetModelScale(colors2.orbpos[manacolor].scale)
-    b.pm3:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y) 
-
-    b.pm4:SetModel(manafog)
-    b.pm4:SetModelScale(colors2.orbpos[manacolor].scale)
-    b.pm4:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y+1) 
+    
+    if st ~= dudustance then
+      b.Power.Filling:SetVertexColor(colors2.orbcolors[manacolor].r,colors2.orbcolors[manacolor].g,colors2.orbcolors[manacolor].b,1)
+  
+      b.pm3:SetModel(manafog)
+      b.pm3:SetModelScale(colors2.orbpos[manacolor].scale)
+      b.pm3:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y) 
+  
+      b.pm4:SetModel(manafog)
+      b.pm4:SetModelScale(colors2.orbpos[manacolor].scale)
+      b.pm4:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y+1) 
+      
+      dudustance = st
+    end
     
   end
   
@@ -718,7 +726,7 @@
       
         self.Power.Filling:SetVertexColor(colors2.orbcolors[manacolor].r,colors2.orbcolors[manacolor].g,colors2.orbcolors[manacolor].b,1)
 
-        self.pm3 = CreateFrame("PlayerModel","D3Orbs_PM3",self.Power)
+        self.pm3 = CreateFrame("PlayerModel",nil,self.Power)
         self.pm3:SetFrameStrata("BACKGROUND")
         self.pm3:SetAllPoints(self.Power)
         self.pm3:SetModel(manafog)
@@ -733,7 +741,7 @@
           self.pm3:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y) 
         end)
         
-        self.pm4 = CreateFrame("PlayerModel","D3Orbs_PM4",self.Power)
+        self.pm4 = CreateFrame("PlayerModel",nil,self.Power)
         self.pm4:SetFrameStrata("BACKGROUND")
         self.pm4:SetAllPoints(self.Power)
         self.pm4:SetModel(manafog)

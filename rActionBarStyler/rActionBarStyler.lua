@@ -22,6 +22,12 @@
   -- range 0 - 1
   local rightbars_off_alpha = 0
   
+  -- on/off
+  local micromenu_on_mouseover = 1
+  
+  -- on/off
+  local bags_on_mouseover = 1
+  
   -- CONFIG END
   
   
@@ -78,17 +84,75 @@
   
   end
 
-  -- want to move the keyring / bags / menu and such?!
-  -- use this kind of system to do so.
-  --CharacterMicroButton:SetParent(f)
-  --CharacterMicroButton:ClearAllPoints()
-  --CharacterMicroButton:SetPoint("CENTER",UIParent,"CENTER",0, 0)
-  --KeyRingButton:SetParent(f)
-  --KeyRingButton:ClearAllPoints()
-  --KeyRingButton:SetPoint("CENTER",UIParent,"CENTER",0, 50)
-  --MainMenuBarBackpackButton:SetParent(f)
-  --MainMenuBarBackpackButton:ClearAllPoints()
-  --MainMenuBarBackpackButton:SetPoint("CENTER",UIParent,"CENTER",0, 0)
+  --------------------
+  -- BagButtons
+  --------------------
+  local fb = CreateFrame("Frame","rABS_BagButtonHolder",UIParent)
+  fb:SetWidth(220)
+  fb:SetHeight(60)
+  --fb:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
+  fb:SetPoint("BOTTOMRIGHT",5,-5)
+  fb:Show()
+  
+  local BagButtons = {
+    MainMenuBarBackpackButton,
+    CharacterBag0Slot,
+    CharacterBag1Slot,
+    CharacterBag2Slot,
+    CharacterBag3Slot,
+    KeyRingButton,
+  }
+  
+  function rABS_MoveBagButtons()
+		for _, frame in pairs(BagButtons) do
+			frame:SetParent("rABS_BagButtonHolder");
+		end
+		MainMenuBarBackpackButton:ClearAllPoints();
+		MainMenuBarBackpackButton:SetPoint("BOTTOMRIGHT", -15, 15);
+  end
+  
+  rABS_MoveBagButtons();
+  
+  --------------------
+  -- MICRO MENU
+  --------------------
+  local fm = CreateFrame("Frame","rABS_MicroButtonHolder",UIParent)
+  fm:SetWidth(263)
+  fm:SetHeight(60)
+  --fm:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
+  fm:SetPoint("TOP",0,5)
+  fm:Show()
+  
+  local MicroButtons = {
+    CharacterMicroButton,
+    SpellbookMicroButton,
+    TalentMicroButton,
+    AchievementMicroButton,
+    QuestLogMicroButton,
+    SocialsMicroButton,
+    PVPMicroButton,
+    LFGMicroButton,
+    MainMenuMicroButton,
+    HelpMicroButton,
+  }
+  
+  function rABS_MoveMicroButtons(skinName)
+		for _, frame in pairs(MicroButtons) do
+			frame:SetParent("rABS_MicroButtonHolder");
+		end
+ 		CharacterMicroButton:ClearAllPoints();
+		CharacterMicroButton:SetPoint("BOTTOMLEFT", 5, 5);
+		SocialsMicroButton:ClearAllPoints();
+		SocialsMicroButton:SetPoint("LEFT", QuestLogMicroButton, "RIGHT", -3, 0);
+ 		UpdateTalentButton();
+  end
+
+  hooksecurefunc("VehicleMenuBar_MoveMicroButtons", rABS_MoveMicroButtons);
+  
+  rABS_MoveMicroButtons();
+  
+  
+  
 
   MultiBarRightButton1:ClearAllPoints()
   MultiBarRightButton1:SetPoint("RIGHT",UIParent,"RIGHT",-30, 190)
@@ -132,6 +196,8 @@
   VehicleMenuBar:SetAlpha(0)
   
   f:SetScale(myscale)
+  fm:SetScale(0.9)
+  fb:SetScale(0.9)
   BonusActionBarFrame:SetScale(1)
   MultiBarBottomLeft:SetScale(myscale)
   MultiBarBottomRight:SetScale(myscale)
@@ -155,9 +221,7 @@
       _G["ActionButton"..i]:SetAlpha(1);
     end;
   end); 
-  
-
-  
+    
   local alphahigh = 1
 
   local function myshowhidepet(alpha)
@@ -180,6 +244,18 @@
         pb:SetAlpha(alpha)
       end
     end
+  end
+  
+  local function myshowhidemicro(alpha)
+		for _, frame in pairs(MicroButtons) do
+      frame:SetAlpha(alpha)
+		end
+  end
+  
+  local function myshowhidebags(alpha)
+		for _, frame in pairs(BagButtons) do
+      frame:SetAlpha(alpha)
+		end
   end
   
   if petbar_on_mouseover == 1 then
@@ -227,5 +303,31 @@
       pb:HookScript("OnEnter", function(self) myshowhiderightbar(alphahigh) end)
       pb:HookScript("OnLeave", function(self) myshowhiderightbar(rightbars_off_alpha) end)
     end;
+  
+  end
+  
+  if micromenu_on_mouseover == 1 then
+    fm:EnableMouse(true)
+    fm:SetScript("OnEnter", function(self) myshowhidemicro(1) end)
+    fm:SetScript("OnLeave", function(self) myshowhidemicro(0) end)
+  
+		for _, frame in pairs(MicroButtons) do
+      frame:SetAlpha(0)
+      frame:HookScript("OnEnter", function(self) myshowhidemicro(1) end)
+      frame:HookScript("OnLeave", function(self) myshowhidemicro(0) end)
+		end
+  
+  end
+  
+  if bags_on_mouseover == 1 then
+    fb:EnableMouse(true)
+    fb:SetScript("OnEnter", function(self) myshowhidebags(1) end)
+    fb:SetScript("OnLeave", function(self) myshowhidebags(0) end)
+  
+		for _, frame in pairs(BagButtons) do
+      frame:SetAlpha(0)
+      frame:HookScript("OnEnter", function(self) myshowhidebags(1) end)
+      frame:HookScript("OnLeave", function(self) myshowhidebags(0) end)
+		end
   
   end

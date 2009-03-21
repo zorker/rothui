@@ -104,11 +104,11 @@
   }
   
   function rABS_MoveBagButtons()
-		for _, frame in pairs(BagButtons) do
-			frame:SetParent("rABS_BagButtonHolder");
-		end
-		MainMenuBarBackpackButton:ClearAllPoints();
-		MainMenuBarBackpackButton:SetPoint("BOTTOMRIGHT", -15, 15);
+    for _, frame in pairs(BagButtons) do
+      frame:SetParent("rABS_BagButtonHolder");
+    end
+    MainMenuBarBackpackButton:ClearAllPoints();
+    MainMenuBarBackpackButton:SetPoint("BOTTOMRIGHT", -15, 15);
   end
   
   rABS_MoveBagButtons();
@@ -137,14 +137,14 @@
   }
   
   function rABS_MoveMicroButtons(skinName)
-		for _, frame in pairs(MicroButtons) do
-			frame:SetParent("rABS_MicroButtonHolder");
-		end
- 		CharacterMicroButton:ClearAllPoints();
-		CharacterMicroButton:SetPoint("BOTTOMLEFT", 5, 5);
-		SocialsMicroButton:ClearAllPoints();
-		SocialsMicroButton:SetPoint("LEFT", QuestLogMicroButton, "RIGHT", -3, 0);
- 		UpdateTalentButton();
+    for _, frame in pairs(MicroButtons) do
+      frame:SetParent("rABS_MicroButtonHolder");
+    end
+     CharacterMicroButton:ClearAllPoints();
+    CharacterMicroButton:SetPoint("BOTTOMLEFT", 5, 5);
+    SocialsMicroButton:ClearAllPoints();
+    SocialsMicroButton:SetPoint("LEFT", QuestLogMicroButton, "RIGHT", -3, 0);
+     UpdateTalentButton();
   end
 
   hooksecurefunc("VehicleMenuBar_MoveMicroButtons", rABS_MoveMicroButtons);
@@ -247,15 +247,15 @@
   end
   
   local function myshowhidemicro(alpha)
-		for _, frame in pairs(MicroButtons) do
+    for _, frame in pairs(MicroButtons) do
       frame:SetAlpha(alpha)
-		end
+    end
   end
   
   local function myshowhidebags(alpha)
-		for _, frame in pairs(BagButtons) do
+    for _, frame in pairs(BagButtons) do
       frame:SetAlpha(alpha)
-		end
+    end
   end
   
   if petbar_on_mouseover == 1 then
@@ -311,11 +311,11 @@
     fm:SetScript("OnEnter", function(self) myshowhidemicro(1) end)
     fm:SetScript("OnLeave", function(self) myshowhidemicro(0) end)
   
-		for _, frame in pairs(MicroButtons) do
+    for _, frame in pairs(MicroButtons) do
       frame:SetAlpha(0)
       frame:HookScript("OnEnter", function(self) myshowhidemicro(1) end)
       frame:HookScript("OnLeave", function(self) myshowhidemicro(0) end)
-		end
+    end
   
   end
   
@@ -324,10 +324,10 @@
     fb:SetScript("OnEnter", function(self) myshowhidebags(1) end)
     fb:SetScript("OnLeave", function(self) myshowhidebags(0) end)
   
-		for _, frame in pairs(BagButtons) do
+    for _, frame in pairs(BagButtons) do
       frame:SetAlpha(0)
       frame:HookScript("OnEnter", function(self) myshowhidebags(1) end)
       frame:HookScript("OnLeave", function(self) myshowhidebags(0) end)
-		end
+    end
   
   end

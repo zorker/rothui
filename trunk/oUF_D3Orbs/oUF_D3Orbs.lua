@@ -28,7 +28,12 @@
   -- 4 = yellow
   local manacolor = 1
   
-  -- colors drid mana on stance
+  -- automatically color mana on class
+  -- 0 = off
+  -- 1 = on
+  local color_mana_on_class = 1
+  
+  -- colors druid mana on stance
   -- 0 = off
   -- 1 = on
   local druid_mana_color = 1
@@ -49,11 +54,14 @@
   -- 0 = no
   local hidepartyinraid = 1
   
-  -- myscale sets scaling. range 0-1, 0.7 = 70%.  
+  -- myscale sets scaling of player orbs and actionbar background. range 0-1, 0.7 = 70%.  
   local myscale = 0.82
   
+  -- target_scale sets scaling of target, target of target and castbars
+  local target_scale = 0.82
+  
   -- petscale scales pet,focus and party
-  local petscale = 0.6
+  local pet_scale = 0.49
   
   --use 3D portraits or 2D portraits
   -- 0 = 2D
@@ -90,6 +98,17 @@
     healthfog = "SPELLS\\OrangeRadiationFog.m2"
   else
     healthfog = "SPELLS\\RedRadiationFog.m2"
+  end
+
+  if color_mana_on_class == 1 then
+    local _, pt = UnitClass("player")
+    if pt == "WARRIOR" or pt == "DEATHKNIGHT" then
+      manacolor = 1
+    elseif pt == "ROGUE" then
+      manacolor = 4
+    else
+      manacolor = 3
+    end
   end
 
   local manafog
@@ -139,15 +158,15 @@
       [1] = {scale = 0.8, z = -12, x = 0.8, y = -1.7}, -- red
       [2] = {scale = 0.75, z = -12, x = 0, y = -1}, -- green
       [3] = {scale = 0.75, z = -12, x = 1.2, y = -1}, -- blue
-      [4] = {scale = 0.7, z = -12, x = 0, y = -0.7}, -- yellow
+      [4] = {scale = 0.75, z = -12, x = -0.3, y = -1.2}, -- yellow
     },
     frame_positions = {
       [1] =   { f = "PlayerPowerOrb",   a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 260,    y = -8      },
       [2] =   { f = "PlayerHealthOrb",  a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -260,   y = -8      },
       [3] =   { f = "Target",           a1 = "CENTER",  a2 = "CENTER",  af = "UIParent",          x = 0,      y = -200    },
       [4] =   { f = "ToT",              a1 = "RIGHT",   a2 = "LEFT",    af = "ouf_target",        x = -80,    y = 0       },
-      [5] =   { f = "Pet",              a1 = "TOPLEFT",  a2 = "TOPLEFT",  af = "UIParent",          x = 30/(myscale*petscale),   y = -200/(myscale*petscale)      },
-      [6] =   { f = "Focus",            a1 = "TOPLEFT",  a2 = "TOPLEFT",  af = "UIParent",          x = 30/(myscale*petscale),    y = -320/(myscale*petscale)      },
+      [5] =   { f = "Pet",              a1 = "TOPLEFT",  a2 = "TOPLEFT",  af = "UIParent",          x = 30/(pet_scale),   y = -300/(pet_scale)      },
+      [6] =   { f = "Focus",            a1 = "TOPLEFT",  a2 = "TOPLEFT",  af = "UIParent",          x = 30/(pet_scale),    y = -420/(pet_scale)      },
       [7] =   { f = "Party",            a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent",      x = 30,     y = 50     },
       [8] =   { f = "Angel",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 325,    y = 0       },
       [9] =   { f = "Demon",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -325,   y = 0       },
@@ -831,7 +850,7 @@
         --self.Castbar.Time:SetPoint("RIGHT", -2, 0)
         
         self.Castbar:Hide()
-        self.Castbar:SetScale(myscale)
+        self.Castbar:SetScale(target_scale)
         Castbar = self.Castbar
         
       end
@@ -1134,17 +1153,19 @@
     ---------------------  
     
     --if unit ~= "player" and unit ~= "target" then
-    if unit == "player" or unit == "target" or unit == "targettarget" then
+    if unit == "player" then
       self:SetScale(myscale)
+    elseif unit == "target" or unit == "targettarget" then
+      self:SetScale(target_scale)
     else
-      self:SetScale(myscale*petscale)
+      self:SetScale(pet_scale)
     end
     
     ---------------------------------
     -- DRUID MANA COLORING (NEW!)
     ---------------------------------
     
-    if unit == "player" and class == "DRUID" and druid_mana_color == 1 then
+    if unit == "player" and class == "DRUID" and druid_mana_color == 1 and use_classcolor == 0 then
       self.Power:RegisterEvent("PLAYER_ENTERING_WORLD")
       self.Power:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
       self.Power:SetScript("OnEvent", function()

@@ -138,10 +138,16 @@ function rActionButtonStyler_AB_styleshapeshift()
   
 end
 
+function rActionButtonStyler_AB_hotkey(self, actionButtonType)
+  local hotkey = _G[self:GetName().."HotKey"];
+  hotkey:Hide();
+end 
+
 
 hooksecurefunc("ActionButton_Update",   rActionButtonStyler_AB_style);
 hooksecurefunc("ActionButton_ShowGrid", rActionButtonStyler_AB_fixgrid);
 hooksecurefunc("ActionButton_OnUpdate", rActionButtonStyler_AB_fixgrid);
+hooksecurefunc("ActionButton_UpdateHotkeys", rActionButtonStyler_AB_hotkey);
 
 hooksecurefunc("ShapeshiftBar_OnLoad",   rActionButtonStyler_AB_styleshapeshift);
 hooksecurefunc("ShapeshiftBar_Update",   rActionButtonStyler_AB_styleshapeshift);

@@ -1,7 +1,8 @@
   
   -- CONFIG
   
-  local myscale = 0.82*0.75
+  local myscale = 0.82
+  
   local petscale = 0.9
   
   -- bar1 and bar2 in 2x6 instead of 1x12
@@ -37,6 +38,8 @@
   --f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
   f:SetPoint("BOTTOM",0,30)
   f:Show()
+  
+  local myscale = myscale*0.75
   
   local bonushooks = {};
   local i;

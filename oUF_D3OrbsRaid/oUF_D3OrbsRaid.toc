@@ -1,7 +1,9 @@
-## Interface: 21337
+## Interface: 31337
 ## Title: oUF_D3OrbsRaid
 ## Author: roth
-## Notes: Raid Frames für oUF_D3OrbsRaid
+## Notes: simple raidframes
 ## Dependencies: oUF
+## OptionalDeps: oUF_Banzai, oUF_DruidMana, oUF_CombatFeedback, oUF_DebuffHighlight, oUF_Smooth, oUF_BarFader, oUF_ReadyCheck
+## X-Category: UnitFrame
 
 layout.lua

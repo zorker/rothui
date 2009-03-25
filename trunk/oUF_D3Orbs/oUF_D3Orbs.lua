@@ -510,24 +510,18 @@
     
     local newmin = do_format(min)
     local newmax = do_format(max)
+    local _, class = UnitClass("player")
+    local shape = GetShapeshiftForm()      
     
     if unit == "player" then
-      if d == 0 or d == 100 or min == 1 or max == 1 then
-        --bar.value:SetText("")
-        --bar.value2:SetText("")
-        bar.value:SetText(d)
-        bar.value2:SetText(newmin)
+      if class == "WARRIOR" or (class == "DRUID" and shape == 3) or (class == "DRUID" and shape == 1) or class == "DEATHKNIGHT" or class == "ROGUE" then
+        bar.value:SetText(newmin)
+        bar.value2:SetText(d)
       else
         bar.value:SetText(d)
-        if d == newmin then
-          --bar.value2:SetText("")
-          bar.value2:SetText(newmin)
-        else
-          bar.value2:SetText(newmin)
-        end
+        bar.value2:SetText(newmin)
       end
     end
-
 
     local manaact = UnitMana(unit)
     local manamax = UnitManaMax(unit)

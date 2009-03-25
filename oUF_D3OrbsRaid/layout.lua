@@ -52,7 +52,7 @@
     else
       self.Name:SetTextColor(0.4,0.4,0.4)
       self.Name:SetText("dead")    
-      bar.bg:SetVertexColor(0,0,0,0.6)
+      bar.bg:SetVertexColor(0,0,0,0.4)
     end
     
 

@@ -31,6 +31,7 @@
   
   -- CONFIG END
   
+  -- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
   
   local f = CreateFrame("Frame","rBars_Button_Holder_Frame",UIParent)
   f:SetWidth(498)
@@ -155,30 +156,20 @@
   rABS_MoveMicroButtons();
   
   
-  
-
+  --RIGHT BARS
   MultiBarRightButton1:ClearAllPoints()
   MultiBarRightButton1:SetPoint("RIGHT",UIParent,"RIGHT",-30, 190)
-
   MultiBarLeftButton1:ClearAllPoints()
   MultiBarLeftButton1:SetPoint("TOPLEFT",MultiBarRightButton1,"TOPLEFT",-43, 0)
   
-  ShapeshiftBarFrame:SetParent(f)
-
-  local myclass, myengclass = UnitClass("player")
+  --SHAPESHIFT+PET
   
-  if myengclass == "DEATHKNIGHT" then
+  if hide_shapeshift ~= 1 then
+    ShapeshiftBarFrame:SetParent(f)
     ShapeshiftButton1:ClearAllPoints()
-    ShapeshiftButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton10,"TOPLEFT",-5,15);
+    ShapeshiftButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",3,54);
     ShapeshiftButton1.SetPoint = function() end
-  else
-    ShapeshiftButton1:ClearAllPoints()
-    ShapeshiftButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",5,15);
-    ShapeshiftButton1.SetPoint = function() end
-  end
-  
-  -- hide the shapeshift 
-  if hide_shapeshift == 1 then
+  else  
     ShapeshiftBarFrame:SetScale(0.001)
     ShapeshiftBarFrame:SetAlpha(0)
   end
@@ -334,3 +325,5 @@
     end
   
   end
+  
+

@@ -1107,7 +1107,7 @@
       self.Portrait_bgt:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3portrait_back2.tga")
       self.Portrait_bgt:SetVertexColor(0.7,0.7,0.7)
     
-      if use_3dportraits == 1 then
+      if use_3dportraits == 1 and unit ~= "focustarget" then
         self.Portrait = CreateFrame("PlayerModel", nil, self.Portrait_bgf)
         self.Portrait:SetPoint("TOPLEFT",self.Portrait_bgf,"TOPLEFT",4,-4)
         self.Portrait:SetPoint("BOTTOMRIGHT",self.Portrait_bgf,"BOTTOMRIGHT",-4,4)
@@ -1211,7 +1211,7 @@
     oUF:Spawn("targettarget","ouf_tot"):SetPoint(colors2.frame_positions[4].a1, colors2.frame_positions[4].af, colors2.frame_positions[4].a2, colors2.frame_positions[4].x, colors2.frame_positions[4].y)
     oUF:Spawn("pet","ouf_pet"):SetPoint(colors2.frame_positions[5].a1, colors2.frame_positions[5].af, colors2.frame_positions[5].a2, colors2.frame_positions[5].x, colors2.frame_positions[5].y)
     oUF:Spawn("focus","ouf_focus"):SetPoint(colors2.frame_positions[6].a1, colors2.frame_positions[6].af, colors2.frame_positions[6].a2, colors2.frame_positions[6].x, colors2.frame_positions[6].y)
-    --oUF:Spawn('focustarget'):SetPoint('CENTER', oUF.units.focus, 'CENTER', 180, 0)
+    oUF:Spawn('focustarget'):SetPoint('CENTER', oUF.units.focus, 'CENTER', 180, 0)
   else
     oUF:Spawn("player","ouf_player"):SetPoint(colors2.frame_positions[2].a1, colors2.frame_positions[2].af, colors2.frame_positions[2].a2, colors2.frame_positions[2].x, colors2.frame_positions[2].y)
   end

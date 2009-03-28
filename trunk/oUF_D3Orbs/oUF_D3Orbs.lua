@@ -156,7 +156,7 @@
     },
     orbpos = {
       [1] = {scale = 0.8, z = -12, x = 0.8, y = -1.7}, -- red
-      [2] = {scale = 0.75, z = -12, x = 0, y = -1}, -- green
+      [2] = {scale = 0.75, z = -12, x = 0, y = -1.1}, -- green
       [3] = {scale = 0.75, z = -12, x = 1.2, y = -1}, -- blue
       [4] = {scale = 0.75, z = -12, x = -0.3, y = -1.2}, -- yellow
     },
@@ -1170,10 +1170,11 @@
     ---------------------
     -- OTHERS
     ---------------------    
-    
-    self.outsideRangeAlpha = 0.4
-    self.inRangeAlpha = 1
-    self.Range = false
+    if (not unit) then
+      self.Range = true
+      self.outsideRangeAlpha = 0.4
+      self.inRangeAlpha = 1
+    end
       
     self.PostUpdateHealth = updateHealth
     self.PostUpdatePower = updatePower

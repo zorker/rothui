@@ -1,4 +1,7 @@
   
+  local rf2_player_name, _ = UnitName("player")
+  local _, rf2_player_class = UnitClass("player")
+  
   -- CONFIG
   
   local myscale = 0.82
@@ -11,7 +14,12 @@
   local button_system = 1
   
   -- on/off
-  local hide_shapeshift = 1
+  local hide_shapeshift
+  if rf2_player_name == "Loral" then
+    hide_shapeshift = 1
+  else
+    hide_shapeshift = 1
+  end
   
   -- on/off
   local petbar_on_mouseover = 1
@@ -32,6 +40,8 @@
   -- CONFIG END
   
   -- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
+  
+  
   
   local f = CreateFrame("Frame","rBars_Button_Holder_Frame",UIParent)
   f:SetWidth(498)
@@ -167,7 +177,11 @@
   if hide_shapeshift ~= 1 then
     ShapeshiftBarFrame:SetParent(f)
     ShapeshiftButton1:ClearAllPoints()
-    ShapeshiftButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",3,54);
+    if rf2_player_name == "Loral" then
+      ShapeshiftButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",3,15);
+    else
+      ShapeshiftButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",3,54);
+    end
     ShapeshiftButton1.SetPoint = function() end
   else  
     ShapeshiftBarFrame:SetScale(0.001)

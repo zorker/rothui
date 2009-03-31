@@ -1,113 +1,230 @@
+
+  -- roth 2009
+
+  ---------------------------------------------------
+  -- GET THE PLAYER CLASS AND THE PLAYER NAME.
+  ---------------------------------------------------
   
-  local rf2_player_name, _ = UnitName("player")
-  local _, rf2_player_class = UnitClass("player")
+  local myname, _ = UnitName("player")
+  local _, myclass = UnitClass("player")
   
-  -- CONFIG
+  ---------------------------------------------------
+  -- CONFIG START
+  ---------------------------------------------------
   
-  local myscale = 0.82
+  -- scale values
+  local myscale = 0.82*0.75
+  local bar2scale = 0.82*0.75
+  local bar3scale = 0.82*0.75
+  local bar45scale = 0.82*0.75  
+  local petscale = 0.65
+  local shapeshiftscale = 0.65
+  local micromenuscale = 0.8
+  local bagscale = 0.9
   
-  local petscale = 0.9
+  --this will activate ALL the backdrops. makes it easier to see the dragable bar areas
+  local testmode = 0
+    
+  local button_system
+  local shapeshift_on_mouseover, petbar_on_mouseover, rightbars_on_mouseover, micromenu_on_mouseover, bags_on_mouseover, bar3_on_mouseover, bar2_on_mouseover, bar1_on_mouseover
+  local move_micro, move_bags, move_rightbars, move_shapeshift, move_bar1, move_bar2, move_bar3
   
   -- bar1 and bar2 in 2x6 instead of 1x12
-  -- 1 = 2x6
   -- 0 = 1x12
-  local button_system = 1
+  -- 1 = 2x6
+  button_system = 0
   
-  -- on/off
-  local hide_shapeshift
-  if rf2_player_name == "Loral" then
-    hide_shapeshift = 1
+  -- make bar 1,2,3 movable on/off
+  -- bar1
+  move_bar1 = 1
+  bar1_on_mouseover = 0
+  
+  -- bar2
+  move_bar2 = 1
+  bar2_on_mouseover = 0
+  
+  -- bar3
+  move_bar3 = 1
+  bar3_on_mouseover = 0
+  
+  -- shapeshift on mouseover on/off
+  -- 0 = off
+  -- 1 = on
+  -- show you how to make the config different for each character
+  if myname == "Loral" and myclass == "DRUID" then
+    shapeshift_on_mouseover = 1
   else
-    hide_shapeshift = 1
+    shapeshift_on_mouseover = 1
   end
+  -- shapeshift movable on/off
+  move_shapeshift = 1
   
-  -- on/off
-  local petbar_on_mouseover = 1
-  -- range 0 - 1
-  local petbar_off_alpha = 0
+  -- petbar on mouseover on/off
+  petbar_on_mouseover = 1
+  -- petbar movable on/off
+  move_pet = 1
+
+  -- rightbars on mouseover on/off
+  rightbars_on_mouseover = 1
+  -- rightbars movable on/off
+  move_rightbars = 1
+
+  -- micromenu on mouseover on/off
+  micromenu_on_mouseover = 1
+  -- bags movable on/off
+  move_micro = 1
+
+  -- bags on mouseover on/off
+  bags_on_mouseover = 1
+  -- bags movable on/off
+  move_bags = 1
   
-  -- on/off
-  local rightbars_on_mouseover = 1
-  -- range 0 - 1
-  local rightbars_off_alpha = 0
-  
-  -- on/off
-  local micromenu_on_mouseover = 1
-  
-  -- on/off
-  local bags_on_mouseover = 1
-  
+  ---------------------------------------------------
   -- CONFIG END
-  
-  -- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
-  
-  
-  
-  local f = CreateFrame("Frame","rBars_Button_Holder_Frame",UIParent)
-  f:SetWidth(498)
-  f:SetHeight(100)
-  --f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
-  f:SetPoint("BOTTOM",0,30)
-  f:Show()
-  
-  local myscale = myscale*0.75
-  
-  local bonushooks = {};
-  local i;
-  
-  BonusActionBarFrame:SetParent(f)
+  ---------------------------------------------------
 
-  for i = 1, 12, 1 do
-    _G["ActionButton"..i]:SetParent(f);
-  end;
+  -- Only edit stuff below if you _know_ what you are doing.
 
+  ---------------------------------------------------
+  -- CREATE ALL THE HOLDER FRAMES
+  ---------------------------------------------------
+    
+  -- Frame to hold the ActionBar1 and the BonusActionBar
+  local fbar1 = CreateFrame("Frame","rABS_Bar1Holder",UIParent)
+  if button_system == 1 then
+    fbar1:SetWidth(264)
+    fbar1:SetHeight(116)
+    fbar1:SetPoint("BOTTOM",-127,20)  
+  else
+    fbar1:SetWidth(518)
+    fbar1:SetHeight(58)
+    fbar1:SetPoint("BOTTOM",0,20)  
+  end
+  if testmode == 1 then
+    fbar1:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
+  end
+  --fbar1:SetFrameStrata("LOW")
+  fbar1:Show()
+  
+  -- Frame to hold the MultibarLeft
+  local fbar2 = CreateFrame("Frame","rABS_Bar2Holder",UIParent)
+  if button_system == 1 then
+    fbar2:SetWidth(264)
+    fbar2:SetHeight(116)
+    fbar2:SetPoint("BOTTOM",125,20)
+  else
+    fbar2:SetWidth(518)
+    fbar2:SetHeight(58)
+    fbar2:SetPoint("BOTTOM",0,60)  
+  end
+  if testmode == 1 then
+    fbar2:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
+  end
+  fbar2:Show()
+
+  -- Frame to hold the MultibarRight
+  local fbar3 = CreateFrame("Frame","rABS_Bar3Holder",UIParent)
+  fbar3:SetWidth(518)
+  fbar3:SetHeight(58)
+  if testmode == 1 then
+    fbar3:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
+  end
+  fbar3:SetPoint("BOTTOM",0,112)
+  fbar3:Show()  
+  
+  -- Frame to hold the right bars
+  local fbar45 = CreateFrame("Frame","rABS_Bar45Holder",UIParent)
+  fbar45:SetWidth(100) -- size the width here
+  fbar45:SetHeight(518) -- size the height here
+  if testmode == 1 then
+    fbar45:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
+  end
+  fbar45:SetPoint("RIGHT",-5,0) 
+  
+  -- Frame to hold the bag buttons
+  local fbag = CreateFrame("Frame","rABS_BagHolder",UIParent)
+  fbag:SetWidth(220)
+  fbag:SetHeight(60)
+  if testmode == 1 then
+    fbag:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
+  end
+  fbag:SetPoint("BOTTOMRIGHT",5,-5)
+  fbag:Show()
+  
+  -- Frame to hold the micro menu  
+  local fmicro = CreateFrame("Frame","rABS_MicroMenuHolder",UIParent)
+  fmicro:SetWidth(263)
+  fmicro:SetHeight(60)
+  if testmode == 1 then
+    fmicro:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
+  end
+  fmicro:SetPoint("TOP",0,5)
+  fmicro:Show()
+  
+  -- Frame to hold the pet bars  
+  local fpet = CreateFrame("Frame","rABS_PetBarHolder",UIParent)
+  fpet:SetWidth(400) -- size the width here
+  fpet:SetHeight(53) -- size the height here
+  if testmode == 1 then
+    fpet:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
+  end
+  fpet:SetPoint("BOTTOM",0,170) 
+  
+  -- Frame to hold the shapeshift bars  
+  local fshift = CreateFrame("Frame","rABS_ShapeShiftHolder",UIParent)
+  fshift:SetWidth(355) -- size the width here
+  fshift:SetHeight(50) -- size the height here
+  if testmode == 1 then
+    fshift:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
+  end
+  fshift:SetPoint("BOTTOM",0,240) 
+ 
+  ---------------------------------------------------
+  -- MOVE STUFF INTO POSITION
+  ---------------------------------------------------
+  
+  local i,f
+  
+  --bar1
+  for i=1, 12 do
+    _G["ActionButton"..i]:SetParent(fbar1);
+  end
   ActionButton1:ClearAllPoints()
-  ActionButton1:SetPoint("BOTTOMLEFT",f,"BOTTOMLEFT",0,0);    
+  ActionButton1:SetPoint("BOTTOMLEFT",fbar1,"BOTTOMLEFT",10,10);   
 
-  --need to do this since I reanchored the bonusactionbar to f
+  --bonus bar  
+  BonusActionBarFrame:SetParent(fbar1)
+  BonusActionBarFrame:SetWidth(0.01)
   BonusActionBarTexture0:Hide()
   BonusActionBarTexture1:Hide()
-  
   BonusActionButton1:ClearAllPoints()
-  BonusActionButton1:SetPoint("BOTTOMLEFT",f,"BOTTOMLEFT",0,0);
+  BonusActionButton1:SetPoint("BOTTOMLEFT", fbar1, "BOTTOMLEFT", 10, 10);
   
-  if button_system == 0 then
-
-    MultiBarBottomLeftButton1:ClearAllPoints()  
-    MultiBarBottomLeftButton1:SetPoint("BOTTOMLEFT",ActionButton1,"TOPLEFT",0,5);
-
-    MultiBarBottomRightButton1:ClearAllPoints()  
-    MultiBarBottomRightButton1:SetPoint("BOTTOMLEFT",MultiBarBottomLeftButton1,"TOPLEFT",0,15);
+  --possess bar
+  --PossessBarFrame:SetParent(fbar1)
+  --PossessButton1:ClearAllPoints()
+  --PossessButton1:SetPoint("BOTTOMLEFT", fbar1, "BOTTOMLEFT", 10, 10);
   
-  else
-
+  --bar2
+  MultiBarBottomLeft:SetParent(fbar2)
+  MultiBarBottomLeftButton1:ClearAllPoints()
+  MultiBarBottomLeftButton1:SetPoint("BOTTOMLEFT", fbar2, "BOTTOMLEFT", 10, 10);
+  
+  --bar3
+  MultiBarBottomRight:SetParent(fbar3)
+  MultiBarBottomRightButton1:ClearAllPoints()
+  MultiBarBottomRightButton1:SetPoint("BOTTOMLEFT", fbar3, "BOTTOMLEFT", 10, 10);
+  
+  if button_system == 1 then
     ActionButton7:ClearAllPoints()  
     ActionButton7:SetPoint("BOTTOMLEFT",ActionButton1,"TOPLEFT",0,5);
-  
     BonusActionButton7:ClearAllPoints()  
     BonusActionButton7:SetPoint("BOTTOMLEFT",BonusActionButton1,"TOPLEFT",0,5);
-    
-    MultiBarBottomLeftButton1:ClearAllPoints()  
-    MultiBarBottomLeftButton1:SetPoint("BOTTOMLEFT",ActionButton6,"BOTTOMRIGHT",5,0);
-  
     MultiBarBottomLeftButton7:ClearAllPoints()  
     MultiBarBottomLeftButton7:SetPoint("BOTTOMLEFT",MultiBarBottomLeftButton1,"TOPLEFT",0,5);
-  
-    MultiBarBottomRightButton1:ClearAllPoints()  
-    MultiBarBottomRightButton1:SetPoint("BOTTOMLEFT",ActionButton7,"TOPLEFT",0,15);
-  
   end
-
-  --------------------
-  -- BagButtons
-  --------------------
-  local fb = CreateFrame("Frame","rABS_BagButtonHolder",UIParent)
-  fb:SetWidth(220)
-  fb:SetHeight(60)
-  --fb:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
-  fb:SetPoint("BOTTOMRIGHT",5,-5)
-  fb:Show()
   
+  --bags
   local BagButtons = {
     MainMenuBarBackpackButton,
     CharacterBag0Slot,
@@ -115,28 +232,17 @@
     CharacterBag2Slot,
     CharacterBag3Slot,
     KeyRingButton,
-  }
-  
-  function rABS_MoveBagButtons()
-    for _, frame in pairs(BagButtons) do
-      frame:SetParent("rABS_BagButtonHolder");
+  }  
+  local function rABS_MoveBagButtons()
+    for _, f in pairs(BagButtons) do
+      f:SetParent(fbag);
     end
     MainMenuBarBackpackButton:ClearAllPoints();
     MainMenuBarBackpackButton:SetPoint("BOTTOMRIGHT", -15, 15);
-  end
+  end  
+  rABS_MoveBagButtons();  
   
-  rABS_MoveBagButtons();
-  
-  --------------------
-  -- MICRO MENU
-  --------------------
-  local fm = CreateFrame("Frame","rABS_MicroButtonHolder",UIParent)
-  fm:SetWidth(263)
-  fm:SetHeight(60)
-  --fm:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
-  fm:SetPoint("TOP",0,5)
-  fm:Show()
-  
+  --mircro menu
   local MicroButtons = {
     CharacterMicroButton,
     SpellbookMicroButton,
@@ -148,98 +254,109 @@
     LFGMicroButton,
     MainMenuMicroButton,
     HelpMicroButton,
-  }
-  
-  function rABS_MoveMicroButtons(skinName)
-    for _, frame in pairs(MicroButtons) do
-      frame:SetParent("rABS_MicroButtonHolder");
+  }  
+  local function rABS_MoveMicroButtons(skinName)
+    for _, f in pairs(MicroButtons) do
+      f:SetParent(fmicro);
     end
-     CharacterMicroButton:ClearAllPoints();
+    CharacterMicroButton:ClearAllPoints();
     CharacterMicroButton:SetPoint("BOTTOMLEFT", 5, 5);
     SocialsMicroButton:ClearAllPoints();
     SocialsMicroButton:SetPoint("LEFT", QuestLogMicroButton, "RIGHT", -3, 0);
-     UpdateTalentButton();
+    UpdateTalentButton();
   end
-
-  hooksecurefunc("VehicleMenuBar_MoveMicroButtons", rABS_MoveMicroButtons);
-  
+  hooksecurefunc("VehicleMenuBar_MoveMicroButtons", rABS_MoveMicroButtons);  
   rABS_MoveMicroButtons();
+
+  --shift
+  ShapeshiftBarFrame:SetParent(fshift)
+  ShapeshiftBarFrame:SetWidth(0.01)
+  ShapeshiftButton1:ClearAllPoints()
+  ShapeshiftButton1:SetPoint("BOTTOMLEFT",fshift,"BOTTOMLEFT",10,10)
   
+  --pet
+  PetActionBarFrame:SetParent(fpet)
+  PetActionBarFrame:SetWidth(0.01)
+  PetActionButton1:ClearAllPoints()
+  PetActionButton1:SetPoint("BOTTOMLEFT",fpet,"BOTTOMLEFT",10,10)
+
+  --right bars
+  MultiBarRight:SetParent(fbar45);
+  MultiBarLeft:SetParent(fbar45);
+  MultiBarRight:ClearAllPoints()
+  MultiBarRight:SetPoint("TOPRIGHT",-10,-10)
+
+  ---------------------------------------------------
+  -- ACTIONBUTTONS MUST BE HIDDEN
+  ---------------------------------------------------
   
-  --RIGHT BARS
-  MultiBarRightButton1:ClearAllPoints()
-  MultiBarRightButton1:SetPoint("RIGHT",UIParent,"RIGHT",-30, 190)
-  MultiBarLeftButton1:ClearAllPoints()
-  MultiBarLeftButton1:SetPoint("TOPLEFT",MultiBarRightButton1,"TOPLEFT",-43, 0)
-  
-  --SHAPESHIFT+PET
-  
-  if hide_shapeshift ~= 1 then
-    ShapeshiftBarFrame:SetParent(f)
-    ShapeshiftButton1:ClearAllPoints()
-    if rf2_player_name == "Loral" then
-      ShapeshiftButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",3,15);
-    else
-      ShapeshiftButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",3,54);
+  -- hide actionbuttons when the bonusbar is visible (rogue stealth and such)
+  local function rABS_showhideactionbuttons(alpha)
+    local f = "ActionButton"
+    for i=1, 12 do
+      _G[f..i]:SetAlpha(alpha)
     end
-    ShapeshiftButton1.SetPoint = function() end
-  else  
-    ShapeshiftBarFrame:SetScale(0.001)
-    ShapeshiftBarFrame:SetAlpha(0)
+  end
+  BonusActionBarFrame:HookScript("OnShow", function(self) rABS_showhideactionbuttons(0) end)
+  BonusActionBarFrame:HookScript("OnHide", function(self) rABS_showhideactionbuttons(1) end)
+  if BonusActionBarFrame:IsShown() then
+    rABS_showhideactionbuttons(0)
   end
   
-  PetActionButton1:ClearAllPoints()
-  PetActionBarFrame:SetParent(f)
-  PetActionButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",5,15);
 
-  -- hmmm I don't know if this does anything since the PossesBar becomes the BonusActionBar upon possessing sth
-  PossessButton1:ClearAllPoints()
-  PossessBarFrame:SetParent(f)
-  PossessButton1:SetPoint("BOTTOMLEFT",MultiBarBottomRightButton1,"TOPLEFT",5,15);
-  
-  --hack to make the mainbar unvisible >_<
-  MainMenuBar:SetScale(0.001)
-  MainMenuBar:SetAlpha(0)
-  VehicleMenuBar:SetScale(0.001)
-  VehicleMenuBar:SetAlpha(0)
-  
-  f:SetScale(myscale)
-  fm:SetScale(0.9)
-  fb:SetScale(0.9)
-  BonusActionBarFrame:SetScale(1)
-  MultiBarBottomLeft:SetScale(myscale)
-  MultiBarBottomRight:SetScale(myscale)
-  MultiBarRight:SetScale(myscale)
-  MultiBarLeft:SetScale(myscale)
-  PetActionBarFrame:SetScale(petscale)
-  
-  bonushooks["onshow"] = BonusActionBarFrame:GetScript("OnShow");
-  bonushooks["onshide"] = BonusActionBarFrame:GetScript("OnHide");
-  
-  BonusActionBarFrame:SetScript("OnShow", function(self,...)
-    if ( bonushooks["onshow"] ) then bonushooks["onshow"](self,...); end;
-    for i = 1, 12, 1 do
-      _G["ActionButton"..i]:SetAlpha(0);
-    end;
-  end);
-  
-  BonusActionBarFrame:SetScript("OnHide", function(self,...)
-    if ( bonushooks["onhide"] ) then bonushooks["onhide"](self,...); end;
-    for i = 1, 12, 1 do
-      _G["ActionButton"..i]:SetAlpha(1);
-    end;
-  end); 
-    
-  local alphahigh = 1
+  ---------------------------------------------------
+  -- ON MOUSEOVER STUFF
+  ---------------------------------------------------
 
-  local function myshowhidepet(alpha)
+  --functions  
+  local function rABS_showhidebar1(alpha)
+    if BonusActionBarFrame:IsShown() then
+      for i=1, 12 do
+        local pb = _G["BonusActionButton"..i]
+        pb:SetAlpha(alpha)
+      end
+    else
+      for i=1, 12 do
+        local pb = _G["ActionButton"..i]
+        pb:SetAlpha(alpha)
+      end
+    end
+  end
+  
+  
+  local function rABS_showhidebar2(alpha)
+    if MultiBarBottomLeft:IsShown() then
+      for i=1, 12 do
+        local pb = _G["MultiBarBottomLeftButton"..i]
+        pb:SetAlpha(alpha)
+      end
+    end
+  end
+  
+  local function rABS_showhidebar3(alpha)
+    if MultiBarBottomRight:IsShown() then
+      for i=1, 12 do
+        local pb = _G["MultiBarBottomRightButton"..i]
+        pb:SetAlpha(alpha)
+      end
+    end
+  end
+  
+  local function rABS_showhideshapeshift(alpha)
+    for i=1, NUM_SHAPESHIFT_SLOTS do
+      local pb = _G["ShapeshiftButton"..i]
+      pb:SetAlpha(alpha)
+    end;
+  end
+  
+  local function rABS_showhidepet(alpha)
     for i=1, NUM_PET_ACTION_SLOTS do
       local pb = _G["PetActionButton"..i]
       pb:SetAlpha(alpha)
     end;
   end
   
-  local function myshowhiderightbar(alpha)
+  local function rABS_showhiderightbar(alpha)
     if MultiBarLeft:IsShown() then
       for i=1, 12 do
         local pb = _G["MultiBarLeftButton"..i]
@@ -254,90 +371,241 @@
     end
   end
   
-  local function myshowhidemicro(alpha)
+  local function rABS_showhidemicro(alpha)
     for _, frame in pairs(MicroButtons) do
       frame:SetAlpha(alpha)
     end
   end
   
-  local function myshowhidebags(alpha)
+  local function rABS_showhidebags(alpha)
     for _, frame in pairs(BagButtons) do
       frame:SetAlpha(alpha)
+    end
+  end
+
+  --calls  
+  if bar1_on_mouseover == 1 then
+    fbar1:EnableMouse(true)
+    fbar1:SetScript("OnEnter", function(self) rABS_showhidebar1(1) end)
+    fbar1:SetScript("OnLeave", function(self) rABS_showhidebar1(0) end)  
+    for i=1, 12 do
+      local pb = _G["ActionButton"..i]
+      pb:SetAlpha(0)
+      pb:HookScript("OnEnter", function(self) rABS_showhidebar1(1) end)
+      pb:HookScript("OnLeave", function(self) rABS_showhidebar1(0) end)
+      local pb = _G["BonusActionButton"..i]
+      pb:SetAlpha(0)
+      pb:HookScript("OnEnter", function(self) rABS_showhidebar1(1) end)
+      pb:HookScript("OnLeave", function(self) rABS_showhidebar1(0) end)
+    end
+  end
+  
+  if bar2_on_mouseover == 1 then
+    fbar2:EnableMouse(true)
+    fbar2:SetScript("OnEnter", function(self) rABS_showhidebar2(1) end)
+    fbar2:SetScript("OnLeave", function(self) rABS_showhidebar2(0) end)  
+    for i=1, 12 do
+      local pb = _G["MultiBarBottomLeftButton"..i]
+      pb:SetAlpha(0)
+      pb:HookScript("OnEnter", function(self) rABS_showhidebar2(1) end)
+      pb:HookScript("OnLeave", function(self) rABS_showhidebar2(0) end)
+    end
+  end
+  
+  if bar3_on_mouseover == 1 then
+    fbar3:EnableMouse(true)
+    fbar3:SetScript("OnEnter", function(self) rABS_showhidebar3(1) end)
+    fbar3:SetScript("OnLeave", function(self) rABS_showhidebar3(0) end)  
+    for i=1, 12 do
+      local pb = _G["MultiBarBottomRightButton"..i]
+      pb:SetAlpha(0)
+      pb:HookScript("OnEnter", function(self) rABS_showhidebar3(1) end)
+      pb:HookScript("OnLeave", function(self) rABS_showhidebar3(0) end)
+    end
+  end
+  
+  if shapeshift_on_mouseover == 1 then
+    fshift:EnableMouse(true)
+    fshift:SetScript("OnEnter", function(self) rABS_showhideshapeshift(1) end)
+    fshift:SetScript("OnLeave", function(self) rABS_showhideshapeshift(0) end)  
+    for i=1, NUM_SHAPESHIFT_SLOTS do
+      local pb = _G["ShapeshiftButton"..i]
+      pb:SetAlpha(0)
+      pb:HookScript("OnEnter", function(self) rABS_showhideshapeshift(1) end)
+      pb:HookScript("OnLeave", function(self) rABS_showhideshapeshift(0) end)
     end
   end
   
   if petbar_on_mouseover == 1 then
-  
-    local f2 = CreateFrame("Frame","myPetBarHolderFrame",UIParent)
-    --comment this in to see the frame
-    --f2:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
-    f2:SetWidth(355) -- size the width here
-    f2:SetHeight(50) -- size the height here
-    f2:SetPoint("BOTTOM",-78,160)  --move it under your petbuttons here
-    f2:SetScale(myscale)
-    f2:EnableMouse(true)
-    f2:SetScript("OnEnter", function(self) myshowhidepet(alphahigh) end)
-    f2:SetScript("OnLeave", function(self) myshowhidepet(petbar_off_alpha) end)
-  
+    fpet:EnableMouse(true)
+    fpet:SetScript("OnEnter", function(self) rABS_showhidepet(1) end)
+    fpet:SetScript("OnLeave", function(self) rABS_showhidepet(0) end)  
     for i=1, NUM_PET_ACTION_SLOTS do
       local pb = _G["PetActionButton"..i]
-      pb:SetAlpha(petbar_off_alpha)
-      pb:HookScript("OnEnter", function(self) myshowhidepet(alphahigh) end)
-      pb:HookScript("OnLeave", function(self) myshowhidepet(petbar_off_alpha) end)
-    end;
-  
+      pb:SetAlpha(0)
+      pb:HookScript("OnEnter", function(self) rABS_showhidepet(1) end)
+      pb:HookScript("OnLeave", function(self) rABS_showhidepet(0) end)
+    end
   end
   
   if rightbars_on_mouseover == 1 then
-  
-    local f3 = CreateFrame("Frame","myRightBarHolderFrame",UIParent)
-    --comment this in to see the frame
-    --f3:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
-    f3:SetWidth(130) -- size the width here
-    f3:SetHeight(500) -- size the height here
-    f3:SetPoint("RIGHT",5,-20)  --move it under your petbuttons here
-    f3:SetScale(myscale)
-    f3:EnableMouse(true)
-    f3:SetScript("OnEnter", function(self) myshowhiderightbar(alphahigh) end)
-    f3:SetScript("OnLeave", function(self) myshowhiderightbar(rightbars_off_alpha) end)
-    
+    fbar45:EnableMouse(true)
+    fbar45:SetScript("OnEnter", function(self) rABS_showhiderightbar(1) end)
+    fbar45:SetScript("OnLeave", function(self) rABS_showhiderightbar(0) end)  
     for i=1, 12 do
       local pb = _G["MultiBarLeftButton"..i]
-      pb:SetAlpha(rightbars_off_alpha)
-      pb:HookScript("OnEnter", function(self) myshowhiderightbar(alphahigh) end)
-      pb:HookScript("OnLeave", function(self) myshowhiderightbar(rightbars_off_alpha) end)
+      pb:SetAlpha(0)
+      pb:HookScript("OnEnter", function(self) rABS_showhiderightbar(1) end)
+      pb:HookScript("OnLeave", function(self) rABS_showhiderightbar(0) end)
       local pb = _G["MultiBarRightButton"..i]
-      pb:SetAlpha(rightbars_off_alpha)
-      pb:HookScript("OnEnter", function(self) myshowhiderightbar(alphahigh) end)
-      pb:HookScript("OnLeave", function(self) myshowhiderightbar(rightbars_off_alpha) end)
-    end;
-  
+      pb:SetAlpha(0)
+      pb:HookScript("OnEnter", function(self) rABS_showhiderightbar(1) end)
+      pb:HookScript("OnLeave", function(self) rABS_showhiderightbar(0) end)
+    end
   end
   
   if micromenu_on_mouseover == 1 then
-    fm:EnableMouse(true)
-    fm:SetScript("OnEnter", function(self) myshowhidemicro(1) end)
-    fm:SetScript("OnLeave", function(self) myshowhidemicro(0) end)
-  
-    for _, frame in pairs(MicroButtons) do
-      frame:SetAlpha(0)
-      frame:HookScript("OnEnter", function(self) myshowhidemicro(1) end)
-      frame:HookScript("OnLeave", function(self) myshowhidemicro(0) end)
+    fmicro:EnableMouse(true)
+    fmicro:SetScript("OnEnter", function(self) rABS_showhidemicro(1) end)
+    fmicro:SetScript("OnLeave", function(self) rABS_showhidemicro(0) end)  
+    for _, f in pairs(MicroButtons) do
+      f:SetAlpha(0)
+      f:HookScript("OnEnter", function(self) rABS_showhidemicro(1) end)
+      f:HookScript("OnLeave", function(self) rABS_showhidemicro(0) end)
     end
-  
   end
   
   if bags_on_mouseover == 1 then
-    fb:EnableMouse(true)
-    fb:SetScript("OnEnter", function(self) myshowhidebags(1) end)
-    fb:SetScript("OnLeave", function(self) myshowhidebags(0) end)
+    fbag:EnableMouse(true)
+    fbag:SetScript("OnEnter", function(self) rABS_showhidebags(1) end)
+    fbag:SetScript("OnLeave", function(self) rABS_showhidebags(0) end)  
+    for _, f in pairs(BagButtons) do
+      f:SetAlpha(0)
+      f:HookScript("OnEnter", function(self) rABS_showhidebags(1) end)
+      f:HookScript("OnLeave", function(self) rABS_showhidebags(0) end)
+    end  
+  end
+
+  ---------------------------------------------------
+  -- MAKE THE DEFAULT BARS UNVISIBLE
+  ---------------------------------------------------
   
-    for _, frame in pairs(BagButtons) do
-      frame:SetAlpha(0)
-      frame:HookScript("OnEnter", function(self) myshowhidebags(1) end)
-      frame:HookScript("OnLeave", function(self) myshowhidebags(0) end)
+  local FramesToHide = {
+    MainMenuBar,
+    VehicleMenuBar,
+  }  
+  
+  local function rABS_HideDefaultFrames()
+    for _, f in pairs(FramesToHide) do
+      f:SetScale(0.001)
+      f:SetAlpha(0)
     end
+  end  
+  rABS_HideDefaultFrames(); 
+
+  ---------------------------------------------------
+  -- SCALING
+  ---------------------------------------------------
+
+  fbar1:SetScale(myscale)
+  fbar2:SetScale(bar2scale)
+  fbar3:SetScale(bar3scale)
+  fbar45:SetScale(bar45scale)
   
+  fpet:SetScale(petscale)
+  fshift:SetScale(shapeshiftscale)
+  fmicro:SetScale(micromenuscale)
+  fbag:SetScale(bagscale)
+
+
+  ---------------------------------------------------
+  -- MOVABLE FRAMES
+  ---------------------------------------------------
+  
+  if move_micro == 1 then
+    fmicro:EnableMouse(true)
+    fmicro:SetMovable(true)
+    fmicro:SetUserPlaced(true)
+    fmicro:RegisterForDrag("RightButton")
+    fmicro:SetScript("OnDragStart", function(self) self:StartMoving() end)
+    fmicro:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+  else
+    fmicro:IsUserPlaced(false)
+  end
+
+  if move_bags == 1 then
+    fbag:EnableMouse(true)
+    fbag:SetMovable(true)
+    fbag:SetUserPlaced(true)
+    fbag:RegisterForDrag("RightButton")
+    fbag:SetScript("OnDragStart", function(self) self:StartMoving() end)
+    fbag:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+  else
+    fbag:IsUserPlaced(false)
   end
   
-
+  if move_rightbars == 1 then
+    fbar45:EnableMouse(true)
+    fbar45:SetMovable(true)
+    fbar45:SetUserPlaced(true)
+    fbar45:RegisterForDrag("RightButton")
+    fbar45:SetScript("OnDragStart", function(self) self:StartMoving() end)
+    fbar45:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+  else
+    fbar45:IsUserPlaced(false)
+  end
+  
+  if move_pet == 1 then
+    fpet:EnableMouse(true)
+    fpet:SetMovable(true)
+    fpet:SetUserPlaced(true)
+    fpet:RegisterForDrag("RightButton")
+    fpet:SetScript("OnDragStart", function(self) self:StartMoving() end)
+    fpet:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+  else
+    fpet:IsUserPlaced(false)
+  end
+  
+  if move_shapeshift == 1 then
+    fshift:EnableMouse(true)
+    fshift:SetMovable(true)
+    fshift:SetUserPlaced(true)
+    fshift:RegisterForDrag("RightButton")
+    fshift:SetScript("OnDragStart", function(self) self:StartMoving() end)
+    fshift:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+  else
+    fshift:IsUserPlaced(false)
+  end
+  
+  if move_bar1 == 1 then
+    fbar1:EnableMouse(true)
+    fbar1:SetMovable(true)
+    fbar1:SetUserPlaced(true)
+    fbar1:RegisterForDrag("RightButton")
+    fbar1:SetScript("OnDragStart", function(self) self:StartMoving() end)
+    fbar1:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+  else
+    fbar1:IsUserPlaced(false)
+  end
+  
+  if move_bar2 == 1 then
+    fbar2:EnableMouse(true)
+    fbar2:SetMovable(true)
+    fbar2:SetUserPlaced(true)
+    fbar2:RegisterForDrag("RightButton")
+    fbar2:SetScript("OnDragStart", function(self) self:StartMoving() end)
+    fbar2:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+  else
+    fbar2:IsUserPlaced(false)
+  end
+  
+  if move_bar3 == 1 then
+    fbar3:EnableMouse(true)
+    fbar3:SetMovable(true)
+    fbar3:SetUserPlaced(true)
+    fbar3:RegisterForDrag("RightButton")
+    fbar3:SetScript("OnDragStart", function(self) self:StartMoving() end)
+    fbar3:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+  else
+    fbar3:IsUserPlaced(false)
+  end

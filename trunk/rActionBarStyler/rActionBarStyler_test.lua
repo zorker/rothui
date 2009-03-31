@@ -83,7 +83,7 @@
   fbar45:SetPoint("RIGHT",5,-20)  --move it under your petbuttons here
   
   -- Frame to hold the bag buttons
-  local fbag = CreateFrame("Frame","rABS_BagButtonHolder",UIParent)
+  local fbag = CreateFrame("Frame","rABS_BagHolder",UIParent)
   fbag:SetWidth(220)
   fbag:SetHeight(60)
   fbag:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
@@ -91,7 +91,7 @@
   fbag:Show()
   
   -- Frame to hold the micro menu  
-  local fmicro = CreateFrame("Frame","rABS_MicroButtonHolder",UIParent)
+  local fmicro = CreateFrame("Frame","rABS_MicroMenuHolder",UIParent)
   fmicro:SetWidth(263)
   fmicro:SetHeight(60)
   fmicro:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
@@ -106,7 +106,7 @@
   fpet:SetPoint("BOTTOM",-78,160) 
   
   -- Frame to hold the pet bars  
-  local fshift = CreateFrame("Frame","rABS_PetBarHolder",UIParent)
+  local fshift = CreateFrame("Frame","rABS_ShapeShiftHolder",UIParent)
   fshift:SetWidth(355) -- size the width here
   fshift:SetHeight(50) -- size the height here
   fshift:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
@@ -215,7 +215,7 @@
     ShapeshiftButton,
   }  
   local function rABS_MoveShapeShiftButtons()
-    for _, f in pairs(MicroButtons) do
+    for _, f in pairs(ShapeShiftButtons) do
       for i=1, NUM_SHAPESHIFT_SLOTS do
         f..i:SetParent(fshift);
       end
@@ -403,9 +403,16 @@
   fmicro:SetScale(petscale)
   fbag:SetScale(petscale)
 
-  
 
-    
+  ---------------------------------------------------
+  -- MOVABLE FRAMES TEST
+  ---------------------------------------------------
+  
+  fmicro:SetMovable(true)
+  fmicro:SetUserPlaced(true)
+  fmicro:RegisterForDrag("RightButton")
+  fmicro:SetScript("OnDragStart", fmicro.StartMoving())
+  fmicro:SetScript("OnDragStop", fmicro.StopMovingOrSizing())
 
 
   

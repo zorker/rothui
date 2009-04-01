@@ -2,82 +2,99 @@
   -- roth 2009
 
   ---------------------------------------------------
-  -- GET THE PLAYER CLASS AND THE PLAYER NAME.
+  -- VARIABLES
   ---------------------------------------------------
   
+  -- define most of the variables  
   local myname, _ = UnitName("player")
   local _, myclass = UnitClass("player")
+  local button_system, testmode
+  local shapeshift_on_mouseover, petbar_on_mouseover, rightbars_on_mouseover, micromenu_on_mouseover
+  local bags_on_mouseover, bar3_on_mouseover, bar2_on_mouseover, bar1_on_mouseover
+  local move_micro, move_bags, move_rightbars, move_shapeshift, move_bar1, move_bar2, move_bar3
+  local lock_micro, lock_bags, lock_rightbars, lock_shapeshift, lock_bar1, lock_bar2, lock_bar3
+  local bar1scale, bar2scale, bar3scale, bar45scale, petscale, shapeshiftscale, micromenuscale, bagscale
   
   ---------------------------------------------------
   -- CONFIG START
   ---------------------------------------------------
   
-  -- scale values
-  local myscale = 0.82*0.75
-  local bar2scale = 0.82*0.75
-  local bar3scale = 0.82*0.75
-  local bar45scale = 0.82*0.75  
-  local petscale = 0.65
-  local shapeshiftscale = 0.65
-  local micromenuscale = 0.8
-  local bagscale = 0.9
-  
   --this will activate ALL the backdrops. makes it easier to see the dragable bar areas
-  local testmode = 0
-    
-  local button_system
-  local shapeshift_on_mouseover, petbar_on_mouseover, rightbars_on_mouseover, micromenu_on_mouseover, bags_on_mouseover, bar3_on_mouseover, bar2_on_mouseover, bar1_on_mouseover
-  local move_micro, move_bags, move_rightbars, move_shapeshift, move_bar1, move_bar2, move_bar3
+  testmode = 0
   
   -- bar1 and bar2 in 2x6 instead of 1x12
   -- 0 = 1x12
   -- 1 = 2x6
   button_system = 0
   
-  -- make bar 1,2,3 movable on/off
+  -- bar settings
+  -- you can make a bar visible on mouseover, make it movable or lock it from moving
+  -- if you make it not movable it will use the default position values of the holder frames
+    
   -- bar1
-  move_bar1 = 1
   bar1_on_mouseover = 0
+  move_bar1 = 1
+  lock_bar1 = 0
   
   -- bar2
-  move_bar2 = 1
   bar2_on_mouseover = 0
+  move_bar2 = 1
+  lock_bar2 = 0
   
   -- bar3
-  move_bar3 = 1
   bar3_on_mouseover = 0
+  move_bar3 = 1
+  lock_bar3 = 0
   
-  -- shapeshift on mouseover on/off
-  -- 0 = off
-  -- 1 = on
-  -- show you how to make the config different for each character
-  if myname == "Loral" and myclass == "DRUID" then
-    shapeshift_on_mouseover = 1
-  else
-    shapeshift_on_mouseover = 1
-  end
-  -- shapeshift movable on/off
-  move_shapeshift = 1
-  
-  -- petbar on mouseover on/off
-  petbar_on_mouseover = 1
-  -- petbar movable on/off
-  move_pet = 1
-
-  -- rightbars on mouseover on/off
+  -- rightbars (bar45)
   rightbars_on_mouseover = 1
-  -- rightbars movable on/off
   move_rightbars = 1
+  lock_rightbars = 0
+  
+  -- shapeshift
+  shapeshift_on_mouseover = 1
+  move_shapeshift = 1
+  lock_shapeshift = 0
+  
+  -- petbar
+  petbar_on_mouseover = 1
+  move_pet = 1
+  lock_pet = 0
 
-  -- micromenu on mouseover on/off
+  -- micromenu
   micromenu_on_mouseover = 1
-  -- bags movable on/off
   move_micro = 1
+  lock_micro = 0
 
-  -- bags on mouseover on/off
+  -- bags
   bags_on_mouseover = 1
-  -- bags movable on/off
   move_bags = 1
+  lock_bags = 0
+  
+  -- scale values
+  bar1scale = 0.82*0.75
+  bar2scale = 0.82*0.75
+  bar3scale = 0.82*0.75
+  bar45scale = 0.82*0.75  
+  petscale = 0.65
+  shapeshiftscale = 0.65
+  micromenuscale = 0.8
+  bagscale = 0.9
+  
+  -- position table for the default frame holder positions
+  -- those are use if the bar is set to not movable or if there is no value in the layout-cache.txt for that frame yet
+  local frame_positions = {
+    [1]  =  { a = "BOTTOM",         x = -127, y = 20  },  --fbar1_button_system_1
+    [2]  =  { a = "BOTTOM",         x = 0,    y = 20  },  --fbar1_button_system_0
+    [3]  =  { a = "BOTTOM",         x = 125,  y = 20  },  --fbar2_button_system_1
+    [4]  =  { a = "BOTTOM",         x = 0,    y = 60  },  --fbar2_button_system_0
+    [5]  =  { a = "BOTTOM",         x = 0,    y = 112 },  --fbar3
+    [6]  =  { a = "RIGHT",          x = -5,   y = 0   },  --fbar45
+    [7]  =  { a = "BOTTOMRIGHT",    x = 5,    y = -5  },  --bags
+    [8]  =  { a = "TOP",            x = 0,    y = 5   },  --micromenu
+    [9]  =  { a = "BOTTOM",         x = 0,    y = 170 },  --petbar
+    [10] =  { a = "BOTTOM",         x = 0,    y = 240 },  --shapeshift
+  },
   
   ---------------------------------------------------
   -- CONFIG END
@@ -94,11 +111,11 @@
   if button_system == 1 then
     fbar1:SetWidth(264)
     fbar1:SetHeight(116)
-    fbar1:SetPoint("BOTTOM",-127,20)  
+    fbar1:SetPoint(frame_positions[1].a,frame_positions[1].x,frame_positions[1].y)  
   else
     fbar1:SetWidth(518)
     fbar1:SetHeight(58)
-    fbar1:SetPoint("BOTTOM",0,20)  
+    fbar1:SetPoint(frame_positions[2].a,frame_positions[2].x,frame_positions[2].y)  
   end
   if testmode == 1 then
     fbar1:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
@@ -111,11 +128,11 @@
   if button_system == 1 then
     fbar2:SetWidth(264)
     fbar2:SetHeight(116)
-    fbar2:SetPoint("BOTTOM",125,20)
+    fbar2:SetPoint(frame_positions[3].a,frame_positions[3].x,frame_positions[3].y)
   else
     fbar2:SetWidth(518)
     fbar2:SetHeight(58)
-    fbar2:SetPoint("BOTTOM",0,60)  
+    fbar2:SetPoint(frame_positions[4].a,frame_positions[4].x,frame_positions[4].y)  
   end
   if testmode == 1 then
     fbar2:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
@@ -129,7 +146,7 @@
   if testmode == 1 then
     fbar3:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
   end
-  fbar3:SetPoint("BOTTOM",0,112)
+  fbar3:SetPoint(frame_positions[5].a,frame_positions[5].x,frame_positions[5].y)
   fbar3:Show()  
   
   -- Frame to hold the right bars
@@ -139,7 +156,7 @@
   if testmode == 1 then
     fbar45:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
   end
-  fbar45:SetPoint("RIGHT",-5,0) 
+  fbar45:SetPoint(frame_positions[6].a,frame_positions[6].x,frame_positions[6].y) 
   
   -- Frame to hold the bag buttons
   local fbag = CreateFrame("Frame","rABS_BagHolder",UIParent)
@@ -148,7 +165,7 @@
   if testmode == 1 then
     fbag:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
   end
-  fbag:SetPoint("BOTTOMRIGHT",5,-5)
+  fbag:SetPoint(frame_positions[7].a,frame_positions[7].x,frame_positions[7].y)
   fbag:Show()
   
   -- Frame to hold the micro menu  
@@ -158,7 +175,7 @@
   if testmode == 1 then
     fmicro:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
   end
-  fmicro:SetPoint("TOP",0,5)
+  fmicro:SetPoint(frame_positions[8].a,frame_positions[8].x,frame_positions[8].y)
   fmicro:Show()
   
   -- Frame to hold the pet bars  
@@ -168,7 +185,7 @@
   if testmode == 1 then
     fpet:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
   end
-  fpet:SetPoint("BOTTOM",0,170) 
+  fpet:SetPoint(frame_positions[9].a,frame_positions[9].x,frame_positions[9].y) 
   
   -- Frame to hold the shapeshift bars  
   local fshift = CreateFrame("Frame","rABS_ShapeShiftHolder",UIParent)
@@ -177,7 +194,7 @@
   if testmode == 1 then
     fshift:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
   end
-  fshift:SetPoint("BOTTOM",0,240) 
+  fshift:SetPoint(frame_positions[10].a,frame_positions[10].x,frame_positions[10].y) 
  
   ---------------------------------------------------
   -- MOVE STUFF INTO POSITION
@@ -507,7 +524,7 @@
   -- SCALING
   ---------------------------------------------------
 
-  fbar1:SetScale(myscale)
+  fbar1:SetScale(bar1scale)
   fbar2:SetScale(bar2scale)
   fbar3:SetScale(bar3scale)
   fbar45:SetScale(bar45scale)
@@ -522,90 +539,28 @@
   -- MOVABLE FRAMES
   ---------------------------------------------------
   
-  if move_micro == 1 then
-    fmicro:EnableMouse(true)
-    fmicro:SetMovable(true)
-    fmicro:SetUserPlaced(true)
-    fmicro:RegisterForDrag("RightButton")
-    fmicro:SetScript("OnDragStart", function(self) self:StartMoving() end)
-    fmicro:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-  else
-    fmicro:IsUserPlaced(false)
-  end
-
-  if move_bags == 1 then
-    fbag:EnableMouse(true)
-    fbag:SetMovable(true)
-    fbag:SetUserPlaced(true)
-    fbag:RegisterForDrag("RightButton")
-    fbag:SetScript("OnDragStart", function(self) self:StartMoving() end)
-    fbag:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-  else
-    fbag:IsUserPlaced(false)
+  -- func
+  local function rABS_MoveThisFrame(f,moveit,lock)
+    if moveit == 1 then
+      f:SetMovable(true)
+      f:SetUserPlaced(true)
+      if lock ~= 1 then
+        f:EnableMouse(true)
+        f:RegisterForDrag("RightButton")
+        f:SetScript("OnDragStart", function(self) self:StartMoving() end)
+        f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+      end
+    else
+      f:IsUserPlaced(false)
+    end  
   end
   
-  if move_rightbars == 1 then
-    fbar45:EnableMouse(true)
-    fbar45:SetMovable(true)
-    fbar45:SetUserPlaced(true)
-    fbar45:RegisterForDrag("RightButton")
-    fbar45:SetScript("OnDragStart", function(self) self:StartMoving() end)
-    fbar45:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-  else
-    fbar45:IsUserPlaced(false)
-  end
-  
-  if move_pet == 1 then
-    fpet:EnableMouse(true)
-    fpet:SetMovable(true)
-    fpet:SetUserPlaced(true)
-    fpet:RegisterForDrag("RightButton")
-    fpet:SetScript("OnDragStart", function(self) self:StartMoving() end)
-    fpet:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-  else
-    fpet:IsUserPlaced(false)
-  end
-  
-  if move_shapeshift == 1 then
-    fshift:EnableMouse(true)
-    fshift:SetMovable(true)
-    fshift:SetUserPlaced(true)
-    fshift:RegisterForDrag("RightButton")
-    fshift:SetScript("OnDragStart", function(self) self:StartMoving() end)
-    fshift:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-  else
-    fshift:IsUserPlaced(false)
-  end
-  
-  if move_bar1 == 1 then
-    fbar1:EnableMouse(true)
-    fbar1:SetMovable(true)
-    fbar1:SetUserPlaced(true)
-    fbar1:RegisterForDrag("RightButton")
-    fbar1:SetScript("OnDragStart", function(self) self:StartMoving() end)
-    fbar1:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-  else
-    fbar1:IsUserPlaced(false)
-  end
-  
-  if move_bar2 == 1 then
-    fbar2:EnableMouse(true)
-    fbar2:SetMovable(true)
-    fbar2:SetUserPlaced(true)
-    fbar2:RegisterForDrag("RightButton")
-    fbar2:SetScript("OnDragStart", function(self) self:StartMoving() end)
-    fbar2:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-  else
-    fbar2:IsUserPlaced(false)
-  end
-  
-  if move_bar3 == 1 then
-    fbar3:EnableMouse(true)
-    fbar3:SetMovable(true)
-    fbar3:SetUserPlaced(true)
-    fbar3:RegisterForDrag("RightButton")
-    fbar3:SetScript("OnDragStart", function(self) self:StartMoving() end)
-    fbar3:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-  else
-    fbar3:IsUserPlaced(false)
-  end
+  -- calls
+  rABS_MoveThisFrame(fmicro,move_micro,lock_micro)
+  rABS_MoveThisFrame(fbag,move_bags,lock_bags)
+  rABS_MoveThisFrame(fbar45,move_rightbars,lock_rightbars)
+  rABS_MoveThisFrame(fpet,move_pet,lock_pet)
+  rABS_MoveThisFrame(fshift,move_shapeshift,lock_shapeshift)
+  rABS_MoveThisFrame(fbar1,move_bar1,lock_bar1)
+  rABS_MoveThisFrame(fbar2,move_bar2,lock_bar2)
+  rABS_MoveThisFrame(fbar3,move_bar3,lock_bar3)

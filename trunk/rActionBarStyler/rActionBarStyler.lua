@@ -25,7 +25,7 @@
   -- bar1 and bar2 in 2x6 instead of 1x12
   -- 0 = 1x12
   -- 1 = 2x6
-  button_system = 0
+  button_system = 1
   
   -- bar settings
   -- you can make a bar visible on mouseover, make it movable or lock it from moving
@@ -33,43 +33,43 @@
     
   -- bar1
   bar1_on_mouseover = 0
-  move_bar1 = 1
-  lock_bar1 = 0
+  move_bar1 = 0
+  lock_bar1 = 1
   
   -- bar2
   bar2_on_mouseover = 0
-  move_bar2 = 1
-  lock_bar2 = 0
+  move_bar2 = 0
+  lock_bar2 = 1
   
   -- bar3
   bar3_on_mouseover = 0
-  move_bar3 = 1
-  lock_bar3 = 0
+  move_bar3 = 0
+  lock_bar3 = 1
   
   -- rightbars (bar45)
   rightbars_on_mouseover = 1
   move_rightbars = 1
-  lock_rightbars = 0
+  lock_rightbars = 1
   
   -- shapeshift
-  shapeshift_on_mouseover = 1
+  shapeshift_on_mouseover = 0
   move_shapeshift = 1
   lock_shapeshift = 0
   
   -- petbar
-  petbar_on_mouseover = 1
+  petbar_on_mouseover = 0
   move_pet = 1
   lock_pet = 0
 
   -- micromenu
   micromenu_on_mouseover = 1
   move_micro = 1
-  lock_micro = 0
+  lock_micro = 1
 
   -- bags
   bags_on_mouseover = 1
   move_bags = 1
-  lock_bags = 0
+  lock_bags = 1
   
   -- scale values
   bar1scale = 0.82*0.75
@@ -94,7 +94,7 @@
     [8]  =  { a = "TOP",            x = 0,    y = 5   },  --micromenu
     [9]  =  { a = "BOTTOM",         x = 0,    y = 170 },  --petbar
     [10] =  { a = "BOTTOM",         x = 0,    y = 240 },  --shapeshift
-  },
+  }
   
   ---------------------------------------------------
   -- CONFIG END
@@ -218,9 +218,9 @@
   BonusActionButton1:SetPoint("BOTTOMLEFT", fbar1, "BOTTOMLEFT", 10, 10);
   
   --possess bar
-  --PossessBarFrame:SetParent(fbar1)
-  --PossessButton1:ClearAllPoints()
-  --PossessButton1:SetPoint("BOTTOMLEFT", fbar1, "BOTTOMLEFT", 10, 10);
+  PossessBarFrame:SetParent(fbar1)
+  PossessButton1:ClearAllPoints()
+  PossessButton1:SetPoint("BOTTOMLEFT", fbar1, "BOTTOMLEFT", 10, 10);
   
   --bar2
   MultiBarBottomLeft:SetParent(fbar2)
@@ -290,6 +290,10 @@
   ShapeshiftBarFrame:SetWidth(0.01)
   ShapeshiftButton1:ClearAllPoints()
   ShapeshiftButton1:SetPoint("BOTTOMLEFT",fshift,"BOTTOMLEFT",10,10)
+  local function rABS_MoveShapeshift()
+    ShapeshiftButton1:SetPoint("BOTTOMLEFT",fshift,"BOTTOMLEFT",10,10)
+  end
+  hooksecurefunc("ShapeshiftBar_Update", rABS_MoveShapeshift);  
   
   --pet
   PetActionBarFrame:SetParent(fpet)

@@ -79,7 +79,7 @@
   bags_on_mouseover = 1
   move_bags = 1
   lock_bags = 1
-  hide_bags = 0
+  hide_bags = 1
   
   -- vehicle exit button
   move_veb = 1
@@ -239,12 +239,12 @@
 	veb:RegisterEvent("UNIT_EXITED_VEHICLE")
   veb:SetScript("OnEvent", function(self)
     if(event=="UNIT_ENTERING_VEHICLE") or (event=="UNIT_ENTERED_VEHICLE") then
-      veb:Show()
+      veb:SetAlpha(1)
     else
-      veb:Hide()
+      veb:SetAlpha(0)
     end
   end)  
-  veb:Hide()    
+  veb:SetAlpha(0)
  
   ---------------------------------------------------
   -- MOVE STUFF INTO POSITION

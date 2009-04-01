@@ -42,17 +42,25 @@
   lock_bar2 = 1
   
   -- bar3
-  bar3_on_mouseover = 0
+  if myname == "Loral" then
+    bar3_on_mouseover = 0
+  else
+    bar3_on_mouseover = 0
+  end
   move_bar3 = 0
   lock_bar3 = 1
   
   -- rightbars (bar45)
   rightbars_on_mouseover = 1
   move_rightbars = 1
-  lock_rightbars = 1
+  lock_rightbars = 0
   
   -- shapeshift
-  shapeshift_on_mouseover = 0
+  if myname == "Loral" then
+    shapeshift_on_mouseover = 1
+  else
+    shapeshift_on_mouseover = 1
+  end
   move_shapeshift = 1
   lock_shapeshift = 0
   
@@ -65,11 +73,17 @@
   micromenu_on_mouseover = 1
   move_micro = 1
   lock_micro = 1
+  hide_micro = 0
 
   -- bags
   bags_on_mouseover = 1
   move_bags = 1
   lock_bags = 1
+  hide_bags = 0
+  
+  -- vehicle exit button
+  move_veb = 1
+  lock_veb = 0
   
   -- scale values
   bar1scale = 0.82*0.75
@@ -94,6 +108,7 @@
     [8]  =  { a = "TOP",            x = 0,    y = 5   },  --micromenu
     [9]  =  { a = "BOTTOM",         x = 0,    y = 170 },  --petbar
     [10] =  { a = "BOTTOM",         x = 0,    y = 240 },  --shapeshift
+    [11] =  { a = "BOTTOM",         x = 0,    y = 290 },  --my own vehicle exit button
   }
   
   ---------------------------------------------------
@@ -195,6 +210,41 @@
     fshift:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
   end
   fshift:SetPoint(frame_positions[10].a,frame_positions[10].x,frame_positions[10].y) 
+  
+  
+  ---------------------------------------------------
+  -- CREATE MY OWN VEHICLE EXIT BUTTON
+  ---------------------------------------------------
+  
+  local fveb = CreateFrame("Frame","rABS_VEBHolder",UIParent)
+  fveb:SetWidth(70) -- size the width here
+  fveb:SetHeight(70) -- size the height here
+  if testmode == 1 then
+    fveb:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
+  end
+  fveb:SetPoint(frame_positions[11].a,frame_positions[11].x,frame_positions[11].y) 
+  
+  local veb = CreateFrame("BUTTON", "rABS_VehicleExitButton", fveb, "SecureActionButtonTemplate");
+  veb:SetWidth(50)
+  veb:SetHeight(50)
+  veb:SetPoint("CENTER",0,0)
+  veb:RegisterForClicks("AnyUp")
+  veb:SetNormalTexture("Interface\\Vehicles\\UI-Vehicles-Button-Exit-Up")
+  veb:SetPushedTexture("Interface\\Vehicles\\UI-Vehicles-Button-Exit-Down")
+  veb:SetHighlightTexture("Interface\\Vehicles\\UI-Vehicles-Button-Exit-Down")
+  veb:SetScript("OnClick", function(self) VehicleExit() end)
+	veb:RegisterEvent("UNIT_ENTERING_VEHICLE")
+	veb:RegisterEvent("UNIT_ENTERED_VEHICLE")
+	veb:RegisterEvent("UNIT_EXITING_VEHICLE")
+	veb:RegisterEvent("UNIT_EXITED_VEHICLE")
+  veb:SetScript("OnEvent", function(self)
+    if(event=="UNIT_ENTERING_VEHICLE") or (event=="UNIT_ENTERED_VEHICLE") then
+      veb:Show()
+    else
+      veb:Hide()
+    end
+  end)  
+  veb:Hide()    
  
   ---------------------------------------------------
   -- MOVE STUFF INTO POSITION
@@ -216,11 +266,6 @@
   BonusActionBarTexture1:Hide()
   BonusActionButton1:ClearAllPoints()
   BonusActionButton1:SetPoint("BOTTOMLEFT", fbar1, "BOTTOMLEFT", 10, 10);
-  
-  --possess bar
-  PossessBarFrame:SetParent(fbar1)
-  PossessButton1:ClearAllPoints()
-  PossessButton1:SetPoint("BOTTOMLEFT", fbar1, "BOTTOMLEFT", 10, 10);
   
   --bar2
   MultiBarBottomLeft:SetParent(fbar2)
@@ -295,6 +340,11 @@
   end
   hooksecurefunc("ShapeshiftBar_Update", rABS_MoveShapeshift);  
   
+  --possess bar
+  PossessBarFrame:SetParent(fshift)
+  PossessButton1:ClearAllPoints()
+  PossessButton1:SetPoint("BOTTOMLEFT", fshift, "BOTTOMLEFT", 10, 10);
+  
   --pet
   PetActionBarFrame:SetParent(fpet)
   PetActionBarFrame:SetWidth(0.01)
@@ -306,7 +356,7 @@
   MultiBarLeft:SetParent(fbar45);
   MultiBarRight:ClearAllPoints()
   MultiBarRight:SetPoint("TOPRIGHT",-10,-10)
-
+  
   ---------------------------------------------------
   -- ACTIONBUTTONS MUST BE HIDDEN
   ---------------------------------------------------
@@ -323,7 +373,6 @@
   if BonusActionBarFrame:IsShown() then
     rABS_showhideactionbuttons(0)
   end
-  
 
   ---------------------------------------------------
   -- ON MOUSEOVER STUFF
@@ -568,3 +617,15 @@
   rABS_MoveThisFrame(fbar1,move_bar1,lock_bar1)
   rABS_MoveThisFrame(fbar2,move_bar2,lock_bar2)
   rABS_MoveThisFrame(fbar3,move_bar3,lock_bar3)
+  rABS_MoveThisFrame(fveb,move_veb,lock_veb)
+
+  if hide_bags == 1 then
+    fbag:SetScale(0.001)
+    fbag:SetAlpha(0)
+  end
+
+  if hide_micro == 1 then
+    fmicro:SetScale(0.001)
+    fmicro:SetAlpha(0)
+  end
+   

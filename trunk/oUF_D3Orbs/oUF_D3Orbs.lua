@@ -17,6 +17,9 @@
   -- 0 = normal mode
   local orbsonly = 0
   
+  -- this is a new value it will be devided though the alpha that is used for the fog!
+  -- the higher the smoother is set, more lighter the fog gets. value of 2 = maximum alpha is 50%, 1 is 100%
+  local orb_fog_color_smoother = 1.2
   
   -- do you only want drag the target area around?
   -- change locked to 0 and make reloadui. now rightclick the grey area and hold the right mousebutton. move the mouse. profit.
@@ -448,8 +451,8 @@
       self.Health.Filling:SetHeight((lifeact / lifemax) * self.Health:GetWidth())
       self.Health.Filling:SetTexCoord(0,1,  math.abs(lifeact / lifemax - 1),1)
       if use_classcolor == 0 then
-        self.pm1:SetAlpha((lifeact / lifemax))
-        self.pm2:SetAlpha((lifeact / lifemax))
+        self.pm1:SetAlpha((lifeact / lifemax)/orb_fog_color_smoother)
+        self.pm2:SetAlpha((lifeact / lifemax)/orb_fog_color_smoother)
       else        
         local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
         self.Health.Filling:SetVertexColor(color.r, color.g, color.b,1)
@@ -572,8 +575,8 @@
         self.Power.Filling:SetTexCoord(0,1,  math.abs(manaact / manamax - 1),1)
         if use_classcolor == 0 then
           self.Power.Filling:SetVertexColor(colors2.orbcolors[manacolor].r,colors2.orbcolors[manacolor].g,colors2.orbcolors[manacolor].b,1)
-          self.pm3:SetAlpha((manaact / manamax))
-          self.pm4:SetAlpha((manaact / manamax))
+          self.pm3:SetAlpha((manaact / manamax)/orb_fog_color_smoother)
+          self.pm4:SetAlpha((manaact / manamax)/orb_fog_color_smoother)
         else        
           local color = colors2.power[UnitPowerType(unit)]
           self.Power.Filling:SetVertexColor(color.r, color.g, color.b,1)
@@ -675,7 +678,7 @@
         self.pm1:SetModelScale(colors2.orbpos[healthcolor].scale)
         self.pm1:SetPosition(colors2.orbpos[healthcolor].z, colors2.orbpos[healthcolor].x, colors2.orbpos[healthcolor].y) 
         
-        self.pm1:SetAlpha(1)
+        self.pm1:SetAlpha(1/orb_fog_color_smoother)
         
         self.pm1:SetScript("OnShow",function() 
           self.pm1:ClearModel()
@@ -690,7 +693,7 @@
         self.pm2:SetModel(healthfog)
         self.pm2:SetModelScale(colors2.orbpos[healthcolor].scale)
         self.pm2:SetPosition(colors2.orbpos[healthcolor].z, colors2.orbpos[healthcolor].x, colors2.orbpos[healthcolor].y+1) 
-        self.pm2:SetAlpha(1)
+        self.pm2:SetAlpha(1/orb_fog_color_smoother)
         
         self.pm2:SetScript("OnShow",function() 
           self.pm2:ClearModel()
@@ -771,7 +774,7 @@
         self.pm3:SetModel(manafog)
         self.pm3:SetModelScale(colors2.orbpos[manacolor].scale)
         self.pm3:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y) 
-        self.pm3:SetAlpha(1)
+        self.pm3:SetAlpha(1/orb_fog_color_smoother)
         
         self.pm3:SetScript("OnShow",function() 
           self.pm3:ClearModel()
@@ -786,7 +789,7 @@
         self.pm4:SetModel(manafog)
         self.pm4:SetModelScale(colors2.orbpos[manacolor].scale)
         self.pm4:SetPosition(colors2.orbpos[manacolor].z, colors2.orbpos[manacolor].x, colors2.orbpos[manacolor].y+1) 
-        self.pm4:SetAlpha(1)
+        self.pm4:SetAlpha(1/orb_fog_color_smoother)
         
         self.pm4:SetScript("OnShow",function() 
           self.pm4:ClearModel()
@@ -1382,6 +1385,8 @@
     else
       if MultiBarBottomRight:IsShown() then
         d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar9")
+      else
+        d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar8")
       end
       MultiBarBottomRight:HookScript("OnShow", function() d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar9") end)
       MultiBarBottomRight:HookScript("OnHide", function() d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar8") end)

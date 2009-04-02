@@ -25,7 +25,7 @@
   -- bar1 and bar2 in 2x6 instead of 1x12
   -- 0 = 1x12
   -- 1 = 2x6
-  button_system = 1
+  button_system = 0
   
   -- bar settings
   -- you can make a bar visible on mouseover, make it movable or lock it from moving
@@ -57,9 +57,9 @@
   
   -- shapeshift
   if myname == "Loral" then
-    shapeshift_on_mouseover = 1
+    shapeshift_on_mouseover = 0
   else
-    shapeshift_on_mouseover = 1
+    shapeshift_on_mouseover = 0
   end
   move_shapeshift = 1
   lock_shapeshift = 0
@@ -79,7 +79,7 @@
   bags_on_mouseover = 1
   move_bags = 1
   lock_bags = 1
-  hide_bags = 1
+  hide_bags = 0
   
   -- vehicle exit button
   move_veb = 1
@@ -600,9 +600,9 @@
       f:SetUserPlaced(true)
       if lock ~= 1 then
         f:EnableMouse(true)
-        f:RegisterForDrag("RightButton")
-        f:SetScript("OnDragStart", function(self) self:StartMoving() end)
-        f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+        f:RegisterForDrag("LeftButton","RightButton")
+        f:SetScript("OnDragStart", function(self) if IsShiftKeyDown() then self:StartMoving() end end)
+        f:SetScript("OnDragStop", function(self) if IsShiftKeyDown() then self:StopMovingOrSizing() end end)
       end
     else
       f:IsUserPlaced(false)

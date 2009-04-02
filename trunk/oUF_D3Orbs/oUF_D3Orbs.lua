@@ -5,6 +5,9 @@
   ----------------
   -- CONFIG
   ---------------- 
+
+  local myname, _ = UnitName("player")
+  local _, myclass = UnitClass("player")
   
   --font, set your font here
   local d3font = "FONTS\\FRIZQT__.ttf"
@@ -13,6 +16,18 @@
   -- 1 = orbs only
   -- 0 = normal mode
   local orbsonly = 0
+  
+  
+  -- do you only want drag the target area around?
+  -- change locked to 0 and make reloadui. now rightclick the grey area and hold the right mousebutton. move the mouse. profit.
+  -- if you change the dragable variable to 0 the default position is used.
+  -- this area manages target, tot and all castbars
+  local target_area_dragable = 0
+  local target_area_locked = 0
+
+  -- this area manages focus, focus target and pet
+  local focus_area_dragable = 0
+  local focus_area_locked = 0
 
   -- healthcolor defines what healthcolor will be used
   -- 1 = red
@@ -26,7 +41,8 @@
   -- 2 = green
   -- 3 = blue
   -- 4 = yellow
-  local manacolor = 1
+  -- 5 = runic
+  local manacolor = 5
   
   -- automatically color mana on class
   -- 0 = off
@@ -70,9 +86,13 @@
   
   -- usebar defines what actionbar texture will be used. 
   -- not really needed anymore, 36 texture will only be used if MultiBarRight is shown
-  -- usebar = 1 -> 24 button texture
-  -- usebar = 2 -> 36 button texture
-  local usebar = 2  
+  -- usebar = 1 -> choose automatically
+  -- usebar = 2 -> 24 button texture always
+  -- usebar = 3 -> 36 button texture always
+  local usebar = 1
+  
+  -- secret
+  local easteregg = 0
   
   ----------------
   -- CONFIG END
@@ -102,8 +122,10 @@
 
   if color_mana_on_class == 1 then
     local _, pt = UnitClass("player")
-    if pt == "WARRIOR" or pt == "DEATHKNIGHT" then
+    if pt == "WARRIOR" then
       manacolor = 1
+    elseif pt == "DEATHKNIGHT" then
+      manacolor = 5
     elseif pt == "ROGUE" then
       manacolor = 4
     else
@@ -118,6 +140,8 @@
     manafog = "SPELLS\\BlueRadiationFog.m2"
   elseif manacolor == 4 then
     manafog = "SPELLS\\OrangeRadiationFog.m2"
+  elseif manacolor == 5 then
+    manafog = "SPELLS\\WhiteRadiationFog.m2"
   else
     manafog = "SPELLS\\RedRadiationFog.m2"
   end  
@@ -153,23 +177,25 @@
       [2] = {r = 0, g = 0.3, b = .1}, -- green
       [3] = {r = 0, g = 0.2,   b = 0.3}, -- blue
       [4] = {r = 0.4, g = 0.3, b = 0}, -- yellow
+      [5] = {r = 0, g = 1,   b = 1}, -- runic
     },
     orbpos = {
       [1] = {scale = 0.8, z = -12, x = 0.8, y = -1.7}, -- red
       [2] = {scale = 0.75, z = -12, x = 0, y = -1.1}, -- green
       [3] = {scale = 0.75, z = -12, x = 1.2, y = -1}, -- blue
       [4] = {scale = 0.75, z = -12, x = -0.3, y = -1.2}, -- yellow
+      [5] = {scale = 0.9, z = -12, x = -0.5, y = -0.8}, -- runic
     },
     frame_positions = {
-      [1] =   { f = "PlayerPowerOrb",   a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 260,    y = -8      },
-      [2] =   { f = "PlayerHealthOrb",  a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -260,   y = -8      },
+      [1] =   { f = "PlayerPowerOrb",   a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 260,    y = -9      },
+      [2] =   { f = "PlayerHealthOrb",  a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -260,   y = -9      },
       [3] =   { f = "Target",           a1 = "CENTER",  a2 = "CENTER",  af = "UIParent",          x = 0,      y = -200    },
       [4] =   { f = "ToT",              a1 = "RIGHT",   a2 = "LEFT",    af = "ouf_target",        x = -80,    y = 0       },
       [5] =   { f = "Pet",              a1 = "TOPLEFT",  a2 = "TOPLEFT",  af = "UIParent",          x = 30/(pet_scale),   y = -300/(pet_scale)      },
       [6] =   { f = "Focus",            a1 = "TOPLEFT",  a2 = "TOPLEFT",  af = "UIParent",          x = 30/(pet_scale),    y = -420/(pet_scale)      },
       [7] =   { f = "Party",            a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent",      x = 30,     y = 50     },
-      [8] =   { f = "Angel",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 325,    y = 0       },
-      [9] =   { f = "Demon",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -325,   y = 0       },
+      [8] =   { f = "Angel",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 270,    y = 0       },
+      [9] =   { f = "Demon",            a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = -265,   y = 0       },
       [10] =  { f = "BottomLine",       a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 0,      y = -3      },
       [11] =  { f = "BarTexture",       a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",          x = 1,      y = 0       },
       [12] =  { f = "CastbarTarget",    a1 = "CENTER",  a2 = "CENTER",  af = "ouf_target",        x = 0,      y = 100     },
@@ -268,7 +294,7 @@
     end)
   
     self.ButtonOverlay = button:CreateTexture(nil, "OVERLAY")
-    self.ButtonOverlay:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\gloss2.tga")
+    self.ButtonOverlay:SetTexture("Interface\\AddOns\\rTextures\\gloss2.tga")
     self.ButtonOverlay:SetVertexColor(0.37,0.3,0.3,1);
     self.ButtonOverlay:SetParent(button)
     self.ButtonOverlay:SetPoint("TOPLEFT", -1, 1)
@@ -600,19 +626,19 @@
     
     if unit == "player" then
       self.Health = CreateFrame("StatusBar", nil, self)
-      self.Health:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_transparent.tga")
+      self.Health:SetStatusBarTexture("Interface\\AddOns\\rTextures\\orb_transparent.tga")
       self.Health:SetHeight(orbsize)
       self.Health:SetWidth(orbsize)
       self.Health:SetPoint("TOPLEFT", 0, 0)
     elseif unit == "target" or unit == "targettarget" then
       self.Health = CreateFrame("StatusBar", nil, self)
-      self.Health:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
+      self.Health:SetStatusBarTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
       self.Health:SetHeight(16)
       self.Health:SetWidth(self:GetWidth())
       self.Health:SetPoint("TOPLEFT",0,-1)
     else
       self.Health = CreateFrame("StatusBar", nil, self)
-      self.Health:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
+      self.Health:SetStatusBarTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
       self.Health:SetHeight(16)
       self.Health:SetWidth(self:GetWidth())
       self.Health:SetPoint("BOTTOMLEFT",0,1)
@@ -630,10 +656,10 @@
     
     if unit == "player" then
       self.Health.bg = self.Health:CreateTexture(nil, "BACKGROUND")
-      self.Health.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back2.tga")
+      self.Health.bg:SetTexture("Interface\\AddOns\\rTextures\\orb_back2.tga")
       self.Health.bg:SetAllPoints(self.Health)
       self.Health.Filling = self.Health:CreateTexture(nil, "ARTWORK")
-      self.Health.Filling:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_filling4.tga")
+      self.Health.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling4.tga")
       self.Health.Filling:SetPoint("BOTTOMLEFT",0,0)
       self.Health.Filling:SetWidth(orbsize)
       self.Health.Filling:SetHeight(orbsize)
@@ -681,36 +707,36 @@
       self.HealthGlossHolder:SetAllPoints(self.Health)
       self.HealthGlossHolder:SetFrameStrata("LOW")
       self.HealthOrbGloss = self.HealthGlossHolder:CreateTexture(nil, "OVERLAY")
-      self.HealthOrbGloss:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_gloss.tga")
+      self.HealthOrbGloss:SetTexture("Interface\\AddOns\\rTextures\\orb_gloss.tga")
       self.HealthOrbGloss:SetAllPoints(self.HealthGlossHolder)
       
       
     elseif unit == "target" then
       self.bg = self:CreateTexture(nil, "BACKGROUND")
-      self.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_targetframe.tga")
+      self.bg:SetTexture("Interface\\AddOns\\rTextures\\d3_targetframe.tga")
       self.bg:SetWidth(512)
       self.bg:SetHeight(128)
       self.bg:SetPoint("CENTER",-3,0)
       self.Health.bg = self.Health:CreateTexture(nil, "BACKGROUND")
-      self.Health.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
+      self.Health.bg:SetTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
       self.Health.bg:SetAllPoints(self.Health)    
     elseif unit == "targettarget" then
       self.bg = self:CreateTexture(nil, "BACKGROUND")
-      self.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3totframe.tga")
+      self.bg:SetTexture("Interface\\AddOns\\rTextures\\d3totframe.tga")
       self.bg:SetWidth(256)
       self.bg:SetHeight(128)
       self.bg:SetPoint("CENTER",-2,0)
       self.Health.bg = self.Health:CreateTexture(nil, "BACKGROUND")
-      self.Health.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
+      self.Health.bg:SetTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
       self.Health.bg:SetAllPoints(self.Health)
     else
       self.bg = self:CreateTexture(nil, "BACKGROUND")
-      self.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3totframe.tga")
+      self.bg:SetTexture("Interface\\AddOns\\rTextures\\d3totframe.tga")
       self.bg:SetWidth(256)
       self.bg:SetHeight(128)
       self.bg:SetPoint("BOTTOM",-2,-56)
       self.Health.bg = self.Health:CreateTexture(nil, "BACKGROUND")
-      self.Health.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
+      self.Health.bg:SetTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
       self.Health.bg:SetAllPoints(self.Health)    
     end
     
@@ -720,17 +746,17 @@
     
     if unit == "player" then
       self.Power = CreateFrame("StatusBar", nil, self)
-      self.Power:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_transparent.tga")
+      self.Power:SetStatusBarTexture("Interface\\AddOns\\rTextures\\orb_transparent.tga")
       self.Power:SetHeight(orbsize)
       self.Power:SetWidth(orbsize)
       --self.Power:SetPoint("BOTTOM", UIParent, "BOTTOM", 250, -8)
       self.Power:SetPoint(colors2.frame_positions[1].a1, colors2.frame_positions[1].af, colors2.frame_positions[1].a2, colors2.frame_positions[1].x, colors2.frame_positions[1].y)
       self.Power.frequentUpdates = true
       self.Power.bg = self.Power:CreateTexture(nil, "BACKGROUND")
-      self.Power.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_back2.tga")
+      self.Power.bg:SetTexture("Interface\\AddOns\\rTextures\\orb_back2.tga")
       self.Power.bg:SetAllPoints(self.Power)
       self.Power.Filling = self.Power:CreateTexture(nil, "ARTWORK")
-      self.Power.Filling:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_filling4.tga")
+      self.Power.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling4.tga")
       self.Power.Filling:SetPoint("BOTTOMLEFT",0,0)
       self.Power.Filling:SetWidth(orbsize)
       self.Power.Filling:SetHeight(orbsize)
@@ -775,18 +801,18 @@
       self.PowerGlossHolder:SetAllPoints(self.Power)
       self.PowerGlossHolder:SetFrameStrata("LOW")
       self.PowerOrbGloss = self.PowerGlossHolder:CreateTexture(nil, "OVERLAY")
-      self.PowerOrbGloss:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_gloss.tga")
+      self.PowerOrbGloss:SetTexture("Interface\\AddOns\\rTextures\\orb_gloss.tga")
       self.PowerOrbGloss:SetAllPoints(self.PowerGlossHolder)
       
       
     else
       self.Power = CreateFrame("StatusBar", nil, self.Health)
-      self.Power:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
+      self.Power:SetStatusBarTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
       self.Power:SetHeight(4)
       self.Power:SetWidth(self:GetWidth())
       self.Power:SetPoint("TOP", self.Health, "BOTTOM", 0, 0)
       self.Power.bg = self.Power:CreateTexture(nil, "BACKGROUND")
-      self.Power.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
+      self.Power.bg:SetTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
       self.Power.bg:SetAllPoints(self.Power)
     end
 
@@ -805,16 +831,16 @@
         self.Castbar:SetFrameStrata("DIALOG")
         self.Castbar:SetWidth(224)
         self.Castbar:SetHeight(18)
-        self.Castbar:SetStatusBarTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
+        self.Castbar:SetStatusBarTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
   
         self.Castbar.bg2 = self.Castbar:CreateTexture(nil, "BACKGROUND")
-        self.Castbar.bg2:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_targetframe.tga")
+        self.Castbar.bg2:SetTexture("Interface\\AddOns\\rTextures\\d3_targetframe.tga")
         self.Castbar.bg2:SetWidth(512)
         self.Castbar.bg2:SetHeight(128)
         self.Castbar.bg2:SetPoint("CENTER",-3,0)
   
         self.Castbar.bg = self.Castbar:CreateTexture(nil, "BORDER")
-        self.Castbar.bg:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\statusbar.tga")
+        self.Castbar.bg:SetTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
         self.Castbar.bg:SetAllPoints(self.Castbar)
         --self.Castbar.bg:SetVertexColor(0.15,0.15,0.15,1)
         if colorswitch == 1 then
@@ -982,7 +1008,7 @@
       self.DebuffHighlight:SetVertexColor(1, 0, 0, 0) -- set alpha to 0 to hide the texture
       self.DebuffHighlightAlpha = 0.5
       self.DebuffHighlightFilter = false
-      self.DebuffHighlight:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_debuff_glow.tga")
+      self.DebuffHighlight:SetTexture("Interface\\AddOns\\rTextures\\orb_debuff_glow.tga")
     elseif unit == "target" then
       --big mama
     elseif unit == "targettarget" then
@@ -994,7 +1020,7 @@
       self.DebuffHighlight:SetVertexColor(1, 0, 0, 0) -- set alpha to 0 to hide the texture
       self.DebuffHighlightAlpha = 0.4
       self.DebuffHighlightFilter = true
-      self.DebuffHighlight:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3totframe_debuff.tga")
+      self.DebuffHighlight:SetTexture("Interface\\AddOns\\rTextures\\d3totframe_debuff.tga")
     else
       self.DebuffHighlight = self:CreateTexture(nil, "OVERLAY")
       self.DebuffHighlight:SetWidth(250)
@@ -1004,7 +1030,7 @@
       self.DebuffHighlight:SetVertexColor(1, 0, 0, 0) -- set alpha to 0 to hide the texture
       self.DebuffHighlightAlpha = 0.4
       self.DebuffHighlightFilter = true
-      self.DebuffHighlight:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3totframe_debuff.tga")
+      self.DebuffHighlight:SetTexture("Interface\\AddOns\\rTextures\\d3totframe_debuff.tga")
     end
 
 
@@ -1015,7 +1041,7 @@
     if unit == "player" then
       self.LowHP = self.Health:CreateTexture(nil, "OVERLAY")
       self.LowHP:SetAllPoints(self.Health)
-      self.LowHP:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_lowhp_glow.tga")
+      self.LowHP:SetTexture("Interface\\AddOns\\rTextures\\orb_lowhp_glow.tga")
       self.LowHP:SetBlendMode("BLEND")
       self.LowHP:SetVertexColor(1, 0, 0, 1)
       self.LowHP:Hide()
@@ -1024,7 +1050,7 @@
       self.LowHP:SetWidth(505)
       self.LowHP:SetHeight(115)
       self.LowHP:SetPoint("CENTER",-3,0)
-      self.LowHP:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_targetframe_lowhp.tga")
+      self.LowHP:SetTexture("Interface\\AddOns\\rTextures\\d3_targetframe_lowhp.tga")
       self.LowHP:SetBlendMode("ADD")
       self.LowHP:SetVertexColor(1, 0, 0, 1)
       self.LowHP:SetAlpha(0.8)
@@ -1034,7 +1060,7 @@
       self.LowHP:SetWidth(250)
       self.LowHP:SetHeight(115)
       self.LowHP:SetPoint("CENTER",-2,0)
-      self.LowHP:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3totframe_lowhp.tga")
+      self.LowHP:SetTexture("Interface\\AddOns\\rTextures\\d3totframe_lowhp.tga")
       self.LowHP:SetBlendMode("ADD")
       self.LowHP:SetVertexColor(1, 0, 0, 1)
       self.LowHP:SetAlpha(0.8)
@@ -1098,7 +1124,7 @@
       
       self.Portrait_bgt = self.Portrait_bgf:CreateTexture(nil, "BACKGROUND")
       self.Portrait_bgt:SetAllPoints(self.Portrait_bgf)
-      self.Portrait_bgt:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3portrait_back2.tga")
+      self.Portrait_bgt:SetTexture("Interface\\AddOns\\rTextures\\d3portrait_back2.tga")
       self.Portrait_bgt:SetVertexColor(0.7,0.7,0.7)
     
       if use_3dportraits == 1 and unit ~= "focustarget" then
@@ -1119,7 +1145,7 @@
 
       self.Portrait_glosst = self.Portrait_glossf:CreateTexture(nil, "ARTWORK")
       self.Portrait_glosst:SetAllPoints(self.Portrait_glossf)
-      --self.Portrait_glosst:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\gloss.tga")
+      --self.Portrait_glosst:SetTexture("Interface\\AddOns\\rTextures\\gloss.tga")
       --self.Portrait_glosst:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_roth2")
       self.Portrait_glosst:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_roth")
       self.Portrait_glosst:SetVertexColor(0.37,0.3,0.3)
@@ -1172,7 +1198,7 @@
     ---------------------    
     if (not unit) then
       self.Range = true
-      self.outsideRangeAlpha = 0.4
+      self.outsideRangeAlpha = 0.7
       self.inRangeAlpha = 1
     end
       
@@ -1199,14 +1225,49 @@
   -------------------------------------------------------
   -- SPAWN UNITS and POSITION THEM
   -------------------------------------------------------
+  
+  -- move func
+  local function oUF_MoveThisFrame(frame,moveit,lock)
+    local f = _G[frame]
+    if moveit == 1 then
+      f:SetMovable(true)
+      f:SetUserPlaced(true)
+      if lock ~= 1 then
+        f:EnableMouse(true)
+        f:RegisterForDrag("RightButton")
+        f:SetScript("OnDragStart", function(self) self:StartMoving() end)
+        f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+      end
+    else
+      f:IsUserPlaced(false)
+    end  
+  end
+  
+  -- create drag frame func
+  local function oUF_CreateDragFrame(framename,movable,locked,anchorframename,anchorpoint,xpos,ypos)
+    local f = CreateFrame("Frame",framename,UIParent)
+    f:SetWidth(50)
+    f:SetHeight(50)
+    if locked ~= 1 and movable == 1 then
+      f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }})
+    end
+    f:SetPoint(anchorpoint,xpos,ypos)
+    f:SetFrameStrata("DIALOG")
+    local anchorframe = _G[anchorframename]
+    anchorframe:ClearAllPoints()
+    anchorframe:SetPoint("TOPLEFT", f, "TOPLEFT",0,0)
+    oUF_MoveThisFrame(framename,movable,locked)
+  end
+
 
   if orbsonly ~= 1 then
     oUF:Spawn("target","ouf_target"):SetPoint(colors2.frame_positions[3].a1, colors2.frame_positions[3].af, colors2.frame_positions[3].a2, colors2.frame_positions[3].x, colors2.frame_positions[3].y)  
     oUF:Spawn("player","ouf_player"):SetPoint(colors2.frame_positions[2].a1, colors2.frame_positions[2].af, colors2.frame_positions[2].a2, colors2.frame_positions[2].x, colors2.frame_positions[2].y)
     oUF:Spawn("targettarget","ouf_tot"):SetPoint(colors2.frame_positions[4].a1, colors2.frame_positions[4].af, colors2.frame_positions[4].a2, colors2.frame_positions[4].x, colors2.frame_positions[4].y)
-    oUF:Spawn("pet","ouf_pet"):SetPoint(colors2.frame_positions[5].a1, colors2.frame_positions[5].af, colors2.frame_positions[5].a2, colors2.frame_positions[5].x, colors2.frame_positions[5].y)
+    --oUF:Spawn("pet","ouf_pet"):SetPoint(colors2.frame_positions[5].a1, colors2.frame_positions[5].af, colors2.frame_positions[5].a2, colors2.frame_positions[5].x, colors2.frame_positions[5].y)
     oUF:Spawn("focus","ouf_focus"):SetPoint(colors2.frame_positions[6].a1, colors2.frame_positions[6].af, colors2.frame_positions[6].a2, colors2.frame_positions[6].x, colors2.frame_positions[6].y)
-    oUF:Spawn('focustarget'):SetPoint('CENTER', oUF.units.focus, 'CENTER', 180, 0)
+    oUF:Spawn("focustarget","ouf_focustot"):SetPoint('CENTER', oUF.units.focus, 'CENTER', 200, 0)
+    oUF:Spawn("pet","ouf_pet"):SetPoint('CENTER', oUF.units.focus, 'CENTER', 0, 250)
   else
     oUF:Spawn("player","ouf_player"):SetPoint(colors2.frame_positions[2].a1, colors2.frame_positions[2].af, colors2.frame_positions[2].a2, colors2.frame_positions[2].x, colors2.frame_positions[2].y)
   end
@@ -1223,6 +1284,18 @@
     --party:SetManyAttributes("showParty", true, "xOffset", 10, "point", "RIGHT", "showPlayer", false)
     party:SetManyAttributes("showParty", true, "xOffset", 80, "point", "LEFT")
   end
+  
+  
+  -------------------------------------------------------
+  -- CREATE DRAG FRAMES TO MOVE STUFF AROUND
+  -------------------------------------------------------
+  
+  if orbsonly ~= 1 then
+    -- oUF_CreateDragFrame(framename,movable,locked,anchorframe,anchorpoint,xpos,ypos)
+    oUF_CreateDragFrame("oUF_TargetDragFrame",target_area_dragable,target_area_locked,"ouf_target",colors2.frame_positions[3].a1,colors2.frame_positions[3].x-65,colors2.frame_positions[3].y)
+    oUF_CreateDragFrame("oUF_FocusDragFrame",focus_area_dragable,focus_area_locked,"ouf_focus","LEFT",30,0)  
+  end
+  
   
   -------------------------------------------------------
   -- TOGGLE PARTY IN RAID (CURRENTLY NO)
@@ -1259,24 +1332,24 @@
 
   local d3f = CreateFrame("Frame",nil,UIParent)
   d3f:SetFrameStrata("TOOLTIP")
-  d3f:SetWidth(155)
-  d3f:SetHeight(155)
+  d3f:SetWidth(320)
+  d3f:SetHeight(160)
   d3f:SetPoint(colors2.frame_positions[8].a1, colors2.frame_positions[8].af, colors2.frame_positions[8].a2, colors2.frame_positions[8].x, colors2.frame_positions[8].y)
   d3f:Show()
   d3f:SetScale(myscale)
   local d3t = d3f:CreateTexture(nil,"BACKGROUND")
-  d3t:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_angel")
+  d3t:SetTexture("Interface\\AddOns\\rTextures\\d3_angel2")
   d3t:SetAllPoints(d3f)
 
   local d3f2 = CreateFrame("Frame",nil,UIParent)
   d3f2:SetFrameStrata("TOOLTIP")
-  d3f2:SetWidth(155)
-  d3f2:SetHeight(155)
+  d3f2:SetWidth(320)
+  d3f2:SetHeight(160)
   d3f2:SetPoint(colors2.frame_positions[9].a1, colors2.frame_positions[9].af, colors2.frame_positions[9].a2, colors2.frame_positions[9].x, colors2.frame_positions[9].y)
   d3f2:Show()
   d3f2:SetScale(myscale)
   local d3t2 = d3f2:CreateTexture(nil,"BACKGROUND")
-  d3t2:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_demon")
+  d3t2:SetTexture("Interface\\AddOns\\rTextures\\d3_demon2")
   d3t2:SetAllPoints(d3f2)
   
   local d3f3 = CreateFrame("Frame",nil,UIParent)
@@ -1287,7 +1360,7 @@
   d3f3:Show()
   d3f3:SetScale(myscale)
   local d3t3 = d3f3:CreateTexture(nil,"BACKGROUND")
-  d3t3:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bottom")
+  d3t3:SetTexture("Interface\\AddOns\\rTextures\\d3_bottom")
   d3t3:SetAllPoints(d3f3)
   
   local d3f4 = CreateFrame("Frame",nil,UIParent)
@@ -1298,13 +1371,26 @@
   d3f4:Show()
   d3f4:SetScale(myscale)
   local d3t4 = d3f4:CreateTexture(nil,"BACKGROUND")
-  d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar6")
   d3t4:SetAllPoints(d3f4)
   
-  if usebar ~= 1 then
-    if MultiBarBottomRight:IsShown() then
-      d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar5")
+  if easteregg ~= "Oo" then
+    
+    if usebar == 2 then
+      d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar8")
+    elseif usebar == 3 then
+      d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar9")
+    else
+      if MultiBarBottomRight:IsShown() then
+        d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar9")
+      end
+      MultiBarBottomRight:HookScript("OnShow", function() d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar9") end)
+      MultiBarBottomRight:HookScript("OnHide", function() d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar8") end)
     end
-    MultiBarBottomRight:HookScript("OnShow", function() d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar5") end)
-    MultiBarBottomRight:HookScript("OnHide", function() d3t4:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\d3_bar6") end)
+  
+  else
+    d3f4:SetWidth(528)
+    d3f4:SetHeight(66)
+    d3f4:ClearAllPoints()
+    d3f4:SetPoint(colors2.frame_positions[11].a1, colors2.frame_positions[11].af, colors2.frame_positions[11].a2, colors2.frame_positions[11].x, colors2.frame_positions[11].y+7)
+    d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar10")
   end

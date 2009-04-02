@@ -233,14 +233,15 @@
   veb:SetPushedTexture("Interface\\Vehicles\\UI-Vehicles-Button-Exit-Down")
   veb:SetHighlightTexture("Interface\\Vehicles\\UI-Vehicles-Button-Exit-Down")
   veb:SetScript("OnClick", function(self) VehicleExit() end)
-	veb:RegisterEvent("UNIT_ENTERING_VEHICLE")
-	veb:RegisterEvent("UNIT_ENTERED_VEHICLE")
-	veb:RegisterEvent("UNIT_EXITING_VEHICLE")
-	veb:RegisterEvent("UNIT_EXITED_VEHICLE")
-  veb:SetScript("OnEvent", function(self)
-    if(event=="UNIT_ENTERING_VEHICLE") or (event=="UNIT_ENTERED_VEHICLE") then
+  veb:RegisterEvent("UNIT_ENTERING_VEHICLE")
+  veb:RegisterEvent("UNIT_ENTERED_VEHICLE")
+  veb:RegisterEvent("UNIT_EXITING_VEHICLE")
+  veb:RegisterEvent("UNIT_EXITED_VEHICLE")
+  veb:SetScript("OnEvent", function(self,event,...)
+    local arg1 = ...;
+    if((event=="UNIT_ENTERING_VEHICLE") or (event=="UNIT_ENTERED_VEHICLE") and arg1 == "player") then
       veb:SetAlpha(1)
-    else
+    elseif((event=="UNIT_EXITING_VEHICLE") or (event=="UNIT_EXITED_VEHICLE") and arg1 == "player") then
       veb:SetAlpha(0)
     end
   end)  

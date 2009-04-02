@@ -239,9 +239,9 @@
   veb:RegisterEvent("UNIT_EXITED_VEHICLE")
   veb:SetScript("OnEvent", function(self,event,...)
     local arg1 = ...;
-    if((event=="UNIT_ENTERING_VEHICLE") or (event=="UNIT_ENTERED_VEHICLE") and arg1 == "player") then
+    if(((event=="UNIT_ENTERING_VEHICLE") or (event=="UNIT_ENTERED_VEHICLE")) and arg1 == "player") then
       veb:SetAlpha(1)
-    elseif((event=="UNIT_EXITING_VEHICLE") or (event=="UNIT_EXITED_VEHICLE") and arg1 == "player") then
+    elseif(((event=="UNIT_EXITING_VEHICLE") or (event=="UNIT_EXITED_VEHICLE")) and arg1 == "player") then
       veb:SetAlpha(0)
     end
   end)  

@@ -364,7 +364,7 @@
     --setscale
     if (cmd:match"setscale") then
       local a,b = strfind(cmd, " ");
-       if b then
+      if b then
         local c = strsub(cmd, b+1)
         if tonumber(c) then
           am("Current scaling is set to: "..c)
@@ -382,7 +382,7 @@
     --setart
     elseif (cmd:match"setart") then
       local a,b = strfind(cmd, " ");
-       if b then
+      if b then
         local c = strsub(cmd, b+1)
         if c == "d1" or c == "d2" or c == "d3" or c == "roth" then
           am("You set the art to: "..c)
@@ -398,7 +398,7 @@
     --setbar
     elseif (cmd:match"setbar") then
       local a,b = strfind(cmd, " ");
-       if b then
+      if b then
         local c = strsub(cmd, b+1)
         if c == "bar1" or c == "bar2" or c == "bar3" then
           am("You set the bar to: "..c)
@@ -422,7 +422,7 @@
     --locked
     elseif (cmd:match"locked") then
       local a,b = strfind(cmd, " ");
-       if b then
+      if b then
         local c = strsub(cmd, b+1)
         if tonumber(c) then
           am("Locked is set to: "..c)
@@ -437,7 +437,7 @@
     --movable
     elseif (cmd:match"movable") then
       local a,b = strfind(cmd, " ");
-       if b then
+      if b then
         local c = strsub(cmd, b+1)
         if tonumber(c) then
           am("Movable is set to: "..c)

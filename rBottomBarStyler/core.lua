@@ -42,7 +42,6 @@
   local bar_to_show
   local frame_to_drag
 
-
   ------------------------------------------------------
   -- / SET UP DEFAULT VALUES / --
   ------------------------------------------------------
@@ -74,14 +73,11 @@
   end
 
   ------------------------------------------------------
-  -- / CHAT OUTPUT FUNC / --
+  -- / SAVE POSXY FUNC / --
   ------------------------------------------------------
   
   local function save_posxy()
     local point, relativeTo, relativePoint, x, y = frame_to_scale:GetPoint()
-    --am(point)
-    --am(x)
-    --am(y)
     rBottomBarStyler.point = point
     rBottomBarStyler.posx = x
     rBottomBarStyler.posy = y
@@ -165,7 +161,7 @@
     end
     return t
   end 
-  
+
   ------------------------------------------------------
   -- / ORB HEALTH FUNC / --
   ------------------------------------------------------
@@ -201,6 +197,25 @@
   end
   
   ------------------------------------------------------
+  -- / CREATE ORB FUNC / --
+  ------------------------------------------------------
+  
+  local function create_orb(orbtype,orbsize,orbanchorframe,orbpoint,orbposx,orbposy,orbscale,orbfilltex,orbcolr,orbcolg,orbcolb)
+    --life orb
+    local orb1 = create_me_a_frame("Frame",nil,orbanchorframe,"LOW",orbsize,orbsize,orbpoint,orbposx,orbposy,orbscale)
+    local orb1_back = create_me_a_texture(orb1,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_back2")
+    local orb1_fill = create_me_a_texture(orb1,"LOW","Interface\\AddOns\\rBottomBarStyler\\orbtex\\"..orbfilltex,"fill")
+    orb1_fill:SetVertexColor(orbcolr,orbcolg,orbcolb)
+    local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
+    local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
+    if orbtype == "life" then
+      orbhealth(orb1,orb1_fill)
+    else
+      orbmana(orb1,orb1_fill)
+    end
+  end  
+  
+  ------------------------------------------------------
   -- / SET ME A SCALE / --
   ------------------------------------------------------
 
@@ -224,187 +239,105 @@
   -- / CREATE D1 STYLE / --
   ------------------------------------------------------  
   local function create_d1_style(scale)
-    --am("c d1")
     --holder
     local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",100,100,"BOTTOM",0,0,scale)
     frame_to_scale = holder    
-    
     --bar texture
     local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1024,256,"BOTTOM",0,0,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d1tex\\bar")
-    
-    local orbsize = 160
-    --life orb
-    local orb1 = create_me_a_frame("Frame",nil,holder,"LOW",orbsize,orbsize,"BOTTOM",-290,120,1)
-    local orb1_back = create_me_a_texture(orb1,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_back2")
-    local orb1_fill = create_me_a_texture(orb1,"LOW","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_filling4","fill")
-    orb1_fill:SetVertexColor(0.8,0,0)
-    local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
-    local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orbhealth(orb1,orb1_fill)
-
-    --mana orb
-    local orb2 = create_me_a_frame("Frame",nil,holder,"LOW",orbsize,orbsize,"BOTTOM",285,120,1)
-    local orb2_back = create_me_a_texture(orb2,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_back2")
-    local orb2_fill = create_me_a_texture(orb2,"LOW","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_filling4","fill")
-    orb2_fill:SetVertexColor(0,0.3,0.8)
-    local orb2_glossholder = create_me_a_frame("Frame",nil,orb2,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
-    local orb2_gloss = create_me_a_texture(orb2_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orbmana(orb2,orb2_fill)
-    
+    --orbs
+    create_orb("life",160,holder,"BOTTOM",-290,120,1,"orb_filling4",0.8,0,0)
+    create_orb("mana",160,holder,"BOTTOM",285,120,1,"orb_filling4",0,0.3,0.8)
     --left figure
     local lefty = create_me_a_frame("Frame",nil,holder,"HIGH",256,256,"BOTTOM",-320,35,0.9)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d1tex\\figure_left")
-    
     --right figure
     local righty = create_me_a_frame("Frame",nil,holder,"HIGH",256,256,"BOTTOM",320,35,0.9)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d1tex\\figure_right")
-    
+    --dragframe
     local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
     frame_to_drag = dragframe  
-    
   end
 
   ------------------------------------------------------
   -- / CREATE D2 STYLE / --
   ------------------------------------------------------  
   local function create_d2_style(scale)
-    --am("c d2")
     --holder
     local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",100,100,"BOTTOM",0,0,scale,true)
     frame_to_scale = holder        
-    
     --bar texture
     local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1024,128,"BOTTOM",0,44,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\bar")
-    
+    --border
     local border_left = create_me_a_frame("Frame",nil,holder,"LOW",1024,512,"BOTTOMRIGHT",0,0,1)
     local border_left_tex = create_me_a_texture(border_left,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\border_left")
-
     local border_right = create_me_a_frame("Frame",nil,holder,"LOW",1024,512,"BOTTOMLEFT",0,0,1)
     local border_right_tex = create_me_a_texture(border_right,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\border_right")
-
-    local orbsize = 160
-    --life orb
-    local orb1 = create_me_a_frame("Frame",nil,holder,"LOW",orbsize,orbsize,"BOTTOM",-472,55,1)
-    local orb1_back = create_me_a_texture(orb1,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_back2")
-    local orb1_fill = create_me_a_texture(orb1,"LOW","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_filling4","fill")
-    orb1_fill:SetVertexColor(0.8,0,0)
-    local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
-    local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orbhealth(orb1,orb1_fill)
-
-    --mana orb
-    local orb2 = create_me_a_frame("Frame",nil,holder,"LOW",orbsize,orbsize,"BOTTOM",465,55,1)
-    local orb2_back = create_me_a_texture(orb2,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_back2")
-    local orb2_fill = create_me_a_texture(orb2,"LOW","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_filling4","fill")
-    orb2_fill:SetVertexColor(0,0.3,0.8)
-    local orb2_glossholder = create_me_a_frame("Frame",nil,orb2,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
-    local orb2_gloss = create_me_a_texture(orb2_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orbmana(orb2,orb2_fill)
-
+    --orbs
+    create_orb("life",160,holder,"BOTTOM",-472,55,1,"orb_filling4",0.8,0,0)
+    create_orb("mana",160,holder,"BOTTOM",465,55,1,"orb_filling4",0,0.3,0.8)
     --left figure
     local lefty = create_me_a_frame("Frame",nil,holder,"HIGH",256,256,"BOTTOM",-453,44,1)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\figure_left")
-    
     --right figure
     local righty = create_me_a_frame("Frame",nil,holder,"HIGH",256,256,"BOTTOM",453,44,1)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\figure_right")
-    
+    --dragframe
     local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
-    frame_to_drag = dragframe  
-    
+    frame_to_drag = dragframe      
   end
   
   ------------------------------------------------------
   -- / CREATE D3 STYLE / --
   ------------------------------------------------------  
   local function create_d3_style(scale)
-    --am("c d3")
+    --holder
     local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",100,100,"BOTTOM",0,0,scale)
     frame_to_scale = holder    
-    
     --bar texture
     local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1024,128,"BOTTOM",0,0,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\bar")
-    
-    local orbsize = 200
-    --life orb
-    local orb1 = create_me_a_frame("Frame",nil,holder,"LOW",orbsize,orbsize,"BOTTOM",-471,-3,1)
-    local orb1_back = create_me_a_texture(orb1,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_back2")
-    local orb1_fill = create_me_a_texture(orb1,"LOW","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_filling4","fill")
-    orb1_fill:SetVertexColor(0.8,0,0)
-    local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
-    local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orbhealth(orb1,orb1_fill)
-
-    --mana orb
-    local orb2 = create_me_a_frame("Frame",nil,holder,"LOW",orbsize,orbsize,"BOTTOM",471,-3,1)
-    local orb2_back = create_me_a_texture(orb2,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_back2")
-    local orb2_fill = create_me_a_texture(orb2,"LOW","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_filling4","fill")
-    orb2_fill:SetVertexColor(0,0.3,0.8)
-    local orb2_glossholder = create_me_a_frame("Frame",nil,orb2,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
-    local orb2_gloss = create_me_a_texture(orb2_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orbmana(orb2,orb2_fill)
-
+    --orbs
+    create_orb("life",200,holder,"BOTTOM",-471,-3,1,"orb_filling4",0.8,0,0)
+    create_orb("mana",200,holder,"BOTTOM",471,-3,1,"orb_filling4",0,0.3,0.8)
     --left figure
     local lefty = create_me_a_frame("Frame",nil,holder,"HIGH",512,256,"BOTTOM",-455,0,1)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\figure_left")
-    
     --right figure
     local righty = create_me_a_frame("Frame",nil,holder,"HIGH",512,256,"BOTTOM",455,0,1)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\figure_right")
-    
+    --dragframe
     local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
-    frame_to_drag = dragframe  
-    
+    frame_to_drag = dragframe      
   end
   
   ------------------------------------------------------
   -- / CREATE ROTH STYLE / --
   ------------------------------------------------------  
   local function create_roth_style(scale)
-    --am("c roth")
+    --holder
     local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",100,100,"BOTTOM",0,0,scale)
     frame_to_scale = holder    
-    
+    --bar texture
     local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",512,256,"BOTTOM",0,0,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\"..rBottomBarStyler.barvalue)
     bar_to_show = bar_tex    
-
+    --bottom
     local bottom = create_me_a_frame("Frame",nil,holder,"HIGH",500,110,"BOTTOM",0,-10,1)
-    local bottom_tex = create_me_a_texture(bottom,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\bottom")
-    
-    local orbsize = 120
-    --life orb
-    local orb1 = create_me_a_frame("Frame",nil,holder,"LOW",orbsize,orbsize,"BOTTOM",-250,-8,1)
-    local orb1_back = create_me_a_texture(orb1,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_back2")
-    local orb1_fill = create_me_a_texture(orb1,"LOW","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_filling4","fill")
-    orb1_fill:SetVertexColor(0.8,0,0)
-    local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
-    local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orbhealth(orb1,orb1_fill)
-
-    --mana orb
-    local orb2 = create_me_a_frame("Frame",nil,holder,"LOW",orbsize,orbsize,"BOTTOM",250,-8,1)
-    local orb2_back = create_me_a_texture(orb2,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_back2")
-    local orb2_fill = create_me_a_texture(orb2,"LOW","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_filling4","fill")
-    orb2_fill:SetVertexColor(0,0.3,0.8)
-    local orb2_glossholder = create_me_a_frame("Frame",nil,orb2,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
-    local orb2_gloss = create_me_a_texture(orb2_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orbmana(orb2,orb2_fill)
-    
+    local bottom_tex = create_me_a_texture(bottom,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\bottom")    
+    --orbs
+    create_orb("life",120,holder,"BOTTOM",-250,-8,1,"orb_filling4",0.8,0,0)
+    create_orb("mana",120,holder,"BOTTOM",250,-8,1,"orb_filling4",0,0.3,0.8)    
     --left figure
     local lefty = create_me_a_frame("Frame",nil,holder,"HIGH",256,256,"BOTTOM",-510,0,0.6)
-    local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\figure_left")
-    
+    local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\figure_left")    
     --right figure
     local righty = create_me_a_frame("Frame",nil,holder,"HIGH",256,256,"BOTTOM",510,0,0.6)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\figure_right")    
-    
+    --dragframe
     local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
-    frame_to_drag = dragframe  
-    
+    frame_to_drag = dragframe      
   end  
   
   ------------------------------------------------------

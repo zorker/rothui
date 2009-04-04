@@ -35,13 +35,16 @@
   local default_scale = 0.6
   local default_art = "d3"  
   local default_bar = "bar2"  
+  local default_movable = 1
+  local default_locked = 1
   rBottomBarStyler = rBottomBarStyler or {}
   local frame_to_scale
   local bar_to_show
+  local frame_to_drag
 
 
   ------------------------------------------------------
-  -- / CHAT OUTPUT FUNC / --
+  -- / SET UP DEFAULT VALUES / --
   ------------------------------------------------------
 
   local function load_default()
@@ -54,6 +57,12 @@
     if(not rBottomBarStyler.barvalue) then 
       rBottomBarStyler.barvalue = default_bar 
     end
+    if(not rBottomBarStyler.movable) then 
+      rBottomBarStyler.movable = default_movable 
+    end
+    if(not rBottomBarStyler.locked) then 
+      rBottomBarStyler.locked = default_locked 
+    end
   end
   
   ------------------------------------------------------
@@ -65,17 +74,78 @@
   end
 
   ------------------------------------------------------
+  -- / CHAT OUTPUT FUNC / --
+  ------------------------------------------------------
+  
+  local function save_posxy()
+    local point, relativeTo, relativePoint, x, y = frame_to_scale:GetPoint()
+    --am(point)
+    --am(x)
+    --am(y)
+    rBottomBarStyler.point = point
+    rBottomBarStyler.posx = x
+    rBottomBarStyler.posy = y
+  end  
+  
+  ------------------------------------------------------
+  -- / MOVE ME FUNC / --
+  ------------------------------------------------------
+  
+  local function move_my_frame()
+    if frame_to_drag then
+      frame_to_drag:Hide()
+    end
+    if rBottomBarStyler.movable == 1 then
+      frame_to_scale:SetMovable(true)
+      if rBottomBarStyler.locked == 0 then
+        if frame_to_drag then
+          frame_to_drag:Show()
+        end
+        frame_to_scale:EnableMouse(true)
+        frame_to_scale:RegisterForDrag("LeftButton","RightButton")
+        frame_to_scale:SetScript("OnDragStart", function(self) 
+          if IsShiftKeyDown() and IsAltKeyDown() then 
+            self:StartMoving() 
+          end 
+        end)
+        frame_to_scale:SetScript("OnDragStop", function(self) 
+          if IsShiftKeyDown() and IsAltKeyDown() then 
+            self:StopMovingOrSizing()
+            save_posxy() 
+          end 
+        end)
+      end
+    else
+      rBottomBarStyler.point = nil
+      rBottomBarStyler.posx = nil
+      rBottomBarStyler.posy = nil
+      frame_to_scale:ClearAllPoints()
+      frame_to_scale:SetPoint("BOTTOM",0,0)
+    end  
+  end
+
+  ------------------------------------------------------
   -- / CREATE ME A FRAME FUNC / --
   ------------------------------------------------------
 
-  local function create_me_a_frame(fart,fname,fparent,fstrata,fwidth,fheight,fanchor,fxpos,fypos,fscale)
+  local function create_me_a_frame(fart,fname,fparent,fstrata,fwidth,fheight,fanchor,fxpos,fypos,fscale,fdrag)
     local f = CreateFrame(fart,fname,fparent)
     f:SetFrameStrata(fstrata)
     f:SetWidth(fwidth)
     f:SetHeight(fheight)
-    f:SetPoint(fanchor,fxpos,fypos)
+    if fname == "rBBS_Holder" then
+      if rBottomBarStyler.point and rBottomBarStyler.posx and rBottomBarStyler.posy then
+        f:SetPoint(rBottomBarStyler.point,rBottomBarStyler.posx,rBottomBarStyler.posy)
+      else
+        f:SetPoint(fanchor,fxpos,fypos)
+      end
+    else
+      f:SetPoint(fanchor,fxpos,fypos)
+    end
     f:SetScale(fscale)
-    --f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
+    if fdrag == true then
+      f:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }})
+    end
     return f  
   end 
   
@@ -95,6 +165,40 @@
     end
     return t
   end 
+  
+  ------------------------------------------------------
+  -- / ORB HEALTH FUNC / --
+  ------------------------------------------------------
+  
+  local function orbhealth(orb1,orb1_fill)
+    orb1:SetScript("OnEvent", function(self, event, arg1, ...)
+      if arg1 == "player" then
+        local uh, uhm = UnitHealth("player"), UnitHealthMax("player")
+        orb1_fill:SetHeight((uh/uhm) * orb1_fill:GetWidth())
+        orb1_fill:SetTexCoord(0,1,  math.abs(uh/uhm - 1),1)
+      end
+    end)
+    orb1:RegisterEvent("UNIT_HEALTH")
+  end
+  
+  ------------------------------------------------------
+  -- / ORB MANA FUNC / --
+  ------------------------------------------------------
+  
+  local function orbmana(orb2,orb2_fill)
+    orb2:SetScript("OnEvent", function(self, event, arg1, ...)
+      if arg1 == "player" then
+        local um, umm = UnitMana("player"), UnitManaMax("player")
+        orb2_fill:SetHeight((um/umm) * orb2_fill:GetWidth())
+        orb2_fill:SetTexCoord(0,1,  math.abs(um/umm - 1),1)
+      end
+    end)
+    orb2:RegisterEvent("UNIT_MANA")
+    orb2:RegisterEvent("UNIT_RAGE")
+    orb2:RegisterEvent("UNIT_ENERGY")
+    orb2:RegisterEvent("UNIT_FOCUS")
+    orb2:RegisterEvent("UNIT_RUNIC_POWER")
+  end
   
   ------------------------------------------------------
   -- / SET ME A SCALE / --
@@ -122,7 +226,7 @@
   local function create_d1_style(scale)
     --am("c d1")
     --holder
-    local holder = create_me_a_frame("Frame","rBBS_holderolder",UIParent,"BACKGROUND",20,20,"BOTTOM",0,0,scale)
+    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",100,100,"BOTTOM",0,0,scale)
     frame_to_scale = holder    
     
     --bar texture
@@ -137,14 +241,7 @@
     orb1_fill:SetVertexColor(0.8,0,0)
     local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
     local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orb1:SetScript("OnEvent", function(self, event, arg1, ...)
-      if arg1 == "player" then
-        local uh, uhm = UnitHealth("player"), UnitHealthMax("player")
-        orb1_fill:SetHeight((uh/uhm) * orb1_fill:GetWidth())
-        orb1_fill:SetTexCoord(0,1,  math.abs(uh/uhm - 1),1)
-      end
-    end)
-    orb1:RegisterEvent("UNIT_HEALTH")
+    orbhealth(orb1,orb1_fill)
 
     --mana orb
     local orb2 = create_me_a_frame("Frame",nil,holder,"LOW",orbsize,orbsize,"BOTTOM",285,120,1)
@@ -153,18 +250,7 @@
     orb2_fill:SetVertexColor(0,0.3,0.8)
     local orb2_glossholder = create_me_a_frame("Frame",nil,orb2,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
     local orb2_gloss = create_me_a_texture(orb2_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orb2:SetScript("OnEvent", function(self, event, arg1, ...)
-      if arg1 == "player" then
-        local um, umm = UnitMana("player"), UnitManaMax("player")
-        orb2_fill:SetHeight((um/umm) * orb2_fill:GetWidth())
-        orb2_fill:SetTexCoord(0,1,  math.abs(um/umm - 1),1)
-      end
-    end)
-    orb2:RegisterEvent("UNIT_MANA")
-    orb2:RegisterEvent("UNIT_RAGE")
-    orb2:RegisterEvent("UNIT_ENERGY")
-    orb2:RegisterEvent("UNIT_FOCUS")
-    orb2:RegisterEvent("UNIT_RUNIC_POWER")
+    orbmana(orb2,orb2_fill)
     
     --left figure
     local lefty = create_me_a_frame("Frame",nil,holder,"HIGH",256,256,"BOTTOM",-320,35,0.9)
@@ -174,6 +260,9 @@
     local righty = create_me_a_frame("Frame",nil,holder,"HIGH",256,256,"BOTTOM",320,35,0.9)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d1tex\\figure_right")
     
+    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
+    frame_to_drag = dragframe  
+    
   end
 
   ------------------------------------------------------
@@ -182,19 +271,18 @@
   local function create_d2_style(scale)
     --am("c d2")
     --holder
-    local holder = create_me_a_frame("Frame",nil,UIParent,"BACKGROUND",20,20,"BOTTOM",0,-5,scale)
+    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",100,100,"BOTTOM",0,0,scale,true)
     frame_to_scale = holder        
     
     --bar texture
     local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1024,128,"BOTTOM",0,44,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\bar")
-
+    
     local border_left = create_me_a_frame("Frame",nil,holder,"LOW",1024,512,"BOTTOMRIGHT",0,0,1)
     local border_left_tex = create_me_a_texture(border_left,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\border_left")
 
     local border_right = create_me_a_frame("Frame",nil,holder,"LOW",1024,512,"BOTTOMLEFT",0,0,1)
     local border_right_tex = create_me_a_texture(border_right,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\border_right")
-
 
     local orbsize = 160
     --life orb
@@ -204,14 +292,7 @@
     orb1_fill:SetVertexColor(0.8,0,0)
     local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
     local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orb1:SetScript("OnEvent", function(self, event, arg1, ...)
-      if arg1 == "player" then
-        local uh, uhm = UnitHealth("player"), UnitHealthMax("player")
-        orb1_fill:SetHeight((uh/uhm) * orb1_fill:GetWidth())
-        orb1_fill:SetTexCoord(0,1,  math.abs(uh/uhm - 1),1)
-      end
-    end)
-    orb1:RegisterEvent("UNIT_HEALTH")
+    orbhealth(orb1,orb1_fill)
 
     --mana orb
     local orb2 = create_me_a_frame("Frame",nil,holder,"LOW",orbsize,orbsize,"BOTTOM",465,55,1)
@@ -220,19 +301,7 @@
     orb2_fill:SetVertexColor(0,0.3,0.8)
     local orb2_glossholder = create_me_a_frame("Frame",nil,orb2,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
     local orb2_gloss = create_me_a_texture(orb2_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orb2:SetScript("OnEvent", function(self, event, arg1, ...)
-      if arg1 == "player" then
-        local um, umm = UnitMana("player"), UnitManaMax("player")
-        orb2_fill:SetHeight((um/umm) * orb2_fill:GetWidth())
-        orb2_fill:SetTexCoord(0,1,  math.abs(um/umm - 1),1)
-      end
-    end)
-    orb2:RegisterEvent("UNIT_MANA")
-    orb2:RegisterEvent("UNIT_RAGE")
-    orb2:RegisterEvent("UNIT_ENERGY")
-    orb2:RegisterEvent("UNIT_FOCUS")
-    orb2:RegisterEvent("UNIT_RUNIC_POWER")
-
+    orbmana(orb2,orb2_fill)
 
     --left figure
     local lefty = create_me_a_frame("Frame",nil,holder,"HIGH",256,256,"BOTTOM",-453,44,1)
@@ -242,6 +311,9 @@
     local righty = create_me_a_frame("Frame",nil,holder,"HIGH",256,256,"BOTTOM",453,44,1)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\figure_right")
     
+    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
+    frame_to_drag = dragframe  
+    
   end
   
   ------------------------------------------------------
@@ -249,7 +321,7 @@
   ------------------------------------------------------  
   local function create_d3_style(scale)
     --am("c d3")
-    local holder = create_me_a_frame("Frame",nil,UIParent,"BACKGROUND",20,20,"BOTTOM",0,0,scale)
+    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",100,100,"BOTTOM",0,0,scale)
     frame_to_scale = holder    
     
     --bar texture
@@ -264,14 +336,7 @@
     orb1_fill:SetVertexColor(0.8,0,0)
     local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
     local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orb1:SetScript("OnEvent", function(self, event, arg1, ...)
-      if arg1 == "player" then
-        local uh, uhm = UnitHealth("player"), UnitHealthMax("player")
-        orb1_fill:SetHeight((uh/uhm) * orb1_fill:GetWidth())
-        orb1_fill:SetTexCoord(0,1,  math.abs(uh/uhm - 1),1)
-      end
-    end)
-    orb1:RegisterEvent("UNIT_HEALTH")
+    orbhealth(orb1,orb1_fill)
 
     --mana orb
     local orb2 = create_me_a_frame("Frame",nil,holder,"LOW",orbsize,orbsize,"BOTTOM",471,-3,1)
@@ -280,19 +345,7 @@
     orb2_fill:SetVertexColor(0,0.3,0.8)
     local orb2_glossholder = create_me_a_frame("Frame",nil,orb2,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
     local orb2_gloss = create_me_a_texture(orb2_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orb2:SetScript("OnEvent", function(self, event, arg1, ...)
-      if arg1 == "player" then
-        local um, umm = UnitMana("player"), UnitManaMax("player")
-        orb2_fill:SetHeight((um/umm) * orb2_fill:GetWidth())
-        orb2_fill:SetTexCoord(0,1,  math.abs(um/umm - 1),1)
-      end
-    end)
-    orb2:RegisterEvent("UNIT_MANA")
-    orb2:RegisterEvent("UNIT_RAGE")
-    orb2:RegisterEvent("UNIT_ENERGY")
-    orb2:RegisterEvent("UNIT_FOCUS")
-    orb2:RegisterEvent("UNIT_RUNIC_POWER")
-
+    orbmana(orb2,orb2_fill)
 
     --left figure
     local lefty = create_me_a_frame("Frame",nil,holder,"HIGH",512,256,"BOTTOM",-455,0,1)
@@ -302,6 +355,9 @@
     local righty = create_me_a_frame("Frame",nil,holder,"HIGH",512,256,"BOTTOM",455,0,1)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\figure_right")
     
+    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
+    frame_to_drag = dragframe  
+    
   end
   
   ------------------------------------------------------
@@ -309,12 +365,12 @@
   ------------------------------------------------------  
   local function create_roth_style(scale)
     --am("c roth")
-    local holder = create_me_a_frame("Frame",nil,UIParent,"BACKGROUND",20,20,"BOTTOM",0,0,scale)
+    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",100,100,"BOTTOM",0,0,scale)
     frame_to_scale = holder    
     
     local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",512,256,"BOTTOM",0,0,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\"..rBottomBarStyler.barvalue)
-    bar_to_show = bar_tex
+    bar_to_show = bar_tex    
 
     local bottom = create_me_a_frame("Frame",nil,holder,"HIGH",500,110,"BOTTOM",0,-10,1)
     local bottom_tex = create_me_a_texture(bottom,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\bottom")
@@ -327,14 +383,7 @@
     orb1_fill:SetVertexColor(0.8,0,0)
     local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
     local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orb1:SetScript("OnEvent", function(self, event, arg1, ...)
-      if arg1 == "player" then
-        local uh, uhm = UnitHealth("player"), UnitHealthMax("player")
-        orb1_fill:SetHeight((uh/uhm) * orb1_fill:GetWidth())
-        orb1_fill:SetTexCoord(0,1,  math.abs(uh/uhm - 1),1)
-      end
-    end)
-    orb1:RegisterEvent("UNIT_HEALTH")
+    orbhealth(orb1,orb1_fill)
 
     --mana orb
     local orb2 = create_me_a_frame("Frame",nil,holder,"LOW",orbsize,orbsize,"BOTTOM",250,-8,1)
@@ -343,18 +392,7 @@
     orb2_fill:SetVertexColor(0,0.3,0.8)
     local orb2_glossholder = create_me_a_frame("Frame",nil,orb2,"MEDIUM",orbsize,orbsize,"BOTTOM",0,0,1)
     local orb2_gloss = create_me_a_texture(orb2_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    orb2:SetScript("OnEvent", function(self, event, arg1, ...)
-      if arg1 == "player" then
-        local um, umm = UnitMana("player"), UnitManaMax("player")
-        orb2_fill:SetHeight((um/umm) * orb2_fill:GetWidth())
-        orb2_fill:SetTexCoord(0,1,  math.abs(um/umm - 1),1)
-      end
-    end)
-    orb2:RegisterEvent("UNIT_MANA")
-    orb2:RegisterEvent("UNIT_RAGE")
-    orb2:RegisterEvent("UNIT_ENERGY")
-    orb2:RegisterEvent("UNIT_FOCUS")
-    orb2:RegisterEvent("UNIT_RUNIC_POWER")
+    orbmana(orb2,orb2_fill)
     
     --left figure
     local lefty = create_me_a_frame("Frame",nil,holder,"HIGH",256,256,"BOTTOM",-510,0,0.6)
@@ -362,13 +400,15 @@
     
     --right figure
     local righty = create_me_a_frame("Frame",nil,holder,"HIGH",256,256,"BOTTOM",510,0,0.6)
-    local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\figure_right")
+    local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\figure_right")    
     
+    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
+    frame_to_drag = dragframe  
     
   end  
   
   ------------------------------------------------------
-  -- / SLASH LOAD STYLE FUNC / --
+  -- / LOAD STYLE FUNC / --
   ------------------------------------------------------
   
   local function load_style(style,scale)
@@ -395,7 +435,7 @@
         local c = strsub(cmd, b+1)
         if tonumber(c) then
   		    am("Current scaling is set to: "..c)
-  	      rBottomBarStyler.scalevalue = c
+  	      rBottomBarStyler.scalevalue = tonumber(c)
   	      set_me_a_scale()
   	    else
   	      am("No number value.")
@@ -440,8 +480,53 @@
   	--getart
   	elseif (cmd:match"getart") then
       am("Current art is set to: "..rBottomBarStyler.artvalue)  	
+  	--getmovable
+  	elseif (cmd:match"getmovable") then
+      am("Movable is set to: "..rBottomBarStyler.movable)  	
+  	--getlocked
+  	elseif (cmd:match"getlocked") then
+      am("Locked is set to: "..rBottomBarStyler.locked)  	
+    --locked
+    elseif (cmd:match"locked") then
+      local a,b = strfind(cmd, " ");
+ 		  if b then
+        local c = strsub(cmd, b+1)
+        if tonumber(c) then
+  		    am("Locked is set to: "..c)
+  	      rBottomBarStyler.locked = tonumber(c)
+  	      move_my_frame()
+  	    else
+  	      am("No number value.")
+  	    end
+  		else
+  		  am("No value found.")
+  		end  	
+    --movable
+    elseif (cmd:match"movable") then
+      local a,b = strfind(cmd, " ");
+ 		  if b then
+        local c = strsub(cmd, b+1)
+        if tonumber(c) then
+  		    am("Movable is set to: "..c)
+  	      rBottomBarStyler.movable = tonumber(c)
+  	      move_my_frame()
+  	    else
+  	      am("No number value.")
+  	    end
+  		else
+  		  am("No value found.")
+  		end  
   	else
-      am("rbbs commands...\n\/rbbs getscale\n\/rbbs setscale NUMBER\n\/rbbs getart\n\/rbbs setart STRING (possible values: d1, d2, d3, roth)\n\/rbbs setbar STRING (possible values: bar1, bar2, bar3 - only affects the roth layout)")
+      am("rbbs commands...")
+      am("\/rbbs getscale")
+      am("\/rbbs getart")
+      am("\/rbbs getlocked")
+      am("\/rbbs getmovable")
+      am("\/rbbs setscale NUMBER")
+      am("\/rbbs setart STRING (possible values: d1, d2, d3, roth)")
+      am("\/rbbs setbar STRING (possible values: bar1, bar2, bar3 - only affects the roth layout)")
+      am("\/rbbs locked NUMBER (value of 1 locks bars, 0 unlocks)")
+      am("\/rbbs movable NUMBER (value of 1 makes bars movable if unlocked, value of 0 will reset position)")
   	end  	
   end
   
@@ -458,6 +543,7 @@
     load_default()
     --load the styles
     load_style(rBottomBarStyler.artvalue,rBottomBarStyler.scalevalue)
+    move_my_frame()
     --slash commands
     SlashCmdList["whatever"] = SlashCmd;
     SLASH_whatever1 = "/rbbs";

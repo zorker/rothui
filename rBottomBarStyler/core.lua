@@ -364,92 +364,92 @@
     --setscale
     if (cmd:match"setscale") then
       local a,b = strfind(cmd, " ");
- 		  if b then
+       if b then
         local c = strsub(cmd, b+1)
         if tonumber(c) then
-  		    am("Current scaling is set to: "..c)
-  	      rBottomBarStyler.scalevalue = tonumber(c)
-  	      set_me_a_scale()
-  	    else
-  	      am("No number value.")
-  	    end
-  		else
-  		  am("No value found.")
-  		end  	
-  	--getscale	
-  	elseif (cmd:match"getscale") then
+          am("Current scaling is set to: "..c)
+          rBottomBarStyler.scalevalue = tonumber(c)
+          set_me_a_scale()
+        else
+          am("No number value.")
+        end
+      else
+        am("No value found.")
+      end    
+    --getscale  
+    elseif (cmd:match"getscale") then
       am("Current scaling is set to: "..rBottomBarStyler.scalevalue)
     --setart
     elseif (cmd:match"setart") then
       local a,b = strfind(cmd, " ");
- 		  if b then
+       if b then
         local c = strsub(cmd, b+1)
         if c == "d1" or c == "d2" or c == "d3" or c == "roth" then
-  		    am("You set the art to: "..c)
-  	      rBottomBarStyler.artvalue = c
-  	      am("You need to reoad the interface to see the changes.")
-  	      am("Type in: \"/console reloadui\".")
-  	    else
-  	      am("Wrong value. (possible values: d1, d2, d3, roth)")
-  	    end
-  		else
-  		  am("No value found.")
-  		end
+          am("You set the art to: "..c)
+          rBottomBarStyler.artvalue = c
+          am("You need to reoad the interface to see the changes.")
+          am("Type in: \"/console reloadui\".")
+        else
+          am("Wrong value. (possible values: d1, d2, d3, roth)")
+        end
+      else
+        am("No value found.")
+      end
     --setbar
     elseif (cmd:match"setbar") then
       local a,b = strfind(cmd, " ");
- 		  if b then
+       if b then
         local c = strsub(cmd, b+1)
         if c == "bar1" or c == "bar2" or c == "bar3" then
-  		    am("You set the bar to: "..c)
-  	      rBottomBarStyler.barvalue = c
+          am("You set the bar to: "..c)
+          rBottomBarStyler.barvalue = c
           set_me_a_bar()
-  	    else
-  	      am("Wrong value. (possible values: bar1, bar2, bar3)")
-  	    end
-  		else
-  		  am("No value found.")
-  		end  		
-  	--getart
-  	elseif (cmd:match"getart") then
-      am("Current art is set to: "..rBottomBarStyler.artvalue)  	
-  	--getmovable
-  	elseif (cmd:match"getmovable") then
-      am("Movable is set to: "..rBottomBarStyler.movable)  	
-  	--getlocked
-  	elseif (cmd:match"getlocked") then
-      am("Locked is set to: "..rBottomBarStyler.locked)  	
+        else
+          am("Wrong value. (possible values: bar1, bar2, bar3)")
+        end
+      else
+        am("No value found.")
+      end      
+    --getart
+    elseif (cmd:match"getart") then
+      am("Current art is set to: "..rBottomBarStyler.artvalue)    
+    --getmovable
+    elseif (cmd:match"getmovable") then
+      am("Movable is set to: "..rBottomBarStyler.movable)    
+    --getlocked
+    elseif (cmd:match"getlocked") then
+      am("Locked is set to: "..rBottomBarStyler.locked)    
     --locked
     elseif (cmd:match"locked") then
       local a,b = strfind(cmd, " ");
- 		  if b then
+       if b then
         local c = strsub(cmd, b+1)
         if tonumber(c) then
-  		    am("Locked is set to: "..c)
-  	      rBottomBarStyler.locked = tonumber(c)
-  	      move_my_frame()
-  	    else
-  	      am("No number value.")
-  	    end
-  		else
-  		  am("No value found.")
-  		end  	
+          am("Locked is set to: "..c)
+          rBottomBarStyler.locked = tonumber(c)
+          move_my_frame()
+        else
+          am("No number value.")
+        end
+      else
+        am("No value found.")
+      end    
     --movable
     elseif (cmd:match"movable") then
       local a,b = strfind(cmd, " ");
- 		  if b then
+       if b then
         local c = strsub(cmd, b+1)
         if tonumber(c) then
-  		    am("Movable is set to: "..c)
-  	      rBottomBarStyler.movable = tonumber(c)
-  	      move_my_frame()
-  	    else
-  	      am("No number value.")
-  	    end
-  		else
-  		  am("No value found.")
-  		end  
-  	else
+          am("Movable is set to: "..c)
+          rBottomBarStyler.movable = tonumber(c)
+          move_my_frame()
+        else
+          am("No number value.")
+        end
+      else
+        am("No value found.")
+      end  
+    else
       am("rbbs commands...")
       am("\/rbbs getscale")
       am("\/rbbs getart")
@@ -460,7 +460,7 @@
       am("\/rbbs setbar STRING (possible values: bar1, bar2, bar3 - only affects the roth layout)")
       am("\/rbbs locked NUMBER (value of 1 locks bars, 0 unlocks)")
       am("\/rbbs movable NUMBER (value of 1 makes bars movable if unlocked, value of 0 will reset position)")
-  	end  	
+    end    
   end
   
   ------------------------------------------------------

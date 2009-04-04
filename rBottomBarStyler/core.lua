@@ -34,7 +34,7 @@
   
   local default_scale = 0.6
   local default_art = "d3"  
-  local default_bar = "bar3"  
+  local default_bar = "bar2"  
   rBottomBarStyler = rBottomBarStyler or {}
   local frame_to_scale
   local bar_to_show
@@ -50,6 +50,9 @@
     end
     if(not rBottomBarStyler.artvalue) then 
       rBottomBarStyler.artvalue = default_art 
+    end
+    if(not rBottomBarStyler.barvalue) then 
+      rBottomBarStyler.barvalue = default_bar 
     end
   end
   

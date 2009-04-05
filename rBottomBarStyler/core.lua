@@ -41,7 +41,7 @@
   local frame_to_scale
   local bar_to_show
   local frame_to_drag
-  local fog_smoother = 1
+  local fog_smoother = 1.3
   local orbtab = {
     [1] = {r = 0.3, g = 0, b = 0, scale = 0.8, z = -12, x = 0.8, y = -1.7, anim = "SPELLS\\RedRadiationFog.m2"}, -- red
     [2] = {r = 0, g = 0.3, b = 0.1, scale = 0.75, z = -12, x = 0, y = -1.1, anim = "SPELLS\\GreenRadiationFog.m2"}, -- green

@@ -37,6 +37,7 @@
   local default_bar = "bar2"  
   local default_movable = 1
   local default_locked = 1
+  local default_font = NAMEPLATE_FONT
   rBottomBarStyler = rBottomBarStyler or {}
   local frame_to_scale
   local bar_to_show
@@ -152,9 +153,9 @@
   -- / CREATE ME A FRAME FUNC / --
   ------------------------------------------------------
 
-  local function create_me_a_frame(fart,fname,fparent,fstrata,fwidth,fheight,fanchor,fxpos,fypos,fscale,fdrag)
+  local function create_me_a_frame(fart,fname,fparent,fstrata,fwidth,fheight,fanchor,fxpos,fypos,fscale,fdrag,finherit)
     --  PARENT, BACKGROUND, LOW, MEDIUM, HIGH, DIALOG, FULLSCREEN, FULLSCREEN_DIALOG, TOOLTIP 
-    local f = CreateFrame(fart,fname,fparent)
+    local f = CreateFrame(fart,fname,fparent,finherit)
     f:SetFrameStrata(fstrata)
     f:SetWidth(fwidth)
     f:SetHeight(fheight)
@@ -191,32 +192,61 @@
     end
     return t
   end 
+  
+  ------------------------------------------------------
+  -- / DO FORMAT / --
+  ------------------------------------------------------
+
+  local function do_format(v)
+    local string = ""
+    if v > 1000000 then
+      string = (floor((v/1000000)*10)/10).."m"
+    elseif v > 1000 then
+      string = (floor((v/1000)*10)/10).."k"
+    else
+      string = v
+    end  
+    return string
+  end
 
   ------------------------------------------------------
   -- / ORB HEALTH FUNC / --
   ------------------------------------------------------
   
-  local function orbhealth(orb1,orb1_fill,glow1,glow2)
+  local function orbhealth(orb1,orb1_fill,glow1,glow2,orbtext1,orbtext2)
     orb1:SetScript("OnEvent", function(self, event, arg1, ...)
-      if arg1 == "player" then
+      if arg1 == "player" or event == "PLAYER_ENTERING_WORLD" then
         local uh, uhm = UnitHealth("player"), UnitHealthMax("player")
+        local perc = floor(uh/uhm*100)
+        local nuh = do_format(uh)
+        local nuhm = do_format(uhm)
+        orbtext1:SetText(perc)
+        orbtext2:SetText(nuh.."/"..nuhm)
         orb1_fill:SetHeight((uh/uhm) * orb1_fill:GetWidth())
         orb1_fill:SetTexCoord(0,1,  math.abs(uh/uhm - 1),1)
         glow1:SetAlpha((uh / uhm)/fog_smoother)
         glow2:SetAlpha((uh / uhm)/fog_smoother)
+        orbtext1:SetText(perc)
+        orbtext2:SetText(nuh.."/"..nuhm)
       end
     end)
     orb1:RegisterEvent("UNIT_HEALTH")
+    orb1:RegisterEvent("PLAYER_ENTERING_WORLD")
   end
   
   ------------------------------------------------------
   -- / ORB MANA FUNC / --
   ------------------------------------------------------
   
-  local function orbmana(orb2,orb2_fill,glow1,glow2)
+  local function orbmana(orb2,orb2_fill,glow1,glow2,orbtext1,orbtext2)
     orb2:SetScript("OnEvent", function(self, event, arg1, ...)
-      if arg1 == "player" then
+      if arg1 == "player" or event == "PLAYER_ENTERING_WORLD" then
         local um, umm = UnitMana("player"), UnitManaMax("player")
+        local perc = floor(um/umm*100)
+        local nuh = do_format(um)
+        local nuhm = do_format(umm)
+        orbtext1:SetText(perc)
+        orbtext2:SetText(nuh.."/"..nuhm)
         orb2_fill:SetHeight((um/umm) * orb2_fill:GetWidth())
         orb2_fill:SetTexCoord(0,1,  math.abs(um/umm - 1),1)
         glow1:SetAlpha((um / umm)/fog_smoother)
@@ -228,6 +258,18 @@
     orb2:RegisterEvent("UNIT_ENERGY")
     orb2:RegisterEvent("UNIT_FOCUS")
     orb2:RegisterEvent("UNIT_RUNIC_POWER")
+    orb2:RegisterEvent("PLAYER_ENTERING_WORLD")
+  end
+  
+  ------------------------------------------------------
+  -- / SET ME A FONT / --
+  ------------------------------------------------------
+  
+  local function set_me_a_font(f, font, size, style)
+    local fs = f:CreateFontString(nil, "OVERLAY")
+    fs:SetFont(font, size, style)
+    fs:SetShadowColor(0,0,0,1)
+    return fs
   end
   
   ------------------------------------------------------
@@ -235,22 +277,43 @@
   ------------------------------------------------------
   
   local function create_orb(orbtype,orbsize,orbanchorframe,orbpoint,orbposx,orbposy,orbscale,orbfilltex,useorb)
-    --life orb
-    local orb1 = create_me_a_frame("Frame",nil,orbanchorframe,"BACKGROUND",orbsize,orbsize,orbpoint,orbposx,orbposy,orbscale)
+    local orb1 = create_me_a_frame("Button",nil,orbanchorframe,"BACKGROUND",orbsize,orbsize,orbpoint,orbposx,orbposy,orbscale,nil,"SecureUnitButtonTemplate")
+    orb1:RegisterForClicks("AnyUp")
+    orb1:SetAttribute("unit", "player")
+    orb1:SetAttribute("*type1", "target")
+    local showmenu = function() 
+      ToggleDropDownMenu(1, nil, PlayerFrameDropDown, "cursor", 0, 0) 
+    end
+    orb1.showmenu = showmenu
+    orb1.unit = "player"
+    orb1:SetAttribute("*type2", "showmenu")
+    orb1:SetScript("OnEnter", UnitFrame_OnEnter)
+    orb1:SetScript("OnLeave", UnitFrame_OnLeave)
+
     local orb1_back = create_me_a_texture(orb1,"BORDER","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_back2")
     local orb1_fill = create_me_a_texture(orb1,"ARTWORK","Interface\\AddOns\\rBottomBarStyler\\orbtex\\"..orbfilltex,"fill")
     orb1_fill:SetVertexColor(orbtab[useorb].r,orbtab[useorb].g,orbtab[useorb].b)
+    local glow1, glow2
     if orbtype == "life" then
-      local glow1 = create_me_a_orb_glow(orb1,useorb,0)
-      local glow2 = create_me_a_orb_glow(orb1,useorb,1)
-      orbhealth(orb1,orb1_fill,glow1,glow2)
+      glow1 = create_me_a_orb_glow(orb1,useorb,0)
+      glow2 = create_me_a_orb_glow(orb1,useorb,1)
     else
-      local glow1 = create_me_a_orb_glow(orb1,useorb,0)
-      local glow2 = create_me_a_orb_glow(orb1,useorb,1)
-      orbmana(orb1,orb1_fill,glow1,glow2)
+      glow1 = create_me_a_orb_glow(orb1,useorb,0)
+      glow2 = create_me_a_orb_glow(orb1,useorb,1)
     end
     local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"LOW",orbsize,orbsize,"BOTTOM",0,0,1)
     local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
+    local orbtext1 = set_me_a_font(orb1_glossholder, default_font, orbsize/5, "THINOUTLINE")
+    orbtext1:SetPoint("CENTER", 0, (orbsize/12))
+    orbtext1:SetTextColor(1,1,1)
+    local orbtext2 = set_me_a_font(orb1_glossholder, default_font, orbsize/8.5, "THINOUTLINE")
+    orbtext2:SetPoint("CENTER", 0, -(orbsize/12))
+    orbtext2:SetTextColor(0.6,0.6,0.6)
+    if orbtype == "life" then
+      orbhealth(orb1,orb1_fill,glow1,glow2,orbtext1,orbtext2)
+    else
+      orbmana(orb1,orb1_fill,glow1,glow2,orbtext1,orbtext2)
+    end
   end  
   
   ------------------------------------------------------

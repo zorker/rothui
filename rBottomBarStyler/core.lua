@@ -37,12 +37,20 @@
   local default_bar = "bar2"  
   local default_movable = 1
   local default_locked = 1
+  local default_healthorb = 2
+  local default_manaorb = 3
+  local default_automana = 1
+  
   local default_font = NAMEPLATE_FONT
   rBottomBarStyler = rBottomBarStyler or {}
   local frame_to_scale
   local bar_to_show
+  local hglow1, hglow2, mglow1, mglow2, hfill, mfill
   local frame_to_drag
   local fog_smoother = 1.3
+  local text_display = 1
+  local save_dudustance
+  
   local orbtab = {
     [1] = {r = 0.3, g = 0, b = 0, scale = 0.8, z = -12, x = 0.8, y = -1.7, anim = "SPELLS\\RedRadiationFog.m2"}, -- red
     [2] = {r = 0, g = 0.3, b = 0.1, scale = 0.75, z = -12, x = 0, y = -1.1, anim = "SPELLS\\GreenRadiationFog.m2"}, -- green
@@ -50,6 +58,40 @@
     [4] = {r = 0.4, g = 0.3, b = 0, scale = 0.75, z = -12, x = -0.3, y = -1.2, anim = "SPELLS\\OrangeRadiationFog.m2"}, -- yellow
     [5] = {r = 0, g = 0.7,   b = 0.7, scale = 0.9, z = -12, x = -0.5, y = -0.8, anim = "SPELLS\\WhiteRadiationFog.m2"}, -- runic
   }
+  
+  UnitPopupMenus["SELF"] = { "PVP_FLAG", "LOOT_METHOD", "LOOT_THRESHOLD", "OPT_OUT_LOOT_TITLE", "LOOT_PROMOTE", "DUNGEON_DIFFICULTY", "RESET_INSTANCES", "RAID_TARGET_ICON", "LEAVE", "CANCEL" }
+  
+  ------------------------------------------------------
+  -- / CHAT OUTPUT FUNC / --
+  ------------------------------------------------------
+  
+  local function am(text)
+    DEFAULT_CHAT_FRAME:AddMessage(text)
+  end
+  
+  ------------------------------------------------------
+  -- / SET AUTO MANA / --
+  ------------------------------------------------------
+  
+  local function set_automana()
+    if rBottomBarStyler.automana == 1 then
+      local st = GetShapeshiftForm()
+      local _, pt = UnitClass("player")
+      if pt == "WARRIOR" then
+        rBottomBarStyler.manaorb = 1
+      elseif pt == "DEATHKNIGHT" then
+        rBottomBarStyler.manaorb = 5
+      elseif pt == "ROGUE" then
+        rBottomBarStyler.manaorb = 4
+      elseif pt == "DRUID" and st == 3 then
+        rBottomBarStyler.manaorb = 4
+      elseif pt == "DRUID" and st == 1 then
+        rBottomBarStyler.manaorb = 1
+      else
+        rBottomBarStyler.manaorb = 3
+      end
+    end
+  end
 
   ------------------------------------------------------
   -- / SET UP DEFAULT VALUES / --
@@ -71,16 +113,22 @@
     if(not rBottomBarStyler.locked) then 
       rBottomBarStyler.locked = default_locked 
     end
+    if(not rBottomBarStyler.healthorb) then 
+      rBottomBarStyler.healthorb = default_healthorb 
+    end
+    if(not rBottomBarStyler.manaorb) then 
+      rBottomBarStyler.manaorb = default_manaorb 
+    end
+    if(not rBottomBarStyler.automana) then 
+      rBottomBarStyler.automana = default_automana 
+    end    
+    
+    set_automana()
+    
+    save_dudustance = GetShapeshiftForm()
+    
   end
   
-  ------------------------------------------------------
-  -- / CHAT OUTPUT FUNC / --
-  ------------------------------------------------------
-  
-  local function am(text)
-    DEFAULT_CHAT_FRAME:AddMessage(text)
-  end
-
   ------------------------------------------------------
   -- / SAVE POSXY FUNC / --
   ------------------------------------------------------
@@ -128,26 +176,64 @@
       frame_to_scale:SetPoint("BOTTOM",0,0)
     end  
   end
+  
+  ------------------------------------------------------
+  -- / SET ME GLOWS / --
+  ------------------------------------------------------
+  
+  local function set_the_hglows()
+    hfill:SetVertexColor(orbtab[rBottomBarStyler.healthorb].r,orbtab[rBottomBarStyler.healthorb].g,orbtab[rBottomBarStyler.healthorb].b)
+    hglow1:SetModel(orbtab[rBottomBarStyler.healthorb].anim)
+    hglow1:SetModelScale(orbtab[rBottomBarStyler.healthorb].scale)
+    hglow1:SetPosition(orbtab[rBottomBarStyler.healthorb].z, orbtab[rBottomBarStyler.healthorb].x, orbtab[rBottomBarStyler.healthorb].y) 
+    hglow2:SetModel(orbtab[rBottomBarStyler.healthorb].anim)
+    hglow2:SetModelScale(orbtab[rBottomBarStyler.healthorb].scale)
+    hglow2:SetPosition(orbtab[rBottomBarStyler.healthorb].z, orbtab[rBottomBarStyler.healthorb].x, orbtab[rBottomBarStyler.healthorb].y+1) 
+  end
+
+  local function set_the_mglows()
+    mfill:SetVertexColor(orbtab[rBottomBarStyler.manaorb].r,orbtab[rBottomBarStyler.manaorb].g,orbtab[rBottomBarStyler.manaorb].b)
+    mglow1:SetModel(orbtab[rBottomBarStyler.manaorb].anim)
+    mglow1:SetModelScale(orbtab[rBottomBarStyler.manaorb].scale)
+    mglow1:SetPosition(orbtab[rBottomBarStyler.manaorb].z, orbtab[rBottomBarStyler.manaorb].x, orbtab[rBottomBarStyler.manaorb].y) 
+    mglow2:SetModel(orbtab[rBottomBarStyler.manaorb].anim)
+    mglow2:SetModelScale(orbtab[rBottomBarStyler.manaorb].scale)
+    mglow2:SetPosition(orbtab[rBottomBarStyler.manaorb].z, orbtab[rBottomBarStyler.manaorb].x, orbtab[rBottomBarStyler.manaorb].y+1) 
+  end
+
+  local function set_the_shapeshift_mglows()
+    local st = GetShapeshiftForm()
+    if st ~= save_dudustance then
+      mfill:SetVertexColor(orbtab[rBottomBarStyler.manaorb].r,orbtab[rBottomBarStyler.manaorb].g,orbtab[rBottomBarStyler.manaorb].b)
+      mglow1:SetModel(orbtab[rBottomBarStyler.manaorb].anim)
+      mglow1:SetModelScale(orbtab[rBottomBarStyler.manaorb].scale)
+      mglow1:SetPosition(orbtab[rBottomBarStyler.manaorb].z, orbtab[rBottomBarStyler.manaorb].x, orbtab[rBottomBarStyler.manaorb].y) 
+      mglow2:SetModel(orbtab[rBottomBarStyler.manaorb].anim)
+      mglow2:SetModelScale(orbtab[rBottomBarStyler.manaorb].scale)
+      mglow2:SetPosition(orbtab[rBottomBarStyler.manaorb].z, orbtab[rBottomBarStyler.manaorb].x, orbtab[rBottomBarStyler.manaorb].y+1) 
+      save_dudustance = st
+    end
+  end
 
   ------------------------------------------------------
   -- / CREATE ME A ORB GLOW FUNC / --
   ------------------------------------------------------
 
-    local function create_me_a_orb_glow(f,useorb,pos)
-      local glow = CreateFrame("PlayerModel", nil, f)
-      glow:SetFrameStrata("BACKGROUND")
-      glow:SetAllPoints(f)
+  local function create_me_a_orb_glow(f,useorb,pos)
+    local glow = CreateFrame("PlayerModel", nil, f)
+    glow:SetFrameStrata("BACKGROUND")
+    glow:SetAllPoints(f)
+    glow:SetModel(orbtab[useorb].anim)
+    glow:SetModelScale(orbtab[useorb].scale)
+    glow:SetPosition(orbtab[useorb].z, orbtab[useorb].x, orbtab[useorb].y+pos) 
+    glow:SetAlpha(1/fog_smoother)
+    glow:SetScript("OnShow",function() 
       glow:SetModel(orbtab[useorb].anim)
       glow:SetModelScale(orbtab[useorb].scale)
       glow:SetPosition(orbtab[useorb].z, orbtab[useorb].x, orbtab[useorb].y+pos) 
-      glow:SetAlpha(1/fog_smoother)
-      glow:SetScript("OnShow",function() 
-        glow:SetModel(orbtab[useorb].anim)
-        glow:SetModelScale(orbtab[useorb].scale)
-        glow:SetPosition(orbtab[useorb].z, orbtab[useorb].x, orbtab[useorb].y+pos) 
-      end)
-      return glow
-    end
+    end)
+    return glow
+  end
 
   ------------------------------------------------------
   -- / CREATE ME A FRAME FUNC / --
@@ -221,13 +307,15 @@
         local nuh = do_format(uh)
         local nuhm = do_format(uhm)
         orbtext1:SetText(perc)
-        orbtext2:SetText(nuh.."/"..nuhm)
+        if text_display == 1 then
+          orbtext2:SetText(nuh)
+        else
+          orbtext2:SetText(nuh.."/"..nuhm)
+        end
         orb1_fill:SetHeight((uh/uhm) * orb1_fill:GetWidth())
         orb1_fill:SetTexCoord(0,1,  math.abs(uh/uhm - 1),1)
         glow1:SetAlpha((uh / uhm)/fog_smoother)
         glow2:SetAlpha((uh / uhm)/fog_smoother)
-        orbtext1:SetText(perc)
-        orbtext2:SetText(nuh.."/"..nuhm)
       end
     end)
     orb1:RegisterEvent("UNIT_HEALTH")
@@ -245,8 +333,20 @@
         local perc = floor(um/umm*100)
         local nuh = do_format(um)
         local nuhm = do_format(umm)
-        orbtext1:SetText(perc)
-        orbtext2:SetText(nuh.."/"..nuhm)
+        local _, class = UnitClass("player")
+        local shape = GetShapeshiftForm()    
+        if text_display == 1 then
+          if class == "WARRIOR" or (class == "DRUID" and shape == 3) or (class == "DRUID" and shape == 1) or class == "DEATHKNIGHT" or class == "ROGUE" then
+            orbtext1:SetText(nuh)
+            orbtext2:SetText(perc)
+          else
+            orbtext1:SetText(perc)
+            orbtext2:SetText(nuh)            
+          end
+        else
+          orbtext1:SetText(perc)
+          orbtext2:SetText(nuh.."/"..nuhm)
+        end
         orb2_fill:SetHeight((um/umm) * orb2_fill:GetWidth())
         orb2_fill:SetTexCoord(0,1,  math.abs(um/umm - 1),1)
         glow1:SetAlpha((um / umm)/fog_smoother)
@@ -277,6 +377,7 @@
   ------------------------------------------------------
   
   local function create_orb(orbtype,orbsize,orbanchorframe,orbpoint,orbposx,orbposy,orbscale,orbfilltex,useorb)
+    --create the player frame
     local orb1 = create_me_a_frame("Button",nil,orbanchorframe,"BACKGROUND",orbsize,orbsize,orbpoint,orbposx,orbposy,orbscale,nil,"SecureUnitButtonTemplate")
     orb1:RegisterForClicks("AnyUp")
     orb1:SetAttribute("unit", "player")
@@ -292,14 +393,22 @@
 
     local orb1_back = create_me_a_texture(orb1,"BORDER","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_back2")
     local orb1_fill = create_me_a_texture(orb1,"ARTWORK","Interface\\AddOns\\rBottomBarStyler\\orbtex\\"..orbfilltex,"fill")
-    orb1_fill:SetVertexColor(orbtab[useorb].r,orbtab[useorb].g,orbtab[useorb].b)
+    --glows
     local glow1, glow2
     if orbtype == "life" then
+      orb1_fill:SetVertexColor(orbtab[useorb].r,orbtab[useorb].g,orbtab[useorb].b)
+      hfill = orb1_fill
       glow1 = create_me_a_orb_glow(orb1,useorb,0)
       glow2 = create_me_a_orb_glow(orb1,useorb,1)
+      hglow1 = glow1
+      hglow2 = glow2
     else
+      orb1_fill:SetVertexColor(orbtab[useorb].r,orbtab[useorb].g,orbtab[useorb].b)
+      mfill = orb1_fill
       glow1 = create_me_a_orb_glow(orb1,useorb,0)
       glow2 = create_me_a_orb_glow(orb1,useorb,1)
+      mglow1 = glow1
+      mglow2 = glow2
     end
     local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"LOW",orbsize,orbsize,"BOTTOM",0,0,1)
     local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
@@ -313,6 +422,17 @@
       orbhealth(orb1,orb1_fill,glow1,glow2,orbtext1,orbtext2)
     else
       orbmana(orb1,orb1_fill,glow1,glow2,orbtext1,orbtext2)
+      --druid mana color on stance
+      local _, pt = UnitClass("player")
+      if pt == "DRUID" then
+        orb1_glossholder:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+        orb1_glossholder:SetScript("OnEvent", function(self,event)
+          if event == "UPDATE_SHAPESHIFT_FORM" then
+            set_automana()
+            set_the_shapeshift_mglows()
+          end
+        end)
+      end
     end
   end  
   
@@ -347,8 +467,8 @@
     local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1024,256,"BOTTOM",0,0,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d1tex\\bar")
     --orbs
-    create_orb("life",160,holder,"BOTTOM",-290,120,1,"orb_filling4",1)
-    create_orb("mana",160,holder,"BOTTOM",285,120,1,"orb_filling4",3)
+    create_orb("life",160,holder,"BOTTOM",-290,120,1,"orb_filling4",rBottomBarStyler.healthorb)
+    create_orb("mana",160,holder,"BOTTOM",285,120,1,"orb_filling4",rBottomBarStyler.manaorb)
     --left figure
     local lefty = create_me_a_frame("Frame",nil,holder,"MEDIUM",256,256,"BOTTOM",-320,35,0.9)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d1tex\\figure_left")
@@ -376,8 +496,8 @@
     local border_right = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1024,512,"BOTTOMLEFT",0,0,1)
     local border_right_tex = create_me_a_texture(border_right,"BORDER","Interface\\AddOns\\rBottomBarStyler\\d2tex\\border_right")
     --orbs
-    create_orb("life",160,holder,"BOTTOM",-472,55,1,"orb_filling4",1)
-    create_orb("mana",160,holder,"BOTTOM",465,55,1,"orb_filling4",3)
+    create_orb("life",160,holder,"BOTTOM",-472,55,1,"orb_filling4",rBottomBarStyler.healthorb)
+    create_orb("mana",160,holder,"BOTTOM",465,55,1,"orb_filling4",rBottomBarStyler.manaorb)
     --left figure
     local lefty = create_me_a_frame("Frame",nil,holder,"MEDIUM",256,256,"BOTTOM",-453,44,1)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\figure_left")
@@ -400,13 +520,13 @@
     local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1024,128,"BOTTOM",0,0,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\bar")
     --orbs
-    create_orb("life",200,holder,"BOTTOM",-471,-3,1,"orb_filling4",1)
-    create_orb("mana",200,holder,"BOTTOM",471,-3,1,"orb_filling4",3)
+    create_orb("life",200,holder,"BOTTOM",-471,-3,1,"orb_filling4",rBottomBarStyler.healthorb)
+    create_orb("mana",200,holder,"BOTTOM",471,-3,1,"orb_filling4",rBottomBarStyler.manaorb)
     --left figure
-    local lefty = create_me_a_frame("Frame",nil,holder,"MEDIUM",512,256,"BOTTOM",-455,0,1)
+    local lefty = create_me_a_frame("Frame",nil,holder,"MEDIUM",512,256,"BOTTOM",-470,0,1)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\figure_left")
     --right figure
-    local righty = create_me_a_frame("Frame",nil,holder,"MEDIUM",512,256,"BOTTOM",455,0,1)
+    local righty = create_me_a_frame("Frame",nil,holder,"MEDIUM",512,256,"BOTTOM",470,0,1)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\figure_right")
     --dragframe
     local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
@@ -425,16 +545,16 @@
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\"..rBottomBarStyler.barvalue)
     bar_to_show = bar_tex    
     --orbs
-    create_orb("life",120,holder,"BOTTOM",-250,-8,1,"orb_filling4",1)
-    create_orb("mana",120,holder,"BOTTOM",250,-8,1,"orb_filling4",3)    
+    create_orb("life",140,holder,"BOTTOM",-255,-8,1,"orb_filling4",rBottomBarStyler.healthorb)
+    create_orb("mana",140,holder,"BOTTOM",250,-8,1,"orb_filling4",rBottomBarStyler.manaorb)    
     --bottom
-    local bottom = create_me_a_frame("Frame",nil,holder,"MEDIUM",500,110,"BOTTOM",0,-10,1)
+    local bottom = create_me_a_frame("Frame",nil,holder,"MEDIUM",510,110,"BOTTOM",0,-10,1)
     local bottom_tex = create_me_a_texture(bottom,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\bottom")    
     --left figure
-    local lefty = create_me_a_frame("Frame",nil,holder,"MEDIUM",256,256,"BOTTOM",-510,0,0.6)
+    local lefty = create_me_a_frame("Frame",nil,holder,"MEDIUM",256,256,"BOTTOM",-530,0,0.6)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\figure_left")    
     --right figure
-    local righty = create_me_a_frame("Frame",nil,holder,"MEDIUM",256,256,"BOTTOM",510,0,0.6)
+    local righty = create_me_a_frame("Frame",nil,holder,"MEDIUM",256,256,"BOTTOM",520,0,0.6)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\figure_right")    
     --dragframe
     local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
@@ -550,6 +670,56 @@
       else
         am("No value found.")
       end  
+    --healthorb
+    elseif (cmd:match"sethealthorb") then
+      local a,b = strfind(cmd, " ");
+      if b then
+        local c = strsub(cmd, b+1)
+        if tonumber(c) and tonumber(c) > 0 and tonumber(c) < 6 then
+          am("Healthorb is set to: "..c)
+          rBottomBarStyler.healthorb = tonumber(c)
+          set_the_hglows()
+        else
+          am("No number value.")
+        end
+      else
+        am("No value found.")
+      end
+    --manaorb
+    elseif (cmd:match"setmanaorb") then
+      local a,b = strfind(cmd, " ");
+      if b then
+        local c = strsub(cmd, b+1)
+        if tonumber(c) and tonumber(c) > 0 and tonumber(c) < 6  then
+          am("Manaorb is set to: "..c)
+          if rBottomBarStyler.automana == 1 then
+            am("Automana is active. Not possible, deactivate automana first.")
+          else
+            rBottomBarStyler.manaorb = tonumber(c)
+            set_the_mglows()
+          end
+        else
+          am("No number value.")
+        end
+      else
+        am("No value found.")
+      end  
+    --automana
+    elseif (cmd:match"setautomana") then
+      local a,b = strfind(cmd, " ");
+      if b then
+        local c = strsub(cmd, b+1)
+        if tonumber(c) then
+          am("Automana is set to: "..c)
+          rBottomBarStyler.automana = tonumber(c)
+          set_automana()
+          set_the_mglows()
+        else
+          am("No number value.")
+        end
+      else
+        am("No value found.")
+      end  
     else
       am("rbbs commands...")
       am("\/rbbs getscale")
@@ -561,6 +731,11 @@
       am("\/rbbs setbar STRING (possible values: bar1, bar2, bar3 - only affects the roth layout)")
       am("\/rbbs locked NUMBER (value of 1 locks bars, 0 unlocks)")
       am("\/rbbs movable NUMBER (value of 1 makes bars movable if unlocked, value of 0 will reset position)")
+ 
+      am("\/rbbs sethealthorb NUMBER (values 1 (red), 2 (green), 3 (blue), 4 (yellow), 5(runic) to set your healthcolor)")
+      am("\/rbbs setmanaorb NUMBER (values 1 (red), 2 (green), 3 (blue), 4 (yellow), 5(runic) to set your manacolor)")
+      am("\/rbbs setautomana NUMBER (values 0 or 1, this will override the manaorb setting and automatically detect your manacolor on class/stance)")
+      
     end    
   end
   

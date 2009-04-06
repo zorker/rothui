@@ -125,8 +125,6 @@
     
     set_automana()
     
-    save_dudustance = GetShapeshiftForm()
-    
   end
   
   ------------------------------------------------------
@@ -222,6 +220,7 @@
   local function create_me_a_orb_glow(f,useorb,pos)
     local glow = CreateFrame("PlayerModel", nil, f)
     glow:SetFrameStrata("BACKGROUND")
+    glow:SetFrameLevel(5)
     glow:SetAllPoints(f)
     glow:SetModel(orbtab[useorb].anim)
     glow:SetModelScale(orbtab[useorb].scale)
@@ -239,10 +238,11 @@
   -- / CREATE ME A FRAME FUNC / --
   ------------------------------------------------------
 
-  local function create_me_a_frame(fart,fname,fparent,fstrata,fwidth,fheight,fanchor,fxpos,fypos,fscale,fdrag,finherit)
+  local function create_me_a_frame(fart,fname,fparent,fstrata,flevel,fwidth,fheight,fanchor,fxpos,fypos,fscale,fdrag,finherit)
     --  PARENT, BACKGROUND, LOW, MEDIUM, HIGH, DIALOG, FULLSCREEN, FULLSCREEN_DIALOG, TOOLTIP 
     local f = CreateFrame(fart,fname,fparent,finherit)
     f:SetFrameStrata(fstrata)
+    f:SetFrameLevel(flevel)
     f:SetWidth(fwidth)
     f:SetHeight(fheight)
     if fname == "rBBS_Holder" then
@@ -378,7 +378,7 @@
   
   local function create_orb(orbtype,orbsize,orbanchorframe,orbpoint,orbposx,orbposy,orbscale,orbfilltex,useorb)
     --create the player frame
-    local orb1 = create_me_a_frame("Button",nil,orbanchorframe,"BACKGROUND",orbsize,orbsize,orbpoint,orbposx,orbposy,orbscale,nil,"SecureUnitButtonTemplate")
+    local orb1 = create_me_a_frame("Button",nil,orbanchorframe,"BACKGROUND",4,orbsize,orbsize,orbpoint,orbposx,orbposy,orbscale,nil,"SecureUnitButtonTemplate")
     orb1:RegisterForClicks("AnyUp")
     orb1:SetAttribute("unit", "player")
     orb1:SetAttribute("*type1", "target")
@@ -410,7 +410,7 @@
       mglow1 = glow1
       mglow2 = glow2
     end
-    local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"LOW",orbsize,orbsize,"BOTTOM",0,0,1)
+    local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"BACKGROUND",7,orbsize,orbsize,"BOTTOM",0,0,1)
     local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
     local orbtext1 = set_me_a_font(orb1_glossholder, default_font, orbsize/5, "THINOUTLINE")
     orbtext1:SetPoint("CENTER", 0, (orbsize/12))
@@ -426,6 +426,7 @@
       local _, pt = UnitClass("player")
       if pt == "DRUID" then
         orb1_glossholder:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+        orb1_glossholder:RegisterEvent("PLAYER_LOGIN")
         orb1_glossholder:SetScript("OnEvent", function(self,event)
           if event == "UPDATE_SHAPESHIFT_FORM" then
             set_automana()
@@ -461,22 +462,22 @@
   ------------------------------------------------------  
   local function create_d1_style(scale)
     --holder
-    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",100,100,"BOTTOM",0,0,scale)
+    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",1,100,100,"BOTTOM",0,0,scale)
     frame_to_scale = holder    
     --bar texture
-    local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1024,256,"BOTTOM",0,0,1)
+    local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",2,1024,256,"BOTTOM",0,0,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d1tex\\bar")
     --orbs
     create_orb("life",160,holder,"BOTTOM",-290,120,1,"orb_filling4",rBottomBarStyler.healthorb)
     create_orb("mana",160,holder,"BOTTOM",285,120,1,"orb_filling4",rBottomBarStyler.manaorb)
     --left figure
-    local lefty = create_me_a_frame("Frame",nil,holder,"MEDIUM",256,256,"BOTTOM",-320,35,0.9)
+    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",-320,35,0.9)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d1tex\\figure_left")
     --right figure
-    local righty = create_me_a_frame("Frame",nil,holder,"MEDIUM",256,256,"BOTTOM",320,35,0.9)
+    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",320,35,0.9)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d1tex\\figure_right")
     --dragframe
-    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
+    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,100,100,"BOTTOM",0,0,scale,true)
     frame_to_drag = dragframe  
   end
 
@@ -485,27 +486,27 @@
   ------------------------------------------------------  
   local function create_d2_style(scale)
     --holder
-    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",100,100,"BOTTOM",0,0,scale)
+    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",1,100,100,"BOTTOM",0,0,scale)
     frame_to_scale = holder        
     --bar texture
-    local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1024,128,"BOTTOM",0,44,1)
+    local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",8,1024,128,"BOTTOM",0,44,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\bar")
     --border
-    local border_left = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1024,512,"BOTTOMRIGHT",0,0,1)
+    local border_left = create_me_a_frame("Frame",nil,holder,"BACKGROUND",3,1024,512,"BOTTOMRIGHT",-40,0,1)
     local border_left_tex = create_me_a_texture(border_left,"BORDER","Interface\\AddOns\\rBottomBarStyler\\d2tex\\border_left")
-    local border_right = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1024,512,"BOTTOMLEFT",0,0,1)
+    local border_right = create_me_a_frame("Frame",nil,holder,"BACKGROUND",3,1024,512,"BOTTOMLEFT",40,0,1)
     local border_right_tex = create_me_a_texture(border_right,"BORDER","Interface\\AddOns\\rBottomBarStyler\\d2tex\\border_right")
     --orbs
     create_orb("life",160,holder,"BOTTOM",-472,55,1,"orb_filling4",rBottomBarStyler.healthorb)
     create_orb("mana",160,holder,"BOTTOM",465,55,1,"orb_filling4",rBottomBarStyler.manaorb)
     --left figure
-    local lefty = create_me_a_frame("Frame",nil,holder,"MEDIUM",256,256,"BOTTOM",-453,44,1)
+    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",-453,44,1)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\figure_left")
     --right figure
-    local righty = create_me_a_frame("Frame",nil,holder,"MEDIUM",256,256,"BOTTOM",453,44,1)
+    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",453,44,1)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\figure_right")
     --dragframe
-    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
+    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,100,100,"BOTTOM",0,0,scale,true)
     frame_to_drag = dragframe      
   end
   
@@ -514,22 +515,25 @@
   ------------------------------------------------------  
   local function create_d3_style(scale)
     --holder
-    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",100,100,"BOTTOM",0,0,scale)
+    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",1,100,100,"BOTTOM",0,0,scale)
     frame_to_scale = holder    
     --bar texture
-    local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1024,128,"BOTTOM",0,0,1)
+    local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",2,1024,256,"BOTTOM",0,0,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\bar")
     --orbs
     create_orb("life",200,holder,"BOTTOM",-471,-3,1,"orb_filling4",rBottomBarStyler.healthorb)
     create_orb("mana",200,holder,"BOTTOM",471,-3,1,"orb_filling4",rBottomBarStyler.manaorb)
+    --xp
+    local xpholder = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,1024,32,"BOTTOM",0,104,1)
+    local xpholder_tex = create_me_a_texture(xpholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\xpbar")
     --left figure
-    local lefty = create_me_a_frame("Frame",nil,holder,"MEDIUM",512,256,"BOTTOM",-470,0,1)
+    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,512,256,"BOTTOM",-461,0,1)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\figure_left")
     --right figure
-    local righty = create_me_a_frame("Frame",nil,holder,"MEDIUM",512,256,"BOTTOM",470,0,1)
+    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,512,256,"BOTTOM",464,0,1)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\figure_right")
     --dragframe
-    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
+    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,100,100,"BOTTOM",0,0,scale,true)
     frame_to_drag = dragframe      
   end
   
@@ -538,28 +542,52 @@
   ------------------------------------------------------  
   local function create_roth_style(scale)
     --holder
-    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",100,100,"BOTTOM",0,0,scale)
+    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",1,100,100,"BOTTOM",0,0,scale)
     frame_to_scale = holder    
     --bar texture
-    local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",512,256,"BOTTOM",0,0,1)
+    local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",2,512,256,"BOTTOM",0,0,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\"..rBottomBarStyler.barvalue)
     bar_to_show = bar_tex    
     --orbs
     create_orb("life",140,holder,"BOTTOM",-255,-8,1,"orb_filling4",rBottomBarStyler.healthorb)
     create_orb("mana",140,holder,"BOTTOM",250,-8,1,"orb_filling4",rBottomBarStyler.manaorb)    
     --bottom
-    local bottom = create_me_a_frame("Frame",nil,holder,"MEDIUM",510,110,"BOTTOM",0,-10,1)
+    local bottom = create_me_a_frame("Frame",nil,holder,"BACKGROUND",9,510,110,"BOTTOM",0,-10,1)
     local bottom_tex = create_me_a_texture(bottom,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\bottom")    
     --left figure
-    local lefty = create_me_a_frame("Frame",nil,holder,"MEDIUM",256,256,"BOTTOM",-530,0,0.6)
+    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",-530,0,0.6)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\figure_left")    
     --right figure
-    local righty = create_me_a_frame("Frame",nil,holder,"MEDIUM",256,256,"BOTTOM",520,0,0.6)
+    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",520,0,0.6)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\figure_right")    
     --dragframe
-    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",100,100,"BOTTOM",0,0,scale,true)
+    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,100,100,"BOTTOM",0,0,scale,true)
     frame_to_drag = dragframe      
   end  
+  
+  ------------------------------------------------------
+  -- / CREATE AION STYLE / --
+  ------------------------------------------------------  
+  local function create_aion_style(scale)
+    --holder
+    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",1,100,100,"BOTTOM",0,0,scale)
+    frame_to_scale = holder    
+    --bar texture
+    local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",2,512,128,"BOTTOM",0,10,1)
+    local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\aiontex\\bar")
+    --orbs
+    create_orb("life",125,holder,"BOTTOM",-245,20,1,"orb_filling4",rBottomBarStyler.healthorb)
+    create_orb("mana",125,holder,"BOTTOM",245,20,1,"orb_filling4",rBottomBarStyler.manaorb)
+    --left figure
+    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",-250,-40,1)
+    local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\aiontex\\figure_left")
+    --right figure
+    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",250,-40,1)
+    local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\aiontex\\figure_right")
+    --dragframe
+    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,100,100,"BOTTOM",0,0,scale,true)
+    frame_to_drag = dragframe      
+  end
   
   ------------------------------------------------------
   -- / LOAD STYLE FUNC / --
@@ -572,6 +600,8 @@
       create_d1_style(scale)
     elseif style == "d2" then
       create_d2_style(scale)
+    elseif style == "aion" then
+      create_aion_style(scale)
     else
       create_d3_style(scale)
     end
@@ -605,13 +635,13 @@
       local a,b = strfind(cmd, " ");
       if b then
         local c = strsub(cmd, b+1)
-        if c == "d1" or c == "d2" or c == "d3" or c == "roth" then
+        if c == "d1" or c == "d2" or c == "d3" or c == "roth" or c == "aion" then
           am("You set the art to: "..c)
           rBottomBarStyler.artvalue = c
           am("You need to reoad the interface to see the changes.")
           am("Type in: \"/console reloadui\".")
         else
-          am("Wrong value. (possible values: d1, d2, d3, roth)")
+          am("Wrong value. (possible values: d1, d2, d3, roth, aion)")
         end
       else
         am("No value found.")
@@ -727,7 +757,7 @@
       am("\/rbbs getlocked")
       am("\/rbbs getmovable")
       am("\/rbbs setscale NUMBER")
-      am("\/rbbs setart STRING (possible values: d1, d2, d3, roth)")
+      am("\/rbbs setart STRING (possible values: d1, d2, d3, roth, aion)")
       am("\/rbbs setbar STRING (possible values: bar1, bar2, bar3 - only affects the roth layout)")
       am("\/rbbs locked NUMBER (value of 1 locks bars, 0 unlocks)")
       am("\/rbbs movable NUMBER (value of 1 makes bars movable if unlocked, value of 0 will reset position)")

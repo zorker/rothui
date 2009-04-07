@@ -137,8 +137,12 @@
       jExp2.point = nil
       jExp2.posx = nil
       jExp2.posy = nil
+      jExp2.width = nil
+      jExp2.height = nil
       frame_to_scale:ClearAllPoints()
-      frame_to_scale:SetPoint("BOTTOM",0,0)
+      frame_to_scale:SetPoint(default_point,default_posx,default_posy)
+      frame_to_scale:SetWidth(default_width)
+      frame_to_scale:SetHeight(default_height)
     end  
   end
     
@@ -154,7 +158,6 @@
     f:SetHeight(fheight)
     if fname == "jExp2_Holder" then
       if jExp2.point and jExp2.posx and jExp2.posy then
-        am("hciks")
         f:SetPoint(jExp2.point,jExp2.posx,jExp2.posy)
       else
         f:SetPoint(fanchor,fxpos,fypos)
@@ -362,9 +365,25 @@
         end
       else
         am("No value found.")
+      end  
+    --movable
+    elseif (cmd:match"movable") then
+      local a,b = strfind(cmd, " ");
+      if b then
+        local c = strsub(cmd, b+1)
+        if tonumber(c) then
+          am("Movable is set to: "..c)
+          jExp2.movable = tonumber(c)
+          move_my_frame()
+        else
+          am("No number value.")
+        end
+      else
+        am("No value found.")
       end    
     else
       am("jExp commands...")
+      am("\/jexp movable NUMBER (value of 1 allows moving bars, 0 resets the bar!)")
       am("\/jexp locked NUMBER (value of 1 locks bars, 0 unlocks)")
     end    
   end

@@ -34,7 +34,7 @@
   
   local default_scale = 0.6
   local default_art = "d3"  
-  local default_bar = "bar2"  
+  local default_bar = "bar1"  
   local default_movable = 1
   local default_locked = 1
   local default_healthorb = 2
@@ -410,7 +410,7 @@
       mglow1 = glow1
       mglow2 = glow2
     end
-    local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"BACKGROUND",7,orbsize,orbsize,"BOTTOM",0,0,1)
+    local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"BACKGROUND",6,orbsize,orbsize,"BOTTOM",0,0,1)
     local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
     local orbtext1 = set_me_a_font(orb1_glossholder, default_font, orbsize/5, "THINOUTLINE")
     orbtext1:SetPoint("CENTER", 0, (orbsize/12))
@@ -452,8 +452,10 @@
   local function set_me_a_bar()
     if rBottomBarStyler.artvalue == "roth" then
       bar_to_show:SetTexture("Interface\\AddOns\\rBottomBarStyler\\rothtex\\"..rBottomBarStyler.barvalue)
+    elseif rBottomBarStyler.artvalue == "d3" then
+      bar_to_show:SetTexture("Interface\\AddOns\\rBottomBarStyler\\d3tex\\"..rBottomBarStyler.barvalue)
     else
-      am("Does only work for roth layout")
+      am("Does only work for roth or d3 layout")
     end
   end 
 
@@ -471,10 +473,10 @@
     create_orb("life",160,holder,"BOTTOM",-290,120,1,"orb_filling4",rBottomBarStyler.healthorb)
     create_orb("mana",160,holder,"BOTTOM",285,120,1,"orb_filling4",rBottomBarStyler.manaorb)
     --left figure
-    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",-320,35,0.9)
+    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,256,256,"BOTTOM",-320,35,0.9)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d1tex\\figure_left")
     --right figure
-    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",320,35,0.9)
+    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,256,256,"BOTTOM",320,35,0.9)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d1tex\\figure_right")
     --dragframe
     local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,100,100,"BOTTOM",0,0,scale,true)
@@ -500,10 +502,10 @@
     create_orb("life",160,holder,"BOTTOM",-472,55,1,"orb_filling4",rBottomBarStyler.healthorb)
     create_orb("mana",160,holder,"BOTTOM",465,55,1,"orb_filling4",rBottomBarStyler.manaorb)
     --left figure
-    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",-453,44,1)
+    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,256,256,"BOTTOM",-453,44,1)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\figure_left")
     --right figure
-    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",453,44,1)
+    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,256,256,"BOTTOM",453,44,1)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\figure_right")
     --dragframe
     local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,100,100,"BOTTOM",0,0,scale,true)
@@ -511,26 +513,27 @@
   end
   
   ------------------------------------------------------
-  -- / CREATE D3 STYLE / --
+  -- / CREATE D3 STYLE (ADAPTED) / --
   ------------------------------------------------------  
   local function create_d3_style(scale)
     --holder
     local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",1,100,100,"BOTTOM",0,0,scale)
     frame_to_scale = holder    
     --bar texture
-    local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",2,1024,256,"BOTTOM",0,0,1)
-    local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\bar")
+    local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",2,1024,512,"BOTTOM",0,0,1)
+    local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\"..rBottomBarStyler.barvalue)
+    bar_to_show = bar_tex   
     --orbs
-    create_orb("life",200,holder,"BOTTOM",-471,-3,1,"orb_filling4",rBottomBarStyler.healthorb)
-    create_orb("mana",200,holder,"BOTTOM",471,-3,1,"orb_filling4",rBottomBarStyler.manaorb)
+    create_orb("life",200,holder,"BOTTOM",-525,-6,1,"orb_filling4",rBottomBarStyler.healthorb)
+    create_orb("mana",200,holder,"BOTTOM",525,-6,1,"orb_filling4",rBottomBarStyler.manaorb)
     --xp
-    local xpholder = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,1024,32,"BOTTOM",0,104,1)
+    local xpholder = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,1178,32,"BOTTOM",0,104,1)
     local xpholder_tex = create_me_a_texture(xpholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\xpbar")
     --left figure
-    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,512,256,"BOTTOM",-461,0,1)
+    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,512,256,"BOTTOM",-520,0,1)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\figure_left")
     --right figure
-    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,512,256,"BOTTOM",464,0,1)
+    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,512,256,"BOTTOM",522,0,1)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\figure_right")
     --dragframe
     local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,100,100,"BOTTOM",0,0,scale,true)
@@ -555,10 +558,10 @@
     local bottom = create_me_a_frame("Frame",nil,holder,"BACKGROUND",9,510,110,"BOTTOM",0,-10,1)
     local bottom_tex = create_me_a_texture(bottom,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\bottom")    
     --left figure
-    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",-530,0,0.6)
+    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,512,256,"BOTTOM",-440,0,0.6)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\figure_left")    
     --right figure
-    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",520,0,0.6)
+    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,512,256,"BOTTOM",435,0,0.6)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\figure_right")    
     --dragframe
     local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,100,100,"BOTTOM",0,0,scale,true)
@@ -579,10 +582,10 @@
     create_orb("life",125,holder,"BOTTOM",-245,20,1,"orb_filling4",rBottomBarStyler.healthorb)
     create_orb("mana",125,holder,"BOTTOM",245,20,1,"orb_filling4",rBottomBarStyler.manaorb)
     --left figure
-    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",-250,-40,1)
+    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,256,256,"BOTTOM",-250,-40,1)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\aiontex\\figure_left")
     --right figure
-    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,256,256,"BOTTOM",250,-40,1)
+    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,256,256,"BOTTOM",250,-40,1)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\aiontex\\figure_right")
     --dragframe
     local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,100,100,"BOTTOM",0,0,scale,true)
@@ -758,7 +761,7 @@
       am("\/rbbs getmovable")
       am("\/rbbs setscale NUMBER")
       am("\/rbbs setart STRING (possible values: d1, d2, d3, roth, aion)")
-      am("\/rbbs setbar STRING (possible values: bar1, bar2, bar3 - only affects the roth layout)")
+      am("\/rbbs setbar STRING (possible values: bar1, bar2, bar3 - only affects the roth or d3 layout)")
       am("\/rbbs locked NUMBER (value of 1 locks bars, 0 unlocks)")
       am("\/rbbs movable NUMBER (value of 1 makes bars movable if unlocked, value of 0 will reset position)")
  

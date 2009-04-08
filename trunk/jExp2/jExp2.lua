@@ -94,7 +94,7 @@
   end
   
   ------------------------------------------------------
-  -- / SAVE POSXY FUNC / --
+  -- / SET FRAMELEVELS FUNC / --
   ------------------------------------------------------
   
   local function set_framelevels()
@@ -430,7 +430,7 @@
           jExp2.bfstrata = c
           set_framelevels()
         else
-          am("Wrong value. (possible values: bar1, bar2, bar3)")
+          am("Wrong value. (possible values: BACKGROUND, LOW, MEDIUM, HIGH)")
         end
       else
         am("No value found.")

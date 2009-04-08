@@ -454,6 +454,8 @@
       bar_to_show:SetTexture("Interface\\AddOns\\rBottomBarStyler\\rothtex\\"..rBottomBarStyler.barvalue)
     elseif rBottomBarStyler.artvalue == "d3" then
       bar_to_show:SetTexture("Interface\\AddOns\\rBottomBarStyler\\d3tex\\"..rBottomBarStyler.barvalue)
+    elseif rBottomBarStyler.artvalue == "d3no" then
+      bar_to_show:SetTexture("Interface\\AddOns\\rBottomBarStyler\\d3tex\\"..rBottomBarStyler.barvalue)
     else
       am("Does only work for roth or d3 layout")
     end
@@ -541,6 +543,34 @@
   end
   
   ------------------------------------------------------
+  -- / CREATE D3 NO ORB STYLE / --
+  ------------------------------------------------------  
+  local function create_d3no_style(scale)
+    --holder
+    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",1,100,100,"BOTTOM",0,0,scale)
+    frame_to_scale = holder    
+    --bgframe
+    local bg = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1,1050,115,"BOTTOM",0,0,1)
+    local bg_tex = create_me_a_texture(bg,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\bg")
+    --bar texture
+    local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",2,1024,512,"BOTTOM",0,0,1)
+    local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\"..rBottomBarStyler.barvalue)
+    bar_to_show = bar_tex   
+    --xp
+    local xpholder = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,1178,32,"BOTTOM",0,104,1)
+    local xpholder_tex = create_me_a_texture(xpholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\xpbar")
+    --left figure
+    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,512,256,"BOTTOM",-390,0,1)
+    local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\figure_left2")
+    --right figure
+    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,512,256,"BOTTOM",380,0,1)
+    local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\figure_right2")
+    --dragframe
+    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,100,100,"BOTTOM",0,0,scale,true)
+    frame_to_drag = dragframe      
+  end
+  
+  ------------------------------------------------------
   -- / CREATE ROTH STYLE / --
   ------------------------------------------------------  
   local function create_roth_style(scale)
@@ -593,6 +623,36 @@
   end
   
   ------------------------------------------------------
+  -- / CREATE AION2 STYLE provided by Dawn / --
+  ------------------------------------------------------  
+  local function create_aion2_style(scale)
+    --holder
+    local holder = create_me_a_frame("Frame","rBBS_Holder",UIParent,"BACKGROUND",1,100,100,"BOTTOM",0,0,scale)
+    frame_to_scale = holder    
+    --bar texture
+    local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1,1440,360,"BOTTOM",0,0,1)
+    local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\aion2tex\\bar")
+    --xpBG
+    local xpholderbg = create_me_a_frame("Frame",nil,holder,"BACKGROUND",1,1024,64,"BOTTOM",0,0,1)
+    local xpholderbg_tex = create_me_a_texture(xpholderbg,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\aion2tex\\xpbarBG")
+    --xp
+    local xpholder = create_me_a_frame("Frame",nil,holder,"BACKGROUND",8,1024,64,"BOTTOM",0,0,1)
+    local xpholder_tex = create_me_a_texture(xpholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\aion2tex\\xpbar")
+    --orbs
+    create_orb("life",180,holder,"BOTTOM",-590,100,1,"orb_filling5",rBottomBarStyler.healthorb)
+    create_orb("mana",180,holder,"BOTTOM",590,100,1,"orb_filling5",rBottomBarStyler.manaorb)
+    --left figure
+    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,386,386,"BOTTOM",-585,3,1)
+    local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\aion2tex\\figure_left")
+    --right figure
+    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",10,386,386,"BOTTOM",585,3,1)
+    local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\aion2tex\\figure_right")
+    --dragframe
+    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,100,100,"BOTTOM",0,0,scale,true)
+    frame_to_drag = dragframe      
+  end
+  
+  ------------------------------------------------------
   -- / LOAD STYLE FUNC / --
   ------------------------------------------------------
   
@@ -605,6 +665,10 @@
       create_d2_style(scale)
     elseif style == "aion" then
       create_aion_style(scale)
+    elseif style == "aion2" then
+      create_aion2_style(scale)
+    elseif style == "d3no" then
+      create_d3no_style(scale)
     else
       create_d3_style(scale)
     end
@@ -638,13 +702,13 @@
       local a,b = strfind(cmd, " ");
       if b then
         local c = strsub(cmd, b+1)
-        if c == "d1" or c == "d2" or c == "d3" or c == "roth" or c == "aion" then
+        if c == "d1" or c == "d2" or c == "d3" or c == "d3no" or c == "roth" or c == "aion" or c == "aion2" then
           am("You set the art to: "..c)
           rBottomBarStyler.artvalue = c
           am("You need to reoad the interface to see the changes.")
           am("Type in: \"/console reloadui\".")
         else
-          am("Wrong value. (possible values: d1, d2, d3, roth, aion)")
+          am("Wrong value. (possible values: d1, d2, d3, d3no, roth, aion, aion2)")
         end
       else
         am("No value found.")
@@ -760,8 +824,8 @@
       am("\/rbbs getlocked")
       am("\/rbbs getmovable")
       am("\/rbbs setscale NUMBER")
-      am("\/rbbs setart STRING (possible values: d1, d2, d3, roth, aion)")
-      am("\/rbbs setbar STRING (possible values: bar1, bar2, bar3 - only affects the roth or d3 layout)")
+      am("\/rbbs setart STRING (possible values: d1, d2, d3, d3no, roth, aion, aion2)")
+      am("\/rbbs setbar STRING (possible values: bar1, bar2, bar3 - only affects the roth, d3 or d3no layout)")
       am("\/rbbs locked NUMBER (value of 1 locks bars, 0 unlocks)")
       am("\/rbbs movable NUMBER (value of 1 makes bars movable if unlocked, value of 0 will reset position)")
  

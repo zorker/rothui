@@ -85,7 +85,7 @@
     if(not jExp2.locked) then 
       jExp2.locked = default_locked
     end
-    if(not jExp2.bflevel) then 
+    if(not jExp2.bflevel) or  (jExp2.bflevel < 2) then 
       jExp2.bflevel = default_bflevel
     end
     if(not jExp2.bfstrata) then 
@@ -104,8 +104,8 @@
     frame_to_activate:SetFrameLevel(jExp2.bflevel)
     rbar:SetFrameStrata(jExp2.bfstrata)
     rbar:SetFrameLevel(jExp2.bflevel-1)
-    xpbar:SetFrameStrata(jExp2.bfstrata)
-    xpbar:SetFrameLevel(jExp2.bflevel+1)
+    xbar:SetFrameStrata(jExp2.bfstrata)
+    xbar:SetFrameLevel(jExp2.bflevel+1)
   end  
   
   ------------------------------------------------------
@@ -352,7 +352,7 @@
     rbar = repbar
     local xpbar = create_me_a_statusbar(bf,xpcol.r,xpcol.g,xpcol.b,0.85,jExp2.bfstrata,jExp2.bflevel+1,statusbartex)
     xbar = xpbar
-    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,jExp2.width,jExp2.height,"BOTTOM",0,0,jExp2.scale,true)
+    local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",99,jExp2.width,jExp2.height,"BOTTOM",0,0,jExp2.scale,true)
     frame_to_drag = dragframe     
     
     bf:EnableMouse(true)
@@ -411,9 +411,13 @@
       if b then
         local c = strsub(cmd, b+1)
         if tonumber(c) then
-          am("Framelevel is set to: "..c)
-          jExp2.bflevel = tonumber(c)
-          set_framelevels()
+          if tonumber(c) < 2 then
+            am("Framelevel must be at least 2!")
+          else
+            am("Framelevel is set to: "..c)
+            jExp2.bflevel = tonumber(c)
+            set_framelevels()
+          end
         else
           am("No number value.")
         end
@@ -425,12 +429,12 @@
       local a,b = strfind(cmd, " ");
       if b then
         local c = strsub(cmd, b+1)
-        if c == "BACKGROUND" or c == "LOW" or c == "MEDIUM" or c == "HIGH" then
+        if c == "BACKGROUND" or c == "LOW" or c == "MEDIUM" or c == "HIGH" or c == "DIALOG" or c == "TOOLTIP" then
           am("You set the bar to: "..c)
           jExp2.bfstrata = c
           set_framelevels()
         else
-          am("Wrong value. (possible values: BACKGROUND, LOW, MEDIUM, HIGH)")
+          am("Wrong value. (possible values: BACKGROUND, LOW, MEDIUM, HIGH, DIALOG, TOOLTIP)")
         end
       else
         am("No value found.")
@@ -439,8 +443,8 @@
       am("jExp commands...")
       am("\/jexp movable NUMBER (Value of 1 allows you to moving the bar at all, 0 will reset the bar!)")
       am("\/jexp locked NUMBER (Value of 1 locks the bar, 0 unlocks it.)")
-      am("\/jexp level NUMBER (Sets the FrameLevel of the bar.)")
-      am("\/jexp locked NUMBER (Set the FrameStrata of the bar.) Values allowed: BACKGROUND, LOW, MEDIUM, HIGH")
+      am("\/jexp level NUMBER (Sets the FrameLevel of the bar. 2 is minimum level required.)")
+      am("\/jexp strata NUMBER (Set the FrameStrata of the bar.) Values allowed: BACKGROUND, LOW, MEDIUM, HIGH, DIALOG, TOOLTIP")
     end    
   end
 

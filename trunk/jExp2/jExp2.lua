@@ -230,110 +230,110 @@
   
   --reset
   local function rbar_ReSetValue(rxp, xp, mxp)
-  	if rxp then
-  		if rxp+xp >= mxp then
-  			rbar:SetValue(mxp)
-  		else
-  			rbar:SetValue(rxp+xp)
-  		end
-  	else
-  		rbar:SetValue(0)
-  	end
-  end	
+    if rxp then
+      if rxp+xp >= mxp then
+        rbar:SetValue(mxp)
+      else
+        rbar:SetValue(rxp+xp)
+      end
+    else
+      rbar:SetValue(0)
+    end
+  end  
   
   --showxp
   local function bf_ShowXP(rxp, xp, mxp)
-  	bbg:SetVertexColor(xpcol.r,xpcol.g,xpcol.b, 0.2)
-  	xbar:SetStatusBarColor(xpcol.r,xpcol.g,xpcol.b, 0.85)
-  	xbar:SetMinMaxValues(0,mxp)
-  	xbar:SetValue(xp)
-  	rbar:SetMinMaxValues(0,mxp)
-  	rbar_ReSetValue(rxp, xp, mxp)
+    bbg:SetVertexColor(xpcol.r,xpcol.g,xpcol.b, 0.2)
+    xbar:SetStatusBarColor(xpcol.r,xpcol.g,xpcol.b, 0.85)
+    xbar:SetMinMaxValues(0,mxp)
+    xbar:SetValue(xp)
+    rbar:SetMinMaxValues(0,mxp)
+    rbar_ReSetValue(rxp, xp, mxp)
   end
   
   --showrep
   local function bf_ShowRep()
-  	name, standing, minrep, maxrep, value = GetWatchedFactionInfo()
-  	if name then
-  		bbg:SetVertexColor(FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b, 0.2)
-  		xbar:SetStatusBarColor(FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b, 0.85)
-  		xbar:SetMinMaxValues(minrep,maxrep)
-  		xbar:SetValue(value)
-  		rbar:SetValue(0)
-  	else
-  		mxp = UnitXPMax("player")
-  		xp = UnitXP("player")
-  		rxp = GetXPExhaustion()
-  		bf_ShowXP(rxp, xp, mxp)
-  	end
+    name, standing, minrep, maxrep, value = GetWatchedFactionInfo()
+    if name then
+      bbg:SetVertexColor(FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b, 0.2)
+      xbar:SetStatusBarColor(FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b, 0.85)
+      xbar:SetMinMaxValues(minrep,maxrep)
+      xbar:SetValue(value)
+      rbar:SetValue(0)
+    else
+      mxp = UnitXPMax("player")
+      xp = UnitXP("player")
+      rxp = GetXPExhaustion()
+      bf_ShowXP(rxp, xp, mxp)
+    end
   end
     
   --onevent
   local function bf_OnEvent(this, event, arg1, arg2, arg3, arg4, ...)
-  	mxp = UnitXPMax("player")
-  	xp = UnitXP("player")
-  	rxp = GetXPExhaustion()
-  	
-  	if event == "PLAYER_ENTERING_WORLD" then
-  		if UnitLevel("player") == MAX_PLAYER_LEVEL then
-  			bf_ShowRep()
-  		else
-  			bf_ShowXP(rxp, xp, mxp)
-  		end
-  	elseif event == "PLAYER_XP_UPDATE" and arg1 == "player" then
-  		xbar:SetValue(xp)
-  		rbar_ReSetValue(rxp, xp, mxp)
-  	elseif event == "PLAYER_LEVEL_UP" then
-  		if UnitLevel("player") == MAX_PLAYER_LEVEL then
-  			bf_ShowRep()
-  		else
-  			bf_ShowXP(rxp, xp, mxp)
-  		end
-  	elseif event == "MODIFIER_STATE_CHANGED" then
-  		if arg1 == "LCTRL" or arg1 == "RCTRL" then
-  			if arg2 == 1 then
-  				bf_ShowRep()
-  			elseif arg2 == 0 and UnitLevel("player") ~= MAX_PLAYER_LEVEL then
-  				bf_ShowXP(rxp, xp, mxp)
-  			end
-  		end
-  	elseif event == "UPDATE_FACTION" then
-  		if UnitLevel("player") == MAX_PLAYER_LEVEL then
-  			bf_ShowRep()
-  		end
-  	end
+    mxp = UnitXPMax("player")
+    xp = UnitXP("player")
+    rxp = GetXPExhaustion()
+    
+    if event == "PLAYER_ENTERING_WORLD" then
+      if UnitLevel("player") == MAX_PLAYER_LEVEL then
+        bf_ShowRep()
+      else
+        bf_ShowXP(rxp, xp, mxp)
+      end
+    elseif event == "PLAYER_XP_UPDATE" and arg1 == "player" then
+      xbar:SetValue(xp)
+      rbar_ReSetValue(rxp, xp, mxp)
+    elseif event == "PLAYER_LEVEL_UP" then
+      if UnitLevel("player") == MAX_PLAYER_LEVEL then
+        bf_ShowRep()
+      else
+        bf_ShowXP(rxp, xp, mxp)
+      end
+    elseif event == "MODIFIER_STATE_CHANGED" then
+      if arg1 == "LCTRL" or arg1 == "RCTRL" then
+        if arg2 == 1 then
+          bf_ShowRep()
+        elseif arg2 == 0 and UnitLevel("player") ~= MAX_PLAYER_LEVEL then
+          bf_ShowXP(rxp, xp, mxp)
+        end
+      end
+    elseif event == "UPDATE_FACTION" then
+      if UnitLevel("player") == MAX_PLAYER_LEVEL then
+        bf_ShowRep()
+      end
+    end
   end
   
   --onenter
   local function bf_OnEnter()
-  	mxp = UnitXPMax("player")
-  	xp = UnitXP("player")
-  	rxp = GetXPExhaustion()
-  	name, standing, minrep, maxrep, value = GetWatchedFactionInfo()
+    mxp = UnitXPMax("player")
+    xp = UnitXP("player")
+    rxp = GetXPExhaustion()
+    name, standing, minrep, maxrep, value = GetWatchedFactionInfo()
   
-  	GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
-  	GameTooltip:AddLine("jExp")
-  	if UnitLevel("player") ~= MAX_PLAYER_LEVEL then
-  		GameTooltip:AddDoubleLine(COMBAT_XP_GAIN, xp.."|cffffd100/|r"..mxp.." |cffffd100/|r "..floor((xp/mxp)*1000)/10 .."%",NORMAL_FONT_COLOR.r,NORMAL_FONT_COLOR.g,NORMAL_FONT_COLOR.b,1,1,1)
-  		if rxp then
-  			GameTooltip:AddDoubleLine(TUTORIAL_TITLE26, rxp .." |cffffd100/|r ".. floor((rxp/mxp)*1000)/10 .."%", NORMAL_FONT_COLOR.r,NORMAL_FONT_COLOR.g,NORMAL_FONT_COLOR.b,1,1,1)
-  		end
-  		if name then
-  			GameTooltip:AddLine(" ")			
-  		end
-  	end
-  	if name then
-  		GameTooltip:AddDoubleLine(FACTION, name, NORMAL_FONT_COLOR.r,NORMAL_FONT_COLOR.g,NORMAL_FONT_COLOR.b,1,1,1)
-  		GameTooltip:AddDoubleLine(STANDING, getglobal("FACTION_STANDING_LABEL"..standing), NORMAL_FONT_COLOR.r,NORMAL_FONT_COLOR.g,NORMAL_FONT_COLOR.b,FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b)
-  		GameTooltip:AddDoubleLine(REPUTATION, value-minrep .."|cffffd100/|r"..maxrep-minrep.." |cffffd100/|r "..floor((value-minrep)/(maxrep-minrep)*1000)/10 .."%", NORMAL_FONT_COLOR.r,NORMAL_FONT_COLOR.g,NORMAL_FONT_COLOR.b,1,1,1)
-  	end
-  		
-  	GameTooltip:Show()
+    GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR")
+    GameTooltip:AddLine("jExp")
+    if UnitLevel("player") ~= MAX_PLAYER_LEVEL then
+      GameTooltip:AddDoubleLine(COMBAT_XP_GAIN, xp.."|cffffd100/|r"..mxp.." |cffffd100/|r "..floor((xp/mxp)*1000)/10 .."%",NORMAL_FONT_COLOR.r,NORMAL_FONT_COLOR.g,NORMAL_FONT_COLOR.b,1,1,1)
+      if rxp then
+        GameTooltip:AddDoubleLine(TUTORIAL_TITLE26, rxp .." |cffffd100/|r ".. floor((rxp/mxp)*1000)/10 .."%", NORMAL_FONT_COLOR.r,NORMAL_FONT_COLOR.g,NORMAL_FONT_COLOR.b,1,1,1)
+      end
+      if name then
+        GameTooltip:AddLine(" ")      
+      end
+    end
+    if name then
+      GameTooltip:AddDoubleLine(FACTION, name, NORMAL_FONT_COLOR.r,NORMAL_FONT_COLOR.g,NORMAL_FONT_COLOR.b,1,1,1)
+      GameTooltip:AddDoubleLine(STANDING, getglobal("FACTION_STANDING_LABEL"..standing), NORMAL_FONT_COLOR.r,NORMAL_FONT_COLOR.g,NORMAL_FONT_COLOR.b,FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b)
+      GameTooltip:AddDoubleLine(REPUTATION, value-minrep .."|cffffd100/|r"..maxrep-minrep.." |cffffd100/|r "..floor((value-minrep)/(maxrep-minrep)*1000)/10 .."%", NORMAL_FONT_COLOR.r,NORMAL_FONT_COLOR.g,NORMAL_FONT_COLOR.b,1,1,1)
+    end
+      
+    GameTooltip:Show()
   end
   
   --onleave
   local function bf_OnLeave()
-  	GameTooltip:Hide()
+    GameTooltip:Hide()
   end
   
   ------------------------------------------------------

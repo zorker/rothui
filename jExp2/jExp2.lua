@@ -40,10 +40,13 @@
   local default_posy = 0 
   local default_movable = 1 
   local default_locked = 1
+  local default_bflevel = 2
+  local default_bfstrata = "BACKGROUND"
   jExp2 = jExp2 or {}
   local xbar, rbar, bbg, frame_to_drag, frame_to_scale, frame_to_activate
   local xpcol = {r = 0.8, g = 0, b = 0}
   local repcol = {r = 1, g = 0.6, b = 0}
+  local statusbartex = "Interface\\AddOns\\jExp2\\statusbar.tga"
   
   ------------------------------------------------------
   -- / CHAT OUTPUT FUNC / --
@@ -82,7 +85,28 @@
     if(not jExp2.locked) then 
       jExp2.locked = default_locked
     end
+    if(not jExp2.bflevel) then 
+      jExp2.bflevel = default_bflevel
+    end
+    if(not jExp2.bfstrata) then 
+      jExp2.bfstrata = default_bfstrata
+    end
   end
+  
+  ------------------------------------------------------
+  -- / SAVE POSXY FUNC / --
+  ------------------------------------------------------
+  
+  local function set_framelevels()
+    frame_to_scale:SetFrameStrata(jExp2.bfstrata)
+    frame_to_scale:SetFrameLevel(jExp2.bflevel-2)
+    frame_to_activate:SetFrameStrata(jExp2.bfstrata)
+    frame_to_activate:SetFrameLevel(jExp2.bflevel)
+    rbar:SetFrameStrata(jExp2.bfstrata)
+    rbar:SetFrameLevel(jExp2.bflevel-1)
+    xpbar:SetFrameStrata(jExp2.bfstrata)
+    xpbar:SetFrameLevel(jExp2.bflevel+1)
+  end  
   
   ------------------------------------------------------
   -- / SAVE POSXY FUNC / --
@@ -318,15 +342,15 @@
   
   -- create the bar
   local function create_xpbars()    
-    local holder = create_me_a_frame("Frame","jExp2_Holder",UIParent,"BACKGROUND",0,jExp2.width,jExp2.height,jExp2.point,jExp2.posx,jExp2.posy,jExp2.scale)
+    local holder = create_me_a_frame("Frame","jExp2_Holder",UIParent,jExp2.bfstrata,jExp2.bflevel-2,jExp2.width,jExp2.height,jExp2.point,jExp2.posx,jExp2.posy,jExp2.scale)
     frame_to_scale = holder   
-    local bf = create_me_a_frame("Frame",nil,holder,"BACKGROUND",2,jExp2.width,jExp2.height,"BOTTOM",0,0,1)    
+    local bf = create_me_a_frame("Frame",nil,holder,jExp2.bfstrata,jExp2.bflevel+1,jExp2.width,jExp2.height,"BOTTOM",0,0,1)    
     frame_to_activate = bf
-    local back = create_me_a_texture(bf,"BACKGROUND","Interface\\AddOns\\jExp2\\statusbar.tga",xpcol.r,xpcol.g,xpcol.b, 0.2)
+    local back = create_me_a_texture(bf,"BACKGROUND",statusbartex,xpcol.r,xpcol.g,xpcol.b, 0.2)
     bbg = back
-    local repbar = create_me_a_statusbar(bf,repcol.r,repcol.g,repcol.b,0.7,"BACKGROUND",1,"Interface\\AddOns\\jExp2\\statusbar.tga")
+    local repbar = create_me_a_statusbar(bf,repcol.r,repcol.g,repcol.b,0.7,jExp2.bfstrata,jExp2.bflevel-1,statusbartex)
     rbar = repbar
-    local xpbar = create_me_a_statusbar(bf,xpcol.r,xpcol.g,xpcol.b,0.85,"BACKGROUND",3,"Interface\\AddOns\\jExp2\\statusbar.tga")
+    local xpbar = create_me_a_statusbar(bf,xpcol.r,xpcol.g,xpcol.b,0.85,jExp2.bfstrata,jExp2.bflevel+1,statusbartex)
     xbar = xpbar
     local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,jExp2.width,jExp2.height,"BOTTOM",0,0,jExp2.scale,true)
     frame_to_drag = dragframe     
@@ -381,10 +405,42 @@
       else
         am("No value found.")
       end    
+    --level
+    elseif (cmd:match"level") then
+      local a,b = strfind(cmd, " ");
+      if b then
+        local c = strsub(cmd, b+1)
+        if tonumber(c) then
+          am("Framelevel is set to: "..c)
+          jExp2.bflevel = tonumber(c)
+          set_framelevels()
+        else
+          am("No number value.")
+        end
+      else
+        am("No value found.")
+      end  
+    --setbar
+    elseif (cmd:match"strata") then
+      local a,b = strfind(cmd, " ");
+      if b then
+        local c = strsub(cmd, b+1)
+        if c == "BACKGROUND" or c == "LOW" or c == "MEDIUM" or c == "HIGH" then
+          am("You set the bar to: "..c)
+          jExp2.bfstrata = c
+          set_framelevels()
+        else
+          am("Wrong value. (possible values: bar1, bar2, bar3)")
+        end
+      else
+        am("No value found.")
+      end    
     else
       am("jExp commands...")
-      am("\/jexp movable NUMBER (value of 1 allows moving bars, 0 resets the bar!)")
-      am("\/jexp locked NUMBER (value of 1 locks bars, 0 unlocks)")
+      am("\/jexp movable NUMBER (Value of 1 allows you to moving the bar at all, 0 will reset the bar!)")
+      am("\/jexp locked NUMBER (Value of 1 locks the bar, 0 unlocks it.)")
+      am("\/jexp level NUMBER (Sets the FrameLevel of the bar.)")
+      am("\/jexp locked NUMBER (Set the FrameStrata of the bar.) Values allowed: BACKGROUND, LOW, MEDIUM, HIGH")
     end    
   end
 

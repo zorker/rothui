@@ -1,6 +1,6 @@
-## Interface: 20400
-## Author: Rothar
+## Interface: 31337
+## Author: roth
 ## Title: rFilter2
-## Notes: addon of awesomeness...lol
+## Notes: buff/debuff/cooldown filtering
 
 rFilter2.lua

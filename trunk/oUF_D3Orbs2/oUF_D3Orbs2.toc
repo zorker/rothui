@@ -1,0 +1,9 @@
+## Interface: 31337
+## Author: roth	
+## Title: oUF_D3Orbs2
+## Notes: oUF layout - Diablo 3 style
+## RequiredDeps: oUF
+## OptionalDeps: oUF_DebuffHighlight, oUF_Smooth, oUF_ReadyCheck
+## X-Category: UnitFrame
+
+layout1.lua

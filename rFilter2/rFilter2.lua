@@ -12,7 +12,7 @@
         copyright notice, this list of conditions and the following
         disclaimer in the documentation and/or other materials provided
         with the distribution.
-      * Neither the name of rFilter2 nor the names of its contributors may
+      * Neither the name of rFilter nor the names of its contributors may
         be used to endorse or promote products derived from this
         software without specific prior written permission.
 
@@ -39,14 +39,9 @@
   -- IMPORTANT, TAGS HAVE TO BE UNIQUE!!!
   -----------------------------------------------------
 
-  -- patch 3.1
-  -- 0 = not yet
-  -- 1 = patch 3.1 is active
-  local patch31 = 0
-
   -- to enable the icons OOC, put this to 1 while moving the icons and to 0 when ready
   -- 0 = off // 1 = on
-  local testmode = 0
+  local testmode = 1
   
   --alpha when buff/debuff/cd not active
   --values between 0 and one are allowed
@@ -57,20 +52,25 @@
   --make icon grey when buff noch active
   --0 = off // 1 = on
   local use_grey_vertex = 1
+  
+  local bordertexture = "Interface\\AddOns\\rTextures\\simplesquare_roth"
 
   --DEFAULT_CHAT_FRAME:AddMessage("found "..rf2_player_name.." : "..rf2_player_class)
   
   if rf2_player_name == "Grombur" and rf2_player_class == "HUNTER" then
     rf2_spell_list = {
       buffs = {
-        --[1] = { tag = "battle", spellid = 2048, unit = "player", size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [1] = { tag = "rapid", spellid = 3045, unit = "player", size = 24, fontsize = 18, posx = -64, posy = -270, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[2] = { tag = "commanding", spellid = 469, unit = "player", size = 32, fontsize = 24, posx = 40, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       debuffs = {
-        --[1] = { tag = "demo", spellid = 25203, ismine = 0, unit = "target", size = 32, fontsize = 24, posx = 0, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-        --[2] = { tag = "sunder", spellid = 25225, ismine = 0, unit = "target", size = 32, fontsize = 24, posx = 40, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-        --[3] = { tag = "clap", spellid = 25264, ismine = 0, unit = "target", size = 32, fontsize = 24, posx = 80, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
-        --[4] = { tag = "scorpid", spellid = 3043, ismine = 0, unit = "target", size = 32, fontsize = 24, posx = 120, posy = 40, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [1] = { tag = "mark",       spellid = 14325,  ismine = 0, unit = "target", size = 24, fontsize = 18, posx = -32, posy = -270, framestrata = "LOW", anchor = "UIParent"},
+        [2] = { tag = "serpent",         spellid = 49000, ismine = 0,  unit = "target", size = 24, fontsize = 18, posx = 0, posy = -270, framestrata = "LOW", anchor = "UIParent"},
+        [3] = { tag = "scorpid",         spellid = 27060, ismine = 0,  unit = "target", size = 24, fontsize = 18, posx = 32, posy = -270, framestrata = "LOW", anchor = "UIParent"},
+
+        --14325 mark
+        --49000 serpentsting
+        --27060 poison
       },
       cooldowns = {
         --[1] = { tag = "wrath", spellid = 19574, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
@@ -81,28 +81,34 @@
   elseif rf2_player_name == "Rothar" and rf2_player_class == "WARRIOR" then
     rf2_spell_list = {
       buffs = {
-        [1] = { tag = "commanding", spellid = 469,  unit = "player", size = 32, fontsize = 20, posx = -24, posy = -280, framestrata = "LOW", anchor = "UIParent"},
-        [2] = { tag = "battle",     spellid = 2048, unit = "player", size = 32, fontsize = 20, posx = 24, posy = -280, framestrata = "LOW", anchor = "UIParent"},
-        [3] = { tag = "snb",        spellid = 50227, unit = "player", size = 48, fontsize = 32, posx = 0 , posy = -30, framestrata = "LOW", anchor = "UIParent"},
+        [1] = { tag = "commanding", spellid = 469,  unit = "player", size = 24, fontsize = 16, posx = -64, posy = -320, framestrata = "LOW", anchor = "UIParent"},
+        [2] = { tag = "battle",     spellid = 2048, unit = "player", size = 24, fontsize = 16, posx = -32, posy = -320, framestrata = "LOW", anchor = "UIParent"},
+        --[3] = { tag = "snb",        spellid = 50227, unit = "player", size = 48, fontsize = 32, posx = 0 , posy = -30, framestrata = "LOW", anchor = "UIParent"},
         --[4] = { tag = "block",      spellid = 2565, unit = "player", size = 32, fontsize = 20, posx = -50 , posy = -30, framestrata = "LOW", anchor = "UIParent"},
         --[5] = { tag = "gnomeblocker", spellid = 35169, unit = "player", size = 32, fontsize = 20, posx = 50 , posy = -30, framestrata = "LOW", anchor = "UIParent"},
         --[6] = { tag = "fireblood", spellid = 40459, unit = "player", size = 32, fontsize = 20, posx = 0 , posy = 20, framestrata = "LOW", anchor = "UIParent"},
+        --[4] = { tag = "freehero",   spellid = 58398, unit = "player", size = 32, fontsize = 20, posx = 0 , posy = -80, framestrata = "LOW", anchor = "UIParent"},        
+        --[3] = { tag = "snb", spellid = 50227, size = 20, fontsize = 15, posx = 30, posy = -260, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[3] = { tag = "rampage", spellid = 30033, size = 18, fontsize = 14, posx = -25, posy = -260, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[3] = { tag = "berserker", spellid = 18499, size = 32, fontsize = 24, posx = 160, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       debuffs = {
-        [1] = { tag = "sunder",       spellid = 25225,  ismine = 0, unit = "target", size = 24, fontsize = 18, posx = -32, posy = -230, framestrata = "LOW", anchor = "UIParent"},
-        [2] = { tag = "demo",         spellid = 25203,  ismine = 0, unit = "target", size = 24, fontsize = 18, posx = 32, posy = -230, framestrata = "LOW", anchor = "UIParent"},
-        [3] = { tag = "clap",         spellid = 25264,  ismine = 0, unit = "target", size = 24, fontsize = 18, posx = 0, posy = -230, framestrata = "LOW", anchor = "UIParent"},
-        --[4] = { tag = "scorpid",      spellid = 3043,   ismine = 0, unit = "target", size = 18, fontsize = 16, posx = 60, posy = -300, framestrata = "LOW", anchor = "UIParent"},
-        --[5] = { tag = "fearie",       spellid = 26993,  ismine = 0, unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
-        --[6] = { tag = "fearieferal",  spellid = 27011,  ismine = 0, unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [1] = { tag = "sunder",       spellid = 25225, ismine = 0,  unit = "target", size = 24, fontsize = 16, posx = 0, posy = -320, framestrata = "LOW", anchor = "UIParent"},
+        [2] = { tag = "demo",         spellid = 25203, ismine = 0,  unit = "target", size = 24, fontsize = 16, posx = 64, posy = -320, framestrata = "LOW", anchor = "UIParent"},
+        [3] = { tag = "clap",         spellid = 25264, ismine = 1,  unit = "target", size = 24, fontsize = 16, posx = 32, posy = -320, framestrata = "LOW", anchor = "UIParent"},
+        --[4] = { tag = "scorpid",      spellid = 3043,ismine = 0,    unit = "target", size = 18, fontsize = 16, posx = 60, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        --[5] = { tag = "fearie",       spellid = 26993, ismine = 0,   unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        --[6] = { tag = "fearieferal",  spellid = 27011, ismine = 0,  unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        --[7] = { tag = "curseofreck", spellid = 27226, ismine = 0,  size = 18, fontsize = 14, posx = 50, posy = -230, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[8] = { tag = "curseoftong", spellid = 11719, ismine = 0,  size = 18, fontsize = 14, posx = 75, posy = -230, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       cooldowns = {
-        --[1] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
-        --[2] = { tag = "berserkercool", spellid = 18499, size = 32, fontsize = 24, posx = 50, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
-        --[1] = { tag = "revenge", spellid = 30357, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
-        --[2] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [1] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "berserkercool", spellid = 18499, size = 32, fontsize = 24, posx = 50, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [3] = { tag = "revenge", spellid = 30357, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [4] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
-    }   
+    }    
   end
   
   -----------------------------------------------------
@@ -139,7 +145,8 @@
     t:SetAllPoints(f)
     f.texture = t
     local t2 = f:CreateTexture(nil,"LOW")
-    t2:SetTexture("Interface\\AddOns\\rTextures\\gloss")
+    t2:SetTexture(bordertexture)
+    t2:SetVertexColor(0.37,0.3,0.3)
     t2:SetPoint("TOPLEFT", f, "TOPLEFT", -2, 2)
     t2:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 2, -2)
     f.texture = t2
@@ -227,7 +234,7 @@
         if timeleft ~= nil then
           if timeleft >= 60 then 
             floortime = floor((timeleft/60)+1).."m"
-          elseif timeleft <= 1.5 then
+          elseif timeleft <= 1 then
             floortime = floor(timeleft*10)/10
           else
             floortime = floor(timeleft+0.5)  
@@ -289,16 +296,15 @@
 
     for i = 1, 40 do
       local name, _, texture, applications, debufftype, duration, timeleft, ismine = UnitDebuff(unit, i)
-
-      local checkvalue
-      if patch31 == 0 then
-        checkvalue = 1
-      else
-        checkvalue = "player"
-      end
-    
-      if ((name == spellName and myspell == 0) or (name == spellName and myspell == 1 and ismine == checkvalue)) then
       
+      if ismine == 1 or ismine == "player" then
+        ismine = 1
+      else
+        ismine = "x"
+      end
+      
+      if ((name == spellName and myspell == 0) or (name == spellName and myspell == ismine)) then
+
         timeleft = timeleft-GetTime()
         --DEFAULT_CHAT_FRAME:AddMessage("found "..name.." timeleft "..timeleft.." duration "..duration.." now "..GetTime())
       
@@ -306,7 +312,7 @@
         if timeleft ~= nil then
           if timeleft >= 60 then 
             floortime = floor((timeleft/60)+1).."m"
-          elseif timeleft <= 1.5 then
+          elseif timeleft <= 1 then
             floortime = floor(timeleft*10)/10
           else
             floortime = floor(timeleft+0.5)  
@@ -330,7 +336,6 @@
         end
         
       end
-
     end
 
     if testmode == 1 
@@ -386,7 +391,7 @@
     local cooldown = (localstartime+floortime-now)
     cooldown = floor(cooldown+0.5)
     
-    if cooldown > 2 then
+    if cooldown > 1 then
       f:SetAlpha(1)
       f2:SetText(cooldown)
       f3:SetText(floornum)

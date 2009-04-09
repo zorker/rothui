@@ -93,10 +93,10 @@
   
   local a = CreateFrame("Frame", nil, UIParent)
   
-  a:RegisterEvent("PLAYER_ENTERING_WORLD")
+  a:RegisterEvent("PLAYER_LOGIN")
   
   a:SetScript("OnEvent", function (self,event,arg1)
-    if(event=="PLAYER_ENTERING_WORLD") then
+    if(event=="PLAYER_LOGIN") then
       for index,value in ipairs(frames_to_rotate) do 
         local ftr = frames_to_rotate[index]
         a:rotateme(ftr.texture, ftr.width, ftr.height, ftr.anchorframe, ftr.framestrata, ftr.color_red, ftr.color_green, ftr.color_blue, ftr.alpha, ftr.update_timer, ftr.steps_in_degree,ftr.direction, ftr.blendmode,ftr.setpoint1,ftr.setpoint2,ftr.posx,ftr.posy)

@@ -59,6 +59,10 @@
       steps_in_degree = 0.1,
       direction = 1,
       blendmode = 0,
+      setpoint1 = "CENTER",
+      setpoint2 = "CENTER",
+      posx = 0,
+      posy = 0,
     },
     [2] = { 
       texture = "mapart2", 
@@ -74,6 +78,10 @@
       steps_in_degree = 0.4,
       direction = 0,
       blendmode = 0,
+      setpoint1 = "CENTER",
+      setpoint2 = "CENTER",
+      posx = 0,
+      posy = 0,
     },
   }
     
@@ -91,12 +99,12 @@
     if(event=="PLAYER_ENTERING_WORLD") then
       for index,value in ipairs(frames_to_rotate) do 
         local ftr = frames_to_rotate[index]
-        a:rotateme(ftr.texture, ftr.width, ftr.height, ftr.anchorframe, ftr.framestrata, ftr.color_red, ftr.color_green, ftr.color_blue, ftr.alpha, ftr.update_timer, ftr.steps_in_degree,ftr.direction, ftr.blendmode)
+        a:rotateme(ftr.texture, ftr.width, ftr.height, ftr.anchorframe, ftr.framestrata, ftr.color_red, ftr.color_green, ftr.color_blue, ftr.alpha, ftr.update_timer, ftr.steps_in_degree,ftr.direction, ftr.blendmode,ftr.setpoint1,ftr.setpoint2,ftr.posx,ftr.posy)
       end
     end
   end)    
   
-  function a:rotateme(tex,texw,texh,texanchor,texstrata,texr,texg,texb,texalpha,timer,steps,side,bmode)
+  function a:rotateme(tex,texw,texh,texanchor,texstrata,texr,texg,texb,texalpha,timer,steps,side,bmode,point1,point2,posx,posy)
 
     --DEFAULT_CHAT_FRAME:AddMessage("ping")
 
@@ -105,7 +113,7 @@
     local f = CreateFrame("Frame",nil,UIParent)
     f:SetWidth(texw)
     f:SetHeight(texh)
-    f:SetPoint("CENTER",texanchor,"CENTER",0,0)
+    f:SetPoint(point1,texanchor,point2,posx,posy)
     f:SetFrameStrata(texstrata)
     f:SetScale(myscale)
     f:Show()

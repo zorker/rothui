@@ -12,7 +12,7 @@
         copyright notice, this list of conditions and the following
         disclaimer in the documentation and/or other materials provided
         with the distribution.
-      * Neither the name of rFilter nor the names of its contributors may
+      * Neither the name of rFilter2 nor the names of its contributors may
         be used to endorse or promote products derived from this
         software without specific prior written permission.
 
@@ -95,7 +95,7 @@
       debuffs = {
         [1] = { tag = "sunder",       spellid = 25225, ismine = 0,  unit = "target", size = 24, fontsize = 16, posx = 0, posy = -320, framestrata = "LOW", anchor = "UIParent"},
         [2] = { tag = "demo",         spellid = 25203, ismine = 0,  unit = "target", size = 24, fontsize = 16, posx = 64, posy = -320, framestrata = "LOW", anchor = "UIParent"},
-        [3] = { tag = "clap",         spellid = 25264, ismine = 1,  unit = "target", size = 24, fontsize = 16, posx = 32, posy = -320, framestrata = "LOW", anchor = "UIParent"},
+        [3] = { tag = "clap",         spellid = 25264, ismine = 0,  unit = "target", size = 24, fontsize = 16, posx = 32, posy = -320, framestrata = "LOW", anchor = "UIParent"},
         --[4] = { tag = "scorpid",      spellid = 3043,ismine = 0,    unit = "target", size = 18, fontsize = 16, posx = 60, posy = -300, framestrata = "LOW", anchor = "UIParent"},
         --[5] = { tag = "fearie",       spellid = 26993, ismine = 0,   unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
         --[6] = { tag = "fearieferal",  spellid = 27011, ismine = 0,  unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
@@ -103,10 +103,22 @@
         --[8] = { tag = "curseoftong", spellid = 11719, ismine = 0,  size = 18, fontsize = 14, posx = 75, posy = -230, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       cooldowns = {
-        [1] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [2] = { tag = "berserkercool", spellid = 18499, size = 32, fontsize = 24, posx = 50, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [3] = { tag = "revenge", spellid = 30357, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
-        [4] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[1] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[2] = { tag = "berserkercool", spellid = 18499, size = 32, fontsize = 24, posx = 50, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[3] = { tag = "revenge", spellid = 30357, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+        --[4] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
+      },
+    }    
+  else
+    rf2_spell_list = {
+      buffs = {
+      
+      },
+      debuffs = {
+
+      },
+      cooldowns = {
+
       },
     }    
   end
@@ -362,7 +374,7 @@
     local f4 = _G["rf2_"..frameTag.."_icon"]
     if use_grey_vertex == 1
     then
-      f4:SetVertexColor(0.2,0.2,0.2)
+      local shaderSupported = f4:SetDesaturated(1)
     end
 
     local spellCooldownStartTime, spellCooldownDuration, spellEnabled = GetSpellCooldown(spellName);
@@ -398,7 +410,7 @@
       
       if use_grey_vertex == 1
       then
-        f4:SetVertexColor(1,1,1)
+        local shaderSupported = f4:SetDesaturated(nil)
       end
       
     end

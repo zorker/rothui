@@ -24,9 +24,18 @@
   
   local function updateHealth(self, event, unit, bar, min, max)
   
-    local tmpunitname = UnitName(unit)      
-    if tmpunitname:len() > 4 then
-      tmpunitname = tmpunitname:sub(1, 4)
+    local tmpunitname
+    if unit then
+      tmpunitname = UnitName(unit)
+      local count = 4
+      for i = 1, 4 do 
+        if string.byte(tmpunitname, i, 1) and (string.byte(tmpunitname, i, 1) == 194 and string.byte(tmpunitname, i, 1) <= 223) then
+          count = count + 1
+        end 
+      end      
+      if tmpunitname and tmpunitname:len() > count then
+        tmpunitname = tmpunitname:sub(1, count)
+      end
     end
     
     local c = max - min
@@ -39,9 +48,21 @@
     local color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
 
     bar:SetStatusBarColor(0.15,0.15,0.15,1)
-    bar.bg:SetVertexColor(1,0.3,0.3,1)
+    if color then
+      bar.bg:SetVertexColor(color.r,color.g,color.b,1)
+    else
+      bar.bg:SetVertexColor(1,0.3,0.3,1)
+    end
     
-    if d == 100 then
+    if UnitIsConnected(unit) ~= 1 then
+      self.Name:SetTextColor(0.4,0.4,0.4)
+      self.Name:SetText("off")    
+      bar.bg:SetVertexColor(0,0,0,0.4)
+    elseif UnitIsDeadOrGhost(unit) == 1 then
+      self.Name:SetTextColor(0.4,0.4,0.4)
+      self.Name:SetText("dead")    
+      bar.bg:SetVertexColor(0,0,0,0.4)
+    elseif d == 100 then
       if color then
         self.Name:SetTextColor(color.r,color.g,color.b)
       end
@@ -51,7 +72,7 @@
       self.Name:SetText("-"..diff)
     else
       self.Name:SetTextColor(0.4,0.4,0.4)
-      self.Name:SetText("dead")    
+      self.Name:SetText("Oo")    
       bar.bg:SetVertexColor(0,0,0,0.4)
     end
     
@@ -60,6 +81,9 @@
   end
   
   local stylefunc = function(self, unit)
+  
+    self:SetScript("OnEnter", UnitFrame_OnEnter)
+    self:SetScript("OnLeave", UnitFrame_OnLeave)
   
     self:SetHeight(size)
     self:SetWidth(size)
@@ -106,9 +130,11 @@
     ricon:SetTexture"Interface\\TargetingFrame\\UI-RaidTargetingIcons"
     self.RaidIcon = ricon
       
-    self.Range = true 
-    self.inRangeAlpha = 1.0
-    self.outsideRangeAlpha = 0.3
+    if (not unit) then
+      self.Range = true
+      self.outsideRangeAlpha = 0.4
+      self.inRangeAlpha = 1
+    end
   
     self.PostUpdateHealth = updateHealth
   
@@ -119,7 +145,6 @@
  
   oUF:RegisterStyle(actstyle, stylefunc)
   oUF:SetActiveStyle(actstyle)
-  
   
   local raid = {}
   for i = 1, 8 do

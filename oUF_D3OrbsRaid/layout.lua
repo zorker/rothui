@@ -28,11 +28,6 @@
     if unit then
       tmpunitname = UnitName(unit)
       local count = 4
-      for i = 1, 4 do 
-        if string.byte(tmpunitname, i, 1) and (string.byte(tmpunitname, i, 1) == 194 and string.byte(tmpunitname, i, 1) <= 223) then
-          count = count + 1
-        end 
-      end      
       if tmpunitname and tmpunitname:len() > count then
         tmpunitname = tmpunitname:sub(1, count)
       end

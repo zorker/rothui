@@ -243,44 +243,44 @@
   
   --buff func
   local function d3o2_createBuffs(self,unit)
-		self.Buffs = CreateFrame("Frame", nil, self)
-		self.Buffs.size = 20
-		self.Buffs.num = 40
-		self.Buffs:SetHeight((self.Buffs.size+5)*3)
-		self.Buffs:SetWidth(self:GetWidth())
-		self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 20, 15)
-		self.Buffs.initialAnchor = "BOTTOMLEFT"
-		self.Buffs["growth-x"] = "RIGHT"
-		self.Buffs["growth-y"] = "UP"
-		self.Buffs.spacing = 5
+    self.Buffs = CreateFrame("Frame", nil, self)
+    self.Buffs.size = 20
+    self.Buffs.num = 40
+    self.Buffs:SetHeight((self.Buffs.size+5)*3)
+    self.Buffs:SetWidth(self:GetWidth())
+    self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 20, 15)
+    self.Buffs.initialAnchor = "BOTTOMLEFT"
+    self.Buffs["growth-x"] = "RIGHT"
+    self.Buffs["growth-y"] = "UP"
+    self.Buffs.spacing = 5
   end
   
   --debuff func
   local function d3o2_createDebuffs(self,unit)
-		self.Debuffs = CreateFrame("Frame", nil, self)
-		if unit == "target" then
-  		self.Debuffs.size = 20
-  		self.Debuffs.num = 40
-  		self.Debuffs:SetHeight((self.Debuffs.size+5)*3)
-  		self.Debuffs:SetWidth(self:GetWidth())
-  		self.Debuffs:SetPoint("TOPLEFT", self, "BOTTOMRIGHT", 20, -15)
-  		self.Debuffs.initialAnchor = "TOPLEFT"
-  		self.Debuffs["growth-x"] = "RIGHT"
-  		self.Debuffs["growth-y"] = "DOWN"
-  		self.Debuffs.spacing = 5
+    self.Debuffs = CreateFrame("Frame", nil, self)
+    if unit == "target" then
+      self.Debuffs.size = 20
+      self.Debuffs.num = 40
+      self.Debuffs:SetHeight((self.Debuffs.size+5)*3)
+      self.Debuffs:SetWidth(self:GetWidth())
+      self.Debuffs:SetPoint("TOPLEFT", self, "BOTTOMRIGHT", 20, -15)
+      self.Debuffs.initialAnchor = "TOPLEFT"
+      self.Debuffs["growth-x"] = "RIGHT"
+      self.Debuffs["growth-y"] = "DOWN"
+      self.Debuffs.spacing = 5
     else
-  		self.Debuffs.size = 20
-  		self.Debuffs.num = 5
-  		self.Debuffs:SetHeight((self.Debuffs.size+5)*1)
-  		self.Debuffs:SetWidth(self:GetWidth())
-  		self.Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -15)
-  		self.Debuffs.initialAnchor = "TOPLEFT"
-  		self.Debuffs["growth-x"] = "RIGHT"
-  		self.Debuffs["growth-y"] = "DOWN"
-  		self.Debuffs.spacing = 5      
+      self.Debuffs.size = 20
+      self.Debuffs.num = 5
+      self.Debuffs:SetHeight((self.Debuffs.size+5)*1)
+      self.Debuffs:SetWidth(self:GetWidth())
+      self.Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -15)
+      self.Debuffs.initialAnchor = "TOPLEFT"
+      self.Debuffs["growth-x"] = "RIGHT"
+      self.Debuffs["growth-y"] = "DOWN"
+      self.Debuffs.spacing = 5      
     end
-		self.Debuffs.onlyShowPlayer = false
-		self.Debuffs.showDebuffType = false
+    self.Debuffs.onlyShowPlayer = false
+    self.Debuffs.showDebuffType = false
   end
   
   local function d3o2_createCastbar(self,unit)

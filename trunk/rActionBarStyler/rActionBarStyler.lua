@@ -25,7 +25,7 @@
   -- bar1 and bar2 in 2x6 instead of 1x12
   -- 0 = 1x12
   -- 1 = 2x6
-  button_system = 0
+  button_system = 1
   
   -- bar settings
   -- you can make a bar visible on mouseover, make it movable or lock it from moving
@@ -33,7 +33,7 @@
     
   -- bar1
   bar1_on_mouseover = 0
-  move_bar1 = 0
+  move_bar1 = 1
   lock_bar1 = 1
   
   -- bar2
@@ -47,7 +47,7 @@
   else
     bar3_on_mouseover = 0
   end
-  move_bar3 = 0
+  move_bar3 = 1
   lock_bar3 = 1
   
   -- rightbars (bar45)
@@ -58,6 +58,8 @@
   -- shapeshift
   if myname == "Loral" then
     shapeshift_on_mouseover = 0
+  elseif myname == "Rothar" then
+    shapeshift_on_mouseover = 1
   else
     shapeshift_on_mouseover = 0
   end
@@ -65,9 +67,9 @@
   lock_shapeshift = 0
   
   -- petbar
-  petbar_on_mouseover = 0
+  petbar_on_mouseover = 1
   move_pet = 1
-  lock_pet = 0
+  lock_pet = 1
 
   -- micromenu
   micromenu_on_mouseover = 1
@@ -98,9 +100,9 @@
   -- position table for the default frame holder positions
   -- those are use if the bar is set to not movable or if there is no value in the layout-cache.txt for that frame yet
   local frame_positions = {
-    [1]  =  { a = "BOTTOM",         x = -127, y = 20  },  --fbar1_button_system_1
-    [2]  =  { a = "BOTTOM",         x = 0,    y = 20  },  --fbar1_button_system_0
-    [3]  =  { a = "BOTTOM",         x = 125,  y = 20  },  --fbar2_button_system_1
+    [1]  =  { a = "BOTTOM",         x = -127, y = 19  },  --fbar1_button_system_1
+    [2]  =  { a = "BOTTOM",         x = 0,    y = 19  },  --fbar1_button_system_0
+    [3]  =  { a = "BOTTOM",         x = 125,  y = 19  },  --fbar2_button_system_1
     [4]  =  { a = "BOTTOM",         x = 0,    y = 60  },  --fbar2_button_system_0
     [5]  =  { a = "BOTTOM",         x = 0,    y = 112 },  --fbar3
     [6]  =  { a = "RIGHT",          x = -5,   y = 0   },  --fbar45

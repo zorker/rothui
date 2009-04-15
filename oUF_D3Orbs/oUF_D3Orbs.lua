@@ -90,8 +90,9 @@
   -- usebar defines what actionbar texture will be used. 
   -- not really needed anymore, 36 texture will only be used if MultiBarRight is shown
   -- usebar = 1 -> choose automatically
-  -- usebar = 2 -> 24 button texture always
-  -- usebar = 3 -> 36 button texture always
+  -- usebar = 2 -> 12 button texture always
+  -- usebar = 3 -> 24 button texture always
+  -- usebar = 4 -> 36 button texture always
   local usebar = 1
   
   -- secret
@@ -1332,7 +1333,6 @@
   -----------------------------
   -- CREATING D3 ART FRAMES
   -----------------------------
-
   local d3f = CreateFrame("Frame",nil,UIParent)
   d3f:SetFrameStrata("TOOLTIP")
   d3f:SetWidth(320)
@@ -1379,17 +1379,23 @@
   if easteregg ~= "Oo" then
     
     if usebar == 2 then
-      d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar8")
+      d3t4:SetTexture("Interface\\AddOns\\rTextures\\bar1")
     elseif usebar == 3 then
-      d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar9")
+      d3t4:SetTexture("Interface\\AddOns\\rTextures\\bar2")
+    elseif usebar == 4 then
+      d3t4:SetTexture("Interface\\AddOns\\rTextures\\bar3")
     else
       if MultiBarBottomRight:IsShown() then
-        d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar9")
+        d3t4:SetTexture("Interface\\AddOns\\rTextures\\bar3")
+      elseif MultiBarBottomLeft:IsShown() then
+        d3t4:SetTexture("Interface\\AddOns\\rTextures\\bar2")
       else
-        d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar8")
+        d3t4:SetTexture("Interface\\AddOns\\rTextures\\bar1")
       end
-      MultiBarBottomRight:HookScript("OnShow", function() d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar9") end)
-      MultiBarBottomRight:HookScript("OnHide", function() d3t4:SetTexture("Interface\\AddOns\\rTextures\\d3_bar8") end)
+      MultiBarBottomRight:HookScript("OnShow", function() d3t4:SetTexture("Interface\\AddOns\\rTextures\\bar3") end)
+      MultiBarBottomRight:HookScript("OnHide", function() d3t4:SetTexture("Interface\\AddOns\\rTextures\\bar2") end)
+      MultiBarBottomLeft:HookScript("OnShow", function() d3t4:SetTexture("Interface\\AddOns\\rTextures\\bar2") end)
+      MultiBarBottomLeft:HookScript("OnHide", function() d3t4:SetTexture("Interface\\AddOns\\rTextures\\bar1") end)
     end
   
   else

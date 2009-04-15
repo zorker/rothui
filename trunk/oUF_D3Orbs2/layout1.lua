@@ -5,13 +5,28 @@
   -- VARIABLES
   -----------------------------
   
+  local myname, _ = UnitName("player")
+  local _, myclass = UnitClass("player")
+  local dudustance
   local orbsize = 150
-  local d3font = "FONTS\\FRIZQT__.ttf"
-  
+  local d3font = "FONTS\\FRIZQT__.ttf"  
   local playerscale = 0.82
-  local targetscale = 0.82
-  
+  local targetscale = 0.82  
+  local petscale = 0.5
+  local partyscale = 0.5
+  local focusscale = 0.5
   local use_rbottombarstyler = 0
+  local use_3dportraits = 1
+  local automana = 1
+  local useglow = 1
+  local fog_smoother = 1.3
+  -- healthcolor defines what healthcolor will be used
+  -- 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
+  local healthcolor = 2
+
+  -- manacolor defines what manacolor will be used
+  -- 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
+  local manacolor = 3
   
   -- usebar defines what actionbar texture will be used. 
   -- not really needed anymore, 36 texture will only be used if MultiBarRight is shown
@@ -21,31 +36,41 @@
   -- usebar = 4 -> 36 button texture always
   local usebar = 1
   
+  local orbtab = {
+    [1] = {r = 0.3, g = 0, b = 0, scale = 0.8, z = -12, x = 0.8, y = -1.7, anim = "SPELLS\\RedRadiationFog.m2"}, -- red
+    [2] = {r = 0, g = 0.3, b = 0.1, scale = 0.75, z = -12, x = 0, y = -1.1, anim = "SPELLS\\GreenRadiationFog.m2"}, -- green
+    [3] = {r = 0, g = 0.2,   b = 0.3, scale = 0.75, z = -12, x = 1.2, y = -1, anim = "SPELLS\\BlueRadiationFog.m2"}, -- blue
+    [4] = {r = 0.4, g = 0.3, b = 0, scale = 0.75, z = -12, x = -0.3, y = -1.2, anim = "SPELLS\\OrangeRadiationFog.m2"}, -- yellow
+    [5] = {r = 0, g = 0.7,   b = 0.7, scale = 0.9, z = -12, x = -0.5, y = -0.8, anim = "SPELLS\\WhiteRadiationFog.m2"}, -- runic
+  }
+  
   local tabvalues = {
     power = {
-      [-2] = PowerBarColor["AMMO"], -- fuel
-      [-1] = PowerBarColor["FUEL"], -- fuel
-      [0] = PowerBarColor["MANA"], -- Mana
-      --[0] = {r = 1/255, g = 130/255, b = 255/255}, -- Mana
-      [1] = PowerBarColor["RAGE"], -- Rage
-      [2] = PowerBarColor["FOCUS"], -- Focus
-      [3] = PowerBarColor["ENERGY"], -- Energy
-      [4] = PowerBarColor["HAPPINESS"], -- Happiness
-      [5] = PowerBarColor["RUNES"], -- dont know
-      [6] = PowerBarColor["RUNIC_POWER"], -- deathknight
+      [-2] = rPowerBarColor["AMMO"], -- fuel
+      [-1] = rPowerBarColor["FUEL"], -- fuel
+      [0] = rPowerBarColor["MANA"], -- Mana
+      [1] = rPowerBarColor["RAGE"], -- Rage
+      [2] = rPowerBarColor["FOCUS"], -- Focus
+      [3] = rPowerBarColor["ENERGY"], -- Energy
+      [4] = rPowerBarColor["HAPPINESS"], -- Happiness
+      [5] = rPowerBarColor["RUNES"], -- dont know
+      [6] = rPowerBarColor["RUNIC_POWER"], -- deathknight
     },
     frame_positions = {
-      [1] =   { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",  x = 260,    y = -9      }, --player mana orb
-      [2] =   { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",  x = -260,   y = -9      }, --player health orb
-      [3] =   { a1 = "CENTER",  a2 = "CENTER",  af = "UIParent",  x = 0,      y = -200    }, --target frame
-      [4] =   { a1 = "RIGHT",   a2 = "LEFT",    af = "oUF_D3Orbs2_TargetFrame",        x = -80,    y = 0       }, --tot
-      [8] =   { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",  x = 270,    y = 0       }, --angel
-      [9] =   { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",  x = -265,   y = 0       }, --demon
-      [10] =  { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",  x = 0,      y = -5      }, --botomline texture
-      [11] =  { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",  x = 1,      y = 0       }, --bottom bar background texture
-      [12] =  { a1 = "CENTER",  a2 = "CENTER",  af = "oUF_D3Orbs2_TargetFrame",  x = 0,      y = 100     }, --castbar target
-      [13] =  { a1 = "CENTER",  a2 = "CENTER",  af = "oUF_D3Orbs2_TargetFrame",  x = 0,      y = -80    },  --castbar player
-      [14] =  { a1 = "CENTER",  a2 = "CENTER",  af = "oUF_D3Orbs2_TargetFrame",  x = 0,      y = 180     }, --castbar focus
+      [1] =   { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",                  x = 260,    y = -9      }, --player mana orb
+      [2] =   { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",                  x = -260,   y = -9      }, --player health orb
+      [3] =   { a1 = "CENTER",  a2 = "CENTER",  af = "UIParent",                  x = 0,      y = -200    }, --target frame
+      [4] =   { a1 = "RIGHT",   a2 = "LEFT",    af = "oUF_D3Orbs2_TargetFrame",   x = -80,    y = 0       }, --tot
+      [5] =   { a1 = "LEFT",    a2 = "RIGHT",   af = "UIParent",                  x = 50,     y = 100     }, --pet
+      [6] =   { a1 = "LEFT",    a2 = "LEFT",    af = "UIParent",                  x = 60,     y = -100    }, --focus
+      [7] =   { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent",                  x = 30,     y = 50      }, --party
+      [8] =   { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",                  x = 270,    y = 0       }, --angel
+      [9] =   { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",                  x = -265,   y = 0       }, --demon
+      [10] =  { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",                  x = 0,      y = -5      }, --botomline texture
+      [11] =  { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",                  x = 1,      y = 0       }, --bottom bar background texture
+      [12] =  { a1 = "CENTER",  a2 = "CENTER",  af = "oUF_D3Orbs2_TargetFrame",   x = 0,      y = 100     }, --castbar target
+      [13] =  { a1 = "CENTER",  a2 = "CENTER",  af = "oUF_D3Orbs2_TargetFrame",   x = 0,      y = -80    },  --castbar player
+      [14] =  { a1 = "CENTER",  a2 = "CENTER",  af = "oUF_D3Orbs2_TargetFrame",   x = 0,      y = 180     }, --castbar focus
     },
   }
   
@@ -68,33 +93,90 @@
     DEFAULT_CHAT_FRAME:AddMessage(text)
   end
   
+  --automana
+  local function set_automana()
+    if automana == 1 then
+      local st = GetShapeshiftForm()
+      if myclass == "WARRIOR" then
+        manacolor = 1
+      elseif myclass == "DEATHKNIGHT" then
+        manacolor = 5
+      elseif myclass == "ROGUE" then
+        manacolor = 4
+      elseif myclass == "DRUID" and st == 3 then
+        manacolor = 4
+      elseif myclass == "DRUID" and st == 1 then
+        manacolor = 1
+      else
+        manacolor = 3
+      end
+    end
+  end
+  --call it once
+  set_automana()
+  
+  --check function for druid manatype
+  local function check_druid_mana(self)
+    local st = GetShapeshiftForm()
+    if st ~= dudustance then
+      set_automana()
+      self.Power.Filling:SetVertexColor(orbtab[manacolor].r,orbtab[manacolor].g,orbtab[manacolor].b)
+      self.pm3:SetModel(orbtab[manacolor].anim)
+      self.pm3:SetModelScale(orbtab[manacolor].scale)
+      self.pm3:SetPosition(orbtab[manacolor].z, orbtab[manacolor].x, orbtab[manacolor].y) 
+      self.pm4:SetModel(orbtab[manacolor].anim)
+      self.pm4:SetModelScale(orbtab[manacolor].scale)
+      self.pm4:SetPosition(orbtab[manacolor].z, orbtab[manacolor].x, orbtab[manacolor].y+1)       
+      dudustance = st
+    end    
+  end
+  
   --update player health func
   local function d3o2_updatePlayerHealth(self, event, unit, bar, min, max)
+    local d = floor(min/max*100)
     self.Health.Filling:SetHeight((min / max) * self.Health:GetWidth())
     self.Health.Filling:SetTexCoord(0,1,  math.abs(min / max - 1),1)
-    self.Health.Filling:SetVertexColor(0.5,1,0)
+    if useglow == 1 then
+      self.pm1:SetAlpha((min/max)/fog_smoother)
+      self.pm2:SetAlpha((min/max)/fog_smoother)
+    end
+    if d <= 25 and min > 1 then
+      self.LowHP:Show()
+    else
+      self.LowHP:Hide()
+    end
   end
   
   --update player power func
   local function d3o2_updatePlayerPower(self, event, unit, bar, min, max)
     self.Power.Filling:SetHeight((min / max) * self.Power:GetWidth())
     self.Power.Filling:SetTexCoord(0,1,  math.abs(min / max - 1),1)
-    self.Power.Filling:SetVertexColor(0,0.5,1)
+    if useglow == 1 then
+      self.pm3:SetAlpha((min/max)/fog_smoother)
+      self.pm4:SetAlpha((min/max)/fog_smoother)
+    end
   end
   
   --update health func
   local function d3o2_updateHealth(self, event, unit, bar, min, max)
-    bar:SetStatusBarColor(0.15,0.15,0.15,0.9)
-    bar.bg:SetVertexColor(0.7,0,0,1)
+    local d = floor(min/max*100)
     local color
     if UnitIsPlayer(unit) then
-      if RAID_CLASS_COLORS[select(2, UnitClass(unit))] then
-        color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+      if rRAID_CLASS_COLORS[select(2, UnitClass(unit))] then
+        color = rRAID_CLASS_COLORS[select(2, UnitClass(unit))]
       end
     else
-      color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
+      color = rFACTION_BAR_COLORS[UnitReaction(unit, "player")]
     end
+    bar:SetStatusBarColor(0.15,0.15,0.15,0.9)
+    bar.bg:SetVertexColor(0.7,0,0,1)
+    --bar.bg:SetVertexColor(color.r, color.g, color.b,1)
     self.Name:SetTextColor(color.r, color.g, color.b,1)
+    if d <= 25 and min > 1 then
+      self.LowHP:Show()
+    else
+      self.LowHP:Hide()
+    end
   end
   
   --update power func
@@ -132,6 +214,36 @@
     self:SetHeight(h)
   end
   
+  --orb glow func
+  local function create_me_a_orb_glow(f,type,pos)
+    local glow = CreateFrame("PlayerModel", nil, f)
+    glow:SetFrameStrata("BACKGROUND")
+    glow:SetFrameLevel(5)
+    glow:SetAllPoints(f)
+    if type == "power" then
+      glow:SetModel(orbtab[manacolor].anim)
+      glow:SetModelScale(orbtab[manacolor].scale)
+      glow:SetPosition(orbtab[manacolor].z, orbtab[manacolor].x, orbtab[manacolor].y+pos) 
+      glow:SetAlpha(1/fog_smoother)
+      glow:SetScript("OnShow",function() 
+        glow:SetModel(orbtab[manacolor].anim)
+        glow:SetModelScale(orbtab[manacolor].scale)
+        glow:SetPosition(orbtab[manacolor].z, orbtab[manacolor].x, orbtab[manacolor].y+pos) 
+      end)
+    else
+      glow:SetModel(orbtab[healthcolor].anim)
+      glow:SetModelScale(orbtab[healthcolor].scale)
+      glow:SetPosition(orbtab[healthcolor].z, orbtab[healthcolor].x, orbtab[healthcolor].y+pos) 
+      glow:SetAlpha(1/fog_smoother)
+      glow:SetScript("OnShow",function() 
+        glow:SetModel(orbtab[healthcolor].anim)
+        glow:SetModelScale(orbtab[healthcolor].scale)
+        glow:SetPosition(orbtab[healthcolor].z, orbtab[healthcolor].x, orbtab[healthcolor].y+pos) 
+      end)    
+    end
+    return glow
+  end
+  
   --create orb func
   local function d3o2_createOrb(self,type)
     local orb = CreateFrame("StatusBar", nil, self)    
@@ -156,12 +268,33 @@
       orb:SetPoint(tabvalues.frame_positions[1].a1, tabvalues.frame_positions[1].af, tabvalues.frame_positions[1].a2, tabvalues.frame_positions[1].x, tabvalues.frame_positions[1].y)
       self.Power = orb
       self.Power.Filling = orb.Filling
+      if useglow == 1 then
+        self.pm3 = create_me_a_orb_glow(orb,type,0)
+        self.pm4 = create_me_a_orb_glow(orb,type,1)
+        self.Power.Filling:SetVertexColor(orbtab[manacolor].r,orbtab[manacolor].g,orbtab[manacolor].b)        
+        if myclass == "DRUID" and automana == 1 and useglow == 1 then
+          self.Power:RegisterEvent("PLAYER_ENTERING_WORLD")
+          self.Power:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+          self.Power:SetScript("OnEvent", function()
+            check_druid_mana(self)        
+          end)
+        end        
+      else
+        self.Power.Filling:SetVertexColor(0,0.5,1)
+      end
       self.Power.frequentUpdates = true
       self.Power.Smooth = true
     else
       orb:SetPoint("TOPLEFT", 0, 0)
       self.Health = orb
       self.Health.Filling = orb.Filling
+      if useglow == 1 then
+        self.pm1 = create_me_a_orb_glow(orb,type,0)
+        self.pm2 = create_me_a_orb_glow(orb,type,1)
+        self.Health.Filling:SetVertexColor(orbtab[healthcolor].r,orbtab[healthcolor].g,orbtab[healthcolor].b)
+      else
+        self.Health.Filling:SetVertexColor(0.5,1,0)
+      end
       self.Health.Smooth = true
     end
   end
@@ -268,12 +401,22 @@
       self.Debuffs["growth-x"] = "RIGHT"
       self.Debuffs["growth-y"] = "DOWN"
       self.Debuffs.spacing = 5
-    else
+    elseif unit == "targettarget" then
       self.Debuffs.size = 20
-      self.Debuffs.num = 5
+      self.Debuffs.num = 8
       self.Debuffs:SetHeight((self.Debuffs.size+5)*1)
       self.Debuffs:SetWidth(self:GetWidth())
       self.Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -15)
+      self.Debuffs.initialAnchor = "TOPLEFT"
+      self.Debuffs["growth-x"] = "RIGHT"
+      self.Debuffs["growth-y"] = "DOWN"
+      self.Debuffs.spacing = 5      
+    else
+      self.Debuffs.size = 34
+      self.Debuffs.num = 3
+      self.Debuffs:SetHeight((self.Debuffs.size+5)*1)
+      self.Debuffs:SetWidth(self:GetWidth())
+      self.Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -17)
       self.Debuffs.initialAnchor = "TOPLEFT"
       self.Debuffs["growth-x"] = "RIGHT"
       self.Debuffs["growth-y"] = "DOWN"
@@ -315,9 +458,186 @@
   
   end
   
+  --lowhp func
+  local function d3o2_createLowHP(self,unit)
+    if unit == "player" then
+      self.LowHP = self.Health:CreateTexture(nil, "OVERLAY")
+      self.LowHP:SetAllPoints(self.Health)
+      self.LowHP:SetTexture("Interface\\AddOns\\rTextures\\orb_lowhp_glow.tga")
+      self.LowHP:SetBlendMode("BLEND")
+      self.LowHP:SetVertexColor(1, 0, 0, 1)
+      self.LowHP:Hide()
+    elseif unit == "target" then
+      self.LowHP = self.Health:CreateTexture(nil, "OVERLAY")
+      self.LowHP:SetWidth(505)
+      self.LowHP:SetHeight(115)
+      self.LowHP:SetPoint("CENTER",-3,0)
+      self.LowHP:SetTexture("Interface\\AddOns\\rTextures\\d3_targetframe_lowhp.tga")
+      self.LowHP:SetBlendMode("ADD")
+      self.LowHP:SetVertexColor(1, 0, 0, 1)
+      self.LowHP:SetAlpha(0.8)
+      self.LowHP:Hide()    
+    else
+      self.LowHP = self.Health:CreateTexture(nil, "OVERLAY")
+      self.LowHP:SetWidth(250)
+      self.LowHP:SetHeight(115)
+      self.LowHP:SetPoint("CENTER",-2,0)
+      self.LowHP:SetTexture("Interface\\AddOns\\rTextures\\d3totframe_lowhp.tga")
+      self.LowHP:SetBlendMode("ADD")
+      self.LowHP:SetVertexColor(1, 0, 0, 1)
+      self.LowHP:SetAlpha(0.8)
+      self.LowHP:Hide()
+    end
+  end
+  
+  local function d3o2_createDebuffGlow(self,unit)
+    if unit == "player" then
+      self.DebuffHighlight = self:CreateTexture(nil, "BACKGROUND")
+      --self.DebuffHighlight:SetAllPoints(self)
+      self.DebuffHighlight:SetWidth(self:GetWidth())
+      self.DebuffHighlight:SetHeight(self:GetWidth())
+      self.DebuffHighlight:SetPoint("CENTER",0,0)
+      self.DebuffHighlight:SetBlendMode("BLEND")
+      self.DebuffHighlight:SetVertexColor(1, 0, 0, 0) -- set alpha to 0 to hide the texture
+      self.DebuffHighlightAlpha = 0.7
+      self.DebuffHighlightFilter = false
+      self.DebuffHighlight:SetTexture("Interface\\AddOns\\rTextures\\orb_debuff_glow.tga")
+    elseif unit == "target" then
+      self.DebuffHighlight = self:CreateTexture(nil, "OVERLAY")
+      self.DebuffHighlight:SetWidth(302)
+      self.DebuffHighlight:SetHeight(self.DebuffHighlight:GetWidth()/4)
+      self.DebuffHighlight:SetPoint("CENTER",-3,0)
+      self.DebuffHighlight:SetBlendMode("BLEND")
+      self.DebuffHighlight:SetVertexColor(1, 0, 0, 0) -- set alpha to 0 to hide the texture
+      self.DebuffHighlightAlpha = 0.8
+      self.DebuffHighlightFilter = true      
+      self.DebuffHighlight:SetTexture("Interface\\AddOns\\rTextures\\d3_nameplate_border_glow.tga")        
+    elseif unit == "targettarget" then
+      self.DebuffHighlight = self:CreateTexture(nil, "OVERLAY")
+      self.DebuffHighlight:SetWidth(256)
+      self.DebuffHighlight:SetHeight(self.DebuffHighlight:GetWidth()/2)
+      self.DebuffHighlight:SetPoint("CENTER",-2,0)
+      self.DebuffHighlight:SetBlendMode("BLEND")
+      self.DebuffHighlight:SetVertexColor(1, 0, 0, 0) -- set alpha to 0 to hide the texture
+      self.DebuffHighlightAlpha = 0.8
+      self.DebuffHighlightFilter = true
+      self.DebuffHighlight:SetTexture("Interface\\AddOns\\rTextures\\d3totframe_debuff.tga")
+    else
+      self.DebuffHighlight = self:CreateTexture(nil, "OVERLAY")
+      self.DebuffHighlight:SetWidth(256)
+      self.DebuffHighlight:SetHeight(115)
+      self.DebuffHighlight:SetPoint("BOTTOM",-2,-50)
+      self.DebuffHighlight:SetBlendMode("BLEND")
+      self.DebuffHighlight:SetVertexColor(1, 0, 0, 0) -- set alpha to 0 to hide the texture
+      self.DebuffHighlightAlpha = 0.8
+      self.DebuffHighlightFilter = true
+      self.DebuffHighlight:SetTexture("Interface\\AddOns\\rTextures\\d3totframe_debuff.tga")
+    end
+  end
+  
+  --create portraits func
+  local function d3o2_createPortraits(self,unit)
+    self.Portrait_bgf = CreateFrame("Frame",nil,self)
+    self.Portrait_bgf:SetPoint("BOTTOM",self.Health,"TOP",0,14)
+    self.Portrait_bgf:SetWidth(self:GetWidth()+10)
+    self.Portrait_bgf:SetHeight(self:GetWidth()+10)  
+    
+    self.Portrait_bgt = self.Portrait_bgf:CreateTexture(nil, "BACKGROUND")
+    self.Portrait_bgt:SetAllPoints(self.Portrait_bgf)
+    self.Portrait_bgt:SetTexture("Interface\\AddOns\\rTextures\\d3portrait_back2.tga")
+    self.Portrait_bgt:SetVertexColor(0.7,0.7,0.7)
+  
+    if use_3dportraits == 1 and unit ~= "focustarget" then
+      self.Portrait = CreateFrame("PlayerModel", nil, self.Portrait_bgf)
+      self.Portrait:SetPoint("TOPLEFT",self.Portrait_bgf,"TOPLEFT",4,-4)
+      self.Portrait:SetPoint("BOTTOMRIGHT",self.Portrait_bgf,"BOTTOMRIGHT",-4,4)
+
+      self.Portrait_glossf = CreateFrame("Frame",nil,self.Portrait)
+      self.Portrait_glossf:SetAllPoints(self.Portrait_bgf)
+    else
+      self.Portrait = self.Portrait_bgf:CreateTexture(nil, "BORDER")
+      self.Portrait:SetPoint("TOPLEFT",self.Portrait_bgf,"TOPLEFT",2,-2)
+      self.Portrait:SetPoint("BOTTOMRIGHT",self.Portrait_bgf,"BOTTOMRIGHT",-2,2)
+
+      self.Portrait_glossf = CreateFrame("Frame",nil,self.Portrait_bgf)
+      self.Portrait_glossf:SetAllPoints(self.Portrait_bgf)
+    end
+
+    self.Portrait_glosst = self.Portrait_glossf:CreateTexture(nil, "ARTWORK")
+    self.Portrait_glosst:SetAllPoints(self.Portrait_glossf)
+    self.Portrait_glosst:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_roth")
+    self.Portrait_glosst:SetVertexColor(0.37,0.3,0.3)
+
+    self.Name:SetPoint("BOTTOM", self.Portrait_bgf, "TOP", 0, 5)
+    self.Name:SetFont(d3font,22,"THINOUTLINE")
+  end
+  
+  local function d3o2_createIcons(self,unit)
+    ---------------------
+    -- Raid Icon
+    ---------------------      
+    if unit == "player" then
+      --nothing   
+    elseif unit == "target" then
+      self.RaidIcon = self:CreateTexture(nil, "OVERLAY")
+      self.RaidIcon:SetHeight(24)
+      self.RaidIcon:SetWidth(24)
+      self.RaidIcon:SetPoint("RIGHT", self.Name, "LEFT", -5, 2)
+      self.RaidIcon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
+    else
+      self.RaidIcon = self:CreateTexture(nil, "OVERLAY")
+      self.RaidIcon:SetHeight(16)
+      self.RaidIcon:SetWidth(16)
+      self.RaidIcon:SetPoint("RIGHT", self.Name, "LEFT", -2, 2)
+      self.RaidIcon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
+    end
+
+    ---------------------
+    -- Leader Icon
+    ---------------------  
+    
+    if unit == "player" then
+      self.Leader = self:CreateTexture(nil, "OVERLAY")
+      self.Leader:SetHeight(16)
+      self.Leader:SetWidth(16)
+      self.Leader:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
+      self.Leader:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")    
+    elseif unit == "target" or unit == "targettarget" then 
+      -- nothing
+    else
+      self.Leader = self:CreateTexture(nil, "OVERLAY")
+      self.Leader:SetHeight(24)
+      self.Leader:SetWidth(24)
+      self.Leader:SetPoint("RIGHT", self.Health, "LEFT", -22, 22)
+      self.Leader:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")      
+    end
+  end
+  
+  
+  local function d3o2_createComboPoints(self,unit)
+    self.CPoints = SetFontString(self.Health, d3font, 24, "THINOUTLINE")
+    self.CPoints:SetPoint("LEFT", self.Name, "RIGHT", 5, -1)
+    self.CPoints:SetTextColor(1, .5, 0)
+    self.CPoints.unit = "player"
+  end
+  
   -----------------------------
   -- CUSTOM TAGS
   -----------------------------
+  
+  oUF.Tags["[d3o2name]"] = function(unit) 
+    local tmpunitname = UnitName(unit)      
+    if unit == "target" then
+      if tmpunitname:len() > 24 then
+        tmpunitname = tmpunitname:sub(1, 24).."..."
+      end
+    else
+      if tmpunitname:len() > 16 then
+        tmpunitname = tmpunitname:sub(1, 16).."..."
+      end
+    end
+    return tmpunitname
+  end
   
   oUF.Tags["[d3o2abshp]"] = function(unit) 
     local v = UnitHealth(unit)
@@ -422,6 +742,10 @@
       self.disallowVehicleSwap = true    
     end
     d3o2_createCastbar(self,unit)
+    d3o2_createLowHP(self,unit)
+    d3o2_createDebuffGlow(self,unit)
+    d3o2_createIcons(self,unit)
+    
     self:SetScale(playerscale)
   end
   
@@ -439,11 +763,15 @@
     local classtext = SetFontString(self, d3font, 16, "THINOUTLINE")
     classtext:SetPoint("BOTTOM", self, "TOP", 0, 13)
     self.Name = name
-    self:Tag(name, "[name]")
+    self:Tag(name, "[d3o2name]")
     self:Tag(hpval, "[d3o2abshp] - [perhp]%")
     self:Tag(classtext, "[d3o2classtext]")
     
     d3o2_createCastbar(self,unit)
+    d3o2_createLowHP(self,unit)
+    d3o2_createDebuffGlow(self,unit)
+    d3o2_createIcons(self,unit)
+    d3o2_createComboPoints(self,unit)
     
     self.PostUpdateHealth = d3o2_updateHealth
     self.PostUpdatePower = d3o2_updatePower
@@ -461,14 +789,43 @@
     local hpval = SetFontString(self.Health, d3font, 14, "THINOUTLINE")
     hpval:SetPoint("RIGHT", self, "RIGHT", -2, 2)
     self.Name = name
-    self:Tag(name, "[name]")
+    self:Tag(name, "[d3o2name]")
     self:Tag(hpval, "[perhp]%")
+    
+    d3o2_createLowHP(self,unit)
+    d3o2_createDebuffGlow(self,unit)
+    d3o2_createIcons(self,unit)
     
     self.PostUpdateHealth = d3o2_updateHealth
     self.PostUpdatePower = d3o2_updatePower
     self.PostCreateAuraIcon = d3o2_createAuraIcon
     self:SetScale(targetscale)
   end
+  
+  --create the focus, pet and party style
+  local function CreateFocusStyle(self, unit)
+    d3o2_setupFrame(self,110,200,"BACKGROUND")
+    d3o2_createHealthPowerFrames(self,unit)
+    d3o2_createDebuffs(self,unit)
+    local name = SetFontString(self, d3font, 18, "THINOUTLINE")
+    name:SetPoint("BOTTOM", self, "TOP", 0, 15)
+    self.Name = name
+    self:Tag(name, "[d3o2name]")
+    
+    d3o2_createLowHP(self,unit)
+    d3o2_createDebuffGlow(self,unit)
+    d3o2_createPortraits(self,unit)    
+    if unit == "focus" then
+      d3o2_createCastbar(self,unit)
+    end    
+    d3o2_createIcons(self,unit)
+    
+    self.PostUpdateHealth = d3o2_updateHealth
+    self.PostUpdatePower = d3o2_updatePower
+    self.PostCreateAuraIcon = d3o2_createAuraIcon
+    self:SetScale(focusscale)
+  end
+  
 
   -----------------------------
   -- REGISTER STYLES
@@ -477,6 +834,7 @@
   oUF:RegisterStyle("oUF_D3Orbs2_player", CreatePlayerStyle)
   oUF:RegisterStyle("oUF_D3Orbs2_target", CreateTargetStyle)
   oUF:RegisterStyle("oUF_D3Orbs2_tot", CreateToTStyle)
+  oUF:RegisterStyle("oUF_D3Orbs2_focus", CreateFocusStyle)
   
   -----------------------------
   -- SPAWN UNITS
@@ -488,6 +846,43 @@
   oUF:Spawn("player", "oUF_D3Orbs2_PlayerFrame"):SetPoint(tabvalues.frame_positions[2].a1, tabvalues.frame_positions[2].af, tabvalues.frame_positions[2].a2, tabvalues.frame_positions[2].x, tabvalues.frame_positions[2].y)  
   oUF:SetActiveStyle("oUF_D3Orbs2_tot")
   oUF:Spawn("targettarget","oUF_D3Orbs2_ToT"):SetPoint(tabvalues.frame_positions[4].a1, tabvalues.frame_positions[4].af, tabvalues.frame_positions[4].a2, tabvalues.frame_positions[4].x, tabvalues.frame_positions[4].y)
+  oUF:SetActiveStyle("oUF_D3Orbs2_focus")
+  oUF:Spawn("focus","oUF_D3Orbs2_focus"):SetPoint(tabvalues.frame_positions[6].a1, tabvalues.frame_positions[6].af, tabvalues.frame_positions[6].a2, tabvalues.frame_positions[6].x, tabvalues.frame_positions[6].y)
+  oUF:Spawn("focustarget","ouf_focustot"):SetPoint('CENTER', oUF.units.focus, 'CENTER', 200, 0)
+  oUF:Spawn("pet","ouf_pet"):SetPoint('CENTER', oUF.units.focus, 'CENTER', 0, 250)
+  
+  local party  = oUF:Spawn("header", "oUF_Party")
+  party:SetPoint(tabvalues.frame_positions[7].a1, tabvalues.frame_positions[7].af, tabvalues.frame_positions[7].a2, tabvalues.frame_positions[7].x, tabvalues.frame_positions[7].y)
+  --party:SetManyAttributes("showParty", true, "xOffset", 10, "point", "RIGHT", "showPlayer", false)
+  party:SetManyAttributes("showParty", true, "xOffset", 80, "point", "LEFT")
+ 
+  -------------------------------------------------------
+  -- TOGGLE PARTY IN RAID (CURRENTLY NO)
+  -------------------------------------------------------
+  
+  partyToggle = CreateFrame("Frame")
+  partyToggle:RegisterEvent("PLAYER_LOGIN")
+  partyToggle:RegisterEvent("RAID_ROSTER_UPDATE")
+  partyToggle:RegisterEvent("PARTY_LEADER_CHANGED")
+  partyToggle:RegisterEvent("PARTY_MEMBER_CHANGED")
+  partyToggle:SetScript("OnEvent", function(self)
+    if(InCombatLockdown()) then
+      self:RegisterEvent("PLAYER_REGEN_ENABLED")
+    else
+      self:UnregisterEvent("PLAYER_REGEN_ENABLED")
+      if(GetNumRaidMembers() > 0) then
+        --activate this to hide party in raid
+        if hidepartyinraid == 1 then
+          party:Hide()
+        else
+          party:Show()
+        end
+      else
+        party:Show()
+      end
+    end
+  end)
+  
   
   -----------------------------
   -- CREATING D3 ART FRAMES

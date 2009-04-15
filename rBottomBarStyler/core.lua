@@ -359,6 +359,12 @@
     orb2:RegisterEvent("UNIT_FOCUS")
     orb2:RegisterEvent("UNIT_RUNIC_POWER")
     orb2:RegisterEvent("PLAYER_ENTERING_WORLD")
+		orb2:RegisterEvent("UNIT_MAXMANA")
+		orb2:RegisterEvent("UNIT_MAXRAGE")
+		orb2:RegisterEvent("UNIT_MAXFOCUS")
+		orb2:RegisterEvent("UNIT_MAXENERGY")
+		orb2:RegisterEvent("UNIT_DISPLAYPOWER")
+		orb2:RegisterEvent("UNIT_MAXRUNIC_POWER")
   end
   
   ------------------------------------------------------
@@ -412,10 +418,10 @@
     end
     local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"BACKGROUND",6,orbsize,orbsize,"BOTTOM",0,0,1)
     local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
-    local orbtext1 = set_me_a_font(orb1_glossholder, default_font, orbsize/5, "THINOUTLINE")
+    local orbtext1 = set_me_a_font(orb1_glossholder, default_font, orbsize/5.5, "THINOUTLINE")
     orbtext1:SetPoint("CENTER", 0, (orbsize/12))
     orbtext1:SetTextColor(1,1,1)
-    local orbtext2 = set_me_a_font(orb1_glossholder, default_font, orbsize/8.5, "THINOUTLINE")
+    local orbtext2 = set_me_a_font(orb1_glossholder, default_font, orbsize/9, "THINOUTLINE")
     orbtext2:SetPoint("CENTER", 0, -(orbsize/12))
     orbtext2:SetTextColor(0.6,0.6,0.6)
     if orbtype == "life" then
@@ -582,16 +588,16 @@
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\"..rBottomBarStyler.barvalue)
     bar_to_show = bar_tex    
     --orbs
-    create_orb("life",140,holder,"BOTTOM",-255,-8,1,"orb_filling4",rBottomBarStyler.healthorb)
-    create_orb("mana",140,holder,"BOTTOM",250,-8,1,"orb_filling4",rBottomBarStyler.manaorb)    
+    create_orb("life",150,holder,"BOTTOM",-260,-8,1,"orb_filling4",rBottomBarStyler.healthorb)
+    create_orb("mana",150,holder,"BOTTOM",260,-8,1,"orb_filling4",rBottomBarStyler.manaorb)    
     --bottom
-    local bottom = create_me_a_frame("Frame",nil,holder,"BACKGROUND",9,510,110,"BOTTOM",0,-10,1)
+    local bottom = create_me_a_frame("Frame",nil,holder,"BACKGROUND",9,510,110,"BOTTOM",0,-5,1)
     local bottom_tex = create_me_a_texture(bottom,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\bottom")    
     --left figure
-    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,512,256,"BOTTOM",-440,0,0.6)
+    local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,512,256,"BOTTOM",-400,0,0.65)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\figure_left")    
     --right figure
-    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,512,256,"BOTTOM",435,0,0.6)
+    local righty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,512,256,"BOTTOM",410,0,0.65)
     local righty_tex = create_me_a_texture(righty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\figure_right")    
     --dragframe
     local dragframe = create_me_a_frame("Frame",nil,holder,"TOOLTIP",1,100,100,"BOTTOM",0,0,scale,true)

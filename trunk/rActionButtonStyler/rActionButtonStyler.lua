@@ -6,7 +6,7 @@ local rb2_pushed_texture    = "Interface\\AddOns\\rActionButtonStyler\\media\\pu
 local rb2_checked_texture   = "Interface\\AddOns\\rActionButtonStyler\\media\\checked"; 
 local rb2_equipped_texture  = "Interface\\AddOns\\rActionButtonStyler\\media\\gloss_grey";
 
-RANGE_INDICATOR = "";
+--RANGE_INDICATOR = "";
 
 --local color = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
 --local color_rn = color.r*0.5
@@ -40,7 +40,7 @@ function rActionButtonStyler_AB_style(self)
   nt:SetPoint("Center", 0, 0)
   bo:Hide()
   
-  ho:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+  ho:SetFont("Fonts\\FRIZQT__.TTF", 18, "OUTLINE")
   co:SetFont("Fonts\\FRIZQT__.TTF", 18, "OUTLINE")
   na:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
   ho:Hide()
@@ -140,7 +140,9 @@ end
 
 function rActionButtonStyler_AB_hotkey(self, actionButtonType)
   local hotkey = _G[self:GetName().."HotKey"];
-  hotkey:Hide();
+  if hotkey then
+    hotkey:Hide();
+  end
 end 
 
 

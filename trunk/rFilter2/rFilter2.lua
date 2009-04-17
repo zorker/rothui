@@ -41,7 +41,7 @@
 
   -- to enable the icons OOC, put this to 1 while moving the icons and to 0 when ready
   -- 0 = off // 1 = on
-  local testmode = 1
+  local testmode = 0
   
   --alpha when buff/debuff/cd not active
   --values between 0 and one are allowed
@@ -83,6 +83,7 @@
       buffs = {
         [1] = { tag = "commanding", spellid = 469,  unit = "player", size = 24, fontsize = 16, posx = -64, posy = -320, framestrata = "LOW", anchor = "UIParent"},
         [2] = { tag = "battle",     spellid = 2048, unit = "player", size = 24, fontsize = 16, posx = -32, posy = -320, framestrata = "LOW", anchor = "UIParent"},
+        [3] = { tag = "SLAM",     spellid = 46916, unit = "player", size = 50, fontsize = 32, posx = 0, posy = 0, framestrata = "LOW", anchor = "UIParent"},
         --[3] = { tag = "snb",        spellid = 50227, unit = "player", size = 48, fontsize = 32, posx = 0 , posy = -30, framestrata = "LOW", anchor = "UIParent"},
         --[4] = { tag = "block",      spellid = 2565, unit = "player", size = 32, fontsize = 20, posx = -50 , posy = -30, framestrata = "LOW", anchor = "UIParent"},
         --[5] = { tag = "gnomeblocker", spellid = 35169, unit = "player", size = 32, fontsize = 20, posx = 50 , posy = -30, framestrata = "LOW", anchor = "UIParent"},

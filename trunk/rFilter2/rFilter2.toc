@@ -1,4 +1,4 @@
-## Interface: 31337
+## Interface: 30100
 ## Author: roth
 ## Title: rFilter2
 ## Notes: buff/debuff/cooldown filtering

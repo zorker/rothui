@@ -1,4 +1,4 @@
-## Interface: 31000
+## Interface: 30100
 ## Author: roth
 ## Title: rFrameRotater
 ## Notes: Lets you rotate frames!

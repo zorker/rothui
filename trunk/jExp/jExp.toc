@@ -1,0 +1,7 @@
+## Interface: 30100
+## Author: jin
+## Title: jExp
+## Notes: oUF_D3Orb (by roth) styled XP- and RepBar
+## X-Category: Misc
+
+jExp.lua

@@ -40,9 +40,9 @@
     map_positions = {
       position = {
         [1] = { frame = "Minimap",                  anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",   anchorframe = "UIParent",   posx = -30,   posy = -10 },
-        [2] = { frame = "MiniMapTracking",          anchor1 = "CENTER",       anchor2 = "CENTER",     anchorframe = "Minimap",    posx = 70,     posy = 25 },
-        [3] = { frame = "MiniMapMailFrame",         anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 50,    posy = -20 },
-        [4] = { frame = "MiniMapBattlefieldFrame",  anchor1 = "TOP",          anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = -25,   posy = -20 },
+        [2] = { frame = "MiniMapTracking",          anchor1 = "CENTER",       anchor2 = "CENTER",     anchorframe = "Minimap",    posx = 68,     posy = 28 },
+        [3] = { frame = "MiniMapMailFrame",         anchor1 = "CENTER",          anchor2 = "CENTER",     anchorframe = "Minimap",    posx = 75,    posy = 0 },
+        [4] = { frame = "MiniMapBattlefieldFrame",  anchor1 = "CENTER",          anchor2 = "CENTER",     anchorframe = "Minimap",    posx = -75,   posy = 0 },
         [5] = { frame = "GameTimeFrame",            anchor1 = "CENTER",          anchor2 = "CENTER",     anchorframe = "Minimap",    posx = 52,    posy = 52 },
         [6] = { frame = "TimeManagerClockButton",   anchor1 = "BOTTOM",       anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 0,    posy = 0 },
       },
@@ -93,16 +93,16 @@
     local t = Minimap:CreateTexture(nil,"ARTWORK")
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_map2")
     local d3mapscale = 1.3
-    t:SetPoint("CENTER", Minimap, "CENTER", -2*d3mapscale, -13*d3mapscale)
+    t:SetPoint("CENTER", Minimap, "CENTER", -2*d3mapscale, -11*d3mapscale)
     t:SetWidth(Minimap:GetHeight()*2*d3mapscale)
     t:SetHeight(Minimap:GetHeight()*d3mapscale)
     
-    local t2 = Minimap:CreateTexture(nil,"OVERLAY")
-    t2:SetTexture("Interface\\AddOns\\oUF_D3Orbs\\textures\\orb_gloss")
+    local t2 = Minimap:CreateTexture(nil,"BORDER")
+    t2:SetTexture("Interface\\AddOns\\rTextures\\orb_gloss")
     t2:SetPoint("CENTER",0,0)
-    t2:SetWidth(Minimap:GetHeight()*1.1)
-    t2:SetHeight(Minimap:GetHeight()*1.1)
-    t2:SetBlendMode("BLEND")
+    t2:SetWidth(Minimap:GetHeight()*1.06)
+    t2:SetHeight(Minimap:GetHeight()*1.06)
+    t2:SetAlpha(1)
   end
   
   function a:dostuff2()
@@ -185,24 +185,28 @@
     MiniMapTracking:SetHeight(iconsize)
     
     MiniMapTrackingButton:SetAllPoints(MiniMapTracking)
+    MiniMapTrackingButton:SetHighlightTexture("");
+    MiniMapTrackingButton:SetPushedTexture("");
     
     local tftb = MiniMapTracking:CreateTexture(nil,"BACKGROUND")
     tftb:SetTexture("Interface\\AddOns\\rMinimap\\mask")
     tftb:SetVertexColor(0,0,0,1)
-    tftb:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 2, 0)
-    tftb:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", 0, 0)
+    tftb:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 2, -2)
+    tftb:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", -2, 2)
+    --tftb:SetAllPoints(MiniMapTracking)
         
     MiniMapTrackingIcon:ClearAllPoints()
-    MiniMapTrackingIcon:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 0, -0)
-    MiniMapTrackingIcon:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", -0, 0)
+    MiniMapTrackingIcon:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 2, -2)
+    MiniMapTrackingIcon:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", -2, 2)
+    --MiniMapTrackingIcon:SetAllPoints(MiniMapTracking)
     MiniMapTrackingIcon.SetPoint = dummy
     MiniMapTrackingIcon:SetTexCoord(0.1,0.9,0.1,0.9)
 
     local tft = MiniMapTracking:CreateTexture(nil,"OVERLAY")
     --tft:SetTexture("Interface\\AddOns\\rTextures\\gloss")
-    tft:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
-    tft:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", -5, 5)
-    tft:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", 27, -27)
+    tft:SetTexture("Interface\\AddOns\\rTextures\\minimap_button2")
+    tft:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", -2, 2)
+    tft:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", 2, -2)
     
     MinimapZoomOut:Hide()
     MinimapZoomIn:Hide()
@@ -211,35 +215,42 @@
     MiniMapMailFrame:SetWidth(iconsize)
     MiniMapMailFrame:SetHeight(iconsize)
     
-    local mft = MiniMapMailFrame:CreateTexture(nil,"ARTWORK")
-    mft:SetTexture("Interface\\AddOns\\rTextures\\gloss")
-    mft:SetPoint("TOPLEFT", MiniMapMailFrame, "TOPLEFT", -0, 0)
-    mft:SetPoint("BOTTOMRIGHT", MiniMapMailFrame, "BOTTOMRIGHT", 0, -0)
-    
     MiniMapMailIcon:ClearAllPoints()
     MiniMapMailIcon:SetPoint("TOPLEFT", MiniMapMailFrame, "TOPLEFT", 1, -1)
     MiniMapMailIcon:SetPoint("BOTTOMRIGHT", MiniMapMailFrame, "BOTTOMRIGHT", -1, 1)
     MiniMapMailIcon:SetTexCoord(0.07,0.93,0.07,0.93)
+    
+    local mft = MiniMapMailFrame:CreateTexture(nil,"OVERLAY")
+    --mft:SetTexture("Interface\\AddOns\\rTextures\\gloss")
+    --mft:SetPoint("TOPLEFT", MiniMapMailFrame, "TOPLEFT", -0, 0)
+    --mft:SetPoint("BOTTOMRIGHT", MiniMapMailFrame, "BOTTOMRIGHT", 0, -0)
+    mft:SetTexture("Interface\\AddOns\\rTextures\\minimap_button2")
+    mft:SetPoint("TOPLEFT", MiniMapMailFrame, "TOPLEFT", -2, 2)
+    mft:SetPoint("BOTTOMRIGHT", MiniMapMailFrame, "BOTTOMRIGHT", 2, -2)
+    
+    
+
     
     MiniMapBattlefieldFrame:SetWidth(iconsize)
     MiniMapBattlefieldFrame:SetHeight(iconsize)
     
     MiniMapBattlefieldBorder:Hide()
     
-    local bftb = MiniMapBattlefieldFrame:CreateTexture(nil,"BACKGROUND")
-    bftb:SetTexture("Interface\\AddOns\\rMinimap\\mask")
-    bftb:SetVertexColor(0,0,0,1)
-    bftb:SetPoint("TOPLEFT", MiniMapBattlefieldFrame, "TOPLEFT", 1, -1)
-    bftb:SetPoint("BOTTOMRIGHT", MiniMapBattlefieldFrame, "BOTTOMRIGHT", -1, 1)
+    --local bftb = MiniMapBattlefieldFrame:CreateTexture(nil,"BACKGROUND")
+    --bftb:SetTexture("Interface\\AddOns\\rMinimap\\mask")
+    --bftb:SetVertexColor(0,0,0,1)
+    --bftb:SetPoint("TOPLEFT", MiniMapBattlefieldFrame, "TOPLEFT", 1, -1)
+    --bftb:SetPoint("BOTTOMRIGHT", MiniMapBattlefieldFrame, "BOTTOMRIGHT", -1, 1)
     
     local bft = MiniMapBattlefieldFrame:CreateTexture(nil,"ARTWORK")
-    bft:SetTexture("Interface\\AddOns\\rTextures\\gloss")
-    bft:SetPoint("TOPLEFT", MiniMapBattlefieldFrame, "TOPLEFT", -0, 0)
-    bft:SetPoint("BOTTOMRIGHT", MiniMapBattlefieldFrame, "BOTTOMRIGHT", 0, -0)
+    --bft:SetTexture("Interface\\AddOns\\rTextures\\gloss")
+    bft:SetTexture("Interface\\AddOns\\rTextures\\minimap_button2")
+    bft:SetPoint("TOPLEFT", MiniMapBattlefieldFrame, "TOPLEFT", -2, 2)
+    bft:SetPoint("BOTTOMRIGHT", MiniMapBattlefieldFrame, "BOTTOMRIGHT", 2, -2)
     
-    MiniMapBattlefieldIcon:ClearAllPoints()
-    MiniMapBattlefieldIcon:SetAllPoints(MiniMapBattlefieldFrame)    
-    MiniMapBattlefieldIcon:SetTexCoord(0.07,0.93,0.07,0.93)
+    --MiniMapBattlefieldIcon:ClearAllPoints()
+    --MiniMapBattlefieldIcon:SetAllPoints(MiniMapBattlefieldFrame)    
+    --MiniMapBattlefieldIcon:SetTexCoord(0.07,0.93,0.07,0.93)
     
     MinimapToggleButton:Hide()
     MinimapZoneTextButton:Hide()
@@ -258,19 +269,22 @@
     bu:SetHeight(iconsize)
     bu:SetHitRectInsets(0, 0, 0, 0)
     
+    select(5, GameTimeFrame:GetRegions()):SetTextColor(1, 1, 1)
+    select(5, GameTimeFrame:GetRegions()):SetFont(NAMEPLATE_FONT,14,"THINOUTLINE")
+    select(5, GameTimeFrame:GetRegions()):ClearAllPoints()
+    select(5, GameTimeFrame:GetRegions()):SetPoint("CENTER",bu,"CENTER",0,1)
+    
     local gtftb = bu:CreateTexture(nil,"BACKGROUND")
     gtftb:SetTexture("Interface\\AddOns\\rMinimap\\mask")
-    gtftb:SetVertexColor(1,1,1,1)
-    gtftb:SetPoint("TOPLEFT", bu, "TOPLEFT", 1, -1)
-    gtftb:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -1, 1)
+    gtftb:SetVertexColor(0,0,0,1)
+    gtftb:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
+    gtftb:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
     
     local gtft = bu:CreateTexture(nil,"ARTWORK")
     --gtft:SetTexture("Interface\\AddOns\\rTextures\\gloss")
-    --gtft:SetPoint("TOPLEFT", bu, "TOPLEFT", -0, 0)
-    --gtft:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 0, -0)
-    gtft:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
-    gtft:SetPoint("TOPLEFT", bu, "TOPLEFT", -5, 5)
-    gtft:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 27, -27)
+    gtft:SetTexture("Interface\\AddOns\\rTextures\\minimap_button2")
+    gtft:SetPoint("TOPLEFT", bu, "TOPLEFT", -2, 2)
+    gtft:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 2, -2)
    
     --the is no name for this texture so we need to workaround this
     nt = bu:GetNormalTexture()

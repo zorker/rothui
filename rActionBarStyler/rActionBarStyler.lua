@@ -33,7 +33,7 @@
     
   -- bar1
   bar1_on_mouseover = 0
-  move_bar1 = 1
+  move_bar1 = 0
   lock_bar1 = 1
   
   -- bar2
@@ -47,13 +47,13 @@
   else
     bar3_on_mouseover = 0
   end
-  move_bar3 = 1
+  move_bar3 = 0
   lock_bar3 = 1
   
   -- rightbars (bar45)
   rightbars_on_mouseover = 1
-  move_rightbars = 1
-  lock_rightbars = 0
+  move_rightbars = 0
+  lock_rightbars = 1
   
   -- shapeshift
   if myname == "Loral" then
@@ -67,9 +67,9 @@
   lock_shapeshift = 0
   
   -- petbar
-  petbar_on_mouseover = 1
+  petbar_on_mouseover = 0
   move_pet = 1
-  lock_pet = 1
+  lock_pet = 0
 
   -- micromenu
   micromenu_on_mouseover = 1

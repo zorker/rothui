@@ -1,12 +1,12 @@
 
-local rb2_normal_texture    = "Interface\\AddOns\\rActionButtonStyler\\media\\gloss";
-local rb2_flash_texture     = "Interface\\AddOns\\rActionButtonStyler\\media\\flash";
-local rb2_hover_texture     = "Interface\\AddOns\\rActionButtonStyler\\media\\hover";    
-local rb2_pushed_texture    = "Interface\\AddOns\\rActionButtonStyler\\media\\pushed";
-local rb2_checked_texture   = "Interface\\AddOns\\rActionButtonStyler\\media\\checked"; 
-local rb2_equipped_texture  = "Interface\\AddOns\\rActionButtonStyler\\media\\gloss_grey";
+local rb2_normal_texture    = "Interface\\AddOns\\rActionButtonStyler\\media\\gloss"
+local rb2_flash_texture     = "Interface\\AddOns\\rActionButtonStyler\\media\\flash"
+local rb2_hover_texture     = "Interface\\AddOns\\rActionButtonStyler\\media\\hover"    
+local rb2_pushed_texture    = "Interface\\AddOns\\rActionButtonStyler\\media\\pushed"
+local rb2_checked_texture   = "Interface\\AddOns\\rActionButtonStyler\\media\\checked" 
+local rb2_equipped_texture  = "Interface\\AddOns\\rActionButtonStyler\\media\\gloss_grey"
 
---RANGE_INDICATOR = "";
+local _G = _G
 
 --local color = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
 --local color_rn = color.r*0.5
@@ -21,10 +21,10 @@ local color_re = 0
 local color_ge = 0.5
 local color_be = 0
 
-function rActionButtonStyler_AB_style(self)
+local function rActionButtonStyler_AB_style(self)
 
-  local action = self.action;
-  local name = self:GetName();
+  local action = self.action
+  local name = self:GetName()
   local bu  = _G[name]
   local ic  = _G[name.."Icon"]
   local co  = _G[name.."Count"]
@@ -57,20 +57,20 @@ function rActionButtonStyler_AB_style(self)
   ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
 
   if ( IsEquippedAction(action) ) then
-    bu:SetNormalTexture(rb2_equipped_texture);
-    nt:SetVertexColor(color_re,color_ge,color_be,1);
+    bu:SetNormalTexture(rb2_equipped_texture)
+    nt:SetVertexColor(color_re,color_ge,color_be,1)
   else
-    bu:SetNormalTexture(rb2_normal_texture);
-    nt:SetVertexColor(color_rn,color_gn,color_bn,1);
+    bu:SetNormalTexture(rb2_normal_texture)
+    nt:SetVertexColor(color_rn,color_gn,color_bn,1)
   end  
 
 end
 
 
-function rActionButtonStyler_AB_stylepet()
+local function rActionButtonStyler_AB_stylepet()
   
   for i=1, NUM_PET_ACTION_SLOTS do
-    local name = "PetActionButton"..i;
+    local name = "PetActionButton"..i
     local bu  = _G[name]
     local ic  = _G[name.."Icon"]
     local fl  = _G[name.."Flash"]
@@ -80,7 +80,7 @@ function rActionButtonStyler_AB_stylepet()
     nt:SetWidth(bu:GetWidth())
     nt:SetPoint("Center", 0, 0)
     
-    nt:SetVertexColor(color_rn,color_gn,color_bn,1);
+    nt:SetVertexColor(color_rn,color_gn,color_bn,1)
     
     fl:SetTexture(rb2_flash_texture)
     bu:SetHighlightTexture(rb2_hover_texture)
@@ -91,28 +91,58 @@ function rActionButtonStyler_AB_stylepet()
     ic:SetTexCoord(0.1,0.9,0.1,0.9)
     ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
     ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
-
-  end
-  
-end
-
-
-function rActionButtonStyler_AB_fixgrid(button)
-  local name = button:GetName();
-  local action = button.action;
-  local nt  = _G[name.."NormalTexture"]
-  if ( IsEquippedAction(action) ) then
-    nt:SetVertexColor(color_re,color_ge,color_be,1);
-  else
-    nt:SetVertexColor(color_rn,color_gn,color_bn,1);
+    
   end  
 end
 
 
-function rActionButtonStyler_AB_styleshapeshift()
+local function rActionButtonStyler_AB_fixgrid(button)
+  local name = button:GetName()
+  local action = button.action
+  local nt  = _G[name.."NormalTexture"]
+  if ( IsEquippedAction(action) ) then
+    nt:SetVertexColor(color_re,color_ge,color_be,1)
+  else
+    nt:SetVertexColor(color_rn,color_gn,color_bn,1)
+  end  
+end
+
+local function rActionButtonStyler_AB_usable(self)
+  local name = self:GetName()
+  local action = self.action
+  local nt  = _G[name.."NormalTexture"]
+  local icon = _G[name.."Icon"]
+  if ( IsEquippedAction(action) ) then
+    nt:SetVertexColor(color_re,color_ge,color_be,1)
+  else
+    nt:SetVertexColor(color_rn,color_gn,color_bn,1)
+  end  
+  local isUsable, notEnoughMana = IsUsableAction(action)
+  if (ActionHasRange(action) and IsActionInRange(action) == 0) then
+    icon:SetVertexColor(0.8, 0.1, 0.1)
+    return
+  elseif (notEnoughMana) then
+    icon:SetVertexColor(0.1, 0.3, 1)
+    return
+  elseif (isUsable) then
+    icon:SetVertexColor(1.0, 1.0, 1.0)
+    return
+  else
+    icon:SetVertexColor(0.4, 0.4, 0.4);
+    return
+  end
+end
+
+local function rActionButtonStyler_AB_onupdate(self)
+  if (self.rangeTimer == TOOLTIP_UPDATE_TIME) then
+    rActionButtonStyler_AB_usable(self)
+  end
+end
+
+local function rActionButtonStyler_AB_styleshapeshift()
   
   for i=1, NUM_SHAPESHIFT_SLOTS do
-    local name = "ShapeshiftButton"..i;
+    local name = "ShapeshiftButton"..i
     local bu  = _G[name]
     local ic  = _G[name.."Icon"]
     local fl  = _G[name.."Flash"]
@@ -122,7 +152,7 @@ function rActionButtonStyler_AB_styleshapeshift()
     nt:SetPoint("TOPLEFT", bu, "TOPLEFT", 0, 0)
     nt:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 0, 0)
     
-    nt:SetVertexColor(color_rn,color_gn,color_bn,1);
+    nt:SetVertexColor(color_rn,color_gn,color_bn,1)
     
     fl:SetTexture(rb2_flash_texture)
     bu:SetHighlightTexture(rb2_hover_texture)
@@ -138,22 +168,22 @@ function rActionButtonStyler_AB_styleshapeshift()
   
 end
 
-function rActionButtonStyler_AB_hotkey(self, actionButtonType)
-  local hotkey = _G[self:GetName().."HotKey"];
+local function rActionButtonStyler_AB_hotkey(self, actionButtonType)
+  local hotkey = _G[self:GetName().."HotKey"]
   if hotkey then
-    hotkey:Hide();
+    hotkey:Hide()
   end
 end 
 
 
-hooksecurefunc("ActionButton_Update",   rActionButtonStyler_AB_style);
-hooksecurefunc("ActionButton_ShowGrid", rActionButtonStyler_AB_fixgrid);
-hooksecurefunc("ActionButton_OnUpdate", rActionButtonStyler_AB_fixgrid);
-hooksecurefunc("ActionButton_UpdateHotkeys", rActionButtonStyler_AB_hotkey);
+hooksecurefunc("ActionButton_Update",   rActionButtonStyler_AB_style)
+hooksecurefunc("ActionButton_UpdateUsable",   rActionButtonStyler_AB_usable)
+hooksecurefunc("ActionButton_OnUpdate",   rActionButtonStyler_AB_onupdate)
+hooksecurefunc("ActionButton_ShowGrid", rActionButtonStyler_AB_fixgrid)
+hooksecurefunc("ActionButton_UpdateHotkeys", rActionButtonStyler_AB_hotkey)
 
-hooksecurefunc("ShapeshiftBar_OnLoad",   rActionButtonStyler_AB_styleshapeshift);
-hooksecurefunc("ShapeshiftBar_Update",   rActionButtonStyler_AB_styleshapeshift);
-hooksecurefunc("ShapeshiftBar_UpdateState",   rActionButtonStyler_AB_styleshapeshift);
+hooksecurefunc("ShapeshiftBar_OnLoad",   rActionButtonStyler_AB_styleshapeshift)
+hooksecurefunc("ShapeshiftBar_Update",   rActionButtonStyler_AB_styleshapeshift)
+hooksecurefunc("ShapeshiftBar_UpdateState",   rActionButtonStyler_AB_styleshapeshift)
 
-hooksecurefunc("PetActionBar_Update",   rActionButtonStyler_AB_stylepet);
-
+hooksecurefunc("PetActionBar_Update",   rActionButtonStyler_AB_stylepet)

@@ -41,8 +41,8 @@
   --local glosstex1 = "Interface\\AddOns\\rTextures\\d3bufficon"
   --local glosstex2 = "Interface\\AddOns\\rTextures\\d3bufficon_white"
 
-  local glosstex1 = "Interface\\AddOns\\rTextures\\gloss"
-  local glosstex2 = "Interface\\AddOns\\rTextures\\gloss_grey"
+  local glosstex1 = "Interface\\AddOns\\rActionButtonStyler\\media\\gloss"
+  local glosstex2 = "Interface\\AddOns\\rActionButtonStyler\\media\\gloss_grey"
 
   local addon = CreateFrame("Frame")
   local _G = getfenv(0)
@@ -124,7 +124,7 @@
       tex:SetVertexColor(0.5,0,0.5)
     else
       tex:SetTexture(glosstex1)
-      tex:SetVertexColor(1,1,1)      
+      tex:SetVertexColor(0.47,0.4,0.4)      
     end  
     
     if b then b:SetAlpha(0) end

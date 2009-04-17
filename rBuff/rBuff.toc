@@ -1,4 +1,4 @@
-## Interface: 21337
+## Interface: 30100
 ## Author: rothar
 ## Title: rBuff
 ## Notes: fucking simple buffs

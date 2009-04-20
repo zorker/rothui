@@ -7,7 +7,7 @@
   
   local myname, _ = UnitName("player")
   local _, myclass = UnitClass("player")
-  local dudustance
+  local dudustance, vehiclepower, playerinvehicle
   
   -- 0 = off
   -- 1 = on
@@ -97,6 +97,8 @@
       [14] =  { a1 = "CENTER",  a2 = "CENTER",  af = "oUF_D3Orbs2_TargetFrame",   x = 0,      y = 180     }, --castbar focus
     },
   }
+  
+  playerinvehicle = 0
   
   -----------------------------
   -- VARIABLES + CONFIG END
@@ -204,6 +206,25 @@
       self.pm3:SetAlpha((d)/fog_smoother)
       self.pm4:SetAlpha((d)/fog_smoother)
     end
+    
+    if playerinvehicle == 1 then
+      local pt = UnitPowerType("pet");
+      if pt then
+        if pt ~= vehiclepower then
+          --am("ping"..pt)
+          vehiclepower = pt
+          if pt == 1 then
+            manacolor = 1
+          elseif pt == 3 then
+            manacolor = 4
+          else
+            manacolor = 3
+          end
+          set_vehicle_mana(self)
+        end        
+      end      
+    end
+    
   end
   
   --update health func
@@ -298,16 +319,10 @@
   --check vehicle type
   local function check_vehicle_mana(self,event)
     if event == "UNIT_ENTERED_VEHICLE" then
-      local powerType = UnitPowerType("pet");
-      if powerType == 1 then
-        manacolor = 1
-      elseif powerType == 3 then
-        manacolor = 4
-      else
-        manacolor = 3
-      end
-      set_vehicle_mana(self)
+      playerinvehicle = 1
     else
+      playerinvehicle = 0
+      vehiclepower = nil
       set_automana()
       set_vehicle_mana(self)
     end
@@ -434,6 +449,9 @@
     self.Power.bg:SetTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
     self.Power.bg:SetAllPoints(self.Power)
     self.Power.Smooth = true
+    if unit == "pet" then
+      --self.Power.frequentUpdates = true
+    end
   end
   
   --aura icon func

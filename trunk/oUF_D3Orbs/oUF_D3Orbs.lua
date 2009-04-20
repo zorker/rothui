@@ -440,7 +440,7 @@
     end  
     self.Health.Smooth = true
     --power    
-    self.Power = CreateFrame("StatusBar", nil, self.Health)
+    self.Power = CreateFrame("StatusBar", nil, self)
     self.Power:SetStatusBarTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
     self.Power:SetHeight(4)
     self.Power:SetWidth(self:GetWidth())
@@ -450,7 +450,7 @@
     self.Power.bg:SetAllPoints(self.Power)
     self.Power.Smooth = true
     if unit == "pet" then
-      --self.Power.frequentUpdates = true
+      self.Power.frequentUpdates = true
     end
   end
   

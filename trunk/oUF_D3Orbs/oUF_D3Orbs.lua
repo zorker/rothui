@@ -80,6 +80,12 @@
       [5] = rPowerBarColor["RUNES"], -- dont know
       [6] = rPowerBarColor["RUNIC_POWER"], -- deathknight
     },
+    happiness = {
+      [0] = {r = 1, g = 1, b = 1}, -- bla test
+      [1] = {r = 1, g = 0, b = 0}, -- need.... | unhappy
+      [2] = {r = 1, g = 1, b = 0}, -- new..... | content
+      [3] = {r = 0, g = 1, b = 0}, -- colors.. | happy
+    },
     frame_positions = {
       [1] =   { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",                  x = 260,    y = -9      }, --player mana orb
       [2] =   { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",                  x = -260,   y = -9      }, --player health orb
@@ -207,11 +213,13 @@
   
   --update player power func
   local function d3o2_updatePlayerPower(self, event, unit, bar, min, max)
-    local d
+    local d, d2
     if max == 0 then
       d = 0
+      d2 = 0
     else
      d = min/max
+     d2 = floor(min/max*100)
     end
     self.Power.Filling:SetHeight((d) * self.Power:GetWidth())
     self.Power.Filling:SetTexCoord(0,1,  math.abs(d - 1),1)
@@ -227,9 +235,9 @@
     
     if myclass == "WARRIOR" or (myclass == "DRUID" and shape == 3) or (myclass == "DRUID" and shape == 1) or myclass == "DEATHKNIGHT" or myclass == "ROGUE" then
       self.mpval1:SetText(do_format(min))
-      self.mpval2:SetText(floor(min/max*100))
+      self.mpval2:SetText(d2)
     else
-      self.mpval1:SetText(floor(min/max*100))
+      self.mpval1:SetText(d2)
       self.mpval2:SetText(do_format(min))
     end
     
@@ -261,6 +269,9 @@
       if rRAID_CLASS_COLORS[select(2, UnitClass(unit))] then
         color = rRAID_CLASS_COLORS[select(2, UnitClass(unit))]
       end
+    elseif unit == "pet" and UnitExists("pet") and GetPetHappiness() then
+      local happiness = GetPetHappiness()
+      color = tabvalues.happiness[happiness]
     else
       color = rFACTION_BAR_COLORS[UnitReaction(unit, "player")]
     end

@@ -176,6 +176,19 @@
     end    
   end
   
+  --do format func
+  local function do_format(v)
+    local string = ""
+    if v > 1000000 then
+      string = (floor((v/1000000)*10)/10).."m"
+    elseif v > 1000 then
+      string = (floor((v/1000)*10)/10).."k"
+    else
+      string = v
+    end  
+    return string
+  end
+  
   --update player health func
   local function d3o2_updatePlayerHealth(self, event, unit, bar, min, max)
     local d = floor(min/max*100)
@@ -205,6 +218,19 @@
     if useglow == 1 then
       self.pm3:SetAlpha((d)/fog_smoother)
       self.pm4:SetAlpha((d)/fog_smoother)
+    end
+    
+    local shape
+    if myclass == "DRUID" then
+      shape = GetShapeshiftForm()    
+    end  
+    
+    if myclass == "WARRIOR" or (myclass == "DRUID" and shape == 3) or (myclass == "DRUID" and shape == 1) or myclass == "DEATHKNIGHT" or myclass == "ROGUE" then
+      self.mpval1:SetText(do_format(min))
+      self.mpval2:SetText(floor(min/max*100))
+    else
+      self.mpval1:SetText(floor(min/max*100))
+      self.mpval2:SetText(do_format(min))
     end
     
     if playerinvehicle == 1 then
@@ -823,8 +849,12 @@
       mpval2:SetTextColor(0.6,0.6,0.6)
       self:Tag(hpval1, "[perhp]")
       self:Tag(hpval2, "[d3o2abshp]")
-      self:Tag(mpval1, "[perpp]")
-      self:Tag(mpval2, "[d3o2absmp]")
+      --cannot use custom events with frequentupdates enabled
+      --self:Tag(mpval1, "[perpp]")
+      --self:Tag(mpval2, "[d3o2absmp]")
+      --set the subobjects to be available for the d3o2_updatePlayerPower func
+      self.mpval1 = mpval1
+      self.mpval2 = mpval2
       self.PostUpdateHealth = d3o2_updatePlayerHealth
       self.PostUpdatePower = d3o2_updatePlayerPower
       d3o2_createLowHP(self,unit)

@@ -83,7 +83,7 @@
       buffs = {
         [1] = { tag = "commanding", spellid = 469,  unit = "player", size = 24, fontsize = 16, posx = -64, posy = -320, framestrata = "LOW", anchor = "UIParent"},
         [2] = { tag = "battle",     spellid = 2048, unit = "player", size = 24, fontsize = 16, posx = -32, posy = -320, framestrata = "LOW", anchor = "UIParent"},
-        [3] = { tag = "SLAM",     spellid = 46916, unit = "player", size = 50, fontsize = 32, posx = 0, posy = 0, framestrata = "LOW", anchor = "UIParent"},
+        [3] = { tag = "SLAM",     spellid = 46916, unit = "player", size = 50, fontsize = 32, posx = 0, posy = -270, framestrata = "LOW", anchor = "UIParent"},
         --[3] = { tag = "snb",        spellid = 50227, unit = "player", size = 48, fontsize = 32, posx = 0 , posy = -30, framestrata = "LOW", anchor = "UIParent"},
         --[4] = { tag = "block",      spellid = 2565, unit = "player", size = 32, fontsize = 20, posx = -50 , posy = -30, framestrata = "LOW", anchor = "UIParent"},
         --[5] = { tag = "gnomeblocker", spellid = 35169, unit = "player", size = 32, fontsize = 20, posx = 50 , posy = -30, framestrata = "LOW", anchor = "UIParent"},
@@ -104,8 +104,8 @@
         --[8] = { tag = "curseoftong", spellid = 11719, ismine = 0,  size = 18, fontsize = 14, posx = 75, posy = -230, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       cooldowns = {
-        --[1] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
-        --[2] = { tag = "berserkercool", spellid = 18499, size = 32, fontsize = 24, posx = 50, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [1] = { tag = "bloodrage", spellid = 2687, size = 32, fontsize = 24, posx = 0, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
+        [2] = { tag = "berserkercool", spellid = 18499, size = 32, fontsize = 24, posx = 50, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[3] = { tag = "revenge", spellid = 30357, size = 32, fontsize = 24, posx = 0, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
         --[4] = { tag = "shieldslam", spellid = 30356, size = 32, fontsize = 24, posx = 40, posy = 80, framestrata = "BACKGROUND", anchor = "UIParent"},
       },

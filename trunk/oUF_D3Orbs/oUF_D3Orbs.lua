@@ -125,6 +125,10 @@
   RuneButtonIndividual1:ClearAllPoints()
   RuneButtonIndividual1:SetPoint("BOTTOM", UIParent, "BOTTOM", -55, 140)
   
+  --shaman totems
+  TotemFrameTotem1:ClearAllPoints()
+  TotemFrameTotem1:SetPoint("BOTTOM", UIParent, "BOTTOM", -35, 140)
+  
   --disable the pet castbar (for vehicles!)
 	PetCastingBarFrame:UnregisterAllEvents()
 	PetCastingBarFrame.Show = function() end
@@ -265,7 +269,11 @@
   local function d3o2_updateHealth(self, event, unit, bar, min, max)
     local d = floor(min/max*100)
     local color
-    if UnitIsPlayer(unit) then
+    local dead
+    if UnitIsDeadOrGhost(unit) == 1 or UnitIsConnected(unit) == nil then
+      color = {r = 0.4, g = 0.4, b = 0.4}
+      dead = 1
+    elseif UnitIsPlayer(unit) then
       if rRAID_CLASS_COLORS[select(2, UnitClass(unit))] then
         color = rRAID_CLASS_COLORS[select(2, UnitClass(unit))]
       end
@@ -277,7 +285,11 @@
     end
     bar:SetStatusBarColor(0.15,0.15,0.15,0.9)
     bar.bg:SetVertexColor(0.7,0,0,1)
+    --if you like color colored background, use this
     --bar.bg:SetVertexColor(color.r, color.g, color.b,1)
+    if dead == 1 then
+      bar.bg:SetVertexColor(0,0,0,0)  
+    end
     if color then
       self.Name:SetTextColor(color.r, color.g, color.b,1)
     end
@@ -508,15 +520,28 @@
   --buff func
   local function d3o2_createBuffs(self,unit)
     self.Buffs = CreateFrame("Frame", nil, self)
-    self.Buffs.size = 20
-    self.Buffs.num = 40
-    self.Buffs:SetHeight((self.Buffs.size+5)*3)
-    self.Buffs:SetWidth(self:GetWidth())
-    self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 20, 15)
-    self.Buffs.initialAnchor = "BOTTOMLEFT"
-    self.Buffs["growth-x"] = "RIGHT"
-    self.Buffs["growth-y"] = "UP"
-    self.Buffs.spacing = 5
+    if unit == "target" then
+      self.Buffs.size = 20
+      self.Buffs.num = 40
+      self.Buffs:SetHeight((self.Buffs.size+5)*3)
+      self.Buffs:SetWidth(self:GetWidth())
+      self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 20, 15)
+      self.Buffs.initialAnchor = "BOTTOMLEFT"
+      self.Buffs["growth-x"] = "RIGHT"
+      self.Buffs["growth-y"] = "UP"
+      self.Buffs.spacing = 5
+    else
+      self.Buffs.size = 34
+      self.Buffs.num = 3
+      self.Buffs:SetHeight((self.Buffs.size+5)*1)
+      self.Buffs:SetWidth(self:GetWidth())
+      self.Buffs:SetPoint("TOP", self, "BOTTOM", 0, -55)
+      self.Buffs.initialAnchor = "TOPLEFT"
+      self.Buffs["growth-x"] = "RIGHT"
+      self.Buffs["growth-y"] = "DOWN"
+      self.Buffs.spacing = 5      
+      self.Buffs.onlyShowPlayer = true
+    end
   end
   
   --debuff func
@@ -703,6 +728,36 @@
     self.Name:SetFont(d3font,22,"THINOUTLINE")
   end
   
+	local function d3o2_createAuraWatch(self,unit)
+		--if unit ~= "target" then return end
+		-- We only want to create this for the target
+		local auras = CreateFrame("Frame", nil, self)
+		auras:SetWidth(34)
+		auras:SetHeight(34)
+		auras:SetPoint("BOTTOMLEFT", self.Health, "TOPRIGHT", 58, -25)
+		
+		local spellIDs = { 
+		  48440, --reju
+		  48443, --regrowth
+		  48450, --lifebloom
+		  53249, --wildgrowth
+		}
+		
+		auras.presentAlpha = 1
+		auras.missingAlpha = 0
+		auras.PostCreateIcon = d3o2_createAuraIcon
+		auras.icons = {}
+		for i, sid in pairs(spellIDs) do
+			local icon = CreateFrame("Frame", nil, auras)
+			icon.spellID = sid
+			icon:SetWidth(34)
+			icon:SetHeight(34)
+			icon:SetPoint("RIGHT", auras, "LEFT", 0, 38*i)
+			auras.icons[sid] = icon
+		end
+		self.AuraWatch = auras
+	end
+  
   --create special icons (raid, leader)
   local function d3o2_createIcons(self,unit)
     if unit == "player" then
@@ -736,8 +791,7 @@
       self.Leader:SetPoint("RIGHT", self.Health, "LEFT", -22, 22)
       self.Leader:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")      
     end
-  end
-  
+  end  
   
   local function d3o2_createComboPoints(self,unit)
     self.CPoints = SetFontString(self.Health, d3font, 24, "THINOUTLINE")
@@ -764,10 +818,35 @@
     return tmpunitname
   end
   
+  oUF.Tags["[d3o2misshp]"] = function(unit) 
+    local max, min = UnitHealthMax(unit), UnitHealth(unit)
+    local v = max-min
+    local string = ""
+    if UnitIsDeadOrGhost(unit) == 1 then
+      string = "dead"
+    elseif UnitIsConnected(unit) == nil then
+      string = "off"
+    elseif v == 0 then
+      string = ""
+    elseif v > 1000000 then
+      string = -(floor((v/1000000)*10)/10).."m"
+    elseif v > 1000 then
+      string = -(floor((v/1000)*10)/10).."k"
+    else
+      string = -v
+    end  
+    return string
+  end
+  oUF.TagEvents["[d3o2misshp]"] = "UNIT_HEALTH"
+  
   oUF.Tags["[d3o2abshp]"] = function(unit) 
     local v = UnitHealth(unit)
     local string = ""
-    if v > 1000000 then
+    if UnitIsDeadOrGhost(unit) == 1 then
+      string = "dead"
+    elseif UnitIsConnected(unit) == nil then
+      string = "off"
+    elseif v > 1000000 then
       string = (floor((v/1000000)*10)/10).."m"
     elseif v > 1000 then
       string = (floor((v/1000)*10)/10).."k"
@@ -933,11 +1012,15 @@
   local function CreateFocusStyle(self, unit)
     d3o2_setupFrame(self,110,200,"BACKGROUND")
     d3o2_createHealthPowerFrames(self,unit)
+    --d3o2_createBuffs(self,unit)
     d3o2_createDebuffs(self,unit)
     local name = SetFontString(self, d3font, 18, "THINOUTLINE")
     name:SetPoint("BOTTOM", self, "TOP", 0, 15)
     self.Name = name
     self:Tag(name, "[d3o2name]")
+    local hpval = SetFontString(self.Health, d3font, 20, "THINOUTLINE")
+    hpval:SetPoint("RIGHT", self.Health, "RIGHT", -2, 0)
+    self:Tag(hpval, "[d3o2misshp]")
     
     d3o2_createLowHP(self,unit)
     d3o2_createDebuffGlow(self,unit)
@@ -946,6 +1029,10 @@
       d3o2_createCastbar(self,unit)
     end    
     d3o2_createIcons(self,unit)
+    
+    if myclass == "DRUID" then
+      d3o2_createAuraWatch(self,unit)
+    end
     
     self.PostUpdateHealth = d3o2_updateHealth
     self.PostUpdatePower = d3o2_updatePower

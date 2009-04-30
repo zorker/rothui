@@ -130,9 +130,9 @@
   TotemFrameTotem1:SetPoint("BOTTOM", UIParent, "BOTTOM", -35, 140)
   
   --disable the pet castbar (for vehicles!)
-	PetCastingBarFrame:UnregisterAllEvents()
-	PetCastingBarFrame.Show = function() end
-	PetCastingBarFrame:Hide()
+  PetCastingBarFrame:UnregisterAllEvents()
+  PetCastingBarFrame.Show = function() end
+  PetCastingBarFrame:Hide()
   
   -----------------------------
   -- FUNCTIONS
@@ -520,28 +520,15 @@
   --buff func
   local function d3o2_createBuffs(self,unit)
     self.Buffs = CreateFrame("Frame", nil, self)
-    if unit == "target" then
-      self.Buffs.size = 20
-      self.Buffs.num = 40
-      self.Buffs:SetHeight((self.Buffs.size+5)*3)
-      self.Buffs:SetWidth(self:GetWidth())
-      self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 20, 15)
-      self.Buffs.initialAnchor = "BOTTOMLEFT"
-      self.Buffs["growth-x"] = "RIGHT"
-      self.Buffs["growth-y"] = "UP"
-      self.Buffs.spacing = 5
-    else
-      self.Buffs.size = 34
-      self.Buffs.num = 3
-      self.Buffs:SetHeight((self.Buffs.size+5)*1)
-      self.Buffs:SetWidth(self:GetWidth())
-      self.Buffs:SetPoint("TOP", self, "BOTTOM", 0, -55)
-      self.Buffs.initialAnchor = "TOPLEFT"
-      self.Buffs["growth-x"] = "RIGHT"
-      self.Buffs["growth-y"] = "DOWN"
-      self.Buffs.spacing = 5      
-      self.Buffs.onlyShowPlayer = true
-    end
+    self.Buffs.size = 20
+    self.Buffs.num = 40
+    self.Buffs:SetHeight((self.Buffs.size+5)*3)
+    self.Buffs:SetWidth(self:GetWidth())
+    self.Buffs:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 20, 15)
+    self.Buffs.initialAnchor = "BOTTOMLEFT"
+    self.Buffs["growth-x"] = "RIGHT"
+    self.Buffs["growth-y"] = "UP"
+    self.Buffs.spacing = 5
   end
   
   --debuff func
@@ -728,35 +715,35 @@
     self.Name:SetFont(d3font,22,"THINOUTLINE")
   end
   
-	local function d3o2_createAuraWatch(self,unit)
-		--if unit ~= "target" then return end
-		-- We only want to create this for the target
-		local auras = CreateFrame("Frame", nil, self)
-		auras:SetWidth(34)
-		auras:SetHeight(34)
-		auras:SetPoint("BOTTOMLEFT", self.Health, "TOPRIGHT", 58, -25)
-		
-		local spellIDs = { 
-		  48440, --reju
-		  48443, --regrowth
-		  48450, --lifebloom
-		  53249, --wildgrowth
-		}
-		
-		auras.presentAlpha = 1
-		auras.missingAlpha = 0
-		auras.PostCreateIcon = d3o2_createAuraIcon
-		auras.icons = {}
-		for i, sid in pairs(spellIDs) do
-			local icon = CreateFrame("Frame", nil, auras)
-			icon.spellID = sid
-			icon:SetWidth(34)
-			icon:SetHeight(34)
-			icon:SetPoint("RIGHT", auras, "LEFT", 0, 38*i)
-			auras.icons[sid] = icon
-		end
-		self.AuraWatch = auras
-	end
+  local function d3o2_createAuraWatch(self,unit)
+    --if unit ~= "target" then return end
+    -- We only want to create this for the target
+    local auras = CreateFrame("Frame", nil, self)
+    auras:SetWidth(34)
+    auras:SetHeight(34)
+    auras:SetPoint("BOTTOMLEFT", self.Health, "TOPRIGHT", 58, -25)
+    
+    local spellIDs = { 
+      48440, --reju
+      48443, --regrowth
+      48450, --lifebloom
+      53249, --wildgrowth
+    }
+    
+    auras.presentAlpha = 1
+    auras.missingAlpha = 0
+    auras.PostCreateIcon = d3o2_createAuraIcon
+    auras.icons = {}
+    for i, sid in pairs(spellIDs) do
+      local icon = CreateFrame("Frame", nil, auras)
+      icon.spellID = sid
+      icon:SetWidth(34)
+      icon:SetHeight(34)
+      icon:SetPoint("RIGHT", auras, "LEFT", 0, 38*i)
+      auras.icons[sid] = icon
+    end
+    self.AuraWatch = auras
+  end
   
   --create special icons (raid, leader)
   local function d3o2_createIcons(self,unit)
@@ -1012,7 +999,6 @@
   local function CreateFocusStyle(self, unit)
     d3o2_setupFrame(self,110,200,"BACKGROUND")
     d3o2_createHealthPowerFrames(self,unit)
-    --d3o2_createBuffs(self,unit)
     d3o2_createDebuffs(self,unit)
     local name = SetFontString(self, d3font, 18, "THINOUTLINE")
     name:SetPoint("BOTTOM", self, "TOP", 0, 15)

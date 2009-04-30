@@ -124,11 +124,7 @@
   --position deathknight runes
   RuneButtonIndividual1:ClearAllPoints()
   RuneButtonIndividual1:SetPoint("BOTTOM", UIParent, "BOTTOM", -55, 140)
-  
-  --shaman totems
-  TotemFrameTotem1:ClearAllPoints()
-  TotemFrameTotem1:SetPoint("BOTTOM", UIParent, "BOTTOM", -35, 140)
-  
+
   --disable the pet castbar (for vehicles!)
   PetCastingBarFrame:UnregisterAllEvents()
   PetCastingBarFrame.Show = function() end

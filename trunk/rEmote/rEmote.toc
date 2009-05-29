@@ -1,0 +1,6 @@
+## Interface: 30100
+## Author: roth
+## Title: rEmote
+## Notes: Redirects NPC emotes to blizzards scrolling combattext
+
+rEmote.lua

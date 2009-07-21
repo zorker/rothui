@@ -1,4 +1,3 @@
-
   --[[-------------------------------------------------------------------------
     Copyright (c) 2009, zork
     All rights reserved.
@@ -30,86 +29,200 @@
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   ---------------------------------------------------------------------------]]
   
-  -----------------------
-  -- CONFIG AREA START --
-  -----------------------
-     
-  -- scaling
-  local myscale = 0.82
+  --    ring layout
+  --     ____ ____
+  --    /    |    \
+  --    |  4 | 1  |
+  --     ----+---- 
+  --    |  3 | 2  |
+  --    \____|____/
+  --
 
-  --info:
-  --texture: name of the texture inside the "media" folder
-  --direction: 1 = right, 0 = left
-  --blendmode: 1 = blendmode("add"), 0 = no blend mode
-  --steps in degree: how much the texture should rotate per step 0.1 = 0.1 degrees
-  --update timer: how often the script should check for updates 1/60 = 60fps
+  -- direction 1 = right (clockwise), 0 = left (counter-clockwise)
 
-  local frames_to_rotate = {
+  -----------------------
+  -- CONFIG
+  -----------------------
+
+  local ring_table = {
     [1] = { 
-      texture = "background", 
-      width = 256, 
-      height = 256,
-      anchorframe = "UIParent",
-      framelevel = 0,
-      color_red = 255/255,
-      color_green = 255/255,
-      color_blue = 255/255,
-      alpha = 0.5,
-      update_timer = 1/30,
-      steps_in_degree = 0.2,
-      direction = 0,
-      blendmode = 0,
-      setpoint1 = "CENTER",
-      setpoint2 = "CENTER",
-      posx = 0,
-      posy = 0,
-    },
-    [2] = { 
-      texture = "ring", 
-      width = 256, 
-      height = 256,
-      anchorframe = "UIParent",
-      framelevel = 1,
-      color_red = 255/255,
-      color_green = 255/255,
-      color_blue = 255/255,
-      alpha = 1,
-      update_timer = 999999,
-      steps_in_degree = 0,
-      direction = 0,
-      blendmode = 1,
-      setpoint1 = "CENTER",
-      setpoint2 = "CENTER",
-      posx = 0,
-      posy = 0,
-    },
-    [3] = { 
-      texture = "foreground", 
-      width = 256, 
-      height = 256,
-      anchorframe = "UIParent",
-      framelevel = 2,
-      color_red = 255/255,
-      color_green = 255/255,
-      color_blue = 255/255,
-      alpha = 1,
-      update_timer = 999999,
-      steps_in_degree = 0,
-      direction = 0,
-      blendmode = 0,
-      setpoint1 = "CENTER",
-      setpoint2 = "CENTER",
-      posx = 0,
-      posy = 0,
+      global = {
+        unit = "player",
+        size = 256,
+        anchorframe = UIParent,
+        anchorpoint = "CENTER",
+        anchorposx = 0,
+        anchorposy = 0,
+        scale = 1,
+        alpha = 1,
+        framelevel = 1,
+        gfx_folder = "256_1",
+        segments_used = 4,
+        start_segment = 4,
+        fill_direction = 0,
+        ringtype = "health",
+      },
+      background = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 0.7,
+        framelevel = 1,
+        blendmode = "blend",
+        use_texture = 1,
+        do_rotation = 1,
+        rotation = {
+          update_timer = 1/30,
+          step_size = 0.3,
+          direction = 1,
+        },
+      },
+      foreground = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 1,
+        blendmode = "blend",
+        framelevel = 3,
+        use_texture = 1,
+      },
+      segment = {
+        color = {r = 255/255, g = 55/255, b = 55/255, a = 1},
+        alpha = 1,
+        blendmode = "add",
+        framelevel = 2,
+      },
     },
 
   }
     
   
   ---------------------  
-  -- CONFIG AREA END --
+  -- FUNCTIONS
   ---------------------
 
+  local function am(text)
+    DEFAULT_CHAT_FRAME:AddMessage(text)
+  end
+  
+  local function cre_ring_holder(ring_config)
+    am(ring_config.global.anchorframe)
+    local f = CreateFrame("Frame",nil,ring_config.global.anchorframe)
+    f:SetWidth(ring_config.global.size)
+    f:SetHeight(ring_config.global.size)
+    f:SetPoint(ring_config.global.anchorpoint,ring_config.global.anchorposx,ring_config.global.anchorposy)
+    f:SetFrameLevel(ring_config.global.framelevel)
+    f:SetScale(ring_config.global.scale)
+    f:SetAlpha(ring_config.global.alpha)
+    return f
+  end
+  
+  local r2 = math.sqrt(0.5^2+0.5^2);
+  
+  --background rotation
+  local function do_background_rotation(self, elapsed)
+    self.rotation.totalElapsed = self.rotation.totalElapsed + elapsed
+    if (self.rotation.totalElapsed < self.rotation.update_timer) then 
+      return 
+    else
+      self.rotation.totalElapsed = 0
+      if self.rotation.direction == 1 then
+        self.texture:SetTexCoord(
+        0.5+r2*cos(self.rotation.degrees+135), 0.5+r2*sin(self.rotation.degrees+135),
+        0.5+r2*cos(self.rotation.degrees-135), 0.5+r2*sin(self.rotation.degrees-135),
+        0.5+r2*cos(self.rotation.degrees+45), 0.5+r2*sin(self.rotation.degrees+45),
+        0.5+r2*cos(self.rotation.degrees-45), 0.5+r2*sin(self.rotation.degrees-45)
+        ) 
+        self.rotation.degrees = self.rotation.degrees+self.rotation.step_size
+        if self.rotation.degrees > 360 then
+          self.rotation.degrees = 0
+        end
+      else
+        self.texture:SetTexCoord(
+        0.5+r2*cos(self.rotation.degrees+45), 0.5+r2*sin(self.rotation.degrees+45),
+        0.5+r2*cos(self.rotation.degrees+135), 0.5+r2*sin(self.rotation.degrees+135),
+        0.5+r2*cos(self.rotation.degrees-45), 0.5+r2*sin(self.rotation.degrees-45),            
+        0.5+r2*cos(self.rotation.degrees-135), 0.5+r2*sin(self.rotation.degrees-135)
+        )
+        self.rotation.degrees = self.rotation.degrees-self.rotation.step_size
+        if self.rotation.degrees < 0 then
+          self.rotation.degrees = 360
+        end
+      end
+    end
+  end
+  
+  local function cre_ring_background(ring_config, ring_object)
+    local f = CreateFrame("Frame",nil,ring_object)
+    f:SetAllPoints(ring_object)
+    f:SetFrameLevel(ring_config.background.framelevel)
+    f:SetAlpha(ring_config.background.alpha)
+    if (ring_config.background.use_texture == 1) then
+      local t = f:CreateTexture(nil,"BACKGROUND")
+      t:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\"..ring_config.global.gfx_folder.."\\ring_background")
+      t:SetAllPoints(f)
+      t:SetVertexColor(ring_config.background.color.r,ring_config.background.color.g,ring_config.background.color.b,ring_config.background.color.a)
+      t:SetBlendMode(ring_config.background.blendmode)
+      f.texture = t
+      --rotation
+      if (ring_config.background.do_rotation == 1) then
+        f.rotation = CreateFrame("Frame",nil,f)
+        f.rotation.totalElapsed = 0
+        f.rotation.direction = ring_config.background.rotation.direction
+        if ring_config.background.rotation.direction == 1 then
+          f.rotation.degrees = 0
+        else 
+          f.rotation.degrees = 360
+        end
+        f.rotation.step_size = ring_config.background.rotation.step_size
+        f.rotation.update_timer = ring_config.background.rotation.update_timer
+        f.rotation.starttime = GetTime()
+        f:SetScript("OnUpdate", function (self,elapsed)
+          do_background_rotation(f,elapsed)
+        end)
+      end
+    end
+    return f
+  end
+  
+  local function cre_ring_foreground(ring_config, ring_object)
+    local f = CreateFrame("Frame",nil,ring_object)
+    f:SetAllPoints(ring_object)
+    f:SetFrameLevel(ring_config.foreground.framelevel)
+    f:SetAlpha(ring_config.foreground.alpha)
+    if (ring_config.foreground.use_texture == 1) then
+      local t = f:CreateTexture(nil,"foreground")
+      t:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\"..ring_config.global.gfx_folder.."\\ring_foreground")
+      t:SetAllPoints(f)
+      t:SetVertexColor(ring_config.foreground.color.r,ring_config.foreground.color.g,ring_config.foreground.color.b,ring_config.foreground.color.a)
+      t:SetBlendMode(ring_config.foreground.blendmode)
+      f.texture = t
+    end
+    return f
+  end
+  
+  local function cre_ring_segments(ring_config, ring_object)
+    local f = CreateFrame("Frame",nil,ring_object)
+    
+    return f
+  end
+
+  
+  local function setup_rings(id)
+  
+    local ring_config = ring_table[id]
+    am("RingMod loaded.")
+    --am(ring_config.global.unit)
+    ring_object = cre_ring_holder(ring_config)
+    ring_object.background = cre_ring_background(ring_config, ring_object)
+    ring_object.segments = cre_ring_segments(ring_config, ring_object)
+    ring_object.foreground = cre_ring_foreground(ring_config, ring_object)
+    --am(ring_object.background.texture:GetTexture())
+
+  end
+  
+  
+  
+  
+  ---------------------  
+  -- CALL
+  ---------------------
   
   local a = CreateFrame("Frame", nil, UIParent)
   
@@ -117,81 +230,8 @@
   
   a:SetScript("OnEvent", function (self,event,arg1)
     if(event=="PLAYER_LOGIN") then
-      for index,value in ipairs(frames_to_rotate) do 
-        local ftr = frames_to_rotate[index]
-        a:rotateme(ftr.texture, ftr.width, ftr.height, ftr.anchorframe, ftr.framelevel, ftr.color_red, ftr.color_green, ftr.color_blue, ftr.alpha, ftr.update_timer, ftr.steps_in_degree,ftr.direction, ftr.blendmode,ftr.setpoint1,ftr.setpoint2,ftr.posx,ftr.posy)
+      for i in ipairs(ring_table) do 
+        setup_rings(i)
       end
     end
-  end)    
-  
-  function a:rotateme(tex,texw,texh,texanchor,texstrata,texr,texg,texb,texalpha,timer,steps,side,bmode,point1,point2,posx,posy)
-
-    --DEFAULT_CHAT_FRAME:AddMessage("ping")
-
-    local r2 = math.sqrt(0.5^2+0.5^2);
-
-    local f = CreateFrame("Frame",nil,UIParent)
-    f:SetWidth(texw)
-    f:SetHeight(texh)
-    f:SetPoint(point1,texanchor,point2,posx,posy)
-    f:SetFrameLevel(texstrata)
-    f:SetScale(myscale)
-    f:Show()
-    
-    local t = f:CreateTexture(nil,"BACKGROUND")
-    t:SetTexture("Interface\\AddOns\\rRingMod\\"..tex)
-    t:SetAllPoints(f)
-    t:SetVertexColor(texr,texg,texb,texalpha)
-    if bmode == 1 then
-      t:SetBlendMode("add")
-    end
-    
-    local totalElapsed = 0
-    local degrees
-    if side == 1 then
-      degrees = 0
-    else 
-      degrees = 360
-    end
-      
-    local update_timer = timer
-    local delaymultiplicator = 1
-    local starttime = GetTime()
-    
-    local function OnUpdateFunc(self, elapsed)
-      totalElapsed = totalElapsed + elapsed
-      if (totalElapsed < update_timer) then 
-        return 
-      else
-        local timenow = GetTime()
-        totalElapsed = 0
-        if (timenow > (starttime+update_timer*delaymultiplicator)) then
-          starttime = timenow
-          if side == 1 then
-            t:SetTexCoord(
-            0.5+r2*cos(degrees+135), 0.5+r2*sin(degrees+135),
-            0.5+r2*cos(degrees-135), 0.5+r2*sin(degrees-135),
-            0.5+r2*cos(degrees+45), 0.5+r2*sin(degrees+45),
-            0.5+r2*cos(degrees-45), 0.5+r2*sin(degrees-45)
-            ) 
-            degrees = degrees+steps
-            if degrees > 360 then
-              degrees = 0
-            end
-          else
-            t:SetTexCoord(
-            0.5+r2*cos(degrees+45), 0.5+r2*sin(degrees+45),
-            0.5+r2*cos(degrees+135), 0.5+r2*sin(degrees+135),
-            0.5+r2*cos(degrees-45), 0.5+r2*sin(degrees-45),            
-            0.5+r2*cos(degrees-135), 0.5+r2*sin(degrees-135)
-            )
-            degrees = degrees-steps
-            if degrees < 0 then
-              degrees = 360
-            end
-          end
-        end
-      end
-    end    
-    f:SetScript("OnUpdate", OnUpdateFunc)
-  end
+  end)  

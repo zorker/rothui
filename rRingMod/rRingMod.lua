@@ -213,6 +213,7 @@
     t1:SetVertexColor(ring_config.segment.color.r,ring_config.segment.color.g,ring_config.segment.color.b,ring_config.segment.color.a)
     t1:SetBlendMode(ring_config.segment.blendmode)
     
+    local direction = ring_config.global.direction
     local segmentsize = ring_config.segment.segmentsize
     local outer_radius = ring_config.segment.outer_radius
     local difference = segmentsize-outer_radius
@@ -220,45 +221,79 @@
     local ring_factor = outer_radius/inner_radius
     local ring_width = outer_radius-inner_radius
     
-    local statusbarvalue = 100
+    local statusbarvalue = 50
     
     --angle
     local angle = statusbarvalue * 90 / 100
     local Arad = math.rad(angle)
-    
-    local ULx,ULy, LLx,LLy, URx,URy, LRx,LRy
 
     local Nx = 0
     local Ny = 0
-    local Ix = inner_radius * math.sin(Arad)
-    local Iy = (outer_radius - (inner_radius * math.cos(Arad))) + difference
-    local Ox = outer_radius * math.sin(Arad)
-    local Oy = (outer_radius - (outer_radius * math.cos(Arad))) + difference
+    local Mx = 1
+    local My = 1
     
-    local IxCoord = Ix / segmentsize 
-    local IyCoord = Iy / segmentsize
-    local OxCoord = Ox / segmentsize
-    local OyCoord = Oy / segmentsize   
-    local NxCoord = Nx / segmentsize
-    local NyCoord = Ny / segmentsize
+    local Ix,Iy,Ox,Oy
+    local IxCoord, IyCoord, OxCoord, OyCoord, NxCoord, NyCoord
+    local sq1_c1_x, sq1_c1_y, sq1_c2_x, sq1_c2_y, sq1_c3_x, sq1_c3_y, sq1_c4_x, sq1_c4_y
+    local sq2_c1_x, sq2_c1_y, sq2_c2_x, sq2_c2_y, sq2_c3_x, sq2_c3_y, sq2_c4_x, sq2_c4_y
     
-    local sq1_c1_x = NxCoord
-    local sq1_c1_y = NyCoord
-    local sq1_c2_x = NxCoord
-    local sq1_c2_y = IyCoord
-    local sq1_c3_x = IxCoord
-    local sq1_c3_y = NyCoord
-    local sq1_c4_x = IxCoord
-    local sq1_c4_y = IyCoord
-    
-    local sq2_c1_x = IxCoord
-    local sq2_c1_y = NyCoord
-    local sq2_c2_x = IxCoord
-    local sq2_c2_y = OyCoord
-    local sq2_c3_x = OxCoord
-    local sq2_c3_y = NyCoord
-    local sq2_c4_x = OxCoord
-    local sq2_c4_y = OyCoord
+    if direction == 1 then
+      Ix = inner_radius * math.sin(Arad)
+      Iy = (outer_radius - (inner_radius * math.cos(Arad))) + difference
+      Ox = outer_radius * math.sin(Arad)
+      Oy = (outer_radius - (outer_radius * math.cos(Arad))) + difference
+      IxCoord = Ix / segmentsize 
+      IyCoord = Iy / segmentsize
+      OxCoord = Ox / segmentsize
+      OyCoord = Oy / segmentsize   
+      NxCoord = Nx / segmentsize
+      NyCoord = Ny / segmentsize
+      sq1_c1_x = NxCoord
+      sq1_c1_y = NyCoord
+      sq1_c2_x = NxCoord
+      sq1_c2_y = IyCoord
+      sq1_c3_x = IxCoord
+      sq1_c3_y = NyCoord
+      sq1_c4_x = IxCoord
+      sq1_c4_y = IyCoord
+            
+      sq2_c1_x = IxCoord
+      sq2_c1_y = NyCoord
+      sq2_c2_x = IxCoord
+      sq2_c2_y = OyCoord
+      sq2_c3_x = OxCoord
+      sq2_c3_y = NyCoord
+      sq2_c4_x = OxCoord
+      sq2_c4_y = OyCoord
+    else
+      Ix = inner_radius * math.sin(Arad) - difference
+      Iy = (outer_radius - (inner_radius * math.cos(Arad)))
+      Ox = outer_radius * math.sin(Arad) - difference
+      Oy = (outer_radius - (outer_radius * math.cos(Arad)))
+      IxCoord = Ix / segmentsize 
+      IyCoord = Iy / segmentsize
+      OxCoord = Ox / segmentsize
+      OyCoord = Oy / segmentsize   
+      NxCoord = Nx / segmentsize
+      NyCoord = Ny / segmentsize
+      sq1_c1_x = NxCoord
+      sq1_c1_y = NyCoord
+      sq1_c2_x = NxCoord
+      sq1_c2_y = IyCoord
+      sq1_c3_x = IxCoord
+      sq1_c3_y = NyCoord
+      sq1_c4_x = IxCoord
+      sq1_c4_y = IyCoord
+            
+      sq2_c1_x = IxCoord
+      sq2_c1_y = NyCoord
+      sq2_c2_x = IxCoord
+      sq2_c2_y = OyCoord
+      sq2_c3_x = OxCoord
+      sq2_c3_y = NyCoord
+      sq2_c4_x = OxCoord
+      sq2_c4_y = OyCoord
+    end
     
     DEFAULT_CHAT_FRAME:AddMessage("angle "..angle)
     DEFAULT_CHAT_FRAME:AddMessage("Arad "..Arad)

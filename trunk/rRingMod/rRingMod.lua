@@ -105,7 +105,7 @@
   end
   
   local function cre_ring_holder(ring_config)
-    am(ring_config.global.anchorframe)
+    --am(ring_config.global.anchorframe)
     local f = CreateFrame("Frame",nil,ring_config.global.anchorframe)
     f:SetWidth(ring_config.global.size)
     f:SetHeight(ring_config.global.size)
@@ -200,27 +200,16 @@
     return f
   end
   
-  --function that creates the textures for each segment
-  local function cre_segment_textures(ring_config,self)
-    am(self.field)
-    local t0 = self:CreateTexture(nil, "BACKGROUND")
-    t0:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\"..ring_config.global.gfx_folder.."\\ring_segment")
-    t0:SetVertexColor(ring_config.segment.color.r,ring_config.segment.color.g,ring_config.segment.color.b,ring_config.segment.color.a)
-    t0:SetBlendMode(ring_config.segment.blendmode)
+  --calculates the one specific ring segment
+  local function calc_ring_segment(self)
+  
+    local t0 = self.square1
+    local t1 = self.square2
+    local t2 = self.slicer
+    local t3 = self.fullsegment
     
-    local t1 = self:CreateTexture(nil, "LOW")
-    t1:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\"..ring_config.global.gfx_folder.."\\ring_segment")
-    t1:SetVertexColor(ring_config.segment.color.r,ring_config.segment.color.g,ring_config.segment.color.b,ring_config.segment.color.a)
-    t1:SetBlendMode(ring_config.segment.blendmode)
-    
-    local direction = ring_config.global.direction
-    local segmentsize = ring_config.segment.segmentsize
-    local outer_radius = ring_config.segment.outer_radius
-    local difference = segmentsize-outer_radius
-    local inner_radius = ring_config.segment.inner_radius
-    local ring_factor = outer_radius/inner_radius
-    local ring_width = outer_radius-inner_radius
-    
+    --calculate statusbar value
+    --remember to invert the value when direction = counter clockwise
     local statusbarvalue = 50
     
     --angle
@@ -229,8 +218,8 @@
 
     local Nx = 0
     local Ny = 0
-    local Mx = 1
-    local My = 1
+    local Mx = segmentsize
+    local My = segmentsize
     
     local Ix,Iy,Ox,Oy
     local IxCoord, IyCoord, OxCoord, OyCoord, NxCoord, NyCoord
@@ -238,6 +227,7 @@
     local sq2_c1_x, sq2_c1_y, sq2_c2_x, sq2_c2_y, sq2_c3_x, sq2_c3_y, sq2_c4_x, sq2_c4_y
     
     if direction == 1 then
+      
       Ix = inner_radius * math.sin(Arad)
       Iy = (outer_radius - (inner_radius * math.cos(Arad))) + difference
       Ox = outer_radius * math.sin(Arad)
@@ -248,6 +238,9 @@
       OyCoord = Oy / segmentsize   
       NxCoord = Nx / segmentsize
       NyCoord = Ny / segmentsize
+      MxCoord = Nx / segmentsize
+      MyCoord = Ny / segmentsize
+      
       sq1_c1_x = NxCoord
       sq1_c1_y = NyCoord
       sq1_c2_x = NxCoord
@@ -265,103 +258,216 @@
       sq2_c3_y = NyCoord
       sq2_c4_x = OxCoord
       sq2_c4_y = OyCoord
+      
+      if self.field == 1 then
+        t0:SetPoint("TOPLEFT",Nx,-Ny)
+        t0:SetWidth(Ix)
+        t0:SetHeight(Iy)
+        t1:SetPoint("TOPLEFT",Ix,-Ny)
+        t1:SetWidth(Ox-Ix)
+        t1:SetHeight(Oy)
+        t2:SetPoint("TOPLEFT",Ix,-Oy)
+        t2:SetWidth(Ox-Ix)
+        t2:SetHeight(Iy-Oy)
+      elseif self.field == 2 then
+        t0:SetPoint("TOPRIGHT",Nx,Ny)
+        t0:SetWidth(Iy)
+        t0:SetHeight(Ix)
+        t1:SetPoint("TOPRIGHT",Ny,-Ix)
+        t1:SetWidth(Oy)
+        t1:SetHeight(Ox-Ix)
+        t2:SetPoint("TOPRIGHT",-Oy,-Ix)
+        t2:SetWidth(Iy-Oy)
+        t2:SetHeight(Ox-Ix)
+        t2:SetTexCoord(0,1, 1,1, 0,0, 1,0)
+      elseif self.field == 3 then
+        t0:SetPoint("BOTTOMRIGHT",Nx,Ny)
+        t0:SetWidth(Ix)
+        t0:SetHeight(Iy)
+        t1:SetPoint("BOTTOMRIGHT",-Ix,Ny)
+        t1:SetWidth(Ox-Ix)
+        t1:SetHeight(Oy)
+        t2:SetPoint("BOTTOMRIGHT",-Ix,Oy)
+        t2:SetWidth(Ox-Ix)
+        t2:SetHeight(Iy-Oy)
+        t2:SetTexCoord(1,1, 1,0, 0,1, 0,0)
+      elseif self.field == 4 then
+        t0:SetPoint("BOTTOMLEFT",Nx,Ny)
+        t0:SetWidth(Iy)
+        t0:SetHeight(Ix)
+        t1:SetPoint("BOTTOMLEFT",Ny,Ix)
+        t1:SetWidth(Oy)
+        t1:SetHeight(Ox-Ix)
+        t2:SetPoint("BOTTOMLEFT",Oy,Ix)
+        t2:SetWidth(Iy-Oy)
+        t2:SetHeight(Ox-Ix)
+        t2:SetTexCoord(1,0, 0,0, 1,1, 0,1)
+      end
+      
     else
-      Ix = inner_radius * math.sin(Arad) - difference
-      Iy = (outer_radius - (inner_radius * math.cos(Arad)))
-      Ox = outer_radius * math.sin(Arad) - difference
-      Oy = (outer_radius - (outer_radius * math.cos(Arad)))
+      
+      Ix = inner_radius * math.sin(Arad)
+      Iy = (outer_radius - (inner_radius * math.cos(Arad))) + difference
+      Ox = outer_radius * math.sin(Arad)
+      Oy = (outer_radius - (outer_radius * math.cos(Arad))) + difference
       IxCoord = Ix / segmentsize 
       IyCoord = Iy / segmentsize
       OxCoord = Ox / segmentsize
       OyCoord = Oy / segmentsize   
       NxCoord = Nx / segmentsize
       NyCoord = Ny / segmentsize
-      sq1_c1_x = NxCoord
-      sq1_c1_y = NyCoord
-      sq1_c2_x = NxCoord
-      sq1_c2_y = IyCoord
-      sq1_c3_x = IxCoord
-      sq1_c3_y = NyCoord
-      sq1_c4_x = IxCoord
-      sq1_c4_y = IyCoord
+      MxCoord = Mx / segmentsize
+      MyCoord = My / segmentsize
+      
+      sq1_c1_x = IxCoord
+      sq1_c1_y = IyCoord
+      sq1_c2_x = IxCoord
+      sq1_c2_y = MyCoord
+      sq1_c3_x = MxCoord
+      sq1_c3_y = IyCoord
+      sq1_c4_x = MxCoord
+      sq1_c4_y = MyCoord
             
-      sq2_c1_x = IxCoord
-      sq2_c1_y = NyCoord
-      sq2_c2_x = IxCoord
-      sq2_c2_y = OyCoord
-      sq2_c3_x = OxCoord
-      sq2_c3_y = NyCoord
-      sq2_c4_x = OxCoord
-      sq2_c4_y = OyCoord
+      sq2_c1_x = OxCoord
+      sq2_c1_y = OyCoord
+      sq2_c2_x = OxCoord
+      sq2_c2_y = IyCoord
+      sq2_c3_x = MxCoord
+      sq2_c3_y = OyCoord
+      sq2_c4_x = MxCoord
+      sq2_c4_y = IyCoord
+      
+      if self.field == 1 then
+        t0:SetPoint("TOPLEFT",Ix,-Iy)
+        t0:SetWidth(segmentsize-Ix)
+        t0:SetHeight(segmentsize-Iy)
+        t1:SetPoint("TOPLEFT",Ox,-Oy)
+        t1:SetWidth(segmentsize-Ox)
+        t1:SetHeight(Iy-Oy)
+        t2:SetPoint("TOPLEFT",Ix,-Oy)
+        t2:SetWidth(Ox-Ix)
+        t2:SetHeight(Iy-Oy)
+      elseif self.field == 2 then
+        t0:SetPoint("TOPRIGHT",-Iy,-Ix)
+        t0:SetWidth(segmentsize-Iy)
+        t0:SetHeight(segmentsize-Ix)
+        t1:SetPoint("TOPRIGHT",-Oy,-Ox)
+        t1:SetWidth(Iy-Oy)
+        t1:SetHeight(segmentsize-Ox)
+        t2:SetPoint("TOPRIGHT",-Oy,-Ix)
+        t2:SetWidth(Iy-Oy)
+        t2:SetHeight(Ox-Ix)
+        t2:SetTexCoord(0,1, 1,1, 0,0, 1,0)
+      elseif self.field == 3 then
+        t0:SetPoint("BOTTOMRIGHT",-Ix,Iy)
+        t0:SetWidth(segmentsize-Ix)
+        t0:SetHeight(segmentsize-Iy)
+        t1:SetPoint("BOTTOMRIGHT",-Ox,Oy)
+        t1:SetWidth(segmentsize-Ox)
+        t1:SetHeight(Iy-Oy)
+        t2:SetPoint("BOTTOMRIGHT",-Ix,Oy)
+        t2:SetWidth(Ox-Ix)
+        t2:SetHeight(Iy-Oy)
+        t2:SetTexCoord(1,1, 1,0, 0,1, 0,0)
+      elseif self.field == 4 then
+        t0:SetPoint("BOTTOMLEFT",Iy,Ix)
+        t0:SetWidth(segmentsize-Iy)
+        t0:SetHeight(segmentsize-Ix)
+        t1:SetPoint("BOTTOMLEFT",Oy,Ox)
+        t1:SetWidth(Iy-Oy)
+        t1:SetHeight(segmentsize-Ox)
+        t2:SetPoint("BOTTOMLEFT",Oy,Ix)
+        t2:SetWidth(Iy-Oy)
+        t2:SetHeight(Ox-Ix)
+        t2:SetTexCoord(1,0, 0,0, 1,1, 0,1)
+      end
     end
-    
-    DEFAULT_CHAT_FRAME:AddMessage("angle "..angle)
-    DEFAULT_CHAT_FRAME:AddMessage("Arad "..Arad)
-    DEFAULT_CHAT_FRAME:AddMessage("Ix "..Ix)
-    DEFAULT_CHAT_FRAME:AddMessage("Iy "..Iy)
-    DEFAULT_CHAT_FRAME:AddMessage("Ox "..Ox)
-    DEFAULT_CHAT_FRAME:AddMessage("Oy "..Oy)
-    DEFAULT_CHAT_FRAME:AddMessage("Nx "..Nx)
-    DEFAULT_CHAT_FRAME:AddMessage("Ny "..Ny)
-    DEFAULT_CHAT_FRAME:AddMessage("IxCoord "..IxCoord)
-    DEFAULT_CHAT_FRAME:AddMessage("IyCoord "..IyCoord)
-    DEFAULT_CHAT_FRAME:AddMessage("OxCoord "..OxCoord)
-    DEFAULT_CHAT_FRAME:AddMessage("OyCoord "..OyCoord)
-    DEFAULT_CHAT_FRAME:AddMessage("NxCoord "..NxCoord)
-    DEFAULT_CHAT_FRAME:AddMessage("NyCoord "..NyCoord)
     
     if self.field == 1 then
       --1,2,3,4
-      t0:SetPoint("TOPLEFT",Nx,-Ny)
-      t0:SetWidth(Ix)
-      t0:SetHeight(Iy)
       t0:SetTexCoord(sq1_c1_x,sq1_c1_y, sq1_c2_x,sq1_c2_y, sq1_c3_x,sq1_c3_y, sq1_c4_x, sq1_c4_y)
-      
-      t1:SetPoint("TOPLEFT",Ix,-Ny)
-      t1:SetWidth(Ox-Ix)
-      t1:SetHeight(Oy)
       t1:SetTexCoord(sq2_c1_x,sq2_c1_y, sq2_c2_x,sq2_c2_y, sq2_c3_x,sq2_c3_y, sq2_c4_x, sq2_c4_y)
     elseif self.field == 2 then
       --2,4,1,3
-      t0:SetPoint("TOPRIGHT",0,0)
-      t0:SetWidth(Iy)
-      t0:SetHeight(Ix)
       t0:SetTexCoord(sq1_c2_x,sq1_c2_y, sq1_c4_x, sq1_c4_y, sq1_c1_x,sq1_c1_y, sq1_c3_x,sq1_c3_y)
-
-      t1:SetPoint("TOPRIGHT",Ny,-Ix)
-      t1:SetWidth(Oy)
-      t1:SetHeight(Ox-Ix)
       t1:SetTexCoord(sq2_c2_x,sq2_c2_y, sq2_c4_x, sq2_c4_y, sq2_c1_x,sq2_c1_y, sq2_c3_x,sq2_c3_y)
-      
     elseif self.field == 3 then
       --4,3,2,1
-      t0:SetPoint("BOTTOMRIGHT",Nx,Ny)
-      t0:SetWidth(Ix)
-      t0:SetHeight(Iy)
       t0:SetTexCoord(sq1_c4_x, sq1_c4_y, sq1_c3_x,sq1_c3_y, sq1_c2_x,sq1_c2_y, sq1_c1_x,sq1_c1_y)
-      
-      t1:SetPoint("BOTTOMRIGHT",-Ix,Ny)
-      t1:SetWidth(Ox-Ix)
-      t1:SetHeight(Oy)
       t1:SetTexCoord(sq2_c4_x, sq2_c4_y, sq2_c3_x,sq2_c3_y, sq2_c2_x,sq2_c2_y, sq2_c1_x,sq2_c1_y)
-      
     elseif self.field == 4 then
       --3,1,4,2
-      t0:SetPoint("BOTTOMLEFT",0,0)
-      t0:SetWidth(Iy)
-      t0:SetHeight(Ix)
       t0:SetTexCoord(sq1_c3_x,sq1_c3_y, sq1_c1_x,sq1_c1_y, sq1_c4_x, sq1_c4_y, sq1_c2_x,sq1_c2_y)
-
-      t1:SetPoint("BOTTOMLEFT",Ny,Ix)
-      t1:SetWidth(Oy)
-      t1:SetHeight(Ox-Ix)
       t1:SetTexCoord(sq2_c3_x,sq2_c3_y, sq2_c1_x,sq2_c1_y, sq2_c4_x, sq2_c4_y, sq2_c2_x,sq2_c2_y)
-      
     end
-       
+  
+  end
+  
+  --function that creates the textures for each segment
+  local function cre_segment_textures(ring_config,self)
+    --am(self.field)
     
-    self.tex0 = t0
-    self.tex1 = t1
+    local direction = ring_config.global.fill_direction
+    local segmentsize = ring_config.segment.segmentsize
+    local outer_radius = ring_config.segment.outer_radius
+    local difference = segmentsize-outer_radius
+    local inner_radius = ring_config.segment.inner_radius
+    local ring_factor = outer_radius/inner_radius
+    local ring_width = outer_radius-inner_radius
+    
+    self.direction =  ring_config.global.fill_direction
+    self.segmentsize = ring_config.segment.segmentsize
+    self.outer_radius = ring_config.segment.outer_radius
+    self.difference = segmentsize-outer_radius
+    self.inner_radius = ring_config.segment.inner_radius
+    self.ring_factor = outer_radius/inner_radius
+    self.ring_width = outer_radius-inner_radius
+    
+    local t0 = self:CreateTexture(nil, "BACKGROUND")
+    t0:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\"..ring_config.global.gfx_folder.."\\ring_segment")
+    t0:SetVertexColor(ring_config.segment.color.r,ring_config.segment.color.g,ring_config.segment.color.b,ring_config.segment.color.a)
+    t0:SetBlendMode(ring_config.segment.blendmode)
+    t0:Hide()
+    
+    local t1 = self:CreateTexture(nil, "LOW")
+    t1:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\"..ring_config.global.gfx_folder.."\\ring_segment")
+    t1:SetVertexColor(ring_config.segment.color.r,ring_config.segment.color.g,ring_config.segment.color.b,ring_config.segment.color.a)
+    t1:SetBlendMode(ring_config.segment.blendmode)
+    t1:Hide()
+
+    local t2 = self:CreateTexture(nil, "BACKGROUND")
+    t2:SetVertexColor(ring_config.segment.color.r,ring_config.segment.color.g,ring_config.segment.color.b,ring_config.segment.color.a)
+    t2:SetBlendMode(ring_config.segment.blendmode)
+    if direction == 1 then
+      t2:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\slicer1")
+    else
+      t2:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\slicer0")
+    end
+    t2:Hide()
+
+    local t3 = self:CreateTexture(nil, "BACKGROUND")
+    t3:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\"..ring_config.global.gfx_folder.."\\ring_segment")
+    t3:SetVertexColor(ring_config.segment.color.r,ring_config.segment.color.g,ring_config.segment.color.b,ring_config.segment.color.a)
+    t3:SetBlendMode(ring_config.segment.blendmode)
+    t3:SetPoint("CENTER",0,0)
+    t3:SetWidth(segmentsize)
+    t3:SetHeight(segmentsize)
+    if self.field == 1 then
+      --no coord needed
+    elseif self.field == 2 then
+      t3:SetTexCoord(0,1, 1,1, 0,0, 1,0)
+    elseif self.field == 3 then
+      t3:SetTexCoord(1,1, 1,0, 0,1, 0,0)
+    elseif self.field == 4 then
+      t3:SetTexCoord(1,0, 0,0, 1,1, 0,1)
+    end
+    t3:Hide()
+    
+    self.square1 = t0
+    self.square2 = t1
+    self.slicer = t2
+    self.fullsegment = t3
+    
   end
   
   --calculate the segment number based on starting segment and direction
@@ -413,6 +519,33 @@
   end
 
   
+  local function calc_ring_health(self,ring_config,unit)
+    local act, max, perc, perc_per_seg = UnitHealth(unit), UnitHealthMax(unit), (UnitHealth(unit)/UnitHealthMax(unit))*100, 100/ring_config.global.segments_used
+    local anz_seg, sum_radius = ring_config.global.segments_used, ring_config.global.segments_used*90
+    local addup = 0
+    for i=1, anz_seg do
+      if(perc >= (i*perc_per_seg)) then
+        am(i.." sichtbar")
+        ring_object.segments[i].fullsegment:Show()
+      elseif(perc <= (i*perc_per_seg)) then
+        am(i.." nich sichtbar")
+        ring_object.segments[i].fullsegment:Hide()
+      else
+        am(i.." zu betrachten")
+        ring_object.segments[i].fullsegment:Hide()
+        am("perc: "..perc.." - addup: "..addup)
+        --am((perc-addup)/perc_per_seg)
+      end
+      addup = addup + perc_per_seg
+    end
+
+    --am(act.."/"..max.." ~ "..perc)
+    --am(ring_config.global.segments_used)
+    
+    
+    
+  end  
+  
   local function setup_rings(id)
   
     local ring_config = ring_table[id]
@@ -424,6 +557,16 @@
     ring_object.foreground = cre_ring_foreground(ring_config, ring_object)
     --am(ring_object.background.texture:GetTexture())
     --am(ring_object.segments[1].field)
+    
+    if ring_config.global.ringtype == "health" then
+      ring_object:SetScript("OnEvent", function(self, event, unit)
+        if (event == "UNIT_HEALTH" and unit == ring_config.global.unit) or event == "PLAYER_ENTERING_WORLD" then
+          calc_ring_health(ring_object,ring_config,ring_config.global.unit)
+        end    
+      end)
+      ring_object:RegisterEvent("UNIT_HEALTH")
+      ring_object:RegisterEvent("PLAYER_ENTERING_WORLD")
+    end
 
   end
   

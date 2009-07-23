@@ -200,19 +200,30 @@
     return f
   end
   
-  --calculates the one specific ring segment
+  -- calculates the one specific ring segment 
   local function calc_ring_segment(self, value)
   
     local t0 = self.square1
     local t1 = self.square2
     local t2 = self.slicer
     local t3 = self.fullsegment
+
+    local direction = self.direction
+    local segmentsize = self.segmentsize
+    local outer_radius = self.outer_radius
+    local difference = self.difference
+    local inner_radius = self.inner_radius
+    local ring_factor = self.ring_factor
+    local ring_width = self.ring_width
     
-    --calculate statusbar value
-    --remember to invert the value when direction = counter clockwise
+    --remember to invert the value when direction is counter-clockwise
     local statusbarvalue = value
-    if (self.direction == 0) then
+    if (direction == 0) then
       statusbarvalue = 100-statusbarvalue
+    end
+    if statusbarvalue = 0 then
+      --textures bugs out if value = 0
+      statusbarvalue = 0.01
     end
     
     --angle
@@ -225,24 +236,24 @@
     local My = segmentsize
     
     local Ix,Iy,Ox,Oy
-    local IxCoord, IyCoord, OxCoord, OyCoord, NxCoord, NyCoord
+    local IxCoord, IyCoord, OxCoord, OyCoord, NxCoord, NyCoord, MxCoord, MyCoord
     local sq1_c1_x, sq1_c1_y, sq1_c2_x, sq1_c2_y, sq1_c3_x, sq1_c3_y, sq1_c4_x, sq1_c4_y
     local sq2_c1_x, sq2_c1_y, sq2_c2_x, sq2_c2_y, sq2_c3_x, sq2_c3_y, sq2_c4_x, sq2_c4_y
+
+    Ix = inner_radius * math.sin(Arad)
+    Iy = (outer_radius - (inner_radius * math.cos(Arad))) + difference
+    Ox = outer_radius * math.sin(Arad)
+    Oy = (outer_radius - (outer_radius * math.cos(Arad))) + difference
+    IxCoord = Ix / segmentsize 
+    IyCoord = Iy / segmentsize
+    OxCoord = Ox / segmentsize
+    OyCoord = Oy / segmentsize   
+    NxCoord = Nx / segmentsize
+    NyCoord = Ny / segmentsize
+    MxCoord = Nx / segmentsize
+    MyCoord = Ny / segmentsize
     
     if direction == 1 then
-      
-      Ix = inner_radius * math.sin(Arad)
-      Iy = (outer_radius - (inner_radius * math.cos(Arad))) + difference
-      Ox = outer_radius * math.sin(Arad)
-      Oy = (outer_radius - (outer_radius * math.cos(Arad))) + difference
-      IxCoord = Ix / segmentsize 
-      IyCoord = Iy / segmentsize
-      OxCoord = Ox / segmentsize
-      OyCoord = Oy / segmentsize   
-      NxCoord = Nx / segmentsize
-      NyCoord = Ny / segmentsize
-      MxCoord = Nx / segmentsize
-      MyCoord = Ny / segmentsize
       
       sq1_c1_x = NxCoord
       sq1_c1_y = NyCoord
@@ -308,20 +319,7 @@
       end
       
     else
-      
-      Ix = inner_radius * math.sin(Arad)
-      Iy = (outer_radius - (inner_radius * math.cos(Arad))) + difference
-      Ox = outer_radius * math.sin(Arad)
-      Oy = (outer_radius - (outer_radius * math.cos(Arad))) + difference
-      IxCoord = Ix / segmentsize 
-      IyCoord = Iy / segmentsize
-      OxCoord = Ox / segmentsize
-      OyCoord = Oy / segmentsize   
-      NxCoord = Nx / segmentsize
-      NyCoord = Ny / segmentsize
-      MxCoord = Mx / segmentsize
-      MyCoord = My / segmentsize
-      
+
       sq1_c1_x = IxCoord
       sq1_c1_y = IyCoord
       sq1_c2_x = IxCoord
@@ -386,20 +384,41 @@
       end
     end
     
+    -- after calculating the squares set the new SetTexCoords
+    -- self.field is the number of the field segment on the ring
+    --
+    -- ring segment layout
+    --     ____ ____
+    --    /    |    \
+    --    |  4 | 1  |
+    --     ----+---- 
+    --    |  3 | 2  |
+    --    \____|____/
+    --
+    --  corners of: 
+    --  segment 1  segment 2  segment 3  segment 4
+    --  +-------+  +-------+  +-------+  +-------+
+    --  | 1   3 |  | 2   1 |  | 4   2 |  | 3   4 |
+    --  |       |  |       |  |       |  |       |
+    --  | 2   4 |  | 4   3 |  | 3   1 |  | 1   2 |
+    --  +-------+  +-------+  +-------+  +-------+
+    --  original   90°right   180°right  270°right
+    --
+        
     if self.field == 1 then
-      --1,2,3,4
+      --1,2,3,4 = corners of field 1
       t0:SetTexCoord(sq1_c1_x,sq1_c1_y, sq1_c2_x,sq1_c2_y, sq1_c3_x,sq1_c3_y, sq1_c4_x, sq1_c4_y)
       t1:SetTexCoord(sq2_c1_x,sq2_c1_y, sq2_c2_x,sq2_c2_y, sq2_c3_x,sq2_c3_y, sq2_c4_x, sq2_c4_y)
     elseif self.field == 2 then
-      --2,4,1,3
+      --2,4,1,3 = corners of field 2 (90° to right)
       t0:SetTexCoord(sq1_c2_x,sq1_c2_y, sq1_c4_x, sq1_c4_y, sq1_c1_x,sq1_c1_y, sq1_c3_x,sq1_c3_y)
       t1:SetTexCoord(sq2_c2_x,sq2_c2_y, sq2_c4_x, sq2_c4_y, sq2_c1_x,sq2_c1_y, sq2_c3_x,sq2_c3_y)
     elseif self.field == 3 then
-      --4,3,2,1
+      --4,3,2,1 = corners of field 3 (180° to right)
       t0:SetTexCoord(sq1_c4_x, sq1_c4_y, sq1_c3_x,sq1_c3_y, sq1_c2_x,sq1_c2_y, sq1_c1_x,sq1_c1_y)
       t1:SetTexCoord(sq2_c4_x, sq2_c4_y, sq2_c3_x,sq2_c3_y, sq2_c2_x,sq2_c2_y, sq2_c1_x,sq2_c1_y)
     elseif self.field == 4 then
-      --3,1,4,2
+      --3,1,4,2 = corners of field 4 (270° to right)
       t0:SetTexCoord(sq1_c3_x,sq1_c3_y, sq1_c1_x,sq1_c1_y, sq1_c4_x, sq1_c4_y, sq1_c2_x,sq1_c2_y)
       t1:SetTexCoord(sq2_c3_x,sq2_c3_y, sq2_c1_x,sq2_c1_y, sq2_c4_x, sq2_c4_y, sq2_c2_x,sq2_c2_y)
     end
@@ -562,10 +581,6 @@
           -- calc_ring_segment(self,value)
           -- remember to invert the value, depending on fill_direction!
           local value = ((perc-((i-1)*perc_per_seg))/perc_per_seg)*100
-          if value = 0 then
-            --textures bug out if value = 0
-            value = 0.01
-          end
           calc_ring_segment(self,value)
         else
           -- crap my health is not high enough to fill this

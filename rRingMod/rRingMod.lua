@@ -201,7 +201,7 @@
   end
   
   --calculates the one specific ring segment
-  local function calc_ring_segment(self)
+  local function calc_ring_segment(self, value)
   
     local t0 = self.square1
     local t1 = self.square2
@@ -210,7 +210,10 @@
     
     --calculate statusbar value
     --remember to invert the value when direction = counter clockwise
-    local statusbarvalue = 50
+    local statusbarvalue = value
+    if (self.direction == 0) then
+      statusbarvalue = 100-statusbarvalue
+    end
     
     --angle
     local angle = statusbarvalue * 90 / 100
@@ -522,27 +525,58 @@
   local function calc_ring_health(self,ring_config,unit)
     local act, max, perc, perc_per_seg = UnitHealth(unit), UnitHealthMax(unit), (UnitHealth(unit)/UnitHealthMax(unit))*100, 100/ring_config.global.segments_used
     local anz_seg, sum_radius = ring_config.global.segments_used, ring_config.global.segments_used*90
-    local addup = 0
-    for i=1, anz_seg do
-      if(perc >= (i*perc_per_seg)) then
-        am(i.." sichtbar")
-        ring_object.segments[i].fullsegment:Show()
-      elseif(perc <= (i*perc_per_seg)) then
-        am(i.." nich sichtbar")
-        ring_object.segments[i].fullsegment:Hide()
-      else
-        am(i.." zu betrachten")
-        ring_object.segments[i].fullsegment:Hide()
-        am("perc: "..perc.." - addup: "..addup)
-        --am((perc-addup)/perc_per_seg)
+    
+    -- need to run through ring segments
+    -- anz_segments defines how much of 100 is taken by each segment
+    -- 1 segment = 100, 2 = 50, 3 = 33, 4 = 25
+    -- segments have 3 states, totally active, totally not active, partially active
+    
+    -- example, lets assume we use 4 segments, thuse 25% each segment
+    -- we use player health as our ring and player has 64% health
+    -- segment 1 is active, segment 2 is active, segment 3 is partial active, segment 4 is not active
+    
+    -- Special 
+    -- if unit is dead or ghost too
+    if perc == 0 then
+      -- hide every element
+      -- because every segment is saved in an array we can use a loop from 1-anz_seg here.
+    elseif perc == 100 then
+      -- make every element visible
+      -- because every segment is saved in an array we can use a loop from 1-anz_seg here.
+    else
+      -- neeed to run through segments
+      for i=1, anz_seg do
+        if(perc > (i*perc_per_seg)) then
+          -- player has more hp than this segment can handle
+          -- show fullsegement texture, hide the rest
+          am(i.." fully visible baby!")
+        elseif (perc >= ((i-1)*perc_per_seg)) && (perc <= (i*perc_per_seg)) then
+          -- player hp is exactly in this segment
+          am(i.." look at me more closely")
+          -- need to calc how much of this segment is filled.
+          -- thuse I need to subtract ((i-1)*perc_per_seg) from my perc value
+          -- example 64%, thus I am in segment 3. => 2*25 = 50
+          -- 64-50=14, so 14 is the value I get, now need the "Dreisatz"
+          -- 14/perc_per_seg = 0.56, so the segment we look at is filled to 56%
+          -- so now we can paste this value to our function
+          -- calc_ring_segment(self,value)
+          -- remember to invert the value, depending on fill_direction!
+          local value = ((perc-((i-1)*perc_per_seg))/perc_per_seg)*100
+          if value = 0 then
+            --textures bug out if value = 0
+            value = 0.01
+          end
+          calc_ring_segment(self,value)
+        else
+          -- crap my health is not high enough to fill this
+          -- hide everything
+          am(i.." i'm out :/")
+        end
       end
-      addup = addup + perc_per_seg
     end
 
     --am(act.."/"..max.." ~ "..perc)
     --am(ring_config.global.segments_used)
-    
-    
     
   end  
   

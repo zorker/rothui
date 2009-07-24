@@ -47,16 +47,118 @@
   local ring_table = {
     [1] = { 
       global = {
+        active = 0,
         unit = "player",
+        ringname = "rM_PlayerHealth",
         size = 256,
         anchorframe = UIParent,
         anchorpoint = "CENTER",
         anchorposx = 0,
         anchorposy = 0,
-        scale = 1,
+        scale = 0.82,
         alpha = 1,
         framelevel = 1,
         gfx_folder = "256_1",
+        segments_used = 2,
+        start_segment = 4,
+        fill_direction = 0,
+        ringtype = "health",
+      },
+      background = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 0.7,
+        framelevel = 1,
+        blendmode = "blend",
+        use_texture = 1,
+        do_rotation = 1,
+        rotation = {
+          update_timer = 1/30,
+          step_size = 0.3,
+          direction = 0,
+        },
+      },
+      foreground = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 1,
+        blendmode = "blend",
+        framelevel = 3,
+        use_texture = 1,
+      },
+      segment = {
+        color = {r = 180/255, g = 10/255, b = 10/255, a = 1},
+        alpha = 1,
+        blendmode = "add",
+        framelevel = 2,
+        segmentsize = 128,
+        outer_radius = 110,
+        inner_radius = 90,
+      },
+    },
+
+    [2] = { 
+      global = {
+        active = 0,
+        unit = "player",
+        ringname = "rM_PlayerMana",
+        size = 256,
+        anchorframe = UIParent,
+        anchorpoint = "CENTER",
+        anchorposx = 0,
+        anchorposy = 0,
+        scale = 0.82,
+        alpha = 1,
+        framelevel = 1,
+        gfx_folder = "256_1",
+        segments_used = 2,
+        start_segment = 1,
+        fill_direction = 1,
+        ringtype = "mana",
+      },
+      background = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 0.7,
+        framelevel = 1,
+        blendmode = "blend",
+        use_texture = 0,
+        do_rotation = 1,
+        rotation = {
+          update_timer = 1/30,
+          step_size = 0.2,
+          direction = 1,
+        },
+      },
+      foreground = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 1,
+        blendmode = "blend",
+        framelevel = 3,
+        use_texture = 0,
+      },
+      segment = {
+        color = {r = 10/255, g = 100/255, b = 150/255, a = 1},
+        alpha = 1,
+        blendmode = "add",
+        framelevel = 2,
+        segmentsize = 128,
+        outer_radius = 110,
+        inner_radius = 90,
+      },
+    },
+
+    [3] = { 
+      global = {
+        active = 1,
+        unit = "player",
+        ringname = "rM_PlayerHealth",
+        size = 256,
+        anchorframe = UIParent,
+        anchorpoint = "CENTER",
+        anchorposx = 0,
+        anchorposy = 0,
+        scale = 0.82,
+        alpha = 1,
+        framelevel = 1,
+        gfx_folder = "256_2",
         segments_used = 4,
         start_segment = 4,
         fill_direction = 0,
@@ -72,7 +174,7 @@
         rotation = {
           update_timer = 1/30,
           step_size = 0.3,
-          direction = 1,
+          direction = 0,
         },
       },
       foreground = {
@@ -84,6 +186,153 @@
       },
       segment = {
         color = {r = 180/255, g = 10/255, b = 10/255, a = 1},
+        alpha = 1,
+        blendmode = "add",
+        framelevel = 2,
+        segmentsize = 128,
+        outer_radius = 110,
+        inner_radius = 1,
+      },
+    },
+
+    [4] = { 
+      global = {
+        active = 0,
+        unit = "player",
+        ringname = "rM_PlayerMana",
+        size = 256,
+        anchorframe = UIParent,
+        anchorpoint = "CENTER",
+        anchorposx = 0,
+        anchorposy = 0,
+        scale = 0.82,
+        alpha = 1,
+        framelevel = 1,
+        gfx_folder = "256_1",
+        segments_used = 2,
+        start_segment = 1,
+        fill_direction = 1,
+        ringtype = "mana",
+      },
+      background = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 0.7,
+        framelevel = 1,
+        blendmode = "blend",
+        use_texture = 0,
+        do_rotation = 1,
+        rotation = {
+          update_timer = 1/30,
+          step_size = 0.2,
+          direction = 1,
+        },
+      },
+      foreground = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 1,
+        blendmode = "blend",
+        framelevel = 3,
+        use_texture = 0,
+      },
+      segment = {
+        color = {r = 10/255, g = 100/255, b = 150/255, a = 1},
+        alpha = 1,
+        blendmode = "add",
+        framelevel = 2,
+        segmentsize = 128,
+        outer_radius = 110,
+        inner_radius = 90,
+      },
+    },
+    [5] = { 
+      global = {
+        unit = "player",
+        ringname = "rM_PlayerHealth",
+        size = 256,
+        anchorframe = UIParent,
+        anchorpoint = "CENTER",
+        anchorposx = 0,
+        anchorposy = 0,
+        scale = 0.82,
+        alpha = 1,
+        framelevel = 1,
+        gfx_folder = "256_1",
+        segments_used = 2,
+        start_segment = 4,
+        fill_direction = 0,
+        ringtype = "health",
+      },
+      background = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 0.7,
+        framelevel = 1,
+        blendmode = "blend",
+        use_texture = 1,
+        do_rotation = 1,
+        rotation = {
+          update_timer = 1/30,
+          step_size = 0.3,
+          direction = 0,
+        },
+      },
+      foreground = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 1,
+        blendmode = "blend",
+        framelevel = 3,
+        use_texture = 1,
+      },
+      segment = {
+        color = {r = 180/255, g = 10/255, b = 10/255, a = 1},
+        alpha = 1,
+        blendmode = "add",
+        framelevel = 2,
+        segmentsize = 128,
+        outer_radius = 110,
+        inner_radius = 90,
+      },
+    },
+
+    [6] = { 
+      global = {
+        unit = "player",
+        ringname = "rM_PlayerMana",
+        size = 256,
+        anchorframe = UIParent,
+        anchorpoint = "CENTER",
+        anchorposx = 0,
+        anchorposy = 0,
+        scale = 0.82,
+        alpha = 1,
+        framelevel = 1,
+        gfx_folder = "256_1",
+        segments_used = 2,
+        start_segment = 1,
+        fill_direction = 1,
+        ringtype = "mana",
+      },
+      background = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 0.7,
+        framelevel = 1,
+        blendmode = "blend",
+        use_texture = 0,
+        do_rotation = 1,
+        rotation = {
+          update_timer = 1/30,
+          step_size = 0.2,
+          direction = 1,
+        },
+      },
+      foreground = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 1,
+        blendmode = "blend",
+        framelevel = 3,
+        use_texture = 0,
+      },
+      segment = {
+        color = {r = 10/255, g = 100/255, b = 150/255, a = 1},
         alpha = 1,
         blendmode = "add",
         framelevel = 2,
@@ -106,7 +355,7 @@
   
   local function cre_ring_holder(ring_config)
     --am(ring_config.global.anchorframe)
-    local f = CreateFrame("Frame",nil,ring_config.global.anchorframe)
+    local f = CreateFrame("Frame",ring_config.global.ringname,ring_config.global.anchorframe)
     f:SetWidth(ring_config.global.size)
     f:SetHeight(ring_config.global.size)
     f:SetPoint(ring_config.global.anchorpoint,ring_config.global.anchorposx,ring_config.global.anchorposy)
@@ -216,16 +465,19 @@
     local ring_factor = self.ring_factor
     local ring_width = self.ring_width
     
-    --remember to invert the value when direction is counter-clockwise
-    local statusbarvalue = value
-    if (direction == 0) then
-      statusbarvalue = 100-statusbarvalue
-    end
-    if statusbarvalue = 0 then
-      --textures bugs out if value = 0
-      statusbarvalue = 0.01
-    end
     
+    --remember to invert the value when direction is counter-clockwise
+    local statusbarvalue = floor(value)
+    if direction == 0 then
+      statusbarvalue = 100 - statusbarvalue
+    end
+    if statusbarvalue == 0 then
+      statusbarvalue = 1
+      --am("Oh Oh")
+    end
+
+    --am(statusbarvalue)
+
     --angle
     local angle = statusbarvalue * 90 / 100
     local Arad = math.rad(angle)
@@ -239,21 +491,21 @@
     local IxCoord, IyCoord, OxCoord, OyCoord, NxCoord, NyCoord, MxCoord, MyCoord
     local sq1_c1_x, sq1_c1_y, sq1_c2_x, sq1_c2_y, sq1_c3_x, sq1_c3_y, sq1_c4_x, sq1_c4_y
     local sq2_c1_x, sq2_c1_y, sq2_c2_x, sq2_c2_y, sq2_c3_x, sq2_c3_y, sq2_c4_x, sq2_c4_y
-
-    Ix = inner_radius * math.sin(Arad)
-    Iy = (outer_radius - (inner_radius * math.cos(Arad))) + difference
-    Ox = outer_radius * math.sin(Arad)
-    Oy = (outer_radius - (outer_radius * math.cos(Arad))) + difference
-    IxCoord = Ix / segmentsize 
-    IyCoord = Iy / segmentsize
-    OxCoord = Ox / segmentsize
-    OyCoord = Oy / segmentsize   
-    NxCoord = Nx / segmentsize
-    NyCoord = Ny / segmentsize
-    MxCoord = Nx / segmentsize
-    MyCoord = Ny / segmentsize
     
     if direction == 1 then
+      
+      Ix = inner_radius * math.sin(Arad)
+      Iy = (outer_radius - (inner_radius * math.cos(Arad))) + difference
+      Ox = outer_radius * math.sin(Arad)
+      Oy = (outer_radius - (outer_radius * math.cos(Arad))) + difference
+      IxCoord = Ix / segmentsize 
+      IyCoord = Iy / segmentsize
+      OxCoord = Ox / segmentsize
+      OyCoord = Oy / segmentsize   
+      NxCoord = Nx / segmentsize
+      NyCoord = Ny / segmentsize
+      MxCoord = Nx / segmentsize
+      MyCoord = Ny / segmentsize
       
       sq1_c1_x = NxCoord
       sq1_c1_y = NyCoord
@@ -319,7 +571,20 @@
       end
       
     else
-
+      
+      Ix = inner_radius * math.sin(Arad)
+      Iy = (outer_radius - (inner_radius * math.cos(Arad))) + difference
+      Ox = outer_radius * math.sin(Arad)
+      Oy = (outer_radius - (outer_radius * math.cos(Arad))) + difference
+      IxCoord = Ix / segmentsize 
+      IyCoord = Iy / segmentsize
+      OxCoord = Ox / segmentsize
+      OyCoord = Oy / segmentsize   
+      NxCoord = Nx / segmentsize
+      NyCoord = Ny / segmentsize
+      MxCoord = Mx / segmentsize
+      MyCoord = My / segmentsize
+      
       sq1_c1_x = IxCoord
       sq1_c1_y = IyCoord
       sq1_c2_x = IxCoord
@@ -384,44 +649,24 @@
       end
     end
     
-    -- after calculating the squares set the new SetTexCoords
-    -- self.field is the number of the field segment on the ring
-    --
-    -- ring segment layout
-    --     ____ ____
-    --    /    |    \
-    --    |  4 | 1  |
-    --     ----+---- 
-    --    |  3 | 2  |
-    --    \____|____/
-    --
-    --  corners of: 
-    --  segment 1  segment 2  segment 3  segment 4
-    --  +-------+  +-------+  +-------+  +-------+
-    --  | 1   3 |  | 2   1 |  | 4   2 |  | 3   4 |
-    --  |       |  |       |  |       |  |       |
-    --  | 2   4 |  | 4   3 |  | 3   1 |  | 1   2 |
-    --  +-------+  +-------+  +-------+  +-------+
-    --  original   90°right   180°right  270°right
-    --
-        
     if self.field == 1 then
-      --1,2,3,4 = corners of field 1
+      --1,2,3,4
       t0:SetTexCoord(sq1_c1_x,sq1_c1_y, sq1_c2_x,sq1_c2_y, sq1_c3_x,sq1_c3_y, sq1_c4_x, sq1_c4_y)
       t1:SetTexCoord(sq2_c1_x,sq2_c1_y, sq2_c2_x,sq2_c2_y, sq2_c3_x,sq2_c3_y, sq2_c4_x, sq2_c4_y)
     elseif self.field == 2 then
-      --2,4,1,3 = corners of field 2 (90° to right)
+      --2,4,1,3
       t0:SetTexCoord(sq1_c2_x,sq1_c2_y, sq1_c4_x, sq1_c4_y, sq1_c1_x,sq1_c1_y, sq1_c3_x,sq1_c3_y)
       t1:SetTexCoord(sq2_c2_x,sq2_c2_y, sq2_c4_x, sq2_c4_y, sq2_c1_x,sq2_c1_y, sq2_c3_x,sq2_c3_y)
     elseif self.field == 3 then
-      --4,3,2,1 = corners of field 3 (180° to right)
+      --4,3,2,1
       t0:SetTexCoord(sq1_c4_x, sq1_c4_y, sq1_c3_x,sq1_c3_y, sq1_c2_x,sq1_c2_y, sq1_c1_x,sq1_c1_y)
       t1:SetTexCoord(sq2_c4_x, sq2_c4_y, sq2_c3_x,sq2_c3_y, sq2_c2_x,sq2_c2_y, sq2_c1_x,sq2_c1_y)
     elseif self.field == 4 then
-      --3,1,4,2 = corners of field 4 (270° to right)
+      --3,1,4,2
       t0:SetTexCoord(sq1_c3_x,sq1_c3_y, sq1_c1_x,sq1_c1_y, sq1_c4_x, sq1_c4_y, sq1_c2_x,sq1_c2_y)
       t1:SetTexCoord(sq2_c3_x,sq2_c3_y, sq2_c1_x,sq2_c1_y, sq2_c4_x, sq2_c4_y, sq2_c2_x,sq2_c2_y)
     end
+
   
   end
   
@@ -556,22 +801,40 @@
     
     -- Special 
     -- if unit is dead or ghost too
-    if perc == 0 then
+    if perc == 0 or UnitIsDeadOrGhost(unit) == 1 then
       -- hide every element
       -- because every segment is saved in an array we can use a loop from 1-anz_seg here.
+      --am("zero,nada,nix")
+      for i=1, anz_seg do
+        self.segments[i].square1:Hide()
+        self.segments[i].square2:Hide()
+        self.segments[i].slicer:Hide()
+        self.segments[i].fullsegment:Hide()
+      end
     elseif perc == 100 then
       -- make every element visible
       -- because every segment is saved in an array we can use a loop from 1-anz_seg here.
+      --am("100!")
+      for i=1, anz_seg do
+        self.segments[i].square1:Hide()
+        self.segments[i].square2:Hide()
+        self.segments[i].slicer:Hide()
+        self.segments[i].fullsegment:Show()
+      end
     else
       -- neeed to run through segments
       for i=1, anz_seg do
         if(perc > (i*perc_per_seg)) then
           -- player has more hp than this segment can handle
           -- show fullsegement texture, hide the rest
-          am(i.." fully visible baby!")
-        elseif (perc >= ((i-1)*perc_per_seg)) && (perc <= (i*perc_per_seg)) then
+          --am(i.." fully visible baby!")
+          self.segments[i].square1:Hide()
+          self.segments[i].square2:Hide()
+          self.segments[i].slicer:Hide()
+          self.segments[i].fullsegment:Show()
+        elseif ((perc >= ((i-1)*perc_per_seg)) and (perc <= (i*perc_per_seg))) then
           -- player hp is exactly in this segment
-          am(i.." look at me more closely")
+          --am(i.." look at me more closely")
           -- need to calc how much of this segment is filled.
           -- thuse I need to subtract ((i-1)*perc_per_seg) from my perc value
           -- example 64%, thus I am in segment 3. => 2*25 = 50
@@ -581,11 +844,19 @@
           -- calc_ring_segment(self,value)
           -- remember to invert the value, depending on fill_direction!
           local value = ((perc-((i-1)*perc_per_seg))/perc_per_seg)*100
-          calc_ring_segment(self,value)
+          calc_ring_segment(self.segments[i],value)
+          self.segments[i].square1:Show()
+          self.segments[i].square2:Show()
+          self.segments[i].slicer:Show()
+          self.segments[i].fullsegment:Hide()
         else
           -- crap my health is not high enough to fill this
           -- hide everything
-          am(i.." i'm out :/")
+          --am(i.." i'm out :/")
+          self.segments[i].square1:Hide()
+          self.segments[i].square2:Hide()
+          self.segments[i].slicer:Hide()
+          self.segments[i].fullsegment:Hide()
         end
       end
     end
@@ -595,32 +866,89 @@
     
   end  
   
+  local function calc_ring_mana(self,ring_config,unit)
+    local act, max, perc, perc_per_seg = UnitMana(unit), UnitManaMax(unit), (UnitMana(unit)/UnitManaMax(unit))*100, 100/ring_config.global.segments_used
+    local anz_seg, sum_radius = ring_config.global.segments_used, ring_config.global.segments_used*90
+    
+    if perc == 0 or UnitIsDeadOrGhost(unit) == 1 then
+      for i=1, anz_seg do
+        self.segments[i].square1:Hide()
+        self.segments[i].square2:Hide()
+        self.segments[i].slicer:Hide()
+        self.segments[i].fullsegment:Hide()
+      end
+    elseif perc == 100 then
+      for i=1, anz_seg do
+        self.segments[i].square1:Hide()
+        self.segments[i].square2:Hide()
+        self.segments[i].slicer:Hide()
+        self.segments[i].fullsegment:Show()
+      end
+    else
+      for i=1, anz_seg do
+        if(perc > (i*perc_per_seg)) then
+          self.segments[i].square1:Hide()
+          self.segments[i].square2:Hide()
+          self.segments[i].slicer:Hide()
+          self.segments[i].fullsegment:Show()
+        elseif ((perc >= ((i-1)*perc_per_seg)) and (perc <= (i*perc_per_seg))) then
+          local value = ((perc-((i-1)*perc_per_seg))/perc_per_seg)*100
+          calc_ring_segment(self.segments[i],value)
+          self.segments[i].square1:Show()
+          self.segments[i].square2:Show()
+          self.segments[i].slicer:Show()
+          self.segments[i].fullsegment:Hide()
+        else
+          self.segments[i].square1:Hide()
+          self.segments[i].square2:Hide()
+          self.segments[i].slicer:Hide()
+          self.segments[i].fullsegment:Hide()
+        end
+      end
+    end
+  end  
+  
   local function setup_rings(id)
   
     local ring_config = ring_table[id]
-    am("RingMod loaded.")
+    --am(ring_config.global.ringname)
     --am(ring_config.global.unit)
-    ring_object = cre_ring_holder(ring_config)
-    ring_object.background = cre_ring_background(ring_config, ring_object)
-    ring_object.segments = cre_ring_segments(ring_config, ring_object)
-    ring_object.foreground = cre_ring_foreground(ring_config, ring_object)
-    --am(ring_object.background.texture:GetTexture())
-    --am(ring_object.segments[1].field)
     
-    if ring_config.global.ringtype == "health" then
-      ring_object:SetScript("OnEvent", function(self, event, unit)
-        if (event == "UNIT_HEALTH" and unit == ring_config.global.unit) or event == "PLAYER_ENTERING_WORLD" then
-          calc_ring_health(ring_object,ring_config,ring_config.global.unit)
-        end    
-      end)
-      ring_object:RegisterEvent("UNIT_HEALTH")
-      ring_object:RegisterEvent("PLAYER_ENTERING_WORLD")
+    if ring_config.global.active == 1 then
+    
+      local ring_object = cre_ring_holder(ring_config)
+      ring_object.background = cre_ring_background(ring_config, ring_object)
+      ring_object.segments = cre_ring_segments(ring_config, ring_object)
+      ring_object.foreground = cre_ring_foreground(ring_config, ring_object)
+      --am(ring_object.background.texture:GetTexture())
+      --am(ring_object.segments[1].field)
+      
+      if ring_config.global.ringtype == "health" then
+        ring_object:SetScript("OnEvent", function(self, event, unit)
+          if (event == "UNIT_HEALTH" and unit == ring_config.global.unit) or event == "PLAYER_ENTERING_WORLD" then
+            calc_ring_health(ring_object,ring_config,ring_config.global.unit)
+          end    
+        end)
+        ring_object:RegisterEvent("UNIT_HEALTH")
+        ring_object:RegisterEvent("PLAYER_ENTERING_WORLD")
+      end
+      
+      if ring_config.global.ringtype == "mana" then
+        ring_object:SetScript("OnEvent", function(self, event, unit)
+          if (event == "UNIT_ENERGY" and unit == ring_config.global.unit) or (event == "UNIT_FOCUS" and unit == ring_config.global.unit) or (event == "UNIT_MANA" and unit == ring_config.global.unit) or (event == "UNIT_RUNIC_POWER" and unit == ring_config.global.unit) or (event == "UNIT_RAGE" and unit == ring_config.global.unit) or event == "PLAYER_ENTERING_WORLD" then
+            calc_ring_mana(ring_object,ring_config,ring_config.global.unit)
+          end    
+        end)
+        ring_object:RegisterEvent("UNIT_ENERGY")
+        ring_object:RegisterEvent("UNIT_FOCUS")
+        ring_object:RegisterEvent("UNIT_MANA")
+        ring_object:RegisterEvent("UNIT_RUNIC_POWER")
+        ring_object:RegisterEvent("UNIT_RAGE")
+        ring_object:RegisterEvent("PLAYER_ENTERING_WORLD")
+      end
     end
 
   end
-  
-  
-  
   
   ---------------------  
   -- CALL
@@ -632,6 +960,7 @@
   
   a:SetScript("OnEvent", function (self,event,arg1)
     if(event=="PLAYER_LOGIN") then
+      am("RingMod loaded.")
       for i in ipairs(ring_table) do 
         setup_rings(i)
       end

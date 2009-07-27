@@ -461,10 +461,6 @@
     if direction == 0 then
       statusbarvalue = 100 - statusbarvalue
     end
-    if statusbarvalue == 0 then
-      statusbarvalue = 0
-      am("Oh Oh "..statusbarvalue)
-    end
 
     --am(statusbarvalue)
 
@@ -779,7 +775,7 @@
   local function calc_ring_health(self, event, unit, bar, min, max)
     local self = self.hp_ring
     local ring_config = self.config
-    local act, max, perc, perc_per_seg = UnitHealth(unit), UnitHealthMax(unit), (UnitHealth(unit)/UnitHealthMax(unit))*100, 100/ring_config.global.segments_used
+    local act, max, perc, perc_per_seg = UnitHealth(unit), UnitHealthMax(unit), floor((UnitHealth(unit)/UnitHealthMax(unit))*100), 100/ring_config.global.segments_used
     local anz_seg, sum_radius = ring_config.global.segments_used, ring_config.global.segments_used*90
     
     if perc == 0 or UnitIsDeadOrGhost(unit) == 1 then
@@ -798,7 +794,7 @@
       end
     else
       for i=1, anz_seg do
-        if(perc > (i*perc_per_seg)) then
+        if(perc >= (i*perc_per_seg)) then
           self.segments[i].square1:Hide()
           self.segments[i].square2:Hide()
           self.segments[i].slicer:Hide()
@@ -823,7 +819,7 @@
   local function calc_ring_mana(self, event, unit, bar, min, max)
     local self = self.mp_ring
     local ring_config = self.config
-    local act, max, perc, perc_per_seg = UnitMana(unit), UnitManaMax(unit), (UnitMana(unit)/UnitManaMax(unit))*100, 100/ring_config.global.segments_used
+    local act, max, perc, perc_per_seg = UnitMana(unit), UnitManaMax(unit), floor((UnitMana(unit)/UnitManaMax(unit))*100), 100/ring_config.global.segments_used
     local anz_seg, sum_radius = ring_config.global.segments_used, ring_config.global.segments_used*90
     
     if perc == 0 or UnitIsDeadOrGhost(unit) == 1 then
@@ -842,7 +838,7 @@
       end
     else
       for i=1, anz_seg do
-        if(perc > (i*perc_per_seg)) then
+        if(perc >= (i*perc_per_seg)) then
           self.segments[i].square1:Hide()
           self.segments[i].square2:Hide()
           self.segments[i].slicer:Hide()
@@ -942,6 +938,8 @@
     self.Health = CreateFrame("StatusBar", nil, self)
     self.Power = CreateFrame("StatusBar", nil, self)
     
+    self.Power.frequentUpdates = true
+    
     self.PostUpdateHealth = calc_ring_health
     self.PostUpdatePower = calc_ring_mana  
   
@@ -977,7 +975,7 @@
   
   end
   
-  --create the target style
+  --create the tot style
   local function CreateToTStyle(self, unit)
     --ring id = 5
     setup_self(5,self)

@@ -41,7 +41,7 @@
       },
       background = {
         color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
-        alpha = 0.7,
+        alpha = 0.6,
         framelevel = 1,
         blendmode = "blend",
         use_texture = 1,
@@ -63,8 +63,8 @@
       },
       segment = {
         color = {r = 180/255, g = 10/255, b = 10/255, a = 1},
-        alpha = 1,
-        blendmode = "add",
+        alpha = 0.6,
+        blendmode = "mod",
         framelevel = 2,
         file = "256_2\\ring_segment",
         segmentsize = 128,
@@ -148,7 +148,7 @@
       },
       background = {
         color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
-        alpha = 0.7,
+        alpha = 0.6,
         framelevel = 1,
         blendmode = "blend",
         use_texture = 1,
@@ -170,8 +170,8 @@
       },
       segment = {
         color = {r = 180/255, g = 10/255, b = 10/255, a = 1},
-        alpha = 1,
-        blendmode = "add",
+        alpha = 0.6,
+        blendmode = "mod",
         framelevel = 2,
         file = "256_2\\ring_segment",
         segmentsize = 128,
@@ -255,7 +255,7 @@
       },
       background = {
         color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
-        alpha = 0.7,
+        alpha = 0.6,
         framelevel = 1,
         blendmode = "blend",
         use_texture = 1,
@@ -277,8 +277,8 @@
       },
       segment = {
         color = {r = 180/255, g = 10/255, b = 10/255, a = 1},
-        alpha = 1,
-        blendmode = "add",
+        alpha = 0.6,
+        blendmode = "mod",
         framelevel = 2,
         file = "256_2\\ring_segment",
         segmentsize = 128,
@@ -934,9 +934,10 @@
     local hpval1holder = CreateFrame("FRAME", nil, self)
     hpval1holder:SetFrameLevel(5)
     hpval1holder:SetAllPoints(self)
+    hpval1holder:SetAlpha(0.7)
     local hpval1 = SetFontString(hpval1holder, ringfont, 32, "OUTLINE")
     hpval1:SetPoint("CENTER", 0, 12)
-    hpval1:SetTextHeight(self.hp_ring.config.global.size/5)
+    hpval1:SetTextHeight(self.hp_ring.config.global.size/6)
     self:Tag(hpval1, "[perhp]")
 
     --mana ring, id = 2
@@ -945,9 +946,10 @@
     local mpval1holder = CreateFrame("FRAME", nil, self)
     mpval1holder:SetFrameLevel(5)
     mpval1holder:SetAllPoints(self)
+    mpval1holder:SetAlpha(0.7)
     local mpval1 = SetFontString(mpval1holder, ringfont, 32, "OUTLINE")
     mpval1:SetPoint("CENTER", 0, -35)
-    mpval1:SetTextHeight(self.hp_ring.config.global.size/6.5)
+    mpval1:SetTextHeight(self.hp_ring.config.global.size/8)
     mpval1:SetTextColor(0.6,0.6,0.6)
     self:Tag(mpval1, "[perpp]")
     
@@ -972,20 +974,22 @@
     local hpval1holder = CreateFrame("FRAME", nil, self)
     hpval1holder:SetFrameLevel(5)
     hpval1holder:SetAllPoints(self)
+    hpval1holder:SetAlpha(0.7)
     local hpval1 = SetFontString(hpval1holder, ringfont, 32, "OUTLINE")
     hpval1:SetPoint("CENTER", 0, 12)
-    hpval1:SetTextHeight(self.hp_ring.config.global.size/5)
+    hpval1:SetTextHeight(self.hp_ring.config.global.size/6)
     self:Tag(hpval1, "[perhp]")
 
-    --mana ring, id = 4
+    --mana ring, id = 2
     self.mp_ring = setup_ring(4,self)
     --mana value
     local mpval1holder = CreateFrame("FRAME", nil, self)
     mpval1holder:SetFrameLevel(5)
     mpval1holder:SetAllPoints(self)
+    mpval1holder:SetAlpha(0.7)
     local mpval1 = SetFontString(mpval1holder, ringfont, 32, "OUTLINE")
     mpval1:SetPoint("CENTER", 0, -35)
-    mpval1:SetTextHeight(self.hp_ring.config.global.size/6.5)
+    mpval1:SetTextHeight(self.hp_ring.config.global.size/8)
     mpval1:SetTextColor(0.6,0.6,0.6)
     self:Tag(mpval1, "[perpp]")
     
@@ -1008,20 +1012,22 @@
     local hpval1holder = CreateFrame("FRAME", nil, self)
     hpval1holder:SetFrameLevel(5)
     hpval1holder:SetAllPoints(self)
+    hpval1holder:SetAlpha(0.7)
     local hpval1 = SetFontString(hpval1holder, ringfont, 32, "OUTLINE")
     hpval1:SetPoint("CENTER", 0, 12)
-    hpval1:SetTextHeight(self.hp_ring.config.global.size/5)
+    hpval1:SetTextHeight(self.hp_ring.config.global.size/6)
     self:Tag(hpval1, "[perhp]")
 
-    --mana ring, id = 6
+    --mana ring, id = 2
     self.mp_ring = setup_ring(6,self)
     --mana value
     local mpval1holder = CreateFrame("FRAME", nil, self)
     mpval1holder:SetFrameLevel(5)
     mpval1holder:SetAllPoints(self)
+    mpval1holder:SetAlpha(0.7)
     local mpval1 = SetFontString(mpval1holder, ringfont, 32, "OUTLINE")
     mpval1:SetPoint("CENTER", 0, -35)
-    mpval1:SetTextHeight(self.hp_ring.config.global.size/6.5)
+    mpval1:SetTextHeight(self.hp_ring.config.global.size/8)
     mpval1:SetTextColor(0.6,0.6,0.6)
     self:Tag(mpval1, "[perpp]")
     

@@ -682,7 +682,7 @@
     t0:SetBlendMode(ring_config.segment.blendmode)
     t0:Hide()
     
-    local t1 = self:CreateTexture(nil, "LOW")
+    local t1 = self:CreateTexture(nil, "BACKGROUND")
     t1:SetTexture(ring_config.global.gfx_folder..ring_config.segment.file)
     t1:SetVertexColor(ring_config.segment.color.r,ring_config.segment.color.g,ring_config.segment.color.b,ring_config.segment.color.a)
     t1:SetBlendMode(ring_config.segment.blendmode)

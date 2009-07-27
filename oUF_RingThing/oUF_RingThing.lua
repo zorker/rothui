@@ -16,6 +16,8 @@
   -- CONFIG
   -----------------------
 
+  local ringfont = "Interface\\AddOns\\oUF_RingThing\\fonts\\Prototype.ttf"
+
   local ring_table = {
     [1] = { 
       global = {
@@ -25,15 +27,15 @@
         size = 256,
         anchorframe = UIParent,
         anchorpoint = "CENTER",
-        anchorposx = 0,
-        anchorposy = 0,
-        scale = 0.82,
+        anchorposx = -400,
+        anchorposy = -100,
+        scale = 0.7,
         alpha = 1,
         framelevel = 1,
-        gfx_folder = "256_1",
+        gfx_folder = "Interface\\AddOns\\oUF_RingThing\\ring_gfx\\",
         segments_used = 2,
-        start_segment = 4,
-        fill_direction = 0,
+        start_segment = 3,
+        fill_direction = 1,
         ringtype = "health",
       },
       background = {
@@ -43,6 +45,7 @@
         blendmode = "blend",
         use_texture = 1,
         do_rotation = 1,
+        file = "256_1\\ring_background",
         rotation = {
           update_timer = 1/30,
           step_size = 0.3,
@@ -54,6 +57,7 @@
         alpha = 1,
         blendmode = "blend",
         framelevel = 3,
+        file = "256_1\\ring_foreground2",
         use_texture = 1,
       },
       segment = {
@@ -61,6 +65,7 @@
         alpha = 1,
         blendmode = "add",
         framelevel = 2,
+        file = "256_1\\ring_segment",
         segmentsize = 128,
         outer_radius = 110,
         inner_radius = 90,
@@ -75,15 +80,15 @@
         size = 256,
         anchorframe = UIParent,
         anchorpoint = "CENTER",
-        anchorposx = 0,
-        anchorposy = 0,
-        scale = 0.82,
+        anchorposx = -400,
+        anchorposy = -100,
+        scale = 0.7,
         alpha = 1,
         framelevel = 1,
-        gfx_folder = "256_1",
+        gfx_folder = "Interface\\AddOns\\oUF_RingThing\\ring_gfx\\",
         segments_used = 2,
-        start_segment = 1,
-        fill_direction = 1,
+        start_segment = 2,
+        fill_direction = 0,
         ringtype = "mana",
       },
       background = {
@@ -92,7 +97,8 @@
         framelevel = 1,
         blendmode = "blend",
         use_texture = 0,
-        do_rotation = 1,
+        file = "256_1\\ring_foreground2",
+        do_rotation = 0,
         rotation = {
           update_timer = 1/30,
           step_size = 0.2,
@@ -105,12 +111,226 @@
         blendmode = "blend",
         framelevel = 3,
         use_texture = 0,
+        file = "256_1\\ring_background",
       },
       segment = {
         color = {r = 10/255, g = 100/255, b = 150/255, a = 1},
         alpha = 1,
         blendmode = "add",
         framelevel = 2,
+        file = "256_1\\ring_segment",
+        segmentsize = 128,
+        outer_radius = 110,
+        inner_radius = 90,
+      },
+    },
+
+    [3] = { 
+      global = {
+        active = 1,
+        unit = "player",
+        ringname = "rM_TargetHealth",
+        size = 256,
+        anchorframe = UIParent,
+        anchorpoint = "CENTER",
+        anchorposx = 400,
+        anchorposy = -100,
+        scale = 0.7,
+        alpha = 1,
+        framelevel = 1,
+        gfx_folder = "Interface\\AddOns\\oUF_RingThing\\ring_gfx\\",
+        segments_used = 2,
+        start_segment = 3,
+        fill_direction = 1,
+        ringtype = "health",
+      },
+      background = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 0.7,
+        framelevel = 1,
+        blendmode = "blend",
+        use_texture = 1,
+        do_rotation = 1,
+        file = "256_1\\ring_background",
+        rotation = {
+          update_timer = 1/30,
+          step_size = 0.3,
+          direction = 0,
+        },
+      },
+      foreground = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 1,
+        blendmode = "blend",
+        framelevel = 3,
+        file = "256_1\\ring_foreground2",
+        use_texture = 1,
+      },
+      segment = {
+        color = {r = 180/255, g = 10/255, b = 10/255, a = 1},
+        alpha = 1,
+        blendmode = "add",
+        framelevel = 2,
+        file = "256_1\\ring_segment",
+        segmentsize = 128,
+        outer_radius = 110,
+        inner_radius = 90,
+      },
+    },
+
+    [4] = { 
+      global = {
+        active = 1,
+        unit = "player",
+        ringname = "rM_TargetMana",
+        size = 256,
+        anchorframe = UIParent,
+        anchorpoint = "CENTER",
+        anchorposx = 400,
+        anchorposy = -100,
+        scale = 0.7,
+        alpha = 1,
+        framelevel = 1,
+        gfx_folder = "Interface\\AddOns\\oUF_RingThing\\ring_gfx\\",
+        segments_used = 2,
+        start_segment = 2,
+        fill_direction = 0,
+        ringtype = "mana",
+      },
+      background = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 0.7,
+        framelevel = 1,
+        blendmode = "blend",
+        use_texture = 0,
+        file = "256_1\\ring_foreground2",
+        do_rotation = 0,
+        rotation = {
+          update_timer = 1/30,
+          step_size = 0.2,
+          direction = 1,
+        },
+      },
+      foreground = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 1,
+        blendmode = "blend",
+        framelevel = 3,
+        use_texture = 0,
+        file = "256_1\\ring_background",
+      },
+      segment = {
+        color = {r = 10/255, g = 100/255, b = 150/255, a = 1},
+        alpha = 1,
+        blendmode = "add",
+        framelevel = 2,
+        file = "256_1\\ring_segment",
+        segmentsize = 128,
+        outer_radius = 110,
+        inner_radius = 90,
+      },
+    },
+
+    [5] = { 
+      global = {
+        active = 1,
+        unit = "player",
+        ringname = "rM_ToTHealth",
+        size = 256,
+        anchorframe = UIParent,
+        anchorpoint = "CENTER",
+        anchorposx = 350,
+        anchorposy = -290,
+        scale = 0.4,
+        alpha = 1,
+        framelevel = 1,
+        gfx_folder = "Interface\\AddOns\\oUF_RingThing\\ring_gfx\\",
+        segments_used = 2,
+        start_segment = 3,
+        fill_direction = 1,
+        ringtype = "health",
+      },
+      background = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 0.7,
+        framelevel = 1,
+        blendmode = "blend",
+        use_texture = 1,
+        do_rotation = 1,
+        file = "256_1\\ring_background",
+        rotation = {
+          update_timer = 1/30,
+          step_size = 0.3,
+          direction = 0,
+        },
+      },
+      foreground = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 1,
+        blendmode = "blend",
+        framelevel = 3,
+        file = "256_1\\ring_foreground2",
+        use_texture = 1,
+      },
+      segment = {
+        color = {r = 180/255, g = 10/255, b = 10/255, a = 1},
+        alpha = 1,
+        blendmode = "add",
+        framelevel = 2,
+        file = "256_1\\ring_segment",
+        segmentsize = 128,
+        outer_radius = 110,
+        inner_radius = 90,
+      },
+    },
+
+    [6] = { 
+      global = {
+        active = 1,
+        unit = "player",
+        ringname = "rM_ToTMana",
+        size = 256,
+        anchorframe = UIParent,
+        anchorpoint = "CENTER",
+        anchorposx = 400,
+        anchorposy = -100,
+        scale = 0.4,
+        alpha = 1,
+        framelevel = 1,
+        gfx_folder = "Interface\\AddOns\\oUF_RingThing\\ring_gfx\\",
+        segments_used = 2,
+        start_segment = 2,
+        fill_direction = 0,
+        ringtype = "mana",
+      },
+      background = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 0.7,
+        framelevel = 1,
+        blendmode = "blend",
+        use_texture = 0,
+        file = "256_1\\ring_foreground2",
+        do_rotation = 0,
+        rotation = {
+          update_timer = 1/30,
+          step_size = 0.2,
+          direction = 1,
+        },
+      },
+      foreground = {
+        color = {r = 255/255, g = 255/255, b = 255/255, a = 1},
+        alpha = 1,
+        blendmode = "blend",
+        framelevel = 3,
+        use_texture = 0,
+        file = "256_1\\ring_background",
+      },
+      segment = {
+        color = {r = 10/255, g = 100/255, b = 150/255, a = 1},
+        alpha = 1,
+        blendmode = "add",
+        framelevel = 2,
+        file = "256_1\\ring_segment",
         segmentsize = 128,
         outer_radius = 110,
         inner_radius = 90,
@@ -128,15 +348,10 @@
     DEFAULT_CHAT_FRAME:AddMessage(text)
   end
   
-  local function cre_ring_holder(ring_config)
+  local function cre_ring_holder(ring_config,self)
     --am(ring_config.global.anchorframe)
-    local f = CreateFrame("Frame",ring_config.global.ringname,ring_config.global.anchorframe)
-    f:SetWidth(ring_config.global.size)
-    f:SetHeight(ring_config.global.size)
-    f:SetPoint(ring_config.global.anchorpoint,ring_config.global.anchorposx,ring_config.global.anchorposy)
-    f:SetFrameLevel(ring_config.global.framelevel)
-    f:SetScale(ring_config.global.scale)
-    f:SetAlpha(ring_config.global.alpha)
+    local f = CreateFrame("Frame",ring_config.global.ringname,self)
+    f:SetAllPoints(self)
     return f
   end
   
@@ -182,7 +397,7 @@
     f:SetAlpha(ring_config.background.alpha)
     if (ring_config.background.use_texture == 1) then
       local t = f:CreateTexture(nil,"BACKGROUND")
-      t:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\"..ring_config.global.gfx_folder.."\\ring_background")
+      t:SetTexture(ring_config.global.gfx_folder..ring_config.background.file)
       t:SetAllPoints(f)
       t:SetVertexColor(ring_config.background.color.r,ring_config.background.color.g,ring_config.background.color.b,ring_config.background.color.a)
       t:SetBlendMode(ring_config.background.blendmode)
@@ -215,7 +430,7 @@
     f:SetAlpha(ring_config.foreground.alpha)
     if (ring_config.foreground.use_texture == 1) then
       local t = f:CreateTexture(nil,"foreground")
-      t:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\"..ring_config.global.gfx_folder.."\\ring_foreground")
+      t:SetTexture(ring_config.global.gfx_folder..ring_config.foreground.file)
       t:SetAllPoints(f)
       t:SetVertexColor(ring_config.foreground.color.r,ring_config.foreground.color.g,ring_config.foreground.color.b,ring_config.foreground.color.a)
       t:SetBlendMode(ring_config.foreground.blendmode)
@@ -247,8 +462,8 @@
       statusbarvalue = 100 - statusbarvalue
     end
     if statusbarvalue == 0 then
-      statusbarvalue = 1
-      --am("Oh Oh")
+      statusbarvalue = 0
+      am("Oh Oh "..statusbarvalue)
     end
 
     --am(statusbarvalue)
@@ -466,13 +681,13 @@
     self.ring_width = outer_radius-inner_radius
     
     local t0 = self:CreateTexture(nil, "BACKGROUND")
-    t0:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\"..ring_config.global.gfx_folder.."\\ring_segment")
+    t0:SetTexture(ring_config.global.gfx_folder..ring_config.segment.file)
     t0:SetVertexColor(ring_config.segment.color.r,ring_config.segment.color.g,ring_config.segment.color.b,ring_config.segment.color.a)
     t0:SetBlendMode(ring_config.segment.blendmode)
     t0:Hide()
     
     local t1 = self:CreateTexture(nil, "LOW")
-    t1:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\"..ring_config.global.gfx_folder.."\\ring_segment")
+    t1:SetTexture(ring_config.global.gfx_folder..ring_config.segment.file)
     t1:SetVertexColor(ring_config.segment.color.r,ring_config.segment.color.g,ring_config.segment.color.b,ring_config.segment.color.a)
     t1:SetBlendMode(ring_config.segment.blendmode)
     t1:Hide()
@@ -481,14 +696,14 @@
     t2:SetVertexColor(ring_config.segment.color.r,ring_config.segment.color.g,ring_config.segment.color.b,ring_config.segment.color.a)
     t2:SetBlendMode(ring_config.segment.blendmode)
     if direction == 1 then
-      t2:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\slicer1")
+      t2:SetTexture(ring_config.global.gfx_folder.."slicer1")
     else
-      t2:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\slicer0")
+      t2:SetTexture(ring_config.global.gfx_folder.."slicer0")
     end
     t2:Hide()
 
     local t3 = self:CreateTexture(nil, "BACKGROUND")
-    t3:SetTexture("Interface\\AddOns\\rRingMod\\ring_gfx\\"..ring_config.global.gfx_folder.."\\ring_segment")
+    t3:SetTexture(ring_config.global.gfx_folder..ring_config.segment.file)
     t3:SetVertexColor(ring_config.segment.color.r,ring_config.segment.color.g,ring_config.segment.color.b,ring_config.segment.color.a)
     t3:SetBlendMode(ring_config.segment.blendmode)
     t3:SetPoint("CENTER",0,0)
@@ -563,7 +778,7 @@
   
   local function calc_ring_health(self, event, unit, bar, min, max)
     local self = self.hp_ring
-    local ring_config = self.hp_ring.config
+    local ring_config = self.config
     local act, max, perc, perc_per_seg = UnitHealth(unit), UnitHealthMax(unit), (UnitHealth(unit)/UnitHealthMax(unit))*100, 100/ring_config.global.segments_used
     local anz_seg, sum_radius = ring_config.global.segments_used, ring_config.global.segments_used*90
     
@@ -588,7 +803,7 @@
           self.segments[i].square2:Hide()
           self.segments[i].slicer:Hide()
           self.segments[i].fullsegment:Show()
-        elseif ((perc >= ((i-1)*perc_per_seg)) and (perc <= (i*perc_per_seg))) then
+        elseif ((perc > ((i-1)*perc_per_seg)) and (perc < (i*perc_per_seg))) then
           local value = ((perc-((i-1)*perc_per_seg))/perc_per_seg)*100
           calc_ring_segment(self.segments[i],value)
           self.segments[i].square1:Show()
@@ -607,7 +822,7 @@
   
   local function calc_ring_mana(self, event, unit, bar, min, max)
     local self = self.mp_ring
-    local ring_config = self.mp_ring.config
+    local ring_config = self.config
     local act, max, perc, perc_per_seg = UnitMana(unit), UnitManaMax(unit), (UnitMana(unit)/UnitManaMax(unit))*100, 100/ring_config.global.segments_used
     local anz_seg, sum_radius = ring_config.global.segments_used, ring_config.global.segments_used*90
     
@@ -632,7 +847,7 @@
           self.segments[i].square2:Hide()
           self.segments[i].slicer:Hide()
           self.segments[i].fullsegment:Show()
-        elseif ((perc >= ((i-1)*perc_per_seg)) and (perc <= (i*perc_per_seg))) then
+        elseif ((perc > ((i-1)*perc_per_seg)) and (perc < (i*perc_per_seg))) then
           local value = ((perc-((i-1)*perc_per_seg))/perc_per_seg)*100
           calc_ring_segment(self.segments[i],value)
           self.segments[i].square1:Show()
@@ -676,10 +891,10 @@
     f:SetAlpha(ring_config.global.alpha)
   end
   
-  local function setup_ring(id)
+  local function setup_ring(id,self)
   
     local ring_config = ring_table[id]
-    local ring_object = cre_ring_holder(ring_config)
+    local ring_object = cre_ring_holder(ring_config,self)
     ring_object.config = ring_config
     ring_object.background = cre_ring_background(ring_object.config, ring_object)
     ring_object.segments = cre_ring_segments(ring_object.config, ring_object)
@@ -687,6 +902,14 @@
     
     return ring_object
 
+  end
+  
+  --set fontstring
+  local function SetFontString(parent, fontName, fontHeight, fontStyle)
+    local fs = parent:CreateFontString(nil, "OVERLAY")
+    fs:SetFont(fontName, fontHeight, fontStyle)
+    fs:SetShadowColor(0,0,0,1)
+    return fs
   end
     
   -----------------------------
@@ -696,10 +919,89 @@
   --create the player style
   local function CreatePlayerStyle(self, unit)
     --self will always have the values of the health ring, important for clickability
+    --ringid = 1
     setup_self(1,self)
-    self.hp_ring = setup_ring(1)
-    self.mp_ring = setup_ring(2)
-        
+    --health ring, id = 1
+    self.hp_ring = setup_ring(1,self)
+    --health value
+    local hpval1 = SetFontString(self, ringfont, 32, "OUTLINE")
+    hpval1:SetPoint("CENTER", 0, 12)
+    hpval1:SetTextHeight(self.hp_ring.config.global.size/5)
+    self:Tag(hpval1, "[perhp]")
+
+    --mana ring, id = 2
+    self.mp_ring = setup_ring(2,self)
+    --mana value
+    local mpval1 = SetFontString(self, ringfont, 32, "OUTLINE")
+    mpval1:SetPoint("CENTER", 0, -35)
+    mpval1:SetTextHeight(self.hp_ring.config.global.size/6.5)
+    mpval1:SetTextColor(0.6,0.6,0.6)
+    self:Tag(mpval1, "[perpp]")
+    
+    --create fake health and power statusbars to make the health/mana functions available
+    self.Health = CreateFrame("StatusBar", nil, self)
+    self.Power = CreateFrame("StatusBar", nil, self)
+    
+    self.PostUpdateHealth = calc_ring_health
+    self.PostUpdatePower = calc_ring_mana  
+  
+  end
+  
+  --create the target style
+  local function CreateTargetStyle(self, unit)
+    --ringid = 3
+    setup_self(3,self)
+    --health ring, id = 3
+    self.hp_ring = setup_ring(3,self)
+    --health value
+    local hpval1 = SetFontString(self, ringfont, 32, "OUTLINE")
+    hpval1:SetPoint("CENTER", 0, 12)
+    hpval1:SetTextHeight(self.hp_ring.config.global.size/5)
+    self:Tag(hpval1, "[perhp]")
+
+    --mana ring, id = 4
+    self.mp_ring = setup_ring(4,self)
+    --mana value
+    local mpval1 = SetFontString(self, ringfont, 32, "OUTLINE")
+    mpval1:SetPoint("CENTER", 0, -35)
+    mpval1:SetTextHeight(self.hp_ring.config.global.size/6.5)
+    mpval1:SetTextColor(0.6,0.6,0.6)
+    self:Tag(mpval1, "[perpp]")    
+    
+    --create fake health and power statusbars to make the health/mana functions available
+    self.Health = CreateFrame("StatusBar", nil, self)
+    self.Power = CreateFrame("StatusBar", nil, self)
+    
+    self.PostUpdateHealth = calc_ring_health
+    self.PostUpdatePower = calc_ring_mana  
+  
+  end
+  
+  --create the target style
+  local function CreateToTStyle(self, unit)
+    --ring id = 5
+    setup_self(5,self)
+    --health ring, id = 5
+    self.hp_ring = setup_ring(5,self)
+    --health value
+    local hpval1 = SetFontString(self, ringfont, 32, "OUTLINE")
+    hpval1:SetPoint("CENTER", 0, 12)
+    hpval1:SetTextHeight(self.hp_ring.config.global.size/5)
+    self:Tag(hpval1, "[perhp]")
+
+    --mana ring, id = 6
+    self.mp_ring = setup_ring(6,self)
+    --mana value
+    local mpval1 = SetFontString(self, ringfont, 32, "OUTLINE")
+    mpval1:SetPoint("CENTER", 0, -35)
+    mpval1:SetTextHeight(self.hp_ring.config.global.size/6.5)
+    mpval1:SetTextColor(0.6,0.6,0.6)
+    self:Tag(mpval1, "[perpp]")    
+    
+    --create fake health and power statusbars to make the health/mana functions available
+    self.Health = CreateFrame("StatusBar", nil, self)
+    self.Power = CreateFrame("StatusBar", nil, self)
+    
     self.PostUpdateHealth = calc_ring_health
     self.PostUpdatePower = calc_ring_mana  
   
@@ -710,6 +1012,8 @@
   -----------------------------
 
   oUF:RegisterStyle("rt_player", CreatePlayerStyle)
+  oUF:RegisterStyle("rt_target", CreateTargetStyle)
+  oUF:RegisterStyle("rt_tot", CreateToTStyle)
   
   -----------------------------
   -- SPAWN UNITS
@@ -717,5 +1021,8 @@
 
   oUF:SetActiveStyle("rt_player")
   oUF:Spawn("player", "oUF_RingThingPlayer")
-
+  oUF:SetActiveStyle("rt_target")
+  oUF:Spawn("target", "oUF_RingThingTarget")
+  oUF:SetActiveStyle("rt_tot")
+  oUF:Spawn("targettarget", "oUF_RingThingToT")
   

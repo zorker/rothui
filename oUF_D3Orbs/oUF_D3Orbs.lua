@@ -111,15 +111,28 @@
   -----------------------------
   
   --rewrite unit popup menus
-  UnitPopupMenus["SELF"] = { "PVP_FLAG", "LOOT_METHOD", "LOOT_THRESHOLD", "OPT_OUT_LOOT_TITLE", "LOOT_PROMOTE", "DUNGEON_DIFFICULTY", "RESET_INSTANCES", "RAID_TARGET_ICON", "LEAVE", "CANCEL" }
-  UnitPopupMenus["PET"] = { "PET_PAPERDOLL", "PET_RENAME", "PET_ABANDON", "PET_DISMISS", "CANCEL" }
-  UnitPopupMenus["PARTY"] = { "MUTE", "UNMUTE", "PARTY_SILENCE", "PARTY_UNSILENCE", "RAID_SILENCE", "RAID_UNSILENCE", "BATTLEGROUND_SILENCE", "BATTLEGROUND_UNSILENCE", "WHISPER", "PROMOTE", "LOOT_PROMOTE", "UNINVITE", "INSPECT", "ACHIEVEMENTS", "TRADE", "FOLLOW", "DUEL", "RAID_TARGET_ICON", "PVP_REPORT_AFK", "RAF_SUMMON", "RAF_GRANT_LEVEL", "CANCEL" }
-  UnitPopupMenus["PLAYER"] = { "WHISPER", "INSPECT", "INVITE", "ACHIEVEMENTS", "TRADE", "FOLLOW", "DUEL", "RAID_TARGET_ICON", "RAF_SUMMON", "RAF_GRANT_LEVEL", "CANCEL" }
-  UnitPopupMenus["RAID_PLAYER"] = { "MUTE", "UNMUTE", "RAID_SILENCE", "RAID_UNSILENCE", "BATTLEGROUND_SILENCE", "BATTLEGROUND_UNSILENCE", "WHISPER", "INSPECT", "ACHIEVEMENTS", "TRADE", "FOLLOW", "DUEL", "RAID_TARGET_ICON", "RAID_LEADER", "RAID_PROMOTE", "RAID_DEMOTE", "LOOT_PROMOTE", "RAID_REMOVE", "PVP_REPORT_AFK", "RAF_SUMMON", "RAF_GRANT_LEVEL", "CANCEL" }
-  UnitPopupMenus["RAID"] = { "MUTE", "UNMUTE", "RAID_SILENCE", "RAID_UNSILENCE", "BATTLEGROUND_SILENCE", "BATTLEGROUND_UNSILENCE", "RAID_LEADER", "RAID_PROMOTE", "RAID_MAINTANK", "RAID_MAINASSIST", "LOOT_PROMOTE", "RAID_DEMOTE", "RAID_REMOVE", "PVP_REPORT_AFK", "CANCEL" }
-  UnitPopupMenus["VEHICLE"] = { "RAID_TARGET_ICON", "VEHICLE_LEAVE", "CANCEL" }
-  UnitPopupMenus["TARGET"] = { "RAID_TARGET_ICON", "CANCEL" }
-  UnitPopupMenus["FOCUS"] = { "RAID_TARGET_ICON", "CANCEL" }
+  -- First level menus
+  UnitPopupMenus["SELF"] = { "PVP_FLAG", "LOOT_METHOD", "LOOT_THRESHOLD", "OPT_OUT_LOOT_TITLE", "LOOT_PROMOTE", "DUNGEON_DIFFICULTY", "RESET_INSTANCES", "RAID_TARGET_ICON", "LEAVE", "CANCEL" };
+  UnitPopupMenus["PET"] = { "PET_PAPERDOLL", "PET_RENAME", "PET_ABANDON", "PET_DISMISS", "CANCEL" };
+  UnitPopupMenus["PARTY"] = { "MUTE", "UNMUTE", "PARTY_SILENCE", "PARTY_UNSILENCE", "RAID_SILENCE", "RAID_UNSILENCE", "BATTLEGROUND_SILENCE", "BATTLEGROUND_UNSILENCE", "WHISPER", "PROMOTE", "LOOT_PROMOTE", "UNINVITE", "INSPECT", "ACHIEVEMENTS", "TRADE", "FOLLOW", "DUEL", "RAID_TARGET_ICON", "PVP_REPORT_AFK", "RAF_SUMMON", "RAF_GRANT_LEVEL", "CANCEL" };
+  UnitPopupMenus["PLAYER"] = { "WHISPER", "INSPECT", "INVITE", "ACHIEVEMENTS", "TRADE", "FOLLOW", "DUEL", "RAID_TARGET_ICON", "RAF_SUMMON", "RAF_GRANT_LEVEL", "CANCEL" };
+  UnitPopupMenus["RAID_PLAYER"] = { "MUTE", "UNMUTE", "RAID_SILENCE", "RAID_UNSILENCE", "BATTLEGROUND_SILENCE", "BATTLEGROUND_UNSILENCE", "WHISPER", "INSPECT", "ACHIEVEMENTS", "TRADE", "FOLLOW", "DUEL", "RAID_TARGET_ICON", "RAID_LEADER", "RAID_PROMOTE", "RAID_DEMOTE", "LOOT_PROMOTE", "RAID_REMOVE", "PVP_REPORT_AFK", "RAF_SUMMON", "RAF_GRANT_LEVEL", "CANCEL" };
+  UnitPopupMenus["RAID"] = { "MUTE", "UNMUTE", "RAID_SILENCE", "RAID_UNSILENCE", "BATTLEGROUND_SILENCE", "BATTLEGROUND_UNSILENCE", "RAID_LEADER", "RAID_PROMOTE", "RAID_MAINTANK", "RAID_MAINASSIST", "LOOT_PROMOTE", "RAID_DEMOTE", "RAID_REMOVE", "PVP_REPORT_AFK", "CANCEL" };
+  UnitPopupMenus["FRIEND"] = { "WHISPER", "INVITE", "TARGET", "IGNORE", "REPORT_SPAM", "GUILD_PROMOTE", "GUILD_LEAVE", "PVP_REPORT_AFK", "CANCEL" };
+  UnitPopupMenus["TEAM"] = { "WHISPER", "INVITE", "TARGET", "TEAM_PROMOTE", "TEAM_KICK", "TEAM_LEAVE", "CANCEL" };
+  UnitPopupMenus["RAID_TARGET_ICON"] = { "RAID_TARGET_1", "RAID_TARGET_2", "RAID_TARGET_3", "RAID_TARGET_4", "RAID_TARGET_5", "RAID_TARGET_6", "RAID_TARGET_7", "RAID_TARGET_8", "RAID_TARGET_NONE" };
+  UnitPopupMenus["CHAT_ROSTER"] = { "WHISPER", "TARGET", "MUTE", "UNMUTE", "CHAT_SILENCE", "CHAT_UNSILENCE", "CHAT_PROMOTE", "CHAT_DEMOTE", "CHAT_OWNER", "CANCEL"  };
+  UnitPopupMenus["VEHICLE"] = { "RAID_TARGET_ICON", "VEHICLE_LEAVE", "CANCEL" };
+  UnitPopupMenus["TARGET"] = { "RAID_TARGET_ICON", "CANCEL" };
+  UnitPopupMenus["ARENAENEMY"] = { "CANCEL" };
+  UnitPopupMenus["FOCUS"] = { "CLEAR_FOCUS", "LOCK_FOCUS_FRAME", "UNLOCK_FOCUS_FRAME", "RAID_TARGET_ICON", "CANCEL" };
+  
+  -- Second level menus
+  UnitPopupMenus["PVP_FLAG"] = { "PVP_ENABLE", "PVP_DISABLE"};
+  UnitPopupMenus["LOOT_METHOD"] = { "FREE_FOR_ALL", "ROUND_ROBIN", "MASTER_LOOTER", "GROUP_LOOT", "NEED_BEFORE_GREED", "CANCEL" };
+  UnitPopupMenus["LOOT_THRESHOLD"] = { "ITEM_QUALITY2_DESC", "ITEM_QUALITY3_DESC", "ITEM_QUALITY4_DESC", "CANCEL" };
+  UnitPopupMenus["OPT_OUT_LOOT_TITLE"] = { "OPT_OUT_LOOT_ENABLE", "OPT_OUT_LOOT_DISABLE"};
+  UnitPopupMenus["DUNGEON_DIFFICULTY"] = { "DUNGEON_DIFFICULTY1", "DUNGEON_DIFFICULTY2" };
   
   --position deathknight runes
   RuneButtonIndividual1:ClearAllPoints()
@@ -383,10 +396,16 @@
     orb.bg:SetTexture("Interface\\AddOns\\rTextures\\orb_back2.tga")
     orb.bg:SetAllPoints(orb)
     orb.Filling = orb:CreateTexture(nil, "ARTWORK")
-    orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling4.tga")
+    if type == "power" then
+      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling6.tga")
+    else
+      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling6.tga")
+    end
     orb.Filling:SetPoint("BOTTOMLEFT",0,0)
     orb.Filling:SetWidth(orbsize)
     orb.Filling:SetHeight(orbsize)
+    --orb.Filling:SetBlendMode("add")
+    orb.Filling:SetAlpha(1)
     orbGlossHolder = CreateFrame("Frame", nil, orb)
     orbGlossHolder:SetAllPoints(orb)
     orbGlossHolder:SetFrameStrata("LOW")
@@ -411,8 +430,10 @@
         if automana == 1 then
           orbGlossHolder:RegisterEvent("UNIT_ENTERED_VEHICLE")
           orbGlossHolder:RegisterEvent("UNIT_EXITED_VEHICLE")
-          orbGlossHolder:SetScript("OnEvent", function(_,event)
-            check_vehicle_mana(self,event)
+          orbGlossHolder:SetScript("OnEvent", function(_,event,arg1)
+            if arg1 == "player" then
+              check_vehicle_mana(self,event)
+            end
           end)
         end
       else
@@ -502,15 +523,24 @@
   --aura icon func
   local function d3o2_createAuraIcon(self, button, icons, index, debuff)
     button.cd:SetReverse()
-    button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-    button.count:SetPoint("BOTTOMRIGHT", button, 1, 0)
+    button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+    button.count:SetPoint("BOTTOMRIGHT", button, 2, -2)
     button.count:SetTextColor(0.7,0.7,0.7)
+    --fix the count on aurawatch, make the count fontsize button size dependend
+    button.count:SetFont(d3font,button:GetWidth()/1.5,"THINOUTLINE")
     self.ButtonOverlay = button:CreateTexture(nil, "OVERLAY")
     self.ButtonOverlay:SetTexture("Interface\\AddOns\\rTextures\\gloss2.tga")
     self.ButtonOverlay:SetVertexColor(0.37,0.3,0.3,1);
     self.ButtonOverlay:SetParent(button)
     self.ButtonOverlay:SetPoint("TOPLEFT", -1, 1)
     self.ButtonOverlay:SetPoint("BOTTOMRIGHT", 1, -1)  
+    
+    local back = button:CreateTexture(nil, "BACKGROUND")
+    back:SetPoint("TOPLEFT",button.icon,"TOPLEFT",-4,4)
+    back:SetPoint("BOTTOMRIGHT",button.icon,"BOTTOMRIGHT",4,-4)
+    back:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_glow")
+    back:SetVertexColor(0, 0, 0, 1)
+    
   end
   
   --buff func
@@ -593,6 +623,26 @@
     self.Castbar.Text:SetPoint("LEFT", 2, 0)
     self.Castbar.Time = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
     self.Castbar.Time:SetPoint("RIGHT", -2, 0)
+    --icon
+    self.Castbar.Icon = self.Castbar:CreateTexture(nil, "BORDER")
+    self.Castbar.Icon:SetWidth(32)
+    self.Castbar.Icon:SetHeight(32)
+    self.Castbar.Icon:SetPoint("LEFT", -77, 0)
+    self.Castbar.Icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+    
+    self.Castbar.IconBack = self.Castbar:CreateTexture(nil, "BACKGROUND")
+    self.Castbar.IconBack:SetPoint("TOPLEFT",self.Castbar.Icon,"TOPLEFT",-5,5)
+    self.Castbar.IconBack:SetPoint("BOTTOMRIGHT",self.Castbar.Icon,"BOTTOMRIGHT",5,-5)
+    self.Castbar.IconBack:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_glow")
+    self.Castbar.IconBack:SetVertexColor(0, 0, 0, 1)
+    
+    self.Castbar.IconOverlay = self.Castbar:CreateTexture(nil, "OVERLAY")
+    self.Castbar.IconOverlay:SetTexture("Interface\\AddOns\\rTextures\\gloss2.tga")
+    self.Castbar.IconOverlay:SetVertexColor(0.37,0.3,0.3,1);
+    self.Castbar.IconOverlay:SetPoint("TOPLEFT", self.Castbar.Icon, "TOPLEFT", -1, 1)
+    self.Castbar.IconOverlay:SetPoint("BOTTOMRIGHT", self.Castbar.Icon, "BOTTOMRIGHT", 1, -1)  
+    
+    
     self.Castbar:SetScale(targetscale)
   
   end
@@ -600,14 +650,14 @@
   --lowhp func
   local function d3o2_createLowHP(self,unit)
     if unit == "player" then
-      self.LowHP = self.Health:CreateTexture(nil, "OVERLAY")
+      self.LowHP = self.Health:CreateTexture(nil, "ARTWORK")
       self.LowHP:SetAllPoints(self.Health)
       self.LowHP:SetTexture("Interface\\AddOns\\rTextures\\orb_lowhp_glow.tga")
       self.LowHP:SetBlendMode("BLEND")
       self.LowHP:SetVertexColor(1, 0, 0, 1)
       self.LowHP:Hide()
     elseif unit == "target" then
-      self.LowHP = self.Health:CreateTexture(nil, "OVERLAY")
+      self.LowHP = self.Health:CreateTexture(nil, "ARTWORK")
       self.LowHP:SetWidth(505)
       self.LowHP:SetHeight(115)
       self.LowHP:SetPoint("CENTER",-3,0)
@@ -617,7 +667,7 @@
       self.LowHP:SetAlpha(0.8)
       self.LowHP:Hide()    
     else
-      self.LowHP = self.Health:CreateTexture(nil, "OVERLAY")
+      self.LowHP = self.Health:CreateTexture(nil, "ARTWORK")
       self.LowHP:SetWidth(250)
       self.LowHP:SetHeight(115)
       self.LowHP:SetPoint("CENTER",-2,0)
@@ -674,12 +724,31 @@
     end
   end
   
+  --create the elite head texture
+  local bubblehead
+  local function d3o2_createBubbleHead(self,unit)
+    local headsize = 100
+    local head = self.Health:CreateTexture(nil,"OVERLAY")
+    head:SetTexture("Interface\\AddOns\\rTextures\\d3_head_trans")
+    head:SetWidth(headsize)
+    head:SetHeight(headsize/2)
+    head:SetPoint("TOP",0,-6)
+    bubblehead = head
+    bubblehead:Hide()
+  end
+  
   --create portraits func
   local function d3o2_createPortraits(self,unit)
     self.Portrait_bgf = CreateFrame("Frame",nil,self)
     self.Portrait_bgf:SetPoint("BOTTOM",self.Health,"TOP",0,14)
     self.Portrait_bgf:SetWidth(self:GetWidth()+10)
     self.Portrait_bgf:SetHeight(self:GetWidth()+10)  
+    
+    local back = self.Portrait_bgf:CreateTexture(nil, "BACKGROUND")
+    back:SetPoint("TOPLEFT",self.Portrait_bgf,"TOPLEFT",-15,15)
+    back:SetPoint("BOTTOMRIGHT",self.Portrait_bgf,"BOTTOMRIGHT",15,-15)
+    back:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_glow")
+    back:SetVertexColor(0, 0, 0, 0.7)
     
     self.Portrait_bgt = self.Portrait_bgf:CreateTexture(nil, "BACKGROUND")
     self.Portrait_bgt:SetAllPoints(self.Portrait_bgf)
@@ -780,8 +849,18 @@
     self.CPoints = SetFontString(self.Health, d3font, 24, "THINOUTLINE")
     self.CPoints:SetPoint("LEFT", self.Name, "RIGHT", 5, -1)
     self.CPoints:SetTextColor(1, .5, 0)
-    self.CPoints.unit = "player"
+    self.CPoints.unit = PlayerFrame.unit
   end
+  
+  --thanks to p3lim for this one
+  --it does fix the vehicle combopoints
+  local function updateCPoints(self, event, unit)
+  	if(unit == PlayerFrame.unit) and (unit ~= self.CPoints.unit) then
+  		self.CPoints.unit = unit
+  		--am("ding "..unit)
+  	end
+  end
+  
   
   -----------------------------
   -- CUSTOM TAGS
@@ -790,8 +869,8 @@
   oUF.Tags["[d3o2name]"] = function(unit) 
     local tmpunitname = UnitName(unit)      
     if unit == "target" then
-      if tmpunitname:len() > 24 then
-        tmpunitname = tmpunitname:sub(1, 24).."..."
+      if tmpunitname:len() > 20 then
+        tmpunitname = tmpunitname:sub(1, 20).."..."
       end
     else
       if tmpunitname:len() > 16 then
@@ -855,6 +934,7 @@
   oUF.TagEvents["[d3o2absmp]"] = "UNIT_ENERGY UNIT_FOCUS UNIT_MANA UNIT_RAGE UNIT_RUNIC_POWER"
   
   oUF.Tags["[d3o2classtext]"] = function(unit) 
+    bubblehead:Hide()
     local string, tmpstring, sp = "", "", " "
     if UnitLevel(unit) ~= -1 then
       string = UnitLevel(unit)
@@ -873,13 +953,19 @@
     local unit_classification = UnitClassification(unit)    
     if unit_classification == "worldboss" then
       tmpstring = "Boss"
-    elseif unit_classification == "rare" then
+      bubblehead:Show()
+      bubblehead:SetTexture("Interface\\AddOns\\rTextures\\d3_head_skull")
+    elseif unit_classification == "rare" or unit_classification == "rareelite" then
       tmpstring = "Rare"
-      if UnitIsPlusMob(unit) then
+      bubblehead:Show()
+      bubblehead:SetTexture("Interface\\AddOns\\rTextures\\d3_head_diablo")
+      if unit_classification == "rareelite" then
         tmpstring = tmpstring.." Elite"
       end
     elseif unit_classification == "elite" then
       tmpstring = "Elite"
+      bubblehead:Show()
+      bubblehead:SetTexture("Interface\\AddOns\\rTextures\\d3_head_garg")
     end    
     if tmpstring ~= "" then
       tmpstring = tmpstring..sp  
@@ -944,7 +1030,7 @@
     d3o2_createHealthPowerFrames(self,unit)
     d3o2_createBuffs(self,unit)
     d3o2_createDebuffs(self,unit)
-    
+    d3o2_createBubbleHead(self,unit)
     local name = SetFontString(self, d3font, 20, "THINOUTLINE")
     name:SetPoint("BOTTOM", self, "TOP", 0, 30)
     local hpval = SetFontString(self.Health, d3font, 14, "THINOUTLINE")
@@ -961,6 +1047,7 @@
     d3o2_createDebuffGlow(self,unit)
     d3o2_createIcons(self,unit)
     d3o2_createComboPoints(self,unit)
+    self:RegisterEvent('UNIT_COMBO_POINTS', updateCPoints)
     
     self.PostUpdateHealth = d3o2_updateHealth
     self.PostUpdatePower = d3o2_updatePower
@@ -1020,6 +1107,13 @@
     self.PostUpdatePower = d3o2_updatePower
     self.PostCreateAuraIcon = d3o2_createAuraIcon
     self:SetScale(focusscale)
+    
+    if (not unit) then
+      self.Range = true
+      self.outsideRangeAlpha = 0.6
+      self.inRangeAlpha = 1
+    end
+    
   end
   
 
@@ -1050,7 +1144,17 @@
   local party  = oUF:Spawn("header", "oUF_Party")
   party:SetPoint(tabvalues.frame_positions[7].a1, tabvalues.frame_positions[7].af, tabvalues.frame_positions[7].a2, tabvalues.frame_positions[7].x, tabvalues.frame_positions[7].y)
   --party:SetManyAttributes("showParty", true, "xOffset", 10, "point", "RIGHT", "showPlayer", false)
-  party:SetManyAttributes("showParty", true, "xOffset", 80, "point", "LEFT")
+  party:SetManyAttributes("showParty", true, "xOffset", 80, "point", "LEFT", "showPlayer", true)
+  
+  local arena = {}
+  for i = 1, 5 do
+  	arena[i] = oUF:Spawn("arena"..i, "oUF_D3Orbs2_Arena"..i)
+  	if i == 1 then
+  		arena[i]:SetPoint(tabvalues.frame_positions[7].a1, tabvalues.frame_positions[7].af, tabvalues.frame_positions[7].a2, tabvalues.frame_positions[7].x, tabvalues.frame_positions[7].y)
+  	else
+  		arena[i]:SetPoint("RIGHT", arena[i-1], "LEFT", 80, 0)
+  	end
+  end
  
   -------------------------------------------------------
   -- TOGGLE PARTY IN RAID (CURRENTLY NO)

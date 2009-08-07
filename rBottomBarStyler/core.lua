@@ -41,25 +41,34 @@
   local default_manaorb = 3
   local default_automana = 1
   
+  local usegalaxy = 1
+  
   local default_font = NAMEPLATE_FONT
   rBottomBarStyler = rBottomBarStyler or {}
   local frame_to_scale
   local bar_to_show
   local hglow1, hglow2, mglow1, mglow2, hfill, mfill
+  local hgal1,hgal2,hgal3,mgal1,mgal2,mgal3
   local frame_to_drag
   local fog_smoother = 1.3
   local text_display = 1
   local save_dudustance
   
   local orbtab = {
-    [1] = {r = 0.3, g = 0, b = 0, scale = 0.8, z = -12, x = 0.8, y = -1.7, anim = "SPELLS\\RedRadiationFog.m2"}, -- red
-    [2] = {r = 0, g = 0.3, b = 0.1, scale = 0.75, z = -12, x = 0, y = -1.1, anim = "SPELLS\\GreenRadiationFog.m2"}, -- green
-    [3] = {r = 0, g = 0.2,   b = 0.3, scale = 0.75, z = -12, x = 1.2, y = -1, anim = "SPELLS\\BlueRadiationFog.m2"}, -- blue
-    [4] = {r = 0.4, g = 0.3, b = 0, scale = 0.75, z = -12, x = -0.3, y = -1.2, anim = "SPELLS\\OrangeRadiationFog.m2"}, -- yellow
-    [5] = {r = 0, g = 0.7,   b = 0.7, scale = 0.9, z = -12, x = -0.5, y = -0.8, anim = "SPELLS\\WhiteRadiationFog.m2"}, -- runic
+    [1] = {r = 0.8, g = 0, b = 0, scale = 0.8, z = -12, x = 0.8, y = -1.7, anim = "SPELLS\\RedRadiationFog.m2"}, -- red
+    [2] = {r = 0.2, g = 0.8, b = 0, scale = 0.75, z = -12, x = 0, y = -1.1, anim = "SPELLS\\GreenRadiationFog.m2"}, -- green
+    [3] = {r = 0, g = 0.35,   b = 0.9, scale = 0.75, z = -12, x = 1.2, y = -1, anim = "SPELLS\\BlueRadiationFog.m2"}, -- blue
+    [4] = {r = 0.9, g = 0.7, b = 0.1, scale = 0.75, z = -12, x = -0.3, y = -1.2, anim = "SPELLS\\OrangeRadiationFog.m2"}, -- yellow
+    [5] = {r = 0.1, g = 0.8,   b = 0.7, scale = 0.9, z = -12, x = -0.5, y = -0.8, anim = "SPELLS\\WhiteRadiationFog.m2"}, -- runic
   }
   
-  UnitPopupMenus["SELF"] = { "PVP_FLAG", "LOOT_METHOD", "LOOT_THRESHOLD", "OPT_OUT_LOOT_TITLE", "LOOT_PROMOTE", "DUNGEON_DIFFICULTY", "RESET_INSTANCES", "RAID_TARGET_ICON", "LEAVE", "CANCEL" }
+  local galaxytab = {
+    [1] = {r = 0.90, g = 0.1, b = 0.1, }, -- red
+    [2] = {r = 0.25, g = 0.9, b = 0.25, }, -- green
+    [3] = {r = 0, g = 0.35,   b = 0.9, }, -- blue
+    [4] = {r = 0.9, g = 0.8, b = 0.35, }, -- yellow
+    [5] = {r = 0.35, g = 0.9,   b = 0.9, }, -- runic
+  }
   
   ------------------------------------------------------
   -- / CHAT OUTPUT FUNC / --
@@ -181,34 +190,52 @@
   
   local function set_the_hglows()
     hfill:SetVertexColor(orbtab[rBottomBarStyler.healthorb].r,orbtab[rBottomBarStyler.healthorb].g,orbtab[rBottomBarStyler.healthorb].b)
-    hglow1:SetModel(orbtab[rBottomBarStyler.healthorb].anim)
-    hglow1:SetModelScale(orbtab[rBottomBarStyler.healthorb].scale)
-    hglow1:SetPosition(orbtab[rBottomBarStyler.healthorb].z, orbtab[rBottomBarStyler.healthorb].x, orbtab[rBottomBarStyler.healthorb].y) 
-    hglow2:SetModel(orbtab[rBottomBarStyler.healthorb].anim)
-    hglow2:SetModelScale(orbtab[rBottomBarStyler.healthorb].scale)
-    hglow2:SetPosition(orbtab[rBottomBarStyler.healthorb].z, orbtab[rBottomBarStyler.healthorb].x, orbtab[rBottomBarStyler.healthorb].y+1) 
+    if usegalaxy == 1 then
+      hgal1.t:SetVertexColor(galaxytab[rBottomBarStyler.healthorb].r,galaxytab[rBottomBarStyler.healthorb].g,galaxytab[rBottomBarStyler.healthorb].b)
+      hgal2.t:SetVertexColor(galaxytab[rBottomBarStyler.healthorb].r,galaxytab[rBottomBarStyler.healthorb].g,galaxytab[rBottomBarStyler.healthorb].b)
+      hgal3.t:SetVertexColor(galaxytab[rBottomBarStyler.healthorb].r,galaxytab[rBottomBarStyler.healthorb].g,galaxytab[rBottomBarStyler.healthorb].b)
+    else
+      hglow1:SetModel(orbtab[rBottomBarStyler.healthorb].anim)
+      hglow1:SetModelScale(orbtab[rBottomBarStyler.healthorb].scale)
+      hglow1:SetPosition(orbtab[rBottomBarStyler.healthorb].z, orbtab[rBottomBarStyler.healthorb].x, orbtab[rBottomBarStyler.healthorb].y) 
+      hglow2:SetModel(orbtab[rBottomBarStyler.healthorb].anim)
+      hglow2:SetModelScale(orbtab[rBottomBarStyler.healthorb].scale)
+      hglow2:SetPosition(orbtab[rBottomBarStyler.healthorb].z, orbtab[rBottomBarStyler.healthorb].x, orbtab[rBottomBarStyler.healthorb].y+1) 
+    end
   end
 
   local function set_the_mglows()
     mfill:SetVertexColor(orbtab[rBottomBarStyler.manaorb].r,orbtab[rBottomBarStyler.manaorb].g,orbtab[rBottomBarStyler.manaorb].b)
-    mglow1:SetModel(orbtab[rBottomBarStyler.manaorb].anim)
-    mglow1:SetModelScale(orbtab[rBottomBarStyler.manaorb].scale)
-    mglow1:SetPosition(orbtab[rBottomBarStyler.manaorb].z, orbtab[rBottomBarStyler.manaorb].x, orbtab[rBottomBarStyler.manaorb].y) 
-    mglow2:SetModel(orbtab[rBottomBarStyler.manaorb].anim)
-    mglow2:SetModelScale(orbtab[rBottomBarStyler.manaorb].scale)
-    mglow2:SetPosition(orbtab[rBottomBarStyler.manaorb].z, orbtab[rBottomBarStyler.manaorb].x, orbtab[rBottomBarStyler.manaorb].y+1) 
-  end
-
-  local function set_the_shapeshift_mglows()
-    local st = GetShapeshiftForm()
-    if st ~= save_dudustance then
-      mfill:SetVertexColor(orbtab[rBottomBarStyler.manaorb].r,orbtab[rBottomBarStyler.manaorb].g,orbtab[rBottomBarStyler.manaorb].b)
+    if usegalaxy == 1 then
+      mgal1.t:SetVertexColor(galaxytab[rBottomBarStyler.manaorb].r,galaxytab[rBottomBarStyler.manaorb].g,galaxytab[rBottomBarStyler.manaorb].b)
+      mgal2.t:SetVertexColor(galaxytab[rBottomBarStyler.manaorb].r,galaxytab[rBottomBarStyler.manaorb].g,galaxytab[rBottomBarStyler.manaorb].b)
+      mgal3.t:SetVertexColor(galaxytab[rBottomBarStyler.manaorb].r,galaxytab[rBottomBarStyler.manaorb].g,galaxytab[rBottomBarStyler.manaorb].b)
+    else
       mglow1:SetModel(orbtab[rBottomBarStyler.manaorb].anim)
       mglow1:SetModelScale(orbtab[rBottomBarStyler.manaorb].scale)
       mglow1:SetPosition(orbtab[rBottomBarStyler.manaorb].z, orbtab[rBottomBarStyler.manaorb].x, orbtab[rBottomBarStyler.manaorb].y) 
       mglow2:SetModel(orbtab[rBottomBarStyler.manaorb].anim)
       mglow2:SetModelScale(orbtab[rBottomBarStyler.manaorb].scale)
       mglow2:SetPosition(orbtab[rBottomBarStyler.manaorb].z, orbtab[rBottomBarStyler.manaorb].x, orbtab[rBottomBarStyler.manaorb].y+1) 
+    end
+  end
+
+  local function set_the_shapeshift_mglows()
+    local st = GetShapeshiftForm()
+    if st ~= save_dudustance then
+      mfill:SetVertexColor(orbtab[rBottomBarStyler.manaorb].r,orbtab[rBottomBarStyler.manaorb].g,orbtab[rBottomBarStyler.manaorb].b)
+      if usegalaxy == 1 then
+        mgal1.t:SetVertexColor(galaxytab[rBottomBarStyler.manaorb].r,galaxytab[rBottomBarStyler.manaorb].g,galaxytab[rBottomBarStyler.manaorb].b)
+        mgal2.t:SetVertexColor(galaxytab[rBottomBarStyler.manaorb].r,galaxytab[rBottomBarStyler.manaorb].g,galaxytab[rBottomBarStyler.manaorb].b)
+        mgal3.t:SetVertexColor(galaxytab[rBottomBarStyler.manaorb].r,galaxytab[rBottomBarStyler.manaorb].g,galaxytab[rBottomBarStyler.manaorb].b)
+      else
+        mglow1:SetModel(orbtab[rBottomBarStyler.manaorb].anim)
+        mglow1:SetModelScale(orbtab[rBottomBarStyler.manaorb].scale)
+        mglow1:SetPosition(orbtab[rBottomBarStyler.manaorb].z, orbtab[rBottomBarStyler.manaorb].x, orbtab[rBottomBarStyler.manaorb].y) 
+        mglow2:SetModel(orbtab[rBottomBarStyler.manaorb].anim)
+        mglow2:SetModelScale(orbtab[rBottomBarStyler.manaorb].scale)
+        mglow2:SetPosition(orbtab[rBottomBarStyler.manaorb].z, orbtab[rBottomBarStyler.manaorb].x, orbtab[rBottomBarStyler.manaorb].y+1) 
+      end
       save_dudustance = st
     end
   end
@@ -232,6 +259,51 @@
       glow:SetPosition(orbtab[useorb].z, orbtab[useorb].x, orbtab[useorb].y+pos) 
     end)
     return glow
+  end
+  
+  ------------------------------------------------------
+  -- / CREATE ME A ORB GALAXY FUNC / --
+  ------------------------------------------------------
+  local function create_me_a_galaxy(f,x,y,size,alpha,dur,tex,useorb)
+    local h = CreateFrame("Frame",nil,f)
+    h:SetHeight(size)
+    h:SetWidth(size)		  
+    h:SetPoint("CENTER",x,y-10)
+    h:SetAlpha(alpha)
+    h:SetFrameLevel(5)
+  
+    local t = h:CreateTexture()
+    t:SetAllPoints(h)
+    t:SetTexture("Interface\\AddOns\\rBottomBarStyler\\orbtex\\"..tex)
+    t:SetBlendMode("ADD")
+    t:SetVertexColor(galaxytab[useorb].r,galaxytab[useorb].g,galaxytab[useorb].b)
+    h.t = t
+    
+    local ag = h:CreateAnimationGroup()
+    h.ag = ag
+    
+    local a1 = h.ag:CreateAnimation("Rotation")
+    a1:SetDegrees(360)
+    a1:SetDuration(dur)
+    h.ag.a1 = a1
+    
+    h:SetScript("OnUpdate",function(self,elapsed)
+      local t = self.total
+      if (not t) then
+        self.total = 0
+        return
+      end
+      t = t + elapsed
+      if (t<1) then
+        self.total = t
+        return
+      else
+        h.ag:Play()
+      end
+    end)
+    
+    return h
+  
   end
 
   ------------------------------------------------------
@@ -314,8 +386,15 @@
         end
         orb1_fill:SetHeight((uh/uhm) * orb1_fill:GetWidth())
         orb1_fill:SetTexCoord(0,1,  math.abs(uh/uhm - 1),1)
-        glow1:SetAlpha((uh / uhm)/fog_smoother)
-        glow2:SetAlpha((uh / uhm)/fog_smoother)
+        
+        if usegalaxy == 1 then
+          hgal1:SetAlpha(uh / uhm)
+          hgal2:SetAlpha(uh / uhm)
+          hgal3:SetAlpha(uh / uhm)
+        else
+          glow1:SetAlpha((uh / uhm)/fog_smoother)
+          glow2:SetAlpha((uh / uhm)/fog_smoother)
+        end
       end
     end)
     orb1:RegisterEvent("UNIT_HEALTH")
@@ -349,8 +428,15 @@
         end
         orb2_fill:SetHeight((um/umm) * orb2_fill:GetWidth())
         orb2_fill:SetTexCoord(0,1,  math.abs(um/umm - 1),1)
-        glow1:SetAlpha((um / umm)/fog_smoother)
-        glow2:SetAlpha((um / umm)/fog_smoother)
+        
+        if usegalaxy == 1 then
+          mgal1:SetAlpha(um / umm)
+          mgal2:SetAlpha(um / umm)
+          mgal3:SetAlpha(um / umm)
+        else
+          glow1:SetAlpha((um / umm)/fog_smoother)
+          glow2:SetAlpha((um / umm)/fog_smoother)
+        end
       end
     end)
     orb2:RegisterEvent("UNIT_MANA")
@@ -404,17 +490,29 @@
     if orbtype == "life" then
       orb1_fill:SetVertexColor(orbtab[useorb].r,orbtab[useorb].g,orbtab[useorb].b)
       hfill = orb1_fill
-      glow1 = create_me_a_orb_glow(orb1,useorb,0)
-      glow2 = create_me_a_orb_glow(orb1,useorb,1)
-      hglow1 = glow1
-      hglow2 = glow2
+      if usegalaxy == 1 then
+        hgal1 = create_me_a_galaxy(orb1,0,15,110,1,35,"galaxy2",useorb)
+        hgal2 = create_me_a_galaxy(orb1,0,-10,150,1,45,"galaxy",useorb)
+        hgal3 = create_me_a_galaxy(orb1,-10,-10,130,1,18,"galaxy3",useorb)
+      else
+        glow1 = create_me_a_orb_glow(orb1,useorb,0)
+        glow2 = create_me_a_orb_glow(orb1,useorb,1)
+        hglow1 = glow1
+        hglow2 = glow2
+      end
     else
       orb1_fill:SetVertexColor(orbtab[useorb].r,orbtab[useorb].g,orbtab[useorb].b)
       mfill = orb1_fill
-      glow1 = create_me_a_orb_glow(orb1,useorb,0)
-      glow2 = create_me_a_orb_glow(orb1,useorb,1)
-      mglow1 = glow1
-      mglow2 = glow2
+      if usegalaxy == 1 then
+        mgal1 = create_me_a_galaxy(orb1,0,10,110,1,40,"galaxy2",useorb)
+        mgal2 = create_me_a_galaxy(orb1,-10,-10,150,1,50,"galaxy",useorb)
+        mgal3 = create_me_a_galaxy(orb1,10,-10,130,1,20,"galaxy3",useorb)
+      else
+        glow1 = create_me_a_orb_glow(orb1,useorb,0)
+        glow2 = create_me_a_orb_glow(orb1,useorb,1)
+        mglow1 = glow1
+        mglow2 = glow2
+      end
     end
     local orb1_glossholder = create_me_a_frame("Frame",nil,orb1,"BACKGROUND",6,orbsize,orbsize,"BOTTOM",0,0,1)
     local orb1_gloss = create_me_a_texture(orb1_glossholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_gloss")
@@ -478,8 +576,8 @@
     local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",2,1024,256,"BOTTOM",0,0,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d1tex\\bar")
     --orbs
-    create_orb("life",160,holder,"BOTTOM",-290,120,1,"orb_filling4",rBottomBarStyler.healthorb)
-    create_orb("mana",160,holder,"BOTTOM",285,120,1,"orb_filling4",rBottomBarStyler.manaorb)
+    create_orb("life",160,holder,"BOTTOM",-290,120,1,"orb_filling8",rBottomBarStyler.healthorb)
+    create_orb("mana",160,holder,"BOTTOM",285,120,1,"orb_filling8",rBottomBarStyler.manaorb)
     --left figure
     local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,256,256,"BOTTOM",-320,35,0.9)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d1tex\\figure_left")
@@ -507,8 +605,8 @@
     local border_right = create_me_a_frame("Frame",nil,holder,"BACKGROUND",3,1024,512,"BOTTOMLEFT",40,0,1)
     local border_right_tex = create_me_a_texture(border_right,"BORDER","Interface\\AddOns\\rBottomBarStyler\\d2tex\\border_right")
     --orbs
-    create_orb("life",160,holder,"BOTTOM",-472,55,1,"orb_filling4",rBottomBarStyler.healthorb)
-    create_orb("mana",160,holder,"BOTTOM",465,55,1,"orb_filling4",rBottomBarStyler.manaorb)
+    create_orb("life",160,holder,"BOTTOM",-472,55,1,"orb_filling8",rBottomBarStyler.healthorb)
+    create_orb("mana",160,holder,"BOTTOM",465,55,1,"orb_filling8",rBottomBarStyler.manaorb)
     --left figure
     local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,256,256,"BOTTOM",-453,44,1)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d2tex\\figure_left")
@@ -532,8 +630,8 @@
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\"..rBottomBarStyler.barvalue)
     bar_to_show = bar_tex   
     --orbs
-    create_orb("life",200,holder,"BOTTOM",-525,-6,1,"orb_filling4",rBottomBarStyler.healthorb)
-    create_orb("mana",200,holder,"BOTTOM",525,-6,1,"orb_filling4",rBottomBarStyler.manaorb)
+    create_orb("life",200,holder,"BOTTOM",-525,-6,1,"orb_filling8",rBottomBarStyler.healthorb)
+    create_orb("mana",200,holder,"BOTTOM",525,-6,1,"orb_filling8",rBottomBarStyler.manaorb)
     --xp
     local xpholder = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,1178,32,"BOTTOM",0,104,1)
     local xpholder_tex = create_me_a_texture(xpholder,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\d3tex\\xpbar")
@@ -588,8 +686,8 @@
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\"..rBottomBarStyler.barvalue)
     bar_to_show = bar_tex    
     --orbs
-    create_orb("life",150,holder,"BOTTOM",-260,-8,1,"orb_filling4",rBottomBarStyler.healthorb)
-    create_orb("mana",150,holder,"BOTTOM",260,-8,1,"orb_filling4",rBottomBarStyler.manaorb)    
+    create_orb("life",150,holder,"BOTTOM",-260,-8,1,"orb_filling8",rBottomBarStyler.healthorb)
+    create_orb("mana",150,holder,"BOTTOM",260,-8,1,"orb_filling8",rBottomBarStyler.manaorb)    
     --bottom
     local bottom = create_me_a_frame("Frame",nil,holder,"BACKGROUND",9,510,110,"BOTTOM",0,-5,1)
     local bottom_tex = create_me_a_texture(bottom,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\rothtex\\bottom")    
@@ -615,8 +713,8 @@
     local bar = create_me_a_frame("Frame",nil,holder,"BACKGROUND",2,512,128,"BOTTOM",0,10,1)
     local bar_tex = create_me_a_texture(bar,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\aiontex\\bar")
     --orbs
-    create_orb("life",125,holder,"BOTTOM",-245,20,1,"orb_filling4",rBottomBarStyler.healthorb)
-    create_orb("mana",125,holder,"BOTTOM",245,20,1,"orb_filling4",rBottomBarStyler.manaorb)
+    create_orb("life",125,holder,"BOTTOM",-245,20,1,"orb_filling8",rBottomBarStyler.healthorb)
+    create_orb("mana",125,holder,"BOTTOM",245,20,1,"orb_filling8",rBottomBarStyler.manaorb)
     --left figure
     local lefty = create_me_a_frame("Frame",nil,holder,"BACKGROUND",7,256,256,"BOTTOM",-250,-40,1)
     local lefty_tex = create_me_a_texture(lefty,"BACKGROUND","Interface\\AddOns\\rBottomBarStyler\\aiontex\\figure_left")

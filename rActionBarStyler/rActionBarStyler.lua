@@ -25,7 +25,7 @@
   -- bar1 and bar2 in 2x6 instead of 1x12
   -- 0 = 1x12
   -- 1 = 2x6
-  button_system = 1
+  button_system = 0
   
   -- bar settings
   -- you can make a bar visible on mouseover, make it movable or lock it from moving
@@ -65,11 +65,13 @@
   end
   move_shapeshift = 1
   lock_shapeshift = 0
+  hide_shapeshift = 0
   
   -- petbar
   petbar_on_mouseover = 0
   move_pet = 1
   lock_pet = 0
+  hide_pet = 0
 
   -- micromenu
   micromenu_on_mouseover = 1
@@ -110,7 +112,7 @@
     [8]  =  { a = "TOP",            x = 0,    y = 5   },  --micromenu
     [9]  =  { a = "BOTTOM",         x = 0,    y = 170 },  --petbar
     [10] =  { a = "BOTTOM",         x = 0,    y = 240 },  --shapeshift
-    [11] =  { a = "BOTTOM",         x = 0,    y = 290 },  --my own vehicle exit button
+    [11] =  { a = "BOTTOM",         x = 120,    y = 120 },  --my own vehicle exit button
   }
   
   ---------------------------------------------------
@@ -632,3 +634,12 @@
     fmicro:SetAlpha(0)
   end
    
+  if hide_shapeshift == 1 then
+    fshift:SetScale(0.001)
+    fshift:SetAlpha(0)
+  end
+   
+  if hide_pet == 1 then
+    fpet:SetScale(0.001)
+    fpet:SetAlpha(0)
+  end

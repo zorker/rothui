@@ -35,10 +35,10 @@
   --automatic mana detection on stance/class (only works with glows active)
   local automana = 1
   
-  --activate the orb glow
+  --activate the galaxy glow
   local usegalaxy = 1
 
-  --activate the orb glow
+  --activate the orb m2-file glow
   local useglow = 0
   
   --variable to lighten the orb glow. the higher the value, the lighter the glow gets.
@@ -49,7 +49,7 @@
   
   -- healthcolor defines what healthcolor will be used
   -- 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
-  local healthcolor = 1
+  local healthcolor = 2
 
   -- manacolor defines what manacolor will be used
   -- 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
@@ -64,7 +64,7 @@
   local usebar = 1
   
   local orbtab = {
-    [1] = {r = 0.6, g = 0, b = 0, scale = 0.8, z = -12, x = 0.8, y = -1.7, anim = "SPELLS\\RedRadiationFog.m2"}, -- red
+    [1] = {r = 0.8, g = 0, b = 0, scale = 0.8, z = -12, x = 0.8, y = -1.7, anim = "SPELLS\\RedRadiationFog.m2"}, -- red
     [2] = {r = 0.2, g = 0.8, b = 0, scale = 0.75, z = -12, x = 0, y = -1.1, anim = "SPELLS\\GreenRadiationFog.m2"}, -- green
     [3] = {r = 0, g = 0.35,   b = 0.9, scale = 0.75, z = -12, x = 1.2, y = -1, anim = "SPELLS\\BlueRadiationFog.m2"}, -- blue
     [4] = {r = 0.9, g = 0.7, b = 0.1, scale = 0.75, z = -12, x = -0.3, y = -1.2, anim = "SPELLS\\OrangeRadiationFog.m2"}, -- yellow
@@ -72,13 +72,17 @@
   }
   
   local galaxytab = {
-    [1] = {r = 0.90, g = 0.3, b = 0.3, }, -- red
-    [2] = {r = 0.35, g = 0.9, b = 0.35, }, -- green
+    [1] = {r = 0.90, g = 0.1, b = 0.1, }, -- red
+    [2] = {r = 0.25, g = 0.9, b = 0.25, }, -- green
     [3] = {r = 0, g = 0.35,   b = 0.9, }, -- blue
     [4] = {r = 0.9, g = 0.8, b = 0.35, }, -- yellow
     [5] = {r = 0.35, g = 0.9,   b = 0.9, }, -- runic
   }
   
+  local orbfilling_texture = "orb_filling8"
+  local statusbar128 = "Interface\\AddOns\\rTextures\\statusbar128"
+  local statusbar256 = "Interface\\AddOns\\rTextures\\statusbar256"
+
   local tabvalues = {
     power = {
       [-2] = rPowerBarColor["AMMO"], -- fuel
@@ -321,7 +325,7 @@
     else
       color = rFACTION_BAR_COLORS[UnitReaction(unit, "player")]
     end
-    bar:SetStatusBarColor(0.15,0.15,0.15,0.9)
+    bar:SetStatusBarColor(0.15,0.15,0.15,1)
     bar.bg:SetVertexColor(0.7,0,0,1)
     --if you like color colored background, use this
     --bar.bg:SetVertexColor(color.r, color.g, color.b,1)
@@ -345,7 +349,7 @@
     --else
     --  bar:SetAlpha(1)
       local color = tabvalues.power[UnitPowerType(unit)]
-      bar:SetStatusBarColor(color.r, color.g, color.b,0.9)
+      bar:SetStatusBarColor(color.r, color.g, color.b,1)
       bar.bg:SetVertexColor(color.r*0.3, color.g*0.3, color.b*0.3,1)
     --end
   end
@@ -472,9 +476,9 @@
     orb.bg:SetAllPoints(orb)
     orb.Filling = orb:CreateTexture(nil, "ARTWORK")
     if type == "power" then
-      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling4.tga")
+      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\"..orbfilling_texture)
     else
-      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling4.tga")
+      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\"..orbfilling_texture)
     end
     orb.Filling:SetPoint("BOTTOMLEFT",0,0)
     orb.Filling:SetWidth(orbsize)
@@ -542,7 +546,7 @@
       self.Health = orb
       self.Health.Filling = orb.Filling
       if usegalaxy == 1 then
-        self.gal1 = create_me_a_galaxy(orb,type,0,5,110,1,35,"galaxy2")
+        self.gal1 = create_me_a_galaxy(orb,type,0,15,110,1,35,"galaxy2")
         self.gal2 = create_me_a_galaxy(orb,type,0,-10,150,1,45,"galaxy")
         self.gal3 = create_me_a_galaxy(orb,type,-10,-10,130,1,18,"galaxy3")
         self.Health.Filling:SetVertexColor(orbtab[healthcolor].r,orbtab[healthcolor].g,orbtab[healthcolor].b)
@@ -569,7 +573,11 @@
   local function d3o2_createHealthPowerFrames(self,unit)
     --health
     self.Health = CreateFrame("StatusBar", nil, self)
-    self.Health:SetStatusBarTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
+    if unit == "target" then
+      self.Health:SetStatusBarTexture(statusbar256)
+    else
+      self.Health:SetStatusBarTexture(statusbar128)
+    end
     self.Health:SetHeight(16)
     self.Health:SetWidth(self:GetWidth())
     if unit == "target" or unit == "targettarget" then
@@ -584,7 +592,7 @@
       self.bg:SetHeight(128)
       self.bg:SetPoint("CENTER",-3,0)
       self.Health.bg = self.Health:CreateTexture(nil, "BACKGROUND")
-      self.Health.bg:SetTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
+      self.Health.bg:SetTexture(statusbar256)
       self.Health.bg:SetAllPoints(self.Health)    
     elseif unit == "targettarget" then
       self.bg = self:CreateTexture(nil, "BACKGROUND")
@@ -593,7 +601,7 @@
       self.bg:SetHeight(128)
       self.bg:SetPoint("CENTER",-2,0)
       self.Health.bg = self.Health:CreateTexture(nil, "BACKGROUND")
-      self.Health.bg:SetTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
+      self.Health.bg:SetTexture(statusbar128)
       self.Health.bg:SetAllPoints(self.Health)
     else
       self.bg = self:CreateTexture(nil, "BACKGROUND")
@@ -602,18 +610,26 @@
       self.bg:SetHeight(128)
       self.bg:SetPoint("BOTTOM",-2,-56)
       self.Health.bg = self.Health:CreateTexture(nil, "BACKGROUND")
-      self.Health.bg:SetTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
+      self.Health.bg:SetTexture(statusbar128)
       self.Health.bg:SetAllPoints(self.Health)    
     end  
     self.Health.Smooth = true
     --power    
     self.Power = CreateFrame("StatusBar", nil, self)
-    self.Power:SetStatusBarTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
+    if unit == "target" then
+      self.Power:SetStatusBarTexture(statusbar256)
+    else
+      self.Power:SetStatusBarTexture(statusbar128)
+    end
     self.Power:SetHeight(4)
     self.Power:SetWidth(self:GetWidth())
     self.Power:SetPoint("TOP", self.Health, "BOTTOM", 0, 0)
     self.Power.bg = self.Power:CreateTexture(nil, "BACKGROUND")
-    self.Power.bg:SetTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
+    if unit == "target" then
+      self.Power.bg:SetTexture(statusbar256)
+    else
+      self.Power.bg:SetTexture(statusbar128)
+    end
     self.Power.bg:SetAllPoints(self.Power)
     self.Power.Smooth = true
     if unit == "pet" then
@@ -701,17 +717,17 @@
     self.Castbar:SetFrameStrata("DIALOG")
     self.Castbar:SetWidth(224)
     self.Castbar:SetHeight(18)
-    self.Castbar:SetStatusBarTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
+    self.Castbar:SetStatusBarTexture(statusbar256)
     self.Castbar.bg2 = self.Castbar:CreateTexture(nil, "BACKGROUND")
     self.Castbar.bg2:SetTexture("Interface\\AddOns\\rTextures\\d3_targetframe.tga")
     self.Castbar.bg2:SetWidth(512)
     self.Castbar.bg2:SetHeight(128)
     self.Castbar.bg2:SetPoint("CENTER",-3,0)
     self.Castbar.bg = self.Castbar:CreateTexture(nil, "BORDER")
-    self.Castbar.bg:SetTexture("Interface\\AddOns\\rTextures\\statusbar.tga")
+    self.Castbar.bg:SetTexture(statusbar256)
     self.Castbar.bg:SetAllPoints(self.Castbar)
     self.Castbar.bg:SetVertexColor(180/255,110/255,30/255,1)
-    self.Castbar:SetStatusBarColor(0.15,0.15,0.15,0.9)
+    self.Castbar:SetStatusBarColor(0.15,0.15,0.15,1)
     if unit == "player" then
       self.Castbar:SetPoint(tabvalues.frame_positions[13].a1, tabvalues.frame_positions[13].af, tabvalues.frame_positions[13].a2, tabvalues.frame_positions[13].x, tabvalues.frame_positions[13].y)
     elseif unit == "target" then
@@ -722,8 +738,12 @@
     
     self.Castbar.Text = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
     self.Castbar.Text:SetPoint("LEFT", 2, 0)
-    self.Castbar.Time = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
-    self.Castbar.Time:SetPoint("RIGHT", -2, 0)
+    self.Castbar.Text:SetPoint("RIGHT", -2, 0)
+    self.Castbar.Text:SetJustifyH("LEFT")
+    
+    --self.Castbar.Time = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
+    --self.Castbar.Time:SetPoint("RIGHT", -2, 0)
+    
     --icon
     self.Castbar.Icon = self.Castbar:CreateTexture(nil, "BORDER")
     self.Castbar.Icon:SetWidth(32)

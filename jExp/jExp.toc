@@ -1,4 +1,4 @@
-## Interface: 30100
+## Interface: 30200
 ## Author: jin
 ## Title: jExp
 ## Notes: oUF_D3Orb (by roth) styled XP- and RepBar

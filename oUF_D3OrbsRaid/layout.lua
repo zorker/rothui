@@ -2,7 +2,9 @@
   -- config
   
   local size = 40
-  
+  local myname, _ = UnitName("player")
+  local _, myclass = UnitClass("player")
+  local d3font = "FONTS\\FRIZQT__.ttf"  
   
   -- config end
   
@@ -20,6 +22,69 @@
       string = v
     end  
     return string
+  end
+  
+  local function d3o2_createAuraWatch(self,unit)
+    local auras = CreateFrame("Frame", nil, self)
+    auras:SetAllPoints(self.Health)
+    local spellIDs = { 
+      48440, --reju
+      48443, --regrowth
+      48450, --lifebloom
+      53249, --wildgrowth
+      27808, --kel iceblock
+      32407, --strange aura
+      28408, --kel sheep heroic
+    }
+    
+    auras.presentAlpha = 1
+    auras.missingAlpha = 0
+    --auras.hideCooldown = true
+    --auras.PostCreateIcon = d3o2_createAuraIcon
+    auras.icons = {}
+    
+    for i, sid in pairs(spellIDs) do
+      local icon = CreateFrame("Frame", nil, auras)
+      icon.spellID = sid
+		  local cd = CreateFrame("Cooldown", nil, icon)
+		  cd:SetAllPoints(icon)
+		  cd:SetReverse()
+		  --cd:SetAlpha(0)
+		  icon.cd = cd
+      if i > 4 then
+        icon.anyUnit = true
+        icon:SetWidth(20)
+        icon:SetHeight(20)
+        icon:SetPoint("CENTER",0,0)
+      else
+        icon:SetWidth(10)
+        icon:SetHeight(10)
+        local tex = icon:CreateTexture(nil, "BACKGROUND")
+        tex:SetAllPoints(icon)
+        tex:SetTexture("Interface\\AddOns\\oUF_D3OrbsRaid\\indicator")
+        if i == 1 then
+          icon:SetPoint("BOTTOMLEFT",0,0)
+          tex:SetVertexColor(200/255,100/255,200/255)
+        elseif i == 2 then
+          icon:SetPoint("TOPLEFT",0,0)
+          tex:SetVertexColor(50/255,200/255,50/255)
+        elseif i == 3 then          
+          icon:SetPoint("TOPRIGHT",0,0)
+          tex:SetVertexColor(100/255,200/255,50/255)
+          local count = icon:CreateFontString(nil, "OVERLAY")
+          count:SetFont(NAMEPLATE_FONT,10,"THINOUTLINE")
+          count:SetPoint("CENTER", -6, 0)
+          --count:SetAlpha(0)
+          icon.count = count
+        elseif i == 4 then
+          icon:SetPoint("BOTTOMRIGHT",0,0)
+          tex:SetVertexColor(200/255,100/255,0/255)
+        end
+        icon.icon = tex
+      end  
+      auras.icons[sid] = icon
+    end
+    self.AuraWatch = auras
   end
   
   local function updateHealth(self, event, unit, bar, min, max)
@@ -88,9 +153,9 @@
     self.DebuffHighlight:SetPoint("TOPLEFT",self,"TOPLEFT",-5,5)
     self.DebuffHighlight:SetPoint("BOTTOMRIGHT",self,"BOTTOMRIGHT",5,-5)
     self.DebuffHighlight:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_glow")
-    self.DebuffHighlight:SetVertexColor(1, 1, 1, 0) -- set alpha to 0 to hide the texture
+    self.DebuffHighlight:SetVertexColor(0, 0, 0, 0.7) -- set alpha to 0 to hide the texture
     self.DebuffHighlightAlpha = 1
-    self.DebuffHighlightFilter = false
+    self.DebuffHighlightFilter = true
   
     self.Health = CreateFrame("StatusBar",nil,self)
     self.Health:SetFrameStrata("LOW")
@@ -117,6 +182,10 @@
     self.glosst:SetAllPoints(self.glossf)
     self.glosst:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_roth")
     self.glosst:SetVertexColor(0.47,0.4,0.4)
+    
+    if myclass == "DRUID" then
+      d3o2_createAuraWatch(self,unit)
+    end
   
     local ricon = self.Health:CreateTexture(nil, "OVERLAY")
     ricon:SetHeight(10)

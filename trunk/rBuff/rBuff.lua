@@ -52,7 +52,7 @@
     if(event=="PLAYER_ENTERING_WORLD") 
     then
       TemporaryEnchantFrame:ClearAllPoints()
-      TemporaryEnchantFrame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -200, -20)
+      TemporaryEnchantFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -40, 3)
       TemporaryEnchantFrame:SetScale(myscale)
       BuffFrame:SetScale(myscale)
       addon:runthroughicons()
@@ -110,6 +110,12 @@
       i:SetTexCoord(0.1,0.9,0.1,0.9)
       i:SetPoint("TOPLEFT", fg, "TOPLEFT", 2, -2)
       i:SetPoint("BOTTOMRIGHT", fg, "BOTTOMRIGHT", -2, 2)
+      
+      local back = f:CreateTexture(nil, "BACKGROUND")
+      back:SetPoint("TOPLEFT",i,"TOPLEFT",-5,5)
+      back:SetPoint("BOTTOMRIGHT",i,"BOTTOMRIGHT",5,-5)
+      back:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_glow")
+      back:SetVertexColor(0, 0, 0, 1)
         
     end
 

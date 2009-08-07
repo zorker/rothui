@@ -60,7 +60,7 @@
   -- if you set the timer to 0 it will update all your 120 buttons on every single frame
   -- so if you have 120FPS it will call the function 14.400 times a second!
   -- if the timer is 1 it will call the function 120 times a second (depends on actionbuttons in screen)
-  local update_timer = 1
+  local update_timer = 0.5
 
   ---------------------------------------
   -- CONFIG END
@@ -230,6 +230,9 @@
       return
     else
       self.rABS_range = 0
+      if(not ActionHasRange(self.action)) then
+        return
+      end
       rActionButtonStyler_AB_usable(self)
     end
   end

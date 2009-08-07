@@ -1,4 +1,4 @@
-## Interface: 21337
+## Interface: 30200
 ## Author: roth
 ## Title: rColors
 ## Notes: Rewrites UnitSelectionColor and GameTooltip_UnitColor

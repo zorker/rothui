@@ -1,4 +1,3 @@
-  
   --helper frame
   local a = CreateFrame("Frame")
   

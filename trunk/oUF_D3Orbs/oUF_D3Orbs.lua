@@ -36,17 +36,20 @@
   local automana = 1
   
   --activate the orb glow
-  local useglow = 1
+  local usegalaxy = 1
+
+  --activate the orb glow
+  local useglow = 0
   
   --variable to lighten the orb glow. the higher the value, the lighter the glow gets.
-  local fog_smoother = 1.3
+  local fog_smoother = 1
   
   --hide party in raids yes/no
   local hidepartyinraid = 1
   
   -- healthcolor defines what healthcolor will be used
   -- 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
-  local healthcolor = 2
+  local healthcolor = 1
 
   -- manacolor defines what manacolor will be used
   -- 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
@@ -61,11 +64,19 @@
   local usebar = 1
   
   local orbtab = {
-    [1] = {r = 0.3, g = 0, b = 0, scale = 0.8, z = -12, x = 0.8, y = -1.7, anim = "SPELLS\\RedRadiationFog.m2"}, -- red
-    [2] = {r = 0, g = 0.3, b = 0.1, scale = 0.75, z = -12, x = 0, y = -1.1, anim = "SPELLS\\GreenRadiationFog.m2"}, -- green
-    [3] = {r = 0, g = 0.2,   b = 0.3, scale = 0.75, z = -12, x = 1.2, y = -1, anim = "SPELLS\\BlueRadiationFog.m2"}, -- blue
-    [4] = {r = 0.4, g = 0.3, b = 0, scale = 0.75, z = -12, x = -0.3, y = -1.2, anim = "SPELLS\\OrangeRadiationFog.m2"}, -- yellow
-    [5] = {r = 0, g = 0.7,   b = 0.7, scale = 0.9, z = -12, x = -0.5, y = -0.8, anim = "SPELLS\\WhiteRadiationFog.m2"}, -- runic
+    [1] = {r = 0.6, g = 0, b = 0, scale = 0.8, z = -12, x = 0.8, y = -1.7, anim = "SPELLS\\RedRadiationFog.m2"}, -- red
+    [2] = {r = 0.2, g = 0.8, b = 0, scale = 0.75, z = -12, x = 0, y = -1.1, anim = "SPELLS\\GreenRadiationFog.m2"}, -- green
+    [3] = {r = 0, g = 0.35,   b = 0.9, scale = 0.75, z = -12, x = 1.2, y = -1, anim = "SPELLS\\BlueRadiationFog.m2"}, -- blue
+    [4] = {r = 0.9, g = 0.7, b = 0.1, scale = 0.75, z = -12, x = -0.3, y = -1.2, anim = "SPELLS\\OrangeRadiationFog.m2"}, -- yellow
+    [5] = {r = 0.1, g = 0.8,   b = 0.7, scale = 0.9, z = -12, x = -0.5, y = -0.8, anim = "SPELLS\\WhiteRadiationFog.m2"}, -- runic
+  }
+  
+  local galaxytab = {
+    [1] = {r = 0.90, g = 0.3, b = 0.3, }, -- red
+    [2] = {r = 0.35, g = 0.9, b = 0.35, }, -- green
+    [3] = {r = 0, g = 0.35,   b = 0.9, }, -- blue
+    [4] = {r = 0.9, g = 0.8, b = 0.35, }, -- yellow
+    [5] = {r = 0.35, g = 0.9,   b = 0.9, }, -- runic
   }
   
   local tabvalues = {
@@ -112,7 +123,8 @@
   
   --rewrite unit popup menus
   -- First level menus
-  UnitPopupMenus["SELF"] = { "PVP_FLAG", "LOOT_METHOD", "LOOT_THRESHOLD", "OPT_OUT_LOOT_TITLE", "LOOT_PROMOTE", "DUNGEON_DIFFICULTY", "RESET_INSTANCES", "RAID_TARGET_ICON", "LEAVE", "CANCEL" };
+  UnitPopupMenus = { };
+  UnitPopupMenus["SELF"] = { "PVP_FLAG", "LOOT_METHOD", "LOOT_THRESHOLD", "OPT_OUT_LOOT_TITLE", "LOOT_PROMOTE", "DUNGEON_DIFFICULTY", "RAID_DIFFICULTY", "RESET_INSTANCES", "RAID_TARGET_ICON", "LEAVE", "CANCEL" };
   UnitPopupMenus["PET"] = { "PET_PAPERDOLL", "PET_RENAME", "PET_ABANDON", "PET_DISMISS", "CANCEL" };
   UnitPopupMenus["PARTY"] = { "MUTE", "UNMUTE", "PARTY_SILENCE", "PARTY_UNSILENCE", "RAID_SILENCE", "RAID_UNSILENCE", "BATTLEGROUND_SILENCE", "BATTLEGROUND_UNSILENCE", "WHISPER", "PROMOTE", "LOOT_PROMOTE", "UNINVITE", "INSPECT", "ACHIEVEMENTS", "TRADE", "FOLLOW", "DUEL", "RAID_TARGET_ICON", "PVP_REPORT_AFK", "RAF_SUMMON", "RAF_GRANT_LEVEL", "CANCEL" };
   UnitPopupMenus["PLAYER"] = { "WHISPER", "INSPECT", "INVITE", "ACHIEVEMENTS", "TRADE", "FOLLOW", "DUEL", "RAID_TARGET_ICON", "RAF_SUMMON", "RAF_GRANT_LEVEL", "CANCEL" };
@@ -121,18 +133,19 @@
   UnitPopupMenus["FRIEND"] = { "WHISPER", "INVITE", "TARGET", "IGNORE", "REPORT_SPAM", "GUILD_PROMOTE", "GUILD_LEAVE", "PVP_REPORT_AFK", "CANCEL" };
   UnitPopupMenus["TEAM"] = { "WHISPER", "INVITE", "TARGET", "TEAM_PROMOTE", "TEAM_KICK", "TEAM_LEAVE", "CANCEL" };
   UnitPopupMenus["RAID_TARGET_ICON"] = { "RAID_TARGET_1", "RAID_TARGET_2", "RAID_TARGET_3", "RAID_TARGET_4", "RAID_TARGET_5", "RAID_TARGET_6", "RAID_TARGET_7", "RAID_TARGET_8", "RAID_TARGET_NONE" };
-  UnitPopupMenus["CHAT_ROSTER"] = { "WHISPER", "TARGET", "MUTE", "UNMUTE", "CHAT_SILENCE", "CHAT_UNSILENCE", "CHAT_PROMOTE", "CHAT_DEMOTE", "CHAT_OWNER", "CANCEL"  };
+  UnitPopupMenus["CHAT_ROSTER"] = { "WHISPER", "TARGET", "MUTE", "UNMUTE", "CHAT_SILENCE", "CHAT_UNSILENCE", "CHAT_PROMOTE", "CHAT_DEMOTE", "CHAT_OWNER", "CANCEL" };
   UnitPopupMenus["VEHICLE"] = { "RAID_TARGET_ICON", "VEHICLE_LEAVE", "CANCEL" };
   UnitPopupMenus["TARGET"] = { "RAID_TARGET_ICON", "CANCEL" };
   UnitPopupMenus["ARENAENEMY"] = { "CANCEL" };
-  UnitPopupMenus["FOCUS"] = { "CLEAR_FOCUS", "LOCK_FOCUS_FRAME", "UNLOCK_FOCUS_FRAME", "RAID_TARGET_ICON", "CANCEL" };
-  
+  UnitPopupMenus["FOCUS"] = { "LOCK_FOCUS_FRAME", "UNLOCK_FOCUS_FRAME", "RAID_TARGET_ICON", "CANCEL" };
+   
   -- Second level menus
   UnitPopupMenus["PVP_FLAG"] = { "PVP_ENABLE", "PVP_DISABLE"};
   UnitPopupMenus["LOOT_METHOD"] = { "FREE_FOR_ALL", "ROUND_ROBIN", "MASTER_LOOTER", "GROUP_LOOT", "NEED_BEFORE_GREED", "CANCEL" };
   UnitPopupMenus["LOOT_THRESHOLD"] = { "ITEM_QUALITY2_DESC", "ITEM_QUALITY3_DESC", "ITEM_QUALITY4_DESC", "CANCEL" };
   UnitPopupMenus["OPT_OUT_LOOT_TITLE"] = { "OPT_OUT_LOOT_ENABLE", "OPT_OUT_LOOT_DISABLE"};
   UnitPopupMenus["DUNGEON_DIFFICULTY"] = { "DUNGEON_DIFFICULTY1", "DUNGEON_DIFFICULTY2" };
+  UnitPopupMenus["RAID_DIFFICULTY"] = { "RAID_DIFFICULTY1", "RAID_DIFFICULTY2", "RAID_DIFFICULTY3", "RAID_DIFFICULTY4" };
   
   --position deathknight runes
   RuneButtonIndividual1:ClearAllPoints()
@@ -177,12 +190,18 @@
   --check function for vehicle manatype
   local function set_vehicle_mana(self)
     self.Power.Filling:SetVertexColor(orbtab[manacolor].r,orbtab[manacolor].g,orbtab[manacolor].b)
-    self.pm3:SetModel(orbtab[manacolor].anim)
-    self.pm3:SetModelScale(orbtab[manacolor].scale)
-    self.pm3:SetPosition(orbtab[manacolor].z, orbtab[manacolor].x, orbtab[manacolor].y) 
-    self.pm4:SetModel(orbtab[manacolor].anim)
-    self.pm4:SetModelScale(orbtab[manacolor].scale)
-    self.pm4:SetPosition(orbtab[manacolor].z, orbtab[manacolor].x, orbtab[manacolor].y+1)       
+    if usegalaxy == 1 then
+      self.gal4.t:SetVertexColor(galaxytab[manacolor].r,galaxytab[manacolor].g,galaxytab[manacolor].b)
+      self.gal5.t:SetVertexColor(galaxytab[manacolor].r,galaxytab[manacolor].g,galaxytab[manacolor].b)
+      self.gal6.t:SetVertexColor(galaxytab[manacolor].r,galaxytab[manacolor].g,galaxytab[manacolor].b)
+    elseif useglow == 1 then
+      self.pm3:SetModel(orbtab[manacolor].anim)
+      self.pm3:SetModelScale(orbtab[manacolor].scale)
+      self.pm3:SetPosition(orbtab[manacolor].z, orbtab[manacolor].x, orbtab[manacolor].y) 
+      self.pm4:SetModel(orbtab[manacolor].anim)
+      self.pm4:SetModelScale(orbtab[manacolor].scale)
+      self.pm4:SetPosition(orbtab[manacolor].z, orbtab[manacolor].x, orbtab[manacolor].y+1)       
+    end
   end
   
   --check function for druid manatype
@@ -217,6 +236,11 @@
       self.pm1:SetAlpha((min/max)/fog_smoother)
       self.pm2:SetAlpha((min/max)/fog_smoother)
     end
+    if usegalaxy == 1 then
+      self.gal1:SetAlpha(min/max)
+      self.gal2:SetAlpha(min/max)
+      self.gal3:SetAlpha(min/max)
+    end
     if d <= 25 and min > 1 then
       self.LowHP:Show()
     else
@@ -239,6 +263,11 @@
     if useglow == 1 then
       self.pm3:SetAlpha((d)/fog_smoother)
       self.pm4:SetAlpha((d)/fog_smoother)
+    end
+    if usegalaxy == 1 then
+      self.gal4:SetAlpha(min/max)
+      self.gal5:SetAlpha(min/max)
+      self.gal6:SetAlpha(min/max)
     end
     
     local shape
@@ -362,8 +391,8 @@
       end)
     else
       glow:SetModel(orbtab[healthcolor].anim)
-      glow:SetModelScale(orbtab[healthcolor].scale)
-      glow:SetPosition(orbtab[healthcolor].z, orbtab[healthcolor].x, orbtab[healthcolor].y+pos) 
+      --glow:SetModelScale(orbtab[healthcolor].scale)
+      --glow:SetPosition(orbtab[healthcolor].z, orbtab[healthcolor].x, orbtab[healthcolor].y+pos) 
       glow:SetAlpha(1/fog_smoother)
       glow:SetScript("OnShow",function() 
         glow:SetModel(orbtab[healthcolor].anim)
@@ -372,6 +401,52 @@
       end)    
     end
     return glow
+  end
+  
+  local function create_me_a_galaxy(f,type,x,y,size,alpha,dur,tex)
+    local h = CreateFrame("Frame",nil,f)
+    h:SetHeight(size)
+    h:SetWidth(size)		  
+    h:SetPoint("CENTER",x,y-10)
+    h:SetAlpha(alpha)
+    h:SetFrameLevel(3)
+  
+    local t = h:CreateTexture()
+    t:SetAllPoints(h)
+    t:SetTexture("Interface\\AddOns\\rTextures\\"..tex)
+    t:SetBlendMode("ADD")
+    if type == "power" then
+      t:SetVertexColor(galaxytab[manacolor].r,galaxytab[manacolor].g,galaxytab[manacolor].b)
+    else
+      t:SetVertexColor(galaxytab[healthcolor].r,galaxytab[healthcolor].g,galaxytab[healthcolor].b)
+    end
+    h.t = t
+    
+    local ag = h:CreateAnimationGroup()
+    h.ag = ag
+    
+    local a1 = h.ag:CreateAnimation("Rotation")
+    a1:SetDegrees(360)
+    a1:SetDuration(dur)
+    h.ag.a1 = a1
+    
+    h:SetScript("OnUpdate",function(self,elapsed)
+      local t = self.total
+      if (not t) then
+        self.total = 0
+        return
+      end
+      t = t + elapsed
+      if (t<1) then
+        self.total = t
+        return
+      else
+        h.ag:Play()
+      end
+    end)
+    
+    return h
+  
   end
   
   --check vehicle type
@@ -397,9 +472,9 @@
     orb.bg:SetAllPoints(orb)
     orb.Filling = orb:CreateTexture(nil, "ARTWORK")
     if type == "power" then
-      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling6.tga")
+      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling4.tga")
     else
-      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling6.tga")
+      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling4.tga")
     end
     orb.Filling:SetPoint("BOTTOMLEFT",0,0)
     orb.Filling:SetWidth(orbsize)
@@ -416,10 +491,31 @@
       orb:SetPoint(tabvalues.frame_positions[1].a1, tabvalues.frame_positions[1].af, tabvalues.frame_positions[1].a2, tabvalues.frame_positions[1].x, tabvalues.frame_positions[1].y)
       self.Power = orb
       self.Power.Filling = orb.Filling
-      if useglow == 1 then
+      if usegalaxy == 1 then
+        self.gal4 = create_me_a_galaxy(orb,type,0,10,110,1,40,"galaxy2")
+        self.gal5 = create_me_a_galaxy(orb,type,-10,-10,150,1,50,"galaxy")
+        self.gal6 = create_me_a_galaxy(orb,type,10,-10,130,1,20,"galaxy3")
+        self.Power.Filling:SetVertexColor(orbtab[manacolor].r,orbtab[manacolor].g,orbtab[manacolor].b)
+        if myclass == "DRUID" and automana == 1 then
+          self.Power:RegisterEvent("PLAYER_ENTERING_WORLD")
+          self.Power:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+          self.Power:SetScript("OnEvent", function()
+            check_druid_mana(self)        
+          end)
+        end
+        if automana == 1 then
+          orbGlossHolder:RegisterEvent("UNIT_ENTERED_VEHICLE")
+          orbGlossHolder:RegisterEvent("UNIT_EXITED_VEHICLE")
+          orbGlossHolder:SetScript("OnEvent", function(_,event,arg1)
+            if arg1 == "player" then
+              check_vehicle_mana(self,event)
+            end
+          end)
+        end
+      elseif useglow == 1 then
         self.pm3 = create_me_a_orb_glow(orb,type,0)
         self.pm4 = create_me_a_orb_glow(orb,type,1)
-        self.Power.Filling:SetVertexColor(orbtab[manacolor].r,orbtab[manacolor].g,orbtab[manacolor].b)        
+        self.Power.Filling:SetVertexColor(orbtab[manacolor].r,orbtab[manacolor].g,orbtab[manacolor].b)
         if myclass == "DRUID" and automana == 1 then
           self.Power:RegisterEvent("PLAYER_ENTERING_WORLD")
           self.Power:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
@@ -445,7 +541,12 @@
       orb:SetPoint("TOPLEFT", 0, 0)
       self.Health = orb
       self.Health.Filling = orb.Filling
-      if useglow == 1 then
+      if usegalaxy == 1 then
+        self.gal1 = create_me_a_galaxy(orb,type,0,5,110,1,35,"galaxy2")
+        self.gal2 = create_me_a_galaxy(orb,type,0,-10,150,1,45,"galaxy")
+        self.gal3 = create_me_a_galaxy(orb,type,-10,-10,130,1,18,"galaxy3")
+        self.Health.Filling:SetVertexColor(orbtab[healthcolor].r,orbtab[healthcolor].g,orbtab[healthcolor].b)
+      elseif useglow == 1 then
         self.pm1 = create_me_a_orb_glow(orb,type,0)
         self.pm2 = create_me_a_orb_glow(orb,type,1)
         self.Health.Filling:SetVertexColor(orbtab[healthcolor].r,orbtab[healthcolor].g,orbtab[healthcolor].b)
@@ -1145,16 +1246,6 @@
   party:SetPoint(tabvalues.frame_positions[7].a1, tabvalues.frame_positions[7].af, tabvalues.frame_positions[7].a2, tabvalues.frame_positions[7].x, tabvalues.frame_positions[7].y)
   --party:SetManyAttributes("showParty", true, "xOffset", 10, "point", "RIGHT", "showPlayer", false)
   party:SetManyAttributes("showParty", true, "xOffset", 80, "point", "LEFT", "showPlayer", true)
-  
-  local arena = {}
-  for i = 1, 5 do
-  	arena[i] = oUF:Spawn("arena"..i, "oUF_D3Orbs2_Arena"..i)
-  	if i == 1 then
-  		arena[i]:SetPoint(tabvalues.frame_positions[7].a1, tabvalues.frame_positions[7].af, tabvalues.frame_positions[7].a2, tabvalues.frame_positions[7].x, tabvalues.frame_positions[7].y)
-  	else
-  		arena[i]:SetPoint("RIGHT", arena[i-1], "LEFT", 80, 0)
-  	end
-  end
  
   -------------------------------------------------------
   -- TOGGLE PARTY IN RAID (CURRENTLY NO)

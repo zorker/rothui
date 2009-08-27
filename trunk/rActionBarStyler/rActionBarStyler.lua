@@ -25,7 +25,11 @@
   -- bar1 and bar2 in 2x6 instead of 1x12
   -- 0 = 1x12
   -- 1 = 2x6
-  button_system = 0
+  if myname == "Rothar" or myname == "Loral" or myname == "Grombur" then
+    button_system = 1
+  else
+    button_system = 0
+  end
   
   -- bar settings
   -- you can make a bar visible on mouseover, make it movable or lock it from moving
@@ -57,7 +61,7 @@
   
   -- shapeshift
   if myname == "Loral" then
-    shapeshift_on_mouseover = 0
+    shapeshift_on_mouseover = 1
   elseif myname == "Rothar" then
     shapeshift_on_mouseover = 1
   else
@@ -68,7 +72,7 @@
   hide_shapeshift = 0
   
   -- petbar
-  petbar_on_mouseover = 0
+  petbar_on_mouseover = 1
   move_pet = 1
   lock_pet = 0
   hide_pet = 0

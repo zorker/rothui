@@ -93,7 +93,7 @@
     local c = _G[name.."Gloss"]
     local ff = _G[name.."Duration"]
     
-    ff:SetFont(NAMEPLATE_FONT, 14, "THINOUTLINE")
+    ff:SetFont(NAMEPLATE_FONT, 13, "THINOUTLINE")
     ff:ClearAllPoints()
     ff:SetPoint("TOP",f,"BOTTOM",0,0)
 

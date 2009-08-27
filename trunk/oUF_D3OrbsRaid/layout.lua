@@ -92,10 +92,10 @@
     local tmpunitname
     if unit then
       tmpunitname = UnitName(unit)
-      local count = 4
-      if tmpunitname and tmpunitname:len() > count then
-        tmpunitname = tmpunitname:sub(1, count)
-      end
+      --local count = 4
+      --if tmpunitname and tmpunitname:len() > count then
+      --  tmpunitname = tmpunitname:sub(1, count)
+      --end
     end
     
     local c = max - min
@@ -114,7 +114,11 @@
       bar.bg:SetVertexColor(1,0.3,0.3,1)
     end
     
-    if UnitIsConnected(unit) ~= 1 then
+    if UnitLevel(unit) == 0 then
+      self.Name:SetTextColor(0.4,0.4,0.4)
+      self.Name:SetText("Oo")    
+      bar.bg:SetVertexColor(0,0,0,0.4)
+    elseif UnitIsConnected(unit) ~= 1 then
       self.Name:SetTextColor(0.4,0.4,0.4)
       self.Name:SetText("off")    
       bar.bg:SetVertexColor(0,0,0,0.4)
@@ -169,8 +173,10 @@
     self.Health.bg:SetTexture("Interface\\AddOns\\oUF_D3OrbsRaid\\statusbar")
   
     self.Name = self.Health:CreateFontString(nil, "OVERLAY")
-    self.Name:SetPoint("CENTER", 0, 0)
-    self.Name:SetFont(NAMEPLATE_FONT,12,"THINOUTLINE")
+    --self.Name:SetPoint("CENTER", 0, 0)
+    self.Name:SetPoint("LEFT", 2, 0)
+    self.Name:SetPoint("RIGHT", -2, 0)
+    self.Name:SetFont(NAMEPLATE_FONT,11,"THINOUTLINE")
     self.Name:SetShadowColor(0,0,0,0)
     self.Name:SetTextColor(1, 1, 1)
     

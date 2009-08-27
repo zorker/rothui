@@ -16,7 +16,9 @@
     
     -- choose chattype
     --post to blizzard combat text
-    CombatText_AddMessage(string, COMBAT_TEXT_SCROLL_FUNCTION, 1, 0, 0, "crit", nil)
+    if CombatText_AddMessage then
+      CombatText_AddMessage(string, COMBAT_TEXT_SCROLL_FUNCTION, 1, 0, 0, "crit", nil)
+    end
     --post to boss emote frame
     --RaidNotice_AddMessage(RaidBossEmoteFrame, string, ChatTypeInfo["RAID_WARNING"]) 
     --post to raidwarningframe

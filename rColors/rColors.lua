@@ -87,5 +87,3 @@
 
   GameTooltip_UnitColor = rGameTooltip_UnitColor;
   UnitSelectionColor = GameTooltip_UnitColor
-
-  GetDifficultyColor = GetQuestDifficultyColor

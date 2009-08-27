@@ -48,8 +48,8 @@
   local hidepartyinraid = 1
   
   -- healthcolor defines what healthcolor will be used
-  -- 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
-  local healthcolor = 2
+  -- 0 = class color, 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
+  local healthcolor = 0
 
   -- manacolor defines what manacolor will be used
   -- 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
@@ -63,7 +63,10 @@
   -- usebar = 4 -> 36 button texture always
   local usebar = 1
   
+  local player_class_color = rRAID_CLASS_COLORS[select(2, UnitClass("player"))]
+  
   local orbtab = {
+    [0] = {r = player_class_color.r*0.8, g = player_class_color.g*0.8,   b = player_class_color.b*0.8, scale = 0.9, z = -12, x = -0.5, y = -0.8, anim = "SPELLS\WhiteRadiationFog.m2"}, -- class color
     [1] = {r = 0.8, g = 0, b = 0, scale = 0.8, z = -12, x = 0.8, y = -1.7, anim = "SPELLS\\RedRadiationFog.m2"}, -- red
     [2] = {r = 0.2, g = 0.8, b = 0, scale = 0.75, z = -12, x = 0, y = -1.1, anim = "SPELLS\\GreenRadiationFog.m2"}, -- green
     [3] = {r = 0, g = 0.35,   b = 0.9, scale = 0.75, z = -12, x = 1.2, y = -1, anim = "SPELLS\\BlueRadiationFog.m2"}, -- blue
@@ -72,6 +75,7 @@
   }
   
   local galaxytab = {
+    [0] = {r = player_class_color.r, g = player_class_color.g, b = player_class_color.b, }, -- class color
     [1] = {r = 0.90, g = 0.1, b = 0.1, }, -- red
     [2] = {r = 0.25, g = 0.9, b = 0.25, }, -- green
     [3] = {r = 0, g = 0.35,   b = 0.9, }, -- blue
@@ -127,7 +131,6 @@
   
   --rewrite unit popup menus
   -- First level menus
-  UnitPopupMenus = { };
   UnitPopupMenus["SELF"] = { "PVP_FLAG", "LOOT_METHOD", "LOOT_THRESHOLD", "OPT_OUT_LOOT_TITLE", "LOOT_PROMOTE", "DUNGEON_DIFFICULTY", "RAID_DIFFICULTY", "RESET_INSTANCES", "RAID_TARGET_ICON", "LEAVE", "CANCEL" };
   UnitPopupMenus["PET"] = { "PET_PAPERDOLL", "PET_RENAME", "PET_ABANDON", "PET_DISMISS", "CANCEL" };
   UnitPopupMenus["PARTY"] = { "MUTE", "UNMUTE", "PARTY_SILENCE", "PARTY_UNSILENCE", "RAID_SILENCE", "RAID_UNSILENCE", "BATTLEGROUND_SILENCE", "BATTLEGROUND_UNSILENCE", "WHISPER", "PROMOTE", "LOOT_PROMOTE", "UNINVITE", "INSPECT", "ACHIEVEMENTS", "TRADE", "FOLLOW", "DUEL", "RAID_TARGET_ICON", "PVP_REPORT_AFK", "RAF_SUMMON", "RAF_GRANT_LEVEL", "CANCEL" };
@@ -269,9 +272,9 @@
       self.pm4:SetAlpha((d)/fog_smoother)
     end
     if usegalaxy == 1 then
-      self.gal4:SetAlpha(min/max)
-      self.gal5:SetAlpha(min/max)
-      self.gal6:SetAlpha(min/max)
+      self.gal4:SetAlpha(d)
+      self.gal5:SetAlpha(d)
+      self.gal6:SetAlpha(d)
     end
     
     local shape
@@ -663,7 +666,7 @@
   --buff func
   local function d3o2_createBuffs(self,unit)
     self.Buffs = CreateFrame("Frame", nil, self)
-    self.Buffs.size = 20
+    self.Buffs.size = 22
     self.Buffs.num = 40
     self.Buffs:SetHeight((self.Buffs.size+5)*3)
     self.Buffs:SetWidth(self:GetWidth())
@@ -678,7 +681,7 @@
   local function d3o2_createDebuffs(self,unit)
     self.Debuffs = CreateFrame("Frame", nil, self)
     if unit == "target" then
-      self.Debuffs.size = 20
+      self.Debuffs.size = 22
       self.Debuffs.num = 40
       self.Debuffs:SetHeight((self.Debuffs.size+5)*3)
       self.Debuffs:SetWidth(self:GetWidth())

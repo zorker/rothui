@@ -87,6 +87,17 @@
     self.AuraWatch = auras
   end
   
+  local function check_threat(self,unit)
+    if unit then
+      local threat = UnitThreatSituation(unit)
+  		if threat == 3 then
+  		  self.glosst:SetVertexColor(1,0,0)
+  		else
+  		  self.glosst:SetVertexColor(0.47,0.4,0.4)
+  		end
+	  end
+  end
+  
   local function updateHealth(self, event, unit, bar, min, max)
   
     local tmpunitname
@@ -96,6 +107,14 @@
       --if tmpunitname and tmpunitname:len() > count then
       --  tmpunitname = tmpunitname:sub(1, count)
       --end
+    end
+    
+    if not self.check_threat then
+      self.check_threat = true
+      bar:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
+      bar:SetScript("OnEvent", function()
+        check_threat(self,unit)
+      end)
     end
     
     local c = max - min

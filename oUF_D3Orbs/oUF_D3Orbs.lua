@@ -44,6 +44,10 @@
   --variable to lighten the orb glow. the higher the value, the lighter the glow gets.
   local fog_smoother = 1
   
+  --variable to switch the bar colors
+  --0 = grey to red, 1 = red to grey
+  local color_switcher = 0
+  
   --hide party in raids yes/no
   local hidepartyinraid = 1
   
@@ -325,11 +329,19 @@
     elseif unit == "pet" and UnitExists("pet") and GetPetHappiness() then
       local happiness = GetPetHappiness()
       color = tabvalues.happiness[happiness]
+      self.Name:SetText(UnitName(unit))
     else
       color = rFACTION_BAR_COLORS[UnitReaction(unit, "player")]
     end
-    bar:SetStatusBarColor(0.15,0.15,0.15,1)
-    bar.bg:SetVertexColor(0.7,0,0,1)
+
+    if color_switcher == 1 then
+      bar:SetStatusBarColor(0.7,0,0,1)
+      bar.bg:SetVertexColor(0.15,0.15,0.15,1)
+    else
+      bar:SetStatusBarColor(0.15,0.15,0.15,1)
+      bar.bg:SetVertexColor(0.7,0,0,1)
+    end
+    
     --if you like color colored background, use this
     --bar.bg:SetVertexColor(color.r, color.g, color.b,1)
     if dead == 1 then
@@ -729,8 +741,13 @@
     self.Castbar.bg = self.Castbar:CreateTexture(nil, "BORDER")
     self.Castbar.bg:SetTexture(statusbar256)
     self.Castbar.bg:SetAllPoints(self.Castbar)
-    self.Castbar.bg:SetVertexColor(180/255,110/255,30/255,1)
-    self.Castbar:SetStatusBarColor(0.15,0.15,0.15,1)
+    if color_switcher == 1 then
+      self.Castbar.bg:SetVertexColor(0.15,0.15,0.15,1)
+      self.Castbar:SetStatusBarColor(180/255,110/255,30/255,1)
+    else
+      self.Castbar.bg:SetVertexColor(180/255,110/255,30/255,1)
+      self.Castbar:SetStatusBarColor(0.15,0.15,0.15,1)
+    end
     if unit == "player" then
       self.Castbar:SetPoint(tabvalues.frame_positions[13].a1, tabvalues.frame_positions[13].af, tabvalues.frame_positions[13].a2, tabvalues.frame_positions[13].x, tabvalues.frame_positions[13].y)
     elseif unit == "target" then
@@ -740,12 +757,12 @@
     end
     
     self.Castbar.Text = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
-    self.Castbar.Text:SetPoint("LEFT", 2, 0)
-    self.Castbar.Text:SetPoint("RIGHT", -2, 0)
+    self.Castbar.Text:SetPoint("LEFT", 2, 1)
+    self.Castbar.Text:SetPoint("RIGHT", -50, 1)
     self.Castbar.Text:SetJustifyH("LEFT")
     
-    --self.Castbar.Time = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
-    --self.Castbar.Time:SetPoint("RIGHT", -2, 0)
+    self.Castbar.Time = SetFontString(self.Castbar, d3font, 14, "THINOUTLINE")
+    self.Castbar.Time:SetPoint("RIGHT", -2, 1)
     
     --icon
     self.Castbar.Icon = self.Castbar:CreateTexture(nil, "BORDER")
@@ -1158,7 +1175,7 @@
     local name = SetFontString(self, d3font, 20, "THINOUTLINE")
     name:SetPoint("BOTTOM", self, "TOP", 0, 30)
     local hpval = SetFontString(self.Health, d3font, 14, "THINOUTLINE")
-    hpval:SetPoint("RIGHT", self, "RIGHT", -2, 2)
+    hpval:SetPoint("RIGHT", self.Health, "RIGHT", -2, 2)
     local classtext = SetFontString(self, d3font, 16, "THINOUTLINE")
     classtext:SetPoint("BOTTOM", self, "TOP", 0, 13)
     self.Name = name
@@ -1187,7 +1204,7 @@
     local name = SetFontString(self, d3font, 18, "THINOUTLINE")
     name:SetPoint("BOTTOM", self, "TOP", 0, 15)
     local hpval = SetFontString(self.Health, d3font, 14, "THINOUTLINE")
-    hpval:SetPoint("RIGHT", self, "RIGHT", -2, 2)
+    hpval:SetPoint("RIGHT", self.Health, "RIGHT", -2, 2)
     self.Name = name
     self:Tag(name, "[d3o2name]")
     self:Tag(hpval, "[perhp]%")

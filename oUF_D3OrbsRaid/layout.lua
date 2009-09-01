@@ -92,6 +92,8 @@
       local threat = UnitThreatSituation(unit)
   		if threat == 3 then
   		  self.glosst:SetVertexColor(1,0,0)
+  		elseif threat == 2 then
+  		  self.glosst:SetVertexColor(1,0.6,0)
   		else
   		  self.glosst:SetVertexColor(0.47,0.4,0.4)
   		end

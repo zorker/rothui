@@ -15,6 +15,14 @@
   --size of the orbs
   local orbsize = 150
   
+  -- shall frames be moved
+  -- set this to 0 to reset all frame positions
+  local allow_frame_movement = 1
+  
+  -- set this to 1 after you have moved everything in place
+  -- THIS IS IMPORTANT because it will deactivate the mouse clickablity on that frame.
+  local lock_all_frames = 0
+  
   --font used
   local d3font = "FONTS\\FRIZQT__.ttf"  
   
@@ -116,7 +124,7 @@
       [4] =   { a1 = "RIGHT",   a2 = "LEFT",    af = "oUF_D3Orbs2_TargetFrame",   x = -80,    y = 0       }, --tot
       [5] =   { a1 = "LEFT",    a2 = "RIGHT",   af = "UIParent",                  x = 50,     y = 100     }, --pet
       [6] =   { a1 = "LEFT",    a2 = "LEFT",    af = "UIParent",                  x = 60,     y = -100    }, --focus
-      [7] =   { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent",                  x = 30,     y = 50      }, --party
+      [7] =   { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent",                  x = 15,     y = -10     }, --party
       [8] =   { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",                  x = 270,    y = 0       }, --angel
       [9] =   { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",                  x = -265,   y = 0       }, --demon
       [10] =  { a1 = "BOTTOM",  a2 = "BOTTOM",  af = "UIParent",                  x = 0,      y = -5      }, --botomline texture
@@ -482,7 +490,12 @@
   
   --create orb func
   local function d3o2_createOrb(self,type)
-    local orb = CreateFrame("StatusBar", nil, self)    
+    local orb
+    if type == "power" then
+      orb = CreateFrame("StatusBar", "oUF_D3Orbs2_PlayerPowerOrb", self)
+    else
+      orb = CreateFrame("StatusBar", nil, self)
+    end
     orb:SetStatusBarTexture("Interface\\AddOns\\rTextures\\orb_transparent.tga")
     orb:SetHeight(orbsize)
     orb:SetWidth(orbsize)
@@ -1003,6 +1016,21 @@
   end
   
   
+  local function make_me_movable(f)
+    if allow_frame_movement == 0 then
+      f:IsUserPlaced(false)
+    else
+      f:SetMovable(true)
+      f:SetUserPlaced(true)
+      if lock_all_frames == 0 then
+        f:EnableMouse(true)
+        f:RegisterForDrag("LeftButton","RightButton")
+        f:SetScript("OnDragStart", function(self) if IsAltKeyDown() and IsShiftKeyDown() then self:StartMoving() end end)
+        f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+      end
+    end  
+  end
+  
   -----------------------------
   -- CUSTOM TAGS
   -----------------------------
@@ -1130,7 +1158,9 @@
     if use_rbottombarstyler ~= 1 then
       d3o2_setupFrame(self,orbsize,orbsize,"BACKGROUND")  
       d3o2_createOrb(self,"health")
+      make_me_movable(self)
       d3o2_createOrb(self,"power")
+      make_me_movable(self.Power)
       self.HealthValueHolder = CreateFrame("FRAME", nil, self.Health)
       self.HealthValueHolder:SetFrameStrata("LOW")
       self.HealthValueHolder:SetAllPoints(self.Health)
@@ -1168,6 +1198,7 @@
   --create the target style
   local function CreateTargetStyle(self, unit)
     d3o2_setupFrame(self,224,20,"BACKGROUND")
+    make_me_movable(self)
     d3o2_createHealthPowerFrames(self,unit)
     d3o2_createBuffs(self,unit)
     d3o2_createDebuffs(self,unit)
@@ -1199,6 +1230,7 @@
   --create the tot style
   local function CreateToTStyle(self, unit)
     d3o2_setupFrame(self,110,20,"BACKGROUND")
+    make_me_movable(self)
     d3o2_createHealthPowerFrames(self,unit)
     d3o2_createDebuffs(self,unit)
     local name = SetFontString(self, d3font, 18, "THINOUTLINE")
@@ -1253,6 +1285,8 @@
       self.Range = true
       self.outsideRangeAlpha = 0.6
       self.inRangeAlpha = 1
+    else
+      make_me_movable(self)
     end
     
   end
@@ -1282,8 +1316,18 @@
   oUF:Spawn("focustarget","ouf_focustot"):SetPoint('CENTER', oUF.units.focus, 'CENTER', 200, 0)
   oUF:Spawn("pet","ouf_pet"):SetPoint('CENTER', oUF.units.focus, 'CENTER', 0, 250)
   
+  local oUF_D3Orbs_PartyDragFrame = CreateFrame("Frame","oUF_D3Orbs_PartyDragFrame",UIParent)
+  oUF_D3Orbs_PartyDragFrame:SetWidth(80)
+  oUF_D3Orbs_PartyDragFrame:SetHeight(100)
+  if lock_all_frames == 0 then
+    oUF_D3Orbs_PartyDragFrame:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }})
+  end
+  oUF_D3Orbs_PartyDragFrame:SetPoint(tabvalues.frame_positions[7].a1, tabvalues.frame_positions[7].af, tabvalues.frame_positions[7].a2, tabvalues.frame_positions[7].x, tabvalues.frame_positions[7].y)
+  make_me_movable(oUF_D3Orbs_PartyDragFrame)
+  
   local party  = oUF:Spawn("header", "oUF_Party")
-  party:SetPoint(tabvalues.frame_positions[7].a1, tabvalues.frame_positions[7].af, tabvalues.frame_positions[7].a2, tabvalues.frame_positions[7].x, tabvalues.frame_positions[7].y)
+  party:SetPoint("TOPLEFT",oUF_D3Orbs_PartyDragFrame,"TOPLEFT",13,60)
+  --party:SetPoint(tabvalues.frame_positions[7].a1, tabvalues.frame_positions[7].af, tabvalues.frame_positions[7].a2, tabvalues.frame_positions[7].x, tabvalues.frame_positions[7].y)
   --party:SetManyAttributes("showParty", true, "xOffset", 10, "point", "RIGHT", "showPlayer", false)
   party:SetManyAttributes("showParty", true, "xOffset", 80, "point", "LEFT", "showPlayer", true)
  
@@ -1316,49 +1360,53 @@
   -----------------------------
   -- CREATING D3 ART FRAMES
   -----------------------------
-  
+
   if use_rbottombarstyler ~= 1 then
     
-    local d3f = CreateFrame("Frame",nil,UIParent)
+    local d3f = CreateFrame("Frame","oUF_D3Orbs_AngelFrame",UIParent)
     d3f:SetFrameStrata("TOOLTIP")
     d3f:SetWidth(320)
     d3f:SetHeight(160)
     d3f:SetPoint(tabvalues.frame_positions[8].a1, tabvalues.frame_positions[8].af, tabvalues.frame_positions[8].a2, tabvalues.frame_positions[8].x, tabvalues.frame_positions[8].y)
     d3f:Show()
     d3f:SetScale(playerscale)
+    make_me_movable(d3f)
     local d3t = d3f:CreateTexture(nil,"BACKGROUND")
     d3t:SetTexture("Interface\\AddOns\\rTextures\\d3_angel2")
     d3t:SetAllPoints(d3f)
   
-    local d3f2 = CreateFrame("Frame",nil,UIParent)
+    local d3f2 = CreateFrame("Frame","oUF_D3Orbs_DemonFrame",UIParent)
     d3f2:SetFrameStrata("TOOLTIP")
     d3f2:SetWidth(320)
     d3f2:SetHeight(160)
     d3f2:SetPoint(tabvalues.frame_positions[9].a1, tabvalues.frame_positions[9].af, tabvalues.frame_positions[9].a2, tabvalues.frame_positions[9].x, tabvalues.frame_positions[9].y)
     d3f2:Show()
     d3f2:SetScale(playerscale)
+    make_me_movable(d3f2)
     local d3t2 = d3f2:CreateTexture(nil,"BACKGROUND")
     d3t2:SetTexture("Interface\\AddOns\\rTextures\\d3_demon2")
     d3t2:SetAllPoints(d3f2)
     
-    local d3f3 = CreateFrame("Frame",nil,UIParent)
+    local d3f3 = CreateFrame("Frame","oUF_D3Orbs_BottomBarLine",UIParent)
     d3f3:SetFrameStrata("TOOLTIP")
     d3f3:SetWidth(500)
     d3f3:SetHeight(112)
     d3f3:SetPoint(tabvalues.frame_positions[10].a1, tabvalues.frame_positions[10].af, tabvalues.frame_positions[10].a2, tabvalues.frame_positions[10].x, tabvalues.frame_positions[10].y)
     d3f3:Show()
     d3f3:SetScale(playerscale)
+    make_me_movable(d3f3)
     local d3t3 = d3f3:CreateTexture(nil,"BACKGROUND")
     d3t3:SetTexture("Interface\\AddOns\\rTextures\\d3_bottom")
     d3t3:SetAllPoints(d3f3)
     
-    local d3f4 = CreateFrame("Frame",nil,UIParent)
+    local d3f4 = CreateFrame("Frame","oUF_D3Orbs_BottomBarArt",UIParent)
     d3f4:SetFrameStrata("BACKGROUND")
     d3f4:SetWidth(512)
     d3f4:SetHeight(256)
     d3f4:SetPoint(tabvalues.frame_positions[11].a1, tabvalues.frame_positions[11].af, tabvalues.frame_positions[11].a2, tabvalues.frame_positions[11].x, tabvalues.frame_positions[11].y)
     d3f4:Show()
     d3f4:SetScale(playerscale)
+    make_me_movable(d3f4)
     local d3t4 = d3f4:CreateTexture(nil,"BACKGROUND")
     d3t4:SetAllPoints(d3f4)
   

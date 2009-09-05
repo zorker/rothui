@@ -69,7 +69,11 @@
   end
   move_shapeshift = 1
   lock_shapeshift = 0
-  hide_shapeshift = 0
+  if myname == "Rothar" then
+    hide_shapeshift = 1
+  else
+    hide_shapeshift = 0
+  end
   
   -- petbar
   petbar_on_mouseover = 1
@@ -609,8 +613,8 @@
       if lock ~= 1 then
         f:EnableMouse(true)
         f:RegisterForDrag("LeftButton","RightButton")
-        f:SetScript("OnDragStart", function(self) if IsShiftKeyDown() then self:StartMoving() end end)
-        f:SetScript("OnDragStop", function(self) if IsShiftKeyDown() then self:StopMovingOrSizing() end end)
+        f:SetScript("OnDragStart", function(self) if IsShiftKeyDown() and IsAltKeyDown() then self:StartMoving() end end)
+        f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
       end
     else
       f:IsUserPlaced(false)

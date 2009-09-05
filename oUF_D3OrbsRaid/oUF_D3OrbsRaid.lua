@@ -6,6 +6,14 @@
   local _, myclass = UnitClass("player")
   local d3font = "FONTS\\FRIZQT__.ttf"  
   
+  -- shall frames be moved
+  -- set this to 0 to reset all frame positions
+  local allow_frame_movement = 0
+  
+  -- set this to 1 after you have moved everything in place
+  -- THIS IS IMPORTANT because it will deactivate the mouse clickablity on that frame.
+  local lock_all_frames = 1
+  
   -- config end
   
   ----------------
@@ -105,10 +113,6 @@
     local tmpunitname
     if unit then
       tmpunitname = UnitName(unit)
-      --local count = 4
-      --if tmpunitname and tmpunitname:len() > count then
-      --  tmpunitname = tmpunitname:sub(1, count)
-      --end
     end
     
     if not self.check_threat then
@@ -237,11 +241,35 @@
   oUF:RegisterStyle(actstyle, stylefunc)
   oUF:SetActiveStyle(actstyle)
   
+  local function make_me_movable(f)
+    if allow_frame_movement == 0 then
+      f:IsUserPlaced(false)
+    else
+      f:SetMovable(true)
+      f:SetUserPlaced(true)
+      if lock_all_frames == 0 then
+        f:EnableMouse(true)
+        f:RegisterForDrag("LeftButton","RightButton")
+        f:SetScript("OnDragStart", function(self) if IsAltKeyDown() and IsShiftKeyDown() then self:StartMoving() end end)
+        f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+      end
+    end  
+  end
+  
+  local oUF_D3Orbs_RaidDragFrame = CreateFrame("Frame","oUF_D3Orbs_RaidDragFrame",UIParent)
+  oUF_D3Orbs_RaidDragFrame:SetWidth(40)
+  oUF_D3Orbs_RaidDragFrame:SetHeight(40)
+  if lock_all_frames == 0 then
+    oUF_D3Orbs_RaidDragFrame:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }})
+  end
+  oUF_D3Orbs_RaidDragFrame:SetPoint("TOPLEFT",20,-20)
+  make_me_movable(oUF_D3Orbs_RaidDragFrame)
+  
   local raid = {}
   for i = 1, 8 do
     table.insert(raid, oUF:Spawn("header", "oUF_Raid"..i))
     if i == 1 then
-      raid[i]:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 20, -20)
+      raid[i]:SetPoint("TOPLEFT", "oUF_D3Orbs_RaidDragFrame", "TOPLEFT", 0, 0)
     else
       raid[i]:SetPoint("TOPLEFT", raid[i-1], "TOPRIGHT", 5, 0)    
     end

@@ -32,12 +32,12 @@
   -- / VARIABLES / --
   ------------------------------------------------------
   
-  local default_scale = 0.6
-  local default_art = "d3"  
-  local default_bar = "bar1"  
+  local default_scale = 0.82
+  local default_art = "roth"  
+  local default_bar = "bar2"  
   local default_movable = 1
   local default_locked = 1
-  local default_healthorb = 2
+  local default_healthorb = 0
   local default_manaorb = 3
   local default_automana = 1
   
@@ -54,7 +54,10 @@
   local text_display = 1
   local save_dudustance
   
+  local player_class_color = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
+  
   local orbtab = {
+    [0] = {r = player_class_color.r*0.8, g = player_class_color.g*0.8,   b = player_class_color.b*0.8, scale = 0.9, z = -12, x = -0.5, y = -0.8, anim = "SPELLS\WhiteRadiationFog.m2"}, -- class color
     [1] = {r = 0.8, g = 0, b = 0, scale = 0.8, z = -12, x = 0.8, y = -1.7, anim = "SPELLS\\RedRadiationFog.m2"}, -- red
     [2] = {r = 0.2, g = 0.8, b = 0, scale = 0.75, z = -12, x = 0, y = -1.1, anim = "SPELLS\\GreenRadiationFog.m2"}, -- green
     [3] = {r = 0, g = 0.35,   b = 0.9, scale = 0.75, z = -12, x = 1.2, y = -1, anim = "SPELLS\\BlueRadiationFog.m2"}, -- blue
@@ -63,6 +66,7 @@
   }
   
   local galaxytab = {
+    [0] = {r = player_class_color.r, g = player_class_color.g, b = player_class_color.b, }, -- class color
     [1] = {r = 0.90, g = 0.1, b = 0.1, }, -- red
     [2] = {r = 0.25, g = 0.9, b = 0.25, }, -- green
     [3] = {r = 0, g = 0.35,   b = 0.9, }, -- blue
@@ -470,7 +474,11 @@
   
   local function create_orb(orbtype,orbsize,orbanchorframe,orbpoint,orbposx,orbposy,orbscale,orbfilltex,useorb)
     --create the player frame
-    local orb1 = create_me_a_frame("Button",nil,orbanchorframe,"BACKGROUND",4,orbsize,orbsize,orbpoint,orbposx,orbposy,orbscale,nil,"SecureUnitButtonTemplate")
+    local orbname = "rBBSManaOrb"
+    if orbtype == "life" then
+      orbname = "rBBSLifeOrb"
+    end
+    local orb1 = create_me_a_frame("Button",orbname,orbanchorframe,"BACKGROUND",4,orbsize,orbsize,orbpoint,orbposx,orbposy,orbscale,nil,"SecureUnitButtonTemplate")
     orb1:RegisterForClicks("AnyUp")
     orb1:SetAttribute("unit", "player")
     orb1:SetAttribute("*type1", "target")
@@ -482,6 +490,9 @@
     orb1:SetAttribute("*type2", "showmenu")
     orb1:SetScript("OnEnter", UnitFrame_OnEnter)
     orb1:SetScript("OnLeave", UnitFrame_OnLeave)
+    
+    ClickCastFrames = ClickCastFrames or {}
+    ClickCastFrames[orb1] = true
 
     local orb1_back = create_me_a_texture(orb1,"BORDER","Interface\\AddOns\\rBottomBarStyler\\orbtex\\orb_back2")
     local orb1_fill = create_me_a_texture(orb1,"ARTWORK","Interface\\AddOns\\rBottomBarStyler\\orbtex\\"..orbfilltex,"fill")
@@ -876,7 +887,7 @@
       local a,b = strfind(cmd, " ");
       if b then
         local c = strsub(cmd, b+1)
-        if tonumber(c) and tonumber(c) > 0 and tonumber(c) < 6 then
+        if tonumber(c) and tonumber(c) >= 0 and tonumber(c) < 6 then
           am("Healthorb is set to: "..c)
           rBottomBarStyler.healthorb = tonumber(c)
           set_the_hglows()
@@ -933,7 +944,7 @@
       am("\/rbbs locked NUMBER (value of 1 locks bars, 0 unlocks)")
       am("\/rbbs movable NUMBER (value of 1 makes bars movable if unlocked, value of 0 will reset position)")
  
-      am("\/rbbs sethealthorb NUMBER (values 1 (red), 2 (green), 3 (blue), 4 (yellow), 5(runic) to set your healthcolor)")
+      am("\/rbbs sethealthorb NUMBER (values 0 (classcolor), 1 (red), 2 (green), 3 (blue), 4 (yellow), 5(runic) to set your healthcolor)")
       am("\/rbbs setmanaorb NUMBER (values 1 (red), 2 (green), 3 (blue), 4 (yellow), 5(runic) to set your manacolor)")
       am("\/rbbs setautomana NUMBER (values 0 or 1, this will override the manaorb setting and automatically detect your manacolor on class/stance)")
       

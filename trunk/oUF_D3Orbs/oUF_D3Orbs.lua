@@ -17,11 +17,11 @@
   
   -- shall frames be moved
   -- set this to 0 to reset all frame positions
-  local allow_frame_movement = 1
+  local allow_frame_movement = 0
   
   -- set this to 1 after you have moved everything in place
   -- THIS IS IMPORTANT because it will deactivate the mouse clickablity on that frame.
-  local lock_all_frames = 0
+  local lock_all_frames = 1
   
   --font used
   local d3font = "FONTS\\FRIZQT__.ttf"  

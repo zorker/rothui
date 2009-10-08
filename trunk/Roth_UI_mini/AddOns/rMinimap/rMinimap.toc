@@ -1,0 +1,6 @@
+## Interface: 30200
+## Author: roth
+## Title: rMinimap
+## Notes: rather simple Minimap
+
+rMinimap.lua

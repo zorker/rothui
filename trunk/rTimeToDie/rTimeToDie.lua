@@ -236,7 +236,7 @@
       end
       if player_in_combat == 1 and target_is_hostile == 1 and target_is_raidboss == 1 and target_is_npc == 1 and not first_life and UnitHealth("target") > 0 then
         first_life = UnitHealth("target")
-        first_life_max = UnitHealth("target")
+        first_life_max = UnitHealthMax("target")
         first_time = GetTime()
         if script_running == 0 then
           activate_this()

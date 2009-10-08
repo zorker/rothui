@@ -84,7 +84,7 @@
     if reason then
       am("TTD: Script ended because of: "..reason..".")
     else
-      am("TTD: Script ended normally.")
+      am("TTD: Script ended.")
     end
     script_running = 0
   end
@@ -92,7 +92,7 @@
   local function updateCombatStatus(self, event, unit)
     if event == "PLAYER_REGEN_DISABLED" then
       player_in_combat = 1
-      if script_running == 0 and player_has_target = 1 then
+      if script_running == 0 then
         activate_this()
       end 
     else
@@ -109,19 +109,36 @@
   
   local function calculate_time_to_death()
     if current_percentage == 0 then
-      am("TTD: Target dies!")
+      am("TTD: Target is dead!")
       if script_running == 1 then
         stop_this("target is dead")
       end
     else
       local time_diff = current_time-first_time_seen
       local hp_diff = first_percentage-current_percentage
-      local calc_time = ((time_diff*1000)/hp_diff)-current_time
-      if calc_time < 0 then
-        calc_time = 0
+      if hp_diff > 0 then
+        local calc_time = ((time_diff*1000)/hp_diff)-current_time
+        if calc_time < 0 then
+          calc_time = 0
+        end
+        time_to_die = SecondsToTime(calc_time)
+        am("TTD: Target dies in "..time_to_die)
+      elseif hp_diff < 0 then
+        --unit has healed, reseting the initial values
+        first_percentage = current_percentage
+        first_time_seen = current_time
+        am("TTD: Target has healed. Please wait... :/")
+      else
+        --check if unit is still at 100% (or has healed too 100% and still sits at 100%)
+        if current_percentage == 1000 then
+          first_percentage = current_percentage
+          first_time_seen = current_time
+          am("TTD: Unit is still at 100%. ZZzzzzzZZZZzzz.")
+        else
+          --no hp change happened since last update
+          am("TTD: No health change. Damage plx. >_<")
+        end
       end
-      time_to_die = SecondsToTime(calc_time)
-      am("TTD: Target dies in "..time_to_die)
     end
   end
   
@@ -150,16 +167,20 @@
          target_is_npc = 1
       end
       calc_target_health()
-      if player_in_combat == 1 and target_is_hostile = 1 and target_is_npc == 1 and not first_percentage and (target_health < 1000) and (target_health > 0) then
+      if player_in_combat == 1 and target_is_hostile = 1 and target_is_npc == 1 and not first_percentage and (target_health > 0) then
         first_percentage = target_health
         first_time_seen = GetTime()
         if script_running == 0 then
           activate_this()
         end 
-      elseif player_in_combat == 1 and target_is_hostile = 1 and target_is_npc == 1 and first_percentage and (target_health < 1000) then 
-        local current_percentage = target_health
-        local current_time = GetTime()
+      elseif player_in_combat == 1 and target_is_hostile = 1 and target_is_npc == 1 and first_percentage then 
+        current_percentage = target_health
+        current_time = GetTime()
         calculate_time_to_death()
+      else
+        if script_running == 1 then
+          stop_this("something strange happened")
+        end
       end
     else
       player_has_target = 0

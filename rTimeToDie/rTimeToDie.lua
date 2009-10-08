@@ -19,8 +19,16 @@
   -- CONFIG
   ---------------------------------------------
 
-  --activate the mod for mobs with mob level >= player level + 3 aswell? 0 = off, 1 = on
-  local use_level_three_mobs = 1
+  --set your mobtype
+  --1 = raidboss only
+  --2 = raidboss and playerlevel + 3 mobs (hc instance bosses, 83 mobs etc.)
+  --3 = show add for every mob available
+  local show_time_mobtype = 2
+  
+  --show dps?
+  local show_dps = 1
+  
+  --position
   local anchor = "TOP"
   local posx = 0
   local posy = -50
@@ -82,7 +90,7 @@
   
   --init
   local function initFrames()
-    a:SetWidth(400)
+    a:SetWidth(600)
     a:SetHeight(40)
     a:SetPoint(anchor,posx,posy)
     --SetBackdrop(a)
@@ -169,7 +177,12 @@
           calc_time = 1
         end
         time_to_die = SecondsToTime(calc_time)
-        am("TTD: "..UnitName("target").." dies in "..time_to_die)
+        if show_dps == 1 then
+          local dps = floor(hp_diff/time_diff)
+          am("TTD: "..UnitName("target").." dies in "..time_to_die.." (DPS "..dps..")")
+        else
+          am("TTD: "..UnitName("target").." dies in "..time_to_die)
+        end
       elseif hp_diff < 0 then
         --unit has healed, reseting the initial values
         first_life = current_life
@@ -199,17 +212,23 @@
       else
         target_is_hostile = 0
       end
-      if UnitLevel("target") == -1 then
-        target_is_raidboss = 1
-      elseif UnitLevel("target") >= (UnitLevel("player")+3) then
-        if use_level_three_mobs == 1 then
+      
+      if show_time_mobtype == 1 then
+        if UnitLevel("target") == -1 then
+          target_is_raidboss = 1
+        else
+          target_is_raidboss = 0
+        end
+      elseif show_time_mobtype == 2 then
+        if (UnitLevel("target") >= (UnitLevel("player")+3)) or (UnitLevel("target") == -1) then
           target_is_raidboss = 1
         else
           target_is_raidboss = 0
         end
       else
-        target_is_raidboss = 0
-      end
+        target_is_raidboss = 1
+      end      
+      
       if (UnitIsPlayer("target")) then
          target_is_npc = 0
       else

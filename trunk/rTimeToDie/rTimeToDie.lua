@@ -16,6 +16,16 @@
   -- how long it will take to bring it down to zero
 
   ---------------------------------------------
+  -- CONFIG
+  ---------------------------------------------
+
+  --activate the mod for mobs with mob level >= player level + 3 aswell? 0 = off, 1 = on
+  local use_level_three_mobs = 1
+  local anchor = "TOP"
+  local posx = 0
+  local posy = -50
+
+  ---------------------------------------------
   -- VARIABLES
   ---------------------------------------------
   
@@ -45,15 +55,50 @@
   --script running
   local script_running = 0
   --helper frame
-  local a = CreateFrame("Frame")  
+  local a = CreateFrame("Frame",nil,UIParent)  
+  local updateCombatStatus, updateTargetStatus
   
   ---------------------------------------------
   -- FUNCTIONS
   ---------------------------------------------
   
-  local function am(text)
-    DEFAULT_CHAT_FRAME:AddMessage(text)
+  
+  --set fontstring
+  local function SetFontString(f, fontName, fontHeight, fontStyle)
+    local fs = f:CreateFontString(nil, "OVERLAY")
+    fs:SetFont(fontName, fontHeight, fontStyle)
+    fs:SetShadowColor(0,0,0,1)
+    return fs
   end
+  
+  --backdrop
+  local function SetBackdrop(f)
+    f:SetBackdrop({ 
+      bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
+      edgeFile = "", tile = false, tileSize = 0, edgeSize = 32, 
+      insets = { left = -2, right = -2, top = -2, bottom = -2 }
+    })
+    f:SetBackdropColor(0,0,0,1)
+  end
+  
+  --init
+  local function initFrames()
+    a:SetWidth(400)
+    a:SetHeight(40)
+    a:SetPoint(anchor,posx,posy)
+    --SetBackdrop(a)
+    local text = SetFontString(a, "FONTS\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    text:SetPoint("LEFT", 2, 0)
+    text:SetPoint("RIGHT", -2, 0)
+    --text:SetJustifyH("LEFT")
+    text:SetTextColor(1,1,1)
+    a.text = text
+  end
+  
+  local function am(meintext)
+    --DEFAULT_CHAT_FRAME:AddMessage(text)
+    a.text:SetText(meintext)
+  end  
   
   local function updateFunc(self,elapsed)
     local t = self.timer
@@ -73,7 +118,8 @@
   
   local function activate_this()
     a:SetScript("OnUpdate", updateFunc)
-    am("TTD: Script started.")
+    --am("TTD: Script started.")
+    am("")
     script_running = 1
   end
   
@@ -81,15 +127,16 @@
     first_percentage = nil
     first_time_seen = nil
     a:SetScript("OnUpdate", nil)
-    if reason then
-      am("TTD: Script ended because of: "..reason..".")
-    else
-      am("TTD: Script ended.")
-    end
+    --if reason then
+    --  am("TTD: Script ended because of: "..reason..".")
+    --else
+    --  am("TTD: Script ended.")
+    --end
+    am("")
     script_running = 0
   end
   
-  local function updateCombatStatus(self, event, unit)
+  updateCombatStatus = function (self, event, unit)
     if event == "PLAYER_REGEN_DISABLED" then
       player_in_combat = 1
       if script_running == 0 then
@@ -109,25 +156,28 @@
   
   local function calculate_time_to_death()
     if current_percentage == 0 then
-      am("TTD: Target is dead!")
+      am("TTD: "..UnitName("target").." is dead!")
       if script_running == 1 then
         stop_this("target is dead")
       end
     else
       local time_diff = current_time-first_time_seen
       local hp_diff = first_percentage-current_percentage
+      --am(current_time.." - "..first_time_seen.." = "..time_diff)
+      --am(first_percentage.." - "..current_percentage.." = "..hp_diff)
       if hp_diff > 0 then
-        local calc_time = ((time_diff*1000)/hp_diff)-current_time
-        if calc_time < 0 then
-          calc_time = 0
+        local calc_time = ((time_diff*1000)/hp_diff)
+        local calc_time = calc_time+first_time_seen-current_time
+        if calc_time < 1 then
+          calc_time = 1
         end
         time_to_die = SecondsToTime(calc_time)
-        am("TTD: Target dies in "..time_to_die)
+        am("TTD: "..UnitName("target").." dies in "..time_to_die)
       elseif hp_diff < 0 then
         --unit has healed, reseting the initial values
         first_percentage = current_percentage
         first_time_seen = current_time
-        am("TTD: Target has healed. Please wait... :/")
+        am("TTD: "..UnitName("target").." has healed. :/")
       else
         --check if unit is still at 100% (or has healed too 100% and still sits at 100%)
         if current_percentage == 1000 then
@@ -136,13 +186,13 @@
           am("TTD: Unit is still at 100%. ZZzzzzzZZZZzzz.")
         else
           --no hp change happened since last update
-          am("TTD: No health change. Damage plx. >_<")
+          --am("TTD: No health change. Damage plx. >_<")
         end
       end
     end
   end
   
-  local function updateTargetStatus(self,event,unit)
+  updateTargetStatus = function (self,event,unit)
     --on target change the script needs to reset values
     if event == "PLAYER_TARGET_CHANGED" then
       if script_running == 1 then
@@ -158,6 +208,12 @@
       end
       if UnitLevel("target") == -1 then
         target_is_raidboss = 1
+      elseif UnitLevel("target") >= (UnitLevel("player")+3) then
+        if use_level_three_mobs == 1 then
+          target_is_raidboss = 1
+        else
+          target_is_raidboss = 0
+        end
       else
         target_is_raidboss = 0
       end
@@ -167,19 +223,20 @@
          target_is_npc = 1
       end
       calc_target_health()
-      if player_in_combat == 1 and target_is_hostile = 1 and target_is_npc == 1 and not first_percentage and (target_health > 0) then
+      if player_in_combat == 1 and target_is_hostile == 1 and target_is_raidboss == 1 and target_is_npc == 1 and not first_percentage and (target_health > 0) then
         first_percentage = target_health
         first_time_seen = GetTime()
         if script_running == 0 then
           activate_this()
         end 
-      elseif player_in_combat == 1 and target_is_hostile = 1 and target_is_npc == 1 and first_percentage then 
+      elseif player_in_combat == 1 and target_is_hostile == 1 and target_is_raidboss == 1 and target_is_npc == 1 and first_percentage then 
         current_percentage = target_health
         current_time = GetTime()
         calculate_time_to_death()
       else
         if script_running == 1 then
-          stop_this("something strange happened")
+          stop_this("mob level is to low")
+          --am("something strange happened")
         end
       end
     else
@@ -188,8 +245,20 @@
         stop_this("no target")
       end
     end
-  end
+  end  
+
   
-  a:RegisterEvent("PLAYER_REGEN_ENABLED", updateCombatStatus)
-  a:RegisterEvent("PLAYER_REGEN_DISABLED", updateCombatStatus)
-  a:RegisterEvent("PLAYER_TARGET_CHANGED", updateTargetStatus)
+  a:RegisterEvent("PLAYER_REGEN_ENABLED")
+  a:RegisterEvent("PLAYER_REGEN_DISABLED")
+  a:RegisterEvent("PLAYER_TARGET_CHANGED")
+  a:RegisterEvent("PLAYER_LOGIN")
+  
+  a:SetScript("OnEvent", function(self,event,unit)
+    if event == "PLAYER_TARGET_CHANGED" then
+      updateTargetStatus(self,event,unit)
+    elseif event == "PLAYER_LOGIN" then
+      initFrames()
+    else
+      updateCombatStatus(self,event,unit)
+    end
+  end)

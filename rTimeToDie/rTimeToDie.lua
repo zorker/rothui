@@ -5,16 +5,6 @@
   
   -- by roth 2009
   
-  -- First...this mod is only viable for raid bosses.
-  -- No one wants to know if something is gonna die in 5 or 10 seconds. Doesn't matter.
-  
-  -- we need to be in combat
-  -- the unit needs to be hostile
-  -- the mob needs to be a raidboss
-  -- we need a variable that saves the first time the boss is below 100%
-  -- then we have an onupdate script that will lookup the boss hp every second to detect 
-  -- how long it will take to bring it down to zero
-
   ---------------------------------------------
   -- CONFIG
   ---------------------------------------------
@@ -32,7 +22,7 @@
   local anchor = "TOP"
   local posx = 0
   local posy = -50
-
+  
   ---------------------------------------------
   -- VARIABLES
   ---------------------------------------------
@@ -56,7 +46,7 @@
   local current_life
   local current_time
   --update timer in seconds
-  local update_timer = 2
+  local update_timer = 1
   --time to die
   local time_to_die
   --script running
@@ -67,8 +57,7 @@
   
   ---------------------------------------------
   -- FUNCTIONS
-  ---------------------------------------------
-  
+  --------------------------------------------- 
   
   --set fontstring
   local function SetFontString(f, fontName, fontHeight, fontStyle)
@@ -88,7 +77,7 @@
     f:SetBackdropColor(0,0,0,1)
   end
   
-  --init
+  --init func
   local function initFrames()
     a:SetWidth(600)
     a:SetHeight(40)
@@ -97,20 +86,21 @@
     local text = SetFontString(a, "FONTS\\FRIZQT__.ttf", 14, "THINOUTLINE")
     text:SetPoint("LEFT", 2, 0)
     text:SetPoint("RIGHT", -2, 0)
-    --text:SetJustifyH("LEFT")
     text:SetTextColor(1,1,1)
     a.text = text
   end
   
+  --output to the frame
   local function am(meintext)
-    --DEFAULT_CHAT_FRAME:AddMessage(text)
     a.text:SetText(meintext)
   end  
   
+  --output to the chat
   local function amd(meintext)
-    DEFAULT_CHAT_FRAME:AddMessage(meintext)
+    --DEFAULT_CHAT_FRAME:AddMessage(meintext)
   end  
   
+  --onUpdate func
   local function updateFunc(self,elapsed)
     local t = self.timer
     if (not t) then
@@ -127,26 +117,29 @@
     end
   end
   
+  --start the onUpdate
   local function activate_this()
     a:SetScript("OnUpdate", updateFunc)
-    --amd("TTD: Script started.")
+    amd("TTD: Script started.")
     am("")
     script_running = 1
   end
   
+  --stop the onUpdate
   local function stop_this(reason)
     first_life = nil
     first_time = nil
     a:SetScript("OnUpdate", nil)
     if reason then
-      --amd("TTD: Script ended because of: "..reason..".")
+      amd("TTD: Script ended because of: "..reason..".")
     else
-      --amd("TTD: Script ended.")
+      amd("TTD: Script ended.")
     end
     am("")
     script_running = 0
   end
   
+  --update combat status
   updateCombatStatus = function (self, event, unit)
     if event == "PLAYER_REGEN_DISABLED" then
       player_in_combat = 1
@@ -161,6 +154,7 @@
     end
   end
   
+  --calculate the time to death
   local function calculate_time_to_death()
     if current_life == 0 then
       am("TTD: "..UnitName("target").." is dead!")
@@ -171,8 +165,14 @@
       local time_diff = current_time-first_time
       local hp_diff = first_life-current_life
       if hp_diff > 0 then
+        -- Rule of three (Dreisatz): 
+        -- If in a given timespan a certain value of damage is done, what timespan is needed to do 100% damage?
+        -- The longer the timespan the more precise the prediction
+        -- time_diff/hp_diff = x/first_life_max 
+        -- x = time_diff*first_life_max/hp_diff
         local calc_time = time_diff*first_life_max/hp_diff
         calc_time = first_time+calc_time-current_time
+        --SecondsToTime can only display values >= 1
         if calc_time < 1 then
           calc_time = 1
         end
@@ -190,14 +190,20 @@
         am("TTD: "..UnitName("target").." has healed. :/")
       else
         if current_life == first_life_max then
+          --since unit is at full health we can reset the time and hp values
+          --thus data will be tracked from the point on when the unit starts to loose life
           first_life = current_life
           first_time = current_time
-          am("TTD: Unit is still at 100%. ZZzzzzzZZZZzzz.")
+          am("TTD: "..UnitName("target").." is at full health.")
+        else
+          --no damage occured in the timespan
+          --do nothing but wait
         end
       end
     end
   end
   
+  --update target status
   updateTargetStatus = function (self,event,unit)
     --on target change the script needs to reset values
     if event == "PLAYER_TARGET_CHANGED" then
@@ -258,11 +264,18 @@
     end
   end  
 
+  ---------------------------------------------
+  -- REGISTER EVENTS
+  ---------------------------------------------
   
   a:RegisterEvent("PLAYER_REGEN_ENABLED")
   a:RegisterEvent("PLAYER_REGEN_DISABLED")
   a:RegisterEvent("PLAYER_TARGET_CHANGED")
   a:RegisterEvent("PLAYER_LOGIN")
+  
+  ---------------------------------------------
+  -- SETSCRIPT
+  ---------------------------------------------
   
   a:SetScript("OnEvent", function(self,event,unit)
     if event == "PLAYER_TARGET_CHANGED" then

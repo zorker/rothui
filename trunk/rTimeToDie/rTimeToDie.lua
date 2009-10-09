@@ -171,7 +171,11 @@
         -- time_diff/hp_diff = x/first_life_max 
         -- x = time_diff*first_life_max/hp_diff
         local calc_time = time_diff*first_life_max/hp_diff
-        calc_time = first_time+calc_time-current_time
+        --if unit was not at 100% at first time seen this is very important we need to calculate backwards in time then too
+        -- second rule of three needed
+        --if first_life == max life this will be 0 but otherwise a time will be the result
+        local past_first_time = (first_life_max-first_life)*time_diff/hp_diff
+        calc_time = first_time-past_first_time+calc_time-current_time
         --SecondsToTime can only display values >= 1
         if calc_time < 1 then
           calc_time = 1

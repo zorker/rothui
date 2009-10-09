@@ -18,6 +18,9 @@
   --show dps?
   local show_dps = 1
   
+  --show fight_length
+  local show_fightlength = 1
+  
   --position
   local anchor = "TOP"
   local posx = 0
@@ -47,13 +50,12 @@
   local current_time
   --update timer in seconds
   local update_timer = 1
-  --time to die
-  local time_to_die
   --script running
   local script_running = 0
   --helper frame
   local a = CreateFrame("Frame",nil,UIParent)  
   local updateCombatStatus, updateTargetStatus
+  local last_string
   
   ---------------------------------------------
   -- FUNCTIONS
@@ -97,7 +99,7 @@
   
   --output to the chat
   local function amd(meintext)
-    --DEFAULT_CHAT_FRAME:AddMessage(meintext)
+    DEFAULT_CHAT_FRAME:AddMessage(meintext)
   end  
   
   --onUpdate func
@@ -120,7 +122,7 @@
   --start the onUpdate
   local function activate_this()
     a:SetScript("OnUpdate", updateFunc)
-    amd("TTD: Script started.")
+    --amd("TTD: Script started.")
     am("")
     script_running = 1
   end
@@ -131,9 +133,13 @@
     first_time = nil
     a:SetScript("OnUpdate", nil)
     if reason then
-      amd("TTD: Script ended because of: "..reason..".")
+      --amd("TTD: Script ended because of: "..reason..".")
     else
-      amd("TTD: Script ended.")
+      --amd("TTD: Script ended.")
+    end
+    if last_string then
+      --amd(last_string)
+      last_string = nil
     end
     am("")
     script_running = 0
@@ -170,23 +176,34 @@
         -- The longer the timespan the more precise the prediction
         -- time_diff/hp_diff = x/first_life_max 
         -- x = time_diff*first_life_max/hp_diff
-        local calc_time = time_diff*first_life_max/hp_diff
+        local full_time = time_diff*first_life_max/hp_diff
         --if unit was not at 100% at first time seen this is very important we need to calculate backwards in time then too
         -- second rule of three needed
         --if first_life == max life this will be 0 but otherwise a time will be the result
         local past_first_time = (first_life_max-first_life)*time_diff/hp_diff
-        calc_time = first_time-past_first_time+calc_time-current_time
+        calc_time = first_time-past_first_time+full_time-current_time
         --SecondsToTime can only display values >= 1
         if calc_time < 1 then
           calc_time = 1
         end
-        time_to_die = SecondsToTime(calc_time)
+        local time_to_die = SecondsToTime(calc_time)
+        local fight_length
+        local dps
         if show_dps == 1 then
-          local dps = floor(hp_diff/time_diff)
-          am("TTD: "..UnitName("target").." dies in "..time_to_die.." (DPS "..dps..")")
+          dps = floor(hp_diff/time_diff)
+          dps = " (DPS "..dps..")"
         else
-          am("TTD: "..UnitName("target").." dies in "..time_to_die)
+          dps = ""
         end
+        if show_fightlength == 1 then
+          fight_length = SecondsToTime(full_time)
+          fight_length = " after "..fight_length
+        else
+          fight_length = ""
+        end
+        last_string = "TTD: "..UnitName("target").." dies in "..time_to_die..fight_length..dps
+        am(last_string)
+        
       elseif hp_diff < 0 then
         --unit has healed, reseting the initial values
         first_life = current_life

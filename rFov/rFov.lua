@@ -15,7 +15,7 @@ local function create_worldframe_background()
   t:SetTexture(0, 0, 0, 1)
   t:SetPoint("TOPLEFT", UIParent, "TOPLEFT", -5, 5)
   t:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 5, -5)
-  WorldFrame.t = t
+  WorldFrame.bg = t
 end
 
 --GLOBAL or LOCAL, you choose. If its global you can access it in the chat window.

@@ -252,7 +252,7 @@
     --MiniMapBattlefieldIcon:SetAllPoints(MiniMapBattlefieldFrame)    
     --MiniMapBattlefieldIcon:SetTexCoord(0.07,0.93,0.07,0.93)
     
-    MinimapToggleButton:Hide()
+    --MinimapToggleButton:Hide()
     MinimapZoneTextButton:Hide()
     MinimapBorderTop:Hide()
     MinimapBorder:Hide()
@@ -303,7 +303,7 @@
     bu:SetPushedTexture("")
     bu:SetHighlightTexture("")
     
-    MiniMapMeetingStoneFrame:Hide()
+    --MiniMapMeetingStoneFrame:Hide()
 
   end
   

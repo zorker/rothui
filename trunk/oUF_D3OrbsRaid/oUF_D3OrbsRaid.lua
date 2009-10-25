@@ -95,8 +95,11 @@
     self.AuraWatch = auras
   end
   
-  local function check_threat(self,unit)
+  local function check_threat(self,event,unit)
     if unit then
+      if self.unit ~= unit then
+        return
+      end
       local threat = UnitThreatSituation(unit)
   		if threat == 3 then
   		  self.glosst:SetVertexColor(1,0,0)
@@ -113,14 +116,6 @@
     local tmpunitname
     if unit then
       tmpunitname = UnitName(unit)
-    end
-    
-    if not self.check_threat then
-      self.check_threat = true
-      bar:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
-      bar:SetScript("OnEvent", function()
-        check_threat(self,unit)
-      end)
     end
     
     local c = max - min
@@ -174,9 +169,11 @@
     self:SetScript("OnEnter", UnitFrame_OnEnter)
     self:SetScript("OnLeave", UnitFrame_OnLeave)
   
-    self:SetHeight(size)
-    self:SetWidth(size)
-    self:SetFrameStrata("LOW")
+    --self:SetHeight(size)
+    --self:SetWidth(size)
+    self:SetAttribute('initial-height', size)
+	  self:SetAttribute('initial-width', size)
+    --self:SetFrameStrata("LOW")
 
     self.DebuffHighlight = self:CreateTexture(nil, "BACKGROUND")
     self.DebuffHighlight:SetPoint("TOPLEFT",self,"TOPLEFT",-5,5)
@@ -213,6 +210,8 @@
     self.glosst:SetAllPoints(self.glossf)
     self.glosst:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_roth")
     self.glosst:SetVertexColor(0.47,0.4,0.4)
+    
+    self:RegisterEvent('UNIT_THREAT_SITUATION_UPDATE', check_threat)
     
     if myclass == "DRUID" then
       d3o2_createAuraWatch(self,unit)

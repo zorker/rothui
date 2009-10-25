@@ -56,33 +56,14 @@
     
     [2] = { 
       texture = "zahnrad", --texturename under media folder
-      width = 215, 
-      height = 215,
+      width = 210, 
+      height = 210,
       scale = 0.82,
       anchorframe = Minimap,
       framelevel = "0",
       color_red = 48/255,
       color_green = 44/255,
       color_blue = 35/255,
-      alpha = 1,
-      duration = 60, --how long should the rotation need to finish 360°
-      direction = 1, --0 = counter-clockwise, 1 = clockwise
-      blendmode = "BLEND", --ADD or BLEND
-      setpoint = "CENTER",
-      setpointx = 0,
-      setpointy = 0,
-    },
-    
-    [3] = { 
-      texture = "zahnrad", --texturename under media folder
-      width = 300, 
-      height = 300,
-      scale = 0.82,
-      anchorframe = UIParent,
-      framelevel = "0",
-      color_red = 255/255,
-      color_green = 0/255,
-      color_blue = 0/255,
       alpha = 1,
       duration = 60, --how long should the rotation need to finish 360°
       direction = 1, --0 = counter-clockwise, 1 = clockwise

@@ -46,7 +46,7 @@
   lock_bar2 = 1
   
   -- bar3
-  if myname == "Loral" then
+  if myname == "Rothar" then
     bar3_on_mouseover = 0
   else
     bar3_on_mouseover = 0

@@ -33,55 +33,63 @@
   -----------------------
   -- CONFIG AREA START --
   -----------------------
-     
-  -- scaling
-  local myscale = 0.82
-
-  --info:
-  --texture: name of the texture inside the "media" folder
-  --direction: 1 = right, 0 = left
-  --blendmode: 1 = blendmode("add"), 0 = no blend mode
-  --steps in degree: how much the texture should rotate per step 0.1 = 0.1 degrees
-  --update timer: how often the script should check for updates 1/60 = 60fps
 
   frames_to_rotate = {
     [1] = { 
-      texture = "ring", 
-      width = 158, 
-      height = 158,
-      anchorframe = "Minimap",
-      framestrata = "LOW",
+      texture = "ring", --texturename under media folder
+      width = 190, 
+      height = 190,
+      scale = 0.82,
+      anchorframe = Minimap,
+      framelevel = "3", --defines the framelevel to overlay or underlay other stuff
       color_red = 0/255,
       color_green = 0/255,
       color_blue = 0/255,
       alpha = 0.4,
-      update_timer = 1/60,
-      steps_in_degree = 0.15,
-      direction = 0,
-      blendmode = 0,
-      setpoint1 = "CENTER",
-      setpoint2 = "CENTER",
-      posx = 0,
-      posy = 0,
+      duration = 60, --how long should the rotation need to finish 360°
+      direction = 1, --0 = counter-clockwise, 1 = clockwise
+      blendmode = "BLEND", --ADD or BLEND
+      setpoint = "CENTER",
+      setpointx = 0,
+      setpointy = 0,
     },
+    
     [2] = { 
-      texture = "mapart2", 
-      width = 180, 
-      height = 180,
-      anchorframe = "Minimap",
-      framestrata = "BACKGROUND",
+      texture = "zahnrad", --texturename under media folder
+      width = 215, 
+      height = 215,
+      scale = 0.82,
+      anchorframe = Minimap,
+      framelevel = "0",
+      color_red = 48/255,
+      color_green = 44/255,
+      color_blue = 35/255,
+      alpha = 1,
+      duration = 60, --how long should the rotation need to finish 360°
+      direction = 1, --0 = counter-clockwise, 1 = clockwise
+      blendmode = "BLEND", --ADD or BLEND
+      setpoint = "CENTER",
+      setpointx = 0,
+      setpointy = 0,
+    },
+    
+    [3] = { 
+      texture = "zahnrad", --texturename under media folder
+      width = 300, 
+      height = 300,
+      scale = 0.82,
+      anchorframe = UIParent,
+      framelevel = "0",
       color_red = 255/255,
-      color_green = 255/255,
-      color_blue = 255/255,
-      alpha = 0.1,
-      update_timer = 1/60,
-      steps_in_degree = 0.08,
-      direction = 1,
-      blendmode = 1,
-      setpoint1 = "CENTER",
-      setpoint2 = "CENTER",
-      posx = 0,
-      posy = 0,
+      color_green = 0/255,
+      color_blue = 0/255,
+      alpha = 1,
+      duration = 60, --how long should the rotation need to finish 360°
+      direction = 1, --0 = counter-clockwise, 1 = clockwise
+      blendmode = "BLEND", --ADD or BLEND
+      setpoint = "CENTER",
+      setpointx = 0,
+      setpointy = 0,
     },
 
   }
@@ -100,79 +108,40 @@
     if(event=="PLAYER_LOGIN") then
       for index,value in ipairs(frames_to_rotate) do 
         local ftr = frames_to_rotate[index]
-        a:rotateme(ftr.texture, ftr.width, ftr.height, ftr.anchorframe, ftr.framestrata, ftr.color_red, ftr.color_green, ftr.color_blue, ftr.alpha, ftr.update_timer, ftr.steps_in_degree,ftr.direction, ftr.blendmode,ftr.setpoint1,ftr.setpoint2,ftr.posx,ftr.posy)
+        a:rotateme(ftr.texture, ftr.width, ftr.height, ftr.scale, ftr.anchorframe, ftr.framelevel, ftr.color_red, ftr.color_green, ftr.color_blue, ftr.alpha, ftr.duration, ftr.direction, ftr.blendmode, ftr.setpoint, ftr.setpointx, ftr.setpointy)
       end
     end
   end)    
   
-  function a:rotateme(tex,texw,texh,texanchor,texstrata,texr,texg,texb,texalpha,timer,steps,side,bmode,point1,point2,posx,posy)
+  function a:rotateme(texture,width,height,scale,anchorframe,framelevel,texr,texg,texb,alpha,duration,side,blendmode,point,pointx,pointy)
 
-    --DEFAULT_CHAT_FRAME:AddMessage("ping")
-
-    local r2 = math.sqrt(0.5^2+0.5^2);
-
-    local f = CreateFrame("Frame",nil,UIParent)
-    f:SetWidth(texw)
-    f:SetHeight(texh)
-    f:SetPoint(point1,texanchor,point2,posx,posy)
-    f:SetFrameStrata(texstrata)
-    f:SetScale(myscale)
-    f:Show()
+    local h = CreateFrame("Frame",nil,anchorframe)
+    h:SetHeight(height)
+    h:SetWidth(width)		  
+    h:SetPoint(point,pointx,pointy)
+    h:SetScale(scale)
+    h:SetFrameLevel(framelevel)
+  
+    local t = h:CreateTexture()
+    t:SetAllPoints(h)
+    t:SetTexture("Interface\\AddOns\\rFramerotater\\media\\"..texture)
+    t:SetBlendMode(blendmode)
+    t:SetVertexColor(texr,texg,texb,alpha)
+    h.t = t
     
-    local t = f:CreateTexture(nil,"BACKGROUND")
-    t:SetTexture("Interface\\AddOns\\rFrameRotater\\media\\"..tex)
-    t:SetAllPoints(f)
-    t:SetVertexColor(texr,texg,texb,texalpha)
-    if bmode == 1 then
-      t:SetBlendMode("add")
+    local ag = h:CreateAnimationGroup()
+    h.ag = ag
+    
+    local a1 = h.ag:CreateAnimation("Rotation")
+    if side == 0 then
+      a1:SetDegrees(360)
+    else
+      a1:SetDegrees(-360)
     end
+    a1:SetDuration(duration)
+    h.ag.a1 = a1
     
-    local totalElapsed = 0
-    local degrees
-    if side == 1 then
-      degrees = 0
-    else 
-      degrees = 360
-    end
-      
-    local update_timer = timer
-    local delaymultiplicator = 1
-    local starttime = GetTime()
-    
-    local function OnUpdateFunc(self, elapsed)
-      totalElapsed = totalElapsed + elapsed
-      if (totalElapsed < update_timer) then 
-        return 
-      else
-        local timenow = GetTime()
-        totalElapsed = 0
-        if (timenow > (starttime+update_timer*delaymultiplicator)) then
-          starttime = timenow
-          if side == 1 then
-            t:SetTexCoord(
-            0.5+r2*cos(degrees+135), 0.5+r2*sin(degrees+135),
-            0.5+r2*cos(degrees-135), 0.5+r2*sin(degrees-135),
-            0.5+r2*cos(degrees+45), 0.5+r2*sin(degrees+45),
-            0.5+r2*cos(degrees-45), 0.5+r2*sin(degrees-45)
-            ) 
-            degrees = degrees+steps
-            if degrees > 360 then
-              degrees = 0
-            end
-          else
-            t:SetTexCoord(
-            0.5+r2*cos(degrees+45), 0.5+r2*sin(degrees+45),
-            0.5+r2*cos(degrees+135), 0.5+r2*sin(degrees+135),
-            0.5+r2*cos(degrees-45), 0.5+r2*sin(degrees-45),            
-            0.5+r2*cos(degrees-135), 0.5+r2*sin(degrees-135)
-            )
-            degrees = degrees-steps
-            if degrees < 0 then
-              degrees = 360
-            end
-          end
-        end
-      end
-    end    
-    f:SetScript("OnUpdate", OnUpdateFunc)
+    h.ag:Play()
+    h.ag:SetLooping("REPEAT")  
+
   end

@@ -1,6 +1,6 @@
 ## Interface: 30100
 ## Author: roth	
-## Title: oUF_RingThing
+## Title: oUF_RingThing3
 ## Notes: oUF layout - The one ring to bind them all...
 ## RequiredDeps: oUF, rColors
 ## OptionalDeps: oUF_DebuffHighlight, oUF_Smooth

@@ -16,7 +16,12 @@
   -- CONFIG
   -----------------------
 
-  local myfont = "Interface\\AddOns\\oUF_RingThing\\fonts\\Prototype.ttf"
+  local myfont = "Interface\\AddOns\\oUF_RingThing3\\media\\Prototype.ttf"
+  local allow_frame_movement = 1
+  local lock_all_frames = 0
+  
+  --for testing
+  local testmode = 1
   
   ---------------------  
   -- FUNCTIONS
@@ -280,9 +285,9 @@
     t2:SetVertexColor(segment_config.color.r,segment_config.color.g,segment_config.color.b,segment_config.color.a)
     t2:SetBlendMode(segment_config.blendmode)
     if direction == 1 then
-      t2:SetTexture("Interface\\AddOns\\oUF_RingThing\\ring_gfx\\slicer1")
+      t2:SetTexture("Interface\\AddOns\\oUF_RingThing3\\media\\slicer1")
     else
-      t2:SetTexture("Interface\\AddOns\\oUF_RingThing\\ring_gfx\\slicer0")
+      t2:SetTexture("Interface\\AddOns\\oUF_RingThing3\\media\\slicer0")
     end
     t2:Hide()
 
@@ -438,9 +443,15 @@
     self:SetAttribute("*type2", "menu")
     self:SetScript("OnEnter", UnitFrame_OnEnter)
     self:SetScript("OnLeave", UnitFrame_OnLeave)
-    self:SetAttribute("initial-height", self.config.size)
-    self:SetAttribute("initial-width", self.config.size)
+    self:SetAttribute("initial-height", self.config.height)
+    self:SetAttribute("initial-width", self.config.width)
     self:SetAttribute("initial-scale", self.config.scale)
+    self:SetPoint(self.config.anchorpoint,self.config.anchorposx,self.config.anchorposy)
+    if testmode == 1 then
+      local t = self:CreateTexture(nil,"BACKGROUND")
+      t:SetTexture(0,0,0,0.5)
+      t:SetAllPoints(self)
+    end
   end
   
   --set fontstring
@@ -453,8 +464,10 @@
   
   --create background texture
   local function create_ring_background(self)
-    local f = CreateFrame("Frame",nil,self)
-    f:SetAllPoints(self)
+    local f = CreateFrame("Frame",nil,self.config.background.anchorframe)
+    f:SetPoint(self.config.background.anchorpoint,self.config.background.anchorposx,self.config.background.anchorposy)
+    f:SetWidth(self.config.background.width)
+    f:SetHeight(self.config.background.height)
     f:SetFrameLevel(self.config.background.framelevel)
     f:SetAlpha(self.config.background.alpha)
     local t = f:CreateTexture(nil,"BACKGROUND")
@@ -468,8 +481,10 @@
   
   --create foreground texture
   local function create_ring_foreground(self)
-    local f = CreateFrame("Frame",nil,self)
-    f:SetAllPoints(self)
+    local f = CreateFrame("Frame",nil,self.config.foreground.anchorframe)
+    f:SetPoint(self.config.foreground.anchorpoint,self.config.foreground.anchorposx,self.config.foreground.anchorposy)
+    f:SetWidth(self.config.foreground.width)
+    f:SetHeight(self.config.foreground.height)
     f:SetFrameLevel(self.config.foreground.framelevel)
     f:SetAlpha(self.config.foreground.alpha)
     local t = f:CreateTexture(nil,"BACKGROUND")
@@ -483,9 +498,11 @@
     
   --create the ring segments
   local function create_segments(self,segment_config)
-    local f = CreateFrame("Frame",nil,self)
-    f:SetAllPoints(self)
-    f:SetFrameLevel(segment_config.framelevel)
+    local f = CreateFrame("Frame",nil,self.config.ringcontainer.anchorframe)
+    f:SetPoint(self.config.ringcontainer.anchorpoint,self.config.ringcontainer.anchorposx,self.config.ringcontainer.anchorposy)
+    f:SetWidth(self.config.ringcontainer.size)
+    f:SetHeight(self.config.ringcontainer.size)
+    f:SetFrameLevel(self.config.ringcontainer.framelevel)
     f:SetAlpha(segment_config.alpha)
     for i=1,(segment_config.segments_used) do
       f[i] = CreateFrame("Frame",nil,f)
@@ -515,12 +532,36 @@
     return f
   end
   
-  --create the health segments
+  --create the power segments
   local function create_power_segments(self)
     local f = CreateFrame("Frame",nil,self)
     f.segments = create_segments(self,self.config.power)
     return f
-  end    
+  end
+  
+  --move me in place
+  local function make_me_movable(f)
+    if allow_frame_movement == 0 then
+      f:IsUserPlaced(false)
+    else
+      f:SetMovable(true)
+      f:SetUserPlaced(true)
+      if lock_all_frames == 0 then
+        f:EnableMouse(true)
+        f:RegisterForDrag("LeftButton","RightButton")
+        f:SetScript("OnDragStart", function(self) if IsAltKeyDown() and IsShiftKeyDown() then self:StartMoving() end end)
+        f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+      end
+    end  
+  end
+  
+  local function create_portraits(self)
+    --self.Portrait = CreateFrame("PlayerModel", nil, self)
+    self.Portrait = self:CreateTexture(nil, "BACKGROUND")
+    self.Portrait:SetPoint("TOPLEFT",self.ring_background,"TOPLEFT",30,-30)
+    self.Portrait:SetPoint("BOTTOMRIGHT",self.ring_background,"BOTTOMRIGHT",-30,30)
+    --self.Portrait:SetFrameLevel(0)
+  end
   
   --the default config
   local function default_config(self)  
@@ -528,21 +569,31 @@
     local c = CreateFrame("Frame", nil, self)
     c.anchorframe = UIParent
     c.anchorpoint = "CENTER"
-    c.anchorposx = -400
-    c.anchorposy = -100
+    c.anchorposx = 0
+    c.anchorposy = 0
     c.scale = 1
-    c.size = 256
+    c.width = 500
+    c.height = 256
     c.alpha = 1
+    
+    --defines the container that will hold the ring
+    local rc = CreateFrame("Frame", nil, self)
+    rc.anchorframe = self
+    rc.anchorpoint = "LEFT"
+    rc.anchorposx = 0
+    rc.anchorposy = 0
+    rc.size = 256
+    rc.alpha = 1
+    rc.framelevel = 3
     
     --define config variables for your health segments
     local hs = CreateFrame("Frame", nil, self)
-    hs.alpha = 1
-    hs.framelevel = 1
+    hs.alpha = 0.9
     hs.segments_used = 2
     hs.start_segment = 3
     hs.fill_direction = 1
-    hs.texture = "Interface\\AddOns\\oUF_RingThing\\ring_gfx\\ring1_segment"
-    hs.color = {r = 180/255, g = 10/255, b = 10/255, a = 1}
+    hs.texture = "Interface\\AddOns\\oUF_RingThing3\\media\\ring1_segment"
+    hs.color = {r = 255/255, g = 10/255, b = 10/255, a = 1}
     hs.blendmode = "BLEND"
     hs.segmentsize = 128
     hs.outer_radius = 110
@@ -550,12 +601,11 @@
     
     --define config variables for your power segments
     local ps = CreateFrame("Frame", nil, self)
-    ps.alpha = 1
-    ps.framelevel = 1
+    ps.alpha = 0.9
     ps.segments_used = 2
     ps.start_segment = 2
     ps.fill_direction = 0
-    ps.texture = "Interface\\AddOns\\oUF_RingThing\\ring_gfx\\ring1_segment"
+    ps.texture = "Interface\\AddOns\\oUF_RingThing3\\media\\ring1_segment"
     ps.color = {r = 10/255, g = 100/255, b = 150/255, a = 1}
     ps.blendmode = "BLEND"
     ps.segmentsize = 128
@@ -566,21 +616,34 @@
     local rb = CreateFrame("Frame", nil, self)
     rb.active = 1
     rb.color = {r = 255/255, g = 255/255, b = 255/255, a = 1}
-    rb.alpha = 0.7
-    rb.framelevel = 0
+    rb.alpha = 0.3
+    rb.framelevel = 2
     rb.blendmode = "BLEND"
-    rb.texture = "Interface\\AddOns\\oUF_RingThing\\ring_gfx\\ring1_background"
+    rb.texture = "Interface\\AddOns\\oUF_RingThing3\\media\\ring1_background"
+    rb.anchorframe = self
+    rb.anchorpoint = "LEFT"
+    rb.anchorposx = 0
+    rb.anchorposy = 0
+    rb.width = 256
+    rb.height = 256
     
     --ring foreground
     local rf = CreateFrame("Frame", nil, self)    
     rf.active = 1
     rf.color = {r = 255/255, g = 255/255, b = 255/255, a = 1}
     rf.alpha = 0.7
-    rf.framelevel = 2
-    rf.blendmode = "BLEND"
-    rf.texture = "Interface\\AddOns\\oUF_RingThing\\ring_gfx\\ring1_foreground"
+    rf.framelevel = 5
+    rf.blendmode = "ADD"
+    rf.texture = "Interface\\AddOns\\oUF_RingThing3\\media\\ring1_foreground"
+    rf.anchorframe = self
+    rf.anchorpoint = "LEFT"
+    rf.anchorposx = 0
+    rf.anchorposy = 0
+    rf.width = 256
+    rf.height = 256
 
     self.config = c
+    self.config.ringcontainer = rc
     self.config.health = hs
     self.config.power = ps
     self.config.background = rb
@@ -606,7 +669,23 @@
     --create fake health and power statusbars to make the health/mana functions available
     self.Health = CreateFrame("StatusBar", nil, self)
     self.Power = CreateFrame("StatusBar", nil, self)    
-    self.Power.frequentUpdates = true    
+    self.Power.frequentUpdates = true
+    
+    --hpval
+    local hpval1 = SetFontString(self, myfont, 32, "OUTLINE")
+    hpval1:SetPoint("CENTER", self.ring_foreground, "CENTER", 0, 12)
+    hpval1:SetTextHeight(self.config.ringcontainer.size/5)
+    self:Tag(hpval1, "[perhp]")
+    --mana value
+    local mpval1 = SetFontString(self, myfont, 32, "OUTLINE")
+    mpval1:SetPoint("CENTER", self.ring_foreground, "CENTER", 0, -35)
+    mpval1:SetTextHeight(self.config.ringcontainer.size/6.5)
+    mpval1:SetTextColor(0.6,0.6,0.6)
+    self:Tag(mpval1, "[perpp]")
+    
+    create_portraits(self)
+    make_me_movable(self)
+    
     self.PostUpdateHealth = calc_ring_health
     self.PostUpdatePower = calc_ring_mana  
   end
@@ -619,7 +698,9 @@
   --PLAYER STYLE
   local function CreatePlayerRingStyle(self, unit)
     --load default setup
-    default_config(self)    
+    default_config(self)   
+    --rewrite specific config values that should be different from the default setup
+    self.config.scale = 0.5 
     --init the frames
     init(self)
   end
@@ -628,7 +709,15 @@
   local function CreateTargetRingStyle(self, unit)    
     default_config(self)
     --rewrite specific config values that should be different from the default setup
-    self.config.anchorposx = self.config.anchorposx*(-1)    
+    self.config.scale = 0.5
+    init(self)  
+  end
+  
+  --ToT STYLE
+  local function CreateToTRingStyle(self, unit)    
+    default_config(self)
+    --rewrite specific config values that should be different from the default setup
+    self.config.scale = 0.4
     init(self)
   
   end
@@ -638,6 +727,7 @@
   -----------------------------
   oUF:RegisterStyle("player_ring", CreatePlayerRingStyle)
   oUF:RegisterStyle("target_ring", CreateTargetRingStyle)
+  oUF:RegisterStyle("tot_ring", CreateToTRingStyle)
   
   -----------------------------
   -- SPAWN UNITS
@@ -646,3 +736,5 @@
   oUF:Spawn("player", "oUF_RingThing_Player")
   oUF:SetActiveStyle("target_ring")
   oUF:Spawn("target", "oUF_RingThing_Target")
+  oUF:SetActiveStyle("tot_ring")
+  oUF:Spawn("targettarget", "oUF_RingThing_ToT")

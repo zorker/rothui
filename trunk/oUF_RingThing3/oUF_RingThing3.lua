@@ -498,12 +498,13 @@
     
   --create the ring segments
   local function create_segments(self,segment_config)
-    local f = CreateFrame("Frame",nil,self.config.ringcontainer.anchorframe)
-    f:SetPoint(self.config.ringcontainer.anchorpoint,self.config.ringcontainer.anchorposx,self.config.ringcontainer.anchorposy)
-    f:SetWidth(self.config.ringcontainer.size)
-    f:SetHeight(self.config.ringcontainer.size)
-    f:SetFrameLevel(self.config.ringcontainer.framelevel)
+    local f = CreateFrame("Frame",nil,segment_config.anchorframe)
+    f:SetPoint(segment_config.anchorpoint,segment_config.anchorposx,segment_config.anchorposy)
+    f:SetWidth(segment_config.size)
+    f:SetHeight(segment_config.size)
+    f:SetFrameLevel(segment_config.framelevel)
     f:SetAlpha(segment_config.alpha)
+    f:SetScale(segment_config.scale)
     for i=1,(segment_config.segments_used) do
       f[i] = CreateFrame("Frame",nil,f)
       f[i]:SetWidth(segment_config.segmentsize)
@@ -576,21 +577,18 @@
     c.height = 256
     c.alpha = 1
     
-    --defines the container that will hold the ring
-    local rc = CreateFrame("Frame", nil, self)
-    rc.anchorframe = self
-    rc.anchorpoint = "LEFT"
-    rc.anchorposx = 0
-    rc.anchorposy = 0
-    rc.size = 256
-    rc.alpha = 1
-    rc.framelevel = 3
-    
     --define config variables for your health segments
     local hs = CreateFrame("Frame", nil, self)
-    hs.alpha = 0.9
-    hs.segments_used = 2
-    hs.start_segment = 3
+    hs.anchorframe = self
+    hs.anchorpoint = "LEFT"
+    hs.anchorposx = 0
+    hs.anchorposy = 0
+    hs.size = 256
+    hs.alpha = 1
+    hs.framelevel = 3
+    hs.scale = 1
+    hs.segments_used = 4
+    hs.start_segment = 1
     hs.fill_direction = 1
     hs.texture = "Interface\\AddOns\\oUF_RingThing3\\media\\ring1_segment"
     hs.color = {r = 255/255, g = 10/255, b = 10/255, a = 1}
@@ -601,9 +599,16 @@
     
     --define config variables for your power segments
     local ps = CreateFrame("Frame", nil, self)
-    ps.alpha = 0.9
-    ps.segments_used = 2
-    ps.start_segment = 2
+    ps.anchorframe = self
+    ps.anchorpoint = "LEFT"
+    ps.anchorposx = -45
+    ps.anchorposy = 0
+    ps.size = 256
+    ps.alpha = 1
+    ps.framelevel = 4
+    ps.scale = 1.5
+    ps.segments_used = 4
+    ps.start_segment = 4
     ps.fill_direction = 0
     ps.texture = "Interface\\AddOns\\oUF_RingThing3\\media\\ring1_segment"
     ps.color = {r = 10/255, g = 100/255, b = 150/255, a = 1}
@@ -643,7 +648,6 @@
     rf.height = 256
 
     self.config = c
-    self.config.ringcontainer = rc
     self.config.health = hs
     self.config.power = ps
     self.config.background = rb
@@ -674,12 +678,12 @@
     --hpval
     local hpval1 = SetFontString(self, myfont, 32, "OUTLINE")
     hpval1:SetPoint("CENTER", self.ring_foreground, "CENTER", 0, 12)
-    hpval1:SetTextHeight(self.config.ringcontainer.size/5)
+    hpval1:SetTextHeight(self.config.health.size/5)
     self:Tag(hpval1, "[perhp]")
     --mana value
     local mpval1 = SetFontString(self, myfont, 32, "OUTLINE")
     mpval1:SetPoint("CENTER", self.ring_foreground, "CENTER", 0, -35)
-    mpval1:SetTextHeight(self.config.ringcontainer.size/6.5)
+    mpval1:SetTextHeight(self.config.health.size/6.5)
     mpval1:SetTextColor(0.6,0.6,0.6)
     self:Tag(mpval1, "[perpp]")
     

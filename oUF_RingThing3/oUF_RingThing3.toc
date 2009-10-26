@@ -1,0 +1,9 @@
+## Interface: 30100
+## Author: roth	
+## Title: oUF_RingThing
+## Notes: oUF layout - The one ring to bind them all...
+## RequiredDeps: oUF, rColors
+## OptionalDeps: oUF_DebuffHighlight, oUF_Smooth
+## X-Category: UnitFrame
+
+oUF_RingThing3.lua

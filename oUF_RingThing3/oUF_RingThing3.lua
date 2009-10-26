@@ -438,9 +438,9 @@
     self:SetAttribute("*type2", "menu")
     self:SetScript("OnEnter", UnitFrame_OnEnter)
     self:SetScript("OnLeave", UnitFrame_OnLeave)
-    self:SetAttribute('initial-height', self.config.size)
-	  self:SetAttribute('initial-width', self.config.size)
-	  self:SetAttribute('initial-scale', self.config.scale)
+    self:SetAttribute("initial-height", self.config.size)
+    self:SetAttribute("initial-width", self.config.size)
+    self:SetAttribute("initial-scale", self.config.scale)
   end
   
   --set fontstring

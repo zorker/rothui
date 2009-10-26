@@ -472,7 +472,7 @@
     f:SetAllPoints(self)
     f:SetFrameLevel(self.config.foreground.framelevel)
     f:SetAlpha(self.config.foreground.alpha)
-    local t = f:CreateTexture(nil,"foreground")
+    local t = f:CreateTexture(nil,"BACKGROUND")
     t:SetTexture(self.config.foreground.texture)
     t:SetAllPoints(f)
     t:SetVertexColor(self.config.foreground.color.r,self.config.foreground.color.g,self.config.foreground.color.b,self.config.foreground.color.a)

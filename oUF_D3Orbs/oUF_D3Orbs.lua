@@ -33,6 +33,12 @@
   --focus, focustarget, pet and partyscale
   local focusscale = 0.5
   
+  --TAGS
+  local targetframe_health_tag = "[d3o2abshp] / [perhp]%"
+  --local targetframe_health_tag = "[d3o2abshp]/[d3o2maxhp] | [perhp]%"
+  --local targetframe_power_tag = "[d3o2absmp]/[d3o2maxmp]"
+  --local targetframe_power_tag = "[d3o2absmp]"
+  
   --activate this if you want to use rbottombarstyler
   --rember that you need to use jExp2 instead of jExp too. 
   local use_rbottombarstyler = 0
@@ -143,31 +149,6 @@
   -----------------------------
   -- VARIABLES + CONFIG END
   -----------------------------
-  
-  --rewrite unit popup menus
-  -- First level menus
-  UnitPopupMenus["SELF"] = { "PVP_FLAG", "LOOT_METHOD", "LOOT_THRESHOLD", "OPT_OUT_LOOT_TITLE", "LOOT_PROMOTE", "DUNGEON_DIFFICULTY", "RAID_DIFFICULTY", "RESET_INSTANCES", "RAID_TARGET_ICON", "LEAVE", "CANCEL" };
-  UnitPopupMenus["PET"] = { "PET_PAPERDOLL", "PET_RENAME", "PET_ABANDON", "PET_DISMISS", "CANCEL" };
-  UnitPopupMenus["PARTY"] = { "MUTE", "UNMUTE", "PARTY_SILENCE", "PARTY_UNSILENCE", "RAID_SILENCE", "RAID_UNSILENCE", "BATTLEGROUND_SILENCE", "BATTLEGROUND_UNSILENCE", "WHISPER", "PROMOTE", "LOOT_PROMOTE", "UNINVITE", "INSPECT", "ACHIEVEMENTS", "TRADE", "FOLLOW", "DUEL", "RAID_TARGET_ICON", "PVP_REPORT_AFK", "RAF_SUMMON", "RAF_GRANT_LEVEL", "CANCEL" };
-  UnitPopupMenus["PLAYER"] = { "WHISPER", "INSPECT", "INVITE", "ACHIEVEMENTS", "TRADE", "FOLLOW", "DUEL", "RAID_TARGET_ICON", "RAF_SUMMON", "RAF_GRANT_LEVEL", "CANCEL" };
-  UnitPopupMenus["RAID_PLAYER"] = { "MUTE", "UNMUTE", "RAID_SILENCE", "RAID_UNSILENCE", "BATTLEGROUND_SILENCE", "BATTLEGROUND_UNSILENCE", "WHISPER", "INSPECT", "ACHIEVEMENTS", "TRADE", "FOLLOW", "DUEL", "RAID_TARGET_ICON", "RAID_LEADER", "RAID_PROMOTE", "RAID_DEMOTE", "LOOT_PROMOTE", "RAID_REMOVE", "PVP_REPORT_AFK", "RAF_SUMMON", "RAF_GRANT_LEVEL", "CANCEL" };
-  UnitPopupMenus["RAID"] = { "MUTE", "UNMUTE", "RAID_SILENCE", "RAID_UNSILENCE", "BATTLEGROUND_SILENCE", "BATTLEGROUND_UNSILENCE", "RAID_LEADER", "RAID_PROMOTE", "RAID_MAINTANK", "RAID_MAINASSIST", "LOOT_PROMOTE", "RAID_DEMOTE", "RAID_REMOVE", "PVP_REPORT_AFK", "CANCEL" };
-  UnitPopupMenus["FRIEND"] = { "WHISPER", "INVITE", "TARGET", "IGNORE", "REPORT_SPAM", "GUILD_PROMOTE", "GUILD_LEAVE", "PVP_REPORT_AFK", "CANCEL" };
-  UnitPopupMenus["TEAM"] = { "WHISPER", "INVITE", "TARGET", "TEAM_PROMOTE", "TEAM_KICK", "TEAM_LEAVE", "CANCEL" };
-  UnitPopupMenus["RAID_TARGET_ICON"] = { "RAID_TARGET_1", "RAID_TARGET_2", "RAID_TARGET_3", "RAID_TARGET_4", "RAID_TARGET_5", "RAID_TARGET_6", "RAID_TARGET_7", "RAID_TARGET_8", "RAID_TARGET_NONE" };
-  UnitPopupMenus["CHAT_ROSTER"] = { "WHISPER", "TARGET", "MUTE", "UNMUTE", "CHAT_SILENCE", "CHAT_UNSILENCE", "CHAT_PROMOTE", "CHAT_DEMOTE", "CHAT_OWNER", "CANCEL" };
-  UnitPopupMenus["VEHICLE"] = { "RAID_TARGET_ICON", "VEHICLE_LEAVE", "CANCEL" };
-  UnitPopupMenus["TARGET"] = { "RAID_TARGET_ICON", "CANCEL" };
-  UnitPopupMenus["ARENAENEMY"] = { "CANCEL" };
-  UnitPopupMenus["FOCUS"] = { "LOCK_FOCUS_FRAME", "UNLOCK_FOCUS_FRAME", "RAID_TARGET_ICON", "CANCEL" };
-   
-  -- Second level menus
-  UnitPopupMenus["PVP_FLAG"] = { "PVP_ENABLE", "PVP_DISABLE"};
-  UnitPopupMenus["LOOT_METHOD"] = { "FREE_FOR_ALL", "ROUND_ROBIN", "MASTER_LOOTER", "GROUP_LOOT", "NEED_BEFORE_GREED", "CANCEL" };
-  UnitPopupMenus["LOOT_THRESHOLD"] = { "ITEM_QUALITY2_DESC", "ITEM_QUALITY3_DESC", "ITEM_QUALITY4_DESC", "CANCEL" };
-  UnitPopupMenus["OPT_OUT_LOOT_TITLE"] = { "OPT_OUT_LOOT_ENABLE", "OPT_OUT_LOOT_DISABLE"};
-  UnitPopupMenus["DUNGEON_DIFFICULTY"] = { "DUNGEON_DIFFICULTY1", "DUNGEON_DIFFICULTY2" };
-  UnitPopupMenus["RAID_DIFFICULTY"] = { "RAID_DIFFICULTY1", "RAID_DIFFICULTY2", "RAID_DIFFICULTY3", "RAID_DIFFICULTY4" };
   
   --position deathknight runes
   RuneButtonIndividual1:ClearAllPoints()
@@ -403,8 +384,8 @@
     end
     --self:SetWidth(w)
     --self:SetHeight(h)
-    self:SetAttribute('initial-height', h)
-	  self:SetAttribute('initial-width', self.width)
+    self:SetAttribute("initial-height", h)
+	  self:SetAttribute("initial-width", self.width)
   end
   
   --orb glow func
@@ -1021,23 +1002,22 @@
       self.Leader:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")      
     end
   end  
-  
-  local function d3o2_createComboPoints(self,unit)
-    self.CPoints = SetFontString(self.Health, d3font, 24, "THINOUTLINE")
-    self.CPoints:SetPoint("LEFT", self.Name, "RIGHT", 5, -1)
-    self.CPoints:SetTextColor(1, .5, 0)
-    self.CPoints.unit = PlayerFrame.unit
-  end
-  
+
   --thanks to p3lim for this one
   --it does fix the vehicle combopoints
-  local function updateCPoints(self, event, unit)
-  	if(unit == PlayerFrame.unit) and (unit ~= self.CPoints.unit) then
-  		self.CPoints.unit = unit
-  		--am("ding "..unit)
-  	end
+  local function updateCombo(self, event, unit)
+    if(unit == PlayerFrame.unit and unit ~= self.CPoints.unit) then
+      self.CPoints.unit = unit
+    end
   end
-  
+
+  local function d3o2_createComboPoints(self,unit)
+    self.CPoints = SetFontString(self.Health, d3font, 24, "THINOUTLINE")
+    self.CPoints:SetPoint("LEFT", self.Name, "RIGHT", 2, -1)
+    self.CPoints:SetTextColor(1, .5, 0)
+    self.CPoints.unit = "player"
+    self:RegisterEvent("UNIT_COMBO_POINTS", updateCombo)
+  end
   
   local function make_me_movable(f)
     if allow_frame_movement == 0 then
@@ -1086,30 +1066,42 @@
       string = "dead"
     elseif UnitIsConnected(unit) == nil then
       string = "off"
-    elseif v > 1000000 then
-      string = (floor((v/1000000)*10)/10).."m"
-    elseif v > 1000 then
-      string = (floor((v/1000)*10)/10).."k"
     else
-      string = v
+      string = do_format(v)
     end  
     return string
   end
   oUF.TagEvents["[d3o2abshp]"] = "UNIT_HEALTH"
   
-  oUF.Tags["[d3o2absmp]"] = function(unit) 
-    local v = UnitMana(unit)
+  oUF.Tags["[d3o2maxhp]"] = function(unit) 
+    local v = UnitHealthMax(unit)
     local string = ""
-    if v > 1000000 then
-      string = (floor((v/1000000)*10)/10).."m"
-    elseif v > 1000 then
-      string = (floor((v/1000)*10)/10).."k"
-    else
-      string = v
+    if v then
+      string = do_format(v)
     end  
     return string
   end
+  oUF.TagEvents["[d3o2maxhp]"] = "UNIT_HEALTH"
+  
+  oUF.Tags["[d3o2absmp]"] = function(unit) 
+    local string = ""
+    --if UnitPowerType(unit) == 0 then
+      local v = UnitMana(unit)
+      string = do_format(v)
+    --end
+    return string
+  end
   oUF.TagEvents["[d3o2absmp]"] = "UNIT_ENERGY UNIT_FOCUS UNIT_MANA UNIT_RAGE UNIT_RUNIC_POWER"
+  
+  oUF.Tags["[d3o2maxmp]"] = function(unit) 
+    local string = ""
+    --if UnitPowerType(unit) == 0 then
+      local v = UnitMana(unit)
+      string = do_format(v)
+    --end
+    return string
+  end
+  oUF.TagEvents["[d3o2maxmp]"] = "UNIT_ENERGY UNIT_FOCUS UNIT_MANA UNIT_RAGE UNIT_RUNIC_POWER"
   
   oUF.Tags["[d3o2classtext]"] = function(unit) 
     bubblehead:Hide()
@@ -1202,7 +1194,7 @@
       d3o2_createIcons(self,unit)
     end
     d3o2_createCastbar(self,unit)
-    self:SetAttribute('initial-scale', playerscale)
+    self:SetAttribute("initial-scale", playerscale)
   end
   
   --create the target style
@@ -1216,15 +1208,20 @@
     d3o2_createBubbleHead(self,unit)
     local name = SetFontString(self, d3font, 20, "THINOUTLINE")
     name:SetPoint("BOTTOM", self, "TOP", 0, 30)
-    name:SetPoint("LEFT", -3,0)
-    name:SetPoint("RIGHT", 3,0)
+    name:SetPoint("LEFT", 5,0)
+    name:SetPoint("RIGHT", -5,0)
     local hpval = SetFontString(self.Health, d3font, 14, "THINOUTLINE")
     hpval:SetPoint("RIGHT", self.Health, "RIGHT", -2, 2)
     local classtext = SetFontString(self, d3font, 16, "THINOUTLINE")
     classtext:SetPoint("BOTTOM", self, "TOP", 0, 13)
     self.Name = name
     self:Tag(name, "[name]")
-    self:Tag(hpval, "[d3o2abshp] - [perhp]%")
+    self:Tag(hpval, targetframe_health_tag)
+    if targetframe_power_tag then
+      local ppval = SetFontString(self.Health, d3font, 14, "THINOUTLINE")
+      ppval:SetPoint("LEFT", self.Health, "LEFT", 2, 2)
+      self:Tag(ppval, targetframe_power_tag)    
+    end
     self:Tag(classtext, "[d3o2classtext]")
     
     d3o2_createCastbar(self,unit)
@@ -1232,12 +1229,11 @@
     d3o2_createDebuffGlow(self,unit)
     d3o2_createIcons(self,unit)
     d3o2_createComboPoints(self,unit)
-    self:RegisterEvent('UNIT_COMBO_POINTS', updateCPoints)
     
     self.PostUpdateHealth = d3o2_updateHealth
     self.PostUpdatePower = d3o2_updatePower
     self.PostCreateAuraIcon = d3o2_createAuraIcon
-    self:SetAttribute('initial-scale', targetscale)
+    self:SetAttribute("initial-scale", targetscale)
   end
   
   --create the tot style
@@ -1264,7 +1260,7 @@
     self.PostUpdateHealth = d3o2_updateHealth
     self.PostUpdatePower = d3o2_updatePower
     self.PostCreateAuraIcon = d3o2_createAuraIcon
-    self:SetAttribute('initial-scale', targetscale)
+    self:SetAttribute("initial-scale", targetscale)
   end
   
   --create the focus, pet and party style
@@ -1295,12 +1291,12 @@
       d3o2_createAuraWatch(self,unit)
     end
     
-    self:RegisterEvent('UNIT_THREAT_SITUATION_UPDATE', check_threat)
+    self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", check_threat)
     
     self.PostUpdateHealth = d3o2_updateHealth
     self.PostUpdatePower = d3o2_updatePower
     self.PostCreateAuraIcon = d3o2_createAuraIcon
-    self:SetAttribute('initial-scale', focusscale)
+    self:SetAttribute("initial-scale", focusscale)
     
     if (not unit) then
       self.Range = true
@@ -1334,8 +1330,8 @@
   oUF:Spawn("targettarget","oUF_D3Orbs2_ToT"):SetPoint(tabvalues.frame_positions[4].a1, tabvalues.frame_positions[4].af, tabvalues.frame_positions[4].a2, tabvalues.frame_positions[4].x, tabvalues.frame_positions[4].y)
   oUF:SetActiveStyle("oUF_D3Orbs2_focus")
   oUF:Spawn("focus","oUF_D3Orbs2_focus"):SetPoint(tabvalues.frame_positions[6].a1, tabvalues.frame_positions[6].af, tabvalues.frame_positions[6].a2, tabvalues.frame_positions[6].x, tabvalues.frame_positions[6].y)
-  oUF:Spawn("focustarget","ouf_focustot"):SetPoint('CENTER', oUF.units.focus, 'CENTER', 200, 0)
-  oUF:Spawn("pet","ouf_pet"):SetPoint('CENTER', oUF.units.focus, 'CENTER', 0, 250)
+  oUF:Spawn("focustarget","ouf_focustot"):SetPoint("CENTER", oUF.units.focus, "CENTER", 200, 0)
+  oUF:Spawn("pet","ouf_pet"):SetPoint("CENTER", oUF.units.focus, "CENTER", 0, 250)
   
   local oUF_D3Orbs_PartyDragFrame = CreateFrame("Frame","oUF_D3Orbs_PartyDragFrame",UIParent)
   oUF_D3Orbs_PartyDragFrame:SetWidth(80)

@@ -61,7 +61,7 @@
   
   -- shapeshift
   if myname == "Loral" then
-    shapeshift_on_mouseover = 1
+    shapeshift_on_mouseover = 0
   elseif myname == "Rothar" then
     shapeshift_on_mouseover = 1
   else
@@ -76,7 +76,7 @@
   end
   
   -- petbar
-  petbar_on_mouseover = 1
+  petbar_on_mouseover = 0
   move_pet = 1
   lock_pet = 0
   hide_pet = 0
@@ -338,7 +338,7 @@
     CharacterMicroButton:SetPoint("BOTTOMLEFT", 5, 5);
     SocialsMicroButton:ClearAllPoints();
     SocialsMicroButton:SetPoint("LEFT", QuestLogMicroButton, "RIGHT", -3, 0);
-    UpdateTalentButton();
+    --UpdateTalentButton();
   end
   hooksecurefunc("VehicleMenuBar_MoveMicroButtons", rABS_MoveMicroButtons);  
   rABS_MoveMicroButtons();

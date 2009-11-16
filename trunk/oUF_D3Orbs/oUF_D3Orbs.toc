@@ -1,4 +1,4 @@
-## Interface: 30200
+## Interface: 30300
 ## Author: roth	
 ## Title: oUF_D3Orbs
 ## Notes: oUF layout - Diablo 3 style

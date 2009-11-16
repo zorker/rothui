@@ -48,7 +48,7 @@
         -- Hostile players are red
         if ( not UnitCanAttack("player", unit) ) then
           r = 1.0;
-          g = 1.0;
+          g = 0;
           b = 1.0;
         else
           r = rFACTION_BAR_COLORS[2].r;
@@ -67,7 +67,7 @@
         b = rFACTION_BAR_COLORS[6].b;
       else
         r = 1.0;
-        g = 1.0;
+        g = 0;
         b = 1.0;
       end
     else
@@ -78,7 +78,7 @@
         b = rFACTION_BAR_COLORS[reaction].b;
       else
         r = 1.0;
-        g = 1.0;
+        g = 0;
         b = 1.0;
       end
     end

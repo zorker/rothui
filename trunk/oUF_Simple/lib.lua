@@ -41,6 +41,16 @@
     f:SetBackdropBorderColor(0,0,0,1)
   end
   
+  lib.menu = function(self)
+    local unit = self.unit:sub(1, -2)
+    local cunit = self.unit:gsub("(.)", string.upper, 1)
+    if(unit == "party" or unit == "partypet") then
+      ToggleDropDownMenu(1, nil, _G["PartyMemberFrame"..self.id.."DropDown"], "cursor", 0, 0)
+    elseif(_G[cunit.."FrameDropDown"]) then
+      ToggleDropDownMenu(1, nil, _G[cunit.."FrameDropDown"], "cursor", 0, 0)
+    end
+  end
+  
   --moveme func
   lib.moveme = function(f)
     if cfg.allow_frame_movement then
@@ -63,6 +73,11 @@
     f:SetAttribute("initial-width", f.width)
     f:SetAttribute("initial-scale", f.scale)
     f:SetPoint("CENTER",UIParent,"CENTER",0,0)
+    f.menu = lib.menu
+    f:RegisterForClicks("AnyUp")
+    f:SetAttribute("*type2", "menu")
+    f:SetScript("OnEnter", UnitFrame_OnEnter)
+    f:SetScript("OnLeave", UnitFrame_OnLeave)
   end  
   
   --fontstring func
@@ -139,9 +154,12 @@
     local s = CreateFrame("StatusBar", "oUF_SimpleCastbar"..f.mystyle, f)
     s:SetHeight(f.height)
     s:SetWidth(f.width)
-    if f.mystyle == "player" or f.mystyle == "target" then
+    if f.mystyle == "player" then
       lib.moveme(s)
-      s:SetPoint("BOTTOM",f,"TOP",0,5)
+      s:SetPoint("CENTER",UIParent,0,-50)
+    elseif f.mystyle == "target" then
+      lib.moveme(s)
+      s:SetPoint("CENTER",UIParent,0,0)
     else
       s:SetPoint("BOTTOM",f,"TOP",0,5)
     end
@@ -215,6 +233,68 @@
     lib.gen_backdrop(h)
   
     f.Portrait = p
+  end
+  
+  lib.PostCreateIcon = function(self, button)
+    button.cd:SetReverse()
+    button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+    button.icon:SetDrawLayer("BACKGROUND")
+    --count
+    button.count:ClearAllPoints()
+    button.count:SetJustifyH("RIGHT")
+    button.count:SetPoint("TOPRIGHT", 2, 2)
+    button.count:SetTextColor(0.7,0.7,0.7)
+    --helper
+    local h = CreateFrame("Frame", nil, button)
+    h:SetFrameLevel(0)
+    h:SetPoint("TOPLEFT",-5,5)
+    h:SetPoint("BOTTOMRIGHT",5,-5)
+    lib.gen_backdrop(h)
+  end
+  
+  lib.createBuffs = function(f)
+    b = CreateFrame("Frame", nil, f)
+    b.size = 20
+    if f.mystyle == "target" then
+      b.num = 40
+    elseif f.mystyle == "player" then
+      b.num = 10
+      b.onlyShowPlayer = true
+    else
+      b.num = 5
+    end
+    b.spacing = 5
+    b.onlyShowPlayer = false
+    b:SetHeight((b.size+b.spacing)*4)
+    b:SetWidth(f.width)
+    b:SetPoint("BOTTOMLEFT", f, "TOPLEFT", 0, 5)
+    b.initialAnchor = "BOTTOMLEFT"
+    b["growth-x"] = "RIGHT"
+    b["growth-y"] = "UP"
+    b.PostCreateIcon = lib.PostCreateIcon
+    f.Buffs = b
+  end
+
+  lib.createDebuffs = function(f)
+    b = CreateFrame("Frame", nil, f)
+    b.size = 20
+    if f.mystyle == "target" then
+      b.num = 40
+    elseif f.mystyle == "player" then
+      b.num = 10
+    else
+      b.num = 5
+    end
+    b.spacing = 5
+    b.onlyShowPlayer = false
+    b:SetHeight((b.size+b.spacing)*4)
+    b:SetWidth(f.width)
+    b:SetPoint("TOPLEFT", f.Power, "BOTTOMLEFT", 0, -5)
+    b.initialAnchor = "TOPLEFT"
+    b["growth-x"] = "RIGHT"
+    b["growth-y"] = "DOWN"
+    b.PostCreateIcon = lib.PostCreateIcon
+    f.Debuffs = b
   end
 
   

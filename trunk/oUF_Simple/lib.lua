@@ -132,6 +132,90 @@
     f.Power = s
     f.Power.bg = b
   end
+  
+  --gen castbar
+  lib.gen_castbar = function(f)
+  
+    local s = CreateFrame("StatusBar", "oUF_SimpleCastbar"..f.mystyle, f)
+    s:SetHeight(f.height)
+    s:SetWidth(f.width)
+    if f.mystyle == "player" or f.mystyle == "target" then
+      lib.moveme(s)
+      s:SetPoint("BOTTOM",f,"TOP",0,5)
+    else
+      s:SetPoint("BOTTOM",f,"TOP",0,5)
+    end
+    s:SetStatusBarTexture(cfg.statusbar_texture)
+    s:SetStatusBarColor(1,0.8,0,1)
+    --helper
+    local h = CreateFrame("Frame", nil, s)
+    h:SetFrameLevel(0)
+    h:SetPoint("TOPLEFT",-5,5)
+    h:SetPoint("BOTTOMRIGHT",5,-5)
+    lib.gen_backdrop(h)
+    
+    local b = s:CreateTexture(nil, "BACKGROUND")
+    b:SetTexture(cfg.statusbar_texture)
+    b:SetAllPoints(s)
+    b:SetVertexColor(1*0.3,0.8*0.3,0,0.7)  
+    
+    local txt = lib.gen_fontstring(s, cfg.font, 13, "THINOUTLINE")
+    txt:SetPoint("LEFT", 2, 0)
+    txt:SetJustifyH("LEFT")
+    --time
+    local t = lib.gen_fontstring(s, cfg.font, 13, "THINOUTLINE")
+    t:SetPoint("RIGHT", -2, 0)
+    txt:SetPoint("RIGHT", t, "LEFT", -5, 0)
+    
+    --icon
+    local i = s:CreateTexture(nil, "ARTWORK")
+    i:SetWidth(f.height)
+    i:SetHeight(f.height)
+    i:SetPoint("RIGHT", s, "LEFT", -5, 0)
+    i:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+    
+    --helper2 for icon
+    local h2 = CreateFrame("Frame", nil, s)
+    h2:SetFrameLevel(0)
+    h2:SetPoint("TOPLEFT",i,"TOPLEFT",-5,5)
+    h2:SetPoint("BOTTOMRIGHT",i,"BOTTOMRIGHT",5,-5)
+    lib.gen_backdrop(h2)
+    
+    if f.mystyle == "player" then
+      --latency only for player unit
+      local z = s:CreateTexture(nil,"OVERLAY")
+      z:SetTexture(cfg.statusbar_texture)
+      z:SetVertexColor(0.6,0,0,0.6)
+      z:SetPoint("TOPRIGHT")
+      z:SetPoint("BOTTOMRIGHT")
+      s.SafeZone = z
+    end
+    
+    f.Castbar = s
+    f.Castbar.Text = txt
+    f.Castbar.Time = t
+    f.Castbar.Icon = i
+  end
+  
+  lib.gen_portrait = function(f)
+    local p = CreateFrame("PlayerModel", nil, f)
+    p:SetWidth(f.height*3)
+    p:SetHeight(f.height*2)
+    if f.mystyle == "target" then
+      p:SetPoint("TOPLEFT", f, "TOPRIGHT", 5, 0)
+    else
+      p:SetPoint("TOPRIGHT", f, "TOPLEFT", -5, 0)
+    end
+    
+    --helper
+    local h = CreateFrame("Frame", nil, p)
+    h:SetFrameLevel(0)
+    h:SetPoint("TOPLEFT",-5,5)
+    h:SetPoint("BOTTOMRIGHT",5,-5)
+    lib.gen_backdrop(h)
+  
+    f.Portrait = p
+  end
 
   
   -----------------------------

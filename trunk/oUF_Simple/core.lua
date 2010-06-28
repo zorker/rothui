@@ -56,6 +56,44 @@
     self.Power.colorPower = true
     self.Power.bg.multiplier = 0.3
   end  
+  
+  --the focus style
+  local function CreateFocusStyle(self)
+    --style specific stuff
+    self.width = 250
+    self.height = 25
+    self.scale = 0.75
+    self.mystyle = "focus"
+    genStyle(self)
+    self.Health.frequentUpdates = true
+    self.Health.colorDisconnected = true
+    self.Health.colorHappiness = true
+    self.Health.colorClass = true
+    self.Health.colorReaction = true
+    self.Health.colorHealth = true
+    self.Health.bg.multiplier = 0.3
+    self.Power.colorPower = true
+    self.Power.bg.multiplier = 0.3
+  end  
+  
+  --the pet style
+  local function CreatePetStyle(self)
+    --style specific stuff
+    self.width = 250
+    self.height = 25
+    self.scale = 0.75
+    self.mystyle = "pet"
+    genStyle(self)
+    self.Health.frequentUpdates = true
+    self.Health.colorDisconnected = true
+    self.Health.colorHappiness = true
+    self.Health.colorClass = true
+    self.Health.colorReaction = true
+    self.Health.colorHealth = true
+    self.Health.bg.multiplier = 0.3
+    self.Power.colorPower = true
+    self.Power.bg.multiplier = 0.3
+  end  
 
   -----------------------------
   -- SPAWN UNITS
@@ -71,4 +109,16 @@
     oUF:RegisterStyle("oUF_SimpleTarget", CreateTargetStyle)
     oUF:SetActiveStyle("oUF_SimpleTarget")
     oUF:Spawn("target", "oUF_Simple_TargetFrame")  
+  end
+  
+  if cfg.showfocus then
+    oUF:RegisterStyle("oUF_SimpleFocus", CreateFocusStyle)
+    oUF:SetActiveStyle("oUF_SimpleFocus")
+    oUF:Spawn("focus", "oUF_Simple_FocusFrame")  
+  end
+  
+  if cfg.showpet then
+    oUF:RegisterStyle("oUF_SimplePet", CreatePetStyle)
+    oUF:SetActiveStyle("oUF_SimplePet")
+    oUF:Spawn("pet", "oUF_Simple_PetFrame")  
   end

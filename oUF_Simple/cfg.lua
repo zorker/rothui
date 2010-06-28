@@ -22,6 +22,7 @@
   cfg.showtot = true
   cfg.showpet = true
   cfg.showfocus = true
+  cfg.showparty = true
   cfg.allow_frame_movement = true
   cfg.frames_locked = false 
   

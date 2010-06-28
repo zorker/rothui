@@ -57,6 +57,26 @@
     self.Power.bg.multiplier = 0.3
   end  
   
+  --the target style
+  local function CreateToTStyle(self)
+    --style specific stuff
+    self.width = 150
+    self.height = 25
+    self.scale = 1
+    self.mystyle = "tot"
+    genStyle(self)
+    self.Health.frequentUpdates = true
+    self.Health.colorTapping = true
+    self.Health.colorDisconnected = true
+    self.Health.colorHappiness = true
+    self.Health.colorClass = true
+    self.Health.colorReaction = true
+    self.Health.colorHealth = true
+    self.Health.bg.multiplier = 0.3
+    self.Power.colorPower = true
+    self.Power.bg.multiplier = 0.3
+  end 
+  
   --the focus style
   local function CreateFocusStyle(self)
     --style specific stuff
@@ -109,6 +129,12 @@
     oUF:RegisterStyle("oUF_SimpleTarget", CreateTargetStyle)
     oUF:SetActiveStyle("oUF_SimpleTarget")
     oUF:Spawn("target", "oUF_Simple_TargetFrame")  
+  end
+
+  if cfg.showtot then
+    oUF:RegisterStyle("oUF_SimpleToT", CreateToTStyle)
+    oUF:SetActiveStyle("oUF_SimpleToT")
+    oUF:Spawn("targettarget", "oUF_Simple_ToTFrame")  
   end
   
   if cfg.showfocus then

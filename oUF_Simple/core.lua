@@ -38,13 +38,13 @@
     self.Power.bg.multiplier = 0.3
   end  
   
-  --the player style
+  --the target style
   local function CreateTargetStyle(self)
     --style specific stuff
     self.width = 250
     self.height = 25
     self.scale = 1
-    self.mystyle = "player"
+    self.mystyle = "target"
     genStyle(self)
     self.Health.frequentUpdates = true
     self.Health.colorTapping = true

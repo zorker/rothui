@@ -25,7 +25,7 @@
   --the player style
   local function CreatePlayerStyle(self)
     --style specific stuff
-    self.width = 250
+    self.width = 230
     self.height = 25
     self.scale = 1
     self.mystyle = "player"
@@ -35,12 +35,14 @@
     self.Health.bg.multiplier = 0.3
     self.Power.colorPower = true
     self.Power.bg.multiplier = 0.3
+    lib.gen_castbar(self)
+    lib.gen_portrait(self)
   end  
   
   --the target style
   local function CreateTargetStyle(self)
     --style specific stuff
-    self.width = 250
+    self.width = 230
     self.height = 25
     self.scale = 1
     self.mystyle = "target"
@@ -55,6 +57,8 @@
     self.Health.bg.multiplier = 0.3
     self.Power.colorPower = true
     self.Power.bg.multiplier = 0.3
+    lib.gen_castbar(self)
+    lib.gen_portrait(self)
   end  
   
   --the target style
@@ -80,9 +84,9 @@
   --the focus style
   local function CreateFocusStyle(self)
     --style specific stuff
-    self.width = 250
+    self.width = 180
     self.height = 25
-    self.scale = 0.75
+    self.scale = 0.9
     self.mystyle = "focus"
     genStyle(self)
     self.Health.frequentUpdates = true
@@ -94,14 +98,16 @@
     self.Health.bg.multiplier = 0.3
     self.Power.colorPower = true
     self.Power.bg.multiplier = 0.3
+    lib.gen_castbar(self)
+    lib.gen_portrait(self)
   end  
   
   --the pet style
   local function CreatePetStyle(self)
     --style specific stuff
-    self.width = 250
+    self.width = 180
     self.height = 25
-    self.scale = 0.75
+    self.scale = 0.9
     self.mystyle = "pet"
     genStyle(self)
     self.Health.frequentUpdates = true
@@ -113,6 +119,8 @@
     self.Health.bg.multiplier = 0.3
     self.Power.colorPower = true
     self.Power.bg.multiplier = 0.3
+    lib.gen_castbar(self)
+    lib.gen_portrait(self)
   end  
 
   -----------------------------

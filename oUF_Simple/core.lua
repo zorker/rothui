@@ -17,7 +17,6 @@
   local function genStyle(self)
     lib.init(self)
     lib.moveme(self)
-    lib.gen_backdrop(self)
     lib.gen_hpbar(self)
     lib.gen_hpstrings(self)
     lib.gen_ppbar(self)

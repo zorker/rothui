@@ -150,6 +150,26 @@
     lib.gen_portrait(self)
     lib.createDebuffs(self)
   end  
+  
+  --the raid style
+  local function CreateRaidStyle(self)
+    --style specific stuff
+    self.width = 130
+    self.height = 25
+    self.scale = 0.8
+    self.mystyle = "raid"
+    genStyle(self)
+    self.Health.frequentUpdates = true
+    self.Health.colorDisconnected = true
+    self.Health.colorHappiness = true
+    self.Health.colorClass = true
+    self.Health.colorReaction = true
+    self.Health.colorHealth = true
+    self.Health.bg.multiplier = 0.3
+    self.Power.colorPower = true
+    self.Power.bg.multiplier = 0.3
+  end   
+  
 
   -----------------------------
   -- SPAWN UNITS
@@ -189,6 +209,20 @@
     oUF:RegisterStyle("oUF_SimpleParty", CreatePartyStyle)
     oUF:SetActiveStyle("oUF_SimpleParty")
 
-   local party = oUF:SpawnHeader("oUF_Party", nil, "raid,party,solo", "showParty", true, "showPlayer", true, "yOffset", -50)
+   local party = oUF:SpawnHeader("oUF_Party", nil, "party", "showParty", true, "showPlayer", true, "yOffset", -50)
    party:SetPoint("TOPLEFT", 70, -20)
+  end
+  
+  if cfg.showraid then
+    oUF:RegisterStyle("oUF_SimpleRaid", CreateRaidStyle)
+    oUF:SetActiveStyle("oUF_SimpleRaid")
+    local raid = {}
+    for i = 1, NUM_RAID_GROUPS do
+      raid[i] = oUF:SpawnHeader("oUF_Raid"..i, nil, "raid",  "groupFilter", i, "showRaid", true, "yOffSet", -20)
+      if i == 1 then
+        raid[i]:SetPoint("TOPLEFT", 10, -20)
+      else
+        raid[i]:SetPoint("TOPLEFT", raid[i-1], "TOPRIGHT", -15, 0)
+      end
+    end
   end

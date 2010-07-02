@@ -92,10 +92,11 @@
   lib.gen_hpbar = function(f)
     --statusbar
     local s = CreateFrame("StatusBar", nil, f)
-    s:SetStatusBarTexture(cfg.statusbar_texture)
     s:SetHeight(f.height)
     s:SetWidth(f.width)
     s:SetPoint("CENTER",0,0)
+    s:SetStatusBarTexture(cfg.statusbar_texture)
+    s:GetStatusBarTexture():SetHorizTile(true)
     --helper
     local h = CreateFrame("Frame", nil, s)
     h:SetFrameLevel(0)
@@ -130,10 +131,11 @@
   lib.gen_ppbar = function(f)
     --statusbar
     local s = CreateFrame("StatusBar", nil, f)
-    s:SetStatusBarTexture(cfg.statusbar_texture)
     s:SetHeight(f.height/5)
     s:SetWidth(f.width)
     s:SetPoint("TOP",f,"BOTTOM",0,-3)
+    s:SetStatusBarTexture(cfg.statusbar_texture)
+    s:GetStatusBarTexture():SetHorizTile(true)
     --helper
     local h = CreateFrame("Frame", nil, s)
     h:SetFrameLevel(0)
@@ -164,6 +166,7 @@
       s:SetPoint("BOTTOM",f,"TOP",0,5)
     end
     s:SetStatusBarTexture(cfg.statusbar_texture)
+    s:GetStatusBarTexture():SetHorizTile(true)
     s:SetStatusBarColor(1,0.8,0,1)
     --helper
     local h = CreateFrame("Frame", nil, s)

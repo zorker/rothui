@@ -41,6 +41,9 @@
   --show role icon on group frame 0/1
   local useroleicon = 1
 
+  --show auras for player, disable this when you are using a different buff mod 0/1
+  local showplayerauras = 1
+
   --only show debuffs from player at the targetframe 0/1
   local showonlyplayeraura = 0
   
@@ -117,7 +120,7 @@
 
   -- manacolor defines what manacolor will be used
   -- 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
-  local manacolor = 3
+  local manacolor = 1
   
   -- usebar defines what actionbar texture will be used. 
   -- not really needed anymore, 36 texture will only be used if MultiBarRight is shown
@@ -383,6 +386,7 @@
     if self.d3o_style == "boss" or self.d3o_style == "arena" or self.d3o_style == "arenatarget" then
       --hp statusbar
       self.Health:SetStatusBarTexture(statusbar128)
+      self.Health:GetStatusBarTexture():SetHorizTile(true)
       self.Health:SetHeight(16)
       self.Health:SetWidth(self.width)
       self.Health:SetPoint("TOPLEFT",0,-1)
@@ -686,7 +690,8 @@
     else
       self.Health:SetHeight(10)
       self.Health:SetPoint("BOTTOM",0,0)
-    end      
+    end
+    self.Health:GetStatusBarTexture():SetHorizTile(true)
     if unit == "target" then
       self.bg = self:CreateTexture(nil, "BACKGROUND")
       self.bg:SetTexture("Interface\\AddOns\\rTextures\\d3_targetframe.tga")
@@ -726,6 +731,7 @@
     self.Power:SetHeight(2)
     self.Power:SetWidth(self.width)
     self.Power:SetPoint("TOP", self.Health, "BOTTOM", 0, 0)
+    self.Power:GetStatusBarTexture():SetHorizTile(true)
     self.Power.bg = self.Power:CreateTexture(nil, "BACKGROUND")
     if unit == "target" then
       self.Power.bg:SetTexture(statusbar256)
@@ -988,7 +994,7 @@
       self.Debuffs.spacing = 5
       self.Debuffs.showDebuffType = false
     else
-      self.Debuffs.size = 18
+      self.Debuffs.size = 20
       self.Debuffs.num = 3
       self.Debuffs:SetHeight((self.Debuffs.size+5)*1)
       self.Debuffs:SetWidth(self.width)
@@ -996,17 +1002,19 @@
       self.Debuffs.initialAnchor = "TOPLEFT"
       self.Debuffs["growth-x"] = "RIGHT"
       self.Debuffs["growth-y"] = "DOWN"
-      self.Debuffs.spacing = 5      
+      self.Debuffs.spacing = 3      
       self.Debuffs.showDebuffType = false
     end
     if unit == "player" then
       self.Debuffs.onlyShowPlayer = false
-    else
+    elseif unit == "target" then
       if showonlyplayeraura == 1 then
         self.Debuffs.onlyShowPlayer = true
       else
         self.Debuffs.onlyShowPlayer = false
       end
+    else
+      self.Debuffs.onlyShowPlayer = false
     end
   end
   
@@ -1016,6 +1024,7 @@
     self.Castbar:SetWidth(224)
     self.Castbar:SetHeight(18)
     self.Castbar:SetStatusBarTexture(statusbar256)
+    self.Castbar:GetStatusBarTexture():SetHorizTile(true)
     self.Castbar.bg2 = self.Castbar:CreateTexture(nil, "BACKGROUND")
     self.Castbar.bg2:SetTexture("Interface\\AddOns\\rTextures\\d3_targetframe.tga")
     self.Castbar.bg2:SetWidth(512)
@@ -1340,6 +1349,22 @@
     self:RegisterEvent("UNIT_COMBO_POINTS", updateCombo)
   end
   
+  local function d3o2_playTargetSound(self,event)
+		if event == "PLAYER_TARGET_CHANGED" then
+  		if ( UnitExists(self.unit) ) then
+  			if ( UnitIsEnemy(self.unit, "player") ) then
+  				PlaySound("igCreatureAggroSelect");
+  			elseif ( UnitIsFriend("player", self.unit) ) then
+  				PlaySound("igCharacterNPCSelect");
+  			else
+  				PlaySound("igCreatureNeutralSelect");
+  			end
+  	  else
+	      PlaySound("INTERFACESOUND_LOSTTARGETUNIT");  	    
+  		end  
+	  end
+  end
+  
   local function make_me_movable(f)
     if allow_frame_movement == 0 then
       f:IsUserPlaced(false)
@@ -1509,12 +1534,14 @@
       self.mpval1 = mpval1
       self.mpval2 = mpval2
       
-      d3o2_createBuffs(self,unit)
-      d3o2_createDebuffs(self,unit)
-      self.PostCreateEnchantIcon = d3o2_createAuraIcon
-      self.PostUpdateEnchantIcons = d3o2_postUpdateEnchantIcon
-      self.PostCreateAuraIcon = d3o2_createAuraIcon
-      self.PostUpdateAuraIcon = d3o2_postUpdateAuraIcon
+      if showplayerauras == 1 then
+        d3o2_createBuffs(self,unit)
+        d3o2_createDebuffs(self,unit)
+        self.PostCreateEnchantIcon = d3o2_createAuraIcon
+        self.PostUpdateEnchantIcons = d3o2_postUpdateEnchantIcon
+        self.PostCreateAuraIcon = d3o2_createAuraIcon
+        self.PostUpdateAuraIcon = d3o2_postUpdateAuraIcon
+      end
       
       self.PostUpdateHealth = d3o2_updatePlayerHealth
       self.PostUpdatePower = d3o2_updatePlayerPower
@@ -1571,6 +1598,11 @@
     self.PostCreateAuraIcon = d3o2_createAuraIcon
     self.PostCastStart = checkCast
     self.PostChannelStart = checkChannel    
+    
+    self:RegisterEvent("PLAYER_TARGET_CHANGED", d3o2_playTargetSound)
+    self.Health:SetScript("OnShow",function()
+      d3o2_playTargetSound(self,"PLAYER_TARGET_CHANGED")
+    end)
     
     self:SetAttribute("initial-scale", targetscale)
   end
@@ -1664,7 +1696,7 @@
     d3o2_createIcons(self,unit)
     
     if useroleicon == 1 then
-      self.LFDRole = do_me_a_icon(self,"ARTWORK",13,self,"BOTTOM","TOP",0,1)
+      self.LFDRole = do_me_a_icon(self,"ARTWORK",12,self,"BOTTOM","TOP",0,1)
       self.LFDRole:SetTexture("Interface\\AddOns\\rTextures\\lfd_role")
     end
     
@@ -1691,7 +1723,8 @@
     make_me_movable(self)
     d3o2_setupFrame(self,110,20,"BACKGROUND")
     d3o2_createHealthFrame(self,unit)
-    self.Health.colorHealth = true
+    self.Health.colorReaction = true
+    self.Health.colorHealth = true    
     local name = SetFontString(self, d3font, 16, "THINOUTLINE")
     name:SetPoint("BOTTOM", self, "TOP", 0, 15)
     name:SetPoint("LEFT", -3,0)
@@ -1785,18 +1818,12 @@
     oUF:SetActiveStyle("oUF_D3Orbs2_boss")
     local boss = {}
     for i = 1, MAX_BOSS_FRAMES do
-      _G["Boss"..i.."TargetFrame"]:UnregisterAllEvents()
-      _G["Boss"..i.."TargetFrame"].Show = dummy
-      _G["Boss"..i.."TargetFrame"]:Hide()
-      _G["Boss"..i.."TargetFrame".."HealthBar"]:UnregisterAllEvents()
-      _G["Boss"..i.."TargetFrame".."ManaBar"]:UnregisterAllEvents()
-      local b = oUF:Spawn("boss"..i, "oUF_Boss"..i)        
+      boss[i] = oUF:Spawn("boss"..i, "oUF_Boss"..i)        
       if i==1 then
-        b:SetPoint("TOP", Minimap, "BOTTOM", 0, -100)
+        boss[i]:SetPoint("TOP", Minimap, "BOTTOM", 0, -150)
       else
-        b:SetPoint("TOP", boss[i-1], "BOTTOM", 0, -60)
+        boss[i]:SetPoint("TOP", boss[i-1], "BOTTOM", 0, -60)
       end
-      boss[i] = b
     end
   end
   

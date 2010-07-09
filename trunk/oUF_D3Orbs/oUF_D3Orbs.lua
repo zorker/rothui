@@ -1350,19 +1350,19 @@
   end
   
   local function d3o2_playTargetSound(self,event)
-		if event == "PLAYER_TARGET_CHANGED" then
-  		if ( UnitExists(self.unit) ) then
-  			if ( UnitIsEnemy(self.unit, "player") ) then
-  				PlaySound("igCreatureAggroSelect");
-  			elseif ( UnitIsFriend("player", self.unit) ) then
-  				PlaySound("igCharacterNPCSelect");
-  			else
-  				PlaySound("igCreatureNeutralSelect");
-  			end
-  	  else
-	      PlaySound("INTERFACESOUND_LOSTTARGETUNIT");  	    
-  		end  
-	  end
+    if event == "PLAYER_TARGET_CHANGED" then
+      if ( UnitExists(self.unit) ) then
+        if ( UnitIsEnemy(self.unit, "player") ) then
+          PlaySound("igCreatureAggroSelect")
+        elseif ( UnitIsFriend("player", self.unit) ) then
+          PlaySound("igCharacterNPCSelect")
+        else
+          PlaySound("igCreatureNeutralSelect")
+        end
+      else
+        PlaySound("INTERFACESOUND_LOSTTARGETUNIT")        
+      end  
+    end
   end
   
   local function make_me_movable(f)

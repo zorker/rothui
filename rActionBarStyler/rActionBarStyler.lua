@@ -11,12 +11,27 @@
   local button_system, testmode
   local shapeshift_on_mouseover, petbar_on_mouseover, rightbars_on_mouseover, micromenu_on_mouseover
   local bags_on_mouseover, bar3_on_mouseover, bar2_on_mouseover, bar1_on_mouseover
-  local move_micro, move_bags, move_rightbars, move_shapeshift, move_bar1, move_bar2, move_bar3
-  local lock_micro, lock_bags, lock_rightbars, lock_shapeshift, lock_bar1, lock_bar2, lock_bar3
-  local bar1scale, bar2scale, bar3scale, bar45scale, petscale, shapeshiftscale, micromenuscale, bagscale
+  local move_micro, move_bags, move_rightbars, move_shapeshift, move_bar1, move_bar2, move_bar3, move_totem
+  local lock_micro, lock_bags, lock_rightbars, lock_shapeshift, lock_bar1, lock_bar2, lock_bar3, lock_totem
+  local bar1scale, bar2scale, bar3scale, bar45scale, petscale, shapeshiftscale, micromenuscale, bagscale, totemscale
   
   ---------------------------------------------------
   -- CONFIG START
+  ---------------------------------------------------
+  
+  ---------------------------------------------------
+  -- NEW! totembar
+  ---------------------------------------------------
+  lock_totem = 1
+  move_totem = 0
+  if myclass == "SHAMAN" then
+    hide_totembar = 0
+  else
+    hide_totembar = 1
+  end
+  
+  ---------------------------------------------------
+  -- Older settings
   ---------------------------------------------------
   
   --this will activate ALL the backdrops. makes it easier to see the dragable bar areas
@@ -63,7 +78,7 @@
   if myname == "Loral" then
     shapeshift_on_mouseover = 0
   elseif myname == "Rothar" then
-    shapeshift_on_mouseover = 1
+    shapeshift_on_mouseover = 0
   else
     shapeshift_on_mouseover = 0
   end
@@ -106,6 +121,7 @@
   shapeshiftscale = 0.65
   micromenuscale = 0.8
   bagscale = 0.9
+  totemscale = 0.85
   
   -- position table for the default frame holder positions
   -- those are use if the bar is set to not movable or if there is no value in the layout-cache.txt for that frame yet
@@ -121,6 +137,7 @@
     [9]  =  { a = "BOTTOM",         x = 0,    y = 170 },  --petbar
     [10] =  { a = "BOTTOM",         x = 0,    y = 240 },  --shapeshift
     [11] =  { a = "BOTTOM",         x = 120,    y = 120 },  --my own vehicle exit button
+    [12] =  { a = "BOTTOM",         x = 3,     y = 115   },  --totembar
   }
   
   ---------------------------------------------------
@@ -222,6 +239,16 @@
     fshift:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
   end
   fshift:SetPoint(frame_positions[10].a,frame_positions[10].x,frame_positions[10].y) 
+  
+   -- Frame to hold the totembar  
+  local ftotem = CreateFrame("Frame","rABS_TotemBarHolder",UIParent)
+  ftotem:SetWidth(300)
+  ftotem:SetHeight(50)
+  if testmode == 1 then
+    ftotem:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 0, right = 0, top = 0, bottom = 0 }});
+  end
+  ftotem:SetPoint(frame_positions[12].a,frame_positions[12].x,frame_positions[12].y)
+  ftotem:Show()
   
   
   ---------------------------------------------------
@@ -326,7 +353,7 @@
     QuestLogMicroButton,
     SocialsMicroButton,
     PVPMicroButton,
-    LFGMicroButton,
+    LFDMicroButton,
     MainMenuMicroButton,
     HelpMicroButton,
   }  
@@ -338,6 +365,7 @@
     CharacterMicroButton:SetPoint("BOTTOMLEFT", 5, 5);
     SocialsMicroButton:ClearAllPoints();
     SocialsMicroButton:SetPoint("LEFT", QuestLogMicroButton, "RIGHT", -3, 0);
+    UpdateMicroButtons()
     --UpdateTalentButton();
   end
   hooksecurefunc("VehicleMenuBar_MoveMicroButtons", rABS_MoveMicroButtons);  
@@ -369,6 +397,20 @@
   MultiBarLeft:SetParent(fbar45);
   MultiBarRight:ClearAllPoints()
   MultiBarRight:SetPoint("TOPRIGHT",-10,-10)
+  
+  --totembar
+  --looks weird, works fine
+  if MultiCastActionBarFrame then
+	MultiCastActionBarFrame:SetParent(ftotem)
+	MultiCastActionBarFrame:ClearAllPoints()
+	MultiCastActionBarFrame:SetPoint("CENTER", ftotem, "CENTER", 0, 0)
+
+	local totemdummy = function() 
+	  return 
+	end
+	MultiCastActionBarFrame.SetParent = totemdummy
+	MultiCastActionBarFrame.SetPoint = totemdummy
+  end
   
   ---------------------------------------------------
   -- ACTIONBUTTONS MUST BE HIDDEN
@@ -556,6 +598,8 @@
       f:HookScript("OnEnter", function(self) rABS_showhidemicro(1) end)
       f:HookScript("OnLeave", function(self) rABS_showhidemicro(0) end)
     end
+	fmicro:SetScript("OnEvent", function(self) rABS_showhidemicro(0) end)
+	fmicro:RegisterEvent("PLAYER_ENTERING_WORLD")
   end
   
   if bags_on_mouseover == 1 then
@@ -599,6 +643,7 @@
   fshift:SetScale(shapeshiftscale)
   fmicro:SetScale(micromenuscale)
   fbag:SetScale(bagscale)
+  ftotem:SetScale(totemscale)
 
 
   ---------------------------------------------------
@@ -631,6 +676,8 @@
   rABS_MoveThisFrame(fbar2,move_bar2,lock_bar2)
   rABS_MoveThisFrame(fbar3,move_bar3,lock_bar3)
   rABS_MoveThisFrame(fveb,move_veb,lock_veb)
+  rABS_MoveThisFrame(ftotem,move_totem,lock_totem)
+
 
   if hide_bags == 1 then
     fbag:SetScale(0.001)
@@ -650,4 +697,9 @@
   if hide_pet == 1 then
     fpet:SetScale(0.001)
     fpet:SetAlpha(0)
+  end
+
+  if hide_totembar == 1 then
+    ftotem:SetScale(0.001)
+    ftotem:SetAlpha(0)
   end

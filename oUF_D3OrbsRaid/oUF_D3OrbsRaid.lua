@@ -272,6 +272,8 @@
     else
       raid[i]:SetPoint("TOPLEFT", raid[i-1], "TOPRIGHT", 5, 0)    
     end
-    raid[i]:SetManyAttributes("showRaid", true, "yOffset", -5, "groupFilter", i)
+    raid[i]:SetAttribute("showRaid", true)    
+    raid[i]:SetAttribute("yOffset", -5)
+    raid[i]:SetAttribute("groupFilter", i)    
     raid[i]:Show()
   end

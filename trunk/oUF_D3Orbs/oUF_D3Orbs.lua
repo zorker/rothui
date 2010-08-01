@@ -880,9 +880,12 @@
     button.cd:SetPoint("TOPLEFT", 1, -1)
     button.cd:SetPoint("BOTTOMRIGHT", -1, 1)
     button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+    if self.mystyle ~= "player" then
+      button.count:SetParent(button.cd)
+    end
     button.count:ClearAllPoints()
     button.count:SetPoint("TOPRIGHT", 4, 4)
-    button.count:SetTextColor(0.7,0.7,0.7)
+    button.count:SetTextColor(0.75,0.75,0.75)
     --fix the count on aurawatch, make the count fontsize button size dependend
     button.count:SetFont(d3font,bw/1.7,"THINOUTLINE")
     button.overlay:SetTexture("Interface\\AddOns\\rTextures\\gloss2.tga")
@@ -1504,6 +1507,7 @@
   local function CreatePlayerStyle(self, unit)
     if use_rbottombarstyler ~= 1 then
       self.width = orbsize
+      self.mystyle = "player"
       d3o2_setupFrame(self,orbsize,orbsize,"BACKGROUND")  
       d3o2_createOrb(self,"health")
       make_me_movable(self)

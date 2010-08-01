@@ -81,9 +81,10 @@
   elseif rf2_player_name == "Rothar" and rf2_player_class == "WARRIOR" then
     rf2_spell_list = {
       buffs = {
-        [1] = { tag = "commanding", spellid = 469,  unit = "player", size = 24, fontsize = 16, posx = -64, posy = -320, framestrata = "LOW", anchor = "UIParent"},
-        [2] = { tag = "battle",     spellid = 2048, unit = "player", size = 24, fontsize = 16, posx = -32, posy = -320, framestrata = "LOW", anchor = "UIParent"},
-        [3] = { tag = "SLAM",     spellid = 46916, unit = "player", size = 64, fontsize = 32, posx = 0, posy = -270, framestrata = "LOW", anchor = "UIParent"},
+        [1] = { tag = "commanding", spellid = 469,  unit = "player", size = 24, fontsize = 16, posx = -64, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [2] = { tag = "battle",     spellid = 2048, unit = "player", size = 24, fontsize = 16, posx = -32, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [3] = { tag = "SLAM",     spellid = 46916, unit = "player", size = 42, fontsize = 32, posx = 0, posy = -250, framestrata = "LOW", anchor = "UIParent"},
+        [4] = { tag = "block",     spellid = 2565, unit = "player", size = 42, fontsize = 32, posx = 0, posy = -250, framestrata = "LOW", anchor = "UIParent"},        
         --[3] = { tag = "snb",        spellid = 50227, unit = "player", size = 48, fontsize = 32, posx = 0 , posy = -30, framestrata = "LOW", anchor = "UIParent"},
         --[4] = { tag = "block",      spellid = 2565, unit = "player", size = 32, fontsize = 20, posx = -50 , posy = -30, framestrata = "LOW", anchor = "UIParent"},
         --[5] = { tag = "gnomeblocker", spellid = 35169, unit = "player", size = 32, fontsize = 20, posx = 50 , posy = -30, framestrata = "LOW", anchor = "UIParent"},
@@ -94,10 +95,10 @@
         --[3] = { tag = "berserker", spellid = 18499, size = 32, fontsize = 24, posx = 160, posy = 0, framestrata = "BACKGROUND", anchor = "UIParent"},
       },
       debuffs = {
-        [1] = { tag = "sunder",       spellid = 25225, ismine = 0,  unit = "target", size = 24, fontsize = 16, posx = 0, posy = -320, framestrata = "LOW", anchor = "UIParent"},
-        [2] = { tag = "demo",         spellid = 25203, ismine = 0,  unit = "target", size = 24, fontsize = 16, posx = 64, posy = -320, framestrata = "LOW", anchor = "UIParent"},
-        [3] = { tag = "clap",         spellid = 25264, ismine = 0,  unit = "target", size = 24, fontsize = 16, posx = 32, posy = -320, framestrata = "LOW", anchor = "UIParent"},
-        [4] = { tag = "rend",         spellid = 47465, ismine = 1,  unit = "target", size = 24, fontsize = 16, posx = -96, posy = -320, framestrata = "LOW", anchor = "UIParent"},        
+        [1] = { tag = "sunder",       spellid = 25225, ismine = 0,  unit = "target", size = 24, fontsize = 16, posx = 0, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [2] = { tag = "demo",         spellid = 25203, ismine = 0,  unit = "target", size = 24, fontsize = 16, posx = 64, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [3] = { tag = "clap",         spellid = 25264, ismine = 0,  unit = "target", size = 24, fontsize = 16, posx = 32, posy = -300, framestrata = "LOW", anchor = "UIParent"},
+        [4] = { tag = "rend",         spellid = 47465, ismine = 1,  unit = "target", size = 24, fontsize = 16, posx = -96, posy = -300, framestrata = "LOW", anchor = "UIParent"},        
         --[4] = { tag = "scorpid",      spellid = 3043,ismine = 0,    unit = "target", size = 18, fontsize = 16, posx = 60, posy = -300, framestrata = "LOW", anchor = "UIParent"},
         --[5] = { tag = "fearie",       spellid = 26993, ismine = 0,   unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
         --[6] = { tag = "fearieferal",  spellid = 27011, ismine = 0,  unit = "target", size = 18, fontsize = 16, posx = 90, posy = -300, framestrata = "LOW", anchor = "UIParent"},
@@ -153,21 +154,26 @@
     f:SetFrameStrata(framestrata)
     f:SetWidth(size)
     f:SetHeight(size)
+    local back = f:CreateTexture(nil, "BACKGROUND")
+    back:SetPoint("TOPLEFT",f,"TOPLEFT",-5,5)
+    back:SetPoint("BOTTOMRIGHT",f,"BOTTOMRIGHT",5,-5)
+    back:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_glow")
+    back:SetVertexColor(0, 0, 0, 1)
     local t = f:CreateTexture(frameName.."_icon","BACKGROUND")
     t:SetTexture(SpellIcon)
     t:SetTexCoord(0.1,0.9,0.1,0.9)
     t:SetAllPoints(f)
-    f.texture = t
-    local t2 = f:CreateTexture(nil,"LOW")
+    f.textureicon = t
+    local t2 = f:CreateTexture(nil,"ARTWORK")
     t2:SetTexture(bordertexture)
     t2:SetVertexColor(0.37,0.3,0.3)
     t2:SetPoint("TOPLEFT", f, "TOPLEFT", -2, 2)
     t2:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 2, -2)
-    f.texture = t2
+    f.textureborder = t2
     local time = f:CreateFontString(frameName.."_time", "ARTWORK")
     time:SetPoint("CENTER", f, "CENTER", 0, 1)
     time:SetFont(NAMEPLATE_FONT,fontsize,"OUTLINE")
-    time:SetTextColor(1, 1, 0)
+    time:SetTextColor(1, 0.8, 0)
     time:SetText("")
     time:Show()
     local num = f:CreateFontString(frameName.."_num", "OVERLAY")

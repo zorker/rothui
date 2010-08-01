@@ -85,5 +85,5 @@
     return r, g, b;
   end
 
-  GameTooltip_UnitColor = rGameTooltip_UnitColor;
-  UnitSelectionColor = GameTooltip_UnitColor
+  --GameTooltip_UnitColor = rGameTooltip_UnitColor
+  --UnitSelectionColor = GameTooltip_UnitColor

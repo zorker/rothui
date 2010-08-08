@@ -45,7 +45,36 @@
   -- FUNCTIONS
   ---------------------------------------
 
-   local nomoreplay = function() end
+  local nomoreplay = function() end
+   
+  local function am(text)
+    DEFAULT_CHAT_FRAME:AddMessage(text)
+  end
+
+
+  local function ntSetVertexColorFunc(nt, r, g, b, a)
+    --do stuff
+    --am("setvertexcol")
+    if nt then
+      local self = nt:GetParent()
+      local action = self.action
+      --local name = self:GetName()
+      local r,g,b,a = nt:GetVertexColor()
+      r = floor(r*100+0.5)/100
+      g = floor(g*100+0.5)/100
+      b = floor(b*100+0.5)/100
+      a = floor(a*100+0.5)/100
+      --am(name.." r: "..r.." g: "..g.." b: "..b.." a: "..a)
+      --important, this a workaround to hack the blizzard showgrid coloring!
+      --the color for the default normaltexture is 1,1,1, so what I'm doing here is a search if r,g and b are all = 1, if so, I'm gonna reset the coloring.
+      --this will fix the default showgrid alpha = 0.5 bug aswell
+      if r > 0.99 and g > 0.99 and b > 0.99 and action and (IsEquippedAction(action)) then
+        nt:SetVertexColor(color_equipped.r,color_equipped.g,color_equipped.b,1)
+      elseif r > 0.99 and g > 0.99 and b > 0.99 then
+        nt:SetVertexColor(color.r,color.g,color.b,1)
+      end        
+    end 
+  end
   
   --initial style func
   local function rActionButtonStyler_AB_style(self)
@@ -111,7 +140,7 @@
       bu.SetPushedTexture = nomoreplay
       bu.SetCheckedTexture = nomoreplay
       bu.SetNormalTexture = nomoreplay
-      nt.SetVertexColor = nomoreplay
+      hooksecurefunc(nt, "SetVertexColor", ntSetVertexColorFunc)
       
       self.rabsstyle = true
     

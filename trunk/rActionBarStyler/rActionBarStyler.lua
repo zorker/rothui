@@ -25,7 +25,7 @@
   lock_totem = 1
   move_totem = 0
   if myclass == "SHAMAN" then
-    hide_totembar = 1
+    hide_totembar = 0
   else
     hide_totembar = 1
   end
@@ -91,7 +91,7 @@
   end
   
   -- petbar
-  petbar_on_mouseover = 1
+  petbar_on_mouseover = 0
   move_pet = 1
   lock_pet = 0
   hide_pet = 0
@@ -399,11 +399,18 @@
   MultiBarRight:SetPoint("TOPRIGHT",-10,-10)
   
   --totembar
-  --if MultiCastActionBarFrame then
-  --  MultiCastActionBarFrame:SetParent(ftotem)
-  --  MultiCastActionBarFrame:ClearAllPoints()
-  --  MultiCastActionBarFrame:SetPoint("CENTER", ftotem, "CENTER", 0, 0)
-  --end
+  --looks weird, works fine
+  if MultiCastActionBarFrame then
+	MultiCastActionBarFrame:SetParent(ftotem)
+	MultiCastActionBarFrame:ClearAllPoints()
+	MultiCastActionBarFrame:SetPoint("CENTER", ftotem, "CENTER", 0, 0)
+
+	local totemdummy = function() 
+	  return 
+	end
+	MultiCastActionBarFrame.SetParent = totemdummy
+	MultiCastActionBarFrame.SetPoint = totemdummy
+  end
   
   ---------------------------------------------------
   -- ACTIONBUTTONS MUST BE HIDDEN
@@ -591,8 +598,8 @@
       f:HookScript("OnEnter", function(self) rABS_showhidemicro(1) end)
       f:HookScript("OnLeave", function(self) rABS_showhidemicro(0) end)
     end
-  fmicro:SetScript("OnEvent", function(self) rABS_showhidemicro(0) end)
-  fmicro:RegisterEvent("PLAYER_ENTERING_WORLD")
+	fmicro:SetScript("OnEvent", function(self) rABS_showhidemicro(0) end)
+	fmicro:RegisterEvent("PLAYER_ENTERING_WORLD")
   end
   
   if bags_on_mouseover == 1 then

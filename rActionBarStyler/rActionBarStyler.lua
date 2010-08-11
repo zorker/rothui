@@ -404,13 +404,25 @@
     MultiCastActionBarFrame:ClearAllPoints()
     MultiCastActionBarFrame:SetPoint("CENTER", ftotem, "CENTER", 0, 0)
   end
-   
+  
   local function moveTotem(self,a,b,c,d,e)
     if a and a ~= "CENTER" then 
-      self:ClearAllPoints()
-      self:SetPoint("CENTER", "rABS_TotemBarHolder", "CENTER", 0, 0)
+      if not InCombatLockdown() then
+        self:ClearAllPoints()
+        self:SetPoint("CENTER", "rABS_TotemBarHolder", "CENTER", 0, 0)
+      else
+        --need to relocate stuff when OOC
+        self:RegisterEvent("PLAYER_REGEN_ENABLED")
+      end
     end
   end
+  
+  MultiCastActionBarFrame:HookScript("OnEvent", function(self,event)
+    if(event == "PLAYER_REGEN_ENABLED") then
+      self:UnregisterEvent("PLAYER_REGEN_ENABLED")
+      moveTotem(self,"BOTTOM")
+    end
+  end)
   
   hooksecurefunc(MultiCastActionBarFrame, "SetPoint", moveTotem)
   

@@ -71,8 +71,10 @@
   --initial style func
   local function rActionButtonStyler_AB_style(self)
   
-    if not self.rabsstyle then
-    
+    if not self.rabsstyle and self:GetParent():GetName() ~= "MultiCastActionBarFrame" and self:GetParent():GetName() ~= "MultiCastActionPage1" and self:GetParent():GetName() ~= "MultiCastActionPage2" and self:GetParent():GetName() ~= "MultiCastActionPage3" then
+      
+      --am(self:GetParent():GetName())
+      
       local action = self.action
       local name = self:GetName()
       local bu  = _G[name]

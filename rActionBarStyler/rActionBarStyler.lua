@@ -399,18 +399,20 @@
   MultiBarRight:SetPoint("TOPRIGHT",-10,-10)
   
   --totembar
-  --looks weird, works fine
   if MultiCastActionBarFrame then
-	MultiCastActionBarFrame:SetParent(ftotem)
-	MultiCastActionBarFrame:ClearAllPoints()
-	MultiCastActionBarFrame:SetPoint("CENTER", ftotem, "CENTER", 0, 0)
-
-	local totemdummy = function() 
-	  return 
-	end
-	MultiCastActionBarFrame.SetParent = totemdummy
-	MultiCastActionBarFrame.SetPoint = totemdummy
+    MultiCastActionBarFrame:SetParent(ftotem)
+    MultiCastActionBarFrame:ClearAllPoints()
+    MultiCastActionBarFrame:SetPoint("CENTER", ftotem, "CENTER", 0, 0)
   end
+   
+  local function moveTotem(self,a,b,c,d,e)
+    if a and a ~= "CENTER" then 
+      self:ClearAllPoints()
+      self:SetPoint("CENTER", "rABS_TotemBarHolder", "CENTER", 0, 0)
+    end
+  end
+  
+  hooksecurefunc(MultiCastActionBarFrame, "SetPoint", moveTotem)
   
   ---------------------------------------------------
   -- ACTIONBUTTONS MUST BE HIDDEN

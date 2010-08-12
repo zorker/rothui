@@ -292,6 +292,17 @@
   
   local i,f
   
+  for _, f in pairs({        
+    _G['PetActionBarFrame'],
+    _G['ShapeshiftBarFrame'],
+    _G['PossessBarFrame'],
+    _G['MultiCastActionBarFrame'],
+  }) do
+    f:SetMovable(true)
+    f:SetUserPlaced(true)
+    f:EnableMouse(false)
+  end
+  
   --bar1
   for i=1, 12 do
     _G["ActionButton"..i]:SetParent(fbar1);
@@ -399,32 +410,22 @@
   MultiBarRight:SetPoint("TOPRIGHT",-10,-10)
   
   --totembar
-  if MultiCastActionBarFrame then
-    MultiCastActionBarFrame:SetParent(ftotem)
-    MultiCastActionBarFrame:ClearAllPoints()
-    MultiCastActionBarFrame:SetPoint("CENTER", ftotem, "CENTER", 0, 0)
-  end
-  
-  local function moveTotem(self,a,b,c,d,e)
-    if a and a ~= "CENTER" then 
-      if not InCombatLockdown() then
+  if myclass == "SHAMAN" then
+    if MultiCastActionBarFrame then
+      MultiCastActionBarFrame:SetParent(ftotem)
+      MultiCastActionBarFrame:ClearAllPoints()
+      MultiCastActionBarFrame:SetPoint("CENTER", ftotem, "CENTER", 0, 0)
+    end
+    
+    local function moveTotem(self,a,...)
+      if a and a ~= "CENTER" then 
         self:ClearAllPoints()
         self:SetPoint("CENTER", "rABS_TotemBarHolder", "CENTER", 0, 0)
-      else
-        --need to relocate stuff when OOC
-        self:RegisterEvent("PLAYER_REGEN_ENABLED")
       end
     end
+    
+    hooksecurefunc(MultiCastActionBarFrame, "SetPoint", moveTotem)  
   end
-  
-  MultiCastActionBarFrame:HookScript("OnEvent", function(self,event)
-    if(event == "PLAYER_REGEN_ENABLED") then
-      self:UnregisterEvent("PLAYER_REGEN_ENABLED")
-      moveTotem(self,"BOTTOM")
-    end
-  end)
-  
-  hooksecurefunc(MultiCastActionBarFrame, "SetPoint", moveTotem)
   
   ---------------------------------------------------
   -- ACTIONBUTTONS MUST BE HIDDEN

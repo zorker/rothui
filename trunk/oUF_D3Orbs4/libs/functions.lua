@@ -1,5 +1,5 @@
   
-  -- // oUF tutorial layout
+  -- // oUF D3Orbs 4.0
   -- // zork - 2010
   
   -----------------------------
@@ -19,360 +19,245 @@
   -- FUNCTIONS
   -----------------------------
   
-  --backdrop table
-  local backdrop_tab = { 
-    bgFile = cfg.backdrop_texture, 
-    edgeFile = cfg.backdrop_edge_texture,
-    tile = false,
-    tileSize = 0, 
-    edgeSize = 5, 
-    insets = { 
-      left = 5, 
-      right = 5, 
-      top = 5, 
-      bottom = 5,
-    },
-  }
-  
-  --backdrop func
-  lib.gen_backdrop = function(f)
-    f:SetBackdrop(backdrop_tab);
-    f:SetBackdropColor(0,0,0,0.7)
-    f:SetBackdropBorderColor(0,0,0,1)
-  end
-  
-  lib.menu = function(self)
-    local unit = self.unit:sub(1, -2)
-    local cunit = self.unit:gsub("(.)", string.upper, 1)
+  --the menu when clicking on a unit
+  lib.createUnitMenu = function(f)
+    local unit = f.unit:sub(1, -2)
+    local cunit = f.unit:gsub("(.)", string.upper, 1)
     if(unit == "party" or unit == "partypet") then
-      ToggleDropDownMenu(1, nil, _G["PartyMemberFrame"..self.id.."DropDown"], "cursor", 0, 0)
+      ToggleDropDownMenu(1, nil, _G["PartyMemberFrame"..f.id.."DropDown"], "cursor", 0, 0)
     elseif(_G[cunit.."FrameDropDown"]) then
       ToggleDropDownMenu(1, nil, _G[cunit.."FrameDropDown"], "cursor", 0, 0)
     end
   end
+
   
-  --moveme func
-  lib.moveme = function(f)
-    if cfg.allow_frame_movement then
-      f:SetMovable(true)
-      f:SetUserPlaced(true)
-      if not cfg.frames_locked then
-        f:EnableMouse(true)
-        f:RegisterForDrag("LeftButton","RightButton")
-        f:SetScript("OnDragStart", function(self) if IsAltKeyDown() and IsShiftKeyDown() then self:StartMoving() end end)
-        f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-      end
-    else
-      f:IsUserPlaced(false)
-    end  
-  end  
-  
-  --init func
-  lib.init = function(f)
-    f:SetAttribute("initial-height", f.height)
-    f:SetAttribute("initial-width", f.width)
-    f:SetAttribute("initial-scale", f.scale)
-    f:SetPoint("CENTER",UIParent,"CENTER",0,0)
-    f.menu = lib.menu
+  --initialize the unit paramters
+  lib.initUnitParameters = function(f)
+    f:SetAttribute("initial-height", f.config.height)
+    f:SetAttribute("initial-width", f.config.width)
+    f:SetAttribute("initial-scale", f.config.scale)
+    f:SetPoint(f.config.pos.a1,f.config.pos.af,f.config.pos.a2,f.config.pos.x,f.config.pos.y)
+    f.menu = lib.createUnitMenu(f)
     f:RegisterForClicks("AnyUp")
     f:SetAttribute("*type2", "menu")
     f:SetScript("OnEnter", UnitFrame_OnEnter)
     f:SetScript("OnLeave", UnitFrame_OnLeave)
-  end  
+    --lib.createBackdrop(f)
+  end
+  
+  --number format func
+  lib.numFormat = function(v)
+    local string = ""
+    if v > 1E6 then
+      string = (floor((v/1E6)*10)/10).."m"
+    elseif v > 1E3 then
+      string = (floor((v/1E3)*10)/10).."k"
+    else
+      string = v
+    end  
+    return string
+  end
   
   --fontstring func
-  lib.gen_fontstring = function(f, name, size, outline)
+  lib.createFontString = function(f, font, size, outline)
     local fs = f:CreateFontString(nil, "OVERLAY")
-    fs:SetFont(name, size, outline)
+    fs:SetFont(font, size, outline)
     fs:SetShadowColor(0,0,0,1)
     return fs
   end  
   
-  --gen healthbar func
-  lib.gen_hpbar = function(f)
-    --statusbar
-    local s = CreateFrame("StatusBar", nil, f)
-    s:SetStatusBarTexture(cfg.statusbar_texture)
-    s:SetHeight(f.height)
-    s:SetWidth(f.width)
-    s:SetPoint("CENTER",0,0)
-    --helper
-    local h = CreateFrame("Frame", nil, s)
-    h:SetFrameLevel(0)
-    h:SetPoint("TOPLEFT",-5,5)
-    h:SetPoint("BOTTOMRIGHT",5,-5)
-    lib.gen_backdrop(h)
-    --bg
-    local b = s:CreateTexture(nil, "BACKGROUND")
-    b:SetTexture(cfg.statusbar_texture)
-    b:SetAllPoints(s)
-    f.Health = s
-    f.Health.bg = b
-  end
+  --create galaxy func
+  lib.createGalaxy = function(f,x,y,size,duration,texture,sublevel)
   
-  --gen hp strings func
-  lib.gen_hpstrings = function(f)
-    --health/name text strings
-    local name = lib.gen_fontstring(f.Health, cfg.font, 13, "THINOUTLINE")
-    name:SetPoint("LEFT", f.Health, "LEFT", 2, 0)
-    name:SetJustifyH("LEFT")
-    
-    local hpval = lib.gen_fontstring(f.Health, cfg.font, 13, "THINOUTLINE")
-    hpval:SetPoint("RIGHT", f.Health, "RIGHT", -2, 0)
-    --this will make the name go "..." when its to long
-    name:SetPoint("RIGHT", hpval, "LEFT", -5, 0)
-    
-    f:Tag(name, "[name]")
-    f:Tag(hpval, "[curhp]/[perhp]%")
-  end
-  
-  --gen healthbar func
-  lib.gen_ppbar = function(f)
-    --statusbar
-    local s = CreateFrame("StatusBar", nil, f)
-    s:SetStatusBarTexture(cfg.statusbar_texture)
-    s:SetHeight(f.height/5)
-    s:SetWidth(f.width)
-    s:SetPoint("TOP",f,"BOTTOM",0,-3)
-    --helper
-    local h = CreateFrame("Frame", nil, s)
-    h:SetFrameLevel(0)
-    h:SetPoint("TOPLEFT",-5,5)
-    h:SetPoint("BOTTOMRIGHT",5,-5)
-    lib.gen_backdrop(h)
-    --bg
-    local b = s:CreateTexture(nil, "BACKGROUND")
-    b:SetTexture(cfg.statusbar_texture)
-    b:SetAllPoints(s)
-    f.Power = s
-    f.Power.bg = b
-  end
-  
-  --gen castbar
-  lib.gen_castbar = function(f)
-  
-    local s = CreateFrame("StatusBar", "oUF_SimpleCastbar"..f.mystyle, f)
-    s:SetHeight(f.height)
-    s:SetWidth(f.width)
-    if f.mystyle == "player" then
-      lib.moveme(s)
-      s:SetPoint("CENTER",UIParent,0,-50)
-    elseif f.mystyle == "target" then
-      lib.moveme(s)
-      s:SetPoint("CENTER",UIParent,0,0)
+    local t = f:CreateTexture(nil, "BACKGROUND", nil, sublevel)
+    t:SetSize(size,size)
+    t:SetPoint("CENTER",x,y)
+    t:SetTexture("Interface\\AddOns\\rTextures\\"..texture)
+    if f.type == "power" then
+      t:SetVertexColor(0,0.3,1,1)
     else
-      s:SetPoint("BOTTOM",f,"TOP",0,5)
+      t:SetVertexColor(1,0,0,1)
     end
-    s:SetStatusBarTexture(cfg.statusbar_texture)
-    s:SetStatusBarColor(1,0.8,0,1)
-    --helper
-    local h = CreateFrame("Frame", nil, s)
-    h:SetFrameLevel(0)
-    h:SetPoint("TOPLEFT",-5,5)
-    h:SetPoint("BOTTOMRIGHT",5,-5)
-    lib.gen_backdrop(h)
+    t:SetBlendMode("ADD")
     
-    local b = s:CreateTexture(nil, "BACKGROUND")
-    b:SetTexture(cfg.statusbar_texture)
-    b:SetAllPoints(s)
-    b:SetVertexColor(1*0.3,0.8*0.3,0,0.7)  
+    local ag = t:CreateAnimationGroup()    
+    local anim = ag:CreateAnimation("Rotation")
+    anim:SetDegrees(360)
+    anim:SetDuration(duration)    
+    ag:Play()
+    ag:SetLooping("REPEAT")
     
-    local txt = lib.gen_fontstring(s, cfg.font, 13, "THINOUTLINE")
-    txt:SetPoint("LEFT", 2, 0)
-    txt:SetJustifyH("LEFT")
-    --time
-    local t = lib.gen_fontstring(s, cfg.font, 13, "THINOUTLINE")
-    t:SetPoint("RIGHT", -2, 0)
-    txt:SetPoint("RIGHT", t, "LEFT", -5, 0)
-    
-    --icon
-    local i = s:CreateTexture(nil, "ARTWORK")
-    i:SetWidth(f.height)
-    i:SetHeight(f.height)
-    i:SetPoint("RIGHT", s, "LEFT", -5, 0)
-    i:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-    
-    --helper2 for icon
-    local h2 = CreateFrame("Frame", nil, s)
-    h2:SetFrameLevel(0)
-    h2:SetPoint("TOPLEFT",i,"TOPLEFT",-5,5)
-    h2:SetPoint("BOTTOMRIGHT",i,"BOTTOMRIGHT",5,-5)
-    lib.gen_backdrop(h2)
-    
-    if f.mystyle == "player" then
-      --latency only for player unit
-      local z = s:CreateTexture(nil,"OVERLAY")
-      z:SetTexture(cfg.statusbar_texture)
-      z:SetVertexColor(0.6,0,0,0.6)
-      z:SetPoint("TOPRIGHT")
-      z:SetPoint("BOTTOMRIGHT")
-      s.SafeZone = z
-    end
-    
-    f.Castbar = s
-    f.Castbar.Text = txt
-    f.Castbar.Time = t
-    f.Castbar.Icon = i
+    return t
+  
   end
   
-  lib.gen_portrait = function(f)
-    local p = CreateFrame("PlayerModel", nil, f)
-    p:SetWidth(f.height*3)
-    p:SetHeight(f.height*2)
-    if f.mystyle == "target" then
-      p:SetPoint("TOPLEFT", f, "TOPRIGHT", 5, 0)
+  
+  --create orb func
+  lib.createOrb = function (f,type)
+    local orb
+    if type == "power" then
+      orb = CreateFrame("StatusBar", "oUF_D3Orbs4PowerOrb", f)
     else
-      p:SetPoint("TOPRIGHT", f, "TOPLEFT", -5, 0)
+      orb = CreateFrame("StatusBar", "oUF_D3Orbs4HealthOrb", f)
     end
+    orb.type = type
+    --need to be transparent just need it for the math
+    orb:SetStatusBarTexture("Interface\\AddOns\\rTextures\\orb_transparent")
+    orb:SetHeight(f.config.height)
+    orb:SetWidth(f.config.width)
     
-    --helper
-    local h = CreateFrame("Frame", nil, p)
-    h:SetFrameLevel(0)
-    h:SetPoint("TOPLEFT",-5,5)
-    h:SetPoint("BOTTOMRIGHT",5,-5)
-    lib.gen_backdrop(h)
-  
-    f.Portrait = p
-  end
-  
-  lib.PostCreateIcon = function(self, button)
-    button.cd:SetReverse()
-    button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-    button.icon:SetDrawLayer("BACKGROUND")
-    --count
-    button.count:ClearAllPoints()
-    button.count:SetJustifyH("RIGHT")
-    button.count:SetPoint("TOPRIGHT", 2, 2)
-    button.count:SetTextColor(0.7,0.7,0.7)
-    --helper
-    local h = CreateFrame("Frame", nil, button)
-    h:SetFrameLevel(0)
-    h:SetPoint("TOPLEFT",-5,5)
-    h:SetPoint("BOTTOMRIGHT",5,-5)
-    lib.gen_backdrop(h)
-  end
-  
-  lib.createBuffs = function(f)
-    b = CreateFrame("Frame", nil, f)
-    b.size = 20
-    if f.mystyle == "target" then
-      b.num = 40
-    elseif f.mystyle == "player" then
-      b.num = 10
-      b.onlyShowPlayer = true
+    --actionbarbackground is at -8, make it be above that
+    orb.back = orb:CreateTexture(nil, "BACKGROUND", nil, -7)
+    orb.back:SetTexture("Interface\\AddOns\\rTextures\\orb_back2")
+    orb.back:SetAllPoints(orb)
+    --orb.back:SetBlendMode("BLEND")
+    
+    orb.Filling = orb:CreateTexture(nil, "BACKGROUND", nil, -6)
+    orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling1")
+    orb.Filling:SetAllPoints(orb)
+    --orb.Filling:SetBlendMode("ADD")
+    
+    orb.galaxy = {}
+    if type == "power" then
+      orb.Filling:SetVertexColor(0,0.3,1,1)
+      orb.galaxy[1] = lib.createGalaxy(orb,0,-10,f.config.width-0,60,"galaxy2",-5)
+      orb.galaxy[2] = lib.createGalaxy(orb,-2,-10,f.config.width-20,32,"galaxy",-5)
+      orb.galaxy[3] = lib.createGalaxy(orb,-4,-10,f.config.width-10,20,"galaxy3",-5)
     else
-      b.num = 5
+      orb.Filling:SetVertexColor(1,0,0,1)
+      orb.galaxy[1] = lib.createGalaxy(orb,0,-10,f.config.width-0,60,"galaxy2",-5)
+      orb.galaxy[2] = lib.createGalaxy(orb,2,-10,f.config.width-20,30,"galaxy",-5)
+      orb.galaxy[3] = lib.createGalaxy(orb,4,-10,f.config.width-10,18,"galaxy3",-5)
     end
-    b.spacing = 5
-    b.onlyShowPlayer = false
-    b:SetHeight((b.size+b.spacing)*4)
-    b:SetWidth(f.width)
-    b:SetPoint("BOTTOMLEFT", f, "TOPLEFT", 0, 5)
-    b.initialAnchor = "BOTTOMLEFT"
-    b["growth-x"] = "RIGHT"
-    b["growth-y"] = "UP"
-    b.PostCreateIcon = lib.PostCreateIcon
-    f.Buffs = b
-  end
+    
+    orb.Gloss = orb:CreateTexture(nil, "BACKGROUND", nil, -4)
+    orb.Gloss:SetTexture("Interface\\AddOns\\rTextures\\orb_gloss")
+    orb.Gloss:SetAllPoints(orb)
+    orb.Gloss:SetAlpha(1)
+    --orb.Gloss:SetBlendMode("ADD")
 
-  lib.createDebuffs = function(f)
-    b = CreateFrame("Frame", nil, f)
-    b.size = 20
-    if f.mystyle == "target" then
-      b.num = 40
-    elseif f.mystyle == "player" then
-      b.num = 10
+    if type == "power" then
+      --reset the power to be on the opposite side of the health orb
+      orb:SetPoint(f.config.pos.a1,f.config.pos.af,f.config.pos.a2,f.config.pos.x*(-1),f.config.pos.y)
     else
-      b.num = 5
-    end
-    b.spacing = 5
-    b.onlyShowPlayer = false
-    b:SetHeight((b.size+b.spacing)*4)
-    b:SetWidth(f.width)
-    b:SetPoint("TOPLEFT", f.Power, "BOTTOMLEFT", 0, -5)
-    b.initialAnchor = "TOPLEFT"
-    b["growth-x"] = "RIGHT"
-    b["growth-y"] = "DOWN"
-    b.PostCreateIcon = lib.PostCreateIcon
-    f.Debuffs = b
-  end
-
-
-  -- Rune bar function
-  lib.addRuneBar = function(self, unit)
-
-  if myclass == "DEATHKNIGHT" and unit == "player" then
-
-    local t
-    local bar = CreateFrame("Frame","oUF_D3Orbs_RuneBar",self)
-    local NUM_RUNES = 6
-    local w = 64*(num_runes+2)
-    local h = 64
-    bar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-    bar:SetWidth(w)
-    bar:SetHeight(h)
-    bar:SetScale(runebarscale)
-    
-    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
-    t:SetSize(64,64)
-    t:SetPoint("LEFT",0,0)
-    t:SetTexture("Interface\\AddOns\\rTextures\\combo_left")
-    bar.leftedge = t
-
-    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
-    t:SetSize(64,64)
-    t:SetPoint("RIGHT",0,0)
-    t:SetTexture("Interface\\AddOns\\rTextures\\combo_right")
-    bar.rightedge = t
-    
-    bar.back = {}
-    bar.filling = {}
-    bar.glow = {}
-    bar.gloss = {}
-    
-    for i = 1, NUM_RUNES do
-    
-      local back = "back"..i
-      bar.back[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-8)  
-      bar.back[i]:SetSize(64,64)
-      bar.back[i]:SetPoint("LEFT",i*64,0)
-      bar.back[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_back")
-
-      bar.filling[i] = CreateFrame("StatusBar", nil, bar)
-      bar.filling[i]:SetSize(64,64)
-      bar.filling[i]:SetPoint("LEFT",i*64,0)
-      bar.filling[i]:SetStatusBarTexture("Interface\\AddOns\\rTextures\\combo_fill")
-      --bar.filling[i]:SetBlendMode("ADD")
-      
-      bar.filling_bg[i] = bar.filling[i]:CreateTexture(nil,"BACKGROUND",nil,-7)  
-      bar.filling_bg[i]:SetAllPoints(bar.filling[i])
-      bar.filling_bg[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_fill")
-      bar.filling_bg[i].multiplier = 0.3
-
-      bar.glow[i] = bar.filling[i]:CreateTexture(nil,"BACKGROUND",nil,-6)  
-      bar.glow[i]:SetSize(64*1.25,64*1.25)
-      bar.glow[i]:SetPoint("CENTER", bar.filling[i], "CENTER", 0, 0)
-      bar.glow[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_glow")
-      bar.glow[i]:SetBlendMode("BLEND")
-      --bar.glow[i]:SetVertexColor(combocolor.r,combocolor.g,combocolor.b,0.4)
-      bar.glow[i]:Hide()
-
-      bar.gloss[i] = bar.filling[i]:CreateTexture(nil,"BACKGROUND",nil,-5)  
-      bar.gloss[i]:SetSize(64,64)
-      bar.gloss[i]:SetPoint("LEFT",i*64,0)
-      bar.gloss[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_highlight")
-      bar.gloss[i]:SetBlendMode("ADD")
-
-      self.Runes[i] = bar.filling[i]
-      self.Runes[i].bg = bar.filling_bg[i]
-
+      --position it in the center of the frame
+      orb:SetPoint("CENTER",f,"CENTER",0,0)
     end
     
-    self.RuneBar = bar
+    return orb
     
   end
-end
+  
+  --allows frames to become movable but frames can be locked or set to default positions
+  lib.applyDragFunctionality = function(f)
+    if not cfg.framesUserplaced then
+      f:IsUserPlaced(false)
+      return
+    else
+      f:SetMovable(true)
+      f:SetUserPlaced(true)
+      if not cfg.framesLocked then
+        f:EnableMouse(true)
+        f:RegisterForDrag("LeftButton","RightButton")
+        f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
+        f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
+      end
+    end  
+  end
+  
+  --allows frames to become movable in any case
+  lib.applyDragFunctionalityNoRestrict = function(f)
+    f:SetMovable(true)
+    f:SetUserPlaced(true)
+    f:EnableMouse(true)
+    f:RegisterForDrag("LeftButton","RightButton")
+    f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
+    f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
+  end
 
+  
+  --background art behind buttons
+  lib.createActionBarBackground = function(p)
+  
+    if not cfg.actionbarbackground.show then return end
+
+    local f = CreateFrame("Frame","oUF_D3Orbs4_ActionBarBackground",p)
+    f:SetWidth(512)
+    f:SetHeight(256)
+    f:SetPoint(cfg.actionbarbackground.pos.a1, cfg.actionbarbackground.pos.af, cfg.actionbarbackground.pos.a2, cfg.actionbarbackground.pos.x, cfg.actionbarbackground.pos.y)
+    f:SetScale(cfg.actionbarbackground.scale)
+    lib.applyDragFunctionality(f)
+    local t = f:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetAllPoints(f)    
+    if cfg.usebar == 12 then
+      t:SetTexture("Interface\\AddOns\\rTextures\\bar1")
+    elseif cfg.usebar == 24 then
+      t:SetTexture("Interface\\AddOns\\rTextures\\bar2")
+    elseif cfg.usebar == 36 then
+      t:SetTexture("Interface\\AddOns\\rTextures\\bar3")
+    else
+      if MultiBarBottomRight:IsShown() then
+        t:SetTexture("Interface\\AddOns\\rTextures\\bar3")
+      elseif MultiBarBottomLeft:IsShown() then
+        t:SetTexture("Interface\\AddOns\\rTextures\\bar2")
+      else
+        t:SetTexture("Interface\\AddOns\\rTextures\\bar1")
+      end
+      MultiBarBottomRight:HookScript("OnShow", function() t:SetTexture("Interface\\AddOns\\rTextures\\bar3") end)
+      MultiBarBottomRight:HookScript("OnHide", function() t:SetTexture("Interface\\AddOns\\rTextures\\bar2") end)
+      MultiBarBottomLeft:HookScript("OnShow", function() t:SetTexture("Interface\\AddOns\\rTextures\\bar2") end)
+      MultiBarBottomLeft:HookScript("OnHide", function() t:SetTexture("Interface\\AddOns\\rTextures\\bar1") end)
+    end
+  end
+
+  --create the angel
+  lib.createAngelFrame = function(p)
+    if not cfg.angel.show then return end
+    local f = CreateFrame("Frame","oUF_D3Orbs4_AngelFrame",p)
+    f:SetWidth(320)
+    f:SetHeight(160)
+    f:SetPoint(cfg.angel.pos.a1, cfg.angel.pos.af, cfg.angel.pos.a2, cfg.angel.pos.x, cfg.angel.pos.y)
+    f:SetScale(cfg.angel.scale)
+    lib.applyDragFunctionality(f)
+    local t = f:CreateTexture(nil,"BACKGROUND",nil,-3)
+    t:SetAllPoints(f)
+    t:SetTexture("Interface\\AddOns\\rTextures\\d3_angel2")
+  end
+
+  --create the demon
+  lib.createDemonFrame = function(p)
+    if not cfg.demon.show then return end
+    local f = CreateFrame("Frame","oUF_D3Orbs4_DemonFrame",p)
+    f:SetWidth(320)
+    f:SetHeight(160)
+    f:SetPoint(cfg.demon.pos.a1, cfg.demon.pos.af, cfg.demon.pos.a2, cfg.demon.pos.x, cfg.demon.pos.y)
+    f:SetScale(cfg.demon.scale)
+    lib.applyDragFunctionality(f)
+    local t = f:CreateTexture(nil,"BACKGROUND",nil,-3)
+    t:SetAllPoints(f)
+    t:SetTexture("Interface\\AddOns\\rTextures\\d3_demon2")
+  end
+
+  --create the bottomline
+  lib.createBottomLine = function(p)
+    if not cfg.bottomline.show then return end
+    local f = CreateFrame("Frame","oUF_D3Orbs4_BottomLine",p)
+    f:SetWidth(500)
+    f:SetHeight(112)
+    f:SetPoint(cfg.bottomline.pos.a1, cfg.bottomline.pos.af, cfg.bottomline.pos.a2, cfg.bottomline.pos.x, cfg.bottomline.pos.y)
+    f:SetScale(cfg.bottomline.scale)
+    lib.applyDragFunctionality(f)
+    local t = f:CreateTexture(nil,"BACKGROUND",nil,-2)
+    t:SetAllPoints(f)
+    t:SetTexture("Interface\\AddOns\\rTextures\\d3_bottom")
+  end
+
+  --backdrop func
+  lib.createBackdrop = function(f)
+    f:SetBackdrop(cfg.backdrop);
+    f:SetBackdropColor(0,0,0,0.7)
+    f:SetBackdropBorderColor(0,0,0,1)
+  end
   
   -----------------------------
   -- HANDOVER

@@ -19,6 +19,18 @@
   -----------------------------
   --GLOBAL VARIABLES
   -----------------------------
+  
+  -- healthcolor defines what healthcolor will be used
+  -- 0 = class color, 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
+  cfg.healthcolor = 0
+
+  -- manacolor defines what manacolor will be used
+  -- 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
+  cfg.manacolor = 3
+  
+  --automatic mana detection on stance/class (only works with glows active)
+  --this will override the manacolor value (obvious)
+  cfg.automana = true
 
   --setting this to false will RESET all the frame positions
   cfg.framesUserplaced = false
@@ -91,6 +103,23 @@
   -----------------------------
   --STUFF
   -----------------------------
+
+  local playername, _ = UnitName("player")
+  local _, playerclass = UnitClass("player")
+  local playercolor = rRAID_CLASS_COLORS[playerclass]
+  
+  cfg.galaxytab = {
+    [0] = {r = playercolor.r, g = playercolor.g, b = playercolor.b, }, -- class color
+    [1] = {r = 0.90, g = 0.1, b = 0.1, }, -- red
+    [2] = {r = 0.25, g = 0.9, b = 0.25, }, -- green
+    [3] = {r = 0, g = 0.35,   b = 0.9, }, -- blue
+    [4] = {r = 0.9, g = 0.8, b = 0.35, }, -- yellow
+    [5] = {r = 0.35, g = 0.9,   b = 0.9, }, -- runic
+  }
+  
+  cfg.playername = playername
+  cfg.playerclass = playerclass
+  cfg.playercolor = playercolor
 
   --font
   cfg.font = "FONTS\\FRIZQT__.ttf"   

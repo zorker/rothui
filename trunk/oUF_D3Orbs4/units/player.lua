@@ -33,13 +33,10 @@
     
     --create the health orb
     self.Health = lib.createOrb(self,"health")
-    self.Health.Smooth = true
 
     --create the power orb
     self.Power = lib.createOrb(self,"power")
     lib.applyDragFunctionality(self.Power)
-    self.Power.frequentUpdates = true
-    self.Power.Smooth = true
     
     --hp strings
     local hpval1, hpval2, ppval1, ppval2, hpvalf, ppvalf
@@ -55,6 +52,9 @@
     self:Tag(hpval1, "[perhp]")
     self:Tag(hpval2, "[d3oShortHP]")
 
+    self.Health.hpval1 = hpval1
+    self.Health.hpval2 = hpval2
+
     --pp strings
     ppvalf = CreateFrame("FRAME", nil, self.Power)
     ppvalf:SetAllPoints(self.Power)
@@ -65,13 +65,25 @@
     ppval2:SetPoint("CENTER", 0, -10)
     ppval2:SetTextColor(0.6,0.6,0.6)
     
-    self:Tag(ppval1, "[perpp]")
-    self:Tag(ppval2, "[d3oShortPP]")
+    --don't use tages for the power values, they will be set in the updatePlayerPower func
+    --self:Tag(ppval1, "[perpp]")
+    --self:Tag(ppval2, "[d3oShortPP]")
+
+    self.Power.ppval1 = ppval1
+    self.Power.ppval2 = ppval2
     
-    --create the other art now, important because of the layers
+    --create the other art now, important because of it being above the other layers, order matters
     lib.createAngelFrame(self)
     lib.createDemonFrame(self)
-    lib.createBottomLine(self)
+    lib.createBottomLine(self)    
+
+    self.Health.Smooth = true
+    self.Power.frequentUpdates = true
+    self.Power.Smooth = true
+
+    self.Health.PostUpdate = lib.updatePlayerHealth
+    self.Power.PostUpdate = lib.updatePlayerPower
+    
     
   end  
 

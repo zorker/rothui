@@ -11,7 +11,7 @@ embeds\runebar.lua
 embeds\totembar.lua
 embeds\aurawatch.lua
 embeds\debuffhighlight.lua
-embeds\smoooth.lua
+embeds\smooth.lua
 embeds\readycheck.lua
 
 config.lua

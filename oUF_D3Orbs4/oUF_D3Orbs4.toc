@@ -5,26 +5,18 @@
 ## RequiredDeps: oUF, rColors
 ## X-Category: UnitFrame
 
-embeds/experiencebar.lua
-embeds/reputationbar.lua
-embeds/runebar.lua
-embeds/totembar.lua
-
-embeds/aurawatch.lua
-embeds/debuffhighlight.lua
-embeds/smoooth.lua
-embeds/readycheck.lua
+embeds\experiencebar.lua
+embeds\reputationbar.lua
+embeds\runebar.lua
+embeds\totembar.lua
+embeds\aurawatch.lua
+embeds\debuffhighlight.lua
+embeds\smoooth.lua
+embeds\readycheck.lua
 
 config.lua
 
-libs/functions.lua
-libs/tags.lua
+libs\functions.lua
+libs\tags.lua
 
-units/player.lua
-units/pet.lua
-units/target.lua
-units/targetoftarget.lua
-units/focus.lua
-units/focustarget.lua
-units/party.lua
-units/raid.lua
+units\player.lua

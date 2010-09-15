@@ -1,5 +1,5 @@
   
-  -- // oUF tutorial layout
+  -- // oUF D3Orbs 4.0
   -- // zork - 2010
   
   --get the addon namespace
@@ -10,185 +10,77 @@
   --get the library
   local lib = ns.lib
 
+  local unitconfig = cfg.units.player
+
+
   -----------------------------
   -- STYLE FUNCTIONS
   -----------------------------
 
-  local function genStyle(self)
-    lib.init(self)
-    lib.moveme(self)
-    lib.gen_hpbar(self)
-    lib.gen_hpstrings(self)
-    lib.gen_ppbar(self)
-  end
-
   --the player style
-  local function CreatePlayerStyle(self)
-    --style specific stuff
-    self.width = 250
-    self.height = 25
-    self.scale = 0.8
-    self.mystyle = "player"
-    genStyle(self)
-    self.Health.frequentUpdates = true
-    self.Health.colorClass = true
-    self.Health.bg.multiplier = 0.3
-    self.Power.colorPower = true
-    self.Power.bg.multiplier = 0.3
-    lib.gen_castbar(self)
-    lib.gen_portrait(self)
-    lib.createBuffs(self)
-    lib.createDebuffs(self)
-  end  
+  local function createStyle(self)
   
-  --the target style
-  local function CreateTargetStyle(self)
-    --style specific stuff
-    self.width = 250
-    self.height = 25
-    self.scale = 0.8
-    self.mystyle = "target"
-    genStyle(self)
-    self.Health.frequentUpdates = true
-    self.Health.colorTapping = true
-    self.Health.colorDisconnected = true
-    self.Health.colorHappiness = true
-    self.Health.colorClass = true
-    self.Health.colorReaction = true
-    self.Health.colorHealth = true
-    self.Health.bg.multiplier = 0.3
-    self.Power.colorPower = true
-    self.Power.bg.multiplier = 0.3
-    lib.gen_castbar(self)
-    lib.gen_portrait(self)
-    lib.createBuffs(self)
-    lib.createDebuffs(self)
-  end  
-  
-  --the tot style
-  local function CreateToTStyle(self)
-    --style specific stuff
-    self.width = 150
-    self.height = 25
-    self.scale = 0.8
-    self.mystyle = "tot"
-    genStyle(self)
-    self.Health.frequentUpdates = true
-    self.Health.colorTapping = true
-    self.Health.colorDisconnected = true
-    self.Health.colorHappiness = true
-    self.Health.colorClass = true
-    self.Health.colorReaction = true
-    self.Health.colorHealth = true
-    self.Health.bg.multiplier = 0.3
-    self.Power.colorPower = true
-    self.Power.bg.multiplier = 0.3
-    lib.createDebuffs(self)
-  end 
-  
-  --the focus style
-  local function CreateFocusStyle(self)
-    --style specific stuff
-    self.width = 180
-    self.height = 25
-    self.scale = 0.8
-    self.mystyle = "focus"
-    genStyle(self)
-    self.Health.frequentUpdates = true
-    self.Health.colorDisconnected = true
-    self.Health.colorHappiness = true
-    self.Health.colorClass = true
-    self.Health.colorReaction = true
-    self.Health.colorHealth = true
-    self.Health.bg.multiplier = 0.3
-    self.Power.colorPower = true
-    self.Power.bg.multiplier = 0.3
-    lib.gen_castbar(self)
-    lib.gen_portrait(self)
-    lib.createDebuffs(self)
-  end  
-  
-  --the pet style
-  local function CreatePetStyle(self)
-    --style specific stuff
-    self.width = 180
-    self.height = 25
-    self.scale = 0.8
-    self.mystyle = "pet"
-    genStyle(self)
-    self.Health.frequentUpdates = true
-    self.Health.colorDisconnected = true
-    self.Health.colorHappiness = true
-    self.Health.colorClass = true
-    self.Health.colorReaction = true
-    self.Health.colorHealth = true
-    self.Health.bg.multiplier = 0.3
-    self.Power.colorPower = true
-    self.Power.bg.multiplier = 0.3
-    lib.gen_castbar(self)
-    lib.gen_portrait(self)
-    lib.createDebuffs(self)
-  end  
+    --make the config values available for the self object
+    self.config = unitconfig
+    
+    --createActionBarBackground
+    lib.createActionBarBackground(self)
+    
+    --init unit parameters
+    lib.initUnitParameters(self)
+    
+    lib.applyDragFunctionality(self)
+    
+    --create the health orb
+    self.Health = lib.createOrb(self,"health")
+    self.Health.Smooth = true
 
-  --the party style
-  local function CreatePartyStyle(self)
-    --style specific stuff
-    self.width = 180
-    self.height = 25
-    self.scale = 0.8
-    self.mystyle = "party"
-    genStyle(self)
-    self.Health.frequentUpdates = true
-    self.Health.colorDisconnected = true
-    self.Health.colorHappiness = true
-    self.Health.colorClass = true
-    self.Health.colorReaction = true
-    self.Health.colorHealth = true
-    self.Health.bg.multiplier = 0.3
-    self.Power.colorPower = true
-    self.Power.bg.multiplier = 0.3
-    lib.gen_portrait(self)
-    lib.createDebuffs(self)
+    --create the power orb
+    self.Power = lib.createOrb(self,"power")
+    lib.applyDragFunctionality(self.Power)
+    self.Power.frequentUpdates = true
+    self.Power.Smooth = true
+    
+    --hp strings
+    local hpval1, hpval2, ppval1, ppval2, hpvalf, ppvalf
+    hpvalf = CreateFrame("FRAME", nil, self.Health)
+    hpvalf:SetAllPoints(self.Health)
+    
+    hpval1 = lib.createFontString(hpvalf, cfg.font, 28, "THINOUTLINE")
+    hpval1:SetPoint("CENTER", 0, 10)
+    hpval2 = lib.createFontString(hpvalf, cfg.font, 16, "THINOUTLINE")
+    hpval2:SetPoint("CENTER", 0, -10)
+    hpval2:SetTextColor(0.6,0.6,0.6)
+    
+    self:Tag(hpval1, "[perhp]")
+    self:Tag(hpval2, "[d3oShortHP]")
+
+    --pp strings
+    ppvalf = CreateFrame("FRAME", nil, self.Power)
+    ppvalf:SetAllPoints(self.Power)
+    
+    ppval1 = lib.createFontString(ppvalf, cfg.font, 28, "THINOUTLINE")
+    ppval1:SetPoint("CENTER", 0, 10)
+    ppval2 = lib.createFontString(ppvalf, cfg.font, 16, "THINOUTLINE")
+    ppval2:SetPoint("CENTER", 0, -10)
+    ppval2:SetTextColor(0.6,0.6,0.6)
+    
+    self:Tag(ppval1, "[perpp]")
+    self:Tag(ppval2, "[d3oShortPP]")
+    
+    --create the other art now, important because of the layers
+    lib.createAngelFrame(self)
+    lib.createDemonFrame(self)
+    lib.createBottomLine(self)
+    
   end  
 
   -----------------------------
   -- SPAWN UNITS
   -----------------------------
 
-  if cfg.showplayer then
-    oUF:RegisterStyle("oUF_SimplePlayer", CreatePlayerStyle)
-    oUF:SetActiveStyle("oUF_SimplePlayer")
-    oUF:Spawn("player", "oUF_Simple_PlayerFrame")  
-  end
-  
-  if cfg.showtarget then
-    oUF:RegisterStyle("oUF_SimpleTarget", CreateTargetStyle)
-    oUF:SetActiveStyle("oUF_SimpleTarget")
-    oUF:Spawn("target", "oUF_Simple_TargetFrame")  
-  end
-
-  if cfg.showtot then
-    oUF:RegisterStyle("oUF_SimpleToT", CreateToTStyle)
-    oUF:SetActiveStyle("oUF_SimpleToT")
-    oUF:Spawn("targettarget", "oUF_Simple_ToTFrame")  
-  end
-  
-  if cfg.showfocus then
-    oUF:RegisterStyle("oUF_SimpleFocus", CreateFocusStyle)
-    oUF:SetActiveStyle("oUF_SimpleFocus")
-    oUF:Spawn("focus", "oUF_Simple_FocusFrame")  
-  end
-  
-  if cfg.showpet then
-    oUF:RegisterStyle("oUF_SimplePet", CreatePetStyle)
-    oUF:SetActiveStyle("oUF_SimplePet")
-    oUF:Spawn("pet", "oUF_Simple_PetFrame")  
-  end
-  
-  if cfg.showparty then
-    oUF:RegisterStyle("oUF_SimpleParty", CreatePartyStyle)
-    oUF:SetActiveStyle("oUF_SimpleParty")
-
-   local party = oUF:SpawnHeader("oUF_Party", nil, "raid,party,solo", "showParty", true, "showPlayer", true, "yOffset", -50)
-   party:SetPoint("TOPLEFT", 70, -20)
+  if unitconfig.show then
+    oUF:RegisterStyle("oUF_D3Orbs4Player", createStyle)
+    oUF:SetActiveStyle("oUF_D3Orbs4Player")
+    oUF:Spawn("player", "oUF_D3Orbs4PlayerFrame")  
   end

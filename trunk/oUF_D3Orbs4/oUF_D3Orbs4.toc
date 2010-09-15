@@ -1,0 +1,30 @@
+## Interface: 40000
+## Author: zork	
+## Title: oUF_D3Orbs 4.0
+## Notes: oUF layout with Diablo flavour!
+## RequiredDeps: oUF, rColors
+## X-Category: UnitFrame
+
+embeds/experiencebar.lua
+embeds/reputationbar.lua
+embeds/runebar.lua
+embeds/totembar.lua
+
+embeds/aurawatch.lua
+embeds/debuffhighlight.lua
+embeds/smoooth.lua
+embeds/readycheck.lua
+
+config.lua
+
+libs/functions.lua
+libs/tags.lua
+
+units/player.lua
+units/pet.lua
+units/target.lua
+units/targetoftarget.lua
+units/focus.lua
+units/focustarget.lua
+units/party.lua
+units/raid.lua

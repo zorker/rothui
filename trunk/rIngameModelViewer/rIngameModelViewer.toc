@@ -1,0 +1,7 @@
+## Interface: 40000
+## Author: zork
+## Version: 0.1
+## Title: rIngameModelViewer 0.1
+## Notes: Mod that allows you to view models ingame.
+
+rIngameModelViewer.lua

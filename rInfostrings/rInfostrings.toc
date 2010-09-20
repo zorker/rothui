@@ -1,0 +1,7 @@
+## Interface: 40000
+## Author: zork
+## Version: 1.0
+## Title: rInfostrings
+## Notes: Some strings with info
+
+rInfostrings.lua

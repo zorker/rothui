@@ -64,7 +64,7 @@
   end
     
   local function changeModelDistanceScale(self, delta)
-    local maxscale = 2
+    local maxscale = 10
     local minscale = 0.1
     self.scaleLevel = self.scaleLevel + delta*0.15
     if (self.scaleLevel > maxscale) then
@@ -78,8 +78,8 @@
   end
   
   local function moveModelLeftRight(self, delta)
-    local max = 2
-    local min = -2
+    local max = 5
+    local min = -5
     self.posX = self.posX + delta*0.15
     if (self.posX > max) then
         self.posX = max
@@ -92,8 +92,8 @@
   end
   
   local function moveModelTopBottom(self, delta)
-    local max = 2
-    local min = -2
+    local max = 5
+    local min = -5
     self.posY = self.posY + delta*0.15
     if (self.posY > max) then
         self.posY = max
@@ -270,8 +270,8 @@
     models = {}
 
     local w = floor(b:GetWidth())
-    local h = floor(b:GetHeight())
-    cfg.rows = floor(h/cfg.size)-1
+    local h = floor(b:GetHeight())-70 --remove 70px for the bottom bar
+    cfg.rows = floor(h/cfg.size)
     cfg.cols = floor(w/cfg.size)
     cfg.num = cfg.rows*cfg.cols
     
@@ -380,7 +380,7 @@
     
     --close button
     l3 = CreateFrame("FRAME", nil,b)
-    l3:SetSize(200,30)
+    l3:SetSize(100,30)
     l3:SetPoint("BOTTOMRIGHT",-10,10)
 
     t = l3:CreateTexture(nil, "BACKGROUND",nil,-8)
@@ -391,7 +391,7 @@
     p = l3:CreateFontString(nil, "BACKGROUND")
     p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
-    p:SetText("CLOSE MODELVIEWER")
+    p:SetText("CLOSE")
     
     l3:EnableMouse(true)
     l3:SetScript("OnMouseDown", function()
@@ -400,7 +400,7 @@
     
     --size + button
     l4 = CreateFrame("FRAME", nil,b)
-    l4:SetSize(200,30)
+    l4:SetSize(100,30)
     l4:SetPoint("LEFT",l2,"RIGHT",15,0)
 
     t = l4:CreateTexture(nil, "BACKGROUND",nil,-8)
@@ -411,7 +411,7 @@
     p = l4:CreateFontString(nil, "BACKGROUND")
     p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
-    p:SetText("MODELSIZE +20")
+    p:SetText("SIZE [+]")
     
     l4:EnableMouse(true)
     l4:SetScript("OnMouseDown", function()
@@ -425,7 +425,7 @@
 
     --size - button
     l5 = CreateFrame("FRAME", nil,b)
-    l5:SetSize(200,30)
+    l5:SetSize(100,30)
     l5:SetPoint("RIGHT",l1,"LEFT",-15,0)
 
     t = l5:CreateTexture(nil, "BACKGROUND",nil,-8)
@@ -436,7 +436,7 @@
     p = l5:CreateFontString(nil, "BACKGROUND")
     p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
-    p:SetText("MODELSIZE -20")
+    p:SetText("SIZE [-]")
     
     l5:EnableMouse(true)
     l5:SetScript("OnMouseDown", function()

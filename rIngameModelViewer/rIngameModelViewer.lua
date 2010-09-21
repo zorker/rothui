@@ -228,8 +228,7 @@
 
   end  
   
-  --GLOBAL FUNCTION TO ACCESS FROM CHAT
-  function changeModelViewerPage(pageid)
+  local function changeModelViewerPage(pageid)
     local cfg = cfg
     cfg.page = pageid
     local models = models
@@ -292,11 +291,53 @@
   
   local createArrows = function(b)
     
-    local l1,l2,l3,l4,l5,t,p
+    local l1,l2,l3,l4,l5,t,p,e,d
+
+    p = b:CreateFontString(nil, "BACKGROUND")
+    p:SetFont("Fonts\\FRIZQT__.ttf", 20, "THINOUTLINE")
+    p:SetPoint("BOTTOMLEFT", 10, 15)
+    p:SetText("rIngameModelViewer 1.1")
+    p:SetTextColor(0,1,0.5)
+
+    --editbox
+    e = CreateFrame("EditBox", nil,b)
+    e:SetSize(200,30)
+    e:SetPoint("BOTTOM",0,10)
+
+    d = e:CreateTexture(nil, "BACKGROUND",nil,-8)
+    d:SetTexture(0,0,0,0.2)
+    d:SetAllPoints(e)
+
+    t = e:CreateTexture(nil, "BACKGROUND",nil,-7)
+    t:SetTexture(1,1,1,0.5)
+    t:SetPoint("TOPLEFT", e, "TOPLEFT", 2, -2)
+    t:SetPoint("BOTTOMRIGHT", e, "BOTTOMRIGHT", -2, 2)
+
+    e:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    e:SetText(cfg.page)
+    e:SetJustifyH("CENTER")
     
+    p = e:CreateFontString(nil, "BACKGROUND")
+    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    p:SetPoint("BOTTOM", e, "TOP", 0, 10)
+    p:SetText("PAGE")
+    
+    --e:EnableMouse(true)
+    e:SetScript("OnEnterPressed", function(s,v,...)
+      local n = floor(s:GetNumber())
+      if n < 1 then
+        n = 1
+      end
+      s:SetText(n)
+      if n ~= cfg.page then
+        changeModelViewerPage(n)
+      end
+    end)    
+
+    --prev page button
     l1 = CreateFrame("FRAME", nil,b)
     l1:SetSize(150,30)
-    l1:SetPoint("BOTTOMLEFT",10,10)
+    l1:SetPoint("RIGHT",e,"LEFT",-15,0)
 
     t = l1:CreateTexture(nil, "BACKGROUND",nil,-8)
     t:SetTexture(0.2,0.2,0.2,0.5)
@@ -304,18 +345,22 @@
     l1.t = t
 
     p = l1:CreateFontString(nil, "BACKGROUND")
-    p:SetFont("Fonts\\FRIZQT__.ttf", 12, "THINOUTLINE")
+    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
     p:SetText("PREVIOUS PAGE")
     
     l1:EnableMouse(true)
-    l1:SetScript("OnMouseDown", function()
-      changeModelViewerPage(cfg.page-1)
+    l1:SetScript("OnMouseDown", function(...)
+      if cfg.page-1 >= 1 then
+        e:SetText(cfg.page-1)
+        changeModelViewerPage(cfg.page-1)
+      end
     end)
 
+    --next page button
     l2 = CreateFrame("FRAME", nil,b)
     l2:SetSize(150,30)
-    l2:SetPoint("BOTTOMRIGHT",-10,10)
+    l2:SetPoint("LEFT",e,"RIGHT",15,0)
 
     t = l2:CreateTexture(nil, "BACKGROUND",nil,-8)
     t:SetTexture(0.2,0.2,0.2,0.5)
@@ -323,18 +368,20 @@
     l2.t = t
 
     p = l2:CreateFontString(nil, "BACKGROUND")
-    p:SetFont("Fonts\\FRIZQT__.ttf", 12, "THINOUTLINE")
+    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
     p:SetText("NEXT PAGE")
     
     l2:EnableMouse(true)
-    l2:SetScript("OnMouseDown", function()
+    l2:SetScript("OnMouseDown", function(...)
+      e:SetText(cfg.page+1)
       changeModelViewerPage(cfg.page+1)
     end)
     
+    --close button
     l3 = CreateFrame("FRAME", nil,b)
     l3:SetSize(200,30)
-    l3:SetPoint("BOTTOM",0,10)
+    l3:SetPoint("BOTTOMRIGHT",-10,10)
 
     t = l3:CreateTexture(nil, "BACKGROUND",nil,-8)
     t:SetTexture(0.2,0.2,0.2,0.5)
@@ -342,7 +389,7 @@
     l3.t = t
 
     p = l3:CreateFontString(nil, "BACKGROUND")
-    p:SetFont("Fonts\\FRIZQT__.ttf", 12, "THINOUTLINE")
+    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
     p:SetText("CLOSE MODELVIEWER")
     
@@ -351,9 +398,10 @@
       b:Hide()
     end)
     
+    --size + button
     l4 = CreateFrame("FRAME", nil,b)
     l4:SetSize(200,30)
-    l4:SetPoint("LEFT",l3,"RIGHT",15,0)
+    l4:SetPoint("LEFT",l2,"RIGHT",15,0)
 
     t = l4:CreateTexture(nil, "BACKGROUND",nil,-8)
     t:SetTexture(0.2,0.2,0.2,0.5)
@@ -361,7 +409,7 @@
     l4.t = t
 
     p = l4:CreateFontString(nil, "BACKGROUND")
-    p:SetFont("Fonts\\FRIZQT__.ttf", 12, "THINOUTLINE")
+    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
     p:SetText("MODELSIZE +20")
     
@@ -375,9 +423,10 @@
       end
     end)
 
+    --size - button
     l5 = CreateFrame("FRAME", nil,b)
     l5:SetSize(200,30)
-    l5:SetPoint("RIGHT",l3,"LEFT",-15,0)
+    l5:SetPoint("RIGHT",l1,"LEFT",-15,0)
 
     t = l5:CreateTexture(nil, "BACKGROUND",nil,-8)
     t:SetTexture(0.2,0.2,0.2,0.5)
@@ -385,7 +434,7 @@
     l5.t = t
 
     p = l5:CreateFontString(nil, "BACKGROUND")
-    p:SetFont("Fonts\\FRIZQT__.ttf", 12, "THINOUTLINE")
+    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
     p:SetText("MODELSIZE -20")
     
@@ -398,7 +447,7 @@
         createAllModels(b)
       end
     end)
-
+    
     l1:SetScript("OnEnter", function(s)
       s.t:SetTexture(0.2,0.2,0.2,0.8)
     end)

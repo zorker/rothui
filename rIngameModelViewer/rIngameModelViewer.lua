@@ -416,8 +416,8 @@
     l4:EnableMouse(true)
     l4:SetScript("OnMouseDown", function()
       cfg.size = cfg.size+20
-      if cfg.size > 500 then
-        cfg.size = 500
+      if cfg.size > 600 then
+        cfg.size = 600
       else
         createAllModels(b)
       end

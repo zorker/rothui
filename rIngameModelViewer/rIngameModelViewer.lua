@@ -34,12 +34,12 @@
   -----------------------------
 
   --round some stuff
-  local function floorNumber(n)
+  local function rIMV_roundNumber(n)
     return floor((n)*10)/10
   end
    
   --change portraitZoom func
-  local function changeModelPortraitZoom(self, delta)
+  local function rIMV_changeModelPortraitZoom(self, delta)
     local maxzoom = 1
     local minzoom = -0.5
     self.zoomLevel = self.zoomLevel + delta*0.15
@@ -49,12 +49,12 @@
     if (minzoom > self.zoomLevel) then
         self.zoomLevel = minzoom
     end
-    self.zoomLeve = floorNumber(self.zoomLevel)
+    self.zoomLeve = rIMV_roundNumber(self.zoomLevel)
     self:SetPortraitZoom(self.zoomLevel)
   end
     
   --change camDistanceScale func
-  local function changeModelDistanceScale(self, delta)
+  local function rIMV_changeModelDistanceScale(self, delta)
     local maxscale = 10
     local minscale = 0.1
     self.scaleLevel = self.scaleLevel + delta*0.15
@@ -64,12 +64,12 @@
     if (minscale > self.scaleLevel) then
         self.scaleLevel = minscale
     end
-    self.scaleLevel = floorNumber(self.scaleLevel)
+    self.scaleLevel = rIMV_roundNumber(self.scaleLevel)
     self:SetCamDistanceScale(self.scaleLevel)
   end
   
   --move model left right func
-  local function moveModelLeftRight(self, delta)
+  local function rIMV_moveModelLeftRight(self, delta)
     local max = 5
     local min = -5
     self.posX = self.posX + delta*0.15
@@ -79,12 +79,12 @@
     if (min > self.posX) then
         self.posX = min
     end
-    self.posX = floorNumber(self.posX)
+    self.posX = rIMV_roundNumber(self.posX)
     self:SetPosition(0,self.posX,self.posY)
   end
   
   --move model top bottom func
-  local function moveModelTopBottom(self, delta)
+  local function rIMV_moveModelTopBottom(self, delta)
     local max = 5
     local min = -5
     self.posY = self.posY + delta*0.15
@@ -94,25 +94,25 @@
     if (min > self.posY) then
         self.posY = min
     end
-    self.posY = floorNumber(self.posY)
+    self.posY = rIMV_roundNumber(self.posY)
     self:SetPosition(0,self.posX,self.posY)
   end
   
   --model rotation func
-  local function rotateModel(self,button)
+  local function rIMV_rotateModel(self,button)
     local rotationIncrement = 0.2
     if button == "LeftButton" then
       self.rotation = self.rotation - rotationIncrement
     else
       self.rotation = self.rotation + rotationIncrement
     end
-    self.rotation = floorNumber(self.rotation)
+    self.rotation = rIMV_roundNumber(self.rotation)
     self:SetRotation(self.rotation)
   end
   
 
   --tooltip for model func
-  local function showModelTooltip(self)
+  local function rIMV_showModelTooltip(self)
     GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
     --GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
     GameTooltip:AddLine("rIngameModelViewer", 0, 1, 0.5, 1, 1, 1)
@@ -134,7 +134,7 @@
   end
     
   --tooltip for icon func
-  local function showIconTooltip(self)
+  local function rIMV_showIconTooltip(self)
     GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
     --GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
     GameTooltip:AddLine("rIngameModelViewer", 0, 1, 0.5, 1, 1, 1)
@@ -146,7 +146,7 @@
   end
     
   --set some default values to work with
-  local function setModelValues(self)
+  local function rIMV_rIMV_setModelValues(self)
   
     self.scaleLevel = 1
     self.zoomLevel = 0
@@ -162,10 +162,10 @@
   end
   
   --bring the model to life and set the displayID
-  local function setModel(self,id)
+  local function rIMV_setModel(self,id)
   
     self:ClearModel()
-    --m:SetModel("Interface\\Buttons\\talktomequestionmark.mdx") --in case setdisplayinfo fails 
+    --m:rIMV_setModel("Interface\\Buttons\\talktomequestionmark.mdx") --in case setdisplayinfo fails 
     self:SetDisplayInfo(id)
     self.id = id
     self.p:SetText(id)
@@ -173,7 +173,7 @@
   end
     
   --move model into position func and adjust some values based on model size
-  local function adjustModelPosition(self,row,col)
+  local function rIMV_adjustModelPosition(self,row,col)
     self:SetSize(cfg.size,cfg.size)
     self:SetPoint("TOPLEFT",cfg.size*row,cfg.size*col*(-1))
     local fs = cfg.size*10/100
@@ -185,31 +185,31 @@
   end
   
   --create a new model func
-  local function createModel(b,id)
+  local function rIMV_createModel(b,id)
     local m = CreateFrame("PlayerModel", nil,b)
    
     m:EnableMouse(true)
     m:SetScript("OnMouseDown", function(s,b,...)
       if IsShiftKeyDown() then
-        setModelValues(s)
+        rIMV_rIMV_setModelValues(s)
       else
-        rotateModel(s,b)
+        rIMV_rotateModel(s,b)
       end
     end)
     
     m:SetScript("OnMouseWheel", function(s,d,...)
       if IsShiftKeyDown() and IsAltKeyDown() then
-        changeModelPortraitZoom(s,d)        
+        rIMV_changeModelPortraitZoom(s,d)        
       elseif IsAltKeyDown() then
-        moveModelTopBottom(s,d)
+        rIMV_moveModelTopBottom(s,d)
       elseif IsShiftKeyDown() then
-        moveModelLeftRight(s,d)
+        rIMV_moveModelLeftRight(s,d)
       else
-        changeModelDistanceScale(s,d)
+        rIMV_changeModelDistanceScale(s,d)
       end
     end)
 
-    m:SetScript("OnEnter", function(s) showModelTooltip(s) end)
+    m:SetScript("OnEnter", function(s) rIMV_showModelTooltip(s) end)
     m:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
 
     local d = m:CreateTexture(nil, "BACKGROUND",nil,-8)
@@ -233,14 +233,14 @@
   end
   
   --change models on page swap
-  local function changeModelViewerPage(pageid)    
+  local function rIMV_changeModelViewerPage(pageid)    
     cfg.page = pageid    
     local displayid = 1 + ((cfg.page-1)*cfg.num) 
     local id = 1    
     for i=1, cfg.num do
       if models[id] then
-        setModelValues(models[id])
-        setModel(models[id],displayid)
+        rIMV_rIMV_setModelValues(models[id])
+        rIMV_setModel(models[id],displayid)
       end
       displayid = displayid+1
       id=id+1
@@ -248,7 +248,7 @@
   end
   
   --hide all the models
-  local function hideAllModels()
+  local function rIMV_hideAllModels()
     local id = 1
     --hide all models first until we are sure which models need to be shown at all
     for i=1, cfg.num do
@@ -261,10 +261,10 @@
   end
   
   --create all the models
-  local function createAllModels(b)
+  local function rIMV_createAllModels(b)
     
     --cleanup first, make sure all models get hidden first
-    hideAllModels()
+    rIMV_hideAllModels()
     
     --calc the new page values
     local w = floor(b:GetWidth())
@@ -280,13 +280,13 @@
       for k=1, cfg.cols do
         --if the model does not exist yet create it, otherwise reset it
         if not models[id] then
-          --make sure createModel is only used when needed
-          models[id] = createModel(b,displayid)
+          --make sure rIMV_createModel is only used when needed
+          models[id] = rIMV_createModel(b,displayid)
           print("[IMV DEBUG] Creating model: "..id) --debugging, only new numbers should be printed
         end
-        adjustModelPosition(models[id],k-1,i-1)
-        setModelValues(models[id])
-        setModel(models[id],displayid)
+        rIMV_adjustModelPosition(models[id],k-1,i-1)
+        rIMV_rIMV_setModelValues(models[id])
+        rIMV_setModel(models[id],displayid)
         displayid = displayid+1
         id=id+1
       end    
@@ -295,7 +295,7 @@
   end
   
   --create menu buttons func
-  local function createArrows(b)
+  local function rIMV_createMenu(b)
     
     local l1,l2,l3,l4,l5,t,p,e,d
 
@@ -336,7 +336,7 @@
       end
       s:SetText(n)
       if n ~= cfg.page then
-        changeModelViewerPage(n)
+        rIMV_changeModelViewerPage(n)
       end
     end)    
 
@@ -359,7 +359,7 @@
     l1:SetScript("OnMouseDown", function(...)
       if cfg.page-1 >= 1 then
         e:SetText(cfg.page-1)
-        changeModelViewerPage(cfg.page-1)
+        rIMV_changeModelViewerPage(cfg.page-1)
       end
     end)
 
@@ -381,7 +381,7 @@
     l2:EnableMouse(true)
     l2:SetScript("OnMouseDown", function(...)
       e:SetText(cfg.page+1)
-      changeModelViewerPage(cfg.page+1)
+      rIMV_changeModelViewerPage(cfg.page+1)
     end)
     
     --close button
@@ -425,7 +425,7 @@
       if cfg.size > 600 then
         cfg.size = 600
       else
-        createAllModels(b)
+        rIMV_createAllModels(b)
       end
     end)
 
@@ -450,7 +450,7 @@
       if cfg.size < 60 then
         cfg.size = 60
       else
-        createAllModels(b)
+        rIMV_createAllModels(b)
       end
     end)
     
@@ -493,7 +493,7 @@
   end
   
   --create fullscreen background frame func
-  local function createHolderFrame()
+  local function rIMV_createHolderFrame()
     local b = CreateFrame("Frame","rIMV_HolderFrame",UIParent)
     b:SetFrameStrata("FULLSCREEN")
     b:SetAllPoints(UIParent)
@@ -517,7 +517,7 @@
   end
   
   --create icon func
-  local function createTheIcon(b)
+  local function rIMV_createIcon(b)
     local i = CreateFrame("Frame","rIMV_Icon",UIParent)
     i:SetSize(64,64)
     i:SetPoint("CENTER",0,0)
@@ -536,11 +536,11 @@
     i:SetScript("OnMouseDown", function()
       if not IsAltKeyDown() then
         b:Show()
-        createAllModels(b)
+        rIMV_createAllModels(b)
       end
     end)
   
-    i:SetScript("OnEnter", function(s) showIconTooltip(s) end)
+    i:SetScript("OnEnter", function(s) rIMV_showIconTooltip(s) end)
     i:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
   
   end
@@ -549,12 +549,12 @@
   -- LOADUP
   -----------------------------
 
-  --init func
-  local function init()
+  --rIMV_init func
+  local function rIMV_init()
     
-    local b = createHolderFrame()
-    createTheIcon(b)
-    createArrows(b)
+    local b = rIMV_createHolderFrame()
+    rIMV_createIcon(b)
+    rIMV_createMenu(b)
     b:Hide()    
   end
   
@@ -563,7 +563,7 @@
   
   a:SetScript("OnEvent", function (s,e,...)
     if(e=="PLAYER_LOGIN") then
-      init()
+      rIMV_init()
     end 
   end)
   

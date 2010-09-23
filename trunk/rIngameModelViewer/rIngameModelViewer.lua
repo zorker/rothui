@@ -37,6 +37,12 @@
   local function rIMV_roundNumber(n)
     return floor((n)*10)/10
   end
+  
+  local calcPageForDisplayID(displayid)
+    local n = math.ceil(displayid/cfg.num)  
+    return n
+  end
+
    
   --change portraitZoom func
   local function rIMV_changeModelPortraitZoom(self, delta)
@@ -112,7 +118,7 @@
   
 
   --tooltip for model func
-  local function rIMV_showModelTooltip(self)
+  local function rIMV_showModelTooltip(self,theater)
     GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
     --GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
     GameTooltip:AddLine("rIngameModelViewer", 0, 1, 0.5, 1, 1, 1)
@@ -123,13 +129,20 @@
     GameTooltip:AddDoubleLine("SetPosition", "(0,"..self.posX..","..self.posY..")", 1, 1, 1, 1, 1, 1)
     GameTooltip:AddDoubleLine("SetRotation", self.rotation, 1, 1, 1, 1, 1, 1)
     GameTooltip:AddLine(" ")
+    if not theater then
+      GameTooltip:AddLine("Click on the model to open the theater view!")
+    end
     GameTooltip:AddLine("Hold SHIFT and click any mousebutton to reset all model values")
-    GameTooltip:AddLine("Click Model with left mousebutton to turn it LEFT")
-    GameTooltip:AddLine("Click Model with right mousebutton to turn it RIGHT")
+    GameTooltip:AddLine("Hold ALT and click model with left mousebutton to turn it LEFT")
+    GameTooltip:AddLine("Hold ALT and click model with right mousebutton to turn it RIGHT")
     GameTooltip:AddLine("Use MouseWheel to change SetCamDistanceScale")
     GameTooltip:AddLine("Hold ALT+SHIFT and use MouseWheel to change SetPortraitZoom")
     GameTooltip:AddLine("Hold ALT and use MouseWheel to move model in y-Axis")
     GameTooltip:AddLine("Hold SHIFT and use MouseWheel to move model in x-Axis")
+    if theater then
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine("Click on the black area to get back!", 1, 0, 1, 1, 1, 1)
+    end
     GameTooltip:Show()
   end
     
@@ -138,10 +151,17 @@
     GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
     --GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
     GameTooltip:AddLine("rIngameModelViewer", 0, 1, 0.5, 1, 1, 1)
-    GameTooltip:AddLine(" ")
     GameTooltip:AddLine("Click the icon to open the model viewer.", 1, 1, 1, 1, 1, 1)
     GameTooltip:AddLine("Hold ALT and any mousebutton to move the icon.", 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddLine(" ")
+    GameTooltip:Show()
+  end
+    
+  --tooltip for icon func
+  local function rIMV_showTheaterTooltip(self)
+    GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
+    --GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
+    GameTooltip:AddLine("rIngameModelViewer", 0, 1, 0.5, 1, 1, 1)
+    GameTooltip:AddLine("Click here to close the theater view!")
     GameTooltip:Show()
   end
     
@@ -189,11 +209,21 @@
     local m = CreateFrame("PlayerModel", nil,b)
    
     m:EnableMouse(true)
-    m:SetScript("OnMouseDown", function(s,b,...)
+    m:SetScript("OnMouseDown", function(s,bu,...)
       if IsShiftKeyDown() then
         rIMV_setModelValues(s)
+      elseif IsAltKeyDown() then
+        rIMV_rotateModel(s,bu)
       else
-        rIMV_rotateModel(s,b)
+        b.theater:Show()
+        b.theater:EnableMouse(true)
+        b.theater.m:ClearModel()
+        b.theater.m:SetDisplayInfo(s.id)
+        b.theater.m.id = s.id
+        b.theater.m.p:SetText(s.id)
+        rIMV_setModelValues(b.theater.m)
+        
+        b.theater.ag1:Play()
       end
     end)
     
@@ -282,7 +312,7 @@
         if not models[id] then
           --make sure rIMV_createModel is only used when needed
           models[id] = rIMV_createModel(b,displayid)
-          print("[IMV DEBUG] Creating model: "..id) --debugging, only new numbers should be printed
+          --print("[IMV DEBUG] Creating model: "..id) --debugging, only new numbers should be printed
         end
         rIMV_adjustModelPosition(models[id],k-1,i-1)
         rIMV_setModelValues(models[id])
@@ -307,7 +337,7 @@
 
     --editbox
     e = CreateFrame("EditBox", nil,b)
-    e:SetSize(200,30)
+    e:SetSize(80,30)
     e:SetPoint("BOTTOM",0,10)
 
     d = e:CreateTexture(nil, "BACKGROUND",nil,-8)
@@ -342,7 +372,7 @@
 
     --prev page button
     l1 = CreateFrame("FRAME", nil,b)
-    l1:SetSize(150,30)
+    l1:SetSize(80,30)
     l1:SetPoint("RIGHT",e,"LEFT",-15,0)
 
     t = l1:CreateTexture(nil, "BACKGROUND",nil,-8)
@@ -353,7 +383,7 @@
     p = l1:CreateFontString(nil, "BACKGROUND")
     p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
-    p:SetText("PREVIOUS PAGE")
+    p:SetText("< PAGE")
     
     l1:EnableMouse(true)
     l1:SetScript("OnMouseDown", function(...)
@@ -365,7 +395,7 @@
 
     --next page button
     l2 = CreateFrame("FRAME", nil,b)
-    l2:SetSize(150,30)
+    l2:SetSize(80,30)
     l2:SetPoint("LEFT",e,"RIGHT",15,0)
 
     t = l2:CreateTexture(nil, "BACKGROUND",nil,-8)
@@ -376,7 +406,7 @@
     p = l2:CreateFontString(nil, "BACKGROUND")
     p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
-    p:SetText("NEXT PAGE")
+    p:SetText("PAGE >")
     
     l2:EnableMouse(true)
     l2:SetScript("OnMouseDown", function(...)
@@ -386,7 +416,7 @@
     
     --close button
     l3 = CreateFrame("FRAME", nil,b)
-    l3:SetSize(100,30)
+    l3:SetSize(80,30)
     l3:SetPoint("BOTTOMRIGHT",-10,10)
 
     t = l3:CreateTexture(nil, "BACKGROUND",nil,-8)
@@ -401,12 +431,12 @@
     
     l3:EnableMouse(true)
     l3:SetScript("OnMouseDown", function()
-      b:Hide()
+      b.ag2:Play()
     end)
     
     --size + button
     l4 = CreateFrame("FRAME", nil,b)
-    l4:SetSize(100,30)
+    l4:SetSize(80,30)
     l4:SetPoint("LEFT",l2,"RIGHT",15,0)
 
     t = l4:CreateTexture(nil, "BACKGROUND",nil,-8)
@@ -417,13 +447,13 @@
     p = l4:CreateFontString(nil, "BACKGROUND")
     p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
-    p:SetText("SIZE [+]")
+    p:SetText("SIZE ++")
     
     l4:EnableMouse(true)
     l4:SetScript("OnMouseDown", function()
       cfg.size = cfg.size+20
-      if cfg.size > 600 then
-        cfg.size = 600
+      if cfg.size > 300 then
+        cfg.size = 300
       else
         rIMV_createAllModels(b)
       end
@@ -431,7 +461,7 @@
 
     --size - button
     l5 = CreateFrame("FRAME", nil,b)
-    l5:SetSize(100,30)
+    l5:SetSize(80,30)
     l5:SetPoint("RIGHT",l1,"LEFT",-15,0)
 
     t = l5:CreateTexture(nil, "BACKGROUND",nil,-8)
@@ -442,13 +472,13 @@
     p = l5:CreateFontString(nil, "BACKGROUND")
     p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
-    p:SetText("SIZE [-]")
+    p:SetText("SIZE --")
     
     l5:EnableMouse(true)
     l5:SetScript("OnMouseDown", function()
       cfg.size = cfg.size-20
-      if cfg.size < 60 then
-        cfg.size = 60
+      if cfg.size < 100 then
+        cfg.size = 100
       else
         rIMV_createAllModels(b)
       end
@@ -510,9 +540,171 @@
     t:SetHorizTile(true)
     b.t = t
     
-    b:EnableMouse(true)
+    b:EnableMouse(false)
+    b:SetAlpha(0)    
+    
+    local ag1, ag2, a1, a2
+    
+    --fade in anim
+    ag1 = b:CreateAnimationGroup()
+    a1 = ag1:CreateAnimation("Alpha")
+    a1:SetDuration(0.8)
+    a1:SetSmoothing("IN")  
+    a1:SetChange(1)
+    b.ag1 = ag1
+    b.ag1.a1 = a1
+    
+    --fade out anim
+    ag2 = b:CreateAnimationGroup()
+    a2 = ag2:CreateAnimation("Alpha")
+    a2:SetDuration(0.8)
+    a2:SetSmoothing("OUT")  
+    a2:SetChange(-1)
+    b.ag2 = ag2
+    b.ag2.a2 = a2
+    
+    b.ag1:SetScript("OnFinished", function(ag)
+      b:SetAlpha(1)
+    end)
+    
+    b.ag2:SetScript("OnFinished", function(ag)
+      b:SetAlpha(0)
+      b:EnableMouse(false)
+      b:Hide()
+    end)
+    
+    --b:SetScript("OnMouseDown", function(s,bu,...)
+      --s.ag2:Play()
+    --end)
     
     return b
+    
+  end
+  
+  --create layer that persists above the models for a special view
+  local function rIMV_createTheaterFrame(f)
+    local b = CreateFrame("Frame","rIMV_TheaterFrame",f)
+    b:SetFrameStrata("FULLSCREEN_DIALOG")
+    b:SetAllPoints(f)
+    --b:SetPoint("CENTER",0,0)
+    --b:SetSize(500,400)
+    --b:SetBackdrop(cfg.backdrop)
+    --b:SetBackdropBorderColor(0.4,0.3,0.3,1)
+  
+    local t = b:CreateTexture(nil, "BACKGROUND",nil,-8)
+    t:SetTexture(0,0,0,0.9)
+    t:SetAllPoints(b)
+    t:SetVertTile(true)
+    t:SetHorizTile(true)
+    b.t = t
+    b:EnableMouse(false)
+    b:SetAlpha(0)
+    
+    local ag1, ag2, a1, a2
+    
+    --fade in anim
+    ag1 = b:CreateAnimationGroup()
+    a1 = ag1:CreateAnimation("Alpha")
+    a1:SetDuration(1)
+    a1:SetSmoothing("OUT")  
+    a1:SetChange(1)
+    b.ag1 = ag1
+    b.ag1.a1 = a1
+    
+    --fade out anim
+    ag2 = b:CreateAnimationGroup()
+    a2 = ag2:CreateAnimation("Alpha")
+    a2:SetDuration(1)
+    a2:SetSmoothing("IN")  
+    a2:SetChange(-1)
+    b.ag2 = ag2
+    b.ag2.a2 = a2
+    
+    b.ag1:SetScript("OnFinished", function(ag)
+      local s = ag:GetParent()
+      s:SetAlpha(1)
+    end)
+    
+    b.ag2:SetScript("OnFinished", function(ag)
+      local s = ag:GetParent()
+      s:SetAlpha(0)
+      s:EnableMouse(false)
+      s:Hide()
+    end)
+    
+    b:SetScript("OnMouseDown", function(s,bu,...)
+      s.ag2:Play()
+    end)
+    
+    
+    local m = CreateFrame("PlayerModel", nil,b)
+   
+    m:EnableMouse(true)
+    m:SetScript("OnMouseDown", function(s,bu,...)
+      if IsShiftKeyDown() then
+        rIMV_setModelValues(s)
+      elseif IsAltKeyDown() then
+        rIMV_rotateModel(s,bu)
+      else
+        rIMV_rotateModel(s,bu)
+      end
+    end)
+    
+    m:SetScript("OnMouseWheel", function(s,d,...)
+      if IsShiftKeyDown() and IsAltKeyDown() then
+        rIMV_changeModelPortraitZoom(s,d)        
+      elseif IsAltKeyDown() then
+        rIMV_moveModelTopBottom(s,d)
+      elseif IsShiftKeyDown() then
+        rIMV_moveModelLeftRight(s,d)
+      else
+        rIMV_changeModelDistanceScale(s,d)
+      end
+    end)
+
+    b:SetScript("OnEnter", function(s) rIMV_showTheaterTooltip(s) end)
+    b:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+    
+    m:SetScript("OnEnter", function(s) rIMV_showModelTooltip(s,"theater") end)
+    m:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+
+    local d = m:CreateTexture(nil, "BACKGROUND",nil,-8)
+    d:SetTexture(0,0,0,0.2)
+    d:SetPoint("TOPLEFT", m, "TOPLEFT", -2, 2)
+    d:SetPoint("BOTTOMRIGHT", m, "BOTTOMRIGHT", 2, -2)
+
+    m.d = d
+
+    local t = m:CreateTexture(nil, "BACKGROUND",nil,-7)
+    t:SetTexture(1,1,1,0.9)
+    t:SetAllPoints(m)
+    m.t = t
+
+    local p = m:CreateFontString(nil, "BACKGROUND")
+    p:SetPoint("TOP", 0, -2)
+    p:SetAlpha(.5)
+    m.p = p
+    
+    m.scaleLevel = 1
+    m.zoomLevel = 0
+    m.posX = 0
+    m.posY = 0
+    m.rotation = 0
+    
+    m:SetPortraitZoom(m.zoomLevel)
+    m:SetCamDistanceScale(m.scaleLevel)
+    m:SetPosition(0,m.posX,m.posY)
+    m:SetRotation(m.rotation)
+
+    local size = floor(b:GetHeight())-40
+    m:SetSize(size,size)
+    m:SetPoint("CENTER",0,0)
+    m.p:SetFont("Fonts\\FRIZQT__.ttf", 30, "THINOUTLINE")    
+    m:Show() 
+    
+    b.m = m
+   
+    f.theater = b
     
   end
   
@@ -535,8 +727,12 @@
     i:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
     i:SetScript("OnMouseDown", function()
       if not IsAltKeyDown() then
+
         b:Show()
         rIMV_createAllModels(b)
+        b:EnableMouse(true)
+        b.ag1:Play()
+
       end
     end)
   
@@ -553,9 +749,11 @@
   local function rIMV_init()
     
     local b = rIMV_createHolderFrame()
+    rIMV_createTheaterFrame(b)
     rIMV_createIcon(b)
     rIMV_createMenu(b)
-    b:Hide()    
+    b:Hide()
+    b.theater:Hide()
   end
   
   --PLAYER_LOGIN EVENT HOOK  

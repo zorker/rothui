@@ -38,8 +38,13 @@
     return floor((n)*10)/10
   end
   
-  local calcPageForDisplayID(displayid)
+  local function calcPageForDisplayID(displayid)
     local n = math.ceil(displayid/cfg.num)  
+    return n
+  end
+  
+  local function calcFirstDisplayIdOfPage()
+    local n = ((cfg.page*cfg.num)+1)-cfg.num
     return n
   end
 
@@ -118,10 +123,14 @@
   
 
   --tooltip for model func
-  local function rIMV_showModelTooltip(self,theater)
+  local function rIMV_showModelTooltip(self,theatre)
     GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
     --GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
-    GameTooltip:AddLine("rIngameModelViewer", 0, 1, 0.5, 1, 1, 1)
+    if not theatre then
+      GameTooltip:AddLine("Model View", 0, 1, 0.5, 1, 1, 1)
+    else
+      GameTooltip:AddLine("Theatre View", 0, 1, 0.5, 1, 1, 1)
+    end
     GameTooltip:AddLine(" ")
     GameTooltip:AddDoubleLine("DisplayID", self.id, 1, 1, 1, 1, 1, 1)
     GameTooltip:AddDoubleLine("SetCamDistanceScale", self.scaleLevel, 1, 1, 1, 1, 1, 1)
@@ -129,8 +138,8 @@
     GameTooltip:AddDoubleLine("SetPosition", "(0,"..self.posX..","..self.posY..")", 1, 1, 1, 1, 1, 1)
     GameTooltip:AddDoubleLine("SetRotation", self.rotation, 1, 1, 1, 1, 1, 1)
     GameTooltip:AddLine(" ")
-    if not theater then
-      GameTooltip:AddLine("Click on the model to open the theater view!")
+    if not theatre then
+      GameTooltip:AddLine("Click on the model to open the theatre view!")
     end
     GameTooltip:AddLine("Hold SHIFT and click any mousebutton to reset all model values")
     GameTooltip:AddLine("Hold ALT and click model with left mousebutton to turn it LEFT")
@@ -139,7 +148,7 @@
     GameTooltip:AddLine("Hold ALT+SHIFT and use MouseWheel to change SetPortraitZoom")
     GameTooltip:AddLine("Hold ALT and use MouseWheel to move model in y-Axis")
     GameTooltip:AddLine("Hold SHIFT and use MouseWheel to move model in x-Axis")
-    if theater then
+    if theatre then
       GameTooltip:AddLine(" ")
       GameTooltip:AddLine("Click on the black area to get back!", 1, 0, 1, 1, 1, 1)
     end
@@ -157,11 +166,20 @@
   end
     
   --tooltip for icon func
-  local function rIMV_showTheaterTooltip(self)
+  local function rIMV_showTheatreTooltip(self)
     GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
     --GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
-    GameTooltip:AddLine("rIngameModelViewer", 0, 1, 0.5, 1, 1, 1)
-    GameTooltip:AddLine("Click here to close the theater view!")
+    GameTooltip:AddLine("Close Theatre View", 0, 1, 0.5, 1, 1, 1)
+    GameTooltip:AddLine("Click here to close the theatre view!")
+    GameTooltip:Show()
+  end
+  
+  --color tooltip func
+  local function rIMV_showColorTooltip(self)
+    GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
+    --GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
+    GameTooltip:AddLine("Color Select", 0, 1, 0.5, 1, 1, 1)
+    GameTooltip:AddLine("Cick here to change model background color to: "..self.color)
     GameTooltip:Show()
   end
     
@@ -215,15 +233,15 @@
       elseif IsAltKeyDown() then
         rIMV_rotateModel(s,bu)
       else
-        b.theater:Show()
-        b.theater:EnableMouse(true)
-        b.theater.m:ClearModel()
-        b.theater.m:SetDisplayInfo(s.id)
-        b.theater.m.id = s.id
-        b.theater.m.p:SetText(s.id)
-        rIMV_setModelValues(b.theater.m)
+        b.theatre:Show()
+        b.theatre:EnableMouse(true)
+        b.theatre.m:ClearModel()
+        b.theatre.m:SetDisplayInfo(s.id)
+        b.theatre.m.id = s.id
+        b.theatre.m.p:SetText(s.id)
+        rIMV_setModelValues(b.theatre.m)
         
-        b.theater.ag1:Play()
+        b.theatre.ag1:Play()
       end
     end)
     
@@ -327,7 +345,7 @@
   --create menu buttons func
   local function rIMV_createMenu(b)
     
-    local l1,l2,l3,l4,l5,t,p,e,d
+    local l1,l2,l3,l4,l5,t,p,e,d,e2
 
     p = b:CreateFontString(nil, "BACKGROUND")
     p:SetFont("Fonts\\FRIZQT__.ttf", 20, "THINOUTLINE")
@@ -335,10 +353,10 @@
     p:SetText("rIngameModelViewer 1.1")
     p:SetTextColor(0,1,0.5)
 
-    --editbox
+    --editbox pageid
     e = CreateFrame("EditBox", nil,b)
     e:SetSize(80,30)
-    e:SetPoint("BOTTOM",0,10)
+    e:SetPoint("BOTTOM",47.5,10)
 
     d = e:CreateTexture(nil, "BACKGROUND",nil,-8)
     d:SetTexture(0,0,0,0.2)
@@ -367,13 +385,51 @@
       s:SetText(n)
       if n ~= cfg.page then
         rIMV_changeModelViewerPage(n)
+        e2:SetText(calcFirstDisplayIdOfPage())
+      end
+    end)    
+    
+    --editbox displayid
+    e2 = CreateFrame("EditBox", nil,b)
+    e2:SetSize(80,30)
+    e2:SetPoint("RIGHT",e,"LEFT",-15,0)
+
+    d = e2:CreateTexture(nil, "BACKGROUND",nil,-8)
+    d:SetTexture(0,0,0,0.2)
+    d:SetAllPoints(e2)
+
+    t = e2:CreateTexture(nil, "BACKGROUND",nil,-7)
+    t:SetTexture(1,1,1,0.5)
+    t:SetPoint("TOPLEFT", e2, "TOPLEFT", 2, -2)
+    t:SetPoint("BOTTOMRIGHT", e2, "BOTTOMRIGHT", -2, 2)
+
+    e2:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    e2:SetText(cfg.page)
+    e2:SetJustifyH("CENTER")
+    
+    p = e2:CreateFontString(nil, "BACKGROUND")
+    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    p:SetPoint("BOTTOM", e2, "TOP", 0, 10)
+    p:SetText("DISPLAYID")
+    
+    --e:EnableMouse(true)
+    e2:SetScript("OnEnterPressed", function(s,v,...)
+      local n = floor(s:GetNumber())
+      if n < 1 then
+        n = 1
+      end
+      s:SetText(n)
+      local n2 = calcPageForDisplayID(n)
+      if n2 ~= cfg.page then
+        e:SetText(n2)
+        rIMV_changeModelViewerPage(n2)
       end
     end)    
 
     --prev page button
     l1 = CreateFrame("FRAME", nil,b)
     l1:SetSize(80,30)
-    l1:SetPoint("RIGHT",e,"LEFT",-15,0)
+    l1:SetPoint("RIGHT",e2,"LEFT",-15,0)
 
     t = l1:CreateTexture(nil, "BACKGROUND",nil,-8)
     t:SetTexture(0.2,0.2,0.2,0.5)
@@ -390,6 +446,7 @@
       if cfg.page-1 >= 1 then
         e:SetText(cfg.page-1)
         rIMV_changeModelViewerPage(cfg.page-1)
+        e2:SetText(calcFirstDisplayIdOfPage())
       end
     end)
 
@@ -412,6 +469,7 @@
     l2:SetScript("OnMouseDown", function(...)
       e:SetText(cfg.page+1)
       rIMV_changeModelViewerPage(cfg.page+1)
+      e2:SetText(calcFirstDisplayIdOfPage())
     end)
     
     --close button
@@ -427,10 +485,11 @@
     p = l3:CreateFontString(nil, "BACKGROUND")
     p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
-    p:SetText("CLOSE")
+    p:SetText("</CLOSE>")
     
     l3:EnableMouse(true)
     l3:SetScript("OnMouseDown", function()
+      b:EnableMouse(false)
       b.ag2:Play()
     end)
     
@@ -456,6 +515,7 @@
         cfg.size = 300
       else
         rIMV_createAllModels(b)
+        e2:SetText(calcFirstDisplayIdOfPage())
       end
     end)
 
@@ -481,6 +541,7 @@
         cfg.size = 100
       else
         rIMV_createAllModels(b)
+        e2:SetText(calcFirstDisplayIdOfPage())
       end
     end)
     
@@ -569,7 +630,6 @@
     
     b.ag2:SetScript("OnFinished", function(ag)
       b:SetAlpha(0)
-      b:EnableMouse(false)
       b:Hide()
     end)
     
@@ -582,8 +642,8 @@
   end
   
   --create layer that persists above the models for a special view
-  local function rIMV_createTheaterFrame(f)
-    local b = CreateFrame("Frame","rIMV_TheaterFrame",f)
+  local function rIMV_createTheatreFrame(f)
+    local b = CreateFrame("Frame","rIMV_TheatreFrame",f)
     b:SetFrameStrata("FULLSCREEN_DIALOG")
     b:SetAllPoints(f)
     --b:SetPoint("CENTER",0,0)
@@ -662,16 +722,16 @@
       end
     end)
 
-    b:SetScript("OnEnter", function(s) rIMV_showTheaterTooltip(s) end)
+    b:SetScript("OnEnter", function(s) rIMV_showTheatreTooltip(s) end)
     b:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
     
-    m:SetScript("OnEnter", function(s) rIMV_showModelTooltip(s,"theater") end)
+    m:SetScript("OnEnter", function(s) rIMV_showModelTooltip(s,"theatre") end)
     m:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
 
     local d = m:CreateTexture(nil, "BACKGROUND",nil,-8)
-    d:SetTexture(0,0,0,0.2)
-    d:SetPoint("TOPLEFT", m, "TOPLEFT", -2, 2)
-    d:SetPoint("BOTTOMRIGHT", m, "BOTTOMRIGHT", 2, -2)
+    d:SetTexture(0,0,0,0.5)
+    d:SetPoint("TOPLEFT", m, "TOPLEFT", -5, 5)
+    d:SetPoint("BOTTOMRIGHT", m, "BOTTOMRIGHT", 5, -5)
 
     m.d = d
 
@@ -684,6 +744,45 @@
     p:SetPoint("TOP", 0, -2)
     p:SetAlpha(.5)
     m.p = p
+    
+    local colorselect1 = CreateFrame("Frame","rIMV_ColorSelectWhite",b)
+    local colorselect2 = CreateFrame("Frame","rIMV_ColorSelectGrey",b)
+    local colorselect3 = CreateFrame("Frame","rIMV_ColorSelectMagenta",b)
+    colorselect1:SetSize(50,50)
+    colorselect1:SetPoint("TOPLEFT", m, "TOPRIGHT", 10, 0)
+    colorselect1:EnableMouse(true)
+    colorselect1.color = "White"
+    colorselect1:SetScript("OnEnter", function(s) rIMV_showColorTooltip(s) end)
+    colorselect1:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+    colorselect1.t = colorselect1:CreateTexture(nil, "BACKGROUND",nil,-8)
+    colorselect1.t:SetTexture(1,1,1,1)
+    colorselect1.t:SetAllPoints(colorselect1)
+    colorselect1:SetScript("OnMouseDown", function() m.t:SetTexture(1,1,1,0.9) end)
+    colorselect1:SetHitRectInsets(-10, -10, -10, -5);
+        
+    colorselect2:SetSize(50,50)
+    colorselect2:SetPoint("TOP", colorselect1, "BOTTOM", 0, -10)
+    colorselect2:EnableMouse(true)
+    colorselect2.color = "Grey"
+    colorselect2:SetScript("OnEnter", function(s) rIMV_showColorTooltip(s) end)
+    colorselect2:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+    colorselect2.t = colorselect2:CreateTexture(nil, "BACKGROUND",nil,-8)
+    colorselect2.t:SetTexture(0.2,0.2,0.2,1)
+    colorselect2.t:SetAllPoints(colorselect2)
+    colorselect2:SetScript("OnMouseDown", function() m.t:SetTexture(0.2,0.2,0.2,0.9) end)
+    colorselect2:SetHitRectInsets(-10, -10, -5, -5);
+    
+    colorselect3:SetSize(50,50)
+    colorselect3:SetPoint("TOP", colorselect2, "BOTTOM", 0, -10)
+    colorselect3:EnableMouse(true)
+    colorselect3.color = "Magenta"
+    colorselect3:SetScript("OnEnter", function(s) rIMV_showColorTooltip(s) end)
+    colorselect3:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+    colorselect3.t = colorselect3:CreateTexture(nil, "BACKGROUND",nil,-8)
+    colorselect3.t:SetTexture(1,0,1,1)
+    colorselect3.t:SetAllPoints(colorselect3)
+    colorselect3:SetScript("OnMouseDown", function() m.t:SetTexture(1,0,1,0.9) end)
+    colorselect3:SetHitRectInsets(-10, -10, -5, -10);
     
     m.scaleLevel = 1
     m.zoomLevel = 0
@@ -704,7 +803,7 @@
     
     b.m = m
    
-    f.theater = b
+    f.theatre = b
     
   end
   
@@ -749,11 +848,11 @@
   local function rIMV_init()
     
     local b = rIMV_createHolderFrame()
-    rIMV_createTheaterFrame(b)
+    rIMV_createTheatreFrame(b)
     rIMV_createIcon(b)
     rIMV_createMenu(b)
     b:Hide()
-    b.theater:Hide()
+    b.theatre:Hide()
   end
   
   --PLAYER_LOGIN EVENT HOOK  

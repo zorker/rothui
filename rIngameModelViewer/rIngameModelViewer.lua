@@ -146,7 +146,7 @@
   end
     
   --set some default values to work with
-  local function rIMV_rIMV_setModelValues(self)
+  local function rIMV_setModelValues(self)
   
     self.scaleLevel = 1
     self.zoomLevel = 0
@@ -165,7 +165,7 @@
   local function rIMV_setModel(self,id)
   
     self:ClearModel()
-    --m:rIMV_setModel("Interface\\Buttons\\talktomequestionmark.mdx") --in case setdisplayinfo fails 
+    --m:SetModel("Interface\\Buttons\\talktomequestionmark.mdx") --in case setdisplayinfo fails 
     self:SetDisplayInfo(id)
     self.id = id
     self.p:SetText(id)
@@ -191,7 +191,7 @@
     m:EnableMouse(true)
     m:SetScript("OnMouseDown", function(s,b,...)
       if IsShiftKeyDown() then
-        rIMV_rIMV_setModelValues(s)
+        rIMV_setModelValues(s)
       else
         rIMV_rotateModel(s,b)
       end
@@ -239,7 +239,7 @@
     local id = 1    
     for i=1, cfg.num do
       if models[id] then
-        rIMV_rIMV_setModelValues(models[id])
+        rIMV_setModelValues(models[id])
         rIMV_setModel(models[id],displayid)
       end
       displayid = displayid+1
@@ -285,7 +285,7 @@
           print("[IMV DEBUG] Creating model: "..id) --debugging, only new numbers should be printed
         end
         rIMV_adjustModelPosition(models[id],k-1,i-1)
-        rIMV_rIMV_setModelValues(models[id])
+        rIMV_setModelValues(models[id])
         rIMV_setModel(models[id],displayid)
         displayid = displayid+1
         id=id+1

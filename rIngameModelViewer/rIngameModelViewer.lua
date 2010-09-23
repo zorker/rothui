@@ -1,14 +1,13 @@
   
-  -- rIngameModelViewer 0.1
+  -- rIngameModelViewer
   -- zork 2010
 
-
-  -----------------------------
-  -- ALL SETTINGS ARE NOW AVAILABLE IN GAME, DO NOT TOUCH ANYTHING HERE
-  -----------------------------
+  ---------------------------------------------------------------------
+  -- DO NOT TOUCH ANYTHING HERE
+  ---------------------------------------------------------------------
   
   local cfg = {
-    size = 100,
+    size = 200,
     page = 1,
     num = 0,
     rows = 0,
@@ -27,29 +26,20 @@
       },
     },
   }
-
-  local a = CreateFrame("Frame")
- 
-  a:RegisterEvent("PLAYER_LOGIN")
-  
-  a:SetScript("OnEvent", function (s,e,...)
-    if(e=="PLAYER_LOGIN") then
-      a:init()
-    end 
-  end)
   
   local models = {}
-
 
   -----------------------------
   -- FUNCTIONS
   -----------------------------
 
+  --round some stuff
   local function floorNumber(n)
     return floor((n)*10)/10
   end
    
-  local function changeModelZoom(self, delta)
+  --change portraitZoom func
+  local function changeModelPortraitZoom(self, delta)
     local maxzoom = 1
     local minzoom = -0.5
     self.zoomLevel = self.zoomLevel + delta*0.15
@@ -63,6 +53,7 @@
     self:SetPortraitZoom(self.zoomLevel)
   end
     
+  --change camDistanceScale func
   local function changeModelDistanceScale(self, delta)
     local maxscale = 10
     local minscale = 0.1
@@ -77,6 +68,7 @@
     self:SetCamDistanceScale(self.scaleLevel)
   end
   
+  --move model left right func
   local function moveModelLeftRight(self, delta)
     local max = 5
     local min = -5
@@ -91,6 +83,7 @@
     self:SetPosition(0,self.posX,self.posY)
   end
   
+  --move model top bottom func
   local function moveModelTopBottom(self, delta)
     local max = 5
     local min = -5
@@ -105,6 +98,7 @@
     self:SetPosition(0,self.posX,self.posY)
   end
   
+  --model rotation func
   local function rotateModel(self,button)
     local rotationIncrement = 0.2
     if button == "LeftButton" then
@@ -116,25 +110,11 @@
     self:SetRotation(self.rotation)
   end
   
-  local function resetModel(self)
-  
-    self.scaleLevel = 1
-    self.zoomLevel = 0
-    self.posX = 0
-    self.posY = 0
-    self.rotation = 0
-    
-    self:SetPortraitZoom(self.zoomLevel)
-    self:SetCamDistanceScale(self.scaleLevel)
-    self:SetPosition(0,self.posX,self.posY)
-    self:SetRotation(self.rotation)
 
-  end
-  
-  --tooltip function from Lyn
+  --tooltip for model func
   local function showModelTooltip(self)
     GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
-    --GameTooltip:SetPoint("BOTTOMRIGHT", WorldFrame, "BOTTOMRIGHT", -90, 90)
+    --GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
     GameTooltip:AddLine("rIngameModelViewer", 0, 1, 0.5, 1, 1, 1)
     GameTooltip:AddLine(" ")
     GameTooltip:AddDoubleLine("DisplayID", self.id, 1, 1, 1, 1, 1, 1)
@@ -153,9 +133,10 @@
     GameTooltip:Show()
   end
     
+  --tooltip for icon func
   local function showIconTooltip(self)
     GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
-    --GameTooltip:SetPoint("BOTTOMRIGHT", WorldFrame, "BOTTOMRIGHT", -90, 90)
+    --GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
     GameTooltip:AddLine("rIngameModelViewer", 0, 1, 0.5, 1, 1, 1)
     GameTooltip:AddLine(" ")
     GameTooltip:AddLine("Click the icon to open the model viewer.", 1, 1, 1, 1, 1, 1)
@@ -164,25 +145,53 @@
     GameTooltip:Show()
   end
     
-  local createModel = function(b,id,row,col)
-    local m = CreateFrame("PlayerModel", nil,b)
-    m:SetSize(cfg.size,cfg.size)
-    m:SetPoint("TOPLEFT",cfg.size*row,cfg.size*col*(-1))
-    --m:SetFacing(math.pi) --math.pi = 180° 
-    m:SetModel("Interface\\Buttons\\talktomequestionmark.mdx") --in case setdisplayinfo fails 
-    --m:SetCreature(id)
-    m:SetDisplayInfo(id)
-    m.id = id
-    m.scaleLevel = 1
-    m.zoomLevel = 0
-    m.posX = 0
-    m.posY = 0
-    m.rotation = 0
+  --set some default values to work with
+  local function setModelValues(self)
+  
+    self.scaleLevel = 1
+    self.zoomLevel = 0
+    self.posX = 0
+    self.posY = 0
+    self.rotation = 0
     
+    self:SetPortraitZoom(self.zoomLevel)
+    self:SetCamDistanceScale(self.scaleLevel)
+    self:SetPosition(0,self.posX,self.posY)
+    self:SetRotation(self.rotation)
+
+  end
+  
+  --bring the model to life and set the displayID
+  local function setModel(self,id)
+  
+    self:ClearModel()
+    --m:SetModel("Interface\\Buttons\\talktomequestionmark.mdx") --in case setdisplayinfo fails 
+    self:SetDisplayInfo(id)
+    self.id = id
+    self.p:SetText(id)
+
+  end
+    
+  --move model into position func and adjust some values based on model size
+  local function adjustModelPosition(self,row,col)
+    self:SetSize(cfg.size,cfg.size)
+    self:SetPoint("TOPLEFT",cfg.size*row,cfg.size*col*(-1))
+    local fs = cfg.size*10/100
+    if fs < 8 then 
+      fs = 8
+    end    
+    self.p:SetFont("Fonts\\FRIZQT__.ttf", fs, "THINOUTLINE")    
+    self:Show()
+  end
+  
+  --create a new model func
+  local function createModel(b,id)
+    local m = CreateFrame("PlayerModel", nil,b)
+   
     m:EnableMouse(true)
     m:SetScript("OnMouseDown", function(s,b,...)
       if IsShiftKeyDown() then
-        resetModel(s)
+        setModelValues(s)
       else
         rotateModel(s,b)
       end
@@ -190,7 +199,7 @@
     
     m:SetScript("OnMouseWheel", function(s,d,...)
       if IsShiftKeyDown() and IsAltKeyDown() then
-        changeModelZoom(s,d)        
+        changeModelPortraitZoom(s,d)        
       elseif IsAltKeyDown() then
         moveModelTopBottom(s,d)
       elseif IsShiftKeyDown() then
@@ -200,12 +209,13 @@
       end
     end)
 
-    m:SetScript("OnEnter", function() showModelTooltip(m) end)
-    m:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    m:SetScript("OnEnter", function(s) showModelTooltip(s) end)
+    m:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
 
     local d = m:CreateTexture(nil, "BACKGROUND",nil,-8)
     d:SetTexture(0,0,0,0.2)
     d:SetAllPoints(m)
+    m.d = d
 
     local t = m:CreateTexture(nil, "BACKGROUND",nil,-7)
     t:SetTexture(1,1,1,0.5)
@@ -214,82 +224,78 @@
     m.t = t
 
     local p = m:CreateFontString(nil, "BACKGROUND")
-    local fs = cfg.size*10/100
-    if fs < 8 then 
-      fs = 8
-    end    
-    p:SetFont("Fonts\\FRIZQT__.ttf", fs, "THINOUTLINE")
     p:SetPoint("TOP", 0, -2)
-    p:SetText(id)
     p:SetAlpha(.5)
     m.p = p
     
     return m
 
-  end  
-  
-  local function changeModelViewerPage(pageid)
-    local cfg = cfg
-    cfg.page = pageid
-    local models = models
-    local modelid = 1 + ((pageid-1)*cfg.num) 
-    local id = 1
-    
-    for i=1, cfg.rows do
-      for k=1, cfg.cols do
-        resetModel(models[id])
-        models[id]:SetModel("Interface\\Buttons\\talktomequestionmark.mdx") --in case setdisplayinfo fails 
-        --models[id]:SetCreature(modelid)
-        models[id]:SetDisplayInfo(modelid)
-        models[id].id = modelid
-        models[id].p:SetText(modelid)
-        modelid = modelid+1
-        id=id+1
-      end    
-    end
-  
   end
   
-  local function createAllModels(b)
-    --remove old models
-    local id
-    
-    id = 1
-    
-    for i=1, cfg.rows do
-      for k=1, cfg.cols do
-        if models[id] then
-          models[id]:ClearAllPoints()
-          models[id]:Hide()
-          models[id] = nil
-          id=id+1  
-        end
-      end    
+  --change models on page swap
+  local function changeModelViewerPage(pageid)    
+    cfg.page = pageid    
+    local displayid = 1 + ((cfg.page-1)*cfg.num) 
+    local id = 1    
+    for i=1, cfg.num do
+      if models[id] then
+        setModelValues(models[id])
+        setModel(models[id],displayid)
+      end
+      displayid = displayid+1
+      id=id+1
+    end  
+  end
+  
+  --hide all the models
+  local function hideAllModels()
+    local id = 1
+    --hide all models first until we are sure which models need to be shown at all
+    for i=1, cfg.num do
+      if models[id] and models[id]:IsShown() then
+        models[id]:ClearAllPoints()
+        models[id]:Hide()
+      end
+      id=id+1
     end
+  end
+  
+  --create all the models
+  local function createAllModels(b)
     
-    models = {}
-
+    --cleanup first, make sure all models get hidden first
+    hideAllModels()
+    
+    --calc the new page values
     local w = floor(b:GetWidth())
     local h = floor(b:GetHeight())-70 --remove 70px for the bottom bar
     cfg.rows = floor(h/cfg.size)
     cfg.cols = floor(w/cfg.size)
     cfg.num = cfg.rows*cfg.cols
     
-    local modelid = 1 + ((cfg.page-1)*cfg.num)    
-    id = 1
+    local displayid = 1 + ((cfg.page-1)*cfg.num)    
+    local id = 1
     
     for i=1, cfg.rows do
       for k=1, cfg.cols do
-        models[id] = createModel(b,modelid,k-1,i-1)
-        --print(models[id].id)
-        modelid = modelid+1
-        id=id+1        
+        --if the model does not exist yet create it, otherwise reset it
+        if not models[id] then
+          --make sure createModel is only used when needed
+          models[id] = createModel(b,displayid)
+          print("[IMV DEBUG] Creating model: "..id) --debugging, only new numbers should be printed
+        end
+        adjustModelPosition(models[id],k-1,i-1)
+        setModelValues(models[id])
+        setModel(models[id],displayid)
+        displayid = displayid+1
+        id=id+1
       end    
     end
   
   end
   
-  local createArrows = function(b)
+  --create menu buttons func
+  local function createArrows(b)
     
     local l1,l2,l3,l4,l5,t,p,e,d
 
@@ -486,7 +492,7 @@
   
   end
   
-
+  --create fullscreen background frame func
   local function createHolderFrame()
     local b = CreateFrame("Frame","rIMV_HolderFrame",UIParent)
     b:SetFrameStrata("FULLSCREEN")
@@ -510,6 +516,7 @@
     
   end
   
+  --create icon func
   local function createTheIcon(b)
     local i = CreateFrame("Frame","rIMV_Icon",UIParent)
     i:SetSize(64,64)
@@ -529,21 +536,35 @@
     i:SetScript("OnMouseDown", function()
       if not IsAltKeyDown() then
         b:Show()
+        createAllModels(b)
       end
     end)
   
-    i:SetScript("OnEnter", function() showIconTooltip(i) end)
-    i:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    i:SetScript("OnEnter", function(s) showIconTooltip(s) end)
+    i:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
   
   end
   
+  -----------------------------
+  -- LOADUP
+  -----------------------------
 
-  function a:init()
+  --init func
+  local function init()
     
     local b = createHolderFrame()
     createTheIcon(b)
     createArrows(b)
-    createAllModels(b)    
-    b:Hide()
-    
+    b:Hide()    
   end
+  
+  --PLAYER_LOGIN EVENT HOOK  
+  local a = CreateFrame("Frame")
+  
+  a:SetScript("OnEvent", function (s,e,...)
+    if(e=="PLAYER_LOGIN") then
+      init()
+    end 
+  end)
+  
+  a:RegisterEvent("PLAYER_LOGIN")

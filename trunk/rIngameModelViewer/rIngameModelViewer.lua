@@ -81,8 +81,8 @@
   
   --move model left right func
   local function rIMV_moveModelLeftRight(self, delta)
-    local max = 5
-    local min = -5
+    local max = 10
+    local min = -10
     self.posX = self.posX + delta*0.15
     if (self.posX > max) then
         self.posX = max
@@ -96,8 +96,8 @@
   
   --move model top bottom func
   local function rIMV_moveModelTopBottom(self, delta)
-    local max = 5
-    local min = -5
+    local max = 10
+    local min = -10
     self.posY = self.posY + delta*0.15
     if (self.posY > max) then
         self.posY = max
@@ -137,6 +137,7 @@
     GameTooltip:AddDoubleLine("SetPortraitZoom", self.zoomLevel, 1, 1, 1, 1, 1, 1)    
     GameTooltip:AddDoubleLine("SetPosition", "(0,"..self.posX..","..self.posY..")", 1, 1, 1, 1, 1, 1)
     GameTooltip:AddDoubleLine("SetRotation", self.rotation, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("GetModel", self.model, 1, 1, 1, 1, 1, 1)
     GameTooltip:AddLine(" ")
     if not theatre then
       GameTooltip:AddLine("Click on the model to open the theatre view!")
@@ -203,8 +204,17 @@
   local function rIMV_setModel(self,id)
   
     self:ClearModel()
-    --m:SetModel("Interface\\Buttons\\talktomequestionmark.mdx") --in case setdisplayinfo fails 
+    local defaultmodel = "interface\\buttons\\talktomequestionmark.m2"
+    self:SetModel(defaultmodel) --in case setdisplayinfo fails 
     self:SetDisplayInfo(id)
+    local model = self:GetModel()
+    if model == defaultmodel then
+      self.model = ""
+      self:EnableMouse(false)
+    else
+      self.model = model
+      self:EnableMouse(true)
+    end
     self.id = id
     self.p:SetText(id)
 
@@ -235,12 +245,12 @@
       else
         b.theatre:Show()
         b.theatre:EnableMouse(true)
+        rIMV_setModelValues(b.theatre.m)
         b.theatre.m:ClearModel()
         b.theatre.m:SetDisplayInfo(s.id)
+        b.theatre.m.model = b.theatre.m:GetModel()
         b.theatre.m.id = s.id
-        b.theatre.m.p:SetText(s.id)
-        rIMV_setModelValues(b.theatre.m)
-        
+        b.theatre.m.p:SetText(s.id)        
         b.theatre.ag1:Play()
       end
     end)
@@ -350,7 +360,7 @@
     p = b:CreateFontString(nil, "BACKGROUND")
     p:SetFont("Fonts\\FRIZQT__.ttf", 20, "THINOUTLINE")
     p:SetPoint("BOTTOMLEFT", 10, 15)
-    p:SetText("rIngameModelViewer 1.1")
+    p:SetText("rIngameModelViewer 1.3")
     p:SetTextColor(0,1,0.5)
 
     --editbox pageid
@@ -537,8 +547,8 @@
     l5:EnableMouse(true)
     l5:SetScript("OnMouseDown", function()
       cfg.size = cfg.size-20
-      if cfg.size < 100 then
-        cfg.size = 100
+      if cfg.size < 60 then
+        cfg.size = 60
       else
         rIMV_createAllModels(b)
         e2:SetText(calcFirstDisplayIdOfPage())

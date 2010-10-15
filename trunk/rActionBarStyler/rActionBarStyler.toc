@@ -1,5 +1,19 @@
-## Interface: 30300
+## Interface: 40000
+## Author: zork
+## Version: 2.0
 ## Title: rActionBarStyler
-## Author: roth
-## Notes: Styles the standard ActionBars
-rActionBarStyler.lua
+## Notes: Simple actionbars
+
+config.lua
+bars\hideblizz.lua
+bars\bar1.lua
+bars\bar2.lua
+bars\bar3.lua
+bars\bar4.lua
+bars\bar5.lua
+bars\stancebar.lua
+bars\petbar.lua
+bars\totembar.lua
+bars\vehicleexit.lua
+bars\bags.lua
+bars\micromenu.lua

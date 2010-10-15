@@ -28,6 +28,7 @@
     
     for i=1, num do
       local button = _G["PetActionButton"..i]
+      local cd = _G["PetActionButton"..i.."Cooldown"]
       button:SetSize(barcfg.buttonsize, barcfg.buttonsize)
       button:ClearAllPoints()
       if i == 1 then
@@ -36,6 +37,7 @@
         local previous = _G["PetActionButton"..i-1]      
         button:SetPoint("LEFT", previous, "RIGHT", barcfg.buttonspacing, 0)
       end
+      cd:SetAllPoints(button)
     end
     
     if barcfg.showonmouseover then    

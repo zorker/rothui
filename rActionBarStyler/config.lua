@@ -91,6 +91,24 @@
       testmode        = false,
       disable         = false,
     },
+    micromenu = {
+      barscale        = 0.82,
+      showonmouseover = true,
+      userplaced      = false, --want to place the bar somewhere else?
+      locked          = false, --frame locked
+      pos             = { a1 = "TOP", a2 = "TOP", af = "UIParent", x = 0, y = -5 }, 
+      testmode        = false,
+      disable         = false,
+    },
+    bags = {
+      barscale        = 0.82,
+      showonmouseover = true,
+      userplaced      = false, --want to place the bar somewhere else?
+      locked          = false, --frame locked
+      pos             = { a1 = "BOTTOMRIGHT", a2 = "BOTTOMRIGHT", af = "UIParent", x = -10, y = 10 }, 
+      testmode        = false,
+      disable         = false,
+    },
     totembar = {
       barscale        = 0.82,
       userplaced      = true, --want to place the bar somewhere else?

@@ -39,7 +39,7 @@
   else
     map_positions = {
       position = {
-        [1] = { frame = "Minimap",                  anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",   anchorframe = "UIParent",   posx = -35,   posy = -15 },
+        [1] = { frame = "Minimap",                  anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",   anchorframe = "UIParent",   posx = -30,   posy = -15 },
         [2] = { frame = "MiniMapTracking",          anchor1 = "CENTER",       anchor2 = "CENTER",     anchorframe = "Minimap",    posx = 68,     posy = 28 },
         [3] = { frame = "MiniMapMailFrame",         anchor1 = "CENTER",          anchor2 = "CENTER",     anchorframe = "Minimap",    posx = 75,    posy = 0 },
         [4] = { frame = "MiniMapBattlefieldFrame",  anchor1 = "CENTER",          anchor2 = "CENTER",     anchorframe = "Minimap",    posx = -75,   posy = 0 },

@@ -11,10 +11,10 @@
   };
   
   rPowerBarColor = {}  
-  rPowerBarColor["MANA"] = { r = 0, g = 0.6, b = 1 };
+  rPowerBarColor["MANA"] = { r = 0, g = 0.4, b = 1 };
   rPowerBarColor["RAGE"] = { r = 1.00, g = 0.00, b = 0.00 };
   rPowerBarColor["FOCUS"] = { r = 1.00, g = 0.50, b = 0.25 };
-  rPowerBarColor["ENERGY"] = { r = 1.00, g = 1.00, b = 0.00 };
+  rPowerBarColor["ENERGY"] = { r = 1.00, g = 0.75, b = 0.10 };
   rPowerBarColor["HAPPINESS"] = { r = 0.00, g = 1.00, b = 1.00 };
   rPowerBarColor["RUNES"] = { r = 0.50, g = 0.50, b = 0.50 };
   rPowerBarColor["RUNIC_POWER"] = { r = 0.00, g = 0.82, b = 1.00 };

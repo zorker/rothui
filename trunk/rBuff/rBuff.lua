@@ -32,27 +32,20 @@
 
   --rdy up for wotlk
 
-  BUFF_FLASH_TIME_ON = 0.8;
-  BUFF_FLASH_TIME_OFF = 0.8;
-  BUFF_MIN_ALPHA = 0.70;
-  
   local myscale = 0.82
   local d3font = "Interface\\AddOns\\oUF_D3Orbs\\avqest.ttf"
-  --local glosstex1 = "Interface\\AddOns\\rTextures\\d3bufficon"
-  --local glosstex2 = "Interface\\AddOns\\rTextures\\d3bufficon_white"
-
   local glosstex1 = "Interface\\AddOns\\rActionButtonStyler\\media\\gloss"
   local glosstex2 = "Interface\\AddOns\\rActionButtonStyler\\media\\gloss_grey"
 
   local addon = CreateFrame("Frame")
-  local _G = getfenv(0)
+  local _G = _G
   
   addon:SetScript("OnEvent", function(self, event, ...)
     local unit = ...;
     if(event=="PLAYER_ENTERING_WORLD") 
     then
-      TemporaryEnchantFrame:ClearAllPoints()
-      TemporaryEnchantFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -40, 3)
+      --TemporaryEnchantFrame:ClearAllPoints()
+      --TemporaryEnchantFrame:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -40, 3)
       TemporaryEnchantFrame:SetScale(myscale)
       BuffFrame:SetScale(myscale)
       addon:runthroughicons()

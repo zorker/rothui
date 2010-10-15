@@ -71,7 +71,7 @@
   --initial style func
   local function rActionButtonStyler_AB_style(self)
   
-    if not self.rabsstyle and self:GetParent():GetName() ~= "MultiCastActionBarFrame" and self:GetParent():GetName() ~= "MultiCastActionPage1" and self:GetParent():GetName() ~= "MultiCastActionPage2" and self:GetParent():GetName() ~= "MultiCastActionPage3" then
+    if not self.rabsstyle and self:GetParent() and  self:GetParent():GetName() ~= "MultiCastActionBarFrame" and self:GetParent():GetName() ~= "MultiCastActionPage1" and self:GetParent():GetName() ~= "MultiCastActionPage2" and self:GetParent():GetName() ~= "MultiCastActionPage3" then
       
       --am(self:GetParent():GetName())
       
@@ -127,8 +127,9 @@
       end  
       
       --disable stuff
-      nt.SetHeight = nomoreplay
-      nt.SetWidth = nomoreplay
+      --nt.SetHeight = nomoreplay
+      --nt.SetWidth = nomoreplay
+      nt:SetAllPoints(bu)
       fl.SetTexture = nomoreplay
       bu.SetHighlightTexture = nomoreplay
       bu.SetPushedTexture = nomoreplay

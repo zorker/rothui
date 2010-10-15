@@ -6,14 +6,14 @@
     MainMenuBarArtFrame, 
     BonusActionBarFrame, 
     VehicleMenuBar,
-		PossessBarFrame,
+    PossessBarFrame,
   }  
   
   for _, f in pairs(FramesToHide) do
-		if f:GetObjectType() == "Frame" then
-			f:UnregisterAllEvents()
-		end
-		f:Hide()
+    if f:GetObjectType() == "Frame" then
+      f:UnregisterAllEvents()
+    end
+    f:Hide()
   end
   
   

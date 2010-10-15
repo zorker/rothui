@@ -32,21 +32,21 @@
   MultiBarBottomRight:SetParent(bar)
   
   for i=1, 12 do
-  	local button = _G["MultiBarBottomRightButton"..i]
-  	button:SetSize(barcfg.buttonsize, barcfg.buttonsize)
-  	button:ClearAllPoints()
-  	if i == 1 then
-  		button:SetPoint("BOTTOMLEFT", bar, 0,0)
-  	else
-  	  local previous = _G["MultiBarBottomRightButton"..i-1]  		
-			if barcfg.uselayout2x6 and i == 7 then
-			  previous = _G["MultiBarBottomRightButton1"]
+    local button = _G["MultiBarBottomRightButton"..i]
+    button:SetSize(barcfg.buttonsize, barcfg.buttonsize)
+    button:ClearAllPoints()
+    if i == 1 then
+      button:SetPoint("BOTTOMLEFT", bar, 0,0)
+    else
+      local previous = _G["MultiBarBottomRightButton"..i-1]      
+      if barcfg.uselayout2x6 and i == 7 then
+        previous = _G["MultiBarBottomRightButton1"]
         button:SetPoint("BOTTOMLEFT", previous, "TOPLEFT", 0, barcfg.buttonspacing)
-			else
-			  button:SetPoint("LEFT", previous, "RIGHT", barcfg.buttonspacing, 0)
-		  end
-  		
-  	end
+      else
+        button:SetPoint("LEFT", previous, "RIGHT", barcfg.buttonspacing, 0)
+      end
+      
+    end
   end
   
   if barcfg.showonmouseover then    

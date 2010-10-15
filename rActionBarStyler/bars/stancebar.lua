@@ -27,15 +27,15 @@
     ShapeshiftBarFrame:SetParent(bar)
     
     for i=1, num do
-    	local button = _G["ShapeshiftButton"..i]
-    	button:SetSize(barcfg.buttonsize, barcfg.buttonsize)
-    	button:ClearAllPoints()
-    	if i == 1 then
-    		button:SetPoint("BOTTOMLEFT", bar, 0,0)
-    	else
-    	  local previous = _G["ShapeshiftButton"..i-1]  		
-  		  button:SetPoint("LEFT", previous, "RIGHT", barcfg.buttonspacing, 0)
-    	end
+      local button = _G["ShapeshiftButton"..i]
+      button:SetSize(barcfg.buttonsize, barcfg.buttonsize)
+      button:ClearAllPoints()
+      if i == 1 then
+        button:SetPoint("BOTTOMLEFT", bar, 0,0)
+      else
+        local previous = _G["ShapeshiftButton"..i-1]      
+        button:SetPoint("LEFT", previous, "RIGHT", barcfg.buttonspacing, 0)
+      end
     end
     
     if barcfg.showonmouseover then    

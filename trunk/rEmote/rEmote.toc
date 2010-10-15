@@ -1,4 +1,4 @@
-## Interface: 30300
+## Interface: 40000
 ## Author: roth
 ## Title: rEmote
 ## Notes: Redirects NPC emotes to blizzards scrolling combattext

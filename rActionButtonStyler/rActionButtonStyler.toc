@@ -1,4 +1,4 @@
-## Interface: 30300
+## Interface: 40000
 ## Title: rActionButtonStyler
 ## Author: roth
 ## Notes: Styles the standard ActionButtons

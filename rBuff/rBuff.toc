@@ -1,6 +1,6 @@
-## Interface: 30300
-## Author: rothar
+## Interface: 40000
+## Author: zork
 ## Title: rBuff
-## Notes: fucking simple buffs
+## Notes: Blizzard buffs/debuffs with a twist
 
 rBuff.lua

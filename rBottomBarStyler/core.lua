@@ -1,6 +1,6 @@
   
   --[[----------------------------------------------------------------------------
-    Copyright (c) 2009, Erik Raetz
+    Copyright (c) 2010, Erik Raetz
     All rights reserved.
   
     Redistribution and use in source and binary forms, with or without
@@ -443,18 +443,9 @@
         end
       end
     end)
-    orb2:RegisterEvent("UNIT_MANA")
-    orb2:RegisterEvent("UNIT_RAGE")
-    orb2:RegisterEvent("UNIT_ENERGY")
-    orb2:RegisterEvent("UNIT_FOCUS")
-    orb2:RegisterEvent("UNIT_RUNIC_POWER")
+    orb2:RegisterEvent("UNIT_POWER")
+    orb2:RegisterEvent("UNIT_MAXPOWER")
     orb2:RegisterEvent("PLAYER_ENTERING_WORLD")
-		orb2:RegisterEvent("UNIT_MAXMANA")
-		orb2:RegisterEvent("UNIT_MAXRAGE")
-		orb2:RegisterEvent("UNIT_MAXFOCUS")
-		orb2:RegisterEvent("UNIT_MAXENERGY")
-		orb2:RegisterEvent("UNIT_DISPLAYPOWER")
-		orb2:RegisterEvent("UNIT_MAXRUNIC_POWER")
   end
   
   ------------------------------------------------------

@@ -1,4 +1,4 @@
-## Interface: 30200
+## Interface: 40000
 ## Author: roth	
 ## Title: rBottomBarStyler
 ## Notes: Styles your bottom back background. Use /rbbs for more.

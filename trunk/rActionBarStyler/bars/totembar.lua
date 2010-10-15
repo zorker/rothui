@@ -26,6 +26,7 @@
       
       local function moveTotem(self,a1,af,a2,x,y,...)
         if x ~= barcfg.pos.x then
+          print('doing')
           bar:SetAllPoints(holder)
         end
       end

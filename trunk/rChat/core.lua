@@ -30,12 +30,12 @@
 
     ChatFontNormal:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE") 
     
-		local bcq = _G["CombatLogQuickButtonFrame_Custom"];
-		if bcq then
-		  bcq:Hide()
-		  bcq:HookScript("OnShow", function(s) s:Hide(); end)
-		  bcq:SetHeight(0)
-		end  
+    local bcq = _G["CombatLogQuickButtonFrame_Custom"];
+    if bcq then
+      bcq:Hide()
+      bcq:HookScript("OnShow", function(s) s:Hide(); end)
+      bcq:SetHeight(0)
+    end  
 
     for i=1, num do      
       local bf = _G['ChatFrame'..i..'ButtonFrame']

@@ -63,6 +63,8 @@
   bar:RegisterEvent("PLAYER_ENTERING_WORLD")
   bar:RegisterEvent("KNOWN_CURRENCY_TYPES_UPDATE")
   bar:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
+  bar:RegisterEvent("PLAYER_TALENT_UPDATE")
+  bar:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
   bar:RegisterEvent("BAG_UPDATE")
   bar:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
@@ -105,6 +107,11 @@
             button:SetPoint("LEFT", previous, "RIGHT", barcfg.buttonspacing, 0)
           end
         end
+      end
+    elseif event == "PLAYER_TALENT_UPDATE" or event == "ACTIVE_TALENT_GROUP_CHANGED" then      
+      RegisterStateDriver(self, "page", GetBar())
+      if not InCombatLockdown() then
+        MainMenuBar:Hide()
       end
     else
        MainMenuBar_OnEvent(self, event, ...)

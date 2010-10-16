@@ -1,5 +1,8 @@
 ## Interface: 40000
+## Author: zork
+## Version: 2.0
 ## Title: rActionButtonStyler
-## Author: roth
-## Notes: Styles the standard ActionButtons
-rActionButtonStyler.lua
+## Notes: The default ActionButtonTemplate with style!
+
+config.lua
+func\functions.lua

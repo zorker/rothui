@@ -35,8 +35,8 @@
     ["DRUID"] = "[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] %s; [bonusbar:2] 8; [bonusbar:3] 9; [bonusbar:4] 10;",
     ["WARRIOR"] = "[bonusbar:1] 7; [bonusbar:2] 8; [bonusbar:3] 9;",
     ["PRIEST"] = "[bonusbar:1] 7;",
-    ["ROGUE"] = "[bonusbar:1] 7; [form:3] 6;",
-    ["WARLOCK"] = "[form:2] 6;",
+    ["ROGUE"] = "[bonusbar:1] 7; [form:3] 7;",
+    ["WARLOCK"] = "[form:2] 7;",
     ["DEFAULT"] = "[bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6; [bonusbar:5] 11;",
   }
   
@@ -61,6 +61,9 @@
   
   bar:RegisterEvent("PLAYER_LOGIN")
   bar:RegisterEvent("PLAYER_ENTERING_WORLD")
+  bar:RegisterEvent("KNOWN_CURRENCY_TYPES_UPDATE")
+  bar:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
+  bar:RegisterEvent("BAG_UPDATE")
   bar:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
       local button
@@ -103,5 +106,7 @@
           end
         end
       end
+    else
+       MainMenuBar_OnEvent(self, event, ...)
     end
   end)

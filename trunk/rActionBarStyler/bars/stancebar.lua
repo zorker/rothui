@@ -38,6 +38,12 @@
       end
     end
     
+    local function rABS_MoveShapeshift()
+      ShapeshiftButton1:SetPoint("BOTTOMLEFT", bar, 0,0)
+    end
+    hooksecurefunc("ShapeshiftBar_Update", rABS_MoveShapeshift);
+    
+    
     if barcfg.showonmouseover then    
       local function lighton(alpha)
         if ShapeshiftBarFrame:IsShown() then

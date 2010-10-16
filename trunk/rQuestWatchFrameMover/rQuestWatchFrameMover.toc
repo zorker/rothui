@@ -1,0 +1,7 @@
+## Interface: 40000
+## Author: zork
+## Version: 1.0
+## Title: rQuestWatchFrameMover
+## Notes: Allows you to move the Blizzard questwatchframe around.
+
+core.lua

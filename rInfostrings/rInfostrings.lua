@@ -196,30 +196,6 @@
   a:SetScript("OnEvent", function(self, event)
     if(event=="PLAYER_LOGIN") then
       a:SetScript("OnUpdate", rsiOnUpdate)
-      
-      --make the quest watchframe movable
-      local f2 = WatchFrame
-      f2:SetMovable(true)
-      f2:SetUserPlaced(true)
-      --f2:EnableMouse(true)
-      f2:RegisterForDrag("LeftButton")
-      f2:SetScript("OnDragStart", function(s) s:StartMoving() end)
-      f2:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
-      
-      --make the watchframe header dragable 
-      local f1 = WatchFrameHeader
-      --f1:SetMovable(true)
-      --f1:SetUserPlaced(true)
-      f1:EnableMouse(true)
-      f1:RegisterForDrag("LeftButton")
-      f1:SetScript("OnDragStart", function(s) 
-        local b = s:GetParent()
-        b:StartMoving()
-      end)
-      f1:SetScript("OnDragStop", function(s) 
-        local b = s:GetParent()
-        b:StopMovingOrSizing()
-      end)
     end
   end)
   

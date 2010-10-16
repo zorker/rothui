@@ -53,7 +53,6 @@
       if cf then cf:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE") end
       local eb = _G['ChatFrame'..i..'EditBox']
       if eb and cf then
-        local ebf = _G['ChatFrame'..i..'EditBoxFocusLeft']
         eb:ClearAllPoints()
         eb:SetPoint("BOTTOM",cf,"TOP",0,22)
         eb:SetPoint("LEFT",cf,-5,0)

@@ -92,7 +92,7 @@
       --apply the normaltexture
       if ( IsEquippedAction(action) ) then
         bu:SetNormalTexture(cfg.textures.equipped)
-        nt:SetVertexColor(color_equipped.r,color_equipped.g,color_equipped.b,1)
+        nt:SetVertexColor(cfg.color.equipped.r,cfg.color.equipped.g,cfg.color.equipped.b,1)
       else
         bu:SetNormalTexture(cfg.textures.normal)
         nt:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)

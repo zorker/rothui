@@ -377,7 +377,7 @@
   
   local function orbhealth(orb1,orb1_fill,glow1,glow2,orbtext1,orbtext2)
     orb1:SetScript("OnEvent", function(self, event, arg1, ...)
-      if arg1 == "player" or event == "PLAYER_ENTERING_WORLD" then
+      if event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD" or arg1 == "player" then      
         local uh, uhm = UnitHealth("player"), UnitHealthMax("player")
         local perc = floor(uh/uhm*100)
         local nuh = do_format(uh)
@@ -402,6 +402,7 @@
       end
     end)
     orb1:RegisterEvent("UNIT_HEALTH")
+    orb1:RegisterEvent("PLAYER_LOGIN")
     orb1:RegisterEvent("PLAYER_ENTERING_WORLD")
   end
   
@@ -411,7 +412,7 @@
   
   local function orbmana(orb2,orb2_fill,glow1,glow2,orbtext1,orbtext2)
     orb2:SetScript("OnEvent", function(self, event, arg1, ...)
-      if arg1 == "player" or event == "PLAYER_ENTERING_WORLD" then
+      if event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD" or arg1 == "player" then      
         local um, umm = UnitMana("player"), UnitManaMax("player")
         local perc = floor(um/umm*100)
         local nuh = do_format(um)
@@ -446,6 +447,7 @@
     orb2:RegisterEvent("UNIT_POWER")
     orb2:RegisterEvent("UNIT_MAXPOWER")
     orb2:RegisterEvent("PLAYER_ENTERING_WORLD")
+    orb2:RegisterEvent("PLAYER_LOGIN")
   end
   
   ------------------------------------------------------

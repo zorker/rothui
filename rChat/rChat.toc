@@ -1,0 +1,8 @@
+## Interface: 40000
+## Author: zork
+## Version: 0.1
+## Title: rChat
+## Notes: Simple Chatmod
+
+core.lua
+channelreplacements.lua

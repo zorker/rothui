@@ -9,8 +9,61 @@
 
   local nomoreplay = function() end
   
+  local classcolor = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
+  
   if cfg.color.classcolored then
-    cfg.color.normal = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
+    cfg.color.normal = classcolor
+  end
+  
+  --backdrop settings
+  local bgfile, edgefile = "", ""  
+  if cfg.background.showshadow then edgefile = cfg.textures.outer_shadow end  
+  if cfg.background.useflatbackground and cfg.background.showbg then bgfile = cfg.textures.buttonbackflat end
+  
+  --backdrop
+  local backdrop = { 
+    bgFile = bgfile, 
+    edgeFile = edgefile,
+    tile = false,
+    tileSize = 32, 
+    edgeSize = cfg.background.inset, 
+    insets = { 
+      left = cfg.background.inset, 
+      right = cfg.background.inset, 
+      top = cfg.background.inset, 
+      bottom = cfg.background.inset,
+    },
+  }
+  
+  local function applyBackground(bu)
+    --shadows+background
+    if cfg.background.showbg or cfg.background.showshadow then
+      bu.bg = CreateFrame("Frame", nil, bu)
+      bu.bg:SetAllPoints(bu)
+      bu.bg:SetPoint("TOPLEFT", bu, "TOPLEFT", -4, 4)
+      bu.bg:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 4, -4)
+      bu.bg:SetFrameLevel(bu:GetFrameLevel()-1)
+      
+      if cfg.background.classcolored then
+        cfg.background.backgroundcolor = classcolor
+        cfg.background.shadowcolor = classcolor
+      end
+      
+      if cfg.background.showbg and not cfg.background.useflatbackground then 
+        local t = bu.bg:CreateTexture(nil,"BACKGROUND",-8)
+        t:SetTexture(cfg.textures.buttonback)
+        t:SetAllPoints(bu)
+        t:SetVertexColor(cfg.background.backgroundcolor.r,cfg.background.backgroundcolor.g,cfg.background.backgroundcolor.b,cfg.background.backgroundcolor.a)
+      end  
+      
+      bu.bg:SetBackdrop(backdrop)
+      if cfg.background.useflatbackground then
+        bu.bg:SetBackdropColor(cfg.background.backgroundcolor.r,cfg.background.backgroundcolor.g,cfg.background.backgroundcolor.b,cfg.background.backgroundcolor.a)
+      end
+      if cfg.background.showshadow then
+        bu.bg:SetBackdropBorderColor(cfg.background.shadowcolor.r,cfg.background.shadowcolor.g,cfg.background.shadowcolor.b,cfg.background.shadowcolor.a)
+      end
+    end
   end
 
   local function ntSetVertexColorFunc(nt, r, g, b, a)
@@ -115,6 +168,9 @@
       --hook to prevent Blizzard from reseting our colors
       hooksecurefunc(nt, "SetVertexColor", ntSetVertexColorFunc)
       
+      --shadows+background
+      if not bu.bg then applyBackground(bu) end
+      
       self.rABS_Styled = true
           
     end  
@@ -147,6 +203,9 @@
       ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
       ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
       
+      --shadows+background
+      if not bu.bg then applyBackground(bu) end
+      
     end  
   end
   
@@ -174,7 +233,11 @@
       --cut the default border of the icons and make them shiny
       ic:SetTexCoord(0.1,0.9,0.1,0.9)
       ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
-      ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)  
+      ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
+      
+      --shadows+background
+      if not bu.bg then applyBackground(bu) end
+      
     end    
   end
   

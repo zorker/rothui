@@ -136,6 +136,14 @@
   
   cfg.playername = playername
   cfg.playerclass = playerclass
+  
+  
+  -----------------------------------
+  -- SPECIAL CHARACTER CONDITIONS
+  -----------------------------------
+  if playername == "Rothar" then
+    cfg.bars.stancebar.disable = true
+  end  
 
   --font
   cfg.font = "FONTS\\FRIZQT__.ttf"

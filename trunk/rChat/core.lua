@@ -11,7 +11,14 @@
   -----------------------------
   -- FUNCTIONS
   -----------------------------
-  
+
+  for i = 1, NUM_CHAT_WINDOWS do
+    --need to do this before the UI gets loaded
+    --but at that moment FCF_GetNumActiveChatFrames() has the wrong result, so using all chatwindows
+    local cf = _G['ChatFrame'..i]
+    if cf then cf:SetClampRectInsets(0,0,0,0) end
+  end
+
   local function init()
   
     local num = FCF_GetNumActiveChatFrames()
@@ -57,10 +64,6 @@
         eb:SetPoint("BOTTOM",cf,"TOP",0,22)
         eb:SetPoint("LEFT",cf,-5,0)
         eb:SetPoint("RIGHT",cf,10,0)
-        cf:SetMovable(true)
-        cf:SetResizable(true)
-        cf:SetUserPlaced(true)
-        cf:SetClampRectInsets(0,0,0,0)
       end
     end
     
@@ -76,3 +79,4 @@
   end)
   
   a:RegisterEvent("PLAYER_LOGIN")
+  

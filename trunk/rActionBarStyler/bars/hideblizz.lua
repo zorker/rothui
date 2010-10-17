@@ -13,6 +13,7 @@
     if f:GetObjectType() == "Frame" then
       f:UnregisterAllEvents()
     end
+    f:HookScript("OnShow", function(s) s:Hide(); end)
     f:Hide()
   end
   

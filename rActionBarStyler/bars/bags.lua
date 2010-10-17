@@ -50,8 +50,8 @@
         f:HookScript("OnEnter", function(self) lighton(1) end)
         f:HookScript("OnLeave", function(self) lighton(0) end)
       end
-  	  bar:SetScript("OnEvent", function(self) lighton(0) end)
-  	  bar:RegisterEvent("PLAYER_ENTERING_WORLD")
+      bar:SetScript("OnEvent", function(self) lighton(0) end)
+      bar:RegisterEvent("PLAYER_ENTERING_WORLD")
     end
   
 

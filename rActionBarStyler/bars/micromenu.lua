@@ -60,21 +60,21 @@
         f:HookScript("OnEnter", function(self) lighton(1) end)
         f:HookScript("OnLeave", function(self) lighton(0) end)
       end
-  	  bar:SetScript("OnEvent", function(self) 
-  	    lighton(0) 
-  	  end)
-  	  bar:RegisterEvent("PLAYER_ENTERING_WORLD")
-  	  
-  	  --fix for the talent button display while micromenu onmouseover
-  	  local function rABS_TalentButtonAlphaFunc(self,alpha)
-  	    if switcher ~= alpha then
-  	      switcher = 0
-  	      self:SetAlpha(0)
-  	    end
-  	  end
-  	  
-  	  hooksecurefunc(TalentMicroButton, "SetAlpha", rABS_TalentButtonAlphaFunc)
-  	  
+      bar:SetScript("OnEvent", function(self) 
+        lighton(0) 
+      end)
+      bar:RegisterEvent("PLAYER_ENTERING_WORLD")
+      
+      --fix for the talent button display while micromenu onmouseover
+      local function rABS_TalentButtonAlphaFunc(self,alpha)
+        if switcher ~= alpha then
+          switcher = 0
+          self:SetAlpha(0)
+        end
+      end
+      
+      hooksecurefunc(TalentMicroButton, "SetAlpha", rABS_TalentButtonAlphaFunc)
+      
     end
 
 end

@@ -43,9 +43,13 @@
     CharacterMicroButton:SetPoint("BOTTOMLEFT", 0, 0)
     
     if barcfg.showonmouseover then    
+      
+      local switcher = -1
+      
       local function lighton(alpha)
         for _, f in pairs(MicroButtons) do
           f:SetAlpha(alpha)
+          switcher = alpha
         end
       end    
       bar:EnableMouse(true)
@@ -56,8 +60,21 @@
         f:HookScript("OnEnter", function(self) lighton(1) end)
         f:HookScript("OnLeave", function(self) lighton(0) end)
       end
-  	  bar:SetScript("OnEvent", function(self) lighton(0) end)
+  	  bar:SetScript("OnEvent", function(self) 
+  	    lighton(0) 
+  	  end)
   	  bar:RegisterEvent("PLAYER_ENTERING_WORLD")
+  	  
+  	  --fix for the talent button display while micromenu onmouseover
+  	  local function rABS_TalentButtonAlphaFunc(self,alpha)
+  	    if switcher ~= alpha then
+  	      switcher = 0
+  	      self:SetAlpha(0)
+  	    end
+  	  end
+  	  
+  	  hooksecurefunc(TalentMicroButton, "SetAlpha", rABS_TalentButtonAlphaFunc)
+  	  
     end
 
 end

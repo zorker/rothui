@@ -23,12 +23,25 @@
     pushed            = "Interface\\AddOns\\rActionButtonStyler\\media\\pushed",
     checked           = "Interface\\AddOns\\rActionButtonStyler\\media\\checked",
     equipped          = "Interface\\AddOns\\rActionButtonStyler\\media\\gloss_grey",
+    buttonback        = "Interface\\AddOns\\rActionButtonStyler\\media\\button_background",
+    buttonbackflat    = "Interface\\AddOns\\rActionButtonStyler\\media\\button_background_flat",
+    outer_shadow      = "Interface\\AddOns\\rActionButtonStyler\\media\\outer_shadow",
+  }
+  
+  cfg.background = {
+    showbg            = true,  --show an background image?
+    showshadow        = true,   --show an outer shadow?
+    useflatbackground = false,  --true uses plain flat color instead
+    backgroundcolor   = { r = 0.3, g = 0.3, b = 0.3, a = 0.7},
+    shadowcolor       = { r = 0, g = 0, b = 0, a = 0.9},
+    classcolored      = false,
+    inset             = 5, 
   }
   
   cfg.color = {
     normal            = { r = 0.37, g = 0.3, b = 0.3, },
     equipped          = { r = 0.1, g = 0.5, b = 0.1, },
-    classcolored      = false,    
+    classcolored      = false,
   }
   
   cfg.hotkeys = {

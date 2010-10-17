@@ -11,7 +11,7 @@
   -----------------------------
   -- FUNCTIONS
   -----------------------------
-
+  
   for i = 1, NUM_CHAT_WINDOWS do
     local bf = _G['ChatFrame'..i..'ButtonFrame']
     if bf then 

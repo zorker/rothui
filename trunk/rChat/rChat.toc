@@ -8,3 +8,4 @@ core.lua
 channelreplacements.lua
 altinvite.lua
 scroll.lua
+urlcopy.lua

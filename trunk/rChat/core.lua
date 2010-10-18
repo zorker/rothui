@@ -29,6 +29,8 @@
     local eb = _G['ChatFrame'..i..'EditBox']
     if eb and cf then
       cf:SetClampRectInsets(0,0,0,0)
+      cf:SetFading(false)
+      eb:SetAltArrowKeyMode(false)
       eb:ClearAllPoints()
       eb:SetPoint("BOTTOM",cf,"TOP",0,22)
       eb:SetPoint("LEFT",cf,-5,0)
@@ -57,7 +59,10 @@
       bcq:Hide()
       bcq:HookScript("OnShow", function(s) s:Hide(); end)
       bcq:SetHeight(0)
-    end  
+    end
+    
+    --disable tab flashing
+    FCF_FlashTab = function() end
 
   end  
   

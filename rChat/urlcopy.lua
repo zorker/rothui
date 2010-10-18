@@ -19,6 +19,11 @@
   
     foundurl = false
   
+    if string.find(text, "%pTInterface%p+") then 
+      --disable interface textures (lol)
+      foundurl = true
+    end
+  
     if not foundurl then
       --192.168.1.1:1234
       text = string.gsub(text, "(%s?)(%d%d?%d?%.%d%d?%d?%.%d%d?%d?%.%d%d?%d?:%d%d?%d?%d?%d?)(%s?)", highlighturl)

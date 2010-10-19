@@ -25,7 +25,9 @@
     local ebtr = _G['ChatFrame'..i..'EditBoxRight']
     if ebtr then ebtr:Hide() end
     local cf = _G['ChatFrame'..i]
-    if cf then cf:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE") end
+    if cf then 
+      cf:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE") 
+    end
     local eb = _G['ChatFrame'..i..'EditBox']
     if eb and cf then
       cf:SetClampRectInsets(0,0,0,0)
@@ -35,6 +37,10 @@
       eb:SetPoint("BOTTOM",cf,"TOP",0,22)
       eb:SetPoint("LEFT",cf,-5,0)
       eb:SetPoint("RIGHT",cf,10,0)
+    end
+    local tab = _G['ChatFrame'..i..'Tab']
+    if tab then
+      tab:GetFontString():SetFont(NAMEPLATE_FONT, 11, "THINOUTLINE")
     end
   end
 

@@ -5,7 +5,8 @@
 ## Notes: Simple Chatmod
 
 core.lua
+fading.lua
+scroll.lua
 channelreplacements.lua
 altinvite.lua
-scroll.lua
 urlcopy.lua

@@ -25,6 +25,7 @@
     cfg.applyDragFunctionality(bar,barcfg.userplaced,barcfg.locked)
   
     ShapeshiftBarFrame:SetParent(bar)
+    ShapeshiftBarFrame:EnableMouse(false)
     
     for i=1, num do
       local button = _G["ShapeshiftButton"..i]

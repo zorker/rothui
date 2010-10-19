@@ -17,59 +17,59 @@
   DEFAULT_CHATFRAME_ALPHA = 0
 
   local CHAT_TEXTURES = {
-  	"Background",
-  	"TopLeftTexture",
-  	"BottomLeftTexture",
-  	"TopRightTexture",
-  	"BottomRightTexture",
-  	"LeftTexture",
-  	"RightTexture",
-  	"BottomTexture",
-  	"TopTexture",
+    "Background",
+    "TopLeftTexture",
+    "BottomLeftTexture",
+    "TopRightTexture",
+    "BottomRightTexture",
+    "LeftTexture",
+    "RightTexture",
+    "BottomTexture",
+    "TopTexture",
   }
   
   local TAB_TEXTURES = {
-  	"Left",
-  	"Middle",
-  	"Right",
-  	"SelectedLeft",
-  	"SelectedMiddle",
-  	"SelectedRight",
-  	"Glow",
-  	"HighlightLeft",
-  	"HighlightMiddle",
-  	"HighlightRight",
+    "Left",
+    "Middle",
+    "Right",
+    "SelectedLeft",
+    "SelectedMiddle",
+    "SelectedRight",
+    "Glow",
+    "HighlightLeft",
+    "HighlightMiddle",
+    "HighlightRight",
   }
   
   --disable all tab textures
   for i = 1, NUM_CHAT_WINDOWS do
     for index, value in pairs(TAB_TEXTURES) do
       local texture = _G['ChatFrame'..i..'Tab'..value]
-    	texture:SetTexture(nil)
+      texture:SetTexture(nil)
     end
   end
 
   --[[
     --tab textures
     --either way disable textures in lua or replace the textures in folder with transparent ones
-		<Layers>
-			<Layer level="BACKGROUND">
-				<Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-BGLeft" parentKey="leftTexture">
-				<Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-BGMid" horizTile="true" parentKey="middleTexture">
-				<Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-BGRight" parentKey="rightTexture">
-			</Layer>
-			<Layer level="BORDER">
-				<Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-SelectedLeft" alphaMode="ADD" parentKey="leftSelectedTexture">
-				<Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-SelectedMid" horizTile="true" alphaMode="ADD" parentKey="middleSelectedTexture">
-				<Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-SelectedRight" alphaMode="ADD" parentKey="rightSelectedTexture">
-				<Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-NewMessage" parentKey="glow" alphaMode="ADD" hidden="true">
-			</Layer>
-			<Layer level="HIGHLIGHT">
-				<Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-HighlightLeft" alphaMode="ADD" parentKey="leftHighlightTexture">
-				<Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-HighlightMid" horizTile="true" alphaMode="ADD" parentKey="middleHighlightTexture">
-				<Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-HighlightRight" alphaMode="ADD" parentKey="rightHighlightTexture">
-			</Layer>
-		</Layers>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-BGLeft" parentKey="leftTexture">
+        <Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-BGMid" horizTile="true" parentKey="middleTexture">
+        <Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-BGRight" parentKey="rightTexture">
+      </Layer>
+      <Layer level="BORDER">
+        <Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-SelectedLeft" alphaMode="ADD" parentKey="leftSelectedTexture">
+        <Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-SelectedMid" horizTile="true" alphaMode="ADD" parentKey="middleSelectedTexture">
+        <Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-SelectedRight" alphaMode="ADD" parentKey="rightSelectedTexture">
+        <Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-NewMessage" parentKey="glow" alphaMode="ADD" hidden="true">
+      </Layer>
+      <Layer level="HIGHLIGHT">
+        <Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-HighlightLeft" alphaMode="ADD" parentKey="leftHighlightTexture">
+        <Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-HighlightMid" horizTile="true" alphaMode="ADD" parentKey="middleHighlightTexture">
+        <Texture name="$parent" file="Interface\ChatFrame\ChatFrameTab-HighlightRight" alphaMode="ADD" parentKey="rightHighlightTexture">
+      </Layer>
+    </Layers>
   ]]--
 
 
@@ -81,37 +81,37 @@
     --new fadein func
     FCF_FadeInChatFrame = function(chatFrame)
     
-    	local frameName = chatFrame:GetName()
-    	chatFrame.hasBeenFaded = true	
-    	
-    	for index, value in pairs(CHAT_TEXTURES) do
-    		local object = _G[frameName..value]
-    		if ( object:IsShown() ) then
+      local frameName = chatFrame:GetName()
+      chatFrame.hasBeenFaded = true  
+      
+      for index, value in pairs(CHAT_TEXTURES) do
+        local object = _G[frameName..value]
+        if ( object:IsShown() ) then
           object:SetAlpha(chatFrame.oldAlpha or 1)
         end
-    	end
-    	
-    	local chatTab = _G[frameName.."Tab"]
-    	if chatTab then
-    	  chatTab:SetAlpha(chatTab.mouseOverAlpha or 1)
+      end
+      
+      local chatTab = _G[frameName.."Tab"]
+      if chatTab then
+        chatTab:SetAlpha(chatTab.mouseOverAlpha or 1)
       end
     end
 
     --new fadeout func
     FCF_FadeOutChatFrame = function(chatFrame)
-    	local frameName = chatFrame:GetName()
-    	chatFrame.hasBeenFaded = false
-    	
-    	for index, value in pairs(CHAT_TEXTURES) do
-    		local object = _G[frameName..value]
-    		if ( object:IsShown() ) then
+      local frameName = chatFrame:GetName()
+      chatFrame.hasBeenFaded = false
+      
+      for index, value in pairs(CHAT_TEXTURES) do
+        local object = _G[frameName..value]
+        if ( object:IsShown() ) then
           object:SetAlpha(0)
         end
-    	end
-    	
-    	local chatTab = _G[frameName.."Tab"]
-    	if chatTab then
-    	  chatTab:SetAlpha(chatTab.noMouseAlpha)
+      end
+      
+      local chatTab = _G[frameName.."Tab"]
+      if chatTab then
+        chatTab:SetAlpha(chatTab.noMouseAlpha)
       end
     end    
 

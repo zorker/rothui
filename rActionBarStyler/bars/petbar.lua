@@ -25,6 +25,7 @@
     cfg.applyDragFunctionality(bar,barcfg.userplaced,barcfg.locked)
   
     PetActionBarFrame:SetParent(bar)
+    PetActionBarFrame:EnableMouse(false)
     
     for i=1, num do
       local button = _G["PetActionButton"..i]

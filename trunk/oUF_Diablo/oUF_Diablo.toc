@@ -1,0 +1,18 @@
+## Interface: 40000
+## Author: zork	
+## Title: oUF_Diablo
+## Notes: zork's oUF layout with Diablo flavour!
+## RequiredDeps: oUF
+## X-Category: UnitFrame
+
+config.lua
+
+libs\functions.lua
+libs\tags.lua
+libs\units.lua
+
+units\player.lua
+units\target.lua
+units\tot.lua
+units\pet.lua
+units\focus.lua

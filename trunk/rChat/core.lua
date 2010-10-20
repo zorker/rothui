@@ -41,6 +41,8 @@
     local tab = _G['ChatFrame'..i..'Tab']
     if tab then
       tab:GetFontString():SetFont(NAMEPLATE_FONT, 11, "THINOUTLINE")
+      --fix for color and alpha of undocked frames
+      tab:GetFontString():SetTextColor(1,0.7,0)
       tab:SetAlpha(1)
     end
   end

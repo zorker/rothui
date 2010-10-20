@@ -37,7 +37,7 @@
   -- SPAWN TARGETTARGET UNIT
   ---------------------------------------------
 
-  if unitconfig.show then
+  if unitcfg.show then
     oUF:RegisterStyle("diablo:targettarget", createStyle)
     oUF:SetActiveStyle("diablo:targettarget")
     oUF:Spawn("targettarget", "oUF_DiabloTargetTargetFrame")

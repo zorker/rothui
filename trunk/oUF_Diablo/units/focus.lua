@@ -37,7 +37,7 @@
   -- SPAWN FOCUS UNIT
   ---------------------------------------------
 
-  if unitconfig.show then
+  if unitcfg.show then
     oUF:RegisterStyle("diablo:focus", createStyle)
     oUF:SetActiveStyle("diablo:focus")
     oUF:Spawn("focus", "oUF_DiabloFocusFrame")  

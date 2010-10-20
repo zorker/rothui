@@ -387,8 +387,9 @@
   --aura icon func
   createAuraIcon = function(icons, button)
     local self = icons:GetParent()
+    local bw = button:GetWidth()
     if (not button.time) then
-      button.time = func.createFontString(button, cfg.font, 16, "THINOUTLINE")
+      button.time = func.createFontString(button, cfg.font, bw/1.8, "THINOUTLINE")
       button.time:SetPoint("BOTTOM", 0, -4)
       button.time:SetJustifyH("CENTER")
       button.time:SetTextColor(1, .8, 0)
@@ -399,7 +400,6 @@
     button.BuffAlphaValue = 1
     --button.isDebuff = debuff
     --button.cd:SetReverse()
-    local bw = button:GetWidth()
     button.cd:SetPoint("TOPLEFT", 1, -1)
     button.cd:SetPoint("BOTTOMRIGHT", -1, 1)
     button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
@@ -410,12 +410,12 @@
     button.count:SetPoint("TOPRIGHT", 4, 4)
     button.count:SetTextColor(0.75,0.75,0.75)
     --fix the count on aurawatch, make the count fontsize button size dependend
-    button.count:SetFont(cfg.font,bw/1.7,"THINOUTLINE")
+    button.count:SetFont(cfg.font,bw/1.8,"THINOUTLINE")
     button.overlay:SetTexture("Interface\\AddOns\\rTextures\\gloss2")
     button.overlay:SetTexCoord(0,1,0,1)
     button.overlay:SetPoint("TOPLEFT", -1, 1)
     button.overlay:SetPoint("BOTTOMRIGHT", 1, -1)
-    button.overlay:SetVertexColor(0.4,0.35,0.35,1)
+    button.overlay:SetVertexColor(0.5,0.45,0.45,1)
     button.overlay:Show()
     button.overlay.Hide = function() end
     

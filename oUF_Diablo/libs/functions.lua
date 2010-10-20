@@ -146,7 +146,7 @@
     if f.cfg.castbar.latency and f.cfg.style == "player" then
       c.SafeZone = c:CreateTexture(nil,"OVERLAY",nil,-8)
       c.SafeZone:SetTexture(f.cfg.castbar.texture)
-      c.SafeZone:SetVertexColor(0.8,0,0,0.4)
+      c.SafeZone:SetVertexColor(0.6,0,0,0.4)
       c.SafeZone:SetPoint("TOPRIGHT")
       c.SafeZone:SetPoint("BOTTOMRIGHT")
     end

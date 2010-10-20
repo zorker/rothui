@@ -75,7 +75,7 @@
       },
       auras = {
         show = true,
-        size = 26,
+        size = 28,
         onlyShowPlayerBuffs = false,
         onlyShowPlayerDebuffs = false,
       },
@@ -86,7 +86,7 @@
         swapcolors = true,
         scale = 0.82,
         texture = "Interface\\AddOns\\rTextures\\statusbar256",
-        color = {r = 1, g = 0.66, b = 0, },
+        color = {r = 190/255, g = 130/255, b = 30/255, },
         pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = -250 }, 
       },      
       art = {

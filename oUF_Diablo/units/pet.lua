@@ -37,7 +37,7 @@
   -- SPAWN PET UNIT
   ---------------------------------------------
 
-  if unitconfig.show then
+  if unitcfg.show then
     oUF:RegisterStyle("diablo:pet", createStyle)
     oUF:SetActiveStyle("diablo:pet")
     oUF:Spawn("pet", "oUF_DiabloPetFrame")  

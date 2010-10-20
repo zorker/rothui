@@ -249,7 +249,7 @@
     bar.galaxy[3]:SetAlpha(d)
     
     local powertype = select(2, UnitPowerType(unit))
-    local color = PowerBarColor[powertype]
+    local color = cfg.powercolors[powertype]
 
     if color and cfg.automana then
       bar.Filling:SetVertexColor(color.r, color.g, color.b)
@@ -452,6 +452,14 @@
 
     self.Health.PostUpdate = updatePlayerHealth
     self.Power.PostUpdate = updatePlayerPower
+    
+    --fix to update druid power correctly when cat has 100 power
+    self.Power:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+    self.Power:SetScript("OnEvent", function(s,e)
+      if e == "UPDATE_SHAPESHIFT_FORM" then
+        updatePlayerPower(s,"player",UnitPower("player"),UnitPowerMax("player"))
+      end
+    end)
     
     --create art textures do this now for correct frame stacking
     createAngelFrame(self)

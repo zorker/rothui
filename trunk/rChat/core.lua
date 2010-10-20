@@ -41,6 +41,7 @@
     local tab = _G['ChatFrame'..i..'Tab']
     if tab then
       tab:GetFontString():SetFont(NAMEPLATE_FONT, 11, "THINOUTLINE")
+      tab:SetAlpha(1)
     end
   end
 

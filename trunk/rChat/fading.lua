@@ -49,7 +49,8 @@
   end
 
   --disable tab flashing
-  FCF_FlashTab = function() end    
+  FCF_FlashTab = function() end
+  FCFTab_UpdateAlpha = function() end
 
   --new fadein func
   FCF_FadeInChatFrame = function(chatFrame)

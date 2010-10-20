@@ -152,6 +152,18 @@
     [4] = {r = 0.9, g = 0.8, b = 0.35, }, -- yellow
     [5] = {r = 0.35, g = 0.9,   b = 0.9, }, -- runic
   }
+  
+  cfg.powercolors = {
+    ["MANA"] = { r = 0, g = 0.4, b = 1 },
+    ["RAGE"] = { r = 1.00, g = 0.00, b = 0.00 },
+    ["FOCUS"] = { r = 1.00, g = 0.50, b = 0.25 },
+    ["ENERGY"] = { r = 1.00, g = 0.75, b = 0.10 },
+    ["HAPPINESS"] = { r = 0.00, g = 1.00, b = 1.00 },
+    ["RUNES"] = { r = 0.50, g = 0.50, b = 0.50 },
+    ["RUNIC_POWER"] = { r = 0.00, g = 0.82, b = 1.00 },
+    ["AMMOSLOT"] = { r = 0.80, g = 0.60, b = 0.00 },
+    ["FUEL"] = { r = 0.0, g = 0.55, b = 0.5 },
+  }
 
   --font
   cfg.font = "FONTS\\FRIZQT__.ttf"   

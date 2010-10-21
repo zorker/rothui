@@ -436,6 +436,7 @@
   
     --apply config to self
     self.cfg = cfg.units.player
+    self.cfg.style = "player"
     
     --init
     initUnitParameters(self)

@@ -12,7 +12,7 @@ libs\tags.lua
 libs\units.lua
 
 units\player.lua
-##units\target.lua
-##units\tot.lua
+units\target.lua
+##units\targettarget.lua
 ##units\pet.lua
 ##units\focus.lua

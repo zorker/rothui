@@ -36,7 +36,7 @@
     self:SetScale(self.cfg.scale)
     self:SetPoint(self.cfg.pos.a1,self.cfg.pos.af,self.cfg.pos.a2,self.cfg.pos.x,self.cfg.pos.y)
     self.menu = func.menu
-    self:RegisterForClicks('AnyDown')
+    self:RegisterForClicks("AnyDown")
     self:SetScript("OnEnter", UnitFrame_OnEnter)
     self:SetScript("OnLeave", UnitFrame_OnLeave)
     --func.createBackdrop(self)
@@ -482,7 +482,9 @@
     end
 
     --castbar
-    func.createCastbar(self)
+    if self.cfg.castbar.show then
+      func.createCastbar(self)
+    end
 
     --auras
     if self.cfg.auras.show then

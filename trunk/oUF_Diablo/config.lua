@@ -61,15 +61,15 @@
       icons = {
         pvp = {
           show = false,
-          pos = { a1 = "CENTER", a2 = "CENTER", x = -95, y = 42 }, --position will be in relation to self object
+          pos = { a1 = "CENTER", a2 = "CENTER", x = -95, y = 42 }, --position in relation to self object
         },
         combat = {
           show = false,
-          pos = { a1 = "CENTER", a2 = "CENTER", x = 0, y = 86 }, --position will be in relation to self object
+          pos = { a1 = "CENTER", a2 = "CENTER", x = 0, y = 86 }, --position in relation to self object
         },
         resting = {
           show = true,
-          pos = { a1 = "CENTER", a2 = "CENTER", x = -72, y = 60 }, --position will be in relation to self object
+          pos = { a1 = "CENTER", a2 = "CENTER", x = -72, y = 60 }, --position in relation to self object
         },
       },
       auras = {

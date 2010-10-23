@@ -1,6 +1,6 @@
 ## Interface: 40000
-## Author: roth
+## Author: zork
 ## Title: rMinimap
-## Notes: rather simple Minimap
+## Notes: Minimap with Diablo flavour.
 
 rMinimap.lua

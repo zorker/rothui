@@ -5,6 +5,14 @@
   -----------------------------
   -- FUNCTIONS
   -----------------------------
+  
+  --colorswitcher allows you swap the fore and the backgroundcolor
+  local colorswitcher = true
+  local showhpvalue = true
+  
+  -----------------------------
+  -- FUNCTIONS
+  -----------------------------
 
   --set unit name func
   local applyNameText = function(f,nameText)
@@ -42,6 +50,47 @@
     else
       f.na:SetTextColor(r,g,b)
     end
+    if colorswitcher then
+      healthBar.bg:SetVertexColor(r,g,b,0.8)
+      healthBar:SetStatusBarColor(0.15*r,0.15*g,0.15*b,0.9)
+    end
+  end
+  
+  --number format func
+  local numFormat = function(v)
+    local string = ""
+    if v > 1E6 then
+      string = (floor((v/1E6)*10)/10).."m"
+    elseif v > 1E3 then
+      string = (floor((v/1E3)*10)/10).."k"
+    else
+      string = v
+    end  
+    return string
+  end
+  
+  --update healthbar function (only called when certain config settings are made)
+  local updateHealthbar = function(healthBar,value)
+    if healthBar and value then
+      local min, max = healthBar:GetMinMaxValues()
+      local p = floor(value/max*100)
+      if colorswitcher then
+        if p == 100 then
+          healthBar.bg:SetWidth(0.01) --fix (0) makes the bar go anywhere
+        elseif p < 100 then
+          local w = healthBar.w
+          healthBar.bg:SetWidth(w-(w*p/100)) --calc new width of bar based on size of healthbar
+        end
+      end
+      if showhpvalue then
+        if p < 100 then
+          healthBar.hpval:SetText(numFormat(value).." / "..p.."%")
+        else
+          healthBar.hpval:SetText("")
+        end
+      end      
+    end
+  
   end
   
   --move raid icon func
@@ -71,7 +120,14 @@
   local createHealthbarBG = function(healthBar)
     --hp bg
     local t = healthBar:CreateTexture(nil,"BACKGROUND",-8)
-    t:SetAllPoints(healthBar)
+    if colorswitcher then
+      t:SetPoint("TOP",0,0)
+      t:SetPoint("RIGHT",0,0)
+      t:SetPoint("BOTTOM",0,0)
+      t:SetWidth(0.01)
+    else
+      t:SetAllPoints(healthBar)
+    end
     t:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
     t:SetVertexColor(0,0,0,0.4)
     healthBar.bg = t
@@ -93,7 +149,14 @@
     lvl:SetJustifyH("LEFT")    
     na:SetPoint("LEFT", lvl, "RIGHT", 0, 0) --left point of name will be right point of level
     f.na = na
-    f.lvl = lvl    
+    f.lvl = lvl
+    if showhpvalue then
+      local hp = healthBar:CreateFontString(nil, "OVERLAY")
+      hp:SetFont(STANDARD_TEXT_FONT, 10, "THINOUTLINE")
+      hp:SetPoint("RIGHT",-1,0)
+      hp:SetJustifyH("RIGHT")
+      healthBar.hpval = hp
+    end
   end
   
   --update the castbar positioning
@@ -102,6 +165,12 @@
     castBar:SetPoint("CENTER",-10,-29)
     castBar.border:ClearAllPoints()
     castBar.border:SetPoint("CENTER",-19,-29)
+    --change castbar color to dark red if the cast is shielded
+    if castBar.shield:IsShown() == 1 then
+      castBar:SetStatusBarColor(0.6,0,0)
+    else
+      castBar:SetStatusBarColor(1,0.7,0)
+    end
     castBar.shield:ClearAllPoints()
     castBar.shield:SetPoint("CENTER",-19,-29)
     castBar.icon:ClearAllPoints()
@@ -121,6 +190,8 @@
     
     castbaricon:SetTexCoord(0.1,0.9,0.1,0.9)
     castBar.icon = castbaricon
+    
+    castBar:SetStatusBarColor(1,0.7,0)
 
     createCastbarBG(castBar)    
     updateCastbarPosition(castBar)
@@ -178,7 +249,9 @@
     
     --init the size of health and castbar
     initHealthCastbarSize(healthBar,castBar)
-    
+    --creaate healthbar bg
+    createHealthbarBG(healthBar)
+        
     --create new fontstrings
     createNewFontStrings(f,healthBar)
     
@@ -193,15 +266,18 @@
     --move some icons
     moveBossIcon(f, bossIcon)
     moveRaidIcon(raidIcon,healthBar)
-
-    --creaate healthbar bg
-    createHealthbarBG(healthBar)
     
     --initialize the castbars
     initCastbars(castBar,castborderTexture, shield, castbaricon)
     
     --disable some stuff
     hideBlizz(nameText,levelText,dragonTexture)
+    
+    highlightTexture:SetAlpha(0.2)
+    
+    if colorswitcher or showhpvalue then
+      healthBar:SetScript("OnValueChanged", updateHealthbar)
+    end
     
     f:HookScript("OnShow", function(s)
       updateStyle(s)      
@@ -213,8 +289,7 @@
 
 
   --STYLE NAMEPLATE FUNC
-  local styleNamePlate = function(f)
-    
+  local styleNamePlate = function(f)    
     f.styled = initStyle(f)
   end
 

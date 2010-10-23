@@ -3,7 +3,7 @@
   -- // zork - 2010
   
   -----------------------------
-  -- FUNCTIONS
+  -- CONFIG
   -----------------------------
   
   --colorswitcher allows you swap the fore and the backgroundcolor
@@ -46,13 +46,13 @@
     r,g,b = floor(r*100+.5)/100, floor(g*100+.5)/100, floor(b*100+.5)/100
     if r==0 and g==0 and b==1 then
       --dark blue color of members of the own faction is barely readable
-      f.na:SetTextColor(0.7,0.7,0.7)
+      f.na:SetTextColor(1,0,1)
     else
       f.na:SetTextColor(r,g,b)
     end
     if colorswitcher then
-      healthBar.bg:SetVertexColor(r,g,b,0.8)
-      healthBar:SetStatusBarColor(0.15*r,0.15*g,0.15*b,0.9)
+      healthBar.bg:SetVertexColor(r,g,b,0.9)
+      healthBar:SetStatusBarColor(0.2*r,0.2*g,0.2*b,0.9)
     end
   end
   

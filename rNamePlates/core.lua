@@ -6,9 +6,9 @@
   -- CONFIG
   -----------------------------
   
-  --colorswitcher allows you swap the fore and the backgroundcolor
-  local colorswitcher = true
-  local showhpvalue = true
+  local colorswitcher = false --true/false will swap back- and foregroundcolor
+  local showhpvalue   = true --true/false will enable disable of hp value on the nameplate
+  local alwaysshowhp  = true --true/false will make the hp value appear even if the unit has 100% life, requires showhpvalue to be true
   
   -----------------------------
   -- FUNCTIONS
@@ -39,6 +39,15 @@
     r,g,b = floor(r*100+.5)/100, floor(g*100+.5)/100, floor(b*100+.5)/100
     f.lvl:SetTextColor(r,g,b)
   end
+  
+  local fixHealtbarColor = function(healthBar, r, g, b, a)
+    if (r == healthBar.bg.col.r) and (g == healthBar.bg.col.g) and (b == healthBar.bg.col.b) then
+      --print('new: r'..r..'g'..g..'b'..b)
+      --print('old: r'..healthBar.bg.col.r..'g'..healthBar.bg.col.g..'b'..healthBar.bg.col.b)
+      print('wrong color placement found. fixing color now.')
+      healthBar:SetStatusBarColor(0.2*r,0.2*g,0.2*b,0.9)
+    end
+  end
 
   --apply enemycolor func
   local applyEnemyColor = function(f,healthBar)
@@ -53,6 +62,15 @@
     if colorswitcher then
       healthBar.bg:SetVertexColor(r,g,b,0.9)
       healthBar:SetStatusBarColor(0.2*r,0.2*g,0.2*b,0.9)
+      --sometimes the statusbar gets recolored, trying to catch that
+      healthBar.bg.col = {}
+      healthBar.bg.col.r = r
+      healthBar.bg.col.g = g
+      healthBar.bg.col.b = b
+      if not healthBar.hooked then
+        hooksecurefunc(healthBar, "SetStatusBarColor", fixHealtbarColor)
+        healthBar.hooked = true
+      end
     end
   end
   
@@ -73,6 +91,7 @@
   local updateHealthbar = function(healthBar,value)
     if healthBar and value then
       local min, max = healthBar:GetMinMaxValues()
+      if value == 'x' then value = max end
       local p = floor(value/max*100)
       if colorswitcher then
         if p == 100 then
@@ -84,6 +103,8 @@
       end
       if showhpvalue then
         if p < 100 then
+          healthBar.hpval:SetText(numFormat(value).." / "..p.."%")
+        elseif p == 100 and alwaysshowhp then
           healthBar.hpval:SetText(numFormat(value).." / "..p.."%")
         else
           healthBar.hpval:SetText("")
@@ -167,7 +188,7 @@
     castBar.border:SetPoint("CENTER",-19,-29)
     --change castbar color to dark red if the cast is shielded
     if castBar.shield:IsShown() == 1 then
-      castBar:SetStatusBarColor(0.6,0,0)
+      castBar:SetStatusBarColor(0.7,0,0)
     else
       castBar:SetStatusBarColor(1,0.7,0)
     end
@@ -277,6 +298,9 @@
     
     if colorswitcher or showhpvalue then
       healthBar:SetScript("OnValueChanged", updateHealthbar)
+      if alwaysshowhp then
+        updateHealthbar(healthBar,'x')
+      end
     end
     
     f:HookScript("OnShow", function(s)

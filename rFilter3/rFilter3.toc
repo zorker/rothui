@@ -1,0 +1,9 @@
+## Interface: 40000
+## Author: zork
+## Version: 0.1
+## Title: rFilter3
+## Notes: Simple buff, debuff tracking for units
+## SavedVariables: rFilter3
+
+config.lua
+core.lua

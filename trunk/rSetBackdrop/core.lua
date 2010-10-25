@@ -52,6 +52,7 @@
     local framename = "rSBDT_Icon"..i
     
     local f = CreateFrame("FRAME",framename,UIParent)
+    f:SetFrameLevel(1)
     f:SetSize(l.size,l.size)
     f:SetPoint(l.pos.a1,l.pos.af,l.pos.a2,l.pos.x,l.pos.y)
     
@@ -82,9 +83,39 @@
       f.t = t
     end
     
+    if l.innerglow and l.showinnerglow then
+      
+      local s = CreateFrame("FRAME",nil,f)
+      s:SetFrameLevel(2)
+      s:SetPoint("TOPLEFT",f,"TOPLEFT",l.innerglow.padding,-l.innerglow.padding)
+      s:SetPoint("BOTTOMRIGHT",f,"BOTTOMRIGHT",-l.innerglow.padding,l.innerglow.padding)
+      
+      backdrop_innerglow = { 
+        bgFile = l.innerglow.bgFile, 
+        edgeFile = l.innerglow.edgeFile,
+        tile = l.innerglow.tile,
+        tileSize = l.innerglow.tileSize, 
+        edgeSize = l.innerglow.edgeSize, 
+        insets = { 
+          left = l.innerglow.inset, 
+          right = l.innerglow.inset, 
+          top = l.innerglow.inset, 
+          bottom = l.innerglow.inset,
+        },
+      }
+      
+      s:SetBackdrop(backdrop_innerglow)
+      s:SetBackdropColor(l.innerglow.bgColor.r, l.innerglow.bgColor.g, l.innerglow.bgColor.b, l.innerglow.bgColor.a)
+      s:SetBackdropBorderColor(l.innerglow.edgeColor.r, l.innerglow.edgeColor.g, l.innerglow.edgeColor.b, l.innerglow.edgeColor.a)
+      
+      f.g = s
+      
+    end
+    
     if l.subframe and l.showsubframe then
       
       local s = CreateFrame("FRAME",nil,f)
+      s:SetFrameLevel(3)
       s:SetPoint("TOPLEFT",f,"TOPLEFT",l.subframe.padding,-l.subframe.padding)
       s:SetPoint("BOTTOMRIGHT",f,"BOTTOMRIGHT",-l.subframe.padding,l.subframe.padding)
       

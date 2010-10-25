@@ -76,8 +76,13 @@
     
     if l.useicontexture then
       local t = f:CreateTexture(nil, "LOW",nil,-8)
-      t:SetPoint("TOPLEFT",f,"TOPLEFT",l.inset,-l.inset)
-      t:SetPoint("BOTTOMRIGHT",f,"BOTTOMRIGHT",-l.inset,l.inset)
+      if l.iconpadding then
+        t:SetPoint("TOPLEFT",f,"TOPLEFT",l.iconpadding,-l.iconpadding)
+        t:SetPoint("BOTTOMRIGHT",f,"BOTTOMRIGHT",-l.iconpadding,l.iconpadding)
+      else
+        t:SetPoint("TOPLEFT",f,"TOPLEFT",l.inset,-l.inset)
+        t:SetPoint("BOTTOMRIGHT",f,"BOTTOMRIGHT",-l.inset,l.inset)
+      end
       t:SetTexture(icon_texture)
       t:SetTexCoord(0.1,0.9,0.1,0.9)
       f.t = t

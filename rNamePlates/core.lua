@@ -6,7 +6,7 @@
   -- CONFIG
   -----------------------------
   
-  local colorswitcher = false --true/false will swap back- and foregroundcolor
+  local colorswitcher = true --true/false will swap back- and foregroundcolor
   local showhpvalue   = true --true/false will enable disable of hp value on the nameplate
   local alwaysshowhp  = true --true/false will make the hp value appear even if the unit has 100% life, requires showhpvalue to be true
   
@@ -16,7 +16,7 @@
 
   --set unit name func
   local applyNameText = function(f,nameText)
-    local txt = nameText:GetText()
+    local txt = nameText:GetText() or ""
     f.na:SetText(txt)
   end
   
@@ -27,7 +27,7 @@
       elite = "+" 
     end   
     if bossIcon:IsShown() ~= 1 then
-      f.lvl:SetText(levelText:GetText()..elite)
+      f.lvl:SetText((levelText:GetText() or "")..elite)
     else
       f.lvl:SetText("")
     end

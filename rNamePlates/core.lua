@@ -40,15 +40,6 @@
     f.lvl:SetTextColor(r,g,b)
   end
   
-  local fixHealtbarColor = function(healthBar, r, g, b, a)
-    if (r == healthBar.bg.col.r) and (g == healthBar.bg.col.g) and (b == healthBar.bg.col.b) then
-      --print('new: r'..r..'g'..g..'b'..b)
-      --print('old: r'..healthBar.bg.col.r..'g'..healthBar.bg.col.g..'b'..healthBar.bg.col.b)
-      print('wrong color placement found. fixing color now.')
-      healthBar:SetStatusBarColor(0.2*r,0.2*g,0.2*b,0.9)
-    end
-  end
-
   --apply enemycolor func
   local applyEnemyColor = function(f,healthBar)
     local r,g,b = healthBar:GetStatusBarColor()
@@ -61,16 +52,9 @@
     end
     if colorswitcher then
       healthBar.bg:SetVertexColor(r,g,b,0.9)
-      healthBar:SetStatusBarColor(0.2*r,0.2*g,0.2*b,0.9)
-      --sometimes the statusbar gets recolored, trying to catch that
-      healthBar.bg.col = {}
-      healthBar.bg.col.r = r
-      healthBar.bg.col.g = g
-      healthBar.bg.col.b = b
-      if not healthBar.hooked then
-        hooksecurefunc(healthBar, "SetStatusBarColor", fixHealtbarColor)
-        healthBar.hooked = true
-      end
+      healthBar.new:SetVertexColor(0.2*r,0.2*g,0.2*b,0.9)
+      healthBar:SetStatusBarTexture("")
+      --hide the default healthbar it will error out sometimes
     end
   end
   
@@ -146,6 +130,13 @@
       t:SetPoint("RIGHT",0,0)
       t:SetPoint("BOTTOM",0,0)
       t:SetWidth(0.01)
+      local n = healthBar:CreateTexture(nil,"BACKGROUND",-8)
+      n:SetPoint("TOP",0,0)
+      n:SetPoint("LEFT",0,0)
+      n:SetPoint("BOTTOM",0,0)
+      n:SetPoint("RIGHT", t, "LEFT", 0, 0) --right point of n will anchor left point of t
+      n:SetTexture("Interface\\TargetingFrame\\UI-TargetingFrame-BarFill")
+      healthBar.new = n
     else
       t:SetAllPoints(healthBar)
     end
@@ -182,10 +173,14 @@
   
   --update the castbar positioning
   local updateCastbarPosition = function(castBar)
-    castBar:ClearAllPoints()
-    castBar:SetPoint("CENTER",-10,-29)
+    
+    --local point, relativeTo, relativePoint, xOfs, yOfs = castBar:GetPoint(n)
+    --xOfs = floor(xOfs+0.5)
+    --yOfs = floor(yOfs+0.5)
+    
     castBar.border:ClearAllPoints()
     castBar.border:SetPoint("CENTER",-19,-29)
+
     --change castbar color to dark red if the cast is shielded
     if castBar.shield:IsShown() == 1 then
       castBar:SetStatusBarColor(0.7,0,0)
@@ -194,8 +189,15 @@
     end
     castBar.shield:ClearAllPoints()
     castBar.shield:SetPoint("CENTER",-19,-29)
+
+    castBar:SetPoint("RIGHT",castBar.border,-1,0)
+    castBar:SetPoint("TOP",castBar.border,0,-10)
+    castBar:SetPoint("BOTTOM",castBar.border,0,12)
+    castBar:SetPoint("LEFT",castBar.border,24,0)
+
     castBar.icon:ClearAllPoints()
-    castBar.icon:SetPoint("LEFT",castBar,-20,0)
+    castBar.icon:SetPoint("LEFT",castBar.border,3,0)
+    
   end
   
   --init the castbar objects
@@ -213,9 +215,7 @@
     castBar.icon = castbaricon
     
     castBar:SetStatusBarColor(1,0.7,0)
-
     createCastbarBG(castBar)    
-    updateCastbarPosition(castBar)
     
     castBar:HookScript("OnShow", function(s)
       s.bg:Show()
@@ -346,8 +346,8 @@
   a:SetScript("OnEvent", function(self, event)
     if(event=="PLAYER_LOGIN") then
       SetCVar("ShowClassColorInNameplate",1)--1
-      SetCVar("bloattest",1)--0.0
-      SetCVar("bloatnameplates",0.0)--0.0
+      SetCVar("bloattest",0)--0.0
+      SetCVar("bloatnameplates",0)--0.0
       SetCVar("spreadnameplates",0)--1
       SetCVar("bloatthreat",0)--1
       self:SetScript("OnUpdate", searchNamePlates)

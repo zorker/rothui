@@ -1,11 +1,6 @@
 
   -- // rFilter3
   -- // zork - 2010
-
-  local player_name, _ = UnitName("player")
-  local _, player_class = UnitClass("player")
-  rFilter3 = rFilter3 or {}
-  local framesLocked = false
   
   --get the addon namespace
   local addon, ns = ...  

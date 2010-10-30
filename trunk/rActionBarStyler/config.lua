@@ -21,7 +21,7 @@
       buttonsize      = 26,
       buttonspacing   = 5,
       barscale        = 0.82,
-      uselayout2x6    = true,
+      uselayout2x6    = false,
       userplaced      = false, --want to place the bar somewhere else?
       locked          = false, --frame locked
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 22 }, 
@@ -31,7 +31,7 @@
       buttonsize      = 26,
       buttonspacing   = 5,
       barscale        = 0.82,
-      uselayout2x6    = true,
+      uselayout2x6    = false,
       showonmouseover = false,
       userplaced      = false, --want to place the bar somewhere else?
       locked          = false, --frame locked
@@ -142,7 +142,9 @@
   -- SPECIAL CHARACTER CONDITIONS
   -----------------------------------
   if playername == "Rothar" then
-    cfg.bars.stancebar.disable = true
+    cfg.bars.bar1.uselayout2x6    = true
+    cfg.bars.bar2.uselayout2x6    = true
+    cfg.bars.stancebar.disable    = true
   end  
 
   --font

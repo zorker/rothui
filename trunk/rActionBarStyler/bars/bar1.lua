@@ -66,7 +66,7 @@
   bar:RegisterEvent("BAG_UPDATE")
   bar:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
-      local button
+      local button, buttons
       for i = 1, NUM_ACTIONBAR_BUTTONS do
         button = _G["ActionButton"..i]
         self:SetFrameRef("ActionButton"..i, button)

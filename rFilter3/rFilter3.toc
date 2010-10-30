@@ -1,6 +1,6 @@
 ## Interface: 40000
 ## Author: zork
-## Version: 0.2
+## Version: 0.3
 ## Title: rFilter3
 ## Notes: Simple buff, debuff and cooldown tracking for units and spells
 

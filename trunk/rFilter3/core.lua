@@ -100,7 +100,12 @@
   local checkDebuff = function(f)
     if f.name and f.rank then
       local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spellID = UnitAura(f.unit, f.name, f.rank, "HARMFUL")
-      if name then
+      if name and (not f.ismine or (f.ismine and caster == "player")) then
+        if caster == "player" and cfg.highlightPlayerSpells then
+          f.iconframe.border:SetVertexColor(0.2,0.6,0.8,1)
+        elseif cfg.highlightPlayerSpells then
+          f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
+        end        
         f.iconframe.icon:SetAlpha(f.alpha.found.icon)
         f.iconframe:SetAlpha(f.alpha.found.frame)
         if f.desaturate then
@@ -125,6 +130,9 @@
         f.iconframe.time:SetText("")
         f.iconframe.count:SetText("")
         f.iconframe.time:SetTextColor(1, 0.8, 0)
+        if cfg.highlightPlayerSpells then
+          f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
+        end 
         if f.desaturate then
           f.iconframe.icon:SetDesaturated(1)
         end
@@ -135,7 +143,12 @@
   local checkBuff = function(f)
     if f.name and f.rank then
       local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spellID = UnitAura(f.unit, f.name, f.rank, "HELPFUL")
-      if name then
+      if name and (not f.ismine or (f.ismine and caster == "player")) then
+        if caster == "player" and cfg.highlightPlayerSpells then
+          f.iconframe.border:SetVertexColor(0.2,0.6,0.8,1)
+        elseif cfg.highlightPlayerSpells then
+          f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
+        end           
         f.iconframe.icon:SetAlpha(f.alpha.found.icon)
         f.iconframe:SetAlpha(f.alpha.found.frame)
         if f.desaturate then
@@ -160,6 +173,9 @@
         f.iconframe.time:SetText("")
         f.iconframe.count:SetText("")
         f.iconframe.time:SetTextColor(1, 0.8, 0)
+        if cfg.highlightPlayerSpells then
+          f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
+        end 
         if f.desaturate then
           f.iconframe.icon:SetDesaturated(1)
         end
@@ -178,6 +194,7 @@
           f.iconframe.icon:SetAlpha(f.alpha.cooldown.icon)
           f.iconframe:SetAlpha(f.alpha.cooldown.frame)
           f.iconframe.count:SetText("")
+          f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
           if f.desaturate then
             f.iconframe.icon:SetDesaturated(1)
           end
@@ -193,6 +210,7 @@
           f.iconframe.time:SetText("RDY")
           f.iconframe.count:SetText("")
           f.iconframe.time:SetTextColor(0, 0.8, 0)
+          f.iconframe.border:SetVertexColor(0.4,0.6,0.2,1)
           if f.desaturate then
             f.iconframe.icon:SetDesaturated(nil)
           end

@@ -36,22 +36,27 @@
       HelpMicroButton,
     }  
 
-    for _, f in pairs(MicroButtons) do
-      f:SetParent(bar)
+    local function movebuttons() 
+      for _, f in pairs(MicroButtons) do
+        f:SetParent(bar)
+      end
+      CharacterMicroButton:ClearAllPoints();
+      CharacterMicroButton:SetPoint("BOTTOMLEFT", 0, 0)
     end
-    CharacterMicroButton:ClearAllPoints();
-    CharacterMicroButton:SetPoint("BOTTOMLEFT", 0, 0)
+    
+    movebuttons()
+
+    local switcher = -1
+    
+    local function lighton(alpha)
+      for _, f in pairs(MicroButtons) do
+        f:SetAlpha(alpha)
+        switcher = alpha
+      end
+    end   
     
     if barcfg.showonmouseover then    
       
-      local switcher = -1
-      
-      local function lighton(alpha)
-        for _, f in pairs(MicroButtons) do
-          f:SetAlpha(alpha)
-          switcher = alpha
-        end
-      end    
       bar:EnableMouse(true)
       bar:SetScript("OnEnter", function(self) lighton(1) end)
       bar:SetScript("OnLeave", function(self) lighton(0) end)  
@@ -60,9 +65,7 @@
         f:HookScript("OnEnter", function(self) lighton(1) end)
         f:HookScript("OnLeave", function(self) lighton(0) end)
       end
-      bar:SetScript("OnEvent", function(self) 
-        lighton(0) 
-      end)
+
       bar:RegisterEvent("PLAYER_ENTERING_WORLD")
       
       --fix for the talent button display while micromenu onmouseover
@@ -76,5 +79,18 @@
       hooksecurefunc(TalentMicroButton, "SetAlpha", rABS_TalentButtonAlphaFunc)
       
     end
+    
+    bar:SetScript("OnEvent", function(self,event) 
+      if event == "PLAYER_TALENT_UPDATE" or event == "ACTIVE_TALENT_GROUP_CHANGED" then
+        if not InCombatLockdown() then
+          movebuttons()
+        end        
+      elseif event == "PLAYER_ENTERING_WORLD" then
+        lighton(0) 
+      end
+    end)
+    
+    bar:RegisterEvent("PLAYER_TALENT_UPDATE")
+    bar:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 
 end

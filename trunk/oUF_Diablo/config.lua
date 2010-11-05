@@ -82,11 +82,10 @@
         show = true,
         latency = true,
         classcolored = false,
-        swapcolors = true,
-        scale = 0.82,
-        texture = "Interface\\AddOns\\rTextures\\statusbar256",
-        color = {r = 190/255, g = 130/255, b = 30/255, },
-        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = -250 }, 
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        scale = 1,
+        color = {r = 0.9, g = 0.59, b = 0, },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 180.5 }, 
       },      
       art = {
         actionbarbackground = {
@@ -114,15 +113,64 @@
     -- TARGET
     target = {
       show = true,
+      scale = 1,
+      pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 250 }, 
+      health = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      power = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      castbar = {
+        show = true,
+        latency = true,
+        classcolored = false,
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        scale = 1,
+        color = {r = 0.9, g = 0.59, b = 0, },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 350 }, 
+      },  
     },
     targettarget = {
       show = true,
+      scale = 1,
+      pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -195, y = 250 }, 
+      health = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      power = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
     },
     pet = {
       show = true,
+      scale = 0.9,
+      pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 10, y = -140 }, 
+      health = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      power = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      portrait = {
+        show = true,
+        use3D = true,
+      },
     },
     focus = {
       show = true,
+      scale = 0.9,
+      pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 10, y = 40 }, 
+      health = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      power = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      portrait = {
+        show = true,
+        use3D = true,
+      },
     },
   }
 
@@ -162,6 +210,13 @@
     ["RUNIC_POWER"] = { r = 0.00, g = 0.82, b = 1.00 },
     ["AMMOSLOT"] = { r = 0.80, g = 0.60, b = 0.00 },
     ["FUEL"] = { r = 0.0, g = 0.55, b = 0.5 },
+  }
+  
+  cfg.happycolors = {
+    [0] = {r = 1, g = 1, b = 1},
+    [1] = {r = 1, g = 0, b = 0},
+    [2] = {r = 1, g = 1, b = 0},
+    [3] = {r = 0, g = 1, b = 0},
   }
 
   --font

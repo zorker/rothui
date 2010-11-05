@@ -30,8 +30,9 @@
   ---------------------------------------------
   
   --init parameters
-  initUnitParameters = function(self)
+  local initUnitParameters = function(self)
     self:SetFrameStrata("BACKGROUND")
+    self:SetFrameLevel(1)
     self:SetSize(self.cfg.width, self.cfg.height)
     self:SetScale(self.cfg.scale)
     self:SetPoint(self.cfg.pos.a1,self.cfg.pos.af,self.cfg.pos.a2,self.cfg.pos.x,self.cfg.pos.y)
@@ -44,7 +45,7 @@
   end
   
   --actionbar background
-  createActionBarBackground = function(self)
+  local createActionBarBackground = function(self)
     local cfg = self.cfg.art.actionbarbackground
     if not cfg.show then return end
     local f = CreateFrame("Frame","oUF_DiabloActionBarBackground",self)
@@ -68,7 +69,7 @@
   end
   
   --create the angel
-  createAngelFrame = function(self)
+  local createAngelFrame = function(self)
     local cfg = self.cfg.art.angel
     if not cfg.show then return end
     local f = CreateFrame("Frame","oUF_DiabloAngelFrame",self)
@@ -82,7 +83,7 @@
   end
 
   --create the demon
-  createDemonFrame = function(self)
+  local createDemonFrame = function(self)
     local cfg = self.cfg.art.demon
     if not cfg.show then return end
     local f = CreateFrame("Frame","oUF_DiabloDemonFrame",self)
@@ -96,7 +97,7 @@
   end
 
   --create the bottomline
-  createBottomLine = function(self)
+  local createBottomLine = function(self)
     local cfg = self.cfg.art.bottomline
     if not cfg.show then return end
     local f = CreateFrame("Frame","oUF_DiabloBottomLine",self)
@@ -109,8 +110,59 @@
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_bottom")
   end
   
+  --create buffs
+  local createBuffs = function(self)
+    
+    --hide blizzard stuff
+    ConsolidatedBuffs:UnregisterAllEvents()
+    ConsolidatedBuffs:Hide()
+    BuffFrame:UnregisterAllEvents()
+    BuffFrame:Hide()      
+    TemporaryEnchantFrame:UnregisterAllEvents()
+    TemporaryEnchantFrame:Hide()
+    
+    local f = CreateFrame("Frame", nil, self)
+    f.size = self.cfg.auras.size
+    f.num = 40
+    f.spacing = 10
+    f:SetHeight((f.size+f.spacing)*4)
+    f:SetWidth((f.size+f.spacing)*10)
+    f:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -40, 2)
+    f.initialAnchor = "TOPRIGHT"
+    f["growth-x"] = "LEFT"
+    f["growth-y"] = "DOWN"
+    f.filter = "HELPFUL"
+    --f.showBuffType = true
+    f.disableCooldown = true
+    f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerBuffs
+
+    self.Buffs = f
+
+  end
+  
+  --create debuff func
+  local createDebuffs = function(self)
+    local f = CreateFrame("Frame", nil, self)
+    f.size = self.cfg.auras.size
+    f.num = 40
+    f.spacing = 10
+    f:SetHeight((f.size+f.spacing)*4)
+    f:SetWidth((f.size+f.spacing)*10)
+    f:SetPoint("TOP", self.Buffs, "BOTTOM", 0, 0)
+    f.initialAnchor = "TOPRIGHT"
+    f["growth-x"] = "LEFT"
+    f["growth-y"] = "DOWN"
+    f.filter = "HARMFUL"
+    f.showDebuffType = true
+    f.disableCooldown = true
+    f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerDebuffs
+    
+    self.Debuffs = f
+    
+  end
+  
   --create galaxy func
-  createGalaxy = function(f,x,y,size,duration,texture,sublevel)
+  local createGalaxy = function(f,x,y,size,duration,texture,sublevel)
   
     local t = f:CreateTexture(nil, "BACKGROUND", nil, sublevel)
     t:SetSize(size,size)
@@ -135,7 +187,7 @@
   end
   
   --create orb func
-  createOrb = function(self,type)
+  local createOrb = function(self,type)
     local orb
     if type == "power" then
       orb = CreateFrame("StatusBar", "oUF_DiabloPowerOrb", self)
@@ -155,7 +207,11 @@
     
     --orb filling
     orb.Filling = orb:CreateTexture(nil, "BACKGROUND", nil, -4)
-    orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling1")
+    if type == "power" then
+      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling3")
+    else
+      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling1")
+    end
     --IMPORTANT, settexcoord will not work with other settings
     orb.Filling:SetPoint("BOTTOMLEFT",0,0)
     orb.Filling:SetHeight(self.cfg.height)
@@ -166,14 +222,14 @@
     orb.galaxy = {}
     if type == "power" then
       orb.Filling:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
-      orb.galaxy[1] = createGalaxy(orb,0,-10,self.cfg.width-0,60,"galaxy2",-3)
-      orb.galaxy[2] = createGalaxy(orb,-2,-10,self.cfg.width-20,32,"galaxy",-3)
-      orb.galaxy[3] = createGalaxy(orb,-4,-10,self.cfg.width-10,20,"galaxy3",-3)
+      orb.galaxy[1] = createGalaxy(orb,0,-10,self.cfg.width-0,90,"galaxy2",-3)
+      orb.galaxy[2] = createGalaxy(orb,-2,-10,self.cfg.width-20,60,"galaxy",-3)
+      orb.galaxy[3] = createGalaxy(orb,-4,-10,self.cfg.width-5,45,"galaxy4",-3)
     else
       orb.Filling:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
-      orb.galaxy[1] = createGalaxy(orb,0,-10,self.cfg.width-0,60,"galaxy2",-3)
-      orb.galaxy[2] = createGalaxy(orb,2,-10,self.cfg.width-20,30,"galaxy",-3)
-      orb.galaxy[3] = createGalaxy(orb,4,-10,self.cfg.width-10,18,"galaxy3",-3)
+      orb.galaxy[1] = createGalaxy(orb,0,-10,self.cfg.width-0,90,"galaxy2",-3)
+      orb.galaxy[2] = createGalaxy(orb,2,-10,self.cfg.width-20,60,"galaxy",-3)
+      orb.galaxy[3] = createGalaxy(orb,4,-10,self.cfg.width-5,45,"galaxy4",-3)
     end
     
     --orb gloss
@@ -218,13 +274,36 @@
   end
   
   --updatePlayerHealth func
-  updatePlayerHealth = function(bar, unit, min, max)
+  local swapper = "x"
+  local updatePlayerHealth = function(bar, unit, min, max)
     local d = floor(min/max*100)
     bar.Filling:SetHeight((min / max) * bar:GetWidth())
     bar.Filling:SetTexCoord(0,1,  math.abs(min / max - 1),1)
     bar.galaxy[1]:SetAlpha(min/max)
     bar.galaxy[2]:SetAlpha(min/max)
     bar.galaxy[3]:SetAlpha(min/max)
+    
+    local status = UnitInVehicle("player")
+    
+    if status and swapper ~= "v" then
+      local color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
+      if color then
+        bar.Filling:SetVertexColor(color.r,color.g,color.b)
+        bar.galaxy[1]:SetVertexColor(color.r,color.g,color.b)
+        bar.galaxy[2]:SetVertexColor(color.r,color.g,color.b)
+        bar.galaxy[3]:SetVertexColor(color.r,color.g,color.b)
+      end
+      swapper = "v"
+      --print("ding")
+    elseif not status and swapper ~= "n" then
+      bar.Filling:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
+      bar.galaxy[1]:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
+      bar.galaxy[2]:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
+      bar.galaxy[3]:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
+      swapper = "n"
+      --print("dong")
+    end
+    
     if d <= 25 and min > 1 then
       bar.LowHP:Show()
     else
@@ -233,7 +312,7 @@
   end
   
   --update player power func
-  updatePlayerPower = function(bar, unit, min, max)
+  local updatePlayerPower = function(bar, unit, min, max)
     local d, d2
     if max == 0 then
       d = 0
@@ -274,7 +353,7 @@
   end
   
   --create strings for health and power orb
-  createHealthPowerStrings = function(self)
+  local createHealthPowerStrings = function(self)
     --hp strings
     local hpval1, hpval2, ppval1, ppval2, hpvalf, ppvalf
     hpvalf = CreateFrame("FRAME", nil, self.Health)
@@ -308,7 +387,7 @@
   end
   
   --update aura time
-  updateAuraTime = function(self,elapsed)  
+  local updateAuraTime = function(self,elapsed)  
     local t = self.updateTimer
     local tl = self.timeLeft-GetTime()
     if tl > 0 then
@@ -363,7 +442,7 @@
   end
   
   --postupdateauraicon
-  postUpdateAuraIcon = function(icons, unit, icon, index, offset)
+  local postUpdateAuraIcon = function(icons, unit, icon, index, offset)
     local filter = icons.filter
     local self = icons:GetParent()
     if self.Buffs.visibleBuffs and self.Buffs then
@@ -385,7 +464,7 @@
   end
   
   --aura icon func
-  createAuraIcon = function(icons, button)
+  local createAuraIcon = function(icons, button)
     local self = icons:GetParent()
     local bw = button:GetWidth()
     if (not button.time) then
@@ -405,6 +484,19 @@
     button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
     if self.cfg.style ~= "player" then
       button.count:SetParent(button.cd)
+    else
+      button:SetScript("OnMouseUp", function(s) 
+        if s.filter == "HELPFUL" then
+          local buffname = UnitAura("player", s:GetID(), s.filter)
+          local eb = LAST_ACTIVE_CHAT_EDIT_BOX
+          local str = "/cancelaura "..buffname
+          if eb then
+            eb:SetText(str)
+            eb:SetFocus()
+            eb:HighlightText()
+          end          
+        end        
+      end)
     end
     button.count:ClearAllPoints()
     button.count:SetPoint("TOPRIGHT", 4, 4)
@@ -432,7 +524,7 @@
   -- PLAYER STYLE FUNC
   ---------------------------------------------
 
-  local function createStyle(self)
+  local createStyle = function(self)
   
     --apply config to self
     self.cfg = cfg.units.player
@@ -483,13 +575,18 @@
 
     --castbar
     if self.cfg.castbar.show then
+      --disable the pet castbar (for vehicles!)
+      PetCastingBarFrame:UnregisterAllEvents()
+      PetCastingBarFrame:HookScript("OnShow", function(s) s:Hide() end)
+      PetCastingBarFrame:Hide()
+      --load castingbar
       func.createCastbar(self)
     end
 
     --auras
     if self.cfg.auras.show then
-      func.createBuffs(self)
-      func.createDebuffs(self)      
+      createBuffs(self)
+      createDebuffs(self)      
       self.Buffs.PostCreateIcon = createAuraIcon
       self.Buffs.PostUpdateIcon = postUpdateAuraIcon      
       self.Debuffs.PostCreateIcon = createAuraIcon

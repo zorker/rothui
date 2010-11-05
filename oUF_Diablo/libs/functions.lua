@@ -65,142 +65,163 @@
     end
   end
   
+  --update health func
+  func.updateHealth = function(bar, unit, min, max)
+    local self = bar:GetParent()
+    local d = floor(min/max*100)
+    local color
+    local dead
+    if UnitIsDeadOrGhost(unit) == 1 or UnitIsConnected(unit) == nil then
+      color = {r = 0.4, g = 0.4, b = 0.4}
+      dead = 1
+    elseif UnitIsPlayer(unit) then
+      if RAID_CLASS_COLORS then
+        color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+      end
+    elseif unit == "pet" and UnitExists("pet") and GetPetHappiness() then
+      local happiness = GetPetHappiness()
+      color = cfg.happycolors[happiness]
+      self.Name:SetText(UnitName(unit))
+    else
+      color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
+    end
+
+
+    if color then
+      self.Name:SetTextColor(color.r, color.g, color.b,1)
+      bar:SetStatusBarColor(0.15,0.15,0.15,1)
+      bar.bg:SetVertexColor(0.8,0,0,0.9)
+      --bar:SetStatusBarColor(color.r, color.g, color.b,1)
+      --bar.bg:SetTexture(1,0,0,0)
+    end
+
+    if d <= 25 and min > 1 then
+      self.Health.glow:SetVertexColor(1,0,0,1)
+    else
+      self.Health.glow:SetVertexColor(0,0,0,0.7)
+      --self.Health.glow:SetVertexColor(1,0,0,1)
+    end
+
+    if dead == 1 then
+      bar.bg:SetVertexColor(0,0,0,0)  
+    end
+
+  end
+  
+  --update power func
+  func.updatePower = function(bar, unit, min, max)
+    local color = cfg.powercolors[select(2, UnitPowerType(unit))]
+    if color then
+      bar:SetStatusBarColor(color.r, color.g, color.b,1)
+      bar.bg:SetVertexColor(color.r, color.g, color.b,0.2)
+    end
+  end
+  
+  --create portrait func
+  func.createPortrait = function(self)
+    
+    local back = CreateFrame("Frame",nil,self)
+    back:SetSize(self.cfg.width,self.cfg.width)
+    back:SetPoint("BOTTOM", self, "TOP", 0, -35)
+    
+    local t = back:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetAllPoints(back)
+    t:SetTexture("Interface\\AddOns\\rTextures\\portrait_back")
+
+    if self.cfg.portrait.use3D then
+      self.Portrait = CreateFrame("PlayerModel", nil, back)
+      self.Portrait:SetPoint("TOPLEFT",back,"TOPLEFT",27,-27)
+      self.Portrait:SetPoint("BOTTOMRIGHT",back,"BOTTOMRIGHT",-27,27)
+      
+      local borderholder = CreateFrame("Frame", nil, self.Portrait)
+      borderholder:SetAllPoints(back)
+      
+      local border = borderholder:CreateTexture(nil, "BACKGROUND",-6)
+      border:SetAllPoints(borderholder)
+      border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
+      
+    else
+      self.Portrait = back:CreateTexture(nil, "BACKGROUND",-7)
+      self.Portrait:SetPoint("TOPLEFT",back,"TOPLEFT",27,-27)
+      self.Portrait:SetPoint("BOTTOMRIGHT",back,"BOTTOMRIGHT",-27,27)
+      self.Portrait:SetTexCoord(0.1,0.9,0.1,0.9)
+      
+      local border = back:CreateTexture(nil, "BACKGROUND",-6)
+      border:SetAllPoints(back)
+      border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
+      
+    end
+    
+    self.Name:SetPoint("BOTTOM", self, "TOP", 0, self.cfg.width-53)
+  
+  end
+  
   --create castbar func
   func.createCastbar = function(f)
   
-    c = CreateFrame("StatusBar", nil, UIParent)
-    c:SetWidth(224)
-    c:SetHeight(18)
+    local cname
+    if f.cfg.style == "player" then
+      cname = "oUF_DiabloPlayerCastbar"
+    elseif f.cfg.style == "target" then
+      cname = "oUF_DiabloTargetCastbar"
+    elseif f.cfg.style == "focus" then
+      cname = "oUF_DiabloFocusCastbar"
+    end
+    
+    c = CreateFrame("StatusBar", cname, UIParent)
+    c:SetSize(186.8,20.2)
     c:SetStatusBarTexture(f.cfg.castbar.texture)
-    c:GetStatusBarTexture():SetHorizTile(true)
     c:SetScale(f.cfg.castbar.scale)
-    c:SetPoint(f.cfg.castbar.pos.a1, f.cfg.castbar.pos.af, f.cfg.castbar.pos.a2, f.cfg.castbar.pos.x, f.cfg.castbar.pos.y)
-    
-    c.bg2 = c:CreateTexture(nil, "BACKGROUND",nil,-8)
-    c.bg2:SetTexture("Interface\\AddOns\\rTextures\\d3_targetframe")
-    c.bg2:SetWidth(512)
-    c.bg2:SetHeight(128)
-    c.bg2:SetPoint("CENTER",-3,0)
-    
-    c.bg = c:CreateTexture(nil, "BACKGROUND",nil,-7)
+    c:SetPoint(f.cfg.castbar.pos.a1, f.cfg.castbar.pos.af, f.cfg.castbar.pos.a2, f.cfg.castbar.pos.x+10.1, f.cfg.castbar.pos.y)
+    c:SetStatusBarColor(0.15,0.15,0.15,1)
+    --c:SetStatusBarColor(0,0,0,1)
+
+    c.background = c:CreateTexture(nil, "BACKGROUND",nil,-8)
+    c.background:SetTexture("Interface\\AddOns\\rTextures\\castbar")
+    c.background:SetPoint("TOP",0,21.9)
+    c.background:SetPoint("LEFT",-44.7,0)
+    c.background:SetPoint("RIGHT",24.5,0)
+    c.background:SetPoint("BOTTOM",0,-22.2)
+
+    c.bg = c:CreateTexture(nil, "BACKGROUND",nil,-6)
     c.bg:SetTexture(f.cfg.castbar.texture)
     c.bg:SetAllPoints(c)
-    
-    if f.cfg.style == "player" and f.cfg.castbar.classcolored then
-      if f.cfg.castbar.swapcolors then
-        c:SetStatusBarColor(0.17,0.15,0.15,0.97)
-        c.bg:SetVertexColor(cfg.playercolor.r, cfg.playercolor.g, cfg.playercolor.b)        
-      else
-        c:SetStatusBarColor(cfg.playercolor.r, cfg.playercolor.g, cfg.playercolor.b)
-        c.bg:SetVertexColor(cfg.playercolor.r*0.2, cfg.playercolor.g*0.2, cfg.playercolor.b*0.2)
-      end
-    else
-      if f.cfg.castbar.swapcolors then
-        c:SetStatusBarColor(0.17,0.15,0.15,0.97)
-        c.bg:SetVertexColor(f.cfg.castbar.color.r,f.cfg.castbar.color.g,f.cfg.castbar.color.b)
-      else
-        c:SetStatusBarColor(f.cfg.castbar.color.r,f.cfg.castbar.color.g,f.cfg.castbar.color.b)
-        c.bg:SetVertexColor(f.cfg.castbar.color.r*0.2,f.cfg.castbar.color.g*0.2,f.cfg.castbar.color.b*0.2)
-      end
-    end
+    c.bg:SetVertexColor(0.96,0.7,0,1)
 
-    c.Text =  func.createFontString(c, cfg.font, 14, "THINOUTLINE")
-    c.Text:SetPoint("LEFT", 3, 0)
-    c.Text:SetPoint("RIGHT", -50, 0)
+    c.Text =  func.createFontString(c, cfg.font, 11, "THINOUTLINE")
+    c.Text:SetPoint("LEFT", 5, 0)
     c.Text:SetJustifyH("LEFT")
     
-    c.Time =  func.createFontString(c, cfg.font, 14, "THINOUTLINE")
+    c.Time =  func.createFontString(c, cfg.font, 11, "THINOUTLINE")
     c.Time:SetPoint("RIGHT", -2, 0)
     
+    c.Text:SetPoint("RIGHT", -50, 0)
+    --c.Text:SetPoint("RIGHT", c.Time, "LEFT", -10, 0) --right point of text will anchor left point of time
+    
     --icon
-    c.Icon = c:CreateTexture(nil, "BACKGROUND",nil,-7)
-    c.Icon:SetWidth(32)
-    c.Icon:SetHeight(32)
-    c.Icon:SetPoint("LEFT", -77, 0)
+    c.Icon = c:CreateTexture(nil, "OVERLAY",nil,-5)
+    c.Icon:SetSize(20.2,20.2)
+    c.Icon:SetPoint("LEFT", -20.2, 0)
     c.Icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
     
-    c.IconBack = c:CreateTexture(nil, "BACKGROUND",nil,-8)
-    c.IconBack:SetPoint("TOPLEFT",c.Icon,"TOPLEFT",-5,5)
-    c.IconBack:SetPoint("BOTTOMRIGHT",c.Icon,"BOTTOMRIGHT",5,-5)
-    c.IconBack:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_glow")
-    c.IconBack:SetVertexColor(0, 0, 0, 1)
-    
-    c.IconOverlay = c:CreateTexture(nil, "BACKGROUND",nil,-6)
-    c.IconOverlay:SetTexture("Interface\\AddOns\\rTextures\\gloss2")
-    c.IconOverlay:SetVertexColor(0.37,0.3,0.3,1)
-    c.IconOverlay:SetPoint("TOPLEFT", c.Icon, "TOPLEFT", -1, 1)
-    c.IconOverlay:SetPoint("BOTTOMRIGHT", c.Icon, "BOTTOMRIGHT", 1, -1)  
+    c.Spark = c:CreateTexture(nil,"LOW",nil,-7)
+    c.Spark:SetBlendMode("ADD")
+    c.Spark:SetVertexColor(0.8,0.6,0,1)
+
+    c.glow = c:CreateTexture(nil, "OVERLAY",nil,-4)
+    c.glow:SetTexture("Interface\\AddOns\\rTextures\\castbar_glow")
+    c.glow:SetAllPoints(c.background)
+    c.glow:SetVertexColor(0,0,0,1)
     
     if f.cfg.style == "target" then
-      --generate shield
-      local shield = c:CreateTexture(nil, "BACKGROUND",nil,-8)
-      shield:SetTexture("Interface\\AddOns\\rTextures\\d3_castshield")
-      shield:SetWidth(512)
-      shield:SetHeight(128)
-      shield:SetPoint("CENTER",-3,0)
-      shield:Hide()
-      c.Shield = shield
+      c.Shield = c:CreateTexture(nil,"BACKGROUND",nil,-8)
+      c.Shield:SetTexture(0,0,0,0)
     end
     
-    --safezone
-    if f.cfg.castbar.latency and f.cfg.style == "player" then
-      c.SafeZone = c:CreateTexture(nil,"OVERLAY",nil,-8)
-      c.SafeZone:SetTexture(f.cfg.castbar.texture)
-      c.SafeZone:SetVertexColor(0.6,0,0,0.4)
-      c.SafeZone:SetPoint("TOPRIGHT")
-      c.SafeZone:SetPoint("BOTTOMRIGHT")
-    end
-    
-    func.applyDragFunctionalityNoRestrict(c)
+    func.applyDragFunctionality(c)
     
     f.Castbar = c    
   
-  end
-  
-  --create buffs
-  func.createBuffs = function(f)
-    f.Buffs = CreateFrame("Frame", nil, f)
-    if f.cfg.style == "player" then
-      --hide blizzard stuff
-      ConsolidatedBuffs:Hide()
-      BuffFrame:Hide()
-      TemporaryEnchantFrame:Hide()
-      
-      f.Buffs.size = f.cfg.auras.size
-      f.Buffs.num = 40
-      f.Buffs.spacing = 10
-      f.Buffs:SetHeight((f.Buffs.size+f.Buffs.spacing)*4)
-      f.Buffs:SetWidth((f.Buffs.size+f.Buffs.spacing)*10)
-      f.Buffs:SetPoint("TOPRIGHT", Minimap, "TOPLEFT", -40, 2)
-      f.Buffs.initialAnchor = "TOPRIGHT"
-      f.Buffs["growth-x"] = "LEFT"
-      f.Buffs["growth-y"] = "DOWN"
-      f.Buffs.filter = "HELPFUL"
-      --f.Buffs.showBuffType = true
-      f.Buffs.disableCooldown = true
-      f.Buffs.onlyShowPlayer = f.cfg.auras.onlyShowPlayerBuffs
-
-    end
-  end
-  
-  --create debuff func
-  func.createDebuffs = function(f)
-    f.Debuffs = CreateFrame("Frame", nil, f)
-    if f.cfg.style == "player" then
-      f.Debuffs.size = f.cfg.auras.size
-      f.Debuffs.num = 40
-      f.Debuffs.spacing = 10
-      f.Debuffs:SetHeight((f.Debuffs.size+f.Debuffs.spacing)*4)
-      f.Debuffs:SetWidth((f.Debuffs.size+f.Debuffs.spacing)*10)
-      f.Debuffs:SetPoint("TOP", f.Buffs, "BOTTOM", 0, 0)
-      f.Debuffs.initialAnchor = "TOPRIGHT"
-      f.Debuffs["growth-x"] = "LEFT"
-      f.Debuffs["growth-y"] = "DOWN"
-      f.Debuffs.filter = "HARMFUL"
-      f.Debuffs.showDebuffType = true
-      f.Debuffs.disableCooldown = true
-      f.Debuffs.onlyShowPlayer = f.cfg.auras.onlyShowPlayerDebuffs
-    end
   end
   
   --fontstring func

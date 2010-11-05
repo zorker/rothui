@@ -97,9 +97,19 @@
 
   end
   
-  local checkDebuff = function(f)
+  local checkDebuff = function(f,spellid)
+    if spellid then
+      local gsi_name, gsi_rank, gsi_icon = GetSpellInfo(spellid)
+      if gsi_name then
+        f.name = gsi_name
+        f.rank = gsi_rank
+        f.texture_list = gsi_icon
+        f.iconframe.icon:SetTexture(f.texture_list)
+        --print(spellid..gsi_name)
+      end
+    end
     if f.name and f.rank then
-      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spellID = UnitAura(f.unit, f.name, f.rank, "HARMFUL")
+      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID = UnitAura(f.unit, f.name, f.rank, "HARMFUL")
       if name and (not f.ismine or (f.ismine and caster == "player")) then
         if caster == "player" and cfg.highlightPlayerSpells then
           f.iconframe.border:SetVertexColor(0.2,0.6,0.8,1)
@@ -108,6 +118,10 @@
         end        
         f.iconframe.icon:SetAlpha(f.alpha.found.icon)
         f.iconframe:SetAlpha(f.alpha.found.frame)
+        if spellid then
+          f.debufffound = true
+          --break out of the debuff search loop
+        end
         if f.desaturate then
           f.iconframe.icon:SetDesaturated(nil)
         end
@@ -127,6 +141,9 @@
       else
         f.iconframe:SetAlpha(f.alpha.not_found.frame)
         f.iconframe.icon:SetAlpha(f.alpha.not_found.icon)
+        if spellid then
+          f.iconframe.icon:SetTexture(f.texture)
+        end
         f.iconframe.time:SetText("")
         f.iconframe.count:SetText("")
         f.iconframe.time:SetTextColor(1, 0.8, 0)
@@ -140,15 +157,29 @@
     end
   end
   
-  local checkBuff = function(f)
+  local checkBuff = function(f,spellid)
+    if spellid then
+      local gsi_name, gsi_rank, gsi_icon = GetSpellInfo(spellid)
+      if gsi_name then
+        f.name = gsi_name
+        f.rank = gsi_rank
+        f.texture_list = gsi_icon
+        f.iconframe.icon:SetTexture(f.texture_list)
+        --print(spellid..gsi_name)
+      end
+    end
     if f.name and f.rank then
-      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spellID = UnitAura(f.unit, f.name, f.rank, "HELPFUL")
+      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID = UnitAura(f.unit, f.name, f.rank, "HELPFUL")
       if name and (not f.ismine or (f.ismine and caster == "player")) then
         if caster == "player" and cfg.highlightPlayerSpells then
           f.iconframe.border:SetVertexColor(0.2,0.6,0.8,1)
         elseif cfg.highlightPlayerSpells then
           f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
-        end           
+        end
+        if spellid then
+          f.bufffound = true
+          --break out of the buff search loop
+        end
         f.iconframe.icon:SetAlpha(f.alpha.found.icon)
         f.iconframe:SetAlpha(f.alpha.found.frame)
         if f.desaturate then
@@ -170,6 +201,9 @@
       else
         f.iconframe:SetAlpha(f.alpha.not_found.frame)
         f.iconframe.icon:SetAlpha(f.alpha.not_found.icon)
+        if spellid then
+          f.iconframe.icon:SetTexture(f.texture)
+        end
         f.iconframe.time:SetText("")
         f.iconframe.count:SetText("")
         f.iconframe.time:SetTextColor(1, 0.8, 0)
@@ -222,14 +256,34 @@
   local searchBuffs = function()
     for i,_ in ipairs(rf3_BuffList) do 
       local f = rf3_BuffList[i]
-      checkBuff(f)
+      if f.spelllist and f.spelllist[1] then
+        --print('buff spelllist exists')
+        f.bufffound = false
+        for k,spellid in ipairs(f.spelllist) do
+          if not f.bufffound then
+            checkBuff(f,spellid)
+          end
+        end        
+      else
+        checkBuff(f)
+      end
     end
   end
 
   local searchDebuffs = function()
     for i,_ in ipairs(rf3_DebuffList) do 
       local f = rf3_DebuffList[i]
-      checkDebuff(f)
+      if  f.spelllist and f.spelllist[1] then
+        --print('debuff spelllist exists')
+        f.debufffound = false
+        for k,spellid in ipairs(f.spelllist) do
+          if not f.debufffound then
+            checkDebuff(f,spellid)
+          end
+        end
+      else
+        checkDebuff(f)
+      end
     end
   end
 

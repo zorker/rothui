@@ -34,6 +34,12 @@
     cfg.rf3_BuffList = {
       [1] = {
         spellid = 469, --commanding shout
+        spelllist = { --check a list instead because other classes can do the same
+          [1] = 469,
+          [2] = 79105,
+          [3] = 6307,
+          [4] = 90364,
+        },
         size = 28,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 130, y = 110 },
         unit = "player",
@@ -52,6 +58,12 @@
       },
       [2] = {
         spellid = 6673, --battle shout
+        spelllist = { --check a list instead because other classes can do the same
+          [1] = 6673,
+          [2] = 57330,
+          [3] = 8076,
+          [4] = 93435,
+        },
         size = 28,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 95, y = 110 },
         unit = "player",
@@ -88,7 +100,7 @@
       },
       [4] = {
         spellid = 2565, --shield block
-        size = 42,
+        size = 42, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
         unit = "player",
         ismine = true,
@@ -111,6 +123,13 @@
     cfg.rf3_DebuffList = {
       [1] = {
         spellid = 58567, --sunder armor
+        spelllist = { --check a list instead because other classes can do the same
+          [1] = 58567,
+          [2] = 91565,
+          [3] = 8647,
+          [4] = 95467,
+          [5] = 95466,
+        },
         size = 28,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 110},
         unit = "target",
@@ -129,6 +148,15 @@
       },
       [2] = {
         spellid = 6343, --thunderclap
+        spelllist = { --check a list instead because other classes can do the same
+          [1] = 6343,
+          [2] = 55095,
+          [3] = 58180,
+          [4] = 68055,
+          [5] = 8042,
+          [6] = 90315,
+          [7] = 54404,
+        },
         size = 28,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -95, y = 110 },
         unit = "target",
@@ -147,6 +175,15 @@
       },
       [3] = {
         spellid = 1160, --demo shout
+        spelllist = { --check a list instead because other classes can do the same
+          [1] = 1160,
+          [2] = 81130,
+          [3] = 99,
+          [4] = 26017,
+          [5] = 702,
+          [6] = 50256,
+          [7] = 24423,
+        },
         size = 28,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -60, y = 110 },
         unit = "target",

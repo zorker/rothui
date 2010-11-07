@@ -23,14 +23,14 @@
     self:SetFrameStrata("BACKGROUND")
     self:SetFrameLevel(1)
     self:SetSize(self.cfg.width, self.cfg.height)
-    self:SetScale(self.cfg.scale)
-    self:SetPoint(self.cfg.pos.a1,self.cfg.pos.af,self.cfg.pos.a2,self.cfg.pos.x,self.cfg.pos.y)
+    --self:SetScale(self.cfg.scale)
+    --self:SetPoint(self.cfg.pos.a1,self.cfg.pos.af,self.cfg.pos.a2,self.cfg.pos.x,self.cfg.pos.y)
     self.menu = func.menu
     self:RegisterForClicks("AnyDown")
     self:SetScript("OnEnter", UnitFrame_OnEnter)
     self:SetScript("OnLeave", UnitFrame_OnLeave)
     --func.createBackdrop(self)
-    func.applyDragFunctionality(self)
+    --func.applyDragFunctionality(self)
   end
   
   --actionbar background
@@ -111,14 +111,14 @@
   end
 
   ---------------------------------------------
-  -- FOCUS STYLE FUNC
+  -- PARTY STYLE FUNC
   ---------------------------------------------
 
   local function createStyle(self)
   
     --apply config to self
-    self.cfg = cfg.units.focus
-    self.cfg.style = "focus"
+    self.cfg = cfg.units.party
+    self.cfg.style = "party"
     
     self.cfg.width = 128
     self.cfg.height = 64
@@ -146,22 +146,34 @@
       self:SetHitRectInsets(0, 0, -100, 0);
     end
     
-    --castbar
-    if self.cfg.castbar.show then
-      func.createCastbar(self)
-    end
-    
-    --add self to unit container (maybe access to that unit is needed in another style)
-    unit.focus = self    
-    
   end  
 
   ---------------------------------------------
-  -- SPAWN FOCUS UNIT
+  -- SPAWN PARTY UNIT
   ---------------------------------------------
 
-  if cfg.units.focus.show then
-    oUF:RegisterStyle("diablo:focus", createStyle)
-    oUF:SetActiveStyle("diablo:focus")
-    oUF:Spawn("focus", "oUF_DiabloFocusFrame")
+  if cfg.units.party.show then
+    oUF:RegisterStyle("diablo:party", createStyle)
+    oUF:SetActiveStyle("diablo:party")
+    
+    local party = oUF:SpawnHeader(
+      "oUF_DiabloPartyHeader", 
+      nil, 
+      "solo,party",
+      "showSolo", cfg.units.party.showsolo, --debug
+      "showParty", true,
+      "showPlayer", true,
+      "point", "LEFT",
+      "oUF-initialConfigFunction", ([[
+        self:SetWidth(%d)
+        self:SetHeight(%d)
+        self:SetScale(%f)
+      ]]):format(128, 64, cfg.units.party.scale)
+    )
+    if cfg.units.party.portrait.show then
+      party:SetPoint(cfg.units.party.pos.a1,cfg.units.party.pos.af,cfg.units.party.pos.a2,cfg.units.party.pos.x,cfg.units.party.pos.y-85*cfg.units.party.scale)
+    else
+      party:SetPoint(cfg.units.party.pos.a1,cfg.units.party.pos.af,cfg.units.party.pos.a2,cfg.units.party.pos.x,cfg.units.party.pos.y)
+    end
+    
   end

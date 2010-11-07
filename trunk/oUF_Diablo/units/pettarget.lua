@@ -111,14 +111,14 @@
   end
 
   ---------------------------------------------
-  -- FOCUS STYLE FUNC
+  -- PETTARGET STYLE FUNC
   ---------------------------------------------
 
   local function createStyle(self)
   
     --apply config to self
-    self.cfg = cfg.units.focus
-    self.cfg.style = "focus"
+    self.cfg = cfg.units.pettarget
+    self.cfg.style = "pettarget"
     
     self.cfg.width = 128
     self.cfg.height = 64
@@ -146,22 +146,17 @@
       self:SetHitRectInsets(0, 0, -100, 0);
     end
     
-    --castbar
-    if self.cfg.castbar.show then
-      func.createCastbar(self)
-    end
-    
     --add self to unit container (maybe access to that unit is needed in another style)
-    unit.focus = self    
+    unit.pettarget = self    
     
   end  
 
   ---------------------------------------------
-  -- SPAWN FOCUS UNIT
+  -- SPAWN PETTARGET UNIT
   ---------------------------------------------
 
-  if cfg.units.focus.show then
-    oUF:RegisterStyle("diablo:focus", createStyle)
-    oUF:SetActiveStyle("diablo:focus")
-    oUF:Spawn("focus", "oUF_DiabloFocusFrame")
+  if cfg.units.pettarget.show then
+    oUF:RegisterStyle("diablo:pettarget", createStyle)
+    oUF:SetActiveStyle("diablo:pettarget")
+    oUF:Spawn("pettarget", "oUF_DiabloPetTargetFrame")
   end

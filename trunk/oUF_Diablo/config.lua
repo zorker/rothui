@@ -123,7 +123,6 @@
       },
       castbar = {
         show = true,
-        latency = true,
         classcolored = false,
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
         scale = 1,
@@ -144,7 +143,7 @@
     },
     pet = {
       show = true,
-      scale = 0.9,
+      scale = 0.85,
       pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 10, y = -140 }, 
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -159,7 +158,7 @@
     },
     focus = {
       show = true,
-      scale = 0.9,
+      scale = 0.85,
       pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 10, y = 40 }, 
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -170,6 +169,60 @@
       portrait = {
         show = true,
         use3D = true,
+      },
+      castbar = {
+        show = false,
+        classcolored = false,
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        scale = 1,
+        color = {r = 0.9, g = 0.59, b = 0, },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 420 }, 
+      },  
+    },
+    pettarget = {
+      show = true,
+      scale = 0.85,
+      pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 140, y = -140 }, 
+      health = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      power = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      portrait = {
+        show = true,
+        use3D = true,
+      },
+    },
+    focustarget = {
+      show = true,
+      scale = 0.85,
+      pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 140, y = 40 }, 
+      health = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      power = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      portrait = {
+        show = true,
+        use3D = true,
+      },
+    },
+    party = {
+      show = true,
+      showsolo = true, --show party when solo
+      scale = 0.85,
+      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 }, 
+      health = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      power = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      portrait = {
+        show = true,
+        use3D = false,
       },
     },
   }

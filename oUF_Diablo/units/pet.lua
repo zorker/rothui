@@ -146,6 +146,12 @@
       self:SetHitRectInsets(0, 0, -100, 0);
     end
     
+    --auras
+    if self.cfg.auras.show then
+      func.createDebuffs(self)      
+      self.Debuffs.PostCreateIcon = func.createAuraIcon
+    end
+    
     --add self to unit container (maybe access to that unit is needed in another style)
     unit.pet = self    
     

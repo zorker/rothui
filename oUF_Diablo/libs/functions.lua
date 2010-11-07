@@ -65,6 +65,54 @@
     end
   end
   
+  --create debuff func
+  func.createDebuffs = function(self)
+    local f = CreateFrame("Frame", nil, self)
+    f.size = self.cfg.auras.size
+    if self.cfg.style == "targettarget" then
+      f.num = 8
+    else
+      f.num = 4
+    end
+    f:SetHeight((f.size+5)*(f.num/4))
+    f:SetWidth((f.size+5)*4)
+    f:SetPoint("TOP", self, "BOTTOM", 2.5, 5)
+    f.initialAnchor = "TOPLEFT"
+    f["growth-x"] = "RIGHT"
+    f["growth-y"] = "DOWN"
+    f.spacing = 5
+    f.showDebuffType = self.cfg.auras.showDebuffType
+    f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerDebuffs    
+    self.Debuffs = f    
+  end
+  
+  --aura icon func
+  func.createAuraIcon = function(icons, button)
+    local bw = button:GetWidth()
+    --button.cd:SetReverse()
+    button.cd:SetPoint("TOPLEFT", 1, -1)
+    button.cd:SetPoint("BOTTOMRIGHT", -1, 1)
+    button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+    button.count:SetParent(button.cd)
+    button.count:ClearAllPoints()
+    button.count:SetPoint("TOPRIGHT", 4, 4)
+    button.count:SetTextColor(0.75,0.75,0.75)
+    --fix fontsize to be based on button size
+    button.count:SetFont(cfg.font,bw/1.8,"THINOUTLINE")
+    button.overlay:SetTexture("Interface\\AddOns\\rTextures\\gloss2")
+    button.overlay:SetTexCoord(0,1,0,1)
+    button.overlay:SetPoint("TOPLEFT", -1, 1)
+    button.overlay:SetPoint("BOTTOMRIGHT", 1, -1)
+    button.overlay:SetVertexColor(0.4,0.35,0.35,1)
+    button.overlay:Show()
+    button.overlay.Hide = function() end    
+    local back = button:CreateTexture(nil, "BACKGROUND")
+    back:SetPoint("TOPLEFT",button.icon,"TOPLEFT",-0.18*bw,0.18*bw)
+    back:SetPoint("BOTTOMRIGHT",button.icon,"BOTTOMRIGHT",0.18*bw,-0.18*bw)
+    back:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_glow")
+    back:SetVertexColor(0, 0, 0, 1)    
+  end
+  
   --update health func
   func.updateHealth = function(bar, unit, min, max)
     local self = bar:GetParent()

@@ -482,22 +482,21 @@
     button.cd:SetPoint("TOPLEFT", 1, -1)
     button.cd:SetPoint("BOTTOMRIGHT", -1, 1)
     button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-    if self.cfg.style ~= "player" then
-      button.count:SetParent(button.cd)
-    else
-      button:SetScript("OnMouseUp", function(s) 
-        if s.filter == "HELPFUL" then
-          local buffname = UnitAura("player", s:GetID(), s.filter)
-          local eb = LAST_ACTIVE_CHAT_EDIT_BOX
-          local str = "/cancelaura "..buffname
-          if eb then
-            eb:SetText(str)
-            eb:SetFocus()
-            eb:HighlightText()
-          end          
-        end        
-      end)
-    end
+    
+    --cancelaura temp fix
+    button:SetScript("OnMouseUp", function(s) 
+      if s.filter == "HELPFUL" then
+        local buffname = UnitAura("player", s:GetID(), s.filter)
+        local eb = LAST_ACTIVE_CHAT_EDIT_BOX
+        local str = "/cancelaura "..buffname
+        if eb then
+          eb:SetText(str)
+          eb:SetFocus()
+          eb:HighlightText()
+        end          
+      end        
+    end)
+    
     button.count:ClearAllPoints()
     button.count:SetPoint("TOPRIGHT", 4, 4)
     button.count:SetTextColor(0.75,0.75,0.75)

@@ -172,6 +172,39 @@
   local checkChannel = function(bar, unit, name, rank)
     checkShield(bar, unit)
   end
+  
+  --create buffs
+  local createBuffs = function(self)    
+    local f = CreateFrame("Frame", nil, self)
+    f.size = self.cfg.auras.size
+    f.num = 40
+    f:SetHeight((f.size+5)*4)
+    f:SetWidth((f.size+5)*10)
+    f:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 0, -15)
+    f.initialAnchor = "BOTTOMLEFT"
+    f["growth-x"] = "RIGHT"
+    f["growth-y"] = "UP"
+    f.spacing = 5   
+    f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerBuffs
+    self.Buffs = f
+  end
+  
+  --create debuff func
+  local createDebuffs = function(self)
+    local f = CreateFrame("Frame", nil, self)
+    f.size = self.cfg.auras.size
+    f.num = 40
+    f:SetHeight((f.size+5)*4)
+    f:SetWidth((f.size+5)*10)
+    f:SetPoint("TOPLEFT", self, "BOTTOMRIGHT", 0, 15)
+    f.initialAnchor = "TOPLEFT"
+    f["growth-x"] = "RIGHT"
+    f["growth-y"] = "DOWN"
+    f.spacing = 5
+    f.showDebuffType = self.cfg.auras.showDebuffType
+    f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerDebuffs    
+    self.Debuffs = f    
+  end
 
   ---------------------------------------------
   -- UNIT SPECIFIC TAG
@@ -264,7 +297,13 @@
     self.Health.PostUpdate = func.updateHealth
     self.Power.PostUpdate = func.updatePower
     
-    --aura
+    --auras
+    if self.cfg.auras.show then
+      createBuffs(self)
+      createDebuffs(self)      
+      self.Buffs.PostCreateIcon = func.createAuraIcon
+      self.Debuffs.PostCreateIcon = func.createAuraIcon
+    end
     
     --castbar
     if self.cfg.castbar.show then

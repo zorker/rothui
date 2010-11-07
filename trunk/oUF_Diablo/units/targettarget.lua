@@ -110,6 +110,7 @@
     
   end
 
+
   ---------------------------------------------
   -- TARGETTARGET STYLE FUNC
   ---------------------------------------------
@@ -139,6 +140,12 @@
     --health power update
     self.Health.PostUpdate = func.updateHealth
     self.Power.PostUpdate = func.updatePower
+    
+    --auras
+    if self.cfg.auras.show then
+      func.createDebuffs(self)      
+      self.Debuffs.PostCreateIcon = func.createAuraIcon
+    end
     
     --add self to unit container (maybe access to that unit is needed in another style)
     unit.targettarget = self    

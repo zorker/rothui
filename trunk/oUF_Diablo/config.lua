@@ -110,6 +110,7 @@
         },
       },      
     },
+    
     -- TARGET
     target = {
       show = true,
@@ -121,6 +122,13 @@
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
       },
+      auras = {
+        show = true,
+        size = 22,
+        onlyShowPlayerBuffs = false,
+        onlyShowPlayerDebuffs = false,
+        showDebuffType = true,
+      },
       castbar = {
         show = true,
         classcolored = false,
@@ -130,10 +138,18 @@
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 350 }, 
       },  
     },
+    
+    --TARGETTARGET
     targettarget = {
       show = true,
       scale = 1,
       pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -195, y = 250 }, 
+      auras = {
+        show = true,
+        size = 22,
+        onlyShowPlayerDebuffs = false,
+        showDebuffType = false,
+      },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
       },
@@ -141,10 +157,18 @@
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
       },
     },
+    
+    --PET
     pet = {
       show = true,
       scale = 0.85,
       pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 10, y = -140 }, 
+      auras = {
+        show = true,
+        size = 22,
+        onlyShowPlayerDebuffs = false,
+        showDebuffType = false,
+      },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
       },
@@ -156,10 +180,18 @@
         use3D = true,
       },
     },
+    
+    --FOCUS
     focus = {
       show = true,
       scale = 0.85,
       pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 10, y = 40 }, 
+      auras = {
+        show = true,
+        size = 22,
+        onlyShowPlayerDebuffs = false,
+        showDebuffType = false,
+      },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
       },
@@ -179,10 +211,18 @@
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 420 }, 
       },  
     },
+    
+    --PETTARGET
     pettarget = {
       show = true,
       scale = 0.85,
       pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 140, y = -140 }, 
+      auras = {
+        show = true,
+        size = 22,
+        onlyShowPlayerDebuffs = false,
+        showDebuffType = false,
+      },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
       },
@@ -194,10 +234,18 @@
         use3D = true,
       },
     },
+    
+    --FOCUSTARGET
     focustarget = {
       show = true,
       scale = 0.85,
       pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 140, y = 40 }, 
+      auras = {
+        show = true,
+        size = 22,
+        onlyShowPlayerDebuffs = false,
+        showDebuffType = false,
+      },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
       },
@@ -209,11 +257,19 @@
         use3D = true,
       },
     },
+    
+    --PARTY
     party = {
       show = true,
       showsolo = true, --show party when solo
       scale = 0.85,
       pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 }, 
+      auras = {
+        show = true,
+        size = 22,
+        onlyShowPlayerDebuffs = false,
+        showDebuffType = false,
+      },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
       },

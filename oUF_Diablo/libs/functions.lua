@@ -136,17 +136,17 @@
       local borderholder = CreateFrame("Frame", nil, self.Portrait)
       borderholder:SetAllPoints(back)
       
-      local border = borderholder:CreateTexture(nil, "BACKGROUND",-6)
+      local border = borderholder:CreateTexture(nil,"BACKGROUND",nil,-6)
       border:SetAllPoints(borderholder)
       border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
       
     else
-      self.Portrait = back:CreateTexture(nil, "BACKGROUND",-7)
+      self.Portrait = back:CreateTexture(nil,"BACKGROUND",nil,-7)
       self.Portrait:SetPoint("TOPLEFT",back,"TOPLEFT",27,-27)
       self.Portrait:SetPoint("BOTTOMRIGHT",back,"BOTTOMRIGHT",-27,27)
       self.Portrait:SetTexCoord(0.1,0.9,0.1,0.9)
       
-      local border = back:CreateTexture(nil, "BACKGROUND",-6)
+      local border = back:CreateTexture(nil,"BACKGROUND",nil,-6)
       border:SetAllPoints(back)
       border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
       
@@ -176,14 +176,14 @@
     c:SetStatusBarColor(0.15,0.15,0.15,1)
     --c:SetStatusBarColor(0,0,0,1)
 
-    c.background = c:CreateTexture(nil, "BACKGROUND",nil,-8)
+    c.background = c:CreateTexture(nil,"BACKGROUND",nil,-8)
     c.background:SetTexture("Interface\\AddOns\\rTextures\\castbar")
     c.background:SetPoint("TOP",0,21.9)
     c.background:SetPoint("LEFT",-44.7,0)
     c.background:SetPoint("RIGHT",24.5,0)
     c.background:SetPoint("BOTTOM",0,-22.2)
 
-    c.bg = c:CreateTexture(nil, "BACKGROUND",nil,-6)
+    c.bg = c:CreateTexture(nil,"BACKGROUND",nil,-6)
     c.bg:SetTexture(f.cfg.castbar.texture)
     c.bg:SetAllPoints(c)
     c.bg:SetVertexColor(0.96,0.7,0,1)

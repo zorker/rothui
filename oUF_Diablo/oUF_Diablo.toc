@@ -16,3 +16,6 @@ units\target.lua
 units\targettarget.lua
 units\pet.lua
 units\focus.lua
+units\pettarget.lua
+units\focustarget.lua
+units\party.lua

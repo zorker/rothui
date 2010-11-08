@@ -518,7 +518,7 @@
     
   end
   
-  
+  --update soul shards
   local updateShards = function(self, event, unit, powerType)
     if(self.unit ~= unit or (powerType and powerType ~= "SOUL_SHARDS")) then return end
     local num = UnitPower(unit, SPELL_POWER_SOUL_SHARDS)
@@ -601,6 +601,90 @@
     self.SoulShardBar = bar
 
   end
+  
+  --update holy power
+  local updateHolyPower = function(self, event, unit, powerType)
+    if(self.unit ~= unit or (powerType and powerType ~= "HOLY_POWER")) then return end
+    local num = UnitPower(unit, SPELL_POWER_HOLY_POWER)
+    local bar = self.HolyPowerBar
+    for i = 1, MAX_HOLY_POWER do
+      if(i <= num) then
+        bar.filling[i]:Show()
+        bar.glow[i]:Show()
+      else
+        bar.filling[i]:Hide()
+        bar.glow[i]:Hide()
+      end
+    end
+  end
+
+  --create holy power bar
+  local createHolyPowerBar = function(self)
+    
+    self.HolyPower = {}
+    
+    local t
+    local bar = CreateFrame("Frame","oUF_DiabloHolyPower",self)
+    local w = 64*(MAX_HOLY_POWER+2)
+    local h = 64
+    bar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    bar:SetWidth(w)
+    bar:SetHeight(h)
+    
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("LEFT",0,0)
+    t:SetTexture("Interface\\AddOns\\rTextures\\combo_left")
+    bar.leftedge = t
+
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("RIGHT",0,0)
+    t:SetTexture("Interface\\AddOns\\rTextures\\combo_right")
+    bar.rightedge = t
+
+    bar.back = {}
+    bar.filling = {}
+    bar.glow = {}
+    bar.gloss = {}
+    
+    for i = 1, MAX_HOLY_POWER do
+      local back = "back"..i
+      bar.back[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-8)  
+      bar.back[i]:SetSize(64,64)
+      bar.back[i]:SetPoint("LEFT",i*64,0)
+      bar.back[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_back")
+
+      bar.filling[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-7)  
+      bar.filling[i]:SetSize(64,64)
+      bar.filling[i]:SetPoint("LEFT",i*64,0)
+      bar.filling[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_fill")
+      bar.filling[i]:SetVertexColor(self.cfg.holypower.color.r,self.cfg.holypower.color.g,self.cfg.holypower.color.b,1)
+      bar.filling[i]:SetBlendMode("ADD")
+
+      bar.glow[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-6)  
+      bar.glow[i]:SetSize(64*1.25,64*1.25)
+      bar.glow[i]:SetPoint("CENTER", bar.filling[i], "CENTER", 0, 0)
+      bar.glow[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_glow")
+      bar.glow[i]:SetBlendMode("ADD")
+      bar.glow[i]:SetVertexColor(self.cfg.holypower.color.r,self.cfg.holypower.color.g,self.cfg.holypower.color.b,1)
+
+      bar.gloss[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-5)  
+      bar.gloss[i]:SetSize(64,64)
+      bar.gloss[i]:SetPoint("LEFT",i*64,0)
+      bar.gloss[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_highlight")
+      bar.gloss[i]:SetBlendMode("ADD")
+      
+      bar.color = self.cfg.holypower.color
+
+      self.HolyPower[i] = bar.filling[i]
+    end
+
+    bar:SetScale(self.cfg.holypower.scale)    
+    func.applyDragFunctionalityNoRestrict(bar)    
+    self.HolyPowerBar = bar
+
+  end
 
   ---------------------------------------------
   -- PLAYER STYLE FUNC
@@ -679,6 +763,19 @@
     if cfg.playerclass == "WARLOCK" and self.cfg.soulshards.show then
       createSoulShardBar(self)
       self.SoulShards.Override = updateShards
+    end
+    
+    --holypower
+    if cfg.playerclass == "PALADIN" and self.cfg.holypower.show then
+      createHolyPowerBar(self)
+      self.HolyPower.Override = updateHolyPower
+    end
+    
+    --runes
+    if cfg.playerclass == "DEATHKNIGHT" then
+      --position deathknight runes
+      RuneButtonIndividual1:ClearAllPoints()
+      RuneButtonIndividual1:SetPoint(self.cfg.runes.pos.a1,self.cfg.runes.pos.af,self.cfg.runes.pos.a2,self.cfg.runes.pos.x,self.cfg.runes.pos.y)
     end
 
     --add self to unit container (maybe access to that unit is needed in another style)

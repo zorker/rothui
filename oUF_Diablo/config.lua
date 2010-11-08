@@ -100,6 +100,18 @@
       runes = {
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -55, y = 140 }, 
       },
+      expbar = { --experience
+        show = true,
+          pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 10 },
+          texture = "Interface\\AddOns\\rTextures\\statusbar",
+          scale = 1,
+      },
+      repbar = { --reputation
+        show = true,
+          pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 10 },
+          texture = "Interface\\AddOns\\rTextures\\statusbar",
+          scale = 1,
+      },
       art = {
         actionbarbackground = {
           show = true,

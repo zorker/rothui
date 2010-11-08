@@ -5,6 +5,9 @@
 ## RequiredDeps: oUF
 ## X-Category: UnitFrame
 
+modules\oUF_Experience.lua
+modules\oUF_Reputation.lua
+
 config.lua
 
 libs\functions.lua

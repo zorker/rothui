@@ -101,6 +101,8 @@
     local cfg = self.cfg.art.bottomline
     if not cfg.show then return end
     local f = CreateFrame("Frame","oUF_DiabloBottomLine",self)
+    f:SetFrameStrata("LOW")
+    f:SetFrameLevel(6)
     f:SetSize(500,112)
     f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
     f:SetScale(cfg.scale)
@@ -108,6 +110,95 @@
     local t = f:CreateTexture(nil,"LOW",nil,5)
     t:SetAllPoints(f)
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_bottom")
+  end
+  
+  --create the exp bar
+  local createExpBar = function(self)
+    local cfg = self.cfg.expbar
+    if not cfg.show then return end
+    
+    local w, h = 360, 5
+    
+    local f = CreateFrame("StatusBar","oUF_DiabloExpBar",self)
+    f:SetFrameStrata("LOW")
+    f:SetFrameLevel(5)
+    f:SetSize(w,h)
+    f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
+    f:SetScale(cfg.scale)
+    f:SetStatusBarTexture(cfg.texture)
+    f:SetStatusBarColor(0.7,0,0.8)
+    
+    local r = CreateFrame("StatusBar",nil,f)
+    r:SetAllPoints(f)
+    r:SetStatusBarTexture(cfg.texture)
+    r:SetStatusBarColor(1,0.8,0.1,0.6)
+    
+    func.applyDragFunctionality(f)
+    
+    local t = r:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetAllPoints(r)
+    t:SetTexture(cfg.texture)
+    t:SetVertexColor(0.7,0,0.8,0.3)
+
+    f:SetScript("OnEnter", function(s)
+    	mxp = UnitXPMax("player")
+    	xp = UnitXP("player")
+    	rxp = GetXPExhaustion()    
+    	GameTooltip:SetOwner(s, "ANCHOR_TOP")
+    	GameTooltip:AddLine("Experience / Rested", 0, 1, 0.5, 1, 1, 1)
+    	if UnitLevel("player") ~= MAX_PLAYER_LEVEL then
+    		GameTooltip:AddDoubleLine(COMBAT_XP_GAIN, xp.."/"..mxp.." ("..floor((xp/mxp)*1000)/10 .."%)",0.7,0,0.8,1,1,1)
+    		if rxp then
+    			GameTooltip:AddDoubleLine(TUTORIAL_TITLE26, rxp .." (".. floor((rxp/mxp)*1000)/10 .."%)", 1,0.8,0.1,1,1,1)
+    		end
+    	end    		
+    	GameTooltip:Show()    
+    end)
+    f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+    
+    self.Experience = f
+    self.Experience.Rested = r
+    
+  end
+  
+  --create the reputation bar
+  local createRepBar = function(self)
+    local cfg = self.cfg.repbar
+    if not cfg.show then return end
+    
+    local w, h = 360, 5
+    
+    local f = CreateFrame("StatusBar","oUF_DiabloRepBar",self)
+    f:SetFrameStrata("LOW")
+    f:SetFrameLevel(5)
+    f:SetSize(w,h)
+    f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
+    f:SetScale(cfg.scale)
+    f:SetStatusBarTexture(cfg.texture)
+    f:SetStatusBarColor(0,0.7,0)
+    
+    func.applyDragFunctionality(f)
+    
+    local t = f:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetAllPoints(f)
+    t:SetTexture(cfg.texture)
+    t:SetVertexColor(0,0.7,0,0.3)
+
+    f:SetScript("OnEnter", function(s)
+      name, standing, minrep, maxrep, value = GetWatchedFactionInfo()
+    	GameTooltip:SetOwner(s, "ANCHOR_TOP")
+    	if name then
+    	  GameTooltip:AddLine("Reputation", 0, 1, 0.5, 1, 1, 1)
+    		GameTooltip:AddDoubleLine(FACTION, name, FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b,1,1,1)
+    		GameTooltip:AddDoubleLine(STANDING, _G["FACTION_STANDING_LABEL"..standing], FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b,1,1,1)
+    		GameTooltip:AddDoubleLine(REPUTATION, value-minrep .."/"..maxrep-minrep.." ("..floor((value-minrep)/(maxrep-minrep)*1000)/10 .."%)", FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b,1,1,1)
+    	end 		
+    	GameTooltip:Show()    
+    end)
+    f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+    
+    self.Reputation = f
+    
   end
   
   --create buffs
@@ -723,6 +814,14 @@
     --create art textures do this now for correct frame stacking
     createAngelFrame(self)
     createDemonFrame(self)
+    
+    --experience bar
+    createExpBar(self)
+    
+    --reputation bar
+    createRepBar(self)
+    
+    --bottomline    
     createBottomLine(self)   
 
     --icons

@@ -89,8 +89,16 @@
       },
       soulshards = { 
         show = true,
-        scale = 0.55,
+        scale = 0.56,
         color = {r = 150/255, g = 135/255, b = 200/255, },
+      },
+      holypower = { 
+        show = true,
+        scale = 0.56,
+        color = {r = 200/255, g = 135/255, b = 190/255, },
+      },
+      runes = {
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -55, y = 140 }, 
       },
       art = {
         actionbarbackground = {
@@ -272,7 +280,7 @@
     --PARTY
     party = {
       show = true,
-      showsolo = true, --show party when solo
+      showsolo = false, --show party when solo
       scale = 0.85,
       pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 }, 
       auras = {

@@ -127,7 +127,7 @@
         size = 22,
         onlyShowPlayerBuffs = false,
         onlyShowPlayerDebuffs = false,
-        showDebuffType = true,
+        showDebuffType = false,
       },
       castbar = {
         show = true,
@@ -136,7 +136,13 @@
         scale = 1,
         color = {r = 0.9, g = 0.59, b = 0, },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 350 }, 
-      },  
+      },
+      combobar = { --can be moved without with shift+drag
+        show = true,
+        scale = 0.5,
+        color = {r = 0.9, g = 0.59, b = 0, },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 480 }, 
+      },
     },
     
     --TARGETTARGET

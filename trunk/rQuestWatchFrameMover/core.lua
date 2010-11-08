@@ -14,7 +14,7 @@
 
   --tooltip for icon func
   local function rQWFM_Tooltip(self)
-    GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
+    GameTooltip:SetOwner(self, "ANCHOR_TOP")
     GameTooltip:AddLine("Drag me!", 0, 1, 0.5, 1, 1, 1)
     GameTooltip:Show()
   end

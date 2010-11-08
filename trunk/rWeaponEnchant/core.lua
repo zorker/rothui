@@ -250,17 +250,17 @@
 
   local count = 0
 
-  if tempEnchantList.mainhand.show then
+  if tempEnchantList.mainhand and tempEnchantList.mainhand.show then
     mainhand = createIcon(tempEnchantList.mainhand,"Mainhand")
     count = count+1
   end
 
-  if tempEnchantList.offhand.show then
+  if tempEnchantList.offhand and tempEnchantList.offhand.show then
     offhand = createIcon(tempEnchantList.offhand,"Offhand")
     count = count+1
   end
   
-  if tempEnchantList.throw.show then
+  if tempEnchantList.throw and tempEnchantList.throw.show then
     throw = createIcon(tempEnchantList.throw,"Throw")
     count = count+1
   end

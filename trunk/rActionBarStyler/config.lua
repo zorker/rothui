@@ -122,7 +122,7 @@
       barscale        = 0.82,
       userplaced      = false, --want to place the bar somewhere else?
       locked          = false, --frame locked
-      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 170, y = 130 }, 
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 210, y = 135 }, 
       testmode        = false,
     },
   }
@@ -178,9 +178,16 @@
       f:SetUserPlaced(true)
       if not locked then
         f:EnableMouse(true)
-        f:RegisterForDrag("LeftButton","RightButton")
+        f:RegisterForDrag("LeftButton")
         f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
         f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
+        f:SetScript("OnEnter", function(s) 
+          GameTooltip:SetOwner(s, "ANCHOR_TOP")
+          GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
+          GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
+          GameTooltip:Show()
+        end)
+        f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
       end
     end  
   end

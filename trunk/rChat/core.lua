@@ -27,6 +27,8 @@
     local cf = _G['ChatFrame'..i]
     if cf then 
       cf:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE") 
+      cf:SetFrameStrata("LOW")
+      cf:SetFrameLevel(2)
     end
     local eb = _G['ChatFrame'..i..'EditBox']
     if eb and cf then

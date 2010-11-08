@@ -96,7 +96,7 @@
     button.count:SetParent(button.cd)
     button.count:ClearAllPoints()
     button.count:SetPoint("TOPRIGHT", 4, 4)
-    button.count:SetTextColor(0.75,0.75,0.75)
+    button.count:SetTextColor(0.9,0.9,0.9)
     --fix fontsize to be based on button size
     button.count:SetFont(cfg.font,bw/1.8,"THINOUTLINE")
     button.overlay:SetTexture("Interface\\AddOns\\rTextures\\gloss2")
@@ -187,6 +187,7 @@
       local border = borderholder:CreateTexture(nil,"BACKGROUND",nil,-6)
       border:SetAllPoints(borderholder)
       border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
+      --border:SetVertexColor(1,0,0,1) --threat test
       
     else
       self.Portrait = back:CreateTexture(nil,"BACKGROUND",nil,-7)
@@ -290,7 +291,7 @@
       f:SetUserPlaced(true)
       if not cfg.framesLocked then
         f:EnableMouse(true)
-        f:RegisterForDrag("LeftButton","RightButton")
+        f:RegisterForDrag("LeftButton")
         f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
         f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
       end
@@ -302,8 +303,8 @@
     f:SetMovable(true)
     f:SetUserPlaced(true)
     f:EnableMouse(true)
-    f:RegisterForDrag("LeftButton","RightButton")
-    f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
+    f:RegisterForDrag("LeftButton")
+    f:SetScript("OnDragStart", function(s) if IsShiftKeyDown() then s:StartMoving() end end)
     f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
   end
   

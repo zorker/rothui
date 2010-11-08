@@ -205,6 +205,115 @@
     f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerDebuffs    
     self.Debuffs = f    
   end
+  
+  --update combo
+  local function updateCombo(self, event, unit)
+    if unit == "pet" then return end
+    local bar = self.ComboBar
+  
+    local cp
+    if(UnitExists("vehicle")) then
+      cp = GetComboPoints("vehicle", "target")
+    else
+      cp = GetComboPoints("player", "target")
+    end
+  
+    if cp < 1 then
+      bar:Hide()
+    else
+      bar:Show()
+    end
+  
+    local cpoints = self.CPoints
+        
+    for i=1, MAX_COMBO_POINTS do
+      local adjust = cp/MAX_COMBO_POINTS
+      if(i <= cp) then
+        if adjust == 1 then
+          bar.filling[i]:SetVertexColor(1,0,0,1)
+          bar.glow[i]:SetVertexColor(1,0,0,1)
+        else
+          bar.filling[i]:SetVertexColor(bar.color.r,bar.color.g,bar.color.b,1)
+          bar.glow[i]:SetVertexColor(bar.color.r,bar.color.g,bar.color.b,1)
+        end
+        cpoints[i]:Show()
+        bar.glow[i]:Show()
+      else
+        cpoints[i]:Hide()
+        bar.glow[i]:Hide()
+      end
+    end
+
+  end
+  
+  --create combo
+  local createComboBar = function(self)
+    
+    self.CPoints = {}
+    
+    local t
+    local bar = CreateFrame("Frame","oUF_DiabloComboPoints",self)
+    local w = 64*(MAX_COMBO_POINTS+2)
+    local h = 64
+    --bar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    bar:SetPoint(self.cfg.combobar.pos.a1,self.cfg.combobar.pos.af,self.cfg.combobar.pos.a2,self.cfg.combobar.pos.x,self.cfg.combobar.pos.y)
+    bar:SetWidth(w)
+    bar:SetHeight(h)
+    
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("LEFT",0,0)
+    t:SetTexture("Interface\\AddOns\\rTextures\\combo_left")
+    bar.leftedge = t
+
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("RIGHT",0,0)
+    t:SetTexture("Interface\\AddOns\\rTextures\\combo_right")
+    bar.rightedge = t
+
+    bar.back = {}
+    bar.filling = {}
+    bar.glow = {}
+    bar.gloss = {}
+    
+    for i = 1, MAX_COMBO_POINTS do
+      local back = "back"..i
+      bar.back[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-8)  
+      bar.back[i]:SetSize(64,64)
+      bar.back[i]:SetPoint("LEFT",i*64,0)
+      bar.back[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_back")
+
+      bar.filling[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-7)  
+      bar.filling[i]:SetSize(64,64)
+      bar.filling[i]:SetPoint("LEFT",i*64,0)
+      bar.filling[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_fill")
+      bar.filling[i]:SetVertexColor(self.cfg.combobar.color.r,self.cfg.combobar.color.g,self.cfg.combobar.color.b,1)
+      bar.filling[i]:SetBlendMode("BLEND")
+
+      bar.glow[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-6)  
+      bar.glow[i]:SetSize(64*1.25,64*1.25)
+      bar.glow[i]:SetPoint("CENTER", bar.filling[i], "CENTER", 0, 0)
+      bar.glow[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_glow")
+      bar.glow[i]:SetBlendMode("BLEND")
+      bar.glow[i]:SetVertexColor(self.cfg.combobar.color.r,self.cfg.combobar.color.g,self.cfg.combobar.color.b,1)
+
+      bar.gloss[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-5)  
+      bar.gloss[i]:SetSize(64,64)
+      bar.gloss[i]:SetPoint("LEFT",i*64,0)
+      bar.gloss[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_highlight")
+      bar.gloss[i]:SetBlendMode("ADD")
+      
+      bar.color = self.cfg.combobar.color
+
+      self.CPoints[i] = bar.filling[i]
+    end
+
+    bar:SetScale(self.cfg.combobar.scale)    
+    func.applyDragFunctionality(bar)    
+    self.ComboBar = bar
+
+  end
 
   ---------------------------------------------
   -- UNIT SPECIFIC TAG
@@ -315,6 +424,10 @@
     end
     
     --combobar
+    if self.cfg.combobar.show then
+      createComboBar(self)
+      self.CPoints.Override = updateCombo
+    end
     
     --add self to unit container (maybe access to that unit is needed in another style)
     unit.target = self  

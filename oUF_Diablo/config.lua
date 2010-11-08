@@ -86,7 +86,12 @@
         scale = 1,
         color = {r = 0.9, g = 0.59, b = 0, },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 180.5 }, 
-      },      
+      },
+      soulshards = { 
+        show = true,
+        scale = 0.55,
+        color = {r = 150/255, g = 135/255, b = 200/255, },
+      },
       art = {
         actionbarbackground = {
           show = true,
@@ -137,7 +142,7 @@
         color = {r = 0.9, g = 0.59, b = 0, },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 350 }, 
       },
-      combobar = { --can be moved without with shift+drag
+      combobar = { 
         show = true,
         scale = 0.5,
         color = {r = 0.9, g = 0.59, b = 0, },

@@ -223,23 +223,21 @@
     else
       bar:Show()
     end
-  
-    local cpoints = self.CPoints
         
     for i=1, MAX_COMBO_POINTS do
       local adjust = cp/MAX_COMBO_POINTS
       if(i <= cp) then
         if adjust == 1 then
-          bar.filling[i]:SetVertexColor(1,0,0,1)
-          bar.glow[i]:SetVertexColor(1,0,0,1)
+          bar.filling[i]:SetVertexColor(60/255,220/255,20/255,1)
+          bar.glow[i]:SetVertexColor(60/255,220/255,20/255,1)
         else
           bar.filling[i]:SetVertexColor(bar.color.r,bar.color.g,bar.color.b,1)
           bar.glow[i]:SetVertexColor(bar.color.r,bar.color.g,bar.color.b,1)
         end
-        cpoints[i]:Show()
+        bar.filling[i]:Show()
         bar.glow[i]:Show()
       else
-        cpoints[i]:Hide()
+        bar.filling[i]:Hide()
         bar.glow[i]:Hide()
       end
     end
@@ -289,13 +287,13 @@
       bar.filling[i]:SetPoint("LEFT",i*64,0)
       bar.filling[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_fill")
       bar.filling[i]:SetVertexColor(self.cfg.combobar.color.r,self.cfg.combobar.color.g,self.cfg.combobar.color.b,1)
-      bar.filling[i]:SetBlendMode("BLEND")
+      bar.filling[i]:SetBlendMode("ADD")
 
       bar.glow[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-6)  
       bar.glow[i]:SetSize(64*1.25,64*1.25)
       bar.glow[i]:SetPoint("CENTER", bar.filling[i], "CENTER", 0, 0)
       bar.glow[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_glow")
-      bar.glow[i]:SetBlendMode("BLEND")
+      bar.glow[i]:SetBlendMode("ADD")
       bar.glow[i]:SetVertexColor(self.cfg.combobar.color.r,self.cfg.combobar.color.g,self.cfg.combobar.color.b,1)
 
       bar.gloss[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-5)  

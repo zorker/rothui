@@ -40,8 +40,8 @@
           [3] = 6307,
           [4] = 90364,
         },
-        size = 28,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 130, y = 110 },
+        size = 26,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 130, y = 107 },
         unit = "player",
         ismine = false,
         desaturate = true,
@@ -64,8 +64,8 @@
           [3] = 8076,
           [4] = 93435,
         },
-        size = 28,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 95, y = 110 },
+        size = 26,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 100, y = 107 },
         unit = "player",
         ismine = false,
         desaturate = true,
@@ -82,8 +82,8 @@
       },
       [3] = {
         spellid = 18499, --berserker rage
-        size = 28,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 130, y = 145 },
+        size = 26,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 130, y = 138 },
         unit = "player",
         ismine = true,
         desaturate = true,
@@ -100,8 +100,26 @@
       },
       [4] = {
         spellid = 2565, --shield block
-        size = 42, 
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
+        size = 26, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 138 },
+        unit = "player",
+        ismine = true,
+        desaturate = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0.6,          
+          },
+        },
+      },
+      [5] = {
+        spellid = 87096, --thunderclap dps boost
+        size = 26, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -100, y = 138 },
         unit = "player",
         ismine = true,
         desaturate = true,
@@ -130,8 +148,8 @@
           [4] = 95467,
           [5] = 95466,
         },
-        size = 28,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 110},
+        size = 26,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 107},
         unit = "target",
         ismine = false,
         desaturate = true,
@@ -157,8 +175,8 @@
           [6] = 90315,
           [7] = 54404,
         },
-        size = 28,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -95, y = 110 },
+        size = 26,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -100, y = 107 },
         unit = "target",
         ismine = false,
         desaturate = true,
@@ -184,8 +202,8 @@
           [6] = 50256,
           [7] = 24423,
         },
-        size = 28,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -60, y = 110 },
+        size = 26,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -40, y = 107 },
         unit = "target",
         ismine = false,
         desaturate = true,
@@ -202,8 +220,8 @@
       },
       [4] = {
         spellid = 772, --rend
-        size = 28,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -25, y = 110 },
+        size = 26,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -70, y = 107 },
         unit = "target",
         ismine = true,
         desaturate = true,
@@ -224,8 +242,8 @@
     cfg.rf3_CooldownList = {
       [1] = {
         spellid = 100, --charge
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 25, y = 110 },
-        size = 28,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 70, y = 107 },
+        size = 26,
         unit = "target",
         desaturate = true,
         alpha = {
@@ -239,10 +257,11 @@
           },
         },
       },
+      --[[
       [2] = {
         spellid = 20252, --intercept
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 60, y = 110 },
-        size = 28,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 70, y = 107 },
+        size = 26,
         unit = "target",
         desaturate = true,
         alpha = {
@@ -256,70 +275,9 @@
           },
         },
       },
+      ]]--
     }
     
-  end
-
-  if player_name == "Astone" and player_class == "WARLOCK" and (spec == 1 or spec == 2) then
-    
-    --Rothars Debuff List
-    
-    cfg.rf3_DebuffList = {
-      [1] = {
-        spellid = 348, --feuerbrand
-        size = 28,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 110},
-        unit = "target",
-        ismine = true,
-        desaturate = true,
-        alpha = {
-          found = {
-            frame = 1,
-            icon = 1,
-          },
-          not_found = {
-            frame = 0.4,
-            icon = 0.6,          
-          },
-        },
-      },
-      [2] = {
-        spellid = 172, --verderbnis
-        size = 28,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -95, y = 110 },
-        unit = "target",
-        ismine = true,
-        desaturate = true,
-        alpha = {
-          found = {
-            frame = 1,
-            icon = 1,
-          },
-          not_found = {
-            frame = 0.4,
-            icon = 0.6,          
-          },
-        },
-      },
-      [3] = {
-        spellid = 980, --omen der pein
-        size = 28,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -60, y = 110 },
-        unit = "target",
-        ismine = true,
-        desaturate = true,
-        alpha = {
-          found = {
-            frame = 1,
-            icon = 1,
-          },
-          not_found = {
-            frame = 0.4,
-            icon = 0.6,          
-          },
-        },
-      },
-    }
   end
   
   -----------------------------

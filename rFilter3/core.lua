@@ -45,8 +45,8 @@
     local w = f.size
     
     local gl = i:CreateTexture(nil, "BACKGROUND",nil,-8)
-    gl:SetPoint("TOPLEFT",i,"TOPLEFT",-w*3/32,w*3/32)
-    gl:SetPoint("BOTTOMRIGHT",i,"BOTTOMRIGHT",w*3/32,-w*3/32)
+    gl:SetPoint("TOPLEFT",i,"TOPLEFT",-w*3.3/32,w*3.3/32)
+    gl:SetPoint("BOTTOMRIGHT",i,"BOTTOMRIGHT",w*3.3/32,-w*3.3/32)
     gl:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_glow")
     gl:SetVertexColor(0, 0, 0, 1)
 
@@ -64,12 +64,12 @@
     end
 
     local bo = i:CreateTexture(nil,"BACKGROUND",nil,-4)
-    bo:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_roth")
+    bo:SetTexture("Interface\\AddOns\\rTextures\\gloss2")
     bo:SetVertexColor(0.37,0.3,0.3,1)
     bo:SetAllPoints(i)
     
     local time = i:CreateFontString(nil, "BORDER")
-    time:SetFont(STANDARD_TEXT_FONT, w*14/32, "THINOUTLINE")
+    time:SetFont(STANDARD_TEXT_FONT, w*16/36, "THINOUTLINE")
     time:SetPoint("BOTTOM", 0, 0)
     time:SetTextColor(1, 0.8, 0)
     --time:SetShadowColor(0,0,0,1)

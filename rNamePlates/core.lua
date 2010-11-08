@@ -8,7 +8,7 @@
   
   local colorswitcher = true --true/false will swap back- and foregroundcolor
   local showhpvalue   = true --true/false will enable disable of hp value on the nameplate
-  local alwaysshowhp  = true --true/false will make the hp value appear even if the unit has 100% life, requires showhpvalue to be true
+  local alwaysshowhp  = false --true/false will make the hp value appear even if the unit has 100% life, requires showhpvalue to be true
   
   -----------------------------
   -- FUNCTIONS
@@ -294,7 +294,8 @@
     --disable some stuff
     hideBlizz(nameText,levelText,dragonTexture)
     
-    highlightTexture:SetAlpha(0.2)
+    --highlightTexture:SetAlpha(0.2)
+    highlightTexture:SetTexture("")
     
     if colorswitcher or showhpvalue then
       healthBar:SetScript("OnValueChanged", updateHealthbar)

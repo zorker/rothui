@@ -7,6 +7,7 @@
 
 modules\oUF_Experience.lua
 modules\oUF_Reputation.lua
+modules\oUF_DebuffHighlight.lua
 
 config.lua
 

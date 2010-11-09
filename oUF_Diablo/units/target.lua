@@ -427,6 +427,9 @@
       self.CPoints.Override = updateCombo
     end
     
+    --debuffglow
+    func.createDebuffGlow(self)
+    
     --add self to unit container (maybe access to that unit is needed in another style)
     unit.target = self  
     

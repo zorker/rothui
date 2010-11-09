@@ -801,6 +801,15 @@
     --create the power orb
     self.Power = createOrb(self,"power")
     
+    --smoothing
+    self.Health.Smooth = true
+    self.Power.Smooth = true
+
+    --activate frequent updates for power orb
+    if self.cfg.power.frequentUpdates then
+      self.Power.frequentUpdates = true
+    end
+    
     createHealthPowerStrings(self)
 
     self.Health.PostUpdate = updatePlayerHealth

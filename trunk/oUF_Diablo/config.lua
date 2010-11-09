@@ -57,6 +57,9 @@
       width = 150,
       height = 150,
       scale = 0.82,
+      power = {
+        frequentUpdates = false,
+      },
       pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -260, y = -9 }, 
       icons = {
         pvp = {

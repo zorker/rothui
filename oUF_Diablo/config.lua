@@ -292,7 +292,7 @@
     --PARTY
     party = {
       show = true,
-      showsolo = false, --show party when solo
+      showsolo = true, --show party when solo
       scale = 0.85,
       pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 }, 
       auras = {
@@ -309,7 +309,7 @@
       },
       portrait = {
         show = true,
-        use3D = false,
+        use3D = true,
       },
     },
   }

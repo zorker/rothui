@@ -165,6 +165,24 @@
     end
   end
   
+  --check threat
+  func.checkThreat = function(self,event,unit)
+    if unit then
+      if self.unit ~= unit then return end
+      local threat = UnitThreatSituation(unit)
+	    if(threat and threat > 0) then
+		    local r, g, b = GetThreatStatusColor(threat)
+        if self.Border then
+          self.Border:SetVertexColor(r,g,b)
+        end
+      else
+        if self.Border then
+          self.Border:SetVertexColor(0.5,0.4,0.4)
+        end
+      end
+    end
+  end
+  
   --create portrait func
   func.createPortrait = function(self)
     
@@ -187,7 +205,9 @@
       local border = borderholder:CreateTexture(nil,"BACKGROUND",nil,-6)
       border:SetAllPoints(borderholder)
       border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
+      border:SetVertexColor(0.5,0.4,0.4)
       --border:SetVertexColor(1,0,0,1) --threat test
+      self.Border = border
       
     else
       self.Portrait = back:CreateTexture(nil,"BACKGROUND",nil,-7)
@@ -198,6 +218,8 @@
       local border = back:CreateTexture(nil,"BACKGROUND",nil,-6)
       border:SetAllPoints(back)
       border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
+      border:SetVertexColor(0.5,0.4,0.4)
+      self.Border = border
       
     end
     

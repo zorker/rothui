@@ -344,18 +344,18 @@
       --debuff glow
       orb.DebuffGlow = orb:CreateTexture(nil, "BACKGROUND", nil, -8)
       orb.DebuffGlow:SetPoint("CENTER",0,0)
-      orb.DebuffGlow:SetSize(self.cfg.width+1,self.cfg.width+1)
+      orb.DebuffGlow:SetSize(self.cfg.width+5,self.cfg.width+5)
       orb.DebuffGlow:SetBlendMode("BLEND")
-      orb.DebuffGlow:SetVertexColor(1, 0, 0, 0) -- set alpha to 0 to hide the texture
+      orb.DebuffGlow:SetVertexColor(0, 1, 1, 0) -- set alpha to 0 to hide the texture
       orb.DebuffGlow:SetTexture("Interface\\AddOns\\rTextures\\orb_debuff_glow")
       self.DebuffHighlight = orb.DebuffGlow
-      self.DebuffHighlightAlpha = 0.7
+      self.DebuffHighlightAlpha = 1
       self.DebuffHighlightFilter = false
       
       --low hp glow
       orb.LowHP = orb:CreateTexture(nil, "BACKGROUND", nil, -5)
       orb.LowHP:SetPoint("CENTER",0,0)
-      orb.LowHP:SetSize(self.cfg.width-10,self.cfg.width-10)
+      orb.LowHP:SetSize(self.cfg.width-5,self.cfg.width-5)
       orb.LowHP:SetTexture("Interface\\AddOns\\rTextures\\orb_lowhp_glow")
       orb.LowHP:SetBlendMode("ADD")
       orb.LowHP:SetVertexColor(1, 0, 0, 1)

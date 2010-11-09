@@ -152,6 +152,9 @@
       self.Debuffs.PostCreateIcon = func.createAuraIcon
     end
     
+    --debuffglow
+    func.createDebuffGlow(self)
+    
     --add self to unit container (maybe access to that unit is needed in another style)
     unit.focustarget = self    
     

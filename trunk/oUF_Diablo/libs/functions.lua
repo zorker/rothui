@@ -156,6 +156,22 @@
 
   end
   
+  --debuffglow
+  func.createDebuffGlow = function(self)
+    local f = self:CreateTexture(nil,"LOW",nil,-5)
+    if self.cfg.style == "target" then
+      f:SetTexture("Interface\\AddOns\\rTextures\\target_debuffglow")
+    else
+      f:SetTexture("Interface\\AddOns\\rTextures\\targettarget_debuffglow")
+    end
+    f:SetAllPoints(self)
+    f:SetBlendMode("BLEND")
+    f:SetVertexColor(0, 1, 1, 0) -- set alpha to 0 to hide the texture
+    self.DebuffHighlight = f
+    self.DebuffHighlightAlpha = 1
+    self.DebuffHighlightFilter = true
+  end
+  
   --update power func
   func.updatePower = function(bar, unit, min, max)
     local color = cfg.powercolors[select(2, UnitPowerType(unit))]

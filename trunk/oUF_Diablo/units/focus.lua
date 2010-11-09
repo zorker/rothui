@@ -157,6 +157,9 @@
       self.Debuffs.PostCreateIcon = func.createAuraIcon
     end
     
+    --debuffglow
+    func.createDebuffGlow(self)
+    
     --threat
     self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", func.checkThreat)
     

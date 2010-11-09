@@ -98,8 +98,8 @@
   
     local name = func.createFontString(self, cfg.font, 14, "THINOUTLINE")
     name:SetPoint("BOTTOM", self, "TOP", 0, -13)
-    name:SetPoint("LEFT", 5,0)
-    name:SetPoint("RIGHT", -5,-2)
+    name:SetPoint("LEFT", self.Health, 0, 0)
+    name:SetPoint("RIGHT", self.Health, 0, 0)
     self.Name = name
 
     local hpval = func.createFontString(self.Health, cfg.font, 11, "THINOUTLINE")
@@ -154,6 +154,19 @@
     
     --debuffglow
     func.createDebuffGlow(self)
+    
+    --range
+    self.Range = {
+      insideAlpha = 1, 
+      outsideAlpha = self.cfg.alpha.notinrange
+    }
+    
+    --icons
+    self.RaidIcon = func.createIcon(self,"BACKGROUND",18,self.Name,"RIGHT","LEFT",0,0,-1)
+    self.ReadyCheck = func.createIcon(self,"OVERLAY",24,self.Health,"CENTER","CENTER",0,0,-1)
+    self.Leader = func.createIcon(self,"BACKGROUND",13,self.Border,"BOTTOMRIGHT","BOTTOMLEFT",16,38,-1)
+    self.LFDRole = func.createIcon(self,"BACKGROUND",12,self.Border,"BOTTOMRIGHT","BOTTOMLEFT",16,18,-1)
+    self.LFDRole:SetTexture("Interface\\AddOns\\rTextures\\lfd_role")
     
     --threat
     self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", func.checkThreat)

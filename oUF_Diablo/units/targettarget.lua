@@ -98,8 +98,8 @@
   
     local name = func.createFontString(self, cfg.font, 14, "THINOUTLINE")
     name:SetPoint("BOTTOM", self, "TOP", 0, -13)
-    name:SetPoint("LEFT", 5,0)
-    name:SetPoint("RIGHT", -5,-2)
+    name:SetPoint("LEFT", self.Health, 0, 0)
+    name:SetPoint("RIGHT", self.Health, 0, 0)
     self.Name = name
 
     local hpval = func.createFontString(self.Health, cfg.font, 11, "THINOUTLINE")
@@ -149,6 +149,9 @@
     
     --debuffglow
     func.createDebuffGlow(self)
+    
+    --icons
+    self.RaidIcon = func.createIcon(self,"BACKGROUND",20,self.Name,"BOTTOM","TOP",0,0,-1)
     
     --add self to unit container (maybe access to that unit is needed in another style)
     unit.targettarget = self    

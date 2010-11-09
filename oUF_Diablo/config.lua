@@ -296,6 +296,9 @@
     party = {
       show = true,
       showsolo = true, --show party when solo
+      alpha = {
+        notinrange = 0.5,
+      },
       scale = 0.85,
       pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 }, 
       auras = {

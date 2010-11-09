@@ -131,7 +131,7 @@
     local r = CreateFrame("StatusBar",nil,f)
     r:SetAllPoints(f)
     r:SetStatusBarTexture(cfg.texture)
-    r:SetStatusBarColor(1,0.8,0.1,0.6)
+    r:SetStatusBarColor(0.9,0.7,0)
     
     func.applyDragFunctionality(f)
     
@@ -139,20 +139,21 @@
     t:SetAllPoints(r)
     t:SetTexture(cfg.texture)
     t:SetVertexColor(0.7,0,0.8,0.3)
+    f.bg = t
 
     f:SetScript("OnEnter", function(s)
-    	mxp = UnitXPMax("player")
-    	xp = UnitXP("player")
-    	rxp = GetXPExhaustion()    
-    	GameTooltip:SetOwner(s, "ANCHOR_TOP")
-    	GameTooltip:AddLine("Experience / Rested", 0, 1, 0.5, 1, 1, 1)
-    	if UnitLevel("player") ~= MAX_PLAYER_LEVEL then
-    		GameTooltip:AddDoubleLine(COMBAT_XP_GAIN, xp.."/"..mxp.." ("..floor((xp/mxp)*1000)/10 .."%)",0.7,0,0.8,1,1,1)
-    		if rxp then
-    			GameTooltip:AddDoubleLine(TUTORIAL_TITLE26, rxp .." (".. floor((rxp/mxp)*1000)/10 .."%)", 1,0.8,0.1,1,1,1)
-    		end
-    	end    		
-    	GameTooltip:Show()    
+      mxp = UnitXPMax("player")
+      xp = UnitXP("player")
+      rxp = GetXPExhaustion()    
+      GameTooltip:SetOwner(s, "ANCHOR_TOP")
+      GameTooltip:AddLine("Experience / Rested", 0, 1, 0.5, 1, 1, 1)
+      if UnitLevel("player") ~= MAX_PLAYER_LEVEL then
+        GameTooltip:AddDoubleLine(COMBAT_XP_GAIN, xp.."/"..mxp.." ("..floor((xp/mxp)*1000)/10 .."%)",0.7,0,0.8,1,1,1)
+        if rxp then
+          GameTooltip:AddDoubleLine(TUTORIAL_TITLE26, rxp .." (".. floor((rxp/mxp)*1000)/10 .."%)", 0.9,0.7,0,1,1,1)
+        end
+      end        
+      GameTooltip:Show()    
     end)
     f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
     
@@ -182,18 +183,20 @@
     local t = f:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetAllPoints(f)
     t:SetTexture(cfg.texture)
-    t:SetVertexColor(0,0.7,0,0.3)
+    t:SetVertexColor(0,0.7,0)
+    t:SetAlpha(0.3)
+    f.bg = t
 
     f:SetScript("OnEnter", function(s)
       name, standing, minrep, maxrep, value = GetWatchedFactionInfo()
-    	GameTooltip:SetOwner(s, "ANCHOR_TOP")
-    	if name then
-    	  GameTooltip:AddLine("Reputation", 0, 1, 0.5, 1, 1, 1)
-    		GameTooltip:AddDoubleLine(FACTION, name, FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b,1,1,1)
-    		GameTooltip:AddDoubleLine(STANDING, _G["FACTION_STANDING_LABEL"..standing], FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b,1,1,1)
-    		GameTooltip:AddDoubleLine(REPUTATION, value-minrep .."/"..maxrep-minrep.." ("..floor((value-minrep)/(maxrep-minrep)*1000)/10 .."%)", FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b,1,1,1)
-    	end 		
-    	GameTooltip:Show()    
+      GameTooltip:SetOwner(s, "ANCHOR_TOP")
+      GameTooltip:AddLine("Reputation", 0, 1, 0.5, 1, 1, 1)
+      if name then
+        GameTooltip:AddDoubleLine(FACTION, name, FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b,1,1,1)
+        GameTooltip:AddDoubleLine(STANDING, _G["FACTION_STANDING_LABEL"..standing], FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b,1,1,1)
+        GameTooltip:AddDoubleLine(REPUTATION, value-minrep .."/"..maxrep-minrep.." ("..floor((value-minrep)/(maxrep-minrep)*1000)/10 .."%)", FACTION_BAR_COLORS[standing].r, FACTION_BAR_COLORS[standing].g, FACTION_BAR_COLORS[standing].b,1,1,1)
+      end     
+      GameTooltip:Show()    
     end)
     f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
     

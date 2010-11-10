@@ -315,7 +315,7 @@
     --PARTY
     party = {
       show = true,
-      showsolo = false, --show party when solo
+      showsolo = true, --show party when solo
       alpha = {
         notinrange = 0.5,
       },
@@ -335,7 +335,7 @@
       },
       portrait = {
         show = true,
-        use3D = true,
+        use3D = false,
       },
     },
   }

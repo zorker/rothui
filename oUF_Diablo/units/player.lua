@@ -588,7 +588,7 @@
           eb:SetFocus()
           eb:HighlightText()
         end          
-      end        
+      end
     end)
     
     button.count:ClearAllPoints()
@@ -780,6 +780,20 @@
 
   end
 
+  --create eclipse bar
+  local createEclipseBar = function(self)
+    local e = _G["EclipseBarFrame"]
+    e:SetParent(self)
+    e:SetScale(self.cfg.eclipsebar.scale)
+    e:ClearAllPoints()
+    e:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    e:SetFrameStrata("HIGH")
+    func.applyDragFunctionalityNoRestrict(e)
+    local t = select(1, e:GetRegions())
+    t:SetTexture("Interface\\AddOns\\rTextures\\eclipsebar")
+    EclipseBar_OnLoad(e)
+  end
+
   ---------------------------------------------
   -- PLAYER STYLE FUNC
   ---------------------------------------------
@@ -880,6 +894,11 @@
     if cfg.playerclass == "PALADIN" and self.cfg.holypower.show then
       createHolyPowerBar(self)
       self.HolyPower.Override = updateHolyPower
+    end
+    
+    --eclipsebar
+    if cfg.playerclass == "DRUID" and self.cfg.eclipsebar.show then
+      createEclipseBar(self)   
     end
     
     --runes

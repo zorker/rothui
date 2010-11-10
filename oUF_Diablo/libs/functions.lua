@@ -137,17 +137,15 @@
 
     if color then
       self.Name:SetTextColor(color.r, color.g, color.b,1)
-      bar:SetStatusBarColor(0.15,0.15,0.15,1)
-      bar.bg:SetVertexColor(0.8,0,0,0.9)
-      --bar:SetStatusBarColor(color.r, color.g, color.b,1)
-      --bar.bg:SetTexture(1,0,0,0)
     end
+
+    bar:SetStatusBarColor(cfg.colorswitcher.healthbar.r,cfg.colorswitcher.healthbar.g,cfg.colorswitcher.healthbar.b,cfg.colorswitcher.healthbar.a)
+    bar.bg:SetVertexColor(cfg.colorswitcher.bg.r,cfg.colorswitcher.bg.g,cfg.colorswitcher.bg.b,cfg.colorswitcher.bg.a)
 
     if d <= 25 and min > 1 then
       self.Health.glow:SetVertexColor(1,0,0,1)
     else
       self.Health.glow:SetVertexColor(0,0,0,0.7)
-      --self.Health.glow:SetVertexColor(1,0,0,1)
     end
 
     if dead == 1 then
@@ -186,8 +184,8 @@
     if unit then
       if self.unit ~= unit then return end
       local threat = UnitThreatSituation(unit)
-	    if(threat and threat > 0) then
-		    local r, g, b = GetThreatStatusColor(threat)
+      if(threat and threat > 0) then
+        local r, g, b = GetThreatStatusColor(threat)
         if self.Border then
           self.Border:SetVertexColor(r,g,b)
         end
@@ -260,7 +258,7 @@
     c:SetStatusBarTexture(f.cfg.castbar.texture)
     c:SetScale(f.cfg.castbar.scale)
     c:SetPoint(f.cfg.castbar.pos.a1, f.cfg.castbar.pos.af, f.cfg.castbar.pos.a2, f.cfg.castbar.pos.x+10.1, f.cfg.castbar.pos.y)
-    c:SetStatusBarColor(0.15,0.15,0.15,1)
+    c:SetStatusBarColor(f.cfg.castbar.color.bar.r,f.cfg.castbar.color.bar.g,f.cfg.castbar.color.bar.b,f.cfg.castbar.color.bar.a)
     --c:SetStatusBarColor(0,0,0,1)
 
     c.background = c:CreateTexture(nil,"BACKGROUND",nil,-8)
@@ -273,7 +271,7 @@
     c.bg = c:CreateTexture(nil,"BACKGROUND",nil,-6)
     c.bg:SetTexture(f.cfg.castbar.texture)
     c.bg:SetAllPoints(c)
-    c.bg:SetVertexColor(0.96,0.7,0,1)
+    c.bg:SetVertexColor(f.cfg.castbar.color.bg.r,f.cfg.castbar.color.bg.g,f.cfg.castbar.color.bg.b,f.cfg.castbar.color.bg.a)
 
     c.Text =  func.createFontString(c, cfg.font, 11, "THINOUTLINE")
     c.Text:SetPoint("LEFT", 5, 0)
@@ -303,6 +301,15 @@
     if f.cfg.style == "target" then
       c.Shield = c:CreateTexture(nil,"BACKGROUND",nil,-8)
       c.Shield:SetTexture(0,0,0,0)
+    end
+    
+    --safezone
+    if f.cfg.style == "player" and f.cfg.castbar.latency then
+      c.SafeZone = c:CreateTexture(nil,"OVERLAY")
+      c.SafeZone:SetTexture(f.cfg.castbar.texture)
+      c.SafeZone:SetVertexColor(0.6,0,0,0.6)
+      c.SafeZone:SetPoint("TOPRIGHT")
+      c.SafeZone:SetPoint("BOTTOMRIGHT")
     end
     
     func.applyDragFunctionality(c)

@@ -34,6 +34,16 @@
   --this will override the manacolor value (obvious)
   cfg.automana = true
 
+  ----------------------------------------
+  -- colorswitcher define your color for healthbars here
+  ----------------------------------------
+  
+  --color is in RGB (red, green, blue, alpha)
+
+  cfg.colorswitcher = {
+    healthbar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
+    bg = { r = 1, g = 0, b = 0, a = 0.9, },
+  }
 
   ----------------------------------------
   -- frame movement
@@ -84,10 +94,12 @@
       castbar = {
         show = true,
         latency = true,
-        classcolored = false,
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
         scale = 1,
-        color = {r = 0.9, g = 0.59, b = 0, },
+        color = {
+          bar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
+          bg = { r = 0.96, g = 0.7, b = 0, a = 1, },
+        },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 180.5 }, 
       },
       soulshards = { 
@@ -99,6 +111,10 @@
         show = true,
         scale = 0.56,
         color = {r = 200/255, g = 135/255, b = 190/255, },
+      },
+      eclipsebar = { 
+        show = true,
+        scale = 1,
       },
       runes = {
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -55, y = 140 }, 
@@ -159,10 +175,12 @@
       },
       castbar = {
         show = true,
-        classcolored = false,
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
         scale = 1,
-        color = {r = 0.9, g = 0.59, b = 0, },
+        color = {
+          bar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
+          bg = { r = 0.96, g = 0.7, b = 0, a = 1, },
+        },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 350 }, 
       },
       combobar = { 
@@ -237,11 +255,13 @@
         use3D = true,
       },
       castbar = {
-        show = false,
-        classcolored = false,
+        show = true,
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
         scale = 1,
-        color = {r = 0.9, g = 0.59, b = 0, },
+        color = {
+          bar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
+          bg = { r = 0.96, g = 0.7, b = 0, a = 1, },
+        },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 420 }, 
       },  
     },
@@ -295,7 +315,7 @@
     --PARTY
     party = {
       show = true,
-      showsolo = true, --show party when solo
+      showsolo = false, --show party when solo
       alpha = {
         notinrange = 0.5,
       },

@@ -222,6 +222,11 @@
       border:SetVertexColor(0.5,0.4,0.4)
       --border:SetVertexColor(1,0,0,1) --threat test
       self.Border = border
+
+      local gloss = borderholder:CreateTexture(nil,"BACKGROUND",nil,-5)
+      gloss:SetAllPoints(borderholder)
+      gloss:SetTexture("Interface\\AddOns\\rTextures\\portrait_gloss")
+      gloss:SetVertexColor(0.9,0.95,1,1)
       
     else
       self.Portrait = back:CreateTexture(nil,"BACKGROUND",nil,-7)
@@ -234,7 +239,12 @@
       border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
       border:SetVertexColor(0.5,0.4,0.4)
       self.Border = border
-      
+
+      local gloss = back:CreateTexture(nil,"BACKGROUND",nil,-5)
+      gloss:SetAllPoints(back)
+      gloss:SetTexture("Interface\\AddOns\\rTextures\\portrait_gloss")
+      gloss:SetVertexColor(0.9,0.95,1,1)
+
     end
     
     self.Name:SetPoint("BOTTOM", self, "TOP", 0, self.cfg.width-53)

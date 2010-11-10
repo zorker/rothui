@@ -302,9 +302,17 @@
     --orb filling
     orb.Filling = orb:CreateTexture(nil, "BACKGROUND", nil, -4)
     if type == "power" then
-      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling3")
+      if cfg.manatexture >= 1 and cfg.manatexture <= 11 then
+        orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling"..cfg.manatexture)
+      else
+        orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling"..math.random(1,11))
+      end
     else
-      orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling1")
+      if cfg.healthtexture >= 1 and cfg.healthtexture <= 11 then
+        orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling"..cfg.healthtexture)
+      else
+        orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling"..math.random(1,11))
+      end
     end
     --IMPORTANT, settexcoord will not work with other settings
     orb.Filling:SetPoint("BOTTOMLEFT",0,0)

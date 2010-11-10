@@ -126,19 +126,26 @@
   end
   
   local createMapOverlay = function()
-    local t = Minimap:CreateTexture(nil,"ARTWORK")
+    local t = Minimap:CreateTexture(nil,"ARTWORK",nil,-8)
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_map2")
     local d3mapscale = 1.3
     t:SetPoint("CENTER", Minimap, "CENTER", -2*d3mapscale, -11*d3mapscale)
     t:SetWidth(Minimap:GetHeight()*2*d3mapscale)
     t:SetHeight(Minimap:GetHeight()*d3mapscale)
     
-    local t2 = Minimap:CreateTexture(nil,"BORDER")
-    t2:SetTexture("Interface\\AddOns\\rTextures\\orb_gloss")
+    local t2 = Minimap:CreateTexture(nil,"ARTWORK",nil,-7)
+    t2:SetTexture("Interface\\AddOns\\rTextures\\orb_gloss2")
+    t2:SetBlendMode("ADD")
     t2:SetPoint("CENTER",0,0)
     t2:SetWidth(Minimap:GetHeight()*1.06)
     t2:SetHeight(Minimap:GetHeight()*1.06)
-    t2:SetAlpha(1)
+    t2:SetVertexColor(0.9,0.95,1,1)
+    
+    local t3 = Minimap:CreateTexture(nil,"ARTWORK",nil,-6)
+    t3:SetTexture("Interface\\AddOns\\rTextures\\orb_innershadow")
+    t3:SetAllPoints(t2)
+    t3:SetVertexColor(0,0,0,1)
+    
   end
   
   local adjustBlizzard = function()

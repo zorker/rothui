@@ -227,7 +227,7 @@
       self.Portrait = back:CreateTexture(nil,"BACKGROUND",nil,-7)
       self.Portrait:SetPoint("TOPLEFT",back,"TOPLEFT",27,-27)
       self.Portrait:SetPoint("BOTTOMRIGHT",back,"BOTTOMRIGHT",-27,27)
-      self.Portrait:SetTexCoord(0.1,0.9,0.1,0.9)
+      self.Portrait:SetTexCoord(0.15,0.85,0.15,0.85)
       
       local border = back:CreateTexture(nil,"BACKGROUND",nil,-6)
       border:SetAllPoints(back)

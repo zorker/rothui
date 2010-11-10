@@ -25,21 +25,32 @@
   -- healthcolor defines what healthcolor will be used
   -- 0 = class color, 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
   cfg.healthcolor = 0
-
+  
   -- manacolor defines what manacolor will be used
   -- 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
   cfg.manacolor = 1
-  
+
   --automatic mana detection on stance/class (only works with glows active)
   --this will override the manacolor value (obvious)
   cfg.automana = true
+
+  ----------------------------------------
+  -- orb texture settings
+  ----------------------------------------
+
+  --the texture of the health orb. you can choose between 11 different textures.
+  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = soft_gradient, 11 = bubbles
+  cfg.healthtexture = 1
+  
+  --the texture of the mana orb. you can choose between 11 different textures.
+  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = soft_gradient, 11 = bubbles
+  cfg.manatexture = 3
 
   ----------------------------------------
   -- colorswitcher define your color for healthbars here
   ----------------------------------------
   
   --color is in RGB (red, green, blue, alpha)
-
   cfg.colorswitcher = {
     healthbar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
     bg = { r = 1, g = 0, b = 0, a = 0.9, },

@@ -188,10 +188,12 @@
         local r, g, b = GetThreatStatusColor(threat)
         if self.Border then
           self.Border:SetVertexColor(r,g,b)
+          self.PortraitBack:SetVertexColor(r,g,b,1)
         end
       else
         if self.Border then
-          self.Border:SetVertexColor(0.5,0.4,0.4)
+          self.Border:SetVertexColor(0.6,0.5,0.5)
+          self.PortraitBack:SetVertexColor(0.1,0.1,0.1,0.9)
         end
       end
     end
@@ -207,6 +209,8 @@
     local t = back:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetAllPoints(back)
     t:SetTexture("Interface\\AddOns\\rTextures\\portrait_back")
+    t:SetVertexColor(0.1,0.1,0.1,0.9)
+    self.PortraitBack = t
 
     if self.cfg.portrait.use3D then
       self.Portrait = CreateFrame("PlayerModel", nil, back)
@@ -219,12 +223,13 @@
       local border = borderholder:CreateTexture(nil,"BACKGROUND",nil,-6)
       border:SetAllPoints(borderholder)
       border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
-      border:SetVertexColor(0.5,0.4,0.4)
+      border:SetVertexColor(0.6,0.5,0.5)
       --border:SetVertexColor(1,0,0,1) --threat test
       self.Border = border
 
       local gloss = borderholder:CreateTexture(nil,"BACKGROUND",nil,-5)
       gloss:SetAllPoints(borderholder)
+      gloss:SetBlendMode("ADD")
       gloss:SetTexture("Interface\\AddOns\\rTextures\\portrait_gloss")
       gloss:SetVertexColor(0.9,0.95,1,1)
       
@@ -237,7 +242,7 @@
       local border = back:CreateTexture(nil,"BACKGROUND",nil,-6)
       border:SetAllPoints(back)
       border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
-      border:SetVertexColor(0.5,0.4,0.4)
+      border:SetVertexColor(0.6,0.5,0.5)
       self.Border = border
 
       local gloss = back:CreateTexture(nil,"BACKGROUND",nil,-5)

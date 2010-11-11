@@ -3,7 +3,7 @@
   -- zork - 2010
 
   local update_timer = 1
-  local showXpRep = true  
+  local showXpRep = false  
   
   --------------------------------
   -- config end
@@ -155,7 +155,7 @@
     local mail = (HasNewMail() or 0)
     local mailtext = ""
     if mail>0 then
-      mailtext = "|c00FF78F1Mail|r|c009C907D | |r"
+      mailtext = "|c00FF78F1New Mail!|r"
     end
     return mailtext
   end
@@ -172,6 +172,10 @@
     
     if showXpRep then
       f3.text:SetText(rsiMail()..""..rsiExpRep())
+      f3:SetHeight(f3.text:GetStringHeight())
+      f3:SetWidth(f3.text:GetStringWidth())
+    else
+      f3.text:SetText(rsiMail() or "")
       f3:SetHeight(f3.text:GetStringHeight())
       f3:SetWidth(f3.text:GetStringWidth())
     end

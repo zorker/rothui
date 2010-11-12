@@ -801,6 +801,16 @@
     t:SetTexture("Interface\\AddOns\\rTextures\\eclipsebar")
     EclipseBar_OnLoad(e)
   end
+  
+  --create rune bar
+  local createRuneBar = function(self)
+    local f = CreateFrame("Frame","oUF_DiabloRuneBar",self)
+    f:SetPoint(self.cfg.runes.pos.a1,self.cfg.runes.pos.af,self.cfg.runes.pos.a2,self.cfg.runes.pos.x,self.cfg.runes.pos.y)
+    f:SetSize(180,50)
+    func.applyDragFunctionalityNoRestrict(f)
+    RuneButtonIndividual1:ClearAllPoints()
+    RuneButtonIndividual1:SetPoint("LEFT",f,"LEFT",10,0)
+  end
 
   ---------------------------------------------
   -- PLAYER STYLE FUNC
@@ -912,8 +922,7 @@
     --runes
     if cfg.playerclass == "DEATHKNIGHT" then
       --position deathknight runes
-      RuneButtonIndividual1:ClearAllPoints()
-      RuneButtonIndividual1:SetPoint(self.cfg.runes.pos.a1,self.cfg.runes.pos.af,self.cfg.runes.pos.a2,self.cfg.runes.pos.x,self.cfg.runes.pos.y)
+      createRuneBar(self)
     end
 
     --add self to unit container (maybe access to that unit is needed in another style)

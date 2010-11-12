@@ -41,7 +41,7 @@
     self:SetScript("OnEnter", UnitFrame_OnEnter)
     self:SetScript("OnLeave", UnitFrame_OnLeave)
     --func.createBackdrop(self)
-    func.applyDragFunctionality(self)
+    func.applyDragFunctionality(self,"orb")
   end
   
   --actionbar background
@@ -344,7 +344,7 @@
       --reset the power to be on the opposite side of the health orb
       orb:SetPoint(self.cfg.pos.a1,self.cfg.pos.af,self.cfg.pos.a2,self.cfg.pos.x*(-1),self.cfg.pos.y)
       --make the power orb dragable
-      func.applyDragFunctionality(orb)
+      func.applyDragFunctionality(orb,"orb")
     else
       --position the health orb ontop of the self object
       orb:SetPoint("CENTER",self,"CENTER",0,0)
@@ -699,7 +699,7 @@
     end
 
     bar:SetScale(self.cfg.soulshards.scale)    
-    func.applyDragFunctionalityNoRestrict(bar)    
+    func.applyDragFunctionality(bar)    
     self.SoulShardBar = bar
 
   end
@@ -783,7 +783,7 @@
     end
 
     bar:SetScale(self.cfg.holypower.scale)    
-    func.applyDragFunctionalityNoRestrict(bar)    
+    func.applyDragFunctionality(bar)    
     self.HolyPowerBar = bar
 
   end
@@ -796,7 +796,7 @@
     e:ClearAllPoints()
     e:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     e:SetFrameStrata("HIGH")
-    func.applyDragFunctionalityNoRestrict(e)
+    func.applyDragFunctionality(e)
     local t = select(1, e:GetRegions())
     t:SetTexture("Interface\\AddOns\\rTextures\\eclipsebar")
     EclipseBar_OnLoad(e)
@@ -807,7 +807,7 @@
     local f = CreateFrame("Frame","oUF_DiabloRuneBar",self)
     f:SetPoint(self.cfg.runes.pos.a1,self.cfg.runes.pos.af,self.cfg.runes.pos.a2,self.cfg.runes.pos.x,self.cfg.runes.pos.y)
     f:SetSize(180,50)
-    func.applyDragFunctionalityNoRestrict(f)
+    func.applyDragFunctionality(f)
     RuneButtonIndividual1:ClearAllPoints()
     RuneButtonIndividual1:SetPoint("LEFT",f,"LEFT",10,0)
   end

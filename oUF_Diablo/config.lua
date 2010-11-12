@@ -61,7 +61,7 @@
   ----------------------------------------
   
   --setting this to false will use the default frame positions, true allows moving
-  cfg.framesUserplaced = false 
+  cfg.framesUserplaced = true 
   
   --setting this to true will lock the frames in place, false unlocks them
   cfg.framesLocked = true

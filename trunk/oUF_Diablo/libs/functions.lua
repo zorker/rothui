@@ -342,18 +342,29 @@
   end 
   
   --allows frames to become movable but frames can be locked or set to default positions
-  func.applyDragFunctionality = function(f)
+  func.applyDragFunctionality = function(f,special)
+    f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
+    f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
+    
+    local t = f:CreateTexture(nil,"OVERLAY",nil,6)
+    t:SetAllPoints(f)
+    t:SetTexture(0,1,0)
+    t:SetAlpha(0)
+    f.dragtexture = t    
+    f:SetHitRectInsets(-15,-15,-15,-15)
+    if not special then    
+      f:SetClampedToScreen(true)
+    end
+    
     if not cfg.framesUserplaced then
-      f:IsUserPlaced(false)
-      return
+      f:SetMovable(false)
     else
       f:SetMovable(true)
       f:SetUserPlaced(true)
       if not cfg.framesLocked then
+        f.dragtexture:SetAlpha(0.2)
         f:EnableMouse(true)
         f:RegisterForDrag("LeftButton")
-        f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
-        f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
         f:SetScript("OnEnter", function(s) 
           GameTooltip:SetOwner(s, "ANCHOR_TOP")
           GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
@@ -363,23 +374,10 @@
         f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
       end
     end  
-  end
-  
-  --allows frames to become movable in any case
-  func.applyDragFunctionalityNoRestrict = function(f)
-    f:SetMovable(true)
-    f:SetUserPlaced(true)
-    f:EnableMouse(true)
-    f:RegisterForDrag("LeftButton")
-    f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
-    f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
-    f:SetScript("OnEnter", function(s) 
-      GameTooltip:SetOwner(s, "ANCHOR_TOP")
-      GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
-      GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
-      GameTooltip:Show()
-    end)
-    f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+
+    --print(f:GetName())
+    --print(f:IsUserPlaced())
+    
   end
   
   --create icon func

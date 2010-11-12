@@ -5,6 +5,7 @@
 ## Notes: Simple actionbars
 
 config.lua
+bars\slashcmd.lua
 bars\hideblizz.lua
 bars\bar1.lua
 bars\bar2.lua

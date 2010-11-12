@@ -12,6 +12,7 @@ modules\oUF_Smooth.lua
 
 config.lua
 
+libs\slashcmd.lua
 libs\functions.lua
 libs\tags.lua
 libs\units.lua

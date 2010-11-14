@@ -106,7 +106,7 @@
     hpval:SetPoint("RIGHT", -2,0)
     
     self:Tag(name, "[name]")
-    self:Tag(hpval, "[diablo_MissHP]")
+    self:Tag(hpval, self.cfg.health.tag or "")
     
   end
 
@@ -189,7 +189,8 @@
     local party = oUF:SpawnHeader(
       "oUF_DiabloPartyHeader", 
       nil, 
-      "solo,party",
+      nil,
+      --"solo,party",
       "showSolo", cfg.units.party.showsolo, --debug
       "showParty", true,
       "showPlayer", true,
@@ -200,10 +201,25 @@
         self:SetScale(%f)
       ]]):format(128, 64, cfg.units.party.scale)
     )
-    if cfg.units.party.portrait.show then
-      party:SetPoint(cfg.units.party.pos.a1,cfg.units.party.pos.af,cfg.units.party.pos.a2,cfg.units.party.pos.x,cfg.units.party.pos.y-85*cfg.units.party.scale)
-    else
-      party:SetPoint(cfg.units.party.pos.a1,cfg.units.party.pos.af,cfg.units.party.pos.a2,cfg.units.party.pos.x,cfg.units.party.pos.y)
-    end
+    party:SetPoint(cfg.units.party.pos.a1,cfg.units.party.pos.af,cfg.units.party.pos.a2,cfg.units.party.pos.x,cfg.units.party.pos.y)    
+    party:Show()
+         
+    local toggle = CreateFrame("Frame")
+    toggle:RegisterEvent("PLAYER_LOGIN")
+    toggle:RegisterEvent("RAID_ROSTER_UPDATE")
+    toggle:RegisterEvent("PARTY_LEADER_CHANGED")
+    toggle:RegisterEvent("PARTY_MEMBER_CHANGED")
+    toggle:SetScript("OnEvent", function(self)
+      if(InCombatLockdown()) then
+        self:RegisterEvent("PLAYER_REGEN_ENABLED")
+      else
+        self:UnregisterEvent("PLAYER_REGEN_ENABLED")
+        if(GetNumRaidMembers() > 0) then
+          party:Hide()
+        else
+          party:Show()
+        end
+      end
+    end)
     
   end

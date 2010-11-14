@@ -136,11 +136,15 @@
     local hpval = func.createFontString(self.Health, cfg.font, 11, "THINOUTLINE")
     hpval:SetPoint("RIGHT", -2,0)
 
+    local ppval = func.createFontString(self.Health, cfg.font, 11, "THINOUTLINE")
+    ppval:SetPoint("LEFT", 2,0)
+
     local classtext = func.createFontString(self, cfg.font, 13, "THINOUTLINE")
     classtext:SetPoint("BOTTOM", self, "TOP", 0, -15)
     
     self:Tag(name, "[name]")
-    self:Tag(hpval, "[diablo_ShortHP] / [perhp]%")
+    self:Tag(hpval, self.cfg.health.tag or "")
+    self:Tag(ppval, self.cfg.power.tag or "")
     self:Tag(classtext, "[classtext]")
     
   end
@@ -180,10 +184,10 @@
     f.num = 40
     f:SetHeight((f.size+5)*4)
     f:SetWidth((f.size+5)*10)
-    f:SetPoint("BOTTOMLEFT", self, "TOPRIGHT", 0, -15)
-    f.initialAnchor = "BOTTOMLEFT"
-    f["growth-x"] = "RIGHT"
-    f["growth-y"] = "UP"
+    f:SetPoint(self.cfg.auras.buffs.pos.a1, self, self.cfg.auras.buffs.pos.a2, self.cfg.auras.buffs.pos.x, self.cfg.auras.buffs.pos.y)
+    f.initialAnchor = self.cfg.auras.buffs.initialAnchor
+    f["growth-x"] = self.cfg.auras.buffs.growthx
+    f["growth-y"] = self.cfg.auras.buffs.growthy
     f.spacing = 5   
     f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerBuffs
     self.Buffs = f
@@ -196,10 +200,10 @@
     f.num = 40
     f:SetHeight((f.size+5)*4)
     f:SetWidth((f.size+5)*10)
-    f:SetPoint("TOPLEFT", self, "BOTTOMRIGHT", 0, 15)
-    f.initialAnchor = "TOPLEFT"
-    f["growth-x"] = "RIGHT"
-    f["growth-y"] = "DOWN"
+    f:SetPoint(self.cfg.auras.debuffs.pos.a1, self, self.cfg.auras.debuffs.pos.a2, self.cfg.auras.debuffs.pos.x, self.cfg.auras.debuffs.pos.y)
+    f.initialAnchor = self.cfg.auras.debuffs.initialAnchor
+    f["growth-x"] = self.cfg.auras.debuffs.growthx
+    f["growth-y"] = self.cfg.auras.debuffs.growthy
     f.spacing = 5
     f.showDebuffType = self.cfg.auras.showDebuffType
     f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerDebuffs    

@@ -106,7 +106,7 @@
     hpval:SetPoint("RIGHT", -2,0)
     
     self:Tag(name, "[name]")
-    self:Tag(hpval, "[diablo_MissHP]")
+    self:Tag(hpval, self.cfg.health.tag or "")
     
   end
 

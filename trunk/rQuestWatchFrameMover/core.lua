@@ -7,6 +7,12 @@
   -----------------------------
 
   local _G = _G
+  
+  -----------------------------
+  -- CONFIG
+  -----------------------------
+  
+  local pos = { a1 = "TOPRIGHT", a2 = "TOPRIGHT", af = "UIParent", x = -100, y = -250 }
 
   -----------------------------
   -- FUNCTIONS
@@ -23,12 +29,18 @@
     
     --make the quest watchframe movable
     local wf = _G['WatchFrame']
-    local wfh = _G['WatchFrameHeader']
-    local wfl = _G['WatchFrameLines']
+    wf:SetClampedToScreen(false)
     
-    wf:SetMovable(true)
+    wf:SetMovable(1)
+    wf:SetResizable(1)
+    wf:EnableMouse(true)
+    wf:ClearAllPoints()	
+    wf.ClearAllPoints = function() end
+    wf:SetPoint(pos.a1,pos.af,pos.a2,pos.x,pos.y)
+    wf.SetPoint = function() end
     wf:SetUserPlaced(true)
-    
+
+    local wfh = _G['WatchFrameHeader']
     wfh:EnableMouse(true)
     wfh:RegisterForDrag("LeftButton")
     wfh:SetHitRectInsets(-15, -15, -5, -5)

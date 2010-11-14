@@ -91,7 +91,7 @@
       showonmouseover = false,
       userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
-      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 140 }, 
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 180 }, 
       testmode        = false,
       disable         = false,
     },

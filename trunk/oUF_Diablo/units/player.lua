@@ -106,7 +106,7 @@
     f:SetSize(500,112)
     f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
     f:SetScale(cfg.scale)
-    func.applyDragFunctionality(f)
+    func.applyDragFunctionality(f,"bottomline")
     local t = f:CreateTexture(nil,"LOW",nil,5)
     t:SetAllPoints(f)
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_bottom")
@@ -586,7 +586,7 @@
     button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
     
     --cancelaura temp fix
-    button:SetScript("OnMouseUp", function(s) 
+    button:SetScript("OnClick", function(s) 
       if s.filter == "HELPFUL" then
         local buffname = UnitAura("player", s:GetID(), s.filter)
         local eb = LAST_ACTIVE_CHAT_EDIT_BOX

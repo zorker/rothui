@@ -19,7 +19,7 @@
   -- CONFIG
   -----------------------------  
   
-  cfg.framesUserplaced = true
+  cfg.framesUserplaced = false
   cfg.framesLocked = false  
   
   if player_class == "SHAMAN" or player_class == "ROGUE" then
@@ -27,8 +27,8 @@
     cfg.tempEnchantList = {
       mainhand = {
         show = true,
-        size = 28,
-        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        size = 24,
+        pos = { a1 = "TOP", a2 = "BOTTOM", af = "Minimap", x = -30, y = -80 },
         desaturate = true,
         alpha = {
           found = {
@@ -43,8 +43,8 @@
       },
       offhand = {
         show = true,
-        size = 28,
-        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 40, y = 0 },
+        size = 24,
+        pos = { a1 = "TOP", a2 = "BOTTOM", af = "Minimap", x = 0, y = -80 },
         desaturate = true,
         alpha = {
           found = {
@@ -59,8 +59,8 @@
       },
       throw = {
         show = true,
-        size = 28,
-        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 80, y = 0 },
+        size = 24,
+        pos = { a1 = "TOP", a2 = "BOTTOM", af = "Minimap", x = 30, y = -80 },
         desaturate = true,
         alpha = {
           found = {

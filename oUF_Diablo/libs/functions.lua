@@ -229,9 +229,8 @@
 
       local gloss = borderholder:CreateTexture(nil,"BACKGROUND",nil,-5)
       gloss:SetAllPoints(borderholder)
-      gloss:SetBlendMode("ADD")
       gloss:SetTexture("Interface\\AddOns\\rTextures\\portrait_gloss")
-      gloss:SetVertexColor(0.9,0.95,1,1)
+      gloss:SetVertexColor(0.9,0.95,1,0.6)
       
     else
       self.Portrait = back:CreateTexture(nil,"BACKGROUND",nil,-7)
@@ -248,7 +247,7 @@
       local gloss = back:CreateTexture(nil,"BACKGROUND",nil,-5)
       gloss:SetAllPoints(back)
       gloss:SetTexture("Interface\\AddOns\\rTextures\\portrait_gloss")
-      gloss:SetVertexColor(0.9,0.95,1,1)
+      gloss:SetVertexColor(0.9,0.95,1,0.6)
 
     end
     

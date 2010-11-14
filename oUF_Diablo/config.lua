@@ -39,11 +39,11 @@
   ----------------------------------------
 
   --the texture of the health orb. you can choose between 11 different textures.
-  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = soft_gradient, 11 = bubbles
+  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = donut, 11 = bubbles
   cfg.healthtexture = 1
   
   --the texture of the mana orb. you can choose between 11 different textures.
-  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = soft_gradient, 11 = bubbles
+  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = donut, 11 = bubbles
   cfg.manatexture = 3
 
   ----------------------------------------
@@ -128,7 +128,7 @@
         scale = 1,
       },
       runes = {
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -55, y = 140 }, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 170 }, 
       },
       expbar = { --experience
         show = true,
@@ -279,7 +279,7 @@
     
     --PETTARGET
     pettarget = {
-      show = true,
+      show = false,
       scale = 0.85,
       pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 140, y = -140 }, 
       auras = {
@@ -302,7 +302,7 @@
     
     --FOCUSTARGET
     focustarget = {
-      show = true,
+      show = false,
       scale = 0.85,
       pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 140, y = 40 }, 
       auras = {

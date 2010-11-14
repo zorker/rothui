@@ -116,9 +116,16 @@
   end
   
   --create healthbar background func
-  local createHealthbarBG = function(healthBar,f,threatTexture)
-    --hp bg
-    local bgsize = 180
+  local createHealthbarBG = function(healthBar,f,castBar)
+
+    local fw, fh, hw,hh = f:GetWidth(), f:GetHeight(), healthBar:GetWidth(), healthBar:GetHeight()
+    
+    healthBar.w = fw
+    healthBar.h = hh
+    castBar.w = hw
+    castBar.h = hh
+
+    local bgsize = hw*197.8/128
     
     local back = f:CreateTexture(nil,"BACKGROUND",nil,-8)
     back:SetPoint("CENTER",f,"CENTER",0,0)
@@ -127,14 +134,11 @@
     f.back = back
 
     local innershadow = f:CreateTexture(nil,"BACKGROUND",nil,-6)
-    innershadow:SetPoint("CENTER",f,"CENTER",0,0)
-    innershadow:SetSize(bgsize,bgsize/4)
+    innershadow:SetAllPoints(back)
     innershadow:SetTexture("Interface\\AddOns\\rTextures\\castbar_glow")
     innershadow:SetVertexColor(0,0,0,0.7)
     healthBar.shadow = innershadow
     
-    healthBar:SetAllPoints(f)
-
     local t = f:CreateTexture(nil,"BACKGROUND",nil,-7)
     t:SetPoint("TOPRIGHT",f,"TOPRIGHT",0,-11)
     t:SetPoint("BOTTOMRIGHT",f,"BOTTOMRIGHT",0,11)
@@ -148,6 +152,9 @@
     n:SetPoint("RIGHT", t, "LEFT", 0, 0) --right point of n will anchor left point of t
     n:SetTexture("Interface\\Addons\\rTextures\\statusbar5")
     healthBar.new = n
+    
+    healthBar:SetFrameLevel(f:GetFrameLevel()+2)
+    healthBar:SetAllPoints(f)
     
     healthBar.bg:SetVertexColor(colorswitcher.bg.r,colorswitcher.bg.g,colorswitcher.bg.b,colorswitcher.bg.a)
     healthBar.new:SetVertexColor(colorswitcher.healthbar.r,colorswitcher.healthbar.g,colorswitcher.healthbar.b,colorswitcher.healthbar.a)
@@ -228,46 +235,24 @@
     end)    
   end
   
-  --init the size parameters
-  local initHealthCastbarSize = function(healthBar, castBar,f)
-    local w,h = healthBar:GetWidth(), healthBar:GetHeight()
-    
-    healthBar.w = f:GetWidth()
-    healthBar.h = h
-    castBar.w = w
-    castBar.h = h
-  end
-  
-  --hide blizz
-  local hideBlizz = function(nameText,levelText,dragonTexture)
-    nameText:Hide()
-    levelText:Hide()
-    dragonTexture:SetTexture("")
-  end
-  
-
   --update style func
   local updateStyle = function(f)
     --get the value
     local healthBar, castBar = f:GetChildren()
     local threatTexture, borderTexture, castborderTexture, shield, castbaricon, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
 
-    --apply color
-    --applyEnemyColor(f,healthBar)
-    --applyDifficultyColor(f,levelText)      
-    
     --update threat texture
     threatTexture:ClearAllPoints()
-    threatTexture:SetAllPoints(f.back)
-    
+    threatTexture:SetAllPoints(f.back)    
     healthBar.shadow:SetVertexColor(0,0,0,0.7)
     
     --apply text
-    --applyNameText(f,nameText)
     applyText(f,levelText,dragonTexture,bossIcon,nameText,healthBar)
     
     --disable some stuff
-    hideBlizz(nameText,levelText,dragonTexture)
+    nameText:Hide()
+    levelText:Hide()
+    dragonTexture:SetTexture("")
   end
 
   --init style func
@@ -277,9 +262,7 @@
     local threatTexture, borderTexture, castborderTexture, shield, castbaricon, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
 
     --init the size of health and castbar
-    initHealthCastbarSize(healthBar,castBar,f)
-
-    createHealthbarBG(healthBar,f,threatTexture)
+    createHealthbarBG(healthBar,f,castBar)
     
     threatTexture:SetTexCoord(0,1,0,1)
     threatTexture:SetTexture("Interface\\AddOns\\rTextures\\target_threatglow")
@@ -289,12 +272,7 @@
     --create new fontstrings
     createNewFontStrings(f,healthBar)
     
-    --apply color
-    --applyEnemyColor(f,healthBar)
-    --applyDifficultyColor(f,levelText)
-    
     --apply text
-    --applyNameText(f,nameText)
     applyText(f,levelText,dragonTexture,bossIcon,nameText,healthBar)
 
     --move some icons
@@ -304,13 +282,13 @@
     initCastbars(castBar,castborderTexture, shield, castbaricon)
     
     --disable some stuff
-    hideBlizz(nameText,levelText,dragonTexture)
-    
+    nameText:Hide()
+    levelText:Hide()
+    dragonTexture:SetTexture("")    
     borderTexture:SetTexture("")
     bossIcon:SetTexture("")
     healthBar:SetStatusBarTexture("")
     castBar:SetStatusBarTexture("Interface\\Addons\\rTextures\\statusbar5")
-    healthBar:SetFrameLevel(f:GetFrameLevel()+2)
     highlightTexture:SetTexture("")
     
     if colorswitcher or showhpvalue then

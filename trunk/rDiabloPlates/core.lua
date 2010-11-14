@@ -45,6 +45,7 @@
     local level = levelText:GetText() or ""
     if bossIcon:IsShown() == 1 then
       level = "??"
+      colorstring = "ff6600"
     elseif dragonTexture:IsShown() == 1 then 
       level = level.."+" 
     end

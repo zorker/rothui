@@ -70,6 +70,7 @@
     --do stuff
     if nt then
       local self = nt:GetParent()
+      --print(self:GetName()..": r"..r.."g"..g.."b"..b)--debug
       local action = self.action
       if r==1 and g==1 and b==1 and action and (IsEquippedAction(action)) then
         nt:SetVertexColor(cfg.color.equipped.r,cfg.color.equipped.g,cfg.color.equipped.b,1)

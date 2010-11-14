@@ -9,6 +9,9 @@
   -- map scale
   local mapscale = 0.82
   
+  --want frames around minimap to be animated?!
+  local enableframerotation = true
+  
   -- size of icons (tracking icon for example)
   local iconsize = 20
 
@@ -101,8 +104,13 @@
     a1:SetDuration(duration)
     h.ag.a1 = a1
     
+    if enableframerotation then
+      h.ag:SetLooping("REPEAT")  
+    else
+      h.ag.a1:SetDuration(0)
+    end
+
     h.ag:Play()
-    h.ag:SetLooping("REPEAT")  
 
   end
   

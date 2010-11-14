@@ -173,9 +173,11 @@
       pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 250 }, 
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        tag = "[diablo_ShortHP] / [perhp]%",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        tag = "", --more tags see oUF/elements/tags.lua | example: "[curpp] / [perpp]%" or "[diablo_ShortPP] / [perpp]%"
       },
       auras = {
         show = true,
@@ -183,6 +185,18 @@
         onlyShowPlayerBuffs = false,
         onlyShowPlayerDebuffs = false,
         showDebuffType = false,
+        buffs = {
+          pos = { a1 = "BOTTOMLEFT", a2 = "TOPRIGHT", x = 0, y = -15 }, 
+          initialAnchor = "BOTTOMLEFT",
+          growthx = "RIGHT",
+          growthy = "UP",
+        },        
+        debuffs = {
+          pos = { a1 = "TOPLEFT", a2 = "BOTTOMRIGHT", x = 0, y = 15 }, 
+          initialAnchor = "TOPLEFT",
+          growthx = "RIGHT",
+          growthy = "DOWN",
+        },
       },
       castbar = {
         show = true,
@@ -215,6 +229,7 @@
       },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        tag = "[diablo_MissHP]",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -234,6 +249,7 @@
       },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        tag = "[diablo_MissHP]",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -257,6 +273,7 @@
       },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        tag = "[diablo_MissHP]",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -290,6 +307,7 @@
       },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        tag = "[diablo_MissHP]",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -313,6 +331,7 @@
       },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        tag = "[diablo_MissHP]",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -331,7 +350,7 @@
         notinrange = 0.5,
       },
       scale = 0.85,
-      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 }, 
+      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -80 }, 
       auras = {
         show = true,
         size = 22,
@@ -340,6 +359,7 @@
       },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        tag = "[diablo_MissHP]",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",

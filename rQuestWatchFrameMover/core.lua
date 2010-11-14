@@ -39,14 +39,6 @@
     wf.SetPoint = function() end
     wf:SetHeight(watchframeheight)  
         
-    local wfl = _G['WatchFrameLines']
-    wfl:HookScript("OnShow", function(s) 
-      wf:SetHeight(watchframeheight)  
-    end)
-    wfl:HookScript("OnHide", function(s) 
-      wf:SetHeight(50)  
-    end)
-    
     local wfh = _G['WatchFrameHeader']
     wfh:EnableMouse(true)
     wfh:RegisterForDrag("LeftButton")

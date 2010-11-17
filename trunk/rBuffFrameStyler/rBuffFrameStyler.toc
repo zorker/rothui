@@ -1,0 +1,9 @@
+## Interface: 40000
+## Author: zork
+## Version: 0.1
+## Title: rBuffFrameStyler
+## Notes: Mod to style the default player auras
+
+config.lua
+func\functions.lua
+func\slashcmd.lua

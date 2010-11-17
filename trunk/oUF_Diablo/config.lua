@@ -96,12 +96,6 @@
           pos = { a1 = "CENTER", a2 = "CENTER", x = -72, y = 60 }, --position in relation to self object
         },
       },
-      auras = {
-        show = false,
-        size = 28,
-        onlyShowPlayerBuffs = false,
-        onlyShowPlayerDebuffs = false,
-      },
       castbar = {
         show = true,
         latency = true,

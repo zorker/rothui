@@ -371,7 +371,7 @@
     
     --RAID
     raid = {
-      show = true,
+      show = false,
       showsolo = false, --show raid when solo
       alpha = {
         notinrange = 0.5,

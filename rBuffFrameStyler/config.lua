@@ -17,18 +17,18 @@
   -----------------------------
   
   cfg.buffframe = {
-    scale           = 1,
-    pos             = { a1 = "CENTER", af = "UIParent", a2 = "CENTER", x = 0, y = 100 }, 
+    scale           = 0.9,
+    pos             = { a1 = "TOPRIGHT", af = "Minimap", a2 = "TOPLEFT", x = -35, y = 0 }, 
     userplaced      = true, --want to place the bar somewhere else?
     locked          = true, --frame locked, can be unlocked ingame via /rbuff
     rowSpacing      = 10,
-    colSpacing      = 10,
+    colSpacing      = 7,
     buffsPerRow     = 10,
   }
 
   cfg.tempenchant = {
     scale           = 1,
-    pos             = { a1 = "CENTER", af = "UIParent", a2 = "CENTER", x = 0, y = 0 }, 
+    pos             = { a1 = "TOP", af = "Minimap", a2 = "BOTTOM", x = 40, y = -70 }, 
     userplaced      = true, --want to place the bar somewhere else?
     locked          = true, --frame locked, can be unlocked ingame via /rbuff
   }  
@@ -41,16 +41,16 @@
   cfg.background = {
     showshadow        = true,   --show an outer shadow?
     shadowcolor       = { r = 0, g = 0, b = 0, a = 0.9},
-    inset             = 5, 
+    inset             = 6, 
   }
   
   cfg.color = {
-    normal            = { r = 0.37, g = 0.3, b = 0.3, },
+    normal            = { r = 0.4, g = 0.35, b = 0.35, },
     classcolored      = false,
   }
   
   cfg.duration = {
-    fontsize        = 12,
+    fontsize        = 13,
     pos             = { a1 = "BOTTOM", x = 0, y = 0 }, 
   }
   

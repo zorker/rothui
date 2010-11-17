@@ -143,11 +143,15 @@
   local function rsiZoneCoords()
     local zone = ""
     local x, y = GetPlayerMapPosition("player")
-    local coords = "";
-    if(x ~= 0 and y ~= 0) then
+    local coords
+    if x and y and x ~= 0 and y ~= 0 then
       coords = format("%.2d/%.2d",x*100,y*100)
     end
-    zone = "|c009C907D"..GetMinimapZoneText().." [|r|c00C9BCA8"..coords.."|r|c009C907D]|r"
+    if coords then
+      zone = "|c00E8B444"..GetMinimapZoneText().." [|r|c00C9BCA8"..coords.."|r|c009C907D]|r"
+    else
+      zone = "|c00E8B444"..GetMinimapZoneText().."|r"
+    end
     return zone
   end  
   

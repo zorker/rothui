@@ -1,6 +1,6 @@
 ## Interface: 40000
-## Author: roth
+## Author: zork
 ## Title: rColors
-## Notes: Rewrites UnitSelectionColor and GameTooltip_UnitColor
+## Notes: define colors for your class
 
 rColors.lua

@@ -3,6 +3,7 @@
 ## Title: oUF_Diablo
 ## Notes: zork's oUF layout with Diablo flavour!
 ## RequiredDeps: oUF
+## OptionalDeps: rColors
 ## X-Category: UnitFrame
 
 modules\oUF_Experience.lua
@@ -25,3 +26,4 @@ units\focus.lua
 units\pettarget.lua
 units\focustarget.lua
 units\party.lua
+units\raid.lua

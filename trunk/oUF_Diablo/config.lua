@@ -97,7 +97,7 @@
         },
       },
       auras = {
-        show = true,
+        show = false,
         size = 28,
         onlyShowPlayerBuffs = false,
         onlyShowPlayerDebuffs = false,
@@ -135,6 +135,10 @@
           pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 10 },
           texture = "Interface\\AddOns\\rTextures\\statusbar",
           scale = 1,
+          color = {r = 0.8, g = 0, b = 0.8, },
+          rested = {
+            color = {r = 1, g = 0.7, b = 0, },
+          },
       },
       repbar = { --reputation
         show = true,
@@ -147,6 +151,7 @@
           show = true,
           pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 1, y = 0 },
           scale = 1,
+          style = 0, --0 = automatic bar detection, 1 = 12 button texture fixed, 2 = 24 button texture fixed, 3 = 36 button texture fixed
         },
         angel = {
           show = true,
@@ -369,6 +374,22 @@
         use3D = true,
       },
     },
+    
+    --RAID
+    raid = {
+      show = true,
+      showsolo = false, --show raid when solo
+      alpha = {
+        notinrange = 0.5,
+      },
+      scale = 0.85,
+      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 0, y = 9 }, 
+      health = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        tag = "[diablo_RaidHP]",
+      },
+    },
+    
   }
 
   ----------------------------------------
@@ -378,7 +399,7 @@
   --player stuff
   local playername, _     = UnitName("player")
   local _, playerclass    = UnitClass("player")
-  local playercolor       = RAID_CLASS_COLORS[playerclass]  
+  local playercolor       = rRAID_CLASS_COLORS[playerclass] or RAID_CLASS_COLORS[playerclass]
   cfg.playername          = playername
   cfg.playerclass         = playerclass
   cfg.playercolor         = playercolor

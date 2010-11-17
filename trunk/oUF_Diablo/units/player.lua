@@ -55,17 +55,22 @@
     func.applyDragFunctionality(f)
     local t = f:CreateTexture(nil,"BACKGROUND",nil,-7)
     t:SetAllPoints(f)
-    if MultiBarBottomRight:IsShown() then
-      t:SetTexture("Interface\\AddOns\\rTextures\\bar3")
-    elseif MultiBarBottomLeft:IsShown() then
-      t:SetTexture("Interface\\AddOns\\rTextures\\bar2")
+    
+    if cfg.style >= 1 and cfg.style <= 3 then
+      t:SetTexture("Interface\\AddOns\\rTextures\\bar"..cfg.style)
     else
-      t:SetTexture("Interface\\AddOns\\rTextures\\bar1")
+      if MultiBarBottomRight:IsShown() then
+        t:SetTexture("Interface\\AddOns\\rTextures\\bar3")
+      elseif MultiBarBottomLeft:IsShown() then
+        t:SetTexture("Interface\\AddOns\\rTextures\\bar2")
+      else
+        t:SetTexture("Interface\\AddOns\\rTextures\\bar1")
+      end
+      MultiBarBottomRight:HookScript("OnShow", function() t:SetTexture("Interface\\AddOns\\rTextures\\bar3") end)
+      MultiBarBottomRight:HookScript("OnHide", function() t:SetTexture("Interface\\AddOns\\rTextures\\bar2") end)
+      MultiBarBottomLeft:HookScript("OnShow", function() t:SetTexture("Interface\\AddOns\\rTextures\\bar2") end)
+      MultiBarBottomLeft:HookScript("OnHide", function() t:SetTexture("Interface\\AddOns\\rTextures\\bar1") end)
     end
-    MultiBarBottomRight:HookScript("OnShow", function() t:SetTexture("Interface\\AddOns\\rTextures\\bar3") end)
-    MultiBarBottomRight:HookScript("OnHide", function() t:SetTexture("Interface\\AddOns\\rTextures\\bar2") end)
-    MultiBarBottomLeft:HookScript("OnShow", function() t:SetTexture("Interface\\AddOns\\rTextures\\bar2") end)
-    MultiBarBottomLeft:HookScript("OnHide", function() t:SetTexture("Interface\\AddOns\\rTextures\\bar1") end)
   end
   
   --create the angel
@@ -126,19 +131,19 @@
     f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
     f:SetScale(cfg.scale)
     f:SetStatusBarTexture(cfg.texture)
-    f:SetStatusBarColor(0.7,0,0.8)
+    f:SetStatusBarColor(cfg.color.r,cfg.color.g,cfg.color.b)
     
     local r = CreateFrame("StatusBar",nil,f)
     r:SetAllPoints(f)
     r:SetStatusBarTexture(cfg.texture)
-    r:SetStatusBarColor(0.9,0.7,0)
+    r:SetStatusBarColor(cfg.rested.color.r,cfg.rested.color.g,cfg.rested.color.b)
     
     func.applyDragFunctionality(f)
     
     local t = r:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetAllPoints(r)
     t:SetTexture(cfg.texture)
-    t:SetVertexColor(0.7,0,0.8,0.3)
+    t:SetVertexColor(cfg.color.r,cfg.color.g,cfg.color.b,0.3)
     f.bg = t
 
     f:SetScript("OnEnter", function(s)
@@ -148,9 +153,9 @@
       GameTooltip:SetOwner(s, "ANCHOR_TOP")
       GameTooltip:AddLine("Experience / Rested", 0, 1, 0.5, 1, 1, 1)
       if UnitLevel("player") ~= MAX_PLAYER_LEVEL then
-        GameTooltip:AddDoubleLine(COMBAT_XP_GAIN, xp.."/"..mxp.." ("..floor((xp/mxp)*1000)/10 .."%)",0.7,0,0.8,1,1,1)
+        GameTooltip:AddDoubleLine(COMBAT_XP_GAIN, xp.."/"..mxp.." ("..floor((xp/mxp)*1000)/10 .."%)", cfg.color.r,cfg.color.g,cfg.color.b,1,1,1)
         if rxp then
-          GameTooltip:AddDoubleLine(TUTORIAL_TITLE26, rxp .." (".. floor((rxp/mxp)*1000)/10 .."%)", 0.9,0.7,0,1,1,1)
+          GameTooltip:AddDoubleLine(TUTORIAL_TITLE26, rxp .." (".. floor((rxp/mxp)*1000)/10 .."%)", cfg.rested.color.r,cfg.rested.color.g,cfg.rested.color.b,1,1,1)
         end
       end        
       GameTooltip:Show()    

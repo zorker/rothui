@@ -123,9 +123,7 @@
       color = {r = 0.4, g = 0.4, b = 0.4}
       dead = 1
     elseif UnitIsPlayer(unit) then
-      if RAID_CLASS_COLORS then
-        color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
-      end
+      color = rRAID_CLASS_COLORS[select(2, UnitClass(unit))] or RAID_CLASS_COLORS[select(2, UnitClass(unit))]
     elseif unit == "pet" and UnitExists("pet") and GetPetHappiness() then
       local happiness = GetPetHappiness()
       color = cfg.happycolors[happiness]
@@ -134,38 +132,40 @@
       color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
     end
 
-
     if color then
       self.Name:SetTextColor(color.r, color.g, color.b,1)
     end
 
-    bar:SetStatusBarColor(cfg.colorswitcher.healthbar.r,cfg.colorswitcher.healthbar.g,cfg.colorswitcher.healthbar.b,cfg.colorswitcher.healthbar.a)
-    bar.bg:SetVertexColor(cfg.colorswitcher.bg.r,cfg.colorswitcher.bg.g,cfg.colorswitcher.bg.b,cfg.colorswitcher.bg.a)
-
-    if d <= 25 and min > 1 then
-      self.Health.glow:SetVertexColor(1,0,0,1)
+    if dead == 1 then
+      bar:SetStatusBarColor(0,0,0,0)
+      bar.bg:SetVertexColor(0,0,0,0)
     else
-      self.Health.glow:SetVertexColor(0,0,0,0.7)
+      bar:SetStatusBarColor(cfg.colorswitcher.healthbar.r,cfg.colorswitcher.healthbar.g,cfg.colorswitcher.healthbar.b,cfg.colorswitcher.healthbar.a)
+      bar.bg:SetVertexColor(cfg.colorswitcher.bg.r,cfg.colorswitcher.bg.g,cfg.colorswitcher.bg.b,cfg.colorswitcher.bg.a)
     end
 
-    if dead == 1 then
-      bar.bg:SetVertexColor(0,0,0,0)  
+    if d <= 25 and min > 1 then
+      bar.glow:SetVertexColor(1,0,0,1)
+    else
+      bar.glow:SetVertexColor(0,0,0,0.7)
     end
 
   end
   
   --debuffglow
   func.createDebuffGlow = function(self)
-    local f = self:CreateTexture(nil,"LOW",nil,-5)
+    local t = self:CreateTexture(nil,"LOW",nil,-5)
     if self.cfg.style == "target" then
-      f:SetTexture("Interface\\AddOns\\rTextures\\target_debuffglow")
+      t:SetTexture("Interface\\AddOns\\rTextures\\target_debuffglow")
+    elseif self.cfg.style == "raid" then
+      t:SetTexture("Interface\\AddOns\\rTextures\\raid_debuffglow")
     else
-      f:SetTexture("Interface\\AddOns\\rTextures\\targettarget_debuffglow")
+      t:SetTexture("Interface\\AddOns\\rTextures\\targettarget_debuffglow")
     end
-    f:SetAllPoints(self)
-    f:SetBlendMode("BLEND")
-    f:SetVertexColor(0, 1, 1, 0) -- set alpha to 0 to hide the texture
-    self.DebuffHighlight = f
+    t:SetAllPoints(self)
+    t:SetBlendMode("BLEND")
+    t:SetVertexColor(0, 1, 1, 0) -- set alpha to 0 to hide the texture
+    self.DebuffHighlight = t
     self.DebuffHighlightAlpha = 1
     self.DebuffHighlightFilter = true
   end

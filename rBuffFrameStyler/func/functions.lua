@@ -189,7 +189,7 @@
       
       local border = _G[button.."Border"]      
       if border then
-        border:SetTexture("Interface\\AddOns\\rBuffFrameStyler\\media\\gloss")
+        border:SetTexture(cfg.textures.normal)
         border:SetTexCoord(0,1,0,1)
         border:SetDrawLayer("BACKGROUND",-7)
         if type == "wpn" then
@@ -202,7 +202,7 @@
         --create border (for buff icons)
         local new = b:CreateTexture(nil,"BACKGROUND",nil,-7)
         new:SetAllPoints(b)
-        new:SetTexture("Interface\\AddOns\\rBuffFrameStyler\\media\\gloss")
+        new:SetTexture(cfg.textures.normal)
         new:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b)
         b.Border = border
       end

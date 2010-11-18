@@ -34,8 +34,8 @@
   }  
   
   cfg.textures = {
-    normal            = "Interface\\AddOns\\rActionButtonStyler\\media\\gloss",
-    outer_shadow      = "Interface\\AddOns\\rActionButtonStyler\\media\\outer_shadow",
+    normal            = "Interface\\AddOns\\rBuffFrameStyler\\media\\gloss",
+    outer_shadow      = "Interface\\AddOns\\rBuffFrameStyler\\media\\outer_shadow",
   }
   
   cfg.background = {

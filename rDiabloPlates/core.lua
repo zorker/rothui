@@ -6,9 +6,13 @@
   -- CONFIG
   -----------------------------
   
+  --color is in RGB (red (r), green (g), blue (b), alpha (a)), values are from 0 (dark color) to 1 (bright color). 1,1,1 = white / 0,0,0 = black / 1,0,0 = red etc
   local colorswitcher = {
-    healthbar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
-    bg = { r = 1, g = 0, b = 0, a = 0.9, },
+    bright              = { r = 1, g = 0, b = 0, a = 0.9, },          -- the bright color
+    dark                = { r = 0.15, g = 0.15, b = 0.15, a = 1, },   -- the dark color
+    classcolored        = false,   -- true   -> override the bright color with the unit specific color (class, faction, happiness)
+    useBrightForeground = false,  -- true   -> use bright color in foreground and dark color in background
+                                  -- false  -> use dark color in foreground and bright color in background
   }
   
   local showhpvalue   = true --true/false will enable disable of hp value on the nameplate
@@ -39,6 +43,23 @@
       f.na:SetTextColor(1,0,1)
     else
       f.na:SetTextColor(r,g,b)
+    end
+    
+    local color = {
+      r = r,
+      g = g,
+      b = b,
+    }
+
+    if not colorswitcher.classcolored then
+      color = colorswitcher.bright
+    end
+    if colorswitcher.useBrightForeground then
+      healthBar.new:SetVertexColor(color.r,color.g,color.b,color.a or 1)
+      healthBar.bg:SetVertexColor(colorswitcher.dark.r,colorswitcher.dark.g,colorswitcher.dark.b,colorswitcher.dark.a)
+    else
+      healthBar.new:SetVertexColor(colorswitcher.dark.r,colorswitcher.dark.g,colorswitcher.dark.b,colorswitcher.dark.a)
+      healthBar.bg:SetVertexColor(color.r,color.g,color.b,color.a or 1)
     end
 
     local name = nameText:GetText() or ""
@@ -157,8 +178,6 @@
     healthBar:SetFrameLevel(f:GetFrameLevel()+2)
     healthBar:SetAllPoints(f)
     
-    healthBar.bg:SetVertexColor(colorswitcher.bg.r,colorswitcher.bg.g,colorswitcher.bg.b,colorswitcher.bg.a)
-    healthBar.new:SetVertexColor(colorswitcher.healthbar.r,colorswitcher.healthbar.g,colorswitcher.healthbar.b,colorswitcher.healthbar.a)
   end
 
   --new fontstrings for name and lvl func
@@ -169,7 +188,7 @@
     na:SetPoint("BOTTOM", f, "TOP", 0, -5)
     na:SetPoint("RIGHT", f, 0, 0)
     na:SetPoint("LEFT", f, 0, 0)
-    na:SetJustifyH("CENTER")        
+    na:SetJustifyH("CENTER")
     f.na = na
     if showhpvalue then
       local hp = healthBar:CreateFontString(nil, "BORDER")

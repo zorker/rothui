@@ -50,10 +50,13 @@
   -- colorswitcher define your color for healthbars here
   ----------------------------------------
   
-  --color is in RGB (red, green, blue, alpha)
+  --color is in RGB (red (r), green (g), blue (b), alpha (a)), values are from 0 (dark color) to 1 (bright color). 1,1,1 = white / 0,0,0 = black / 1,0,0 = red etc
   cfg.colorswitcher = {
-    healthbar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
-    bg = { r = 1, g = 0, b = 0, a = 0.9, },
+    bright              = { r = 1, g = 0, b = 0, a = 0.9, },          -- the bright color
+    dark                = { r = 0.15, g = 0.15, b = 0.15, a = 1, },   -- the dark color
+    classcolored        = false,   -- true   -> override the bright color with the unit specific color (class, faction, happiness)
+    useBrightForeground = false,  -- true   -> use bright color in foreground and dark color in background
+                                  -- false  -> use dark color in foreground and bright color in background
   }
 
   ----------------------------------------
@@ -162,7 +165,13 @@
           pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = -5 },
           scale = 1,
         },
-      },      
+      },
+      portrait = {
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = -100, y = 0 },
+        size = 150,
+        show = false,
+        use3D = true,
+      },
     },
     
     -- TARGET
@@ -212,6 +221,12 @@
         scale = 0.5,
         color = {r = 0.9, g = 0.59, b = 0, },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 480 }, 
+      },
+      portrait = {
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 100, y = 0 },
+        size = 150,
+        show = false,
+        use3D = true,
       },
     },
     
@@ -371,16 +386,17 @@
     
     --RAID
     raid = {
-      show = false,
+      show = true,
       showsolo = false, --show raid when solo
       alpha = {
         notinrange = 0.5,
       },
-      scale = 0.85,
-      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 0, y = 9 }, 
+      scale = 1,
+      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 }, 
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
         tag = "[diablo_RaidHP]",
+        classcoloroverride = true, --even if you set the colorswitcher to no classcolor this value can be used to make the raid class colored
       },
     },
     

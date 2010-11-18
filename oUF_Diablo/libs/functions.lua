@@ -140,8 +140,16 @@
       bar:SetStatusBarColor(0,0,0,0)
       bar.bg:SetVertexColor(0,0,0,0)
     else
-      bar:SetStatusBarColor(cfg.colorswitcher.healthbar.r,cfg.colorswitcher.healthbar.g,cfg.colorswitcher.healthbar.b,cfg.colorswitcher.healthbar.a)
-      bar.bg:SetVertexColor(cfg.colorswitcher.bg.r,cfg.colorswitcher.bg.g,cfg.colorswitcher.bg.b,cfg.colorswitcher.bg.a)
+      if not cfg.colorswitcher.classcolored then
+        color = cfg.colorswitcher.bright
+      end
+      if cfg.colorswitcher.useBrightForeground then
+        bar:SetStatusBarColor(color.r,color.g,color.b,color.a or 1)
+        bar.bg:SetVertexColor(cfg.colorswitcher.dark.r,cfg.colorswitcher.dark.g,cfg.colorswitcher.dark.b,cfg.colorswitcher.dark.a)
+      else
+        bar:SetStatusBarColor(cfg.colorswitcher.dark.r,cfg.colorswitcher.dark.g,cfg.colorswitcher.dark.b,cfg.colorswitcher.dark.a)
+        bar.bg:SetVertexColor(color.r,color.g,color.b,color.a or 1)
+      end
     end
 
     if d <= 25 and min > 1 then
@@ -157,8 +165,6 @@
     local t = self:CreateTexture(nil,"LOW",nil,-5)
     if self.cfg.style == "target" then
       t:SetTexture("Interface\\AddOns\\rTextures\\target_debuffglow")
-    elseif self.cfg.style == "raid" then
-      t:SetTexture("Interface\\AddOns\\rTextures\\raid_debuffglow")
     else
       t:SetTexture("Interface\\AddOns\\rTextures\\targettarget_debuffglow")
     end
@@ -181,6 +187,10 @@
   
   --check threat
   func.checkThreat = function(self,event,unit)
+    if self.Border then
+      self.Border:SetVertexColor(0.6,0.5,0.5)
+      self.PortraitBack:SetVertexColor(0.1,0.1,0.1,0.9)
+    end
     if unit then
       if self.unit ~= unit then return end
       local threat = UnitThreatSituation(unit)
@@ -189,11 +199,6 @@
         if self.Border then
           self.Border:SetVertexColor(r,g,b)
           self.PortraitBack:SetVertexColor(r,g,b,1)
-        end
-      else
-        if self.Border then
-          self.Border:SetVertexColor(0.6,0.5,0.5)
-          self.PortraitBack:SetVertexColor(0.1,0.1,0.1,0.9)
         end
       end
     end
@@ -253,6 +258,67 @@
     
     self.Name:SetPoint("BOTTOM", self, "TOP", 0, self.cfg.width-53)
   
+  end
+  
+  --create standalone portrait func
+  func.createStandAlonePortrait = function(self)
+  
+    local fname
+    if self.cfg.style == "player" then
+      fname = "oUF_DiabloPlayerPortrait"
+    elseif self.cfg.style == "target" then
+      fname = "oUF_DiabloTargetPortrait"
+    end
+    
+    local pcfg = self.cfg.portrait
+    
+    local back = CreateFrame("Frame",fname,self)
+    back:SetSize(pcfg.size,pcfg.size)
+    back:SetPoint(pcfg.pos.a1,pcfg.pos.af,pcfg.pos.a2,pcfg.pos.x,pcfg.pos.y)
+    
+    func.applyDragFunctionality(back)
+    
+    local t = back:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetAllPoints(back)
+    t:SetTexture("Interface\\AddOns\\rTextures\\portrait_back")
+    t:SetVertexColor(0.1,0.1,0.1,0.9)
+
+    if pcfg.use3D then
+      self.Portrait = CreateFrame("PlayerModel", nil, back)
+      self.Portrait:SetPoint("TOPLEFT",back,"TOPLEFT",pcfg.size*27/128,-pcfg.size*27/128)
+      self.Portrait:SetPoint("BOTTOMRIGHT",back,"BOTTOMRIGHT",-pcfg.size*27/128,pcfg.size*27/128)
+      
+      local borderholder = CreateFrame("Frame", nil, self.Portrait)
+      borderholder:SetAllPoints(back)
+      
+      local border = borderholder:CreateTexture(nil,"BACKGROUND",nil,-6)
+      border:SetAllPoints(borderholder)
+      border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
+      border:SetVertexColor(0.6,0.5,0.5)
+
+      local gloss = borderholder:CreateTexture(nil,"BACKGROUND",nil,-5)
+      gloss:SetAllPoints(borderholder)
+      gloss:SetTexture("Interface\\AddOns\\rTextures\\portrait_gloss")
+      gloss:SetVertexColor(0.9,0.95,1,0.6)
+      
+    else
+      self.Portrait = back:CreateTexture(nil,"BACKGROUND",nil,-7)
+      self.Portrait:SetPoint("TOPLEFT",back,"TOPLEFT",pcfg.size*27/128,-pcfg.size*27/128)
+      self.Portrait:SetPoint("BOTTOMRIGHT",back,"BOTTOMRIGHT",-pcfg.size*27/128,pcfg.size*27/128)
+      self.Portrait:SetTexCoord(0.15,0.85,0.15,0.85)
+      
+      local border = back:CreateTexture(nil,"BACKGROUND",nil,-6)
+      border:SetAllPoints(back)
+      border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
+      border:SetVertexColor(0.6,0.5,0.5)
+
+      local gloss = back:CreateTexture(nil,"BACKGROUND",nil,-5)
+      gloss:SetAllPoints(back)
+      gloss:SetTexture("Interface\\AddOns\\rTextures\\portrait_gloss")
+      gloss:SetVertexColor(0.9,0.95,1,0.6)
+
+    end
+    
   end
   
   --create castbar func

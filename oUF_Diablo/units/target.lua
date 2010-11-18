@@ -437,6 +437,11 @@
     --icons
     self.RaidIcon = func.createIcon(self,"BACKGROUND",24,self.Name,"BOTTOM","TOP",0,0,-1)
     
+    --create portrait
+    if self.cfg.portrait.show then
+      func.createStandAlonePortrait(self)
+    end
+    
     --add self to unit container (maybe access to that unit is needed in another style)
     unit.target = self  
     

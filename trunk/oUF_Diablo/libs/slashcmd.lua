@@ -28,6 +28,8 @@
     "oUF_DiabloAngelFrame",
     "oUF_DiabloDemonFrame",
     "oUF_DiabloBottomLine",
+    "oUF_DiabloPlayerPortrait",
+    "oUF_DiabloTargetPortrait",
   } 
   
   function oUF_DiabloUnlock(c)

@@ -45,25 +45,6 @@
   -- FUNCTIONS
   ---------------------------------------
   
-  --rewrite timesto abbrev
-  SecondsToTimeAbbrev = function(time)
-    local hr, m, s, text
-    if time <= 0 then text = ""
-    elseif(time < 3600 and time > 60) then
-      hr = floor(time / 3600)
-      m = floor(mod(time, 3600) / 60 + 1)
-      text = format("%dm", m)
-    elseif time < 60 then
-      m = floor(time / 60)
-      s = mod(time, 60)
-      text = (m == 0 and format("%ds", s))
-    else
-      hr = floor(time / 3600 + 1)
-      text = format("%dh", hr)
-    end
-    return text
-  end
-
   --allows frames to become movable but frames can be locked or set to default positions
   local applyDragFunctionality = function(f,userplaced,locked)
     f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
@@ -123,7 +104,7 @@
         buff:SetPoint("TOPRIGHT", BuffFrame, "TOPRIGHT", 0, 0)
         aboveBuff = buff
       else
-        buff:SetPoint("RIGHT", previousBuff, "LEFT", -cfg.buffframe.colSpacing, 0);
+        buff:SetPoint("RIGHT", previousBuff, "LEFT", -cfg.buffframe.colSpacing, 0)
       end
       previousBuff = buff      
     end    
@@ -137,11 +118,11 @@
     local buff = _G[buttonName..index]
     -- Position debuffs
     if ((index > 1) and (mod(index, BUFFS_PER_ROW) == 1)) then
-      buff:SetPoint("TOP", _G[buttonName..(index-cfg.buffframe.buffsPerRow)], "BOTTOM", 0, -cfg.buffframe.rowSpacing);
+      buff:SetPoint("TOP", _G[buttonName..(index-cfg.buffframe.buffsPerRow)], "BOTTOM", 0, -cfg.buffframe.rowSpacing)
     elseif (index == 1) then
-      buff:SetPoint("TOPRIGHT", BuffFrame, "TOPRIGHT", 0, -rows*(cfg.buffframe.rowSpacing+buff:GetHeight()));
+      buff:SetPoint("TOPRIGHT", BuffFrame, "TOPRIGHT", 0, -rows*(cfg.buffframe.rowSpacing+buff:GetHeight()))
     else
-      buff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", -cfg.buffframe.colSpacing, 0);
+      buff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", -cfg.buffframe.colSpacing, 0)
     end    
   
   end
@@ -181,6 +162,11 @@
     BuffFrame:SetPoint("TOPRIGHT",0,0)
   end
 
+  --check duration
+  local function durationSetText(duration, arg1, arg2)
+    duration:SetText(format(string.gsub(arg1, " ", ""), arg2))
+  end
+
   --apply aura frame texture func
   local function applySkin(b,button,type)
     if b then
@@ -218,6 +204,9 @@
       b.duration:SetFont(cfg.font, cfg.duration.fontsize, "THINOUTLINE")
       b.duration:ClearAllPoints()
       b.duration:SetPoint(cfg.duration.pos.a1,cfg.duration.pos.x,cfg.duration.pos.y)
+      
+      --hook duration settext
+      hooksecurefunc(b.duration, "SetFormattedText", durationSetText)
 
       --count
       b.count:SetFont(cfg.font, cfg.count.fontsize, "THINOUTLINE")

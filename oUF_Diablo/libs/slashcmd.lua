@@ -21,6 +21,8 @@
     "oUF_DiabloPetFrame",
     "oUF_DiabloFocusTargetFrame",
     "oUF_DiabloFocusFrame",
+    "oUF_DiabloRaidHeader",
+    "oUF_DiabloPartyHeader",
   } 
   
   oUF_Diablo_Art = {
@@ -30,6 +32,8 @@
     "oUF_DiabloBottomLine",
     "oUF_DiabloPlayerPortrait",
     "oUF_DiabloTargetPortrait",
+    "MiniMapInstanceDifficulty",
+    "GuildInstanceDifficulty",
   } 
   
   function oUF_DiabloUnlock(c)
@@ -46,7 +50,7 @@
       f = _G[v]
       if f and f:IsUserPlaced() then
         --print(f:GetName())
-        if c ~= "units" then
+        if v:match"Header" or c ~= "units" then
           f:EnableMouse(true)
           f:SetScript("OnEnter", function(s) 
             GameTooltip:SetOwner(s, "ANCHOR_TOP")
@@ -75,7 +79,7 @@
     for _, v in pairs(a) do
       f = _G[v]
       if f and f:IsUserPlaced() then
-        if c ~= "units" then
+        if v:match"Header" or c ~= "units" then
           f:EnableMouse(nil)
           f:SetScript("OnEnter", nil)
           f:SetScript("OnLeave", nil)

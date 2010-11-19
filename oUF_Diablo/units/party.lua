@@ -201,5 +201,7 @@
       ]]):format(128, 64, cfg.units.party.scale)
     )
     party:SetPoint(cfg.units.party.pos.a1,cfg.units.party.pos.af,cfg.units.party.pos.a2,cfg.units.party.pos.x,cfg.units.party.pos.y)    
+    
+    func.applyDragFunctionality(party)
         
   end

@@ -458,7 +458,7 @@
     local bar = CreateFrame("Frame","oUF_DiabloSoulShards",self)
     local w = 64*(SHARD_BAR_NUM_SHARDS+2)
     local h = 64
-    bar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    bar:SetPoint(self.cfg.soulshards.pos.a1,self.cfg.soulshards.pos.af,self.cfg.soulshards.pos.a2,self.cfg.soulshards.pos.x,self.cfg.soulshards.pos.y)
     bar:SetWidth(w)
     bar:SetHeight(h)
     
@@ -542,7 +542,7 @@
     local bar = CreateFrame("Frame","oUF_DiabloHolyPower",self)
     local w = 64*(MAX_HOLY_POWER+2)
     local h = 64
-    bar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    bar:SetPoint(self.cfg.holypower.pos.a1,self.cfg.holypower.pos.af,self.cfg.holypower.pos.a2,self.cfg.holypower.pos.x,self.cfg.holypower.pos.y)
     bar:SetWidth(w)
     bar:SetHeight(h)
     
@@ -607,7 +607,7 @@
     e:SetParent(self)
     e:SetScale(self.cfg.eclipsebar.scale)
     e:ClearAllPoints()
-    e:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    e:SetPoint(self.cfg.eclipsebar.pos.a1,self.cfg.eclipsebar.pos.af,self.cfg.eclipsebar.pos.a2,self.cfg.eclipsebar.pos.x,self.cfg.eclipsebar.pos.y)
     e:SetFrameStrata("HIGH")
     func.applyDragFunctionality(e)
     local t = select(1, e:GetRegions())
@@ -623,6 +623,24 @@
     func.applyDragFunctionality(f)
     RuneButtonIndividual1:ClearAllPoints()
     RuneButtonIndividual1:SetPoint("LEFT",f,"LEFT",10,0)
+  end
+  
+  --adjust minimap difficulty
+  local adjustMinimapDifficulty = function(self)
+    
+    local m = _G["MiniMapInstanceDifficulty"]
+		local g = _G["GuildInstanceDifficulty"]
+		
+		if m then
+		  m:SetScale(self.cfg.art.minimapdifficulty.scale)
+		  func.applyDragFunctionality(m)
+		end
+		
+		if g then
+		  g:SetScale(self.cfg.art.minimapdifficulty.scale)
+		  func.applyDragFunctionality(g)
+		end
+		
   end
 
   ---------------------------------------------
@@ -732,6 +750,9 @@
     if self.cfg.portrait.show then
       func.createStandAlonePortrait(self)
     end
+    
+    --adjust minimap difficulty frames
+    adjustMinimapDifficulty(self)
 
     --add self to unit container (maybe access to that unit is needed in another style)
     unit.player = self    

@@ -112,16 +112,19 @@
       },
       soulshards = { 
         show = true,
-        scale = 0.56,
+        scale = 0.58,
         color = {r = 150/255, g = 135/255, b = 200/255, },
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 }, 
       },
       holypower = { 
         show = true,
-        scale = 0.56,
+        scale = 0.58,
         color = {r = 200/255, g = 135/255, b = 190/255, },
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 }, 
       },
       eclipsebar = { 
         show = true,
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 }, 
         scale = 1,
       },
       runes = {
@@ -144,6 +147,9 @@
           scale = 1,
       },
       art = {
+        minimapdifficulty = {
+          scale = 0.8,
+        },
         actionbarbackground = {
           show = true,
           pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 1, y = 0 },
@@ -387,7 +393,6 @@
     --RAID
     raid = {
       show = true,
-      showsolo = false, --show raid when solo
       alpha = {
         notinrange = 0.5,
       },
@@ -398,6 +403,15 @@
         tag = "[diablo_RaidHP]",
         classcoloroverride = true, --even if you set the colorswitcher to no classcolor this value can be used to make the raid class colored
       },
+      attributes = {
+        point               = "TOP",
+        yOffset             = 15,
+        xoffset             = 0,
+        maxColumns          = 8,
+        unitsPerColumn      = 5,
+        columnSpacing       = -15,
+        columnAnchorPoint   = "LEFT",        
+      }
     },
     
   }

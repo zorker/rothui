@@ -30,7 +30,6 @@
     self:SetScript("OnEnter", UnitFrame_OnEnter)
     self:SetScript("OnLeave", UnitFrame_OnLeave)
     --func.createBackdrop(self)
-    --func.applyDragFunctionality(self)
     self:SetHitRectInsets(15,15,15,15)
   end
 
@@ -256,26 +255,26 @@
     oUF:RegisterStyle("diablo:raid", createStyle)
     oUF:SetActiveStyle("diablo:raid")
     
+    local attr = cfg.units.raid.attributes
+    
     --spawn raid
     local raid = oUF:SpawnHeader(
-      "oUF_DiabloRaidHeader", 
-      nil, 
-      "solo,raid",
-      "showSolo", cfg.units.raid.showsolo, --debug
-      "showPlayer", true,
-      "showParty", true,
-      "showRaid", true,
-      "point", "TOP",
-      "yOffset", 15,
-      "xoffset", 0,
-      "groupFilter", "1,2,3,4,5,6,7,8",
-      "groupBy", "GROUP",
-      "groupingOrder", "1,2,3,4,5,6,7,8",
-      "sortMethod", "NAME",
-      "maxColumns", 8,
-      "unitsPerColumn", 5,
-      "columnSpacing", -15,
-      "columnAnchorPoint", "LEFT",
+      "oUF_DiabloRaidHeader", --name
+      nil,
+      "solo,raid",          --visibility
+      "showSolo",           true, --debug
+      "showRaid",           true,
+      "point",              attr.point,
+      "yOffset",            attr.yOffset,
+      "xoffset",            attr.xoffset,
+      "groupFilter",        "1,2,3,4,5,6,7,8",
+      "groupBy",            "GROUP",
+      "groupingOrder",      "1,2,3,4,5,6,7,8",
+      "sortMethod",         "NAME",
+      "maxColumns",         attr.maxColumns,
+      "unitsPerColumn",     attr.unitsPerColumn,
+      "columnSpacing",      attr.columnSpacing,
+      "columnAnchorPoint",  attr.columnAnchorPoint,
       
       "oUF-initialConfigFunction", ([[
         self:SetWidth(%d)
@@ -283,6 +282,8 @@
         self:SetScale(%f)
       ]]):format(64, 64, cfg.units.raid.scale)
     )
-    raid:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)    
+    raid:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
+    
+    func.applyDragFunctionality(raid)
    
   end

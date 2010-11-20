@@ -365,7 +365,6 @@
     --PARTY
     party = {
       show = true,
-      showsolo = false, --show party when solo
       alpha = {
         notinrange = 0.5,
       },

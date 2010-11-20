@@ -187,11 +187,11 @@
       pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 250 }, 
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag = "[diablo_ShortHP] / [perhp]%",
+        tag = "[diablo:hpval]",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag = "", --more tags see oUF/elements/tags.lua | example: "[curpp] / [perpp]%" or "[diablo_ShortPP] / [perpp]%"
+        tag = "", --more tags see oUF/elements/tags.lua | example: "[curpp] / [perpp]%" or "[diablo:ppval]"
       },
       auras = {
         show = true,
@@ -249,7 +249,7 @@
       },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag = "[diablo_MissHP]",
+        tag = "[diablo:misshp]",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -269,7 +269,7 @@
       },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag = "[diablo_MissHP]",
+        tag = "[diablo:misshp]",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -293,7 +293,7 @@
       },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag = "[diablo_MissHP]",
+        tag = "[diablo:misshp]",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -327,7 +327,7 @@
       },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag = "[diablo_MissHP]",
+        tag = "[diablo:misshp]",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -351,7 +351,7 @@
       },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag = "[diablo_MissHP]",
+        tag = "[diablo:misshp]",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -379,7 +379,7 @@
       },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag = "[diablo_MissHP]",
+        tag = "[diablo:misshp]",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -400,8 +400,8 @@
       pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 }, 
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag = "[diablo_RaidHP]",
-        classcoloroverride = true, --even if you set the colorswitcher to no classcolor this value can be used to make the raid class colored
+        tag = "[diablo:raidhp]",
+        classcoloroverride = false, --even if you set the colorswitcher to no classcolor this value can be used to make the raid class colored
       },
       attributes = {
         point               = "TOP",

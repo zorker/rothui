@@ -103,11 +103,11 @@
     self.DebuffHighlightFilter = true
     
     --name
-    local name = func.createFontString(h, cfg.font, 11, "THINOUTLINE")
-    name:SetPoint("LEFT", h, 2, 0)
-    name:SetPoint("RIGHT", h, -2, 0)
+    local name = func.createFontString(h, cfg.font, 10.5, "THINOUTLINE")
+    name:SetPoint("LEFT", h, 0, 0)
+    name:SetPoint("RIGHT", h, -0, 0)
     name:SetJustifyH("CENTER")
-    self:Tag(name, self.cfg.health.tag or "[name]")  
+    self:Tag(name, self.cfg.health.tag or "")  
     --name:SetText("-23.2k")
     --name:SetText("Haudraufinixx")
     h.Name = name
@@ -118,35 +118,26 @@
   
   --update health func
   local updateHealth = function(bar, unit, min, max)
-    local d = floor(min/max*100)
-    
+    local d = floor(min/max*100)    
     --apply bar width
     if d == 100 then
       bar.back:SetWidth(0.01) --fix (0) makes the bar go anywhere
     elseif d < 100 then
       local w = bar.w
       bar.back:SetWidth(w-(w*d/100)) --calc new width of bar based on size of healthbar
-    end
-    
+    end    
     local color
     local dead
-    if UnitIsDeadOrGhost(unit) == 1 or UnitIsConnected(unit) == nil then
+    if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) then
       color = {r = 0.4, g = 0.4, b = 0.4}
       dead = 1
     elseif UnitIsPlayer(unit) then
       color = rRAID_CLASS_COLORS[select(2, UnitClass(unit))] or RAID_CLASS_COLORS[select(2, UnitClass(unit))]
-    elseif unit == "pet" and UnitExists("pet") and GetPetHappiness() then
-      local happiness = GetPetHappiness()
-      color = cfg.happycolors[happiness]
     else
       color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
     end
-
-    if (color and d == 100) or dead == 1 then
-      bar.Name:SetTextColor(color.r, color.g, color.b,1)
-    else
-      bar.Name:SetTextColor(1,1,1,1)
-    end
+    
+    if not color then color = { r = 0.5, g = 0.5, b = 0.5, } end
 
     if dead == 1 then
       bar.new:SetVertexColor(0,0,0,0)
@@ -162,14 +153,6 @@
         bar.new:SetVertexColor(cfg.colorswitcher.dark.r,cfg.colorswitcher.dark.g,cfg.colorswitcher.dark.b,cfg.colorswitcher.dark.a)
         bar.back:SetVertexColor(color.r,color.g,color.b,color.a or 1)
       end
-    end
-
-    if d < 100 and min > 1 then
-      bar.Name:SetPoint("LEFT", bar, -4, 0)
-      bar.Name:SetPoint("RIGHT", bar, 4, 0)
-    else
-      bar.Name:SetPoint("LEFT", bar, 2, 0)
-      bar.Name:SetPoint("RIGHT", bar, -2, 0)
     end
 
     if dead == 1 then
@@ -234,6 +217,13 @@
       outsideAlpha = self.cfg.alpha.notinrange
     }
     
+    --icons
+    self.RaidIcon = func.createIcon(self.Health,"LOW",14,self.Health,"BOTTOM","TOP",0,-6,-1)
+    self.ReadyCheck = func.createIcon(self.Health,"OVERLAY",24,self.Health,"CENTER","CENTER",0,0,-1)
+    self.LFDRole = func.createIcon(self.Health,"LOW",12,self.Health,"TOP","BOTTOM",0,4,-1)
+    self.LFDRole:SetTexture("Interface\\AddOns\\rTextures\\lfd_role")
+    self.LFDRole:SetDesaturated(1)
+    
   end  
 
   ---------------------------------------------
@@ -261,8 +251,9 @@
     local raid = oUF:SpawnHeader(
       "oUF_DiabloRaidHeader", --name
       nil,
-      "solo,raid",          --visibility
-      "showSolo",           true, --debug
+      --"solo,raid",          --visibility
+      "raid",                 --visibility
+      --"showSolo",           true, --debug
       "showRaid",           true,
       "point",              attr.point,
       "yOffset",            attr.yOffset,

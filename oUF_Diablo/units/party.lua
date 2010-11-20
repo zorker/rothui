@@ -165,13 +165,18 @@
     self.RaidIcon = func.createIcon(self,"BACKGROUND",18,self.Name,"RIGHT","LEFT",0,0,-1)
     self.ReadyCheck = func.createIcon(self.Health,"OVERLAY",24,self.Health,"CENTER","CENTER",0,0,-1)
     if self.Border then
-      self.Leader = func.createIcon(self,"BACKGROUND",13,self.Border,"BOTTOMRIGHT","BOTTOMLEFT",16,38,-1)
-      self.LFDRole = func.createIcon(self,"BACKGROUND",12,self.Border,"BOTTOMRIGHT","BOTTOMLEFT",16,18,-1)
+      self.Leader = func.createIcon(self,"BACKGROUND",13,self.Border,"BOTTOMRIGHT","BOTTOMLEFT",16,18,-1)
+      if self.cfg.portrait.use3D then
+        self.LFDRole = func.createIcon(self.BorderHolder,"OVERLAY",12,self.Portrait,"TOP","BOTTOM",0,5,5)  
+      else
+        self.LFDRole = func.createIcon(self.PortraitHolder,"OVERLAY",12,self.Portrait,"TOP","BOTTOM",0,5,5)  
+      end
     else
       self.Leader = func.createIcon(self,"BACKGROUND",13,self,"RIGHT","LEFT",16,-18,-1)
       self.LFDRole = func.createIcon(self,"BACKGROUND",12,self,"RIGHT","LEFT",16,18,-1)    
     end
     self.LFDRole:SetTexture("Interface\\AddOns\\rTextures\\lfd_role")
+    --self.LFDRole:SetDesaturated(1)    
     
     --threat
     self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", func.checkThreat)
@@ -190,9 +195,9 @@
       "oUF_DiabloPartyHeader", 
       nil, 
       "party",        --visibility debug
+      "showPlayer",   true,
       "showSolo",     false, --debug
       "showParty",    true,
-      "showPlayer",   true,
       "showRaid",     false,
       "point",        "LEFT",
       "oUF-initialConfigFunction", ([[

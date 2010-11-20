@@ -233,6 +233,7 @@
     local back = CreateFrame("Frame",nil,self)
     back:SetSize(self.cfg.width,self.cfg.width)
     back:SetPoint("BOTTOM", self, "TOP", 0, -35)
+    self.PortraitHolder = back
     
     local t = back:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetAllPoints(back)
@@ -247,6 +248,7 @@
       
       local borderholder = CreateFrame("Frame", nil, self.Portrait)
       borderholder:SetAllPoints(back)
+      self.BorderHolder = borderholder
       
       local border = borderholder:CreateTexture(nil,"BACKGROUND",nil,-6)
       border:SetAllPoints(borderholder)

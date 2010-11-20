@@ -172,7 +172,6 @@
 
   --check threat
   local checkThreat = function(self,event,unit)
-    self.Health.border:SetVertexColor(0.8,0.65,0.65)
     if unit then
       if self.unit ~= unit then return end
       local threat = UnitThreatSituation(unit)
@@ -180,6 +179,10 @@
         local r, g, b = GetThreatStatusColor(threat)
         if self.Health.border then
           self.Health.border:SetVertexColor(r,g,b)
+        end
+      else
+        if self.Health.border then
+          self.Health.border:SetVertexColor(0.8,0.65,0.65)
         end
       end
     end
@@ -251,9 +254,9 @@
     local raid = oUF:SpawnHeader(
       "oUF_DiabloRaidHeader", --name
       nil,
-      --"solo,raid",          --visibility
-      "raid",                 --visibility
-      --"showSolo",           true, --debug
+      "solo,raid",          --visibility debug
+      --"raid",                 --visibility
+      "showSolo",           true, --debug
       "showRaid",           true,
       "point",              attr.point,
       "yOffset",            attr.yOffset,

@@ -439,8 +439,12 @@
     t:SetTexture(0,1,0)
     t:SetAlpha(0)
     f.dragtexture = t    
-    f:SetHitRectInsets(-15,-15,-15,-15)
-    if not special then    
+    if special == "unitframe" then
+      f:SetHitRectInsets(10,10,5,10)
+    else
+      f:SetHitRectInsets(-15,-15,-15,-15)
+    end
+    if special == "unitframe" or not special then    
       f:SetClampedToScreen(true)
     end
     

@@ -142,10 +142,10 @@
     local classtext = func.createFontString(self, cfg.font, 13, "THINOUTLINE")
     classtext:SetPoint("BOTTOM", self, "TOP", 0, -15)
     
-    self:Tag(name, "[name]")
+    self:Tag(name, "[diablo:name]")
     self:Tag(hpval, self.cfg.health.tag or "")
     self:Tag(ppval, self.cfg.power.tag or "")
-    self:Tag(classtext, "[classtext]")
+    self:Tag(classtext, "[diablo:classtext]")
     
   end
 
@@ -321,10 +321,12 @@
   -- UNIT SPECIFIC TAG
   ---------------------------------------------
 
-  oUF.Tags["classtext"] = function(unit) 
+  oUF.Tags["diablo:classtext"] = function(unit) 
     bubblehead:Hide()
     local string, tmpstring, sp = "", "", " "
-    if UnitLevel(unit) ~= -1 then
+    if UnitLevel(unit) == 0 then
+      string = "Haxx, unit undefined"
+    elseif UnitLevel(unit) ~= -1 then
       string = UnitLevel(unit)
     else
       string = "??"

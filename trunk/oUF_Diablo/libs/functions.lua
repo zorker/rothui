@@ -115,26 +115,22 @@
   
   --update health func
   func.updateHealth = function(bar, unit, min, max)
-    local self = bar:GetParent()
     local d = floor(min/max*100)
     local color
     local dead
-    if UnitIsDeadOrGhost(unit) == 1 or UnitIsConnected(unit) == nil then
+    if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) then
       color = {r = 0.4, g = 0.4, b = 0.4}
       dead = 1
     elseif UnitIsPlayer(unit) then
       color = rRAID_CLASS_COLORS[select(2, UnitClass(unit))] or RAID_CLASS_COLORS[select(2, UnitClass(unit))]
-    elseif unit == "pet" and UnitExists("pet") and GetPetHappiness() then
+    elseif UnitIsUnit(unit, "pet") then
       local happiness = GetPetHappiness()
       color = cfg.happycolors[happiness]
-      self.Name:SetText(UnitName(unit))
     else
       color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
     end
 
-    if color then
-      self.Name:SetTextColor(color.r, color.g, color.b,1)
-    end
+    if not color then color = { r = 0.5, g = 0.5, b = 0.5, } end
 
     if dead == 1 then
       bar:SetStatusBarColor(0,0,0,0)
@@ -159,6 +155,15 @@
     end
 
   end
+
+  --update power func
+  func.updatePower = function(bar, unit, min, max)
+    local color = cfg.powercolors[select(2, UnitPowerType(unit))]
+    if color then
+      bar:SetStatusBarColor(color.r, color.g, color.b,1)
+      bar.bg:SetVertexColor(color.r, color.g, color.b,0.2)
+    end
+  end
   
   --debuffglow
   func.createDebuffGlow = function(self)
@@ -174,15 +179,6 @@
     self.DebuffHighlight = t
     self.DebuffHighlightAlpha = 1
     self.DebuffHighlightFilter = true
-  end
-  
-  --update power func
-  func.updatePower = function(bar, unit, min, max)
-    local color = cfg.powercolors[select(2, UnitPowerType(unit))]
-    if color then
-      bar:SetStatusBarColor(color.r, color.g, color.b,1)
-      bar.bg:SetVertexColor(color.r, color.g, color.b,0.2)
-    end
   end
   
   --check threat
@@ -400,7 +396,7 @@
   
   --fontstring func
   func.createFontString = function(f, font, size, outline)
-    local fs = f:CreateFontString(nil, "OVERLAY")
+    local fs = f:CreateFontString(nil, "BORDER")
     fs:SetFont(font, size, outline)
     fs:SetShadowColor(0,0,0,1)
     return fs

@@ -105,7 +105,7 @@
     local hpval = func.createFontString(self.Health, cfg.font, 11, "THINOUTLINE")
     hpval:SetPoint("RIGHT", -2,0)
     
-    self:Tag(name, "[name]")
+    self:Tag(name, "[diablo:name]")
     self:Tag(hpval, self.cfg.health.tag or "")
     
   end

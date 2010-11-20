@@ -412,7 +412,7 @@
     hpval2:SetTextColor(0.6,0.6,0.6)
     
     self:Tag(hpval1, "[perhp]")
-    self:Tag(hpval2, "[diablo_ShortHP]")
+    self:Tag(hpval2, "[diablo:shorthpval]")
 
     self.Health.hpval1 = hpval1
     self.Health.hpval2 = hpval2

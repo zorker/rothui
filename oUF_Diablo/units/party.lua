@@ -189,11 +189,12 @@
     local party = oUF:SpawnHeader(
       "oUF_DiabloPartyHeader", 
       nil, 
-      "solo,party",
-      "showSolo", cfg.units.party.showsolo, --debug
-      "showParty", true,
-      "showPlayer", true,
-      "point", "LEFT",
+      "party",        --visibility debug
+      "showSolo",     false, --debug
+      "showParty",    true,
+      "showPlayer",   true,
+      "showRaid",     false,
+      "point",        "LEFT",
       "oUF-initialConfigFunction", ([[
         self:SetWidth(%d)
         self:SetHeight(%d)

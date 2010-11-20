@@ -30,7 +30,8 @@
     self:SetScript("OnEnter", UnitFrame_OnEnter)
     self:SetScript("OnLeave", UnitFrame_OnLeave)
     --func.createBackdrop(self)
-    func.applyDragFunctionality(self,"unitframe")
+    func.applyDragFunctionality(self)
+    self:SetHitRectInsets(10,10,10,10)
   end
   
   --actionbar background

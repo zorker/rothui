@@ -55,8 +55,6 @@
     b:SetTexture("Interface\\AddOns\\rTextures\\raid_back")
     b:SetVertexColor(0.5,0.5,0.5,1)
     
-    h.back = b
-    
     --bg texture that will not make the whole frame red
     local t = h:CreateTexture(nil,"BACKGROUND",nil,-6)
     t:SetPoint("TOPRIGHT",h,"TOPRIGHT",0,0)
@@ -255,6 +253,7 @@
       "oUF_DiabloRaidHeader", --name
       nil,
       "raid",               --visibility debug
+      "showPlayer",         false,
       "showSolo",           false,
       "showParty",          false,
       "showRaid",           true,

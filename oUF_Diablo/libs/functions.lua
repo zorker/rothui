@@ -396,7 +396,7 @@
   
   --fontstring func
   func.createFontString = function(f, font, size, outline)
-    local fs = f:CreateFontString(nil, "BORDER")
+    local fs = f:CreateFontString(nil, "OVERLAY")
     fs:SetFont(font, size, outline)
     fs:SetShadowColor(0,0,0,1)
     return fs

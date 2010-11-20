@@ -183,10 +183,6 @@
   
   --check threat
   func.checkThreat = function(self,event,unit)
-    if self.Border then
-      self.Border:SetVertexColor(0.6,0.5,0.5)
-      self.PortraitBack:SetVertexColor(0.1,0.1,0.1,0.9)
-    end
     if unit then
       if self.unit ~= unit then return end
       local threat = UnitThreatSituation(unit)
@@ -195,6 +191,11 @@
         if self.Border then
           self.Border:SetVertexColor(r,g,b)
           self.PortraitBack:SetVertexColor(r,g,b,1)
+        end
+      else
+        if self.Border then
+          self.Border:SetVertexColor(0.6,0.5,0.5)
+          self.PortraitBack:SetVertexColor(0.1,0.1,0.1,0.9)
         end
       end
     end

@@ -115,12 +115,14 @@
 
     local numBuffs = BUFF_ACTUAL_DISPLAY
     local rows = ceil(numBuffs/cfg.buffframe.buffsPerRow)
+    local gap = cfg.buffframe.gap
+    if rows == 0 then gap = 0 end
     local buff = _G[buttonName..index]
     -- Position debuffs
-    if ((index > 1) and (mod(index, BUFFS_PER_ROW) == 1)) then
+    if ((index > 1) and (mod(index, cfg.buffframe.buffsPerRow) == 1)) then
       buff:SetPoint("TOP", _G[buttonName..(index-cfg.buffframe.buffsPerRow)], "BOTTOM", 0, -cfg.buffframe.rowSpacing)
     elseif (index == 1) then
-      buff:SetPoint("TOPRIGHT", BuffFrame, "TOPRIGHT", 0, -rows*(cfg.buffframe.rowSpacing+buff:GetHeight()))
+      buff:SetPoint("TOPRIGHT", BuffFrame, "TOPRIGHT", 0, -(rows*(cfg.buffframe.rowSpacing+buff:GetHeight())+gap))
     else
       buff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", -cfg.buffframe.colSpacing, 0)
     end    

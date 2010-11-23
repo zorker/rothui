@@ -32,6 +32,7 @@
     pos             = { a1 = "TOP", af = "Minimap", a2 = "BOTTOM", x = 40, y = -70 }, 
     userplaced      = true, --want to place the bar somewhere else?
     locked          = true, --frame locked, can be unlocked ingame via /rbuff
+    colSpacing      = 7,
   }  
   
   cfg.textures = {

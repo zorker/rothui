@@ -129,6 +129,21 @@
   
   end
 
+  --update wpn enchant icon positions
+  local updateTempEnchantAnchors = function()
+    for i=1, NUM_TEMP_ENCHANT_FRAMES do
+      local b = _G["TempEnchant"..i]
+      local previousBuff
+      if b then
+        if (i == 1) then
+          b:SetPoint("TOPRIGHT", TemporaryEnchantFrame, "TOPRIGHT", 0, 0)
+        else
+          b:SetPoint("RIGHT", previousBuff, "LEFT", -cfg.tempenchant.colSpacing, 0)
+        end
+        previousBuff = b
+      end
+    end
+  end
 
   --create drag frame for temp enchant icons
   local function createTempEnchantHolder()
@@ -270,6 +285,9 @@
         applySkin(b,"TempEnchant"..i, "wpn")
       end
     end
+    
+    --move temp enchant icons in position
+    updateTempEnchantAnchors()
 
     --hook the consolidatedbuffs
     if ConsolidatedBuffs then

@@ -66,7 +66,7 @@
     local type, value = link:match("(%a+):(.+)")
     if ( type == "url" ) then
       --local eb = _G[frame:GetName()..'EditBox'] --sometimes this is not the active chatbox. thus use the last active one for this
-      local eb = LAST_ACTIVE_CHAT_EDIT_BOX
+      local eb = LAST_ACTIVE_CHAT_EDIT_BOX or _G[frame:GetName()..'EditBox']
       if eb then
         eb:SetText(value)
         eb:SetFocus()

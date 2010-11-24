@@ -34,6 +34,7 @@
     "oUF_DiabloTargetPortrait",
     "MiniMapInstanceDifficulty",
     "GuildInstanceDifficulty",
+    "MinimapCluster",
   } 
   
   function oUF_DiabloUnlock(c)

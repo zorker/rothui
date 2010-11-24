@@ -29,11 +29,13 @@
   oUF.Tags["diablo:color"] = function(unit)
     local color = { r=1, g=1, b=1, }
     if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) then
-      color = {r = 0.4, g = 0.4, b = 0.4}
+      color = {r = 0.5, g = 0.5, b = 0.5}
     elseif UnitIsPlayer(unit) then
       color = rRAID_CLASS_COLORS[select(2, UnitClass(unit))] or RAID_CLASS_COLORS[select(2, UnitClass(unit))]
-    elseif UnitIsUnit(unit, "pet")  then
+    elseif UnitIsUnit(unit, "pet") and GetPetHappiness() then
       color = cfg.happycolors[GetPetHappiness()]
+    elseif UnitIsUnit(unit, "target") and UnitIsTapped("target") and not UnitIsTappedByPlayer("target") then
+      color = {r = 0.5, g = 0.5, b = 0.5}
     else
       color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
     end
@@ -50,7 +52,7 @@
   oUF.Tags["diablo:colorsimple"] = function(unit)
     local color = { r=1, g=1, b=1, }
     if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) then
-      color = {r = 0.4, g = 0.4, b = 0.4}
+      color = {r = 0.5, g = 0.5, b = 0.5}
     end
     if color then
       return RGBPercToHex(color.r,color.g,color.b)
@@ -76,9 +78,9 @@
     local color = oUF.Tags["diablo:colorsimple"](unit)
     local hpval
     if UnitIsDeadOrGhost(unit) then
-      hpval = "dead"
+      hpval = "Dead"
     elseif not UnitIsConnected(unit) then
-      hpval = "off"
+      hpval = "Offline"
     else
       hpval = func.numFormat(UnitHealth(unit) or 0).." / "..oUF.Tags["perhp"](unit).."%"
     end
@@ -93,9 +95,9 @@
     local color = oUF.Tags["diablo:colorsimple"](unit)
     local hpval
     if UnitIsDeadOrGhost(unit) then
-      hpval = "dead"
+      hpval = "Dead"
     elseif not UnitIsConnected(unit) then
-      hpval = "off"
+      hpval = "Offline"
     else
       hpval = func.numFormat(UnitHealth(unit) or 0)
     end
@@ -118,9 +120,9 @@
     local color = oUF.Tags["diablo:colorsimple"](unit)
     local hpval
     if UnitIsDeadOrGhost(unit) then
-      hpval = "dead"
+      hpval = "Dead"
     elseif not UnitIsConnected(unit) then
-      hpval = "off"
+      hpval = "Offline"
     else
       local max, min = UnitHealthMax(unit), UnitHealth(unit)
       if max-min > 0 then
@@ -137,9 +139,11 @@
     local color = oUF.Tags["diablo:color"](unit)
     local hpval
     if UnitIsDeadOrGhost(unit) then
-      hpval = "dead"
+      --hpval = "Dead"
+      hpval = UnitName(rolf or unit)
     elseif not UnitIsConnected(unit) then
-      hpval = "off"
+      hpval = UnitName(rolf or unit)
+      --hpval = "Offline"
     else
       local max, min = UnitHealthMax(unit), UnitHealth(unit)
       if max-min > 0 then

@@ -245,17 +245,18 @@
     
     --orb filling
     orb.Filling = orb:CreateTexture(nil, "BACKGROUND", nil, -4)
+    local MAX_ORBTEX_NUM = 14
     if type == "power" then
-      if cfg.manatexture >= 1 and cfg.manatexture <= 11 then
+      if cfg.manatexture >= 1 and cfg.manatexture <= MAX_ORBTEX_NUM then
         orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling"..cfg.manatexture)
       else
-        orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling"..math.random(1,11))
+        orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling"..math.random(1,MAX_ORBTEX_NUM))
       end
     else
-      if cfg.healthtexture >= 1 and cfg.healthtexture <= 11 then
+      if cfg.healthtexture >= 1 and cfg.healthtexture <= MAX_ORBTEX_NUM then
         orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling"..cfg.healthtexture)
       else
-        orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling"..math.random(1,11))
+        orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling"..math.random(1,MAX_ORBTEX_NUM))
       end
     end
     --IMPORTANT, settexcoord will not work with other settings
@@ -623,6 +624,10 @@
     func.applyDragFunctionality(f)
     RuneButtonIndividual1:ClearAllPoints()
     RuneButtonIndividual1:SetPoint("LEFT",f,"LEFT",10,0)
+    for i=1,6 do
+      local r = _G["RuneButtonIndividual"..i.."Cooldown"]
+      r.noOCC = true
+    end
   end
   
   --adjust minimap difficulty
@@ -630,6 +635,7 @@
     
     local m = _G["MiniMapInstanceDifficulty"]
 		local g = _G["GuildInstanceDifficulty"]
+		local c = _G["MinimapCluster"]
 		
 		if m then
 		  m:SetScale(self.cfg.art.minimapdifficulty.scale)
@@ -640,6 +646,8 @@
 		  g:SetScale(self.cfg.art.minimapdifficulty.scale)
 		  func.applyDragFunctionality(g)
 		end
+		
+		func.applyDragFunctionality(c)
 		
   end
 

@@ -18,7 +18,7 @@
   --position data
   local map_positions = {
     position = {
-      [1] = { frame = "Minimap",                  anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",   anchorframe = "UIParent",   posx = -30,   posy = -15 },
+      [1] = { frame = "Minimap",                  anchor1 = "TOPRIGHT",     anchor2 = "TOPRIGHT",   anchorframe = "MinimapCluster",   posx = -30,   posy = -15 },
       [2] = { frame = "MiniMapTracking",          anchor1 = "CENTER",       anchor2 = "CENTER",     anchorframe = "Minimap",    posx = 68,     posy = 28 },
       [3] = { frame = "MiniMapMailFrame",         anchor1 = "CENTER",          anchor2 = "CENTER",     anchorframe = "Minimap",    posx = 75,    posy = 0 },
       [4] = { frame = "MiniMapBattlefieldFrame",  anchor1 = "CENTER",          anchor2 = "CENTER",     anchorframe = "Minimap",    posx = -75,   posy = 0 },
@@ -219,7 +219,7 @@
     bu:SetHitRectInsets(0, 0, 0, 0)
     
     select(5, GameTimeFrame:GetRegions()):SetTextColor(1, 1, 1)
-    select(5, GameTimeFrame:GetRegions()):SetFont(NAMEPLATE_FONT,14,"THINOUTLINE")
+    select(5, GameTimeFrame:GetRegions()):SetFont(NAMEPLATE_FONT,12,"THINOUTLINE")
     select(5, GameTimeFrame:GetRegions()):ClearAllPoints()
     select(5, GameTimeFrame:GetRegions()):SetPoint("CENTER",bu,"CENTER",0,1)
     

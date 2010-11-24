@@ -53,7 +53,8 @@
     local b = self:CreateTexture(nil,"BACKGROUND",nil,-8)
     b:SetAllPoints(self)
     b:SetTexture("Interface\\AddOns\\rTextures\\raid_back")
-    b:SetVertexColor(0.5,0.5,0.5,1)
+    h.dropshadow = b
+    --b:SetVertexColor(0.5,0.5,0.5,1)
     
     --bg texture that will not make the whole frame red
     local t = h:CreateTexture(nil,"BACKGROUND",nil,-6)
@@ -100,8 +101,25 @@
     self.DebuffHighlightAlpha = 1
     self.DebuffHighlightFilter = true
     
+    --skull
+    local s = h:CreateTexture(nil,"OVERLAY",nil,-4)
+    s:SetTexture("interface\\targetingframe\\ui-targetingframe-skull")
+    s:SetSize(22,22)
+    s:SetPoint("LEFT",-13,0)
+    --s:SetDesaturated(1)
+    s:Hide()
+    h.skull = s
+    
+    --disconnect
+    local disco = h:CreateTexture(nil,"OVERLAY",nil,-4)
+    disco:SetTexture("interface\\buttons\\ui-grouploot-pass-up")
+    disco:SetSize(18,18)
+    disco:SetPoint("LEFT",-11,0)
+    h.disco = disco
+    
+    
     --name
-    local name = func.createFontString(h, cfg.font, 10.5, "THINOUTLINE")
+    local name = func.createFontString(h, cfg.font, 10.5, "THINOUTLINE","BORDER")
     name:SetPoint("LEFT", h, 0, 0)
     name:SetPoint("RIGHT", h, -0, 0)
     name:SetJustifyH("CENTER")
@@ -124,11 +142,14 @@
       local w = bar.w
       bar.back:SetWidth(w-(w*d/100)) --calc new width of bar based on size of healthbar
     end    
-    local color
-    local dead
-    if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) then
+    local color, dead, disco
+    
+    if UnitIsDeadOrGhost(unit) then
       color = {r = 0.4, g = 0.4, b = 0.4}
       dead = 1
+    elseif not UnitIsConnected(unit) then
+      color = {r = 0.4, g = 0.4, b = 0.4}
+      disco = 1
     elseif UnitIsPlayer(unit) then
       color = rRAID_CLASS_COLORS[select(2, UnitClass(unit))] or RAID_CLASS_COLORS[select(2, UnitClass(unit))]
     else
@@ -137,7 +158,7 @@
     
     if not color then color = { r = 0.5, g = 0.5, b = 0.5, } end
 
-    if dead == 1 then
+    if dead or disco then
       bar.new:SetVertexColor(0,0,0,0)
       bar.back:SetVertexColor(0,0,0,0)
     else
@@ -153,10 +174,24 @@
       end
     end
 
-    if dead == 1 then
-      bar.glow:SetVertexColor(0,0,0,0.3)
+    if dead then
+      bar.glow:SetVertexColor(0,0,0,0.5)
+      bar.disco:Hide()
+      bar.skull:Show()
+      bar.dropshadow:SetAlpha(0.5)
+      bar.border:SetAlpha(0.5)
+    elseif disco then
+      bar.glow:SetVertexColor(0,0,0,0.5)
+      bar.skull:Hide()
+      bar.disco:Show()      
+      bar.dropshadow:SetAlpha(0.5)
+      bar.border:SetAlpha(0.5)
     elseif d <= 25 and min > 1 then
       bar.glow:SetVertexColor(1,0,0,1)
+      bar.skull:Hide()
+      bar.disco:Hide()
+      bar.dropshadow:SetAlpha(1)
+      bar.border:SetAlpha(1)
       if cfg.colorswitcher.useBrightForeground then
         bar.new:SetVertexColor(1,0,0,1)
       else
@@ -164,6 +199,10 @@
       end
     else
       bar.glow:SetVertexColor(0,0,0,0.7)
+      bar.skull:Hide()
+      bar.disco:Hide()
+      bar.dropshadow:SetAlpha(1)
+      bar.border:SetAlpha(1)
     end
 
   end

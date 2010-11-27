@@ -114,17 +114,25 @@
         show = true,
         scale = 0.58,
         color = {r = 150/255, g = 135/255, b = 200/255, },
-        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 }, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 }, 
+        alpha = {
+          ooc = 0.5, --alpha value out of combat
+          ic = 1, --alpha value in comat
+        },
       },
       holypower = { 
         show = true,
         scale = 0.58,
         color = {r = 200/255, g = 135/255, b = 190/255, },
-        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 }, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 }, 
+        alpha = {
+          ooc = 0.5, --alpha value out of combat
+          ic = 1, --alpha value in comat
+        },
       },
       eclipsebar = { 
         show = true,
-        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 }, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 }, 
         scale = 1,
       },
       runes = {

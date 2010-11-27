@@ -513,7 +513,20 @@
     end
 
     bar:SetScale(self.cfg.soulshards.scale)    
-    func.applyDragFunctionality(bar)    
+    func.applyDragFunctionality(bar)
+    
+    bar:RegisterEvent("PLAYER_REGEN_ENABLED")
+    bar:RegisterEvent("PLAYER_REGEN_DISABLED")
+    bar.cfg = self.cfg.soulshards
+    bar:SetScript("OnEvent", function(self,event)
+      if event == "PLAYER_REGEN_DISABLED" then
+        self:SetAlpha(self.cfg.alpha.ic)
+      elseif event == "PLAYER_REGEN_ENABLED" then
+        self:SetAlpha(self.cfg.alpha.ooc)
+      end
+    end)
+    bar:SetAlpha(bar.cfg.alpha.ooc) 
+    
     self.SoulShardBar = bar
 
   end
@@ -598,6 +611,19 @@
 
     bar:SetScale(self.cfg.holypower.scale)    
     func.applyDragFunctionality(bar)    
+    
+    bar:RegisterEvent("PLAYER_REGEN_ENABLED")
+    bar:RegisterEvent("PLAYER_REGEN_DISABLED")
+    bar.cfg = self.cfg.holypower
+    bar:SetScript("OnEvent", function(self,event)
+      if event == "PLAYER_REGEN_DISABLED" then
+        self:SetAlpha(self.cfg.alpha.ic)
+      elseif event == "PLAYER_REGEN_ENABLED" then
+        self:SetAlpha(self.cfg.alpha.ooc)
+      end
+    end)
+    bar:SetAlpha(bar.cfg.alpha.ooc)    
+    
     self.HolyPowerBar = bar
 
   end

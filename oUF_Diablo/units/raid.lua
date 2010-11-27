@@ -104,8 +104,8 @@
     --skull
     local s = h:CreateTexture(nil,"OVERLAY",nil,-4)
     s:SetTexture("interface\\targetingframe\\ui-targetingframe-skull")
-    s:SetSize(22,22)
-    s:SetPoint("LEFT",-13,0)
+    s:SetSize(18,18)
+    s:SetPoint("LEFT",-11,0)
     --s:SetDesaturated(1)
     s:Hide()
     h.skull = s
@@ -178,20 +178,20 @@
       bar.glow:SetVertexColor(0,0,0,0.5)
       bar.disco:Hide()
       bar.skull:Show()
-      bar.dropshadow:SetAlpha(0.5)
-      bar.border:SetAlpha(0.5)
+      --bar.dropshadow:SetAlpha(0.5)
+      --bar.border:SetAlpha(0.5)
     elseif disco then
       bar.glow:SetVertexColor(0,0,0,0.5)
       bar.skull:Hide()
       bar.disco:Show()      
-      bar.dropshadow:SetAlpha(0.5)
-      bar.border:SetAlpha(0.5)
+      --bar.dropshadow:SetAlpha(0.5)
+      --bar.border:SetAlpha(0.5)
     elseif d <= 25 and min > 1 then
       bar.glow:SetVertexColor(1,0,0,1)
       bar.skull:Hide()
       bar.disco:Hide()
-      bar.dropshadow:SetAlpha(1)
-      bar.border:SetAlpha(1)
+      --bar.dropshadow:SetAlpha(1)
+      --bar.border:SetAlpha(1)
       if cfg.colorswitcher.useBrightForeground then
         bar.new:SetVertexColor(1,0,0,1)
       else
@@ -201,8 +201,8 @@
       bar.glow:SetVertexColor(0,0,0,0.7)
       bar.skull:Hide()
       bar.disco:Hide()
-      bar.dropshadow:SetAlpha(1)
-      bar.border:SetAlpha(1)
+      --bar.dropshadow:SetAlpha(1)
+      --bar.border:SetAlpha(1)
     end
 
   end

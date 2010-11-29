@@ -131,9 +131,9 @@
 
   --update wpn enchant icon positions
   local updateTempEnchantAnchors = function()
+    local previousBuff
     for i=1, NUM_TEMP_ENCHANT_FRAMES do
       local b = _G["TempEnchant"..i]
-      local previousBuff
       if b then
         if (i == 1) then
           b:SetPoint("TOPRIGHT", TemporaryEnchantFrame, "TOPRIGHT", 0, 0)

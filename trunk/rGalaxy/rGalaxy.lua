@@ -1,49 +1,42 @@
+  
+  -- Zorks round texture animation testmod
 
-  --Blizzard documentation
-  --http://forums.worldofwarcraft.com/thread.html?sid=1&topicId=15443414368
-  
-  --Black box
-  --http://wow.curseforge.com/addons/blackboxlua/
-
-  local function createme(x,y,size,alpha,dur)
-    local h = CreateFrame("Frame",nil,UIParent)
-    h:SetHeight(size)
-    h:SetWidth(size)		  
-    h:SetPoint("CENTER",x,y)
-    h:SetAlpha(alpha)
-  
-    local t = h:CreateTexture()
-    t:SetAllPoints(h)
-    t:SetTexture("Interface\\AddOns\\rGalaxy\\galaxy")
-    h.t = t
+  local function createme(h,tex,circle,x,y,size,dur,degree)    
+        
+    local t = h:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetPoint("CENTER",x,y)
+    t:SetSize(size,size)
+    t:SetBlendMode("ADD")
     
-    local ag = h:CreateAnimationGroup()
-    h.ag = ag
+    if circle then
+      SetPortraitToTexture(t, "Interface\\AddOns\\rGalaxy\\"..tex)
+    else
+      t:SetTexture("Interface\\AddOns\\rGalaxy\\"..tex)
+    end
     
-    local a1 = h.ag:CreateAnimation("Rotation")
-    a1:SetDegrees(360)
-    a1:SetDuration(dur)
-    h.ag.a1 = a1
+    if dur then
     
-    h:SetScript("OnUpdate",function(self,elapsed)
-      local t = self.total
-      if (not t) then
-        self.total = 0
-        return
-      end
-      t = t + elapsed
-      if (t<1) then
-        self.total = t
-        return
-      else
-        h.ag:Play()
-      end
-    end)
+      local ag = t:CreateAnimationGroup()    
+      local anim = ag:CreateAnimation("Rotation")
+      anim:SetDegrees(degree)
+      anim:SetDuration(dur)    
+      ag:Play()
+      ag:SetLooping("REPEAT")
     
-    return h
+    end
+    
+    return t    
   
-  end
+  end  
   
-  local a = createme(0,0,100,0.8,20)
-  local b = createme(5,0,130,0.5,10)
-  local c = createme(5,5,120,0.6,15)
+  local h = CreateFrame("Frame",nil,UIParent)  
+  h:SetPoint("CENTER",0,0)
+  h:SetSize(64,64)
+  
+  local a = createme(h,"bob",true,70,70,128)
+  local b = createme(h,"bob",false,-70,70,128)
+  local c = createme(h,"bob",true,70,-70,128,15,360)
+  local d = createme(h,"bob",false,-70,-70,128,15,360)
+  local e = createme(h,"bob",true,70,-140,128,15,-360)
+  local f = createme(h,"bob",false,-70,-140,128,15,-360)  
+  local g = createme(h,"galaxy",true,210,70,128,15,360)

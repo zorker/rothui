@@ -32,12 +32,12 @@
   cfg.applyDragFunctionality(bar,barcfg.userplaced,barcfg.locked)
   
   local Page = {
-    ["DRUID"] = "[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] %s; [bonusbar:2] 8; [bonusbar:3] 9; [bonusbar:4] 10;",
+    ["DRUID"] = "[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] 8; [bonusbar:2] 8; [bonusbar:3] 9; [bonusbar:4] 10;",
     ["WARRIOR"] = "[bonusbar:1] 7; [bonusbar:2] 8; [bonusbar:3] 9;",
     ["PRIEST"] = "[bonusbar:1] 7;",
     ["ROGUE"] = "[bonusbar:1] 7; [form:3] 7;",
     ["WARLOCK"] = "[form:2] 7;",
-    ["DEFAULT"] = "[bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6; [bonusbar:5] 11;",
+    ["DEFAULT"] = "[bonusbar:5] 11; [bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6;",
   }
   
   local function GetBar()
@@ -45,14 +45,6 @@
     local class = cfg.playerclass
     local page = Page[class]
     if page then
-      if class == "DRUID" then
-        -- Handles prowling, prowling has no real stance, so this is a hack which utilizes the Tree of Life bar for non-resto druids.
-        if IsSpellKnown(33891) then -- Tree of Life form
-          page = page:format(7)
-        else
-          page = page:format(8)
-        end
-      end
       condition = condition.." "..page
     end
     condition = condition.." 1"

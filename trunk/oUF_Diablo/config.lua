@@ -395,6 +395,14 @@
         show = true,
         use3D = true,
       },
+      attributes = {
+        visibility          = "party",  --show this header in party
+        showPlayer          = true,     --make this true to show player in party
+        showSolo            = false,    --make this true to show while solo (only works if solo is in visiblity aswell
+        showParty           = true,     --make this true to show headerin party
+        showRaid            = false,    --show in raid
+        point               = "LEFT",
+      },
     },
     
     --RAID
@@ -411,6 +419,11 @@
         classcoloroverride = false, --even if you set the colorswitcher to no classcolor this value can be used to make the raid class colored
       },
       attributes = {
+        visibility          = "raid", --use "party,raid" to show this in party aswell
+        showPlayer          = false,  --make this true to show player in party
+        showSolo            = false,  --make this true to show while solo (only works if solo is in visiblity aswell
+        showParty           = false,  --make this true to show raid in party
+        showRaid            = true,   --show in raid
         point               = "TOP",
         yOffset             = 15,
         xoffset             = 0,
@@ -418,7 +431,7 @@
         unitsPerColumn      = 5,
         columnSpacing       = -15,
         columnAnchorPoint   = "LEFT",        
-      }
+      },
     },
     
   }

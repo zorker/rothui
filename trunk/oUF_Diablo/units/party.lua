@@ -191,15 +191,17 @@
     oUF:RegisterStyle("diablo:party", createStyle)
     oUF:SetActiveStyle("diablo:party")
     
+    local attr = cfg.units.party.attributes
+    
     local party = oUF:SpawnHeader(
       "oUF_DiabloPartyHeader", 
       nil, 
-      "party",        --visibility debug
-      "showPlayer",   true,
-      "showSolo",     false, --debug
-      "showParty",    true,
-      "showRaid",     false,
-      "point",        "LEFT",
+      attr.visibility,
+      "showPlayer",         attr.showPlayer,
+      "showSolo",           attr.showSolo,
+      "showParty",          attr.showParty,
+      "showRaid",           attr.showRaid,
+      "point",              attr.point,
       "oUF-initialConfigFunction", ([[
         self:SetWidth(%d)
         self:SetHeight(%d)

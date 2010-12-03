@@ -291,11 +291,11 @@
     local raid = oUF:SpawnHeader(
       "oUF_DiabloRaidHeader", --name
       nil,
-      "raid",               --visibility debug
-      "showPlayer",         false,
-      "showSolo",           false,
-      "showParty",          false,
-      "showRaid",           true,
+      attr.visibility,
+      "showPlayer",         attr.showPlayer,
+      "showSolo",           attr.showSolo,
+      "showParty",          attr.showParty,
+      "showRaid",           attr.showRaid,
       "point",              attr.point,
       "yOffset",            attr.yOffset,
       "xoffset",            attr.xoffset,

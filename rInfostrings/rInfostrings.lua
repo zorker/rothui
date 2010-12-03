@@ -2,7 +2,7 @@
   -- rInfostrings
   -- zork - 2010
 
-  local update_timer = 1
+  local update_timer = 3
   local showXpRep = false  
   
   --------------------------------

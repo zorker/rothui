@@ -218,7 +218,7 @@
   
     local cp
     if(UnitExists("vehicle")) then
-      cp = GetComboPoints("vehicle", "target")
+      cp = GetComboPoints("vehicle", "target") or GetComboPoints("player", "target")
     else
       cp = GetComboPoints("player", "target")
     end

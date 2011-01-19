@@ -15,6 +15,7 @@
   cfg.timespan = 0.25 -- time that has to pass in seconds before a new table will be drawn to prevent spamming in raids  
   cfg.scale = 1       -- global scale  
   cfg.hide = false    -- true/false should the frame be hidden out of combat/without target etc
+  cfg.partyonly = true --frame will only be available in party/raid
   
   cfg.position {
     coord           = { a1 = "CENTER", af = UIParent, a2 = "CENTER", x = 0, y = 0 }, --default position

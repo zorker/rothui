@@ -233,6 +233,10 @@
 
   --check status func
   local function checkStatus(self,event,...)
+    if cfg.partyonly and (GetNumRaidMembers() + GetNumPartyMembers() == 0) then
+      self:Hide()
+      return
+    end    
     local unit = "target"
     if UnitExists(unit) and not UnitIsDeadOrGhost(unit) and InCombatLockdown() then
       self:Show()    

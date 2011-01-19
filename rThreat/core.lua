@@ -233,10 +233,12 @@
 
   --check status func
   local function checkStatus(self,event,...)
+    --print(event)
     if cfg.partyonly and (GetNumRaidMembers() + GetNumPartyMembers() == 0) then
       self:Hide()
       return
     end    
+    if not cfg.hide then self:Show() end
     local unit = "target"
     if UnitExists(unit) and not UnitIsDeadOrGhost(unit) and InCombatLockdown() then
       self:Show()    
@@ -408,6 +410,7 @@
     holder:RegisterEvent("PLAYER_ENTERING_WORLD")
     holder:RegisterEvent("PLAYER_REGEN_DISABLED")
     holder:RegisterEvent("PLAYER_REGEN_ENABLED")
+    holder:RegisterEvent("PARTY_MEMBERS_CHANGED")
     
     holder:SetScale(cfg.scale)
     

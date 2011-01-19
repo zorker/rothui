@@ -16,10 +16,10 @@
   cfg.timespan      = 0.25    -- time that has to pass in seconds before a new table will be drawn to prevent spamming in raids  
   cfg.scale         = 1       -- global scale  
   cfg.hide          = false   -- true/false hides frame out of combat/without target, otherwise it will be visible all the time
-  cfg.partyonly     = true    -- frame will only be available in party/raid (overrides hide setting)
+  cfg.partyonly     = false    -- frame will only be available in party/raid (overrides hide setting)
   
   -- frame position (you can move the frame ingame via "/rthreat")
-  cfg.position {
+  cfg.position = {
     coord           = { a1 = "CENTER", af = UIParent, a2 = "CENTER", x = 0, y = 0 }, -- default position
     userplaced      = true,   -- want to place the bar somewhere else?
     locked          = true,   -- frame locked, can be unlocked ingame via /rthreat

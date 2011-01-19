@@ -41,7 +41,7 @@
       f:SetMovable(true)
       f:SetUserPlaced(true)
       if not locked then
-        f.dragtexture:SetAlpha(0.2)
+        f.dragtexture:SetAlpha(0.4)
         f:EnableMouse(true)
         f:RegisterForDrag("LeftButton")
         f:SetScript("OnEnter", function(s) 
@@ -267,11 +267,13 @@
     holder:SetPoint(cfg.position.coord.a1,cfg.position.coord.af,cfg.position.coord.a2,cfg.position.coord.x,cfg.position.coord.y)
     applyDragFunctionality(holder,cfg.position.userplaced,cfg.position.locked)
     
+    local title
+    
     -- | T I T L E | --
     if cfg.title.show then
     
       --title container
-      local title = CreateFrame("Frame",nil,holder)
+      title = CreateFrame("Frame",nil,holder)
       title:SetAllPoints(holder)
       
       --shadow stuff    
@@ -419,14 +421,6 @@
   -- CALL
   -----------------------------
 
-  local a = CreateFrame("Frame")
-
-  a:SetScript("OnEvent", function(self, event)
-    if(event=="PLAYER_LOGIN") then
-      initThreatBars()
-    end
-  end)  
-
-  a:RegisterEvent("PLAYER_LOGIN")
+  initThreatBars()
   
   

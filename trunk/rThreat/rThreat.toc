@@ -1,6 +1,6 @@
 ## Interface: 40000
 ## Author: zork
-## Version: 4.001
+## Version: 4.002
 ## Title: rThreat
 ## Notes: Simple threat display.
 

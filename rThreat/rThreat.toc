@@ -6,3 +6,4 @@
 
 config.lua
 core.lua
+slashcmd.lua

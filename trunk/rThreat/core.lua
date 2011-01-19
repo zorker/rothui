@@ -141,7 +141,7 @@
   
   --compare values func
   local compare = function(a, b)
-  	return a.scaledPercent > b.scaledPercent
+    return a.scaledPercent > b.scaledPercent
   end
   
   --update threatbar func

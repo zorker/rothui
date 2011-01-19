@@ -283,7 +283,7 @@
       
       --title string
       local name = content:CreateFontString(nil, "BACKGROUND")
-      name:SetFont(cfg.title.font.font, cfg.title.font.size, "THINOUTLINE")
+      name:SetFont(cfg.title.font.font, cfg.title.font.size, cfg.title.font.outline)
       name:SetPoint("CENTER", 0, 0)
       name:SetText("rThreat")    
       name:SetVertexColor(cfg.title.font.color.r, cfg.title.font.color.g, cfg.title.font.color.b, cfg.title.font.color.a)
@@ -354,21 +354,24 @@
       bg:SetVertexColor(cfg.statusbars.inactive.color.r, cfg.statusbars.inactive.color.g, cfg.statusbars.inactive.color.b, cfg.statusbars.inactive.color.a)
       
       local name = bars[i]:CreateFontString(nil, "LOW")
-      name:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, "THINOUTLINE")
+      name:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, cfg.statusbars.font.outline)
+      name:SetVertexColor(cfg.statusbars.font.color.r, cfg.statusbars.font.color.g, cfg.statusbars.font.color.b, cfg.statusbars.font.color.a)
       name:SetPoint("LEFT", bars[i], 2, 0)
       name.value = ""
       name:SetJustifyH("LEFT")
       name:SetText(name.value)    
       
       local perc = bars[i]:CreateFontString(nil, "LOW")
-      perc:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, "THINOUTLINE")
+      perc:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, cfg.statusbars.font.outline)
+      perc:SetVertexColor(cfg.statusbars.font.color.r, cfg.statusbars.font.color.g, cfg.statusbars.font.color.b, cfg.statusbars.font.color.a)
       perc:SetPoint("RIGHT", bars[i], -2, 0)
       perc.value = bars[i].value.."%"
       perc:SetJustifyH("RIGHT")
       perc:SetText("")    
       
       local val = bars[i]:CreateFontString(nil, "LOW")
-      val:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, "THINOUTLINE")
+      val:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, cfg.statusbars.font.outline)
+      val:SetVertexColor(cfg.statusbars.font.color.r, cfg.statusbars.font.color.g, cfg.statusbars.font.color.b, cfg.statusbars.font.color.a)
       val:SetPoint("RIGHT", bars[i], -40, 0)
       val.value = bars[i].value
       val:SetJustifyH("RIGHT")

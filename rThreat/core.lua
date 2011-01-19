@@ -356,7 +356,7 @@
     local name = content:CreateFontString(nil, "BACKGROUND")
     name:SetFont(cfg.title.font.font, cfg.title.font.size, "THINOUTLINE")
     name:SetPoint("CENTER", 0, 0)
-    name:SetText("rThreat 0.1")    
+    name:SetText("rThreat")    
     name:SetVertexColor(cfg.title.font.color.r, cfg.title.font.color.g, cfg.title.font.color.b, cfg.title.font.color.a)
 
     local bg = content:CreateTexture(nil, "BACKGROUND",nil,-8)

@@ -11,7 +11,7 @@
       local f = _G[v]
       if f and f:IsUserPlaced() then
         --print(f:GetName())
-        f.dragtexture:SetAlpha(0.2)
+        f.dragtexture:SetAlpha(0.4)
         f:EnableMouse(true)
         f:RegisterForDrag("LeftButton")
         f:SetScript("OnEnter", function(s) 

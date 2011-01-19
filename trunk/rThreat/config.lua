@@ -88,8 +88,8 @@
     }, 
     texture = {
       texture       = "Interface\\AddOns\\rThreat\\media\\statusbar",
-      multiplier    = 0.2,    -- multiplier allows darker background colors
-      alpha         = { background = 0.9, foreground = 1},
+      multiplier    = 0.5,    -- multiplier allows darker background colors
+      alpha         = { background = 0.6, foreground = 1},
     },
     inactive = {
       color         = { r = 0.5, g = 0.5, b = 0.5, a = 0.1 },

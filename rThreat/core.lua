@@ -9,11 +9,14 @@
   local cfg = ns.cfg  
 
   -----------------------------
-  -- CONSTANTS
+  -- VARIABLES
   -----------------------------
   
   local player_name, _ = UnitName("player")
   local _, player_class = UnitClass("player")
+  local threatTable = {}
+  local i
+  local oldtime = 0
   
   -----------------------------
   -- FUNCTIONS
@@ -37,6 +40,52 @@
     f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)    
   end
   
+  --create backdrop func (cheat to use it for borders aswell)
+  local function createBackdrop(anchor,cfg,typ)  
+    local backdrop = { 
+      bgFile = cfg.bgFile, 
+      edgeFile = cfg.edgeFile,
+      tile = cfg.tile,
+      tileSize = cfg.tileSize, 
+      edgeSize = cfg.edgeSize, 
+      insets = { 
+        left = cfg.inset, 
+        right = cfg.inset, 
+        top = cfg.inset, 
+        bottom = cfg.inset,
+      },
+    }      
+    local f = CreateFrame("Frame",nil,anchor)
+    f:SetPoint("TOPLEFT",anchor,"TOPLEFT",-cfg.inset,cfg.inset)
+    f:SetPoint("BOTTOMRIGHT",anchor,"BOTTOMRIGHT",cfg.inset,-cfg.inset)      
+    f:SetBackdrop(backdrop)
+    f:SetBackdropColor(cfg.bgColor.r, cfg.bgColor.g, cfg.bgColor.b, cfg.bgColor.a)
+    f:SetBackdropBorderColor(cfg.edgeColor.r, cfg.edgeColor.g, cfg.edgeColor.b, cfg.edgeColor.a)       
+    if typ == "shadow" then
+      anchor.shadow = f
+    else
+      f:SetFrameStrata("LOW") --make the border hover the other frames
+      anchor.border = f
+    end  
+  end
+  
+  --get threat data
+  local function getThreatData(unit)
+    local isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, "target")
+    local values = {
+      UnitID        = unit,
+      UnitName      = UnitName(unit) or "Not found",
+      UnitClass     = UnitClass(unit),
+      isTanking     = isTanking or 0,
+      status        = status or 0,
+      scaledPercent = scaledPercent or 0,
+      rawPercent    = rawPercent or 0,
+      threatValue   = threatValue or 0,        
+    }
+    return values  
+  end
+  
+  --get color func
   local function getColor(unit)
     local color = { r=1, g=0, b=1 }
     if UnitIsPlayer(unit) then
@@ -53,6 +102,7 @@
     return color
   end
   
+  --num format func
   local numFormat = function(v)
     local string = ""
     if v > 1E9 then
@@ -67,183 +117,62 @@
     return string
   end
   
-  local threatTable = {}
-  local i
-  
   --compare values func
   local compare = function(a, b)
   	return a.scaledPercent > b.scaledPercent
   end
   
-  --update threatbars
+  --update threatbar func
   local function updateThreatBars(self)
-  
-    threatTable = {} --empty table
-
-    local typ = 0 --0 = player only, 1 = raid, 2 = party, 3 = pet
+    
+    threatTable = {}  --clear table
+    local typ = 0     --0 = player only, 1 = raid, 2 = party, 3 = pet
+    local unit
+    
+    -- check raid
     if GetNumRaidMembers() > 0 then 
-      typ = 1 
-      
-      for i=1,GetNumRaidMembers() do
-        
+      typ = 1       
+      for i=1,GetNumRaidMembers() do        
         --check for raid members
         unit = "raid"..i
         if(UnitExists(unit)) then
-          local isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, "target")      
-          local values = {
-            UnitID        = unit,
-            UnitName      = UnitName(unit) or "Not found",
-            UnitClass     = UnitClass(unit),
-            isTanking     = isTanking or 0,
-            status        = status or 0,
-            scaledPercent = scaledPercent or 0,
-            rawPercent    = rawPercent or 0,
-            threatValue   = threatValue or 0,        
-          }  
-          table.insert(threatTable,values)         
-        end      
-        
+          table.insert(threatTable,getThreatData(unit))
+        end              
         --check for raid pets
         unit = "raidpet"..i
         if(UnitExists(unit)) then
-          local isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, "target")      
-          local values = {
-            UnitID        = unit,
-            UnitName      = UnitName(unit) or "Not found",
-            UnitClass     = UnitClass(unit),
-            isTanking     = isTanking or 0,
-            status        = status or 0,
-            scaledPercent = scaledPercent or 0,
-            rawPercent    = rawPercent or 0,
-            threatValue   = threatValue or 0,        
-          }  
-          table.insert(threatTable,values)         
-        end
-        
+          table.insert(threatTable,getThreatData(unit))
+        end        
       end
-      
-      
+    -- check party (party excludes player and pet, thus we add them manually)
     elseif GetNumPartyMembers() > 0 then 
       typ = 2
-      
-      local unit
-      
       --check player
-      unit = "player"      
-      local isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, "target")    
-      local values = {
-        UnitID        = unit,
-        UnitName      = UnitName(unit) or "Not found",
-        UnitClass     = UnitClass(unit),
-        isTanking     = isTanking or 0,
-        status        = status or 0,
-        scaledPercent = scaledPercent or 0,
-        rawPercent    = rawPercent or 0,
-        threatValue   = threatValue or 0,        
-      }
-      table.insert(threatTable,values)
-      
+      table.insert(threatTable,getThreatData("player"))    
       --check player pet
       if not UnitInVehicle("player") and UnitExists("pet") then
-        unit = "pet"        
-        local isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, "target")      
-        local values = {
-          UnitID        = unit,
-          UnitName      = UnitName(unit) or "Not found",
-          UnitClass     = UnitClass(unit),
-          isTanking     = isTanking or 0,
-          status        = status or 0,
-          scaledPercent = scaledPercent or 0,
-          rawPercent    = rawPercent or 0,
-          threatValue   = threatValue or 0,        
-        }  
-        table.insert(threatTable,values)        
-      end
-      
-      for i=1,GetNumPartyMembers() do
-        
+        table.insert(threatTable,getThreatData("pet"))
+      end      
+      for i=1,GetNumPartyMembers() do        
         --check for party members
         unit = "party"..i
         if(UnitExists(unit)) then
-          local isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, "target")      
-          local values = {
-            UnitID        = unit,
-            UnitName      = UnitName(unit) or "Not found",
-            UnitClass     = UnitClass(unit),
-            isTanking     = isTanking or 0,
-            status        = status or 0,
-            scaledPercent = scaledPercent or 0,
-            rawPercent    = rawPercent or 0,
-            threatValue   = threatValue or 0,        
-          }  
-          table.insert(threatTable,values)         
-        end      
-        
+          table.insert(threatTable,getThreatData(unit))
+        end        
         --check for partypets
         unit = "partypet"..i
         if(UnitExists(unit)) then
-          local isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, "target")      
-          local values = {
-            UnitID        = unit,
-            UnitName      = UnitName(unit) or "Not found",
-            UnitClass     = UnitClass(unit),
-            isTanking     = isTanking or 0,
-            status        = status or 0,
-            scaledPercent = scaledPercent or 0,
-            rawPercent    = rawPercent or 0,
-            threatValue   = threatValue or 0,        
-          }  
-          table.insert(threatTable,values)         
-        end  
-      
+          table.insert(threatTable,getThreatData(unit))
+        end      
       end
-      
+    -- check solo+pet
     elseif not UnitInVehicle("player") and UnitExists("pet") then 
-      typ = 3 
-      
-      for i=1,2 do
-        --run through units and gather threat
-        local unit
-        if i == 1 then
-          unit = "player"
-        else
-          unit = "pet"       
-        end        
-        
-        local isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, "target")    
-      
-        local values = {
-          UnitID        = unit,
-          UnitName      = UnitName(unit) or "Not found",
-          UnitClass     = UnitClass(unit),
-          isTanking     = isTanking or 0,
-          status        = status or 0,
-          scaledPercent = scaledPercent or 0,
-          rawPercent    = rawPercent or 0,
-          threatValue   = threatValue or 0,        
-        }
-  
-        table.insert(threatTable,values)
-      end
+      typ = 3      
+      table.insert(threatTable,getThreatData("player"))
+      table.insert(threatTable,getThreatData("pet"))
+    -- check solo
     else
-      --player only
-      local unit = "player"
-      
-      local isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, "target")    
-    
-      local values = {
-        UnitID        = unit,
-        UnitName      = UnitName(unit) or "Not found",
-        UnitClass     = UnitClass(unit),
-        isTanking     = isTanking or 0,
-        status        = status or 0,
-        scaledPercent = scaledPercent or 0,
-        rawPercent    = rawPercent or 0,
-        threatValue   = threatValue or 0,        
-      }
-
-      table.insert(threatTable,values)
-      
+      table.insert(threatTable,getThreatData("player"))      
     end
     
     --sort the threat table
@@ -271,17 +200,12 @@
         bar:SetStatusBarColor(1,1,1,0)
         bar.bg:SetVertexColor(cfg.statusbars.inactive.color.r, cfg.statusbars.inactive.color.g, cfg.statusbars.inactive.color.b, cfg.statusbars.inactive.color.a)
       end
-    end
-  
+    end  
   end
-  
-  
-  local oldtime = 0
 
   --check status func
   local function checkStatus(self,event,...)
     local unit = "target"
-    --if UnitExists(unit) and UnitIsEnemy("player", unit) and not UnitIsPlayer(unit) then
     if UnitExists(unit) and not UnitIsDeadOrGhost(unit) and InCombatLockdown() then
       self:Show()    
       local currenttime = GetTime()
@@ -289,32 +213,27 @@
         --print("Getting new data")
         updateThreatBars(self)
         oldtime = currenttime
-      --else
-        --print("keeping table")
-      end
-    
+      end    
     else
       oldtime = 0
       if cfg.hide then
         self:Hide()
       end
-    end
-  
+    end  
   end
-
 
   --create threat bars func
   local function initThreatBars()
-
+    
     -- | H O L D E R | --
-
+    
     --first create a holder frame to gather all the objects (make that dragable later)
     local holder = CreateFrame("Frame","rThreatDragFrame",UIParent)
     holder:SetSize(cfg.title.width,cfg.title.height) --the holder should be dragable thus we make it match the size of the title
-    applyDragFunctionality(holder)
     holder:SetPoint("CENTER",0,0) --default position until first movement
     holder:SetFrameStrata("BACKGROUND")
     holder:SetFrameLevel(1)
+    applyDragFunctionality(holder)
     
     -- | T I T L E | --
     
@@ -323,78 +242,31 @@
     title:SetAllPoints(holder)
     
     --shadow stuff    
-    if cfg.shadow.show then
-      local backdrop = { 
-        bgFile = cfg.shadow.bgFile, 
-        edgeFile = cfg.shadow.edgeFile,
-        tile = cfg.shadow.tile,
-        tileSize = cfg.shadow.tileSize, 
-        edgeSize = cfg.shadow.edgeSize, 
-        insets = { 
-          left = cfg.shadow.inset, 
-          right = cfg.shadow.inset, 
-          top = cfg.shadow.inset, 
-          bottom = cfg.shadow.inset,
-        },
-      }
-      
-      local shadow = CreateFrame("Frame",nil,title)
-      shadow:SetPoint("TOPLEFT",title,"TOPLEFT",-cfg.shadow.inset,cfg.shadow.inset)
-      shadow:SetPoint("BOTTOMRIGHT",title,"BOTTOMRIGHT",cfg.shadow.inset,-cfg.shadow.inset)      
-      shadow:SetBackdrop(backdrop)
-      shadow:SetBackdropColor(cfg.shadow.bgColor.r, cfg.shadow.bgColor.g, cfg.shadow.bgColor.b, cfg.shadow.bgColor.a)
-      shadow:SetBackdropBorderColor(cfg.shadow.edgeColor.r, cfg.shadow.edgeColor.g, cfg.shadow.edgeColor.b, cfg.shadow.edgeColor.a) 
-      
-      title.shadow = shadow
-      
-    end    
+    if cfg.shadow.show then createBackdrop(title,cfg.shadow,"shadow") end
     
     --frame to hold the namestring
     local content = CreateFrame("Frame",nil,title)
     content:SetAllPoints(title) 
     
+    --title string
     local name = content:CreateFontString(nil, "BACKGROUND")
     name:SetFont(cfg.title.font.font, cfg.title.font.size, "THINOUTLINE")
     name:SetPoint("CENTER", 0, 0)
     name:SetText("rThreat")    
     name:SetVertexColor(cfg.title.font.color.r, cfg.title.font.color.g, cfg.title.font.color.b, cfg.title.font.color.a)
 
+    --background for title frame
     local bg = content:CreateTexture(nil, "BACKGROUND",nil,-8)
     bg:SetTexture(cfg.title.bg.texture)
     bg:SetAllPoints(content)
     bg:SetVertexColor(cfg.title.bg.color.r, cfg.title.bg.color.g, cfg.title.bg.color.b, cfg.title.bg.color.a)
 
     content.name = name
-    content.bg = bg
-    
+    content.bg = bg    
     title.content = content
 
     --border stuff
-    if cfg.border.show then
-      local backdrop = { 
-        bgFile = cfg.border.bgFile, 
-        edgeFile = cfg.border.edgeFile,
-        tile = cfg.border.tile,
-        tileSize = cfg.border.tileSize, 
-        edgeSize = cfg.border.edgeSize, 
-        insets = { 
-          left = cfg.border.inset, 
-          right = cfg.border.inset, 
-          top = cfg.border.inset, 
-          bottom = cfg.border.inset,
-        },
-      }
-      
-      local border = CreateFrame("Frame",nil,title)
-      border:SetFrameStrata("LOW")
-      border:SetPoint("TOPLEFT",title,"TOPLEFT",-cfg.border.inset,cfg.border.inset)
-      border:SetPoint("BOTTOMRIGHT",title,"BOTTOMRIGHT",cfg.border.inset,-cfg.border.inset)       
-      border:SetBackdrop(backdrop)
-      border:SetBackdropColor(cfg.border.bgColor.r, cfg.border.bgColor.g, cfg.border.bgColor.b, cfg.border.bgColor.a)
-      border:SetBackdropBorderColor(cfg.border.edgeColor.r, cfg.border.edgeColor.g, cfg.border.edgeColor.b, cfg.border.edgeColor.a)
-      
-      title.border = border          
-    end
+    if cfg.border.show then createBackdrop(title,cfg.border,"border") end
     
     -- | B A R S | --
     
@@ -409,45 +281,19 @@
     barcontainer:SetSize(cfg.statusbars.width,cfg.statusbars.height*cfg.statusbars.count+cfg.statusbars.gap*cfg.statusbars.count-cfg.statusbars.gap) 
     
     --shadow stuff    
-    if cfg.shadow.show then
-      local backdrop = { 
-        bgFile = cfg.shadow.bgFile, 
-        edgeFile = cfg.shadow.edgeFile,
-        tile = cfg.shadow.tile,
-        tileSize = cfg.shadow.tileSize, 
-        edgeSize = cfg.shadow.edgeSize, 
-        insets = { 
-          left = cfg.shadow.inset, 
-          right = cfg.shadow.inset, 
-          top = cfg.shadow.inset, 
-          bottom = cfg.shadow.inset,
-        },
-      }
-      
-      local shadow = CreateFrame("Frame",nil,barcontainer)
-      shadow:SetPoint("TOPLEFT",barcontainer,"TOPLEFT",-cfg.shadow.inset,cfg.shadow.inset)
-      shadow:SetPoint("BOTTOMRIGHT",barcontainer,"BOTTOMRIGHT",cfg.shadow.inset,-cfg.shadow.inset)      
-      shadow:SetBackdrop(backdrop)
-      shadow:SetBackdropColor(cfg.shadow.bgColor.r, cfg.shadow.bgColor.g, cfg.shadow.bgColor.b, cfg.shadow.bgColor.a)
-      shadow:SetBackdropBorderColor(cfg.shadow.edgeColor.r, cfg.shadow.edgeColor.g, cfg.shadow.edgeColor.b, cfg.shadow.edgeColor.a) 
-      
-      barcontainer.shadow = shadow
-      
-    end  
+    if cfg.shadow.show then createBackdrop(barcontainer,cfg.shadow,"shadow") end
     
-    --frame to hold the namestring
+    --frame to hold all the statusbars
     local barframe = CreateFrame("Frame",nil,barcontainer)
     barframe:SetAllPoints(barcontainer) 
     
+    --background for statusbarframe
     local bg = barframe:CreateTexture(nil, "BACKGROUND",nil,-8)
     bg:SetTexture(cfg.statusbars.bg.texture)
     bg:SetAllPoints(barframe)
     bg:SetVertexColor(cfg.statusbars.bg.color.r, cfg.statusbars.bg.color.g, cfg.statusbars.bg.color.b, cfg.statusbars.bg.color.a)
-
-    barframe.bg = bg
     
-    --statusbars
-    
+    --statusbars    
     local bars = {}
     
     for i=0,cfg.statusbars.count-1 do
@@ -486,7 +332,7 @@
       local val = bars[i]:CreateFontString(nil, "LOW")
       val:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, "THINOUTLINE")
       val:SetPoint("RIGHT", bars[i], -40, 0)
-      val.value = bars[i].value..".3m"
+      val.value = bars[i].value
       val:SetJustifyH("RIGHT")
       val:SetText("")    
       
@@ -499,36 +345,12 @@
       
     end
     
-    barframe.bars = bars
-    
+    barframe.bg = bg
+    barframe.bars = bars    
     barcontainer.content = barframe
 
     --border stuff
-    if cfg.border.show then
-      local backdrop = { 
-        bgFile = cfg.border.bgFile, 
-        edgeFile = cfg.border.edgeFile,
-        tile = cfg.border.tile,
-        tileSize = cfg.border.tileSize, 
-        edgeSize = cfg.border.edgeSize, 
-        insets = { 
-          left = cfg.border.inset, 
-          right = cfg.border.inset, 
-          top = cfg.border.inset, 
-          bottom = cfg.border.inset,
-        },
-      }
-      
-      local border = CreateFrame("Frame",nil,barcontainer)
-      border:SetFrameStrata("LOW")
-      border:SetPoint("TOPLEFT",barcontainer,"TOPLEFT",-cfg.border.inset,cfg.border.inset)
-      border:SetPoint("BOTTOMRIGHT",barcontainer,"BOTTOMRIGHT",cfg.border.inset,-cfg.border.inset)       
-      border:SetBackdrop(backdrop)
-      border:SetBackdropColor(cfg.border.bgColor.r, cfg.border.bgColor.g, cfg.border.bgColor.b, cfg.border.bgColor.a)
-      border:SetBackdropBorderColor(cfg.border.edgeColor.r, cfg.border.edgeColor.g, cfg.border.edgeColor.b, cfg.border.edgeColor.a)
-      
-      barcontainer.border = border          
-    end
+    if cfg.border.show then createBackdrop(barcontainer,cfg.border,"border") end
     
     holder.title = title
     holder.barcontainer = barcontainer

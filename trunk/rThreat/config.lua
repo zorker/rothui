@@ -12,11 +12,15 @@
   -- CONFIG
   -----------------------------  
 
-  cfg.timespan = 0.25 -- time that has to pass in seconds before a new table will be drawn to prevent spamming in raids
+  cfg.timespan = 0.25 -- time that has to pass in seconds before a new table will be drawn to prevent spamming in raids  
+  cfg.scale = 1       -- global scale  
+  cfg.hide = false    -- true/false should the frame be hidden out of combat/without target etc
   
-  cfg.scale = 1 --global scale
-  
-  cfg.hide = false --true/false should the frame be hidden out of combat/without target etc
+  cfg.position {
+    coord           = { a1 = "CENTER", af = UIParent, a2 = "CENTER", x = 0, y = 0 }, --default position
+    userplaced      = true, --want to place the bar somewhere else?
+    locked          = true, --frame locked, can be unlocked ingame via /rthreat
+  }
 
   cfg.shadow = {
     show      = true,
@@ -43,7 +47,7 @@
   }
 
   cfg.title = {
-    scale     = 1,
+    show      = true, --true/false to enable/disable the title frame
     width     = 200,
     height    = 16,
     gap       = 10, --gap between title and statusbar container
@@ -60,11 +64,11 @@
   }
 
   cfg.statusbars = {
-    scale     = 1,
     count     = 6, --how many statusbars should be created?
     width     = 200,
     height    = 16,
     gap       = 1, --gap between bars
+    marker    = true, --true/false this will mark your statusbar in red color if active
     font =  {
       font      = "Fonts\\FRIZQT__.ttf",
       size      = 12,

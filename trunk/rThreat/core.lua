@@ -23,21 +23,42 @@
   -----------------------------
 
   --apply drag functionality func
-  local function applyDragFunctionality(f)
+  local applyDragFunctionality = function(f,userplaced,locked)
     f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
     f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
+    
+    local t = f:CreateTexture(nil,"OVERLAY",nil,6)
+    t:SetAllPoints(f)
+    t:SetTexture(0,1,0)
+    t:SetAlpha(0)
+    f.dragtexture = t    
+    f:SetHitRectInsets(-15,-15,-15,-15)
     f:SetClampedToScreen(true)
-    f:SetMovable(true)
-    f:SetUserPlaced(true)
-    f:EnableMouse(true)
-    f:RegisterForDrag("LeftButton")
-    f:SetScript("OnEnter", function(s) 
-      GameTooltip:SetOwner(s, "ANCHOR_TOP")
-      GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
-      GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
-      GameTooltip:Show()
-    end)
-    f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)    
+    
+    if not userplaced then
+      f:SetMovable(false)
+    else
+      f:SetMovable(true)
+      f:SetUserPlaced(true)
+      if not locked then
+        f.dragtexture:SetAlpha(0.2)
+        f:EnableMouse(true)
+        f:RegisterForDrag("LeftButton")
+        f:SetScript("OnEnter", function(s) 
+          GameTooltip:SetOwner(s, "ANCHOR_TOP")
+          GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
+          GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
+          GameTooltip:Show()
+        end)
+        f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+      else
+        f.dragtexture:SetAlpha(0)
+        f:EnableMouse(nil)
+        f:RegisterForDrag(nil)
+        f:SetScript("OnEnter", nil)
+        f:SetScript("OnLeave", nil)
+      end
+    end  
   end
   
   --create backdrop func (cheat to use it for borders aswell)
@@ -72,10 +93,11 @@
   --get threat data
   local function getThreatData(unit)
     local isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, "target")
+    local _, class = UnitClass(unit)
     local values = {
       UnitID        = unit,
       UnitName      = UnitName(unit) or "Not found",
-      UnitClass     = UnitClass(unit),
+      UnitClass     = class or "Not found",
       isTanking     = isTanking or 0,
       status        = status or 0,
       scaledPercent = scaledPercent or 0,
@@ -190,6 +212,12 @@
         bar.perc:SetText(floor(entry.scaledPercent).."%")
         bar:SetValue(entry.scaledPercent)
         local color = getColor(entry.UnitID)
+        --if cfg.statusbars.marker and entry.UnitName == player_name and entry.UnitClass == player_class then
+        if cfg.statusbars.marker and entry.UnitName == player_name and UnitIsPlayer(entry.UnitID) then
+          --use marker and check if the unit is the player
+          --if that is the case rewrite the color to red
+          color = { r=1, g=0, b=0 }
+        end
         bar:SetStatusBarColor(color.r, color.g, color.b, cfg.statusbars.texture.alpha.foreground)
         bar.bg:SetVertexColor(color.r*cfg.statusbars.texture.multiplier, color.g*cfg.statusbars.texture.multiplier, color.b*cfg.statusbars.texture.multiplier, cfg.statusbars.texture.alpha.background)
       else
@@ -230,43 +258,46 @@
     --first create a holder frame to gather all the objects (make that dragable later)
     local holder = CreateFrame("Frame","rThreatDragFrame",UIParent)
     holder:SetSize(cfg.title.width,cfg.title.height) --the holder should be dragable thus we make it match the size of the title
-    holder:SetPoint("CENTER",0,0) --default position until first movement
     holder:SetFrameStrata("BACKGROUND")
     holder:SetFrameLevel(1)
-    applyDragFunctionality(holder)
+    holder:SetPoint(cfg.position.coord.a1,cfg.position.coord.af,cfg.position.coord.a2,cfg.position.coord.x,cfg.position.coord.y)
+    applyDragFunctionality(holder,cfg.position.userplaced,cfg.position.locked)
     
     -- | T I T L E | --
+    if cfg.title.show then
     
-    --title container
-    local title = CreateFrame("Frame",nil,holder)
-    title:SetAllPoints(holder)
+      --title container
+      local title = CreateFrame("Frame",nil,holder)
+      title:SetAllPoints(holder)
+      
+      --shadow stuff    
+      if cfg.shadow.show then createBackdrop(title,cfg.shadow,"shadow") end
+      
+      --frame to hold the namestring
+      local content = CreateFrame("Frame",nil,title)
+      content:SetAllPoints(title) 
+      
+      --title string
+      local name = content:CreateFontString(nil, "BACKGROUND")
+      name:SetFont(cfg.title.font.font, cfg.title.font.size, "THINOUTLINE")
+      name:SetPoint("CENTER", 0, 0)
+      name:SetText("rThreat")    
+      name:SetVertexColor(cfg.title.font.color.r, cfg.title.font.color.g, cfg.title.font.color.b, cfg.title.font.color.a)
+  
+      --background for title frame
+      local bg = content:CreateTexture(nil, "BACKGROUND",nil,-8)
+      bg:SetTexture(cfg.title.bg.texture)
+      bg:SetAllPoints(content)
+      bg:SetVertexColor(cfg.title.bg.color.r, cfg.title.bg.color.g, cfg.title.bg.color.b, cfg.title.bg.color.a)
+  
+      content.name = name
+      content.bg = bg    
+      title.content = content
+  
+      --border stuff
+      if cfg.border.show then createBackdrop(title,cfg.border,"border") end
     
-    --shadow stuff    
-    if cfg.shadow.show then createBackdrop(title,cfg.shadow,"shadow") end
-    
-    --frame to hold the namestring
-    local content = CreateFrame("Frame",nil,title)
-    content:SetAllPoints(title) 
-    
-    --title string
-    local name = content:CreateFontString(nil, "BACKGROUND")
-    name:SetFont(cfg.title.font.font, cfg.title.font.size, "THINOUTLINE")
-    name:SetPoint("CENTER", 0, 0)
-    name:SetText("rThreat")    
-    name:SetVertexColor(cfg.title.font.color.r, cfg.title.font.color.g, cfg.title.font.color.b, cfg.title.font.color.a)
-
-    --background for title frame
-    local bg = content:CreateTexture(nil, "BACKGROUND",nil,-8)
-    bg:SetTexture(cfg.title.bg.texture)
-    bg:SetAllPoints(content)
-    bg:SetVertexColor(cfg.title.bg.color.r, cfg.title.bg.color.g, cfg.title.bg.color.b, cfg.title.bg.color.a)
-
-    content.name = name
-    content.bg = bg    
-    title.content = content
-
-    --border stuff
-    if cfg.border.show then createBackdrop(title,cfg.border,"border") end
+    end
     
     -- | B A R S | --
     
@@ -277,7 +308,11 @@
     
     --bar container
     local barcontainer = CreateFrame("Frame",nil,holder)
-    barcontainer:SetPoint("TOP",title,"BOTTOM",0,-cfg.title.gap)
+    if cfg.title.show then
+      barcontainer:SetPoint("TOP",title,"BOTTOM",0,-cfg.title.gap)
+    else
+      barcontainer:SetPoint("TOP",0,0)
+    end
     barcontainer:SetSize(cfg.statusbars.width,cfg.statusbars.height*cfg.statusbars.count+cfg.statusbars.gap*cfg.statusbars.count-cfg.statusbars.gap) 
     
     --shadow stuff    
@@ -317,7 +352,6 @@
       local name = bars[i]:CreateFontString(nil, "LOW")
       name:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, "THINOUTLINE")
       name:SetPoint("LEFT", bars[i], 2, 0)
-      --name:SetPoint("RIGHT", bars[i], 100, 0)
       name.value = ""
       name:SetJustifyH("LEFT")
       name:SetText(name.value)    
@@ -352,7 +386,9 @@
     --border stuff
     if cfg.border.show then createBackdrop(barcontainer,cfg.border,"border") end
     
-    holder.title = title
+    if title then
+      holder.title = title
+    end
     holder.barcontainer = barcontainer
 
     holder:SetScript("OnEvent", checkStatus)

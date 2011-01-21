@@ -105,7 +105,7 @@
     local s = h:CreateTexture(nil,"OVERLAY",nil,-4)
     s:SetTexture("interface\\targetingframe\\ui-targetingframe-skull")
     s:SetSize(18,18)
-    s:SetPoint("LEFT",-11,0)
+    s:SetPoint("CENTER", 0, 0)
     --s:SetDesaturated(1)
     s:Hide()
     h.skull = s
@@ -114,21 +114,18 @@
     local disco = h:CreateTexture(nil,"OVERLAY",nil,-4)
     disco:SetTexture("interface\\buttons\\ui-grouploot-pass-up")
     disco:SetSize(18,18)
-    disco:SetPoint("LEFT",-11,0)
-    h.disco = disco
-    
+    disco:SetPoint("CENTER", 0, 0)
+    h.disco = disco    
     
     --name
     local name = func.createFontString(h, cfg.font, 10.5, "THINOUTLINE","BORDER")
-    name:SetPoint("LEFT", h, 0, 0)
-    name:SetPoint("RIGHT", h, 0, 0)
-    name:SetPoint("CENTER", h, 0, 10)
+    name:SetPoint("LEFT", h, 0, 6)
+    name:SetPoint("RIGHT", h, 0, 6)
     name:SetJustifyH("CENTER")
 
-    local hpval = func.createFontString(h, cfg.font, 10.5, "THINOUTLINE","BORDER")
-    hpval:SetPoint("LEFT", h, 0, 0)
-    hpval:SetPoint("RIGHT", h, 0, 0)
-    hpval:SetPoint("CENTER", h, 0, -10)
+    local hpval = func.createFontString(h, cfg.font, 10, "THINOUTLINE","BORDER")
+    hpval:SetPoint("LEFT", h, 0, -6)
+    hpval:SetPoint("RIGHT", h, 0, -6)
     hpval:SetJustifyH("CENTER")    
     
     self:Tag(name, self.cfg.health.tag1 or "")
@@ -212,30 +209,13 @@
     end
 
   end
-
-  --check threat
-  local checkThreat = function(self,event,unit)
-    if unit then
-      if self.unit ~= unit then return end
-      local threat = UnitThreatSituation(unit)
-      if(threat and threat > 0) then
-        local r, g, b = GetThreatStatusColor(threat)
-        if self.Health.border then
-          self.Health.border:SetVertexColor(r,g,b)
-        end
-      else
-        if self.Health.border then
-          self.Health.border:SetVertexColor(0.8,0.65,0.65)
-        end
-      end
-    end
-  end
-
+  
   --fill the whitelist table automatically with all the spellids
   local whitelist = {}
   for i,spellid in pairs(cfg.units.raid.auras.spelllist) do
     local spell = GetSpellInfo(spellid)
-    if spell then table.insert(whitelist,spell,true) end
+    if spell then whitelist[spell] = true end
+    --if spell then table.insert(whitelist,spell,true) end
   end
   
   --custom aura filter
@@ -254,9 +234,10 @@
     f.initialAnchor = "TOPLEFT"
     f["growth-x"] = "RIGHT"
     f["growth-y"] = "DOWN"
-    f.spacing = 0
+    f.spacing = -f.size
     f.disableCooldown = self.cfg.auras.disableCooldown
-    f.showDebuffType = self.cfg.auras.showDebuffType
+    f.showDebuffType  = self.cfg.auras.showDebuffType
+    f.showBuffType    = self.cfg.auras.showBuffType
     f.CustomFilter = customFilter
     self.Auras = f
   end
@@ -274,8 +255,32 @@
     button.count:SetTextColor(0.9,0.9,0.9)
     button.count:SetFont(cfg.font,bw/1.8,"THINOUTLINE")
     button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-    button.overlay:Hide()
-    button.overlay.Show = function() end
+    button.overlay:SetTexture("Interface\\AddOns\\rTextures\\aura_square")
+    button.overlay:SetTexCoord(0,1,0,1)
+    button.overlay:SetPoint("TOPLEFT", -1, 1)
+    button.overlay:SetPoint("BOTTOMRIGHT", 1, -1)
+    button.overlay:SetVertexColor(0,0,0,1)
+    button.overlay:Show()
+    button.overlay.Hide = function() end  
+
+  end
+
+  --check threat
+  local checkThreat = function(self,event,unit)
+    if unit then
+      if self.unit ~= unit then return end
+      local threat = UnitThreatSituation(unit)
+      if(threat and threat > 0) then
+        local r, g, b = GetThreatStatusColor(threat)
+        if self.Health.border then
+          self.Health.border:SetVertexColor(r,g,b)
+        end
+      else
+        if self.Health.border then
+          self.Health.border:SetVertexColor(0.8,0.65,0.65)
+        end
+      end
+    end
   end
 
 

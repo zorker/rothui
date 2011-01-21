@@ -787,6 +787,16 @@
     
     --adjust minimap difficulty frames
     adjustMinimapDifficulty(self)
+    
+    --make alternative power bar movable
+    local pba = PlayerPowerBarAlt
+    pba:SetMovable(true)
+    pba:SetUserPlaced(true)
+    pba:EnableMouse(true)
+    pba:SetClampedToScreen(true)
+    pba:RegisterForDrag("LeftButton")
+    pba:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
+    pba:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
 
     --add self to unit container (maybe access to that unit is needed in another style)
     unit.player = self    

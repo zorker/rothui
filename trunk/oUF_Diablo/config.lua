@@ -203,7 +203,7 @@
       },
       auras = {
         show = true,
-        size = 22,
+        size = 20,
         onlyShowPlayerBuffs = false,
         onlyShowPlayerDebuffs = false,
         showDebuffType = false,
@@ -415,7 +415,7 @@
       pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 }, 
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag1 = "[diablo:name]",   --tag for the first line
+        tag1 = "[diablo:name]",     --tag for the first line
         tag2 = "[diablo:misshp]",   --tag for the second line
         classcoloroverride = false, --even if you set the colorswitcher to no classcolor this value can be used to make the raid class colored
       },
@@ -426,8 +426,8 @@
         spelllist = {
           
           --test
-          74562, 123, 1234,
-          
+          32407, 
+                    
           --CATACLYSM RAIDS          
           
           --maloriak
@@ -436,9 +436,10 @@
           
         },
         show            = true,
-        disableCooldown = false,
-        showDebuffType  = true,
-        size            = 30,
+        disableCooldown = true,
+        showBuffType    = false,
+        showDebuffType  = false,
+        size            = 20,
       },
       attributes = {
         visibility          = "raid", --use "party,raid" to show this in party aswell
@@ -460,14 +461,14 @@
     boss = {
       show = true,
       scale = 1,
-      pos = { a1 = "TOP", a2 = "BOTTOM", af = "Minimap", x = 0, y = -250 }, 
+      pos = { a1 = "TOP", a2 = "BOTTOM", af = "Minimap", x = 0, y = -80 }, 
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
         tag = "[perhp]%",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag = "[curpp]",
+        tag = "[perpp]%",
       },
     },
     

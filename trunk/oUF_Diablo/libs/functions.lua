@@ -184,10 +184,12 @@
   --update power func
   func.updatePower = function(bar, unit, min, max)
     local color = cfg.powercolors[select(2, UnitPowerType(unit))]
-    if color then
-      bar:SetStatusBarColor(color.r, color.g, color.b,1)
-      bar.bg:SetVertexColor(color.r, color.g, color.b,0.2)
+    if not color then
+      --prevent powertype from bugging out on certain encounters.
+      color = {r=1,g=0.5,b=0.25}      
     end
+    bar:SetStatusBarColor(color.r, color.g, color.b,1)
+    bar.bg:SetVertexColor(color.r, color.g, color.b,0.2)
   end
   
   --debuffglow

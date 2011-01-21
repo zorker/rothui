@@ -97,7 +97,7 @@
   local createHealthPowerStrings = function(self)
   
     local name = func.createFontString(self, cfg.font, 14, "THINOUTLINE")
-    name:SetPoint("BOTTOM", self, "TOP", 0, -13)
+    name:SetPoint("BOTTOM", self, "TOP", 0, -14)
     name:SetPoint("LEFT", self.Health, 0, 0)
     name:SetPoint("RIGHT", self.Health, 0, 0)
     self.Name = name
@@ -105,8 +105,9 @@
     local hpval = func.createFontString(self.Health, cfg.font, 11, "THINOUTLINE")
     hpval:SetPoint("RIGHT", -2,0)
 
-    local ppval = func.createFontString(self.Health, cfg.font, 11, "THINOUTLINE")
-    ppval:SetPoint("LEFT", 2,0)
+    local ppval = func.createFontString(self.Health, cfg.font, 10, "THINOUTLINE")
+    ppval:SetPoint("TOP",self.Health,"BOTTOM", 0,0)
+    ppval:SetVertexColor(0.6,0.6,0.6,1)
     
     self:Tag(name, "[diablo:name]")
     self:Tag(hpval, self.cfg.health.tag or "")
@@ -149,7 +150,7 @@
     self.Power.PostUpdate = func.updatePower
     
     --icons
-    self.RaidIcon = func.createIcon(self,"BACKGROUND",20,self.Name,"BOTTOM","TOP",0,0,-1)
+    self.RaidIcon = func.createIcon(self,"BACKGROUND",16,self.Name,"BOTTOM","TOP",0,0,-1)
     
     --add self to unit container (maybe access to that unit is needed in another style)
     unit.boss[bossid] = self
@@ -171,7 +172,7 @@
       if i==1 then
         unit:SetPoint(cfg.units.boss.pos.a1,cfg.units.boss.pos.af,cfg.units.boss.pos.a2,cfg.units.boss.pos.x,cfg.units.boss.pos.y)
       else
-        unit:SetPoint("TOP", boss[i-1], "BOTTOM", 0, -50)
+        unit:SetPoint("TOP", boss[i-1], "BOTTOM", 0, -5)
       end
       boss[i] = unit
     end

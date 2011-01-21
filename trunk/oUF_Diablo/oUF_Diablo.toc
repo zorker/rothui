@@ -27,3 +27,4 @@ units\pettarget.lua
 units\focustarget.lua
 units\party.lua
 units\raid.lua
+units\boss.lua

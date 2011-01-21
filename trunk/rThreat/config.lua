@@ -13,10 +13,10 @@
   -----------------------------  
 
   -- general settings
-  cfg.timespan      = 0.25    -- time that has to pass in seconds before a new table will be drawn to prevent spamming in raids  
+  cfg.timespan      = 0.1    -- time that has to pass in seconds before a new table will be drawn to prevent spamming in raids  
   cfg.scale         = 1       -- global scale  
-  cfg.hide          = false   -- true/false hides frame out of combat/without target, otherwise it will be visible all the time
-  cfg.partyonly     = false    -- frame will only be available in party/raid (overrides hide setting)
+  cfg.hide          = true   -- true/false hides frame out of combat/without target, otherwise it will be visible all the time
+  cfg.partyonly     = true    -- frame will only be available in party/raid (overrides hide setting)
   
   -- frame position (you can move the frame ingame via "/rthreat")
   cfg.position = {
@@ -53,13 +53,13 @@
 
   -- title bar settings
   cfg.title = {
-    show            = true,   -- true/false to enable/disable the title frame
-    width           = 200,
-    height          = 16,
+    show            = false,   -- true/false to enable/disable the title frame
+    width           = 160,
+    height          = 14,
     gap             = 10,     -- gap between title and statusbar container
     font = {
       font          = "Fonts\\FRIZQT__.ttf",
-      size          = 14,
+      size          = 12,
       color         = { r = 1, g = 0.8, b = 0, a = 1 },
       outline       = "THINOUTLINE",
     },
@@ -71,14 +71,14 @@
 
   -- threat bar settings
   cfg.statusbars = {
-    count           = 6,      -- how many statusbars should be created?
-    width           = 200,
-    height          = 16,
+    count           = 5,      -- how many statusbars should be created?
+    width           = 160,
+    height          = 14,
     gap             = 1,      -- gap between bars
     marker          = true,   -- true/false this will mark your statusbar in red color if active
     font = {
       font          = "Fonts\\FRIZQT__.ttf",
-      size          = 12,
+      size          = 11,
       color         = { r = 1, g = 1, b = 1, a = 1 },
       outline       = "THINOUTLINE",
     },

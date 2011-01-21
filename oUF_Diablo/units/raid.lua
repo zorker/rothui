@@ -121,13 +121,19 @@
     --name
     local name = func.createFontString(h, cfg.font, 10.5, "THINOUTLINE","BORDER")
     name:SetPoint("LEFT", h, 0, 0)
-    name:SetPoint("RIGHT", h, -0, 0)
+    name:SetPoint("RIGHT", h, 0, 0)
+    name:SetPoint("CENTER", h, 0, 10)
     name:SetJustifyH("CENTER")
-    self:Tag(name, self.cfg.health.tag or "")  
-    --name:SetText("-23.2k")
-    --name:SetText("Haudraufinixx")
-    h.Name = name
+
+    local hpval = func.createFontString(h, cfg.font, 10.5, "THINOUTLINE","BORDER")
+    hpval:SetPoint("LEFT", h, 0, 0)
+    hpval:SetPoint("RIGHT", h, 0, 0)
+    hpval:SetPoint("CENTER", h, 0, -10)
+    hpval:SetJustifyH("CENTER")    
     
+    self:Tag(name, self.cfg.health.tag1 or "")
+    self:Tag(hpval, self.cfg.health.tag2 or "")
+        
     self.Health = h
     
   end

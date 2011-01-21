@@ -170,7 +170,7 @@
     f1:SetHeight(f1.text:GetStringHeight())
     f1:SetWidth(f1.text:GetStringWidth())
     
-    f2.text:SetText("|c009C907D"..rsiLatency().." "..rsiFPS().." "..rsiMemory().."|r")
+    f2.text:SetText("|c009C907D"..rsiLatency().." "..rsiFPS().."|r")
     f2:SetHeight(f2.text:GetStringHeight())
     f2:SetWidth(f2.text:GetStringWidth())
     
@@ -184,9 +184,7 @@
       f3:SetWidth(f3.text:GetStringWidth())
     end
 
-
-  end 
-  
+  end   
 
   local totalElapsed = 0
   local function rsiOnUpdate(self, elapsed)

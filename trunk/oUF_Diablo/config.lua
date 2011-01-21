@@ -415,7 +415,8 @@
       pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 }, 
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag = "[diablo:raidhp]",
+        tag1 = "[diablo:name]",   --tag for the first line
+        tag2 = "[diablo:misshp]",   --tag for the second line
         classcoloroverride = false, --even if you set the colorswitcher to no classcolor this value can be used to make the raid class colored
       },
       attributes = {
@@ -431,6 +432,21 @@
         unitsPerColumn      = 5,
         columnSpacing       = -15,
         columnAnchorPoint   = "LEFT",        
+      },
+    },
+    
+    --BOSSFRAMES
+    boss = {
+      show = true,
+      scale = 1,
+      pos = { a1 = "TOP", a2 = "BOTTOM", af = "Minimap", x = 0, y = -250 }, 
+      health = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        tag = "[perhp]%",
+      },
+      power = {
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        tag = "[curpp]",
       },
     },
     

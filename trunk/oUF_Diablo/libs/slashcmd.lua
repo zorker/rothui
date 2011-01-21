@@ -23,6 +23,11 @@
     "oUF_DiabloFocusFrame",
     "oUF_DiabloRaidHeader",
     "oUF_DiabloPartyHeader",
+    "oUF_DiabloBossFrame1",
+    "oUF_DiabloBossFrame2",
+    "oUF_DiabloBossFrame3",
+    "oUF_DiabloBossFrame4",
+    "oUF_DiabloBossFrame5",
   } 
   
   oUF_Diablo_Art = {

@@ -231,6 +231,53 @@
     end
   end
 
+  --fill the whitelist table automatically with all the spellids
+  local whitelist = {}
+  for i,spellid in pairs(cfg.units.raid.auras.spelllist) do
+    local spell = GetSpellInfo(spellid)
+    if spell then table.insert(whitelist,spell,true) end
+  end
+  
+  --custom aura filter
+  local customFilter = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
+  	if(whitelist[name]) then return true end 
+  end
+  
+  --create aura func
+  local createAuras = function(self)
+    local f = CreateFrame("Frame", nil, self)
+    f.size = self.cfg.auras.size
+    f.num = 1
+    f:SetHeight(f.size)
+    f:SetWidth(f.size)
+    f:SetPoint("CENTER", self, "CENTER", 0, 0)
+    f.initialAnchor = "TOPLEFT"
+    f["growth-x"] = "RIGHT"
+    f["growth-y"] = "DOWN"
+    f.spacing = 0
+    f.disableCooldown = self.cfg.auras.disableCooldown
+    f.showDebuffType = self.cfg.auras.showDebuffType
+    f.CustomFilter = customFilter
+    self.Auras = f
+  end
+
+  --aura icon func
+  local createAuraIcon = function(icons, button)
+    local bw = button:GetWidth()
+    if button.cd then
+      button.cd:SetPoint("TOPLEFT", 1, -1)
+      button.cd:SetPoint("BOTTOMRIGHT", -1, 1)
+      button.count:SetParent(button.cd)
+    end
+    button.count:ClearAllPoints()
+    button.count:SetPoint("TOPRIGHT", 4, 4)
+    button.count:SetTextColor(0.9,0.9,0.9)
+    button.count:SetFont(cfg.font,bw/1.8,"THINOUTLINE")
+    button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+    button.overlay:Hide()
+    button.overlay.Show = function() end
+  end
+
 
   ---------------------------------------------
   -- RAID STYLE FUNC
@@ -262,6 +309,12 @@
       insideAlpha = 1, 
       outsideAlpha = self.cfg.alpha.notinrange
     }
+    
+    --auras
+    if self.cfg.auras.show then
+      createAuras(self)      
+      self.Auras.PostCreateIcon = createAuraIcon
+    end
     
     --icons
     self.RaidIcon = func.createIcon(self.Health,"LOW",14,self.Health,"BOTTOM","TOP",0,-6,-1)

@@ -419,6 +419,27 @@
         tag2 = "[diablo:misshp]",   --tag for the second line
         classcoloroverride = false, --even if you set the colorswitcher to no classcolor this value can be used to make the raid class colored
       },
+      auras = {
+        --put every single spellid here that you want to be tracked, be it buff or debuff doesn't matter
+        --maximum number of icons displayed at a time = 1
+        --this is for important boss mechanics only, this is not for tracking healing HOTs etc
+        spelllist = {
+          
+          --test
+          74562, 123, 1234,
+          
+          --CATACLYSM RAIDS          
+          
+          --maloriak
+          92980, --ice bomb
+          77786, --red phase consuming flames
+          
+        },
+        show            = true,
+        disableCooldown = false,
+        showDebuffType  = true,
+        size            = 30,
+      },
       attributes = {
         visibility          = "raid", --use "party,raid" to show this in party aswell
         showPlayer          = false,  --make this true to show player in party

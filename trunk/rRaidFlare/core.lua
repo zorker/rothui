@@ -150,7 +150,7 @@
   end  
 
   --apply drag functionality func
-  local applyDragFunctionality = function(f,userplaced,locked)
+  local applyDragFunctionality = function(f)
     --green overlay texture
     local t = f:CreateTexture(nil,"OVERLAY",nil,6)
     t:SetAllPoints(f)
@@ -228,7 +228,7 @@
     local bar = createFlareBar()
     
     --apply the drag functionality
-    applyDragFunctionality(bar,true,true)
+    applyDragFunctionality(bar)
     
     --hook the unlock and lock functions to make it available in the slash command function
     bar.lockFrame   = lockFrame

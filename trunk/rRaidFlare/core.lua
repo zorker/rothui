@@ -122,7 +122,7 @@
     local numRaidMarkerButtons = 6
   
     --create the holder frame
-    local bar = CreateFrame("Frame","rRaidWorldMarkerBar",UIParent, "SecureHandlerStateTemplate")
+    local bar = CreateFrame("Frame","rRaidWorldMarkerBar",UIParent,"SecureHandlerStateTemplate")
     bar:SetSize(numRaidMarkerButtons*cfg.buttons.margin+numRaidMarkerButtons*cfg.buttons.size+cfg.buttons.margin,cfg.buttons.size+cfg.buttons.margin*2)
     bar:SetPoint(cfg.bar.pos.a1,cfg.bar.pos.af,cfg.bar.pos.a2,cfg.bar.pos.x,cfg.bar.pos.y)
     bar:SetScale(cfg.bar.scale)
@@ -150,7 +150,7 @@
   end  
 
   --apply drag functionality func
-  local function applyDragFunctionality (f,userplaced,locked)
+  local applyDragFunctionality = function(f,userplaced,locked)
     --green overlay texture
     local t = f:CreateTexture(nil,"OVERLAY",nil,6)
     t:SetAllPoints(f)
@@ -172,7 +172,7 @@
   end
   
   --unlock frame func
-  local function unlockFrame(f)
+  local unlockFrame = function(f)
     if f and f:IsUserPlaced() then
       f.dragtexture:SetAlpha(0.5)
       f:EnableMouse(true)
@@ -190,7 +190,7 @@
   end
  
   --lock frame func
-  local function lockFrame(f)
+  local lockFrame = function(f)
     if f and f:IsUserPlaced() then
       f.dragtexture:SetAlpha(0)
       f:EnableMouse(nil)
@@ -256,7 +256,7 @@
   -----------------------------
 
   -- the slash command function to handle the /rflare slash command
-  local function SlashCmd(cmd)    
+  local SlashCmd = function(cmd)    
     local f = _G["rRaidWorldMarkerBar"]
     if (cmd:match"unlock") then
       if f then f.unlockFrame(f) end

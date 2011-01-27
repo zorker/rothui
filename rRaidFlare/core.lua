@@ -80,7 +80,7 @@
     local bc = cfg.button[id]
     
     --button
-    local b = CreateFrame("Button", bc.name.."Flare", bar, "SecureActionButtonTemplate")
+    local b = CreateFrame("Button", nil, bar, "SecureActionButtonTemplate")
     b:SetSize(cfg.buttons.size,cfg.buttons.size)
 	  b:SetNormalTexture(bc.texture)
 	  b:GetNormalTexture():SetTexCoord(bc.coord.l,bc.coord.r,bc.coord.t,bc.coord.b)
@@ -104,7 +104,7 @@
         GameTooltip:AddLine("ClearButton", 0, 1, 0.5, 1, 1, 1)
         GameTooltip:AddLine("Click to clear the raid flares.", 1, 1, 1, 1, 1, 1)
       else
-        GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
+        GameTooltip:AddLine(s.name.."Flare", 0, 1, 0.5, 1, 1, 1)
         GameTooltip:AddLine("Click to create a "..s.name.." flare on the ground.", 1, 1, 1, 1, 1, 1)      
       end
       GameTooltip:Show()
@@ -114,7 +114,6 @@
     return b
   
   end
-
 
   --create bar frame func
   local createFlareBar = function()
@@ -127,7 +126,7 @@
     bar:SetSize(numRaidMarkerButtons*cfg.buttons.margin+numRaidMarkerButtons*cfg.buttons.size+cfg.buttons.margin,cfg.buttons.size+cfg.buttons.margin*2)
     bar:SetPoint(cfg.bar.pos.a1,cfg.bar.pos.af,cfg.bar.pos.a2,cfg.bar.pos.x,cfg.bar.pos.y)
     bar:SetScale(cfg.bar.scale)
-    
+      
     --background
 	  local bg = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     bg:SetTexture(0,0,0,0.5)
@@ -148,12 +147,69 @@
     
     return bar
     
+  end  
+
+  --apply drag functionality func
+  local function applyDragFunctionality (f,userplaced,locked)
+    --green overlay texture
+    local t = f:CreateTexture(nil,"OVERLAY",nil,6)
+    t:SetAllPoints(f)
+    t:SetTexture(0,1,0)
+    f.dragtexture = t    
+    --stuff
+    f.unlocked = false
+    f:SetHitRectInsets(-15,-15,-15,-15)
+    f:SetClampedToScreen(true)
+    f:SetMovable(true)
+    f:SetUserPlaced(true)
+    f.dragtexture:SetAlpha(0)
+    f:EnableMouse(nil)
+    f:RegisterForDrag(nil)
+    f:SetScript("OnEnter", nil)
+    f:SetScript("OnLeave", nil)
+    f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
+    f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
+  end
+  
+  --unlock frame func
+  local function unlockFrame(f)
+    if f and f:IsUserPlaced() then
+      f.dragtexture:SetAlpha(0.5)
+      f:EnableMouse(true)
+      f:RegisterForDrag("LeftButton")
+      f:SetScript("OnEnter", function(s)
+        GameTooltip:SetOwner(s, "ANCHOR_TOP")
+        GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
+        GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
+        GameTooltip:Show()
+      end)
+      f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+      f.unlocked = true
+      f.checkStatus(f)
+    end
+  end
+ 
+  --lock frame func
+  local function lockFrame(f)
+    if f and f:IsUserPlaced() then
+      f.dragtexture:SetAlpha(0)
+      f:EnableMouse(nil)
+      f:RegisterForDrag(nil)
+      f:SetScript("OnEnter", nil)
+      f:SetScript("OnLeave", nil)
+      f.unlocked = false
+      f.checkStatus(f)
+    end
   end
   
   --checkstatus func
-  local checkStatus = function(self,event,...)
+  local checkStatus = function(self)
+    if self.unlocked then
+      self:Show()
+      return
+    end
     if cfg.bar.partyonly and (GetNumRaidMembers() + GetNumPartyMembers() == 0) then
-      --if partyonly is true hid bar if not in party/raid
+      --hide bar out of party/raid
       self:Hide()
       return
     end 
@@ -171,6 +227,14 @@
     --in case some events should be traced
     local bar = createFlareBar()
     
+    --apply the drag functionality
+    applyDragFunctionality(bar,true,true)
+    
+    --hook the unlock and lock functions to make it available in the slash command function
+    bar.lockFrame   = lockFrame
+    bar.unlockFrame = unlockFrame
+    bar.checkStatus = checkStatus
+    
     --hook events
     bar:RegisterEvent("PLAYER_ENTERING_WORLD")
     bar:RegisterEvent("PLAYER_REGEN_DISABLED")
@@ -186,3 +250,27 @@
   -----------------------------
   
   init()
+
+  -----------------------------
+  -- SLASH COMMAND FUNCTION
+  -----------------------------
+
+  -- the slash command function to handle the /rflare slash command
+  local function SlashCmd(cmd)    
+    local f = _G["rRaidWorldMarkerBar"]
+    if (cmd:match"unlock") then
+      if f then f.unlockFrame(f) end
+    elseif (cmd:match"lock") then
+      if f then f.lockFrame(f) end
+    else
+      print("|c00FFAA00Command list:|r")
+      print("|c00FFAA00\/rflare lock|r, to lock")
+      print("|c00FFAA00\/rflare unlock|r, to unlock")
+    end
+  end
+ 
+  SlashCmdList["/rflare"] = SlashCmd;
+  SLASH_/rflare1 = "/rflare";
+ 
+  print("|c00FFAA00rFlare loaded.|r")
+  print("|c00FFAA00\/rflare|r to display the command list")

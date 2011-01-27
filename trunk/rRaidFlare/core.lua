@@ -25,7 +25,7 @@
   
   --bar settings
   cfg.bar = {
-    scale     = 1,
+    scale     = 0.6,
     pos       = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 }, 
     partyonly = true,
   }
@@ -203,7 +203,7 @@
   end
   
   --checkstatus func
-  local checkStatus = function(self)
+  local checkStatus = function(self,event,...)
     if self.unlocked then
       self:Show()
       return
@@ -213,7 +213,7 @@
       self:Hide()
       return
     end 
-    if InCombatLockdown() then
+    if InCombatLockdown() or event == "PLAYER_REGEN_DISABLED" then
       --hide bar in combat
       self:Hide()
       return    

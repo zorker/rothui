@@ -204,6 +204,9 @@
   
   --checkstatus func
   local checkStatus = function(self,event,...)
+    if InCombatLockdown() then
+      return
+    end
     if self.unlocked then
       self:Show()
       return
@@ -213,7 +216,7 @@
       self:Hide()
       return
     end 
-    if InCombatLockdown() or event == "PLAYER_REGEN_DISABLED" then
+    if event == "PLAYER_REGEN_DISABLED" then
       --hide bar in combat
       self:Hide()
       return    

@@ -82,22 +82,22 @@
     --button
     local b = CreateFrame("Button", nil, bar, "SecureActionButtonTemplate")
     b:SetSize(cfg.buttons.size,cfg.buttons.size)
-	  b:SetNormalTexture(bc.texture)
-	  b:GetNormalTexture():SetTexCoord(bc.coord.l,bc.coord.r,bc.coord.t,bc.coord.b)
-	  b.name = bc.name
-	  b.id = id
+    b:SetNormalTexture(bc.texture)
+    b:GetNormalTexture():SetTexCoord(bc.coord.l,bc.coord.r,bc.coord.t,bc.coord.b)
+    b.name = bc.name
+    b.id = id
     
     --macro attribute
-	  b:SetAttribute("type", "macro")
-	  b:SetAttribute("macrotext1", "/click CompactRaidFrameManagerDisplayFrameLeaderOptionsRaidWorldMarkerButton\n/click DropDownList1Button"..id)
-	  
-	  --background
-	  local bg = b:CreateTexture(nil,"BACKGROUND",nil,-8)
+    b:SetAttribute("type", "macro")
+    b:SetAttribute("macrotext1", "/click CompactRaidFrameManagerDisplayFrameLeaderOptionsRaidWorldMarkerButton\n/click DropDownList1Button"..id)
+    
+    --background
+    local bg = b:CreateTexture(nil,"BACKGROUND",nil,-8)
     bg:SetTexture(0,0,0,0.5)
     bg:SetAllPoints(b)
     b.bg = bg
-	  
-	  --tooltip
+    
+    --tooltip
     b:SetScript("OnEnter", function(s) 
       GameTooltip:SetOwner(s, "ANCHOR_TOP")
       if s.id == 6 then
@@ -128,7 +128,7 @@
     bar:SetScale(cfg.bar.scale)
       
     --background
-	  local bg = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    local bg = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     bg:SetTexture(0,0,0,0.5)
     bg:SetAllPoints(bar)
     bar.bg = bg

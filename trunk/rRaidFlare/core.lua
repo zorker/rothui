@@ -138,7 +138,7 @@
     --create all the buttons
     for i=1,numRaidMarkerButtons do
       button[i] = createFlareButton(i,bar)
-      if i = 1 then
+      if i == 1 then
         button[i]:SetPoint("LEFT",cfg.buttons.margin,0)
       else
         button[i]:SetPoint("LEFT",button[i-1],"RIGHT",cfg.buttons.margin,0)
@@ -269,8 +269,8 @@
     end
   end
  
-  SlashCmdList["/rflare"] = SlashCmd;
-  SLASH_/rflare1 = "/rflare";
+  SlashCmdList["rflare"] = SlashCmd;
+  SLASH_rflare1 = "/rflare";
  
   print("|c00FFAA00rFlare loaded.|r")
   print("|c00FFAA00\/rflare|r to display the command list")

@@ -359,7 +359,7 @@
       cname = "oUF_DiabloFocusCastbar"
     end
     
-    c = CreateFrame("StatusBar", cname, UIParent)
+    c = CreateFrame("StatusBar", cname, f)
     c:SetSize(186.8,20.2)
     c:SetStatusBarTexture(f.cfg.castbar.texture)
     c:SetScale(f.cfg.castbar.scale)

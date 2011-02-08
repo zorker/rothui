@@ -217,7 +217,7 @@
       local bu  = _G[name]
       local ic  = _G[name.."Icon"]
       local fl  = _G[name.."Flash"]
-      local nt  = _G[name.."NormalTexture"]
+      local nt  = _G[name.."NormalTexture2"]
   
       nt:SetAllPoints(bu)
       

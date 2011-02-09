@@ -2,7 +2,7 @@
   local a = CreateFrame("Frame")
   
   --register events
-  --a:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE")
+  a:RegisterEvent("CHAT_MSG_RAID_BOSS_EMOTE")
   a:RegisterEvent("CHAT_MSG_MONSTER_EMOTE")
   --a:RegisterEvent("CHAT_MSG_MONSTER_SAY")
   --a:RegisterEvent("CHAT_MSG_MONSTER_WHISPER")
@@ -16,11 +16,11 @@
     
     -- choose chattype
     --post to blizzard combat text
-    --if CombatText_AddMessage then
-      --CombatText_AddMessage(string, COMBAT_TEXT_SCROLL_FUNCTION, 1, 0, 0, "crit", nil)
-    --end
+    if CombatText_AddMessage then
+      CombatText_AddMessage(string, COMBAT_TEXT_SCROLL_FUNCTION, 1, 0, 0, "crit", nil)
+    end
     --post to boss emote frame
-    RaidNotice_AddMessage(RaidBossEmoteFrame, string, ChatTypeInfo["RAID_WARNING"]) 
+    --RaidNotice_AddMessage(RaidBossEmoteFrame, string, ChatTypeInfo["RAID_WARNING"]) 
     --post to raidwarningframe
     --RaidNotice_AddMessage(RaidWarningFrame, string, ChatTypeInfo["RAID_WARNING"])
     

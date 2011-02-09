@@ -103,7 +103,7 @@
         show = true,
         latency = true,
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        scale = 1,
+        scale = 1/0.82, --divide 1 by current unit scale if you want to prevent scaling of the castbar based on unit scale
         color = {
           bar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
           bg = { r = 0.96, g = 0.7, b = 0, a = 1, },
@@ -223,7 +223,7 @@
       castbar = {
         show = true,
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        scale = 1,
+        scale = 1/1, --divide 1 by current unit scale if you want to prevent scaling of the castbar based on unit scale
         color = {
           bar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
           bg = { r = 0.96, g = 0.7, b = 0, a = 1, },
@@ -313,7 +313,7 @@
       castbar = {
         show = true,
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        scale = 1,
+        scale = 1/0.85, --divide 1 by current unit scale if you want to prevent scaling of the castbar based on unit scale
         color = {
           bar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
           bg = { r = 0.96, g = 0.7, b = 0, a = 1, },
@@ -411,7 +411,7 @@
       alpha = {
         notinrange = 0.5,
       },
-      scale = 1,
+      scale = 1.05,
       pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 }, 
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
@@ -434,6 +434,9 @@
           92980, --ice bomb
           77786, --red phase consuming flames
           
+          --chimaeron
+          89084 , --skull icon chimaeron <10k life
+          
         },
         show            = true,
         disableCooldown = true,
@@ -448,11 +451,11 @@
         showParty           = false,  --make this true to show raid in party
         showRaid            = true,   --show in raid
         point               = "TOP",
-        yOffset             = 15,
+        yOffset             = 20,
         xoffset             = 0,
         maxColumns          = 8,
         unitsPerColumn      = 5,
-        columnSpacing       = -15,
+        columnSpacing       = -20,
         columnAnchorPoint   = "LEFT",        
       },
     },

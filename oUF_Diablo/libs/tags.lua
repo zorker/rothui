@@ -92,7 +92,7 @@
   
   --short hp value
   oUF.Tags["diablo:shorthpval"] = function(unit) 
-    local color = oUF.Tags["diablo:colorsimple"](unit)
+    --local color = oUF.Tags["diablo:colorsimple"](unit)
     local hpval
     if UnitIsDeadOrGhost(unit) then
       hpval = "Dead"
@@ -101,7 +101,8 @@
     else
       hpval = func.numFormat(UnitHealth(unit) or 0)
     end
-    return "|cff"..color..(hpval or "").."|r"
+    --return "|cff"..color..(hpval or "").."|r"
+    return hpval or ""
   end
   oUF.TagEvents["diablo:shorthpval"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
   

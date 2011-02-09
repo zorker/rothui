@@ -215,12 +215,13 @@
   for i,spellid in pairs(cfg.units.raid.auras.spelllist) do
     local spell = GetSpellInfo(spellid)
     if spell then whitelist[spell] = true end
-    --if spell then table.insert(whitelist,spell,true) end
+    --if spell then whitelist[spellid] = true end
   end
   
   --custom aura filter
   local customFilter = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
   	if(whitelist[name]) then return true end 
+  	--if(whitelist[spellID]) then return true end 
   end
   
   --create aura func
@@ -244,6 +245,7 @@
 
   --aura icon func
   local createAuraIcon = function(icons, button)
+    button:EnableMouse(false)
     local bw = button:GetWidth()
     if button.cd then
       button.cd:SetPoint("TOPLEFT", 1, -1)

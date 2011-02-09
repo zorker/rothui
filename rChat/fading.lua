@@ -65,12 +65,16 @@
   FCFTab_UpdateColors = function(self, selected)
     if (selected) then
       self:GetFontString():SetTextColor(1,0.7,0)
+      self:GetFontString():SetShadowOffset(1,-1)
+      self:GetFontString():SetShadowColor(0,0,0,0.6)
       self:SetAlpha(1)
       self.leftSelectedTexture:Show();
       self.middleSelectedTexture:Show();
       self.rightSelectedTexture:Show();
     else
       self:GetFontString():SetTextColor(0.5,0.5,0.5)
+      self:GetFontString():SetShadowOffset(1,-1)
+      self:GetFontString():SetShadowColor(0,0,0,0.3)
       self:SetAlpha(not_selected_tab_alpha)
       self.leftSelectedTexture:Hide();
       self.middleSelectedTexture:Hide();

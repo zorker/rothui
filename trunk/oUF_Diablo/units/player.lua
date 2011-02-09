@@ -410,7 +410,7 @@
     hpval1:SetPoint("CENTER", 0, 10)
     hpval2 = func.createFontString(hpvalf, cfg.font, 16, "THINOUTLINE")
     hpval2:SetPoint("CENTER", 0, -10)
-    hpval2:SetTextColor(0.6,0.6,0.6)
+    hpval2:SetTextColor(0.8,0.8,0.8)
     
     self:Tag(hpval1, "[perhp]")
     self:Tag(hpval2, "[diablo:shorthpval]")
@@ -426,7 +426,7 @@
     ppval1:SetPoint("CENTER", 0, 10)
     ppval2 = func.createFontString(ppvalf, cfg.font, 16, "THINOUTLINE")
     ppval2:SetPoint("CENTER", 0, -10)
-    ppval2:SetTextColor(0.6,0.6,0.6)
+    ppval2:SetTextColor(0.8,0.8,0.8)
 
     self.Power.ppval1 = ppval1
     self.Power.ppval2 = ppval2

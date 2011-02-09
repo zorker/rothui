@@ -27,6 +27,8 @@
     local cf = _G['ChatFrame'..i]
     if cf then 
       cf:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE") 
+      cf:SetShadowOffset(1,-1)
+      cf:SetShadowColor(0,0,0,0.6)
       cf:SetFrameStrata("LOW")
       cf:SetFrameLevel(2)
     end
@@ -45,6 +47,8 @@
       tab:GetFontString():SetFont(NAMEPLATE_FONT, 11, "THINOUTLINE")
       --fix for color and alpha of undocked frames
       tab:GetFontString():SetTextColor(1,0.7,0)
+      tab:GetFontString():SetShadowOffset(1,-1)
+      tab:GetFontString():SetShadowColor(0,0,0,0.6)
       tab:SetAlpha(1)
     end
   end
@@ -64,6 +68,8 @@
     end
 
     ChatFontNormal:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE") 
+    ChatFontNormal:SetShadowOffset(1,-1)
+    ChatFontNormal:SetShadowColor(0,0,0,0.6)
     
     local bcq = _G["CombatLogQuickButtonFrame_Custom"];
     if bcq then

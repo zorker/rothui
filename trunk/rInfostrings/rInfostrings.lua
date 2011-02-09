@@ -175,7 +175,7 @@
     f2:SetWidth(f2.text:GetStringWidth())
     
     if showXpRep then
-      f3.text:SetText(rsiMail()..""..rsiExpRep())
+      f3.text:SetText(rsiMail().." "..rsiExpRep())
       f3:SetHeight(f3.text:GetStringHeight())
       f3:SetWidth(f3.text:GetStringWidth())
     else

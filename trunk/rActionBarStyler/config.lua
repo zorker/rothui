@@ -145,7 +145,7 @@
   -----------------------------------
   -- SPECIAL CHARACTER CONDITIONS
   -----------------------------------
-  if playername == "Rothar" or playername == "Grombur" then
+  if playername == "Rothar" or playername == "Grombur" or playername == "Wolowizard" then
     cfg.bars.bar1.uselayout2x6    = true
     cfg.bars.bar2.uselayout2x6    = true
     cfg.bars.stancebar.disable    = true

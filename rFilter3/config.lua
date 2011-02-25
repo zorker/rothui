@@ -13,10 +13,6 @@
   local player_name, _ = UnitName("player")
   local _, player_class = UnitClass("player")
   
-  local spec = GetActiveTalentGroup()
-  
-  cfg.spec = spec
-  
   -----------------------------
   -- CONFIG
   -----------------------------  
@@ -24,16 +20,17 @@
   cfg.highlightPlayerSpells = true
   cfg.updatetime            = 0.2 --how fast should the timer update itself
 
-  --now with spec possible.
-  -- 1 is your first spec
-  -- 2 is your second spec
-  
-  if player_name == "Rothar" and player_class == "WARRIOR" and (spec == 1 or spec == 2) then
+  if player_name == "Rothar" and player_class == "WARRIOR" then
   
     --Rothars Buff List
   
     cfg.rf3_BuffList = {
       [1] = {
+        spec = 1, 
+        --spec got moved to bufflist, so buffs can be set up per spec 
+        -- 1 is your first spec 
+        -- 2 is your second spec
+        -- false or nil will remove the spec tracking
         spellid = 469, --commanding shout
         spelllist = { --check a list instead because other classes can do the same
           [1] = 469,
@@ -45,8 +42,8 @@
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 130, y = 107 },
         unit = "player",
         validate_unit = true, --only show the icon if unit is found
-        ismine = false,
-        desaturate = true,
+        ismine        = false,
+        desaturate =   true,
         alpha = {
           found = {
             frame = 1,
@@ -59,6 +56,7 @@
         },
       },
       [2] = {
+        spec = 2, 
         spellid = 6673, --battle shout
         spelllist = { --check a list instead because other classes can do the same
           [1] = 6673,
@@ -83,6 +81,7 @@
         },
       },
       [3] = {
+        spec = nil, 
         spellid = 18499, --berserker rage
         size = 30,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
@@ -101,6 +100,7 @@
         },
       },
       [4] = {
+        spec = nil, 
         spellid = 2565, --shield block
         size = 26, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 138 },
@@ -119,6 +119,7 @@
         },
       },
       [5] = {
+        spec = nil, 
         spellid = 87096, --thunderclap dps boost
         size = 26, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -100, y = 138 },
@@ -137,6 +138,7 @@
         },
       },
       [6] = {
+        spec = nil, 
         spellid = 14202, --enrage
         size = 30, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
@@ -155,6 +157,7 @@
         },
       },
       [7] = {
+        spec = nil, 
         spellid = 12292, --deathwish
         size = 30, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
@@ -173,6 +176,7 @@
         },
       },
       [8] = {
+        spec = nil, 
         spellid = 12964, --deathwish
         size = 50, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 190 },
@@ -198,6 +202,7 @@
     
     cfg.rf3_DebuffList = {
       [1] = {
+        spec = nil, 
         spellid = 58567, --sunder armor
         spelllist = { --check a list instead because other classes can do the same
           [1] = 58567,
@@ -225,6 +230,7 @@
         },
       },
       [2] = {
+        spec = nil, 
         spellid = 6343, --thunderclap
         spelllist = { --check a list instead because other classes can do the same
           [1] = 6343,
@@ -254,6 +260,7 @@
         },
       },
       [3] = {
+        spec = nil, 
         spellid = 1160, --demo shout
         spelllist = { --check a list instead because other classes can do the same
           [1] = 1160,
@@ -283,6 +290,7 @@
         },
       },
       [4] = {
+        spec = nil, 
         spellid = 772, --rend
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -70, y = 107 },
@@ -303,6 +311,7 @@
         },
       },
       [5] = {
+        spec = nil, 
         spellid = 86346, --colossus smash
         size = 40, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 110 },
@@ -327,6 +336,7 @@
   --Rothars Cooldown List
     cfg.rf3_CooldownList = {
       [1] = {
+        spec = nil, 
         spellid = 100, --charge
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 70, y = 107 },
         size = 26,
@@ -344,10 +354,10 @@
       },
       --[[
       [2] = {
+        spec = nil, 
         spellid = 20252, --intercept
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 70, y = 107 },
         size = 26,
-        unit = "target",
         desaturate = true,
         alpha = {
           cooldown = {
@@ -365,9 +375,10 @@
     
   end
   
-  if player_name == "Wolowizard" and player_class == "MAGE" and (spec == 1 or spec == 2) then
+  if player_name == "Wolowizard" and player_class == "MAGE" then
     cfg.rf3_DebuffList = {
       [1] = {
+        spec = nil, 
         spellid = 36032, --arcane blast debuff
         size = 32, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -150, y = 173 },

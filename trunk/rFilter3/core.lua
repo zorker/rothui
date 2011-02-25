@@ -98,6 +98,14 @@
   end
   
   local checkDebuff = function(f,spellid)
+    if not UnitExists(f.unit) and f.validate_unit then
+      f.iconframe:SetAlpha(0)
+      return
+    end
+    if not InCombatLockdown() and f.hide_ooc then
+      f.iconframe:SetAlpha(0)
+      return      
+    end
     if spellid then
       local gsi_name, gsi_rank, gsi_icon = GetSpellInfo(spellid)
       if gsi_name then
@@ -158,6 +166,14 @@
   end
   
   local checkBuff = function(f,spellid)
+    if not UnitExists(f.unit) and f.validate_unit then
+      f.iconframe:SetAlpha(0)
+      return
+    end
+    if not InCombatLockdown() and f.hide_ooc then
+      f.iconframe:SetAlpha(0)
+      return      
+    end
     if spellid then
       local gsi_name, gsi_rank, gsi_icon = GetSpellInfo(spellid)
       if gsi_name then
@@ -218,6 +234,10 @@
   end
   
   local checkCooldown = function(f)
+    if not InCombatLockdown() and f.hide_ooc then
+      f.iconframe:SetAlpha(0)
+      return      
+    end
     if f.name and f.spellid then
       local start, duration, enable = GetSpellCooldown(f.spellid)
       if start and duration then
@@ -297,7 +317,7 @@
   local lastupdate = 0
   local rFilterOnUpdate = function(self,elapsed)
     lastupdate = lastupdate + elapsed    
-    if lastupdate > 1 then
+    if lastupdate > cfg.updatetime then
       lastupdate = 0
       searchBuffs()
       searchDebuffs()

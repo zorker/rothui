@@ -98,6 +98,10 @@
   end
   
   local checkDebuff = function(f,spellid)
+    if f.spec and f.spec ~= GetActiveTalentGroup() then
+      f.iconframe:SetAlpha(0)
+      return
+    end
     if not UnitExists(f.unit) and f.validate_unit then
       f.iconframe:SetAlpha(0)
       return
@@ -166,6 +170,10 @@
   end
   
   local checkBuff = function(f,spellid)
+    if f.spec and f.spec ~= GetActiveTalentGroup() then
+      f.iconframe:SetAlpha(0)
+      return
+    end
     if not UnitExists(f.unit) and f.validate_unit then
       f.iconframe:SetAlpha(0)
       return
@@ -234,6 +242,10 @@
   end
   
   local checkCooldown = function(f)
+    if f.spec and f.spec ~= GetActiveTalentGroup() then
+      f.iconframe:SetAlpha(0)
+      return
+    end
     if not InCombatLockdown() and f.hide_ooc then
       f.iconframe:SetAlpha(0)
       return      

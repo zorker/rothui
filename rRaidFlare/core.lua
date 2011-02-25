@@ -25,7 +25,7 @@
   
   --bar settings
   cfg.bar = {
-    scale     = 0.6,
+    scale     = 0.5,
     pos       = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 }, 
     partyonly = true,
   }

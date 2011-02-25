@@ -91,6 +91,19 @@
     ToggleDropDownMenu(1, nil, dropdown, "cursor", 0, 0)
   end
   
+  --remove focus from menu list
+  do 
+    for k,v in pairs(UnitPopupMenus) do
+      for x,y in pairs(UnitPopupMenus[k]) do
+        if y == "SET_FOCUS" then
+          table.remove(UnitPopupMenus[k],x)
+        elseif y == "CLEAR_FOCUS" then
+          table.remove(UnitPopupMenus[k],x)
+        end
+      end
+    end
+  end
+  
   --create debuff func
   func.createDebuffs = function(self)
     local f = CreateFrame("Frame", nil, self)

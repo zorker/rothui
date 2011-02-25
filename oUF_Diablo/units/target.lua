@@ -151,20 +151,19 @@
   end
 
   --check for interruptable spellcast
-  local checkShield = function(bar, unit)
-    if unit == "vehicle" then unit = "player" end
-    if bar.Shield:IsShown() and UnitCanAttack("player", unit) then
+  local checkShield = function(self, unit)
+    if self.Shield:IsShown() and UnitCanAttack("player", unit) then
       --show shield
-      bar:SetStatusBarColor(0.3,0.3,0.3,1)
-      bar.bg:SetVertexColor(0.6,0.6,0.6,1)
-      bar.Spark:SetVertexColor(0.8,0.8,0.8,1)
-      bar.background:SetDesaturated(1)
+      self:SetStatusBarColor(self.cfg.color.shieldbar.r,self.cfg.color.shieldbar.g,self.cfg.color.shieldbar.b,self.cfg.color.shieldbar.a)
+      self.bg:SetVertexColor(self.cfg.color.shieldbg.r,self.cfg.color.shieldbg.g,self.cfg.color.shieldbg.b,self.cfg.color.shieldbg.a)
+      self.Spark:SetVertexColor(0.8,0.8,0.8,1)
+      self.background:SetDesaturated(1)
     else
       --no shield
-      bar:SetStatusBarColor(0.15,0.15,0.15,1)
-      bar.bg:SetVertexColor(0.96,0.7,0,1)
-      bar.Spark:SetVertexColor(0.8,0.6,0,1)
-      bar.background:SetDesaturated(nil)
+      self:SetStatusBarColor(self.cfg.color.bar.r,self.cfg.color.bar.g,self.cfg.color.bar.b,self.cfg.color.bar.a)
+      self.bg:SetVertexColor(self.cfg.color.bg.r,self.cfg.color.bg.g,self.cfg.color.bg.b,self.cfg.color.bg.a)
+      self.Spark:SetVertexColor(0.8,0.6,0,1)
+      self.background:SetDesaturated(nil)
     end
   end
 
@@ -422,7 +421,7 @@
     --castbar
     if self.cfg.castbar.show then
       func.createCastbar(self)
-      
+      self.Castbar.cfg = self.cfg.castbar
       self.Castbar.PostCastStart = checkCast
       self.Castbar.PostChannelStart = checkChannel   
       

@@ -22,6 +22,7 @@
   -----------------------------  
   
   cfg.highlightPlayerSpells = true
+  cfg.updatetime            = 0.2 --how fast should the timer update itself
 
   --now with spec possible.
   -- 1 is your first spec
@@ -43,6 +44,7 @@
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 130, y = 107 },
         unit = "player",
+        validate_unit = true, --only show the icon if unit is found
         ismine = false,
         desaturate = true,
         alpha = {
@@ -82,8 +84,8 @@
       },
       [3] = {
         spellid = 18499, --berserker rage
-        size = 26,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 130, y = 138 },
+        size = 30,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
         unit = "player",
         ismine = true,
         desaturate = true,
@@ -94,7 +96,7 @@
           },
           not_found = {
             frame = 0,
-            icon = 0.6,          
+            icon = 0,          
           },
         },
       },
@@ -134,6 +136,62 @@
           },
         },
       },
+      [6] = {
+        spellid = 14202, --enrage
+        size = 30, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
+        unit = "player",
+        ismine = true,
+        desaturate = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0,          
+          },
+        },
+      },
+      [7] = {
+        spellid = 12292, --deathwish
+        size = 30, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
+        unit = "player",
+        ismine = true,
+        desaturate = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0,          
+          },
+        },
+      },
+      [8] = {
+        spellid = 12964, --deathwish
+        size = 50, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 190 },
+        unit = "player",
+        ismine = true,
+        desaturate = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0,          
+          },
+        },
+      },
+      
+      
     }
     
     --Rothars Debuff List
@@ -148,11 +206,13 @@
           [4] = 95467,
           [5] = 95466,
         },
-        size = 26,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 107},
-        unit = "target",
-        ismine = false,
-        desaturate = true,
+        size          = 26,
+        pos           = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 107},
+        unit          = "target",
+        validate_unit = true, --only show the icon if unit is found
+        hide_ooc      = true, --hide icon out of combat
+        ismine        = false,
+        desaturate    = true,
         alpha = {
           found = {
             frame = 1,
@@ -178,6 +238,8 @@
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -100, y = 107 },
         unit = "target",
+        validate_unit = true, --only show the icon if unit is found
+        hide_ooc      = true, --hide icon out of combat
         ismine = false,
         desaturate = true,
         alpha = {
@@ -205,6 +267,8 @@
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -40, y = 107 },
         unit = "target",
+        validate_unit = true, --only show the icon if unit is found
+        hide_ooc      = true, --hide icon out of combat
         ismine = false,
         desaturate = true,
         alpha = {
@@ -223,6 +287,8 @@
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -70, y = 107 },
         unit = "target",
+        validate_unit = true, --only show the icon if unit is found
+        hide_ooc      = true, --hide icon out of combat
         ismine = true,
         desaturate = true,
         alpha = {
@@ -236,6 +302,26 @@
           },
         },
       },
+      [5] = {
+        spellid = 86346, --colossus smash
+        size = 40, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 110 },
+        unit = "target",
+        validate_unit = true, --only show the icon if unit is found
+        hide_ooc      = true, --hide icon out of combat
+        ismine = true,
+        desaturate = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0,          
+          },
+        },
+      },
     }
   
   --Rothars Cooldown List
@@ -244,7 +330,6 @@
         spellid = 100, --charge
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 70, y = 107 },
         size = 26,
-        unit = "target",
         desaturate = true,
         alpha = {
           cooldown = {
@@ -278,6 +363,29 @@
       ]]--
     }
     
+  end
+  
+  if player_name == "Wolowizard" and player_class == "MAGE" and (spec == 1 or spec == 2) then
+    cfg.rf3_DebuffList = {
+      [1] = {
+        spellid = 36032, --arcane blast debuff
+        size = 32, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -150, y = 173 },
+        unit = "player",
+        ismine = false,
+        desaturate = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0.6,          
+          },
+        },
+      },
+    }
   end
   
   -----------------------------

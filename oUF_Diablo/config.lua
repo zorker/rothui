@@ -227,6 +227,8 @@
         color = {
           bar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
           bg = { r = 0.96, g = 0.7, b = 0, a = 1, },
+          shieldbar = { r = 0.5, g = 0.5, b = 0.5, a = 1, }, --the castbar color while target casting a shielded spell
+          shieldbg = { r = 0.8, g = 0.8, b = 0.8, a = 1, },  --the castbar background color while target casting a shielded spell
         },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 350 }, 
       },
@@ -396,7 +398,7 @@
         use3D = true,
       },
       attributes = {
-        visibility          = "party",  --show this header in party
+        visibility          = "custom [group:party,nogroup:raid][@raid6,noexists,group:raid] show;hide",  --show this header in party
         showPlayer          = true,     --make this true to show player in party
         showSolo            = false,    --make this true to show while solo (only works if solo is in visiblity aswell
         showParty           = true,     --make this true to show headerin party
@@ -429,6 +431,7 @@
           32407, 
                     
           --CATACLYSM RAIDS          
+          86622,
           
           --maloriak
           92980, --ice bomb
@@ -445,7 +448,7 @@
         size            = 20,
       },
       attributes = {
-        visibility          = "raid", --use "party,raid" to show this in party aswell
+        visibility          = "custom [@raid6,exists,group:raid] show;hide", --use "party,raid" to show this in party aswell
         showPlayer          = false,  --make this true to show player in party
         showSolo            = false,  --make this true to show while solo (only works if solo is in visiblity aswell
         showParty           = false,  --make this true to show raid in party

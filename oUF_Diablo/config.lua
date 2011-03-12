@@ -207,6 +207,7 @@
         onlyShowPlayerBuffs = false,
         onlyShowPlayerDebuffs = false,
         showDebuffType = false,
+        desaturateDebuffs = true,
         buffs = {
           pos = { a1 = "BOTTOMLEFT", a2 = "TOPRIGHT", x = 0, y = -15 }, 
           initialAnchor = "BOTTOMLEFT",

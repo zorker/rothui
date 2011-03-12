@@ -416,6 +416,9 @@
       createDebuffs(self)      
       self.Buffs.PostCreateIcon = func.createAuraIcon
       self.Debuffs.PostCreateIcon = func.createAuraIcon
+      if self.cfg.auras.desaturateDebuffs then
+        self.Debuffs.PostUpdateIcon = func.postUpdateDebuff
+      end
     end
     
     --castbar

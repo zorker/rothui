@@ -157,6 +157,11 @@
       self.Debuffs.PostCreateIcon = func.createAuraIcon
     end
     
+    --aurawatch
+    if self.cfg.aurawatch.show then
+      func.createAuraWatch(self)
+    end
+    
     --debuffglow
     func.createDebuffGlow(self)
     

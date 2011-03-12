@@ -266,6 +266,70 @@
     button.overlay.Hide = function() end  
 
   end
+  
+  --create aura watch func
+  local createAuraWatch = function(self)
+    
+    --start the DRUID setup
+    if cfg.playerclass == "DRUID" then
+
+  		local auras = {}
+  		local spellIDs = {
+				774, -- Rejuvenation
+				8936, -- Regrowth
+				33763, -- Lifebloom
+				48438, -- Wild Growth
+  		}
+  		
+  		local dir = {
+  		  [1] = { indicator = true, color = { r=1,g=0,b=1 },        size = 8, pos = "TOPLEFT",       x = 12, y = -12 },
+  		  [2] = { indicator = true, color = { r=0,g=1,b=0 },        size = 8, pos = "BOTTOMLEFT",    x = 12, y = 12 },
+  		  [3] = { indicator = true, color = { r=0.5,g=1,b=0.5 },    size = 8, pos = "TOPRIGHT",      x = -12, y = -12 },
+  		  [4] = { indicator = true, color = { r=1,g=1,b=0 },        size = 8, pos = "BOTTOMRIGHT",   x = -12, y = 12 },
+  		}
+
+		  auras.onlyShowPresent = true
+  		auras.presentAlpha = 1
+  		
+  		auras.PostCreateIcon = function(self, icon, sid)
+        if icon.cd then
+          icon.cd:SetPoint("TOPLEFT", 1, -1)
+          icon.cd:SetPoint("BOTTOMRIGHT", -1, 1)
+        end
+        --count hack for lifebloom
+        if sid == 33763 and icon.count then
+          icon.count:SetFont("Interface\\AddOns\\rTextures\\visitor1.ttf",8,"THINOUTLINE, MONOCHROME")
+          icon.count:ClearAllPoints()
+          icon.count:SetPoint("CENTER", 3, 3)
+          icon.count:SetParent(icon.cd)
+        end
+      end
+  		
+  		-- Set any other AuraWatch settings
+  		auras.icons = {}
+  		for i, sid in pairs(spellIDs) do
+  			local icon = CreateFrame("Frame", nil, self)
+  			icon.spellID = sid
+  			-- set the dimensions and positions
+  			icon:SetSize(dir[i].size,dir[i].size)
+        --position icon
+  			icon:SetPoint(dir[i].pos, self, dir[i].pos, dir[i].x, dir[i].y)
+        --make indicator
+        if dir[i].indicator then
+          local tex = icon:CreateTexture(nil, "OVERLAY")
+          tex:SetAllPoints(icon)
+          tex:SetTexture("Interface\\AddOns\\rTextures\\indicator")
+          tex:SetVertexColor(dir[i].color.r,dir[i].color.g,dir[i].color.b)
+          icon.icon = tex
+        end
+        
+  			auras.icons[sid] = icon
+  			-- Set any other AuraWatch icon settings
+  		end		  
+		  --call aurawatch
+		  self.AuraWatch = auras
+    end
+  end
 
   --check threat
   local checkThreat = function(self,event,unit)
@@ -322,6 +386,11 @@
       createAuras(self)      
       self.Auras.PostCreateIcon = createAuraIcon
     end
+
+    --aurawatch
+    if self.cfg.aurawatch.show then
+      createAuraWatch(self)
+    end
     
     --icons
     self.RaidIcon = func.createIcon(self.Health,"LOW",14,self.Health,"BOTTOM","TOP",0,-6,-1)
@@ -329,6 +398,7 @@
     self.LFDRole = func.createIcon(self.Health,"LOW",12,self.Health,"TOP","BOTTOM",0,4,-1)
     self.LFDRole:SetTexture("Interface\\AddOns\\rTextures\\lfd_role")
     self.LFDRole:SetDesaturated(1)
+    
     
   end  
 

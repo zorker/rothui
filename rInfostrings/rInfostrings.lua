@@ -148,7 +148,7 @@
       coords = format("%.2d/%.2d",x*100,y*100)
     end
     if coords then
-      zone = "|c00E8B444"..GetMinimapZoneText().." [|r|c00C9BCA8"..coords.."|r|c009C907D]|r"
+      zone = "|c00E8B444"..GetMinimapZoneText().." |c009C907D[|c00C9BCA8"..coords.."|c009C907D]|r"
     else
       zone = "|c00E8B444"..GetMinimapZoneText().."|r"
     end

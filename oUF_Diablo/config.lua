@@ -112,21 +112,21 @@
       },
       soulshards = { 
         show = true,
-        scale = 0.58,
+        scale = 0.45,
         color = {r = 150/255, g = 135/255, b = 200/255, },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 }, 
         alpha = {
-          ooc = 0.5, --alpha value out of combat
+          ooc = 0.7, --alpha value out of combat
           ic = 1, --alpha value in comat
         },
       },
       holypower = { 
         show = true,
-        scale = 0.58,
+        scale = 0.45,
         color = {r = 200/255, g = 135/255, b = 190/255, },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 }, 
         alpha = {
-          ooc = 0.5, --alpha value out of combat
+          ooc = 0.7, --alpha value out of combat
           ic = 1, --alpha value in comat
         },
       },
@@ -295,6 +295,10 @@
       show = true,
       scale = 0.85,
       pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 10, y = 40 }, 
+      aurawatch = {
+        show            = true,
+        size            = 20,
+      },
       auras = {
         show = true,
         size = 22,
@@ -380,6 +384,10 @@
       },
       scale = 0.85,
       pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -80 }, 
+      aurawatch = {
+        show            = true,
+        size            = 20.1,
+      },
       auras = {
         show = true,
         size = 22,
@@ -420,6 +428,9 @@
         tag1 = "[diablo:name]",     --tag for the first line
         tag2 = "[diablo:misshp]",   --tag for the second line
         classcoloroverride = false, --even if you set the colorswitcher to no classcolor this value can be used to make the raid class colored
+      },
+      aurawatch = {
+        show            = true,
       },
       auras = {
         --put every single spellid here that you want to be tracked, be it buff or debuff doesn't matter

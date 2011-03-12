@@ -10,6 +10,7 @@ modules\oUF_Experience.lua
 modules\oUF_Reputation.lua
 modules\oUF_DebuffHighlight.lua
 modules\oUF_Smooth.lua
+modules\oUF_AuraWatch.lua
 
 config.lua
 

@@ -26,7 +26,7 @@
   
     cfg.rf3_BuffList = {
       [1] = {
-        spec = 1, 
+        spec = nil, 
         --spec got moved to bufflist, so buffs can be set up per spec 
         -- 1 is your first spec 
         -- 2 is your second spec
@@ -56,7 +56,7 @@
         },
       },
       [2] = {
-        spec = 2, 
+        spec = nil, 
         spellid = 6673, --battle shout
         spelllist = { --check a list instead because other classes can do the same
           [1] = 6673,
@@ -100,7 +100,7 @@
         },
       },
       [4] = {
-        spec = nil, 
+        spec = 2, 
         spellid = 2565, --shield block
         size = 26, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 138 },
@@ -119,7 +119,7 @@
         },
       },
       [5] = {
-        spec = nil, 
+        spec = 2, 
         spellid = 87096, --thunderclap dps boost
         size = 26, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -100, y = 138 },
@@ -138,7 +138,7 @@
         },
       },
       [6] = {
-        spec = nil, 
+        spec = 2, 
         spellid = 14202, --enrage
         size = 30, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
@@ -157,7 +157,7 @@
         },
       },
       [7] = {
-        spec = nil, 
+        spec = 1, 
         spellid = 12292, --deathwish
         size = 30, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
@@ -176,8 +176,8 @@
         },
       },
       [8] = {
-        spec = nil, 
-        spellid = 12964, --deathwish
+        spec = 1, 
+        spellid = 12964, --free rage cast
         size = 50, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 190 },
         unit = "player",
@@ -290,7 +290,7 @@
         },
       },
       [4] = {
-        spec = nil, 
+        spec = 2, 
         spellid = 772, --rend
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -70, y = 107 },
@@ -311,7 +311,7 @@
         },
       },
       [5] = {
-        spec = nil, 
+        spec = 1, 
         spellid = 86346, --colossus smash
         size = 40, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 110 },

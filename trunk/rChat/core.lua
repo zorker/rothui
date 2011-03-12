@@ -12,6 +12,10 @@
   -- FUNCTIONS
   -----------------------------
   
+	for i = 1, 23 do
+		CHAT_FONT_HEIGHTS[i] = i+7
+	end
+  
   for i = 1, NUM_CHAT_WINDOWS do
     local bf = _G['ChatFrame'..i..'ButtonFrame']
     if bf then 

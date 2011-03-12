@@ -152,6 +152,41 @@
     back:SetVertexColor(0, 0, 0, 1)    
   end
   
+  
+  --create aura watch func
+  func.createAuraWatch = function(self)
+    
+    --start the DRUID setup
+    if cfg.playerclass == "DRUID" then
+
+  		local auras = {}
+  		local spellIDs = {
+				774, -- Rejuvenation
+				8936, -- Regrowth
+				33763, -- Lifebloom
+				48438, -- Wild Growth
+  		}
+
+		  auras.onlyShowPresent = true
+  		auras.presentAlpha = 1  		
+  		auras.PostCreateIcon = func.createAuraIcon
+  		
+  		-- Set any other AuraWatch settings
+  		auras.icons = {}
+  		for i, sid in pairs(spellIDs) do
+  			local icon = CreateFrame("Frame", nil, self)
+  			icon.spellID = sid
+  			-- set the dimensions and positions
+  			icon:SetSize(self.cfg.aurawatch.size,self.cfg.aurawatch.size)
+        icon:SetPoint("BOTTOM", self, "BOTTOM", 60, ((self.cfg.aurawatch.size+6) * i)+20)
+  			auras.icons[sid] = icon
+  			-- Set any other AuraWatch icon settings
+  		end		  
+		  --call aurawatch
+		  self.AuraWatch = auras
+    end
+  end
+  
   --update health func
   func.updateHealth = function(bar, unit, min, max)
     local d = floor(min/max*100)

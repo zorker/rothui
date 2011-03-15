@@ -138,6 +138,13 @@
       runes = {
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 170 }, 
       },
+      altpower = { 
+        show = true,
+        scale = 0.5,
+        color = {r = 1, g = 0, b = 1, },
+        texture = "Interface\\AddOns\\rTextures\\statusbar",
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 }, 
+      },
       expbar = { --experience
         show = true,
           pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 10 },
@@ -207,7 +214,7 @@
         onlyShowPlayerBuffs = false,
         onlyShowPlayerDebuffs = false,
         showDebuffType = false,
-        desaturateDebuffs = true,
+        desaturateDebuffs = false,
         buffs = {
           pos = { a1 = "BOTTOMLEFT", a2 = "TOPRIGHT", x = 0, y = -15 }, 
           initialAnchor = "BOTTOMLEFT",
@@ -482,7 +489,7 @@
       pos = { a1 = "TOP", a2 = "BOTTOM", af = "Minimap", x = 0, y = -80 }, 
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag = "[perhp]%",
+        tag = "[diablo:altbosspower][perhp]%",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",

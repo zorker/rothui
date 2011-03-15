@@ -161,3 +161,27 @@
   
   ---------------------------------------------
   
+  oUF.Tags["diablo:altbosspower"] = function(unit)
+    local cur = UnitPower(unit, ALTERNATE_POWER_INDEX)
+    local max = UnitPowerMax(unit, ALTERNATE_POWER_INDEX)
+    local color = "0099ff"
+    if(max > 0 and not UnitIsDeadOrGhost(unit)) then
+      return "|cff"..color..("%s%%"):format(math.floor(cur/max*100)).."|cff666666 / |r"
+    --else
+      --return "|cff"..color.."97%".."|cff666666 / |r"
+    end
+  end
+  oUF.TagEvents["diablo:altbosspower"] = "UNIT_POWER"
+
+  ---------------------------------------------
+  
+  oUF.Tags["diablo:altpower"] = function(unit)
+    local cur = UnitPower(unit, ALTERNATE_POWER_INDEX)
+    local max = UnitPowerMax(unit, ALTERNATE_POWER_INDEX)
+    if(max > 0) then
+      return ("%s%%"):format(math.floor(cur/max*100))
+    --else
+      --return "97%"
+    end
+  end
+  oUF.TagEvents["diablo:altpower"] = "UNIT_POWER"

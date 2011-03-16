@@ -166,6 +166,50 @@
     back:SetVertexColor(0, 0, 0, 1)    
   end
   
+  --create AltPowerBar
+  func.createAltPowerBar = function(self,name)
+    
+    local t,f
+    local num = 4
+    local w = 64*num
+    local h = 22
+
+    local bar = CreateFrame("StatusBar",name,self)
+    bar:SetPoint(self.cfg.altpower.pos.a1,self.cfg.altpower.pos.af,self.cfg.altpower.pos.a2,self.cfg.altpower.pos.x,self.cfg.altpower.pos.y)
+    bar:SetSize(w,h)
+	  bar:SetStatusBarTexture(self.cfg.altpower.texture)
+    bar:SetStatusBarColor(self.cfg.altpower.color.r, self.cfg.altpower.color.g, self.cfg.altpower.color.b)
+    --bar:SetMinMaxValues(0,100)
+    --bar:SetValue(70)
+    
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("LEFT",-64,0)
+    t:SetTexture("Interface\\AddOns\\rTextures\\combo_left")
+    bar.leftedge = t
+
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("RIGHT",64,0)
+    t:SetTexture("Interface\\AddOns\\rTextures\\combo_right")
+    bar.rightedge = t
+    
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)  
+    t:SetSize(64*num,64)
+    t:SetPoint("LEFT",0,0)
+    t:SetTexture("Interface\\AddOns\\rTextures\\combo_back")
+    bar.back = t
+
+    f = func.createFontString(bar, cfg.font, 24, "THINOUTLINE")
+    f:SetPoint("CENTER", 0, 0)
+    f:SetTextColor(0.8,0.8,0.8)
+    self:Tag(f, "[diablo:altpower]")
+
+    bar:SetScale(self.cfg.altpower.scale)    
+    func.simpleDragFunc(bar)    
+    self.AltPowerBar = bar
+
+  end
   
   --create aura watch func
   func.createAuraWatch = function(self)

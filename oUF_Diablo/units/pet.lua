@@ -155,6 +155,11 @@
     --debuffglow
     func.createDebuffGlow(self)
     
+    --make alternative power bar movable (vehicle)
+    if self.cfg.altpower.show then
+      func.createAltPowerBar(self,"oUF_AltPowerPet")
+    end
+    
     --threat
     self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", func.checkThreat)
     

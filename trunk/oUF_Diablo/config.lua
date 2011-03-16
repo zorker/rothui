@@ -292,6 +292,13 @@
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
       },
+      altpower = { 
+        show = true,
+        scale = 0.5,
+        color = {r = 1, g = 0, b = 1, },
+        texture = "Interface\\AddOns\\rTextures\\statusbar",
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 }, 
+      },
       portrait = {
         show = true,
         use3D = true,

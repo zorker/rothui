@@ -220,8 +220,8 @@
   
   --custom aura filter
   local customFilter = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
-  	if(whitelist[name]) then return true end 
-  	--if(whitelist[spellID]) then return true end 
+    if(whitelist[name]) then return true end 
+    --if(whitelist[spellID]) then return true end 
   end
   
   --create aura func
@@ -273,25 +273,25 @@
     --start the DRUID setup
     if cfg.playerclass == "DRUID" then
 
-  		local auras = {}
-  		local spellIDs = {
-				774, -- Rejuvenation
-				8936, -- Regrowth
-				33763, -- Lifebloom
-				48438, -- Wild Growth
-  		}
-  		
-  		local dir = {
-  		  [1] = { indicator = true, color = { r=1,g=0,b=1 },        size = 8, pos = "TOPLEFT",       x = 12, y = -12 },
-  		  [2] = { indicator = true, color = { r=0,g=1,b=0 },        size = 8, pos = "BOTTOMLEFT",    x = 12, y = 12 },
-  		  [3] = { indicator = true, color = { r=0.5,g=1,b=0.5 },    size = 8, pos = "TOPRIGHT",      x = -12, y = -12 },
-  		  [4] = { indicator = true, color = { r=1,g=1,b=0 },        size = 8, pos = "BOTTOMRIGHT",   x = -12, y = 12 },
-  		}
+      local auras = {}
+      local spellIDs = {
+        774, -- Rejuvenation
+        8936, -- Regrowth
+        33763, -- Lifebloom
+        48438, -- Wild Growth
+      }
+      
+      local dir = {
+        [1] = { indicator = true, color = { r=1,g=0,b=1 },        size = 8, pos = "TOPLEFT",       x = 12, y = -12 },
+        [2] = { indicator = true, color = { r=0,g=1,b=0 },        size = 8, pos = "BOTTOMLEFT",    x = 12, y = 12 },
+        [3] = { indicator = true, color = { r=0.5,g=1,b=0.5 },    size = 8, pos = "TOPRIGHT",      x = -12, y = -12 },
+        [4] = { indicator = true, color = { r=1,g=1,b=0 },        size = 8, pos = "BOTTOMRIGHT",   x = -12, y = 12 },
+      }
 
-		  auras.onlyShowPresent = true
-  		auras.presentAlpha = 1
-  		
-  		auras.PostCreateIcon = function(self, icon, sid)
+      auras.onlyShowPresent = true
+      auras.presentAlpha = 1
+      
+      auras.PostCreateIcon = function(self, icon, sid)
         if icon.cd then
           icon.cd:SetPoint("TOPLEFT", 1, -1)
           icon.cd:SetPoint("BOTTOMRIGHT", -1, 1)
@@ -304,16 +304,16 @@
           icon.count:SetParent(icon.cd)
         end
       end
-  		
-  		-- Set any other AuraWatch settings
-  		auras.icons = {}
-  		for i, sid in pairs(spellIDs) do
-  			local icon = CreateFrame("Frame", nil, self)
-  			icon.spellID = sid
-  			-- set the dimensions and positions
-  			icon:SetSize(dir[i].size,dir[i].size)
+      
+      -- Set any other AuraWatch settings
+      auras.icons = {}
+      for i, sid in pairs(spellIDs) do
+        local icon = CreateFrame("Frame", nil, self)
+        icon.spellID = sid
+        -- set the dimensions and positions
+        icon:SetSize(dir[i].size,dir[i].size)
         --position icon
-  			icon:SetPoint(dir[i].pos, self, dir[i].pos, dir[i].x, dir[i].y)
+        icon:SetPoint(dir[i].pos, self, dir[i].pos, dir[i].x, dir[i].y)
         --make indicator
         if dir[i].indicator then
           local tex = icon:CreateTexture(nil, "OVERLAY")
@@ -323,11 +323,11 @@
           icon.icon = tex
         end
         
-  			auras.icons[sid] = icon
-  			-- Set any other AuraWatch icon settings
-  		end		  
-		  --call aurawatch
-		  self.AuraWatch = auras
+        auras.icons[sid] = icon
+        -- Set any other AuraWatch icon settings
+      end      
+      --call aurawatch
+      self.AuraWatch = auras
     end
   end
 

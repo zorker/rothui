@@ -18,6 +18,11 @@
   local showhpvalue   = true --true/false will enable disable of hp value on the nameplate
   local alwaysshowhp  = true --true/false will make the hp value appear even if the unit has 100% life, requires showhpvalue to be true
   
+  local scale = 0.8
+  local fontscale = 0.8
+  
+  local pos = { x = 0, y = 20 }
+  
   -----------------------------
   -- FUNCTIONS
   -----------------------------
@@ -142,35 +147,39 @@
 
     local fw, fh, hw,hh = f:GetWidth(), f:GetHeight(), healthBar:GetWidth(), healthBar:GetHeight()
     
-    healthBar.w = fw
+    healthBar.w = fw*scale
     healthBar.h = hh
     castBar.w = hw
     castBar.h = hh
 
-    local bgsize = hw*197.8/128
+    local helper = CreateFrame("Frame",nil,f)    
+    helper:SetSize(fw*scale, fh*scale)
+    helper:SetPoint("CENTER",pos.x,pos.y)    
+
+    local bgsize = scale*hw*197.8/128
     
-    local back = f:CreateTexture(nil,"BACKGROUND",nil,-8)
-    back:SetPoint("CENTER",f,"CENTER",0,0)
+    local back = helper:CreateTexture(nil,"BACKGROUND",nil,-8)
+    back:SetPoint("CENTER",helper,"CENTER",0,0)
     back:SetSize(bgsize,bgsize/4)
     back:SetTexture("Interface\\AddOns\\rTextures\\castbar")
     f.back = back
 
-    local innershadow = f:CreateTexture(nil,"BACKGROUND",nil,-6)
+    local innershadow = helper:CreateTexture(nil,"BACKGROUND",nil,-6)
     innershadow:SetAllPoints(back)
     innershadow:SetTexture("Interface\\AddOns\\rTextures\\castbar_glow")
     innershadow:SetVertexColor(0,0,0,0.7)
     healthBar.shadow = innershadow
     
-    local t = f:CreateTexture(nil,"BACKGROUND",nil,-7)
-    t:SetPoint("TOPRIGHT",f,"TOPRIGHT",0,-11)
-    t:SetPoint("BOTTOMRIGHT",f,"BOTTOMRIGHT",0,11)
+    local t = helper:CreateTexture(nil,"BACKGROUND",nil,-7)
+    t:SetPoint("TOPRIGHT",helper,"TOPRIGHT",0,-11*scale)
+    t:SetPoint("BOTTOMRIGHT",helper,"BOTTOMRIGHT",0,11*scale)
     t:SetWidth(0.01)
     t:SetTexture("Interface\\Addons\\rTextures\\statusbar5")
     healthBar.bg = t
     
-    local n = f:CreateTexture(nil,"BACKGROUND",nil,-7)
-    n:SetPoint("TOPLEFT",f,"TOPLEFT",0,-11)
-    n:SetPoint("BOTTOMLEFT",f,"BOTTOMLEFT",0,11)
+    local n = helper:CreateTexture(nil,"BACKGROUND",nil,-7)
+    n:SetPoint("TOPLEFT",helper,"TOPLEFT",0,-11*scale)
+    n:SetPoint("BOTTOMLEFT",helper,"BOTTOMLEFT",0,11*scale)
     n:SetPoint("RIGHT", t, "LEFT", 0, 0) --right point of n will anchor left point of t
     n:SetTexture("Interface\\Addons\\rTextures\\statusbar5")
     healthBar.new = n
@@ -184,16 +193,16 @@
   local createNewFontStrings = function(f,healthBar)
     --new name
     local na = f:CreateFontString(nil, "BORDER")
-    na:SetFont(STANDARD_TEXT_FONT, 12, "THINOUTLINE")
-    na:SetPoint("BOTTOM", f, "TOP", 0, -5)
-    na:SetPoint("RIGHT", f, 0, 0)
-    na:SetPoint("LEFT", f, 0, 0)
+    na:SetFont(STANDARD_TEXT_FONT, 12*fontscale, "THINOUTLINE")
+    na:SetPoint("BOTTOM", f.back, "TOP", 0, -9*scale)
+    na:SetPoint("RIGHT", f.back, -20*scale, 0)
+    na:SetPoint("LEFT", f.back, 20*scale, 0)
     na:SetJustifyH("CENTER")
     f.na = na
     if showhpvalue then
       local hp = healthBar:CreateFontString(nil, "BORDER")
-      hp:SetFont(STANDARD_TEXT_FONT, 10, "THINOUTLINE")
-      hp:SetPoint("RIGHT",f.back,"RIGHT",-18,1)
+      hp:SetFont(STANDARD_TEXT_FONT, 10*fontscale, "THINOUTLINE")
+      hp:SetPoint("RIGHT",f.back,"RIGHT",-18*scale,0)
       hp:SetJustifyH("RIGHT")
       healthBar.hpval = hp
     end

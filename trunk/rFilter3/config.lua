@@ -158,25 +158,6 @@
       },
       [7] = {
         spec = 1, 
-        spellid = 12292, --deathwish
-        size = 30, 
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
-        unit = "player",
-        ismine = true,
-        desaturate = true,
-        alpha = {
-          found = {
-            frame = 1,
-            icon = 1,
-          },
-          not_found = {
-            frame = 0,
-            icon = 0,          
-          },
-        },
-      },
-      [8] = {
-        spec = 1, 
         spellid = 12964, --free rage cast
         size = 50, 
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 190 },
@@ -194,7 +175,7 @@
           },
         },
       },
-      
+     
       
     }
     
@@ -290,7 +271,7 @@
         },
       },
       [4] = {
-        spec = 2, 
+        spec = nil, 
         spellid = 772, --rend
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -70, y = 107 },
@@ -331,6 +312,7 @@
           },
         },
       },
+
     }
   
   --Rothars Cooldown List

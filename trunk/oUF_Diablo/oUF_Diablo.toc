@@ -13,6 +13,7 @@ modules\oUF_Smooth.lua
 modules\oUF_AuraWatch.lua
 
 config.lua
+##charspecific.lua
 
 libs\slashcmd.lua
 libs\functions.lua

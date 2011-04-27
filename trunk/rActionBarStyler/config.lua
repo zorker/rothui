@@ -26,7 +26,7 @@
       buttonspacing   = 5,
       barscale        = 0.82,
       uselayout2x6    = false,
-      userplaced      = true, --want to place the bar somewhere else?
+      userplaced      = false, --want to place the bar somewhere else?
       locked          = true, --frame locked
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 22 }, 
       testmode        = false,
@@ -37,7 +37,7 @@
       barscale        = 0.82,
       uselayout2x6    = false,
       showonmouseover = false,
-      userplaced      = true, --want to place the bar somewhere else?
+      userplaced      = false, --want to place the bar somewhere else?
       locked          = true, --frame locked
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 53 }, 
       testmode        = false,
@@ -145,7 +145,7 @@
   -----------------------------------
   -- SPECIAL CHARACTER CONDITIONS
   -----------------------------------
-  if playername == "Rothar" or playername == "Grombur" or playername == "Wolowizard" then
+  if playername == "Rothar" or playername == "Grombur" or playername == "Wolowizard" or playername == "Loral" then
     cfg.bars.bar1.uselayout2x6    = true
     cfg.bars.bar2.uselayout2x6    = true
     cfg.bars.stancebar.disable    = true

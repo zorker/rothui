@@ -18,10 +18,10 @@
   local showhpvalue   = true --true/false will enable disable of hp value on the nameplate
   local alwaysshowhp  = true --true/false will make the hp value appear even if the unit has 100% life, requires showhpvalue to be true
   
-  local scale = 0.8
-  local fontscale = 0.8
+  local scale = 0.9
+  local fontscale = 0.9
   
-  local pos = { x = 0, y = 20 }
+  local pos = { x = 0, y = 0 }
   
   -----------------------------
   -- FUNCTIONS
@@ -184,7 +184,7 @@
     n:SetTexture("Interface\\Addons\\rTextures\\statusbar5")
     healthBar.new = n
     
-    healthBar:SetFrameLevel(f:GetFrameLevel()+2)
+    healthBar:SetFrameLevel(f:GetFrameLevel()+5)
     healthBar:SetAllPoints(f)
     
   end
@@ -268,7 +268,8 @@
   local updateStyle = function(f)
     --get the value
     local healthBar, castBar = f:GetChildren()
-    local threatTexture, borderTexture, castborderTexture, shield, castbaricon, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
+    --local threatTexture, borderTexture, castborderTexture, shield, castbaricon, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
+    local threatTexture, borderTexture, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
 
     --update threat texture
     threatTexture:ClearAllPoints()
@@ -288,7 +289,25 @@
   local initStyle = function(f)
     --get the value
     local healthBar, castBar = f:GetChildren()
-    local threatTexture, borderTexture, castborderTexture, shield, castbaricon, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
+    --print(f:GetRegions():GetName())
+    --[[
+    local a,b,c,d,e,f,g,h = f:GetRegions()
+    print(a:GetTexture()) --flash
+    print(b:GetTexture()) --border
+    print(c:GetTexture()) --glow
+    print(d:GetName()) --?
+    print(e:GetName()) --?
+    print(f:GetTexture()) --skull
+    print(g:GetTexture()) --raidicon
+    print(h:GetTexture()) --elite icon
+    f.styled = true
+    ]]--
+    
+    local threatTexture, borderTexture, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
+    
+
+    --local threatTexture, borderTexture, castborderTexture, shield, castbaricon, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
+    
 
     --init the size of health and castbar
     createHealthbarBG(healthBar,f,castBar)
@@ -308,7 +327,7 @@
     moveRaidIcon(raidIcon,f)
     
     --initialize the castbars
-    initCastbars(castBar,castborderTexture, shield, castbaricon)
+    --initCastbars(castBar,castborderTexture, shield, castbaricon)
     
     --disable some stuff
     nameText:Hide()
@@ -330,6 +349,7 @@
     f:HookScript("OnShow", function(s)
       updateStyle(s)      
     end)
+
     
     return true
 
@@ -342,9 +362,16 @@
   end
 
   local IsNamePlateFrame = function(f)
-    if f:GetName() then return false end    
+    --if f:GetName() then return false end    
+    --print(f:GetName())
     local o = select(2,f:GetRegions())
-    if not o or o:GetObjectType() ~= "Texture" or o:GetTexture() ~= "Interface\\Tooltips\\Nameplate-Border" then return false end    
+    --if o and o:GetObjectType() == "Texture" then
+      --print(o:GetTexture())
+    --end 
+    if not o or o:GetObjectType() ~= "Texture" or o:GetTexture() ~= "Interface\\Tooltips\\Nameplate-Border" then 
+      f.styled = true --don't touch this frame again
+      return false 
+    end    
     return true
   end
 
@@ -372,7 +399,6 @@
       SetCVar("ShowClassColorInNameplate",1)--1
       SetCVar("bloattest",0)--0.0
       SetCVar("bloatnameplates",0)--0.0
-      SetCVar("spreadnameplates",0)--1
       SetCVar("bloatthreat",0)--1
       self:SetScript("OnUpdate", searchNamePlates)
     end

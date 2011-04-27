@@ -217,9 +217,9 @@
   
     local cp
     if(UnitExists("vehicle")) then
-      cp = GetComboPoints("vehicle", "target") or GetComboPoints("player", "target")
+      cp = GetComboPoints("vehicle")
     else
-      cp = GetComboPoints("player", "target")
+      cp = GetComboPoints("player")
     end
   
     if cp < 1 then
@@ -314,7 +314,7 @@
     bar:SetScale(self.cfg.combobar.scale)    
     func.applyDragFunctionality(bar)    
     self.ComboBar = bar
-
+    
   end
 
   ---------------------------------------------

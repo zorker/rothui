@@ -255,8 +255,9 @@
       dead = 1
     elseif UnitIsPlayer(unit) then
       color = rRAID_CLASS_COLORS[select(2, UnitClass(unit))] or RAID_CLASS_COLORS[select(2, UnitClass(unit))]
-    elseif UnitIsUnit(unit, "pet") and GetPetHappiness() then
-      color = cfg.happycolors[GetPetHappiness()]
+    --happiness removed in 4.1
+    --elseif UnitIsUnit(unit, "pet") and GetPetHappiness() then
+      --color = cfg.happycolors[GetPetHappiness()]
     else
       color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
     end

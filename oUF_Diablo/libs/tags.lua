@@ -32,8 +32,9 @@
       color = {r = 0.5, g = 0.5, b = 0.5}
     elseif UnitIsPlayer(unit) then
       color = rRAID_CLASS_COLORS[select(2, UnitClass(unit))] or RAID_CLASS_COLORS[select(2, UnitClass(unit))]
-    elseif UnitIsUnit(unit, "pet") and GetPetHappiness() then
-      color = cfg.happycolors[GetPetHappiness()]
+    --happiness removed in 4.1
+    --elseif UnitIsUnit(unit, "pet") and GetPetHappiness() then
+      --color = cfg.happycolors[GetPetHappiness()]
     elseif UnitIsUnit(unit, "target") and UnitIsTapped("target") and not UnitIsTappedByPlayer("target") then
       color = {r = 0.5, g = 0.5, b = 0.5}
     else

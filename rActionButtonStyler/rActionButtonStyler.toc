@@ -1,4 +1,4 @@
-## Interface: 40000
+## Interface: 40100
 ## Author: zork
 ## Version: 2.0
 ## Title: rActionButtonStyler

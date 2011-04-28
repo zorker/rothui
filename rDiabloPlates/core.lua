@@ -266,9 +266,8 @@
   
   --update style func
   local updateStyle = function(f)
-    --get the value
+
     local healthBar, castBar = f:GetChildren()
-    --local threatTexture, borderTexture, castborderTexture, shield, castbaricon, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
     local threatTexture, borderTexture, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
 
     --update threat texture
@@ -287,28 +286,10 @@
 
   --init style func
   local initStyle = function(f)
-    --get the value
+
     local healthBar, castBar = f:GetChildren()
-    --print(f:GetRegions():GetName())
-    --[[
-    local a,b,c,d,e,f,g,h = f:GetRegions()
-    print(a:GetTexture()) --flash
-    print(b:GetTexture()) --border
-    print(c:GetTexture()) --glow
-    print(d:GetName()) --?
-    print(e:GetName()) --?
-    print(f:GetTexture()) --skull
-    print(g:GetTexture()) --raidicon
-    print(h:GetTexture()) --elite icon
-    f.styled = true
-    ]]--
-    
     local threatTexture, borderTexture, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
-    
-
-    --local threatTexture, borderTexture, castborderTexture, shield, castbaricon, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
-    
-
+   
     --init the size of health and castbar
     createHealthbarBG(healthBar,f,castBar)
     
@@ -349,7 +330,6 @@
     f:HookScript("OnShow", function(s)
       updateStyle(s)      
     end)
-
     
     return true
 
@@ -362,12 +342,7 @@
   end
 
   local IsNamePlateFrame = function(f)
-    --if f:GetName() then return false end    
-    --print(f:GetName())
     local o = select(2,f:GetRegions())
-    --if o and o:GetObjectType() == "Texture" then
-      --print(o:GetTexture())
-    --end 
     if not o or o:GetObjectType() ~= "Texture" or o:GetTexture() ~= "Interface\\Tooltips\\Nameplate-Border" then 
       f.styled = true --don't touch this frame again
       return false 

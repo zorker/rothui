@@ -216,7 +216,7 @@
     --yOfs = floor(yOfs+0.5)
     
     castBar.border:ClearAllPoints()
-    castBar.border:SetPoint("CENTER",0,-29)
+    castBar.border:SetPoint("CENTER",castBar:GetParent(),0,-29)
 
     --change castbar color to dark red if the cast is shielded
     if castBar.shield:IsShown() == 1 then
@@ -225,7 +225,7 @@
       castBar:SetStatusBarColor(1,0.7,0)
     end
     castBar.shield:ClearAllPoints()
-    castBar.shield:SetPoint("CENTER",0,-29)
+    castBar.shield:SetPoint("CENTER",castBar:GetParent(),0,-29)
 
     castBar:SetPoint("RIGHT",castBar.border,-1,0)
     castBar:SetPoint("TOP",castBar.border,0,-10)
@@ -269,6 +269,7 @@
 
     local healthBar, castBar = f:GetChildren()
     local threatTexture, borderTexture, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
+    local barfill, castborderTexture, shield, castbaricon = castBar:GetRegions()
 
     --update threat texture
     threatTexture:ClearAllPoints()
@@ -289,6 +290,7 @@
 
     local healthBar, castBar = f:GetChildren()
     local threatTexture, borderTexture, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
+    local barfill, castborderTexture, shield, castbaricon = castBar:GetRegions()
    
     --init the size of health and castbar
     createHealthbarBG(healthBar,f,castBar)
@@ -308,7 +310,7 @@
     moveRaidIcon(raidIcon,f)
     
     --initialize the castbars
-    --initCastbars(castBar,castborderTexture, shield, castbaricon)
+    initCastbars(castBar,castborderTexture, shield, castbaricon)
     
     --disable some stuff
     nameText:Hide()

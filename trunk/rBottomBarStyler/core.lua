@@ -299,6 +299,7 @@
   
   local function orbhealth(orb1,orb1_fill,orbtext1,orbtext2)
     orb1:SetScript("OnEvent", function(self, event, arg1, ...)
+
       if event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD" or arg1 == "player" then      
         local uh, uhm = UnitHealth("player"), UnitHealthMax("player")
         local perc = floor(uh/uhm*100)
@@ -319,6 +320,7 @@
     orb1:RegisterEvent("UNIT_HEALTH")
     orb1:RegisterEvent("PLAYER_LOGIN")
     orb1:RegisterEvent("PLAYER_ENTERING_WORLD")
+    
   end
   
   ------------------------------------------------------

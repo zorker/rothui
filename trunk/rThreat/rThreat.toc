@@ -1,4 +1,4 @@
-## Interface: 40000
+## Interface: 40100
 ## Author: zork
 ## Version: 4.002
 ## Title: rThreat

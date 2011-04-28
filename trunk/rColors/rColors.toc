@@ -1,4 +1,4 @@
-## Interface: 40000
+## Interface: 40100
 ## Author: zork
 ## Title: rColors
 ## Notes: define colors for your class

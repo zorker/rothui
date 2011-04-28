@@ -26,7 +26,7 @@
       buttonspacing   = 5,
       barscale        = 0.82,
       uselayout2x6    = false,
-      userplaced      = false, --want to place the bar somewhere else?
+      userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 22 }, 
       testmode        = false,
@@ -37,7 +37,7 @@
       barscale        = 0.82,
       uselayout2x6    = false,
       showonmouseover = false,
-      userplaced      = false, --want to place the bar somewhere else?
+      userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 53 }, 
       testmode        = false,

@@ -1,6 +1,6 @@
-## Interface: 40000
+## Interface: 40100
 ## Author: zork
-## Version: 1.2
+## Version: 1.3
 ## Title: rNamePlates
 ## Notes: Simple nameplates
 

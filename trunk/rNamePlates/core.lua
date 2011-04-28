@@ -1,6 +1,6 @@
 
-  -- // rNamePlaters
-  -- // zork - 2010
+  -- // rNamePlates
+  -- // zork - 2011
   
   -----------------------------
   -- CONFIG
@@ -8,7 +8,7 @@
   
   local colorswitcher = true --true/false will swap back- and foregroundcolor
   local showhpvalue   = true --true/false will enable disable of hp value on the nameplate
-  local alwaysshowhp  = false --true/false will make the hp value appear even if the unit has 100% life, requires showhpvalue to be true
+  local alwaysshowhp  = true --true/false will make the hp value appear even if the unit has 100% life, requires showhpvalue to be true
   
   -----------------------------
   -- FUNCTIONS
@@ -179,7 +179,7 @@
     --yOfs = floor(yOfs+0.5)
     
     castBar.border:ClearAllPoints()
-    castBar.border:SetPoint("CENTER",-19,-29)
+    castBar.border:SetPoint("CENTER",castBar:GetParent(),"CENTER",-19,-29)
 
     --change castbar color to dark red if the cast is shielded
     if castBar.shield:IsShown() == 1 then
@@ -188,12 +188,12 @@
       castBar:SetStatusBarColor(1,0.7,0)
     end
     castBar.shield:ClearAllPoints()
-    castBar.shield:SetPoint("CENTER",-19,-29)
+    castBar.shield:SetPoint("CENTER",castBar:GetParent(),"CENTER",-19,-29)
 
     castBar:SetPoint("RIGHT",castBar.border,-1,0)
-    castBar:SetPoint("TOP",castBar.border,0,-10)
+    castBar:SetPoint("TOP",castBar.border,0,-12)
     castBar:SetPoint("BOTTOM",castBar.border,0,12)
-    castBar:SetPoint("LEFT",castBar.border,24,0)
+    castBar:SetPoint("LEFT",castBar.border,22,0)
 
     castBar.icon:ClearAllPoints()
     castBar.icon:SetPoint("LEFT",castBar.border,3,0)
@@ -203,15 +203,18 @@
   --init the castbar objects
   local initCastbars = function(castBar,castborderTexture, shield, castbaricon)
     castborderTexture:SetTexture("Interface\\Tooltips\\Nameplate-CastBar")
+    castborderTexture:SetDrawLayer("OVERLAY", 1)
     castborderTexture:SetSize(castBar.w+25,(castBar.w+25)/4)
     castborderTexture:SetTexCoord(0,1,0,1)
     castBar.border = castborderTexture
         
+    shield:SetDrawLayer("OVERLAY", 1)
     shield:SetSize(castBar.w+25,(castBar.w+25)/4)
     shield:SetTexCoord(0,1,0,1)
     castBar.shield = shield
     
     castbaricon:SetTexCoord(0.1,0.9,0.1,0.9)
+    castbaricon:SetDrawLayer("OVERLAY", 4)
     castBar.icon = castbaricon
     
     castBar:SetStatusBarColor(1,0.7,0)
@@ -248,7 +251,8 @@
   local updateStyle = function(f)
     --get the value
     local healthBar, castBar = f:GetChildren()
-    local threatTexture, borderTexture, castborderTexture, shield, castbaricon, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
+    local threatTexture, borderTexture, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
+    local barfill, castborderTexture, shield, castbaricon = castBar:GetRegions()
 
     --apply color
     applyEnemyColor(f,healthBar)
@@ -266,11 +270,13 @@
   local initStyle = function(f)
     --get the value
     local healthBar, castBar = f:GetChildren()
-    local threatTexture, borderTexture, castborderTexture, shield, castbaricon, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
+    local threatTexture, borderTexture, highlightTexture, nameText, levelText, bossIcon, raidIcon, dragonTexture = f:GetRegions()
+    local barfill, castborderTexture, shield, castbaricon = castBar:GetRegions()
     
     --init the size of health and castbar
     initHealthCastbarSize(healthBar,castBar)
-    --creaate healthbar bg
+    
+    --create healthbar bg
     createHealthbarBG(healthBar)
         
     --create new fontstrings
@@ -294,8 +300,7 @@
     --disable some stuff
     hideBlizz(nameText,levelText,dragonTexture)
     
-    --highlightTexture:SetAlpha(0.2)
-    highlightTexture:SetTexture("")
+    highlightTexture:SetAlpha(0.2)
     
     if colorswitcher or showhpvalue then
       healthBar:SetScript("OnValueChanged", updateHealthbar)
@@ -319,9 +324,11 @@
   end
 
   local IsNamePlateFrame = function(f)
-    if f:GetName() then return false end    
     local o = select(2,f:GetRegions())
-    if not o or o:GetObjectType() ~= "Texture" or o:GetTexture() ~= "Interface\\Tooltips\\Nameplate-Border" then return false end    
+    if not o or o:GetObjectType() ~= "Texture" or o:GetTexture() ~= "Interface\\Tooltips\\Nameplate-Border" then 
+      f.styled = true --don't touch this frame again
+      return false 
+    end    
     return true
   end
 
@@ -349,7 +356,6 @@
       SetCVar("ShowClassColorInNameplate",1)--1
       SetCVar("bloattest",0)--0.0
       SetCVar("bloatnameplates",0)--0.0
-      SetCVar("spreadnameplates",0)--1
       SetCVar("bloatthreat",0)--1
       self:SetScript("OnUpdate", searchNamePlates)
     end

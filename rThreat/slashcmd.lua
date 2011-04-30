@@ -11,6 +11,12 @@
       local f = _G[v]
       if f and f:IsUserPlaced() then
         --print(f:GetName())
+        if f:IsShown() then
+          f.visiblestatus = true
+        else
+          f.visiblestatus = false
+        end
+        f:Show()
         f.dragtexture:SetAlpha(0.4)
         f:EnableMouse(true)
         f:RegisterForDrag("LeftButton")
@@ -30,6 +36,11 @@
     for _, v in pairs(rThreat_Frames) do
       local f = _G[v]
       if f and f:IsUserPlaced() then
+        if f.visiblestatus then
+          f:Show()
+        else
+          f:Hide()
+        end        
         f.dragtexture:SetAlpha(0)
         f:EnableMouse(nil)
         f:RegisterForDrag(nil)

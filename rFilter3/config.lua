@@ -41,9 +41,10 @@
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 130, y = 107 },
         unit = "player",
-        validate_unit = true, --only show the icon if unit is found
-        ismine        = false,
-        desaturate =   true,
+        validate_unit   = true, --only show the icon if unit is found
+        ismine          = false,
+        desaturate      = true,
+        match_spellid   = false,
         alpha = {
           found = {
             frame = 1,
@@ -66,9 +67,10 @@
         },
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 100, y = 107 },
-        unit = "player",
-        ismine = false,
-        desaturate = true,
+        unit            = "player",
+        ismine          = false,
+        desaturate      = true,
+        match_spellid   = false,
         alpha = {
           found = {
             frame = 1,
@@ -81,44 +83,26 @@
         },
       },
       [3] = {
-        spec = nil, 
-        spellid = 18499, --berserker rage
-        size = 30,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
-        unit = "player",
-        ismine = true,
-        desaturate = true,
-        alpha = {
+        spec            = 2, 
+        spellid         = 2565, --shield block
+        size            = 26, 
+        pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 138 },
+        unit            = "player",
+        ismine          = true,
+        desaturate      = true,
+        match_spellid   = false,
+        alpha           = {
           found = {
-            frame = 1,
-            icon = 1,
+            frame       = 1,
+            icon        = 1,
           },
           not_found = {
-            frame = 0,
-            icon = 0,          
+            frame       = 0,
+            icon        = 0.6,          
           },
         },
       },
       [4] = {
-        spec = 2, 
-        spellid = 2565, --shield block
-        size = 26, 
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 138 },
-        unit = "player",
-        ismine = true,
-        desaturate = true,
-        alpha = {
-          found = {
-            frame = 1,
-            icon = 1,
-          },
-          not_found = {
-            frame = 0,
-            icon = 0.6,          
-          },
-        },
-      },
-      [5] = {
         spec = 2, 
         spellid = 87096, --thunderclap dps boost
         size = 26, 
@@ -137,30 +121,11 @@
           },
         },
       },
-      [6] = {
-        spec = 2, 
-        spellid = 14202, --enrage
-        size = 30, 
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
-        unit = "player",
-        ismine = true,
-        desaturate = true,
-        alpha = {
-          found = {
-            frame = 1,
-            icon = 1,
-          },
-          not_found = {
-            frame = 0,
-            icon = 0,          
-          },
-        },
-      },
-      [7] = {
+      [5] = {
         spec = 1, 
-        spellid = 12964, --free rage cast
+        spellid = 60503, --free rage cast
         size = 50, 
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 190 },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
         unit = "player",
         ismine = true,
         desaturate = true,
@@ -294,8 +259,8 @@
       [5] = {
         spec = 1, 
         spellid = 86346, --colossus smash
-        size = 40, 
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 110 },
+        size = 36, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 107 },
         unit = "target",
         validate_unit = true, --only show the icon if unit is found
         hide_ooc      = true, --hide icon out of combat

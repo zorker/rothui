@@ -110,7 +110,9 @@
       f.iconframe:SetAlpha(0)
       return      
     end
+    local tmp_spellid = f.spellid
     if spellid then
+      tmp_spellid = spellid --spellid gets overwritten for spelllists
       local gsi_name, gsi_rank, gsi_icon = GetSpellInfo(spellid)
       if gsi_name then
         f.name = gsi_name
@@ -122,7 +124,8 @@
     end
     if f.name and f.rank then
       local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID = UnitAura(f.unit, f.name, f.rank, "HARMFUL")
-      if name and (not f.ismine or (f.ismine and caster == "player")) then
+      --if name and (not f.ismine or (f.ismine and caster == "player")) then
+      if name and (not f.ismine or (f.ismine and caster == "player")) and (not f.match_spellid or (f.match_spellid and spID == tmp_spellid)) then
         if caster == "player" and cfg.highlightPlayerSpells then
           f.iconframe.border:SetVertexColor(0.2,0.6,0.8,1)
         elseif cfg.highlightPlayerSpells then
@@ -182,7 +185,9 @@
       f.iconframe:SetAlpha(0)
       return      
     end
+    local tmp_spellid = f.spellid
     if spellid then
+      tmp_spellid = spellid --spellid gets overwritten for spelllists
       local gsi_name, gsi_rank, gsi_icon = GetSpellInfo(spellid)
       if gsi_name then
         f.name = gsi_name
@@ -194,7 +199,8 @@
     end
     if f.name and f.rank then
       local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID = UnitAura(f.unit, f.name, f.rank, "HELPFUL")
-      if name and (not f.ismine or (f.ismine and caster == "player")) then
+      --if name and (not f.ismine or (f.ismine and caster == "player")) then
+      if name and (not f.ismine or (f.ismine and caster == "player")) and (not f.match_spellid or (f.match_spellid and spID == tmp_spellid)) then
         if caster == "player" and cfg.highlightPlayerSpells then
           f.iconframe.border:SetVertexColor(0.2,0.6,0.8,1)
         elseif cfg.highlightPlayerSpells then

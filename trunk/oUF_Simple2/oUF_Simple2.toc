@@ -1,0 +1,10 @@
+## Interface: 40100
+## Author: zork
+## Title: oUF_Simple2
+## Notes: An oUF tutorial layout
+## RequiredDeps: oUF
+## X-Category: UnitFrame
+
+cfg.lua
+lib.lua
+core.lua

@@ -37,55 +37,67 @@
   --backdrop func
   lib.gen_backdrop = function(f)
     f:SetBackdrop(backdrop_tab);
-    f:SetBackdropColor(0,0,0,0.7)
+    f:SetBackdropColor(0,0,0,0.8)
     f:SetBackdropBorderColor(0,0,0,1)
   end
-  
-  lib.menu = function(self)
-    local unit = self.unit:sub(1, -2)
-    local cunit = self.unit:gsub("(.)", string.upper, 1)
-    if(unit == "party" or unit == "partypet") then
-      ToggleDropDownMenu(1, nil, _G["PartyMemberFrame"..self.id.."DropDown"], "cursor", 0, 0)
-    elseif(_G[cunit.."FrameDropDown"]) then
-      ToggleDropDownMenu(1, nil, _G[cunit.."FrameDropDown"], "cursor", 0, 0)
-    end
-  end
-  
-  --moveme func
-  lib.moveme = function(f)
-    if cfg.allow_frame_movement then
-      f:SetMovable(true)
-      f:SetUserPlaced(true)
-      if not cfg.frames_locked then
-        f:EnableMouse(true)
-        f:RegisterForDrag("LeftButton","RightButton")
-        f:SetScript("OnDragStart", function(self) if IsAltKeyDown() and IsShiftKeyDown() then self:StartMoving() end end)
-        f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
-      end
-    else
-      f:IsUserPlaced(false)
-    end  
-  end  
-  
-  --init func
-  lib.init = function(f)
-    f:SetSize(f.width, f.height)
-    f:SetScale(f.scale)
-    f:SetPoint("CENTER",UIParent,"CENTER",0,0)
-    f.menu = lib.menu
-    f:RegisterForClicks("AnyUp")
-    f:SetAttribute("*type2", "menu")
-    f:SetScript("OnEnter", UnitFrame_OnEnter)
-    f:SetScript("OnLeave", UnitFrame_OnLeave)
-  end  
-  
+
   --fontstring func
   lib.gen_fontstring = function(f, name, size, outline)
     local fs = f:CreateFontString(nil, "OVERLAY")
     fs:SetFont(name, size, outline)
-    fs:SetShadowColor(0,0,0,1)
+    fs:SetShadowColor(0,0,0,0.5)
+    fs:SetShadowOffset(0,-0)
     return fs
   end  
+  
+  local dropdown = CreateFrame("Frame", addon.."DropDown", UIParent, "UIDropDownMenuTemplate")
+  
+  UIDropDownMenu_Initialize(dropdown, function(self)
+    local unit = self:GetParent().unit
+    if not unit then return end  
+    local menu, name, id
+    if UnitIsUnit(unit, "player") then
+      menu = "SELF"
+    elseif UnitIsUnit(unit, "vehicle") then
+      menu = "VEHICLE"
+    elseif UnitIsUnit(unit, "pet") then
+      menu = "PET"
+    elseif UnitIsPlayer(unit) then
+      id = UnitInRaid(unit)
+      if id then
+        menu = "RAID_PLAYER"
+        name = GetRaidRosterInfo(id)
+      elseif UnitInParty(unit) then
+        menu = "PARTY"
+      else
+        menu = "PLAYER"
+      end
+    else
+      menu = "TARGET"
+      name = RAID_TARGET_ICON
+    end
+    if menu then
+      UnitPopup_ShowMenu(self, menu, unit, name, id)
+    end
+  end, "MENU")
+  
+  lib.menu = function(self)
+    dropdown:SetParent(self)
+    ToggleDropDownMenu(1, nil, dropdown, "cursor", 0, 0)
+  end
+  
+  --remove focus from menu list
+  do 
+    for k,v in pairs(UnitPopupMenus) do
+      for x,y in pairs(UnitPopupMenus[k]) do
+        if y == "SET_FOCUS" then
+          table.remove(UnitPopupMenus[k],x)
+        elseif y == "CLEAR_FOCUS" then
+          table.remove(UnitPopupMenus[k],x)
+        end
+      end
+    end
+  end
   
   --gen healthbar func
   lib.gen_hpbar = function(f)
@@ -111,18 +123,39 @@
   
   --gen hp strings func
   lib.gen_hpstrings = function(f)
+    
+    local name, hpval
+    
     --health/name text strings
-    local name = lib.gen_fontstring(f.Health, cfg.font, 13, "THINOUTLINE")
-    name:SetPoint("LEFT", f.Health, "LEFT", 2, 0)
-    name:SetJustifyH("LEFT")
+    if not f.hidename then
+      name = lib.gen_fontstring(f.Health, cfg.font, 16, "THINOUTLINE")
+      name:SetPoint("LEFT", f.Health, "LEFT", 2, 0)
+      name:SetJustifyH("LEFT")
+    end
     
-    local hpval = lib.gen_fontstring(f.Health, cfg.font, 13, "THINOUTLINE")
+    hpval = lib.gen_fontstring(f.Health, cfg.font, 16, "THINOUTLINE")
     hpval:SetPoint("RIGHT", f.Health, "RIGHT", -2, 0)
-    --this will make the name go "..." when its to long
-    name:SetPoint("RIGHT", hpval, "LEFT", -5, 0)
+
+    if f.hidename then
+      hpval:SetJustifyH("CENTER")
+      hpval:SetPoint("LEFT", f.Health, "LEFT", 2, 0)
+    else
+      --this will make the name go "..." when its to long
+      name:SetPoint("RIGHT", hpval, "LEFT", -5, 0)
+      hpval:SetJustifyH("RIGHT")
+      if f.nametag then
+        f:Tag(name, f.nametag)
+      else
+        f:Tag(name, "[name]")
+      end
+    end      
     
-    f:Tag(name, "[name]")
-    f:Tag(hpval, "[curhp]/[perhp]%")
+    if f.hptag then
+      f:Tag(hpval, f.hptag)
+    else
+      f:Tag(hpval, "[curhp]/[perhp]%")
+    end
+
   end
   
   --gen healthbar func
@@ -146,6 +179,17 @@
     f.Power = s
     f.Power.bg = b
   end
+  
+  --moveme func
+  lib.moveme = function(f)
+    f:SetMovable(true)
+    f:SetUserPlaced(true)
+    f:EnableMouse(true)
+    f:RegisterForDrag("LeftButton","RightButton")
+    --f:SetScript("OnDragStart", function(self) if IsAltKeyDown() and IsShiftKeyDown() then self:StartMoving() end end)
+    f:SetScript("OnDragStart", function(self) self:StartMoving() end)
+    f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+  end 
   
   --gen castbar
   lib.gen_castbar = function(f)
@@ -176,11 +220,11 @@
     b:SetAllPoints(s)
     b:SetVertexColor(1*0.3,0.8*0.3,0,0.7)  
     
-    local txt = lib.gen_fontstring(s, cfg.font, 13, "THINOUTLINE")
+    local txt = lib.gen_fontstring(s, cfg.font, 16, "THINOUTLINE")
     txt:SetPoint("LEFT", 2, 0)
     txt:SetJustifyH("LEFT")
     --time
-    local t = lib.gen_fontstring(s, cfg.font, 13, "THINOUTLINE")
+    local t = lib.gen_fontstring(s, cfg.font, 16, "THINOUTLINE")
     t:SetPoint("RIGHT", -2, 0)
     txt:SetPoint("RIGHT", t, "LEFT", -5, 0)
     

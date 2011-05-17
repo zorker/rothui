@@ -13,20 +13,33 @@
   -----------------------------
   -- STYLE FUNCTIONS
   -----------------------------
+  
+  --init func
+  local initHeader = function(self)
+    self.menu = lib.menu
+    self:RegisterForClicks("AnyUp")
+    self:SetAttribute("*type2", "menu")
+    self:SetScript("OnEnter", UnitFrame_OnEnter)
+    self:SetScript("OnLeave", UnitFrame_OnLeave)
+    lib.gen_hpbar(self)
+    lib.gen_hpstrings(self)
+    lib.gen_ppbar(self)
+  end  
+
+  --init func
+  local init = function(self)
+    self:SetSize(self.width, self.height)
+    self:SetPoint("CENTER",UIParent,"CENTER",0,0)
+    initHeader(self)
+  end
 
   --the player style
   local function CreatePlayerStyle(self)
     --style specific stuff
-    print("hi")
-    self.width = 250
+    self.width = 270
     self.height = 25
-    self.scale = 0.8
     self.mystyle = "player"
-    lib.init(self)
-    lib.moveme(self)
-    lib.gen_hpbar(self)
-    lib.gen_hpstrings(self)
-    lib.gen_ppbar(self)
+    init(self)
     self.Health.colorClass = true
     self.Health.colorHealth = true
     self.Health.bg.multiplier = 0.3
@@ -39,15 +52,10 @@
   --the target style
   local function CreateTargetStyle(self)
     --style specific stuff
-    self.width = 250
+    self.width = 270
     self.height = 25
-    self.scale = 0.8
     self.mystyle = "target"
-    lib.init(self)
-    lib.moveme(self)
-    lib.gen_hpbar(self)
-    lib.gen_hpstrings(self)
-    lib.gen_ppbar(self)
+    init(self)
     self.Health.colorTapping = true
     self.Health.colorDisconnected = true
     self.Health.colorClass = true
@@ -67,13 +75,9 @@
     --style specific stuff
     self.width = 150
     self.height = 25
-    self.scale = 0.8
     self.mystyle = "tot"
-    lib.init(self)
-    lib.moveme(self)
-    lib.gen_hpbar(self)
-    lib.gen_hpstrings(self)
-    lib.gen_ppbar(self)
+    self.hptag = "[perhp]%"
+    init(self)
     self.Health.colorTapping = true
     self.Health.colorDisconnected = true
     self.Health.colorClass = true
@@ -90,13 +94,8 @@
     --style specific stuff
     self.width = 180
     self.height = 25
-    self.scale = 0.8
     self.mystyle = "focus"
-    lib.init(self)
-    lib.moveme(self)
-    lib.gen_hpbar(self)
-    lib.gen_hpstrings(self)
-    lib.gen_ppbar(self)
+    init(self)
     self.Health.colorDisconnected = true
     self.Health.colorClass = true
     self.Health.colorReaction = true
@@ -114,13 +113,10 @@
     --style specific stuff
     self.width = 180
     self.height = 25
-    self.scale = 0.8
     self.mystyle = "pet"
-    lib.init(self)
-    lib.moveme(self)
-    lib.gen_hpbar(self)
-    lib.gen_hpstrings(self)
-    lib.gen_ppbar(self)
+    --init
+    init(self)
+    --stuff
     self.Health.colorDisconnected = true
     self.Health.colorClass = true
     self.Health.colorReaction = true
@@ -131,20 +127,19 @@
     lib.gen_castbar(self)
     lib.gen_portrait(self)
     lib.createDebuffs(self)
-  end  
-
-  --the party style
+  end
+  
+  --now header units, examples for party, raid10, raid25, raid40
+  
+  --party frames
   local function CreatePartyStyle(self)
     --style specific stuff
     self.width = 180
     self.height = 25
-    self.scale = 0.8
     self.mystyle = "party"
-    lib.init(self)
-    lib.moveme(self)
-    lib.gen_hpbar(self)
-    lib.gen_hpstrings(self)
-    lib.gen_ppbar(self)
+    --init
+    initHeader(self)
+    --stuff
     self.Health.colorDisconnected = true
     self.Health.colorClass = true
     self.Health.colorReaction = true
@@ -155,6 +150,26 @@
     lib.gen_portrait(self)
     lib.createDebuffs(self)
   end  
+  
+  --party frames
+  local function CreateRaidStyle(self)
+    --style specific stuff
+    self.width = 100
+    self.height = 25
+    self.mystyle = "raid"
+    self.hptag = "[missinghp]"
+    self.hidename = true
+    --init
+    initHeader(self)
+    --stuff
+    self.Health.colorDisconnected = true
+    self.Health.colorClass = true
+    self.Health.colorReaction = true
+    self.Health.colorHealth = true
+    self.Health.bg.multiplier = 0.3
+    self.Power.colorPower = true
+    self.Power.bg.multiplier = 0.3
+  end 
 
   -----------------------------
   -- SPAWN UNITS
@@ -163,37 +178,159 @@
   if cfg.showplayer then
     oUF:RegisterStyle("oUF_SimplePlayer", CreatePlayerStyle)
     oUF:SetActiveStyle("oUF_SimplePlayer")
-    oUF:Spawn("player", "oUF_Simple_PlayerFrame")  
+    oUF:Spawn("player")  
   end
   
   if cfg.showtarget then
     oUF:RegisterStyle("oUF_SimpleTarget", CreateTargetStyle)
     oUF:SetActiveStyle("oUF_SimpleTarget")
-    oUF:Spawn("target", "oUF_Simple_TargetFrame")  
+    oUF:Spawn("target")  
   end
 
   if cfg.showtot then
     oUF:RegisterStyle("oUF_SimpleToT", CreateToTStyle)
     oUF:SetActiveStyle("oUF_SimpleToT")
-    oUF:Spawn("targettarget", "oUF_Simple_ToTFrame")  
+    oUF:Spawn("targettarget")  
   end
   
   if cfg.showfocus then
     oUF:RegisterStyle("oUF_SimpleFocus", CreateFocusStyle)
     oUF:SetActiveStyle("oUF_SimpleFocus")
-    oUF:Spawn("focus", "oUF_Simple_FocusFrame")  
+    oUF:Spawn("focus")  
   end
   
   if cfg.showpet then
     oUF:RegisterStyle("oUF_SimplePet", CreatePetStyle)
     oUF:SetActiveStyle("oUF_SimplePet")
-    oUF:Spawn("pet", "oUF_Simple_PetFrame")  
+    oUF:Spawn("pet")  
   end
-  
+
   if cfg.showparty then
     oUF:RegisterStyle("oUF_SimpleParty", CreatePartyStyle)
     oUF:SetActiveStyle("oUF_SimpleParty")
+    
+    local party = oUF:SpawnHeader(
+      nil, 
+      nil, 
+      "custom [@raid1,exists] hide; [group:party,nogroup:raid] show; hide",
+      "showPlayer",         true,
+      "showSolo",           false,
+      "showParty",          true,
+      "showRaid",           false,
+      "point",              "TOP",
+      "yOffset",            -50,
+      "xoffset",            0,
+  		"oUF-initialConfigFunction", [[
+  			self:SetHeight(25)
+  			self:SetWidth(180)
+  		]]
+    )
+    party:SetPoint("CENTER",UIParent,"CENTER",0,0)    
+        
+  end
+  
 
-   local party = oUF:SpawnHeader("oUF_Party", nil, "raid,party,solo", "showParty", true, "showPlayer", true, "yOffset", -50)
-   party:SetPoint("TOPLEFT", 70, -20)
+  if cfg.showraid then
+    
+    --die raid panel, die
+    CompactRaidFrameManager:UnregisterAllEvents()
+    CompactRaidFrameManager.Show = CompactRaidFrameManager.Hide
+    CompactRaidFrameManager:Hide()
+    
+    CompactRaidFrameContainer:UnregisterAllEvents()
+    CompactRaidFrameContainer.Show = CompactRaidFrameContainer.Hide
+    CompactRaidFrameContainer:Hide()
+    
+    --setup for 10 man raid    
+    oUF:RegisterStyle("oUF_SimpleRaid10", CreateRaidStyle)
+    oUF:SetActiveStyle("oUF_SimpleRaid10")
+    
+    local raid10 = oUF:SpawnHeader(
+      "oUF_SimpleRaid10", 
+      nil, 
+      "custom [@raid11,exists] hide; [@raid1,exists] show; hide",  
+      "showPlayer",         false,
+      "showSolo",           false,
+      "showParty",          false,
+      "showRaid",           true,
+      "point",              "LEFT",
+      "yOffset",            0,
+      "xoffset",            10,
+      "columnSpacing",      17,
+      "columnAnchorPoint",  "TOP",
+      "groupFilter",        "1,2,3,4,5,6,7,8",
+      "groupBy",            "GROUP",
+      "groupingOrder",      "1,2,3,4,5,6,7,8",
+      "sortMethod",         "NAME",
+      "maxColumns",         8,
+      "unitsPerColumn",     5,
+  		"oUF-initialConfigFunction", [[
+  			self:SetHeight(25)
+  			self:SetWidth(100)
+  		]]
+    )
+    raid10:SetPoint("CENTER",UIParent,"CENTER",0,0)
+    
+    --setup for 25 man raid
+    
+    oUF:RegisterStyle("oUF_SimpleRaid25", CreateRaidStyle)
+    oUF:SetActiveStyle("oUF_SimpleRaid25")
+    
+    local raid25 = oUF:SpawnHeader(
+      "oUF_SimpleRaid25", 
+      nil, 
+      "custom [@raid26,exists] hide; [@raid11,exists] show; hide",  
+      "showPlayer",         false,
+      "showSolo",           false,
+      "showParty",          false,
+      "showRaid",           true,
+      "point",              "LEFT",
+      "yOffset",            0,
+      "xoffset",            10,
+      "columnSpacing",      17,
+      "columnAnchorPoint",  "TOP",
+      "groupFilter",        "1,2,3,4,5,6,7,8",
+      "groupBy",            "GROUP",
+      "groupingOrder",      "1,2,3,4,5,6,7,8",
+      "sortMethod",         "NAME",
+      "maxColumns",         8,
+      "unitsPerColumn",     5,
+  		"oUF-initialConfigFunction", [[
+  			self:SetHeight(25)
+  			self:SetWidth(100)
+  		]]
+    )
+    raid25:SetPoint("CENTER",UIParent,"CENTER",0,0)
+    
+    --setup for 40 man raid
+    
+    oUF:RegisterStyle("oUF_SimpleRaid40", CreateRaidStyle)
+    oUF:SetActiveStyle("oUF_SimpleRaid40")
+    
+    local raid40 = oUF:SpawnHeader(
+      "oUF_SimpleRaid40", 
+      nil, 
+      "custom [@raid26,exists] show; hide",  
+      "showPlayer",         false,
+      "showSolo",           false,
+      "showParty",          false,
+      "showRaid",           true,
+      "point",              "LEFT",
+      "yOffset",            0,
+      "xoffset",            10,
+      "columnSpacing",      17,
+      "columnAnchorPoint",  "TOP",
+      "groupFilter",        "1,2,3,4,5,6,7,8",
+      "groupBy",            "GROUP",
+      "groupingOrder",      "1,2,3,4,5,6,7,8",
+      "sortMethod",         "NAME",
+      "maxColumns",         8,
+      "unitsPerColumn",     5,
+  		"oUF-initialConfigFunction", [[
+  			self:SetHeight(25)
+  			self:SetWidth(100)
+  		]]
+    )
+    raid40:SetPoint("CENTER",UIParent,"CENTER",0,0)
+        
   end

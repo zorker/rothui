@@ -23,8 +23,7 @@
   cfg.showpet = true
   cfg.showfocus = true
   cfg.showparty = true
-  cfg.allow_frame_movement = true
-  cfg.frames_locked = false 
+  cfg.showraid = true
   
   cfg.statusbar_texture = "Interface\\AddOns\\oUF_Simple2\\media\\statusbar"
   cfg.backdrop_texture = "Interface\\AddOns\\oUF_Simple2\\media\\backdrop"

@@ -99,6 +99,22 @@
     end
   end
   
+  --update health func
+  lib.updateHealth = function(bar, unit, min, max)
+    --color the hp bar in red if the unit has aggro
+    --if not the preset color does not get overwritten
+    if unit and UnitThreatSituation(unit) == 3 then
+		  bar:SetStatusBarColor(1,0,0)
+      bar.bg:SetVertexColor(1*bar.bg.multiplier,0,0)
+    end   
+  end
+  
+  --check threat
+  lib.checkThreat = function(f,event,unit)
+    --force an update on the health frame
+    f.Health:ForceUpdate()
+  end
+  
   --gen healthbar func
   lib.gen_hpbar = function(f)
     --statusbar
@@ -126,11 +142,19 @@
     dbh:SetVertexColor(0,0,0,0)
     
     f.DebuffHighlightAlpha = 1
-    f.DebuffHighlightFilter = true
+    f.DebuffHighlightFilter = false
     
     f.DebuffHighlight = dbh
     f.Health = s
     f.Health.bg = b
+    
+    --check the threat status on hp update to recolor the health bar
+    --if f.checkThreat then --in case only specific units should be tracked add the checkThreat attribute to the self object
+      f.Health.PostUpdate = lib.updateHealth
+      f:RegisterEvent("PLAYER_TARGET_CHANGED", lib.checkThreat)
+      f:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", lib.checkThreat)
+    --end
+    
   end
   
   --gen hp strings func

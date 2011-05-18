@@ -158,7 +158,7 @@
   local function CreateRaidStyle(self)
     --style specific stuff
     self.width = 100
-    self.height = 25
+    self.height = 30
     self.mystyle = "raid"
     self.hptag = "[simple:hpraid]"
     self.hidename = true
@@ -268,7 +268,7 @@
       "maxColumns",         8,
       "unitsPerColumn",     5,
       "oUF-initialConfigFunction", [[
-        self:SetHeight(25)
+        self:SetHeight(30)
         self:SetWidth(100)
       ]]
     )
@@ -299,7 +299,7 @@
       "maxColumns",         8,
       "unitsPerColumn",     5,
       "oUF-initialConfigFunction", [[
-        self:SetHeight(25)
+        self:SetHeight(30)
         self:SetWidth(100)
       ]]
     )
@@ -330,7 +330,7 @@
       "maxColumns",         8,
       "unitsPerColumn",     5,
       "oUF-initialConfigFunction", [[
-        self:SetHeight(25)
+        self:SetHeight(30)
         self:SetWidth(100)
       ]]
     )

@@ -117,6 +117,18 @@
     local b = s:CreateTexture(nil, "BACKGROUND")
     b:SetTexture(cfg.statusbar_texture)
     b:SetAllPoints(s)
+    
+    --debuff highlight
+    local dbh = s:CreateTexture(nil, "OVERLAY")
+    dbh:SetAllPoints(f)
+    dbh:SetTexture("Interface\\AddOns\\oUF_Simple2\\media\\debuff_highlight")
+    dbh:SetBlendMode("ADD")
+    dbh:SetVertexColor(0,0,0,0)
+    
+    f.DebuffHighlightAlpha = 1
+    f.DebuffHighlightFilter = true
+    
+    f.DebuffHighlight = dbh
     f.Health = s
     f.Health.bg = b
   end

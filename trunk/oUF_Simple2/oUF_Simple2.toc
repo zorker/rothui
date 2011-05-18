@@ -5,6 +5,8 @@
 ## Notes: oUF tutorial layout.
 ## Dependencies: oUF
 
+modules\oUF_DebuffHighlight.lua
+
 tags.lua
 cfg.lua
 lib.lua

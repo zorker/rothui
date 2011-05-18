@@ -9,6 +9,9 @@
   local cfg = ns.cfg
   --get the library
   local lib = ns.lib
+  
+  --fix oUF mana color
+  oUF.colors.power["MANA"] = {0, 0.4, 0.9}
 
   -----------------------------
   -- STYLE FUNCTIONS
@@ -76,7 +79,7 @@
     self.width = 150
     self.height = 25
     self.mystyle = "tot"
-    self.hptag = "[perhp]%"
+    self.hptag = "[simple:hpperc]"
     init(self)
     self.Health.colorTapping = true
     self.Health.colorDisconnected = true
@@ -157,7 +160,7 @@
     self.width = 100
     self.height = 25
     self.mystyle = "raid"
-    self.hptag = "[missinghp]"
+    self.hptag = "[simple:hpraid]"
     self.hidename = true
     --init
     initHeader(self)
@@ -220,10 +223,10 @@
       "point",              "TOP",
       "yOffset",            -50,
       "xoffset",            0,
-  		"oUF-initialConfigFunction", [[
-  			self:SetHeight(25)
-  			self:SetWidth(180)
-  		]]
+      "oUF-initialConfigFunction", [[
+        self:SetHeight(25)
+        self:SetWidth(180)
+      ]]
     )
     party:SetPoint("CENTER",UIParent,"CENTER",0,0)    
         
@@ -264,10 +267,10 @@
       "sortMethod",         "NAME",
       "maxColumns",         8,
       "unitsPerColumn",     5,
-  		"oUF-initialConfigFunction", [[
-  			self:SetHeight(25)
-  			self:SetWidth(100)
-  		]]
+      "oUF-initialConfigFunction", [[
+        self:SetHeight(25)
+        self:SetWidth(100)
+      ]]
     )
     raid10:SetPoint("CENTER",UIParent,"CENTER",0,0)
     
@@ -295,10 +298,10 @@
       "sortMethod",         "NAME",
       "maxColumns",         8,
       "unitsPerColumn",     5,
-  		"oUF-initialConfigFunction", [[
-  			self:SetHeight(25)
-  			self:SetWidth(100)
-  		]]
+      "oUF-initialConfigFunction", [[
+        self:SetHeight(25)
+        self:SetWidth(100)
+      ]]
     )
     raid25:SetPoint("CENTER",UIParent,"CENTER",0,0)
     
@@ -326,10 +329,10 @@
       "sortMethod",         "NAME",
       "maxColumns",         8,
       "unitsPerColumn",     5,
-  		"oUF-initialConfigFunction", [[
-  			self:SetHeight(25)
-  			self:SetWidth(100)
-  		]]
+      "oUF-initialConfigFunction", [[
+        self:SetHeight(25)
+        self:SetWidth(100)
+      ]]
     )
     raid40:SetPoint("CENTER",UIParent,"CENTER",0,0)
         

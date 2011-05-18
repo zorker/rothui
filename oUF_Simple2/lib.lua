@@ -153,7 +153,7 @@
     if f.hptag then
       f:Tag(hpval, f.hptag)
     else
-      f:Tag(hpval, "[curhp]/[perhp]%")
+      f:Tag(hpval, "[simple:hpdefault]")
     end
 
   end

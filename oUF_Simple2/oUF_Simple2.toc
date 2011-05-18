@@ -5,6 +5,7 @@
 ## Notes: oUF tutorial layout.
 ## Dependencies: oUF
 
+tags.lua
 cfg.lua
 lib.lua
 core.lua

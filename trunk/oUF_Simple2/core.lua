@@ -154,6 +154,11 @@
     self.Power.bg.multiplier = 0.3
     lib.gen_portrait(self)
     lib.createDebuffs(self)
+    --range
+    self.Range = {
+      insideAlpha = 1, 
+      outsideAlpha = 0.4,
+    }
   end  
   
   --party frames
@@ -173,7 +178,12 @@
     self.Health.colorHealth = true
     self.Health.bg.multiplier = 0.3
     self.Power.colorPower = true
-    self.Power.bg.multiplier = 0.3
+    self.Power.bg.multiplier = 0.3    
+    --range
+    self.Range = {
+      insideAlpha = 1, 
+      outsideAlpha = 0.4,
+    }    
   end 
 
   -----------------------------

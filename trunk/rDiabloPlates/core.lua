@@ -155,6 +155,8 @@
     local helper = CreateFrame("Frame",nil,f)    
     helper:SetSize(fw*scale, fh*scale)
     helper:SetPoint("CENTER",pos.x,pos.y)    
+    
+    f.helper = helper
 
     local bgsize = scale*hw*197.8/128
     
@@ -184,7 +186,7 @@
     n:SetTexture("Interface\\Addons\\rTextures\\statusbar5")
     healthBar.new = n
     
-    healthBar:SetFrameLevel(f:GetFrameLevel()+5)
+    healthBar:SetFrameLevel(f:GetFrameLevel()+1)
     healthBar:SetAllPoints(f)
     
   end
@@ -200,9 +202,9 @@
     na:SetJustifyH("CENTER")
     f.na = na
     if showhpvalue then
-      local hp = healthBar:CreateFontString(nil, "BORDER")
+      local hp = f.helper:CreateFontString(nil, "OVERLAY")
       hp:SetFont(STANDARD_TEXT_FONT, 10*fontscale, "THINOUTLINE")
-      hp:SetPoint("RIGHT",f.back,"RIGHT",-18*scale,0)
+      hp:SetPoint("RIGHT",f.helper,"RIGHT",0,0)
       hp:SetJustifyH("RIGHT")
       healthBar.hpval = hp
     end

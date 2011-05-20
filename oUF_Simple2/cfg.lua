@@ -63,6 +63,11 @@
     hptag           = "[simple:hpraid]",
   }
 
+  cfg.partypet = {
+    show            = true,
+    --party and raid pets spawned with the raid style
+  }
+
   
   cfg.statusbar_texture = "Interface\\AddOns\\oUF_Simple2\\media\\statusbar"
   cfg.backdrop_texture = "Interface\\AddOns\\oUF_Simple2\\media\\backdrop"

@@ -377,3 +377,33 @@
     raid40:SetPoint("CENTER",UIParent,"CENTER",0,0)
         
   end
+  
+  if cfg.partypet.show then
+    
+    --pets that will be spawned in party or raid
+    oUF:RegisterStyle("oUF_SimplePartyPet", CreateRaidStyle)
+    oUF:SetActiveStyle("oUF_SimplePartyPet")
+    
+    local partypet = oUF:SpawnHeader(
+      "oUF_SimplePartyPet", 
+      nil, 
+      "party,raid",  
+      "showParty",          true,
+      "showRaid",           true,
+      "point",              "LEFT",
+      "yOffset",            0,
+      "xoffset",            10,
+      "columnSpacing",      17,
+      "columnAnchorPoint",  "TOP",
+      "sortMethod",         "NAME",
+      "filterOnPet",        true,
+      "maxColumns",         8,
+      "unitsPerColumn",     5,
+      "oUF-initialConfigFunction", ([[
+        self:SetWidth(%d)
+        self:SetHeight(%d)
+        self:SetAttribute("unitsuffix", "pet")
+      ]]):format(cfg.raid.width, cfg.raid.height)
+    )
+    partypet:SetPoint("CENTER",UIParent,"CENTER",0,0)
+  end

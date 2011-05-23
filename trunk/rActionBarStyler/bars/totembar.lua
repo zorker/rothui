@@ -23,22 +23,18 @@
             
       bar:SetParent(holder)
       bar:SetAllPoints(holder)
+      bar:EnableMouse(false)
+      
+      bar.SetPoint = function() end
       
       local function moveTotem(self,a1,af,a2,x,y,...)
-        if x ~= barcfg.pos.x then
-          --print('doing')
-          bar:SetAllPoints(holder)
-        end
+        if InCombatLockdown() then return end
       end
             
-      hooksecurefunc(bar, "SetPoint", moveTotem)  
+      --hooksecurefunc(bar, "SetPoint", moveTotem)  
       holder:SetPoint(barcfg.pos.a1,barcfg.pos.af,barcfg.pos.a2,barcfg.pos.x,barcfg.pos.y)  
-
       holder:SetScale(barcfg.barscale)
-      
-      bar:SetMovable(true)
-      bar:SetUserPlaced(true)
-      bar:EnableMouse(false)
+
 
     end
   

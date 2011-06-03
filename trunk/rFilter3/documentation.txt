@@ -1,0 +1,78 @@
+  -------------------------------------
+  -- rFILTER 3 - CONFIG DOCUMENTATION
+  -- zork, 2011
+  -------------------------------------
+
+  -------------------------------------
+  -- GENERAL
+  -------------------------------------  
+  
+  highlightPlayerSpells = true  --player spells will have a blue border
+  updatetime            = 0.2   --how fast should the timer update itself
+  
+  -------------------------------------
+  -- BUFFS / DEBUFFS
+  -------------------------------------
+
+  spec            =  nil,         --nil, 1 or 2 (optional), the talent spec where you want to track the spell (nil is in both specs)
+  spellid         = 469,          --NUMBER, the spellid to track this will represent the icon if none is found
+  spelllist       = {             --TABLE (optional), you can check spell lists in case the same effect is given by more that one buff/debuff. your spell needs to be in the list aswell! list is sorted by index.
+                      [1] = 469,
+                      [2] = 79105,
+                      [3] = 6307,
+                      [4] = 90364,
+                    },
+  size            = 26,           --NUMBER, the size of the icon
+  pos             = {             --TABLE, the position of the icon (http://www.wowwiki.com/API_Region_SetPoint)
+                      a1 = "BOTTOM", 
+                      a2 = "BOTTOM", 
+                      af = "UIParent", 
+                      x = 130, 
+                      y = 107 
+                    }, 
+  unit            = "player",     --STRING, UnitID (http://www.wowwiki.com/UnitId), the unit that should be tracked
+  validate_unit   = true,         --true/false (optional), only show the icon if unit is found
+  hide_ooc        = true,         --true/false (optional), hide icon out of combat
+  ismine          = false,        --true/false, track if the spell casted is actually MY spell (hide same buffs/debuffs from other players)
+  desaturate      = true,         --true/false, desaturate the icon if not found
+  match_spellid   = false,        --true/false (optional), in case you not only match the name but the spell id of the buff/debuff
+  move_ingame     = true,         --true/false (optional), in case you want to move the frame ingame, the size will be the MINIMUM frame size you can resize to, so adjust the size in case you need lower minimum size ingame
+  alpha           = {             --TABLE, Set the alpha values of your icons (transparency)
+                      found = {
+                        frame = 1,
+                        icon = 1,
+                      },
+                      not_found = {
+                        frame = 0.4,
+                        icon = 0.6,          
+                      },
+                    },
+                    
+  -------------------------------------
+  -- COOLDOWNS
+  -------------------------------------
+  
+  spec            =  nil,         --nil, 1 or 2 (optional), the talent spec where you want to track the spell (nil is in both specs)
+  spellid         = 469,          --NUMBER, the spellid to track this will represent the icon if none is found
+  size            = 26,           --NUMBER, the size of the icon
+  pos             = {             --TABLE, the position of the icon (http://www.wowwiki.com/API_Region_SetPoint)
+                      a1 = "BOTTOM", 
+                      a2 = "BOTTOM", 
+                      af = "UIParent", 
+                      x = 130, 
+                      y = 107 
+                    }, 
+  unit            = "player",     --STRING, UnitID (http://www.wowwiki.com/UnitId), the unit that should be tracked
+  hide_ooc        = true,         --true/false (optional), hide icon out of combat
+  desaturate      = true,         --true/false, desaturate the icon if not found
+  move_ingame     = true,         --true/false (optional), in case you want to move the frame ingame, the size will be the MINIMUM frame size you can resize to, so adjust the size in case you need lower minimum size ingame
+  alpha           = {             --TABLE, Set the alpha values of your icons (transparency)
+                      cooldown = {
+                        frame = 1,
+                        icon = 0.6,
+                      },
+                      no_cooldown = {
+                        frame = 1,
+                        icon = 1,          
+                      },
+                    },

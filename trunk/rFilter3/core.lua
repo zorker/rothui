@@ -10,6 +10,8 @@
   
   local rf3_BuffList, rf3_DebuffList, rf3_CooldownList = cfg.rf3_BuffList, cfg.rf3_DebuffList, cfg.rf3_CooldownList
   
+  rFilter3Frames = {}  --global variable gather all frames that can be moved ingame, will be accessed by slash command function later
+  
   -----------------------------
   -- FUNCTIONS
   -----------------------------
@@ -56,6 +58,46 @@
     return "rFilter3"..type.."Frame"..f.spellid.."Spec"..spec..class
   end
   
+  local unlockFrame = function(i)
+    if i.spec and i.spec ~= GetActiveTalentGroup() then
+      return --only show icons that are visible for the current spec
+    end    
+    i:EnableMouse(true)
+    i.locked = false
+    i.dragtexture:SetAlpha(0.2)
+    i:RegisterForDrag("LeftButton","RightButton")
+    i:SetScript("OnEnter", function(s) 
+      GameTooltip:SetOwner(s, "ANCHOR_BOTTOMRIGHT")
+      GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:AddLine("LEFT MOUSE + ALT + SHIFT to DRAG", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine("RIGHT MOUSE + ALT + SHIFT to SIZE", 1, 1, 1, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    i:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+    i:SetScript("OnDragStart", function(s,b) 
+      if IsAltKeyDown() and IsShiftKeyDown() and b == "LeftButton" then
+        s:StartMoving()
+      end
+      if IsAltKeyDown() and IsShiftKeyDown() and b == "RightButton" then
+        s:StartSizing()
+      end
+    end)
+    i:SetScript("OnDragStop", function(s) 
+      s:StopMovingOrSizing() 
+    end)
+  end
+  
+  local lockFrame = function(i)
+    i:EnableMouse(nil)
+    i.locked = true
+    i.dragtexture:SetAlpha(0)
+    i:RegisterForDrag(nil)
+    i:SetScript("OnEnter", nil)
+    i:SetScript("OnLeave", nil)
+    i:SetScript("OnDragStart", nil)
+    i:SetScript("OnDragStop", nil)
+  end
+  
   --simple frame movement
   local appyMoveFunctionality = function(f,i)
     if not f.move_ingame then 
@@ -69,41 +111,50 @@
     i:SetMovable(true)
     i:SetResizable(true)
     i:SetUserPlaced(true)
-    i:EnableMouse(true)    
-    --[[
     local t = i:CreateTexture(nil,"OVERLAY",nil,6)
     t:SetAllPoints(i)
     t:SetTexture(0,1,0)
-    t:SetAlpha(0.3)
-    i.dragtexture = t   
-    ]]--
-    i:RegisterForDrag("LeftButton","RightButton")
-    --[[
-    i:SetScript("OnEnter", function(s) 
-      GameTooltip:SetOwner(s, "ANCHOR_BOTTOMRIGHT")
-      GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
-      GameTooltip:AddLine("LEFT MOUSE + ALT + SHIFT to DRAG", 1, 1, 1, 1, 1, 1)
-      GameTooltip:AddLine("RIGHT MOUSE + ALT + SHIFT to SIZE", 1, 1, 1, 1, 1, 1)
-      GameTooltip:Show()
-    end)
-    i:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
-    ]]--
-    i:SetScript("OnDragStart", function(s,b) 
-      if IsAltKeyDown() and IsShiftKeyDown() and b == "LeftButton" then
-        s:StartMoving()
-      end
-      if IsAltKeyDown() and IsShiftKeyDown() and b == "RightButton" then
-        s:StartSizing()
-      end
-    end)
-    i:SetScript("OnDragStop", function(s) 
-      s:StopMovingOrSizing() 
-    end)
+    t:SetAlpha(0)
+    i.dragtexture = t
     i:SetScript("OnSizeChanged", function(s) 
       applySize(s)
     end)
-    
+    lockFrame(i) --lock frame by default
+    table.insert(rFilter3Frames,i:GetName()) --load all the frames that can be moved into the global table
   end
+  
+  --unlock all frames
+  local unlockAllFrames = function()
+    for index,v in ipairs(rFilter3Frames) do 
+      unlockFrame(_G[v])
+    end
+  end
+
+  --lock all frames
+  local lockAllFrames = function()
+    for index,v in ipairs(rFilter3Frames) do 
+      lockFrame(_G[v])
+    end
+  end
+  
+  --slash command functionality
+  local function SlashCmd(cmd)    
+    if (cmd:match"unlock") then
+      unlockAllFrames()
+    elseif (cmd:match"lock") then
+      lockAllFrames()
+    else
+      print("|c0033AAFFrFilter3 command list:|r")
+      print("|c0033AAFF\/rfilter lock|r, to lock")
+      print("|c0033AAFF\/rfilter unlock|r, to unlock")
+    end
+  end
+
+  SlashCmdList["rfilter"] = SlashCmd;
+  SLASH_rfilter1 = "/rfilter";
+  SLASH_rfilter2 = "/rf";  
+  print("|c0033AAFFrFilter3 loaded.|r")
+  print("|c0033AAFF\/rfilter|r or |c0033AAFF\/rf|r to display the command list")
   
   local createIcon = function(f,index,type)
 
@@ -146,7 +197,8 @@
     i.back = ba
     i.time = time
     i.count = count
-    i.icon = t    
+    i.icon = t
+    i.spec = f.spec --save the spec to the icon
     applySize(i)
     appyMoveFunctionality(f,i)
     f.iconframe = i
@@ -157,6 +209,14 @@
   end
   
   local checkDebuff = function(f,spellid)
+    if f.move_ingame and not f.iconframe.locked then --make the icon visible in case we want to move it
+      f.iconframe.icon:SetAlpha(1)
+      f.iconframe:SetAlpha(1)
+      f.iconframe.icon:SetDesaturated(nil)
+      f.iconframe.time:SetText("30m")
+      f.iconframe.count:SetText("3")
+      return
+    end
     if f.spec and f.spec ~= GetActiveTalentGroup() then
       f.iconframe:SetAlpha(0)
       return
@@ -232,6 +292,14 @@
   end
   
   local checkBuff = function(f,spellid)
+    if f.move_ingame and not f.iconframe.locked then --make the icon visible in case we want to move it
+      f.iconframe.icon:SetAlpha(1)
+      f.iconframe:SetAlpha(1)
+      f.iconframe.icon:SetDesaturated(nil)
+      f.iconframe.time:SetText("30m")
+      f.iconframe.count:SetText("3")
+      return
+    end
     if f.spec and f.spec ~= GetActiveTalentGroup() then
       f.iconframe:SetAlpha(0)
       return
@@ -307,6 +375,14 @@
   end
   
   local checkCooldown = function(f)
+    if f.move_ingame and not f.iconframe.locked then --make the icon visible in case we want to move it
+      f.iconframe.icon:SetAlpha(1)
+      f.iconframe:SetAlpha(1)
+      f.iconframe.icon:SetDesaturated(nil)
+      f.iconframe.time:SetText("30m")
+      f.iconframe.count:SetText("3")
+      return
+    end
     if f.spec and f.spec ~= GetActiveTalentGroup() then
       f.iconframe:SetAlpha(0)
       return

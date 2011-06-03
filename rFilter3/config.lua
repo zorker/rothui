@@ -17,22 +17,16 @@
   -- CONFIG
   -----------------------------  
   
-  cfg.highlightPlayerSpells = true
-  cfg.updatetime            = 0.2 --how fast should the timer update itself
+  cfg.highlightPlayerSpells = true  --player spells will have a blue border
+  cfg.updatetime            = 0.2   --how fast should the timer update itself
 
   if player_name == "Rothar" and player_class == "WARRIOR" then
-  
-    --Rothars Buff List
-  
+    --Rothars Buff List  
     cfg.rf3_BuffList = {
       [1] = {
         spec = nil, 
-        --spec got moved to bufflist, so buffs can be set up per spec 
-        -- 1 is your first spec 
-        -- 2 is your second spec
-        -- false or nil will remove the spec tracking
         spellid = 469, --commanding shout
-        spelllist = { --check a list instead because other classes can do the same
+        spelllist = {
           [1] = 469,
           [2] = 79105,
           [3] = 6307,
@@ -41,7 +35,7 @@
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 130, y = 107 },
         unit = "player",
-        validate_unit   = true, --only show the icon if unit is found
+        validate_unit   = true,
         ismine          = false,
         desaturate      = true,
         match_spellid   = false,
@@ -60,7 +54,7 @@
       [2] = {
         spec = nil, 
         spellid = 6673, --battle shout
-        spelllist = { --check a list instead because other classes can do the same
+        spelllist = {
           [1] = 6673,
           [2] = 57330,
           [3] = 8076,
@@ -93,6 +87,7 @@
         ismine          = true,
         desaturate      = true,
         match_spellid   = false,
+        move_ingame     = true,
         alpha           = {
           found = {
             frame       = 1,
@@ -112,6 +107,7 @@
         unit = "player",
         ismine = true,
         desaturate = true,
+        move_ingame     = true,
         alpha = {
           found = {
             frame = 1,
@@ -131,6 +127,7 @@
         unit = "player",
         ismine = true,
         desaturate = true,
+        move_ingame     = true,
         alpha = {
           found = {
             frame = 1,
@@ -152,7 +149,7 @@
       [1] = {
         spec = nil, 
         spellid = 58567, --sunder armor
-        spelllist = { --check a list instead because other classes can do the same
+        spelllist = {
           [1] = 58567,
           [2] = 91565,
           [3] = 8647,
@@ -162,10 +159,11 @@
         size          = 26,
         pos           = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 107},
         unit          = "target",
-        validate_unit = true, --only show the icon if unit is found
-        hide_ooc      = true, --hide icon out of combat
+        validate_unit = true,
+        hide_ooc      = true,
         ismine        = false,
         desaturate    = true,
+        move_ingame     = true,
         alpha = {
           found = {
             frame = 1,
@@ -180,7 +178,7 @@
       [2] = {
         spec = nil, 
         spellid = 6343, --thunderclap
-        spelllist = { --check a list instead because other classes can do the same
+        spelllist = {
           [1] = 6343,
           [2] = 55095,
           [3] = 58180,
@@ -192,10 +190,11 @@
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -100, y = 107 },
         unit = "target",
-        validate_unit = true, --only show the icon if unit is found
-        hide_ooc      = true, --hide icon out of combat
+        validate_unit = true,
+        hide_ooc      = true,
         ismine = false,
         desaturate = true,
+        move_ingame     = true,
         alpha = {
           found = {
             frame = 1,
@@ -210,7 +209,7 @@
       [3] = {
         spec = nil, 
         spellid = 1160, --demo shout
-        spelllist = { --check a list instead because other classes can do the same
+        spelllist = {
           [1] = 1160,
           [2] = 81130,
           [3] = 99,
@@ -222,10 +221,11 @@
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -40, y = 107 },
         unit = "target",
-        validate_unit = true, --only show the icon if unit is found
-        hide_ooc      = true, --hide icon out of combat
+        validate_unit = true,
+        hide_ooc      = true,
         ismine = false,
         desaturate = true,
+        move_ingame     = true,
         alpha = {
           found = {
             frame = 1,
@@ -243,10 +243,11 @@
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -70, y = 107 },
         unit = "target",
-        validate_unit = true, --only show the icon if unit is found
-        hide_ooc      = true, --hide icon out of combat
+        validate_unit = true,
+        hide_ooc      = true,
         ismine = true,
         desaturate = true,
+        move_ingame     = true,
         alpha = {
           found = {
             frame = 1,
@@ -259,15 +260,16 @@
         },
       },
       [5] = {
-        spec = 1, 
-        spellid = 86346, --colossus smash
-        size = 50, 
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -117, y = 142 },
-        unit = "target",
-        validate_unit = true, --only show the icon if unit is found
-        hide_ooc      = true, --hide icon out of combat
-        ismine = true,
-        desaturate = true,
+        spec            = 1, 
+        spellid         = 86346, --colossus smash
+        size            = 50, 
+        pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -117, y = 142 },
+        unit            = "target",
+        validate_unit   = true,
+        hide_ooc        = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
         alpha = {
           found = {
             frame = 1,
@@ -290,6 +292,7 @@
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 70, y = 107 },
         size = 26,
         desaturate = true,
+        move_ingame     = true,
         alpha = {
           cooldown = {
             frame = 1,
@@ -308,6 +311,7 @@
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 70, y = 107 },
         size = 26,
         desaturate = true,
+        move_ingame     = true,
         alpha = {
           cooldown = {
             frame = 1,
@@ -334,6 +338,7 @@
         unit = "player",
         ismine = false,
         desaturate = true,
+        move_ingame     = true,
         alpha = {
           found = {
             frame = 1,

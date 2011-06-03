@@ -45,6 +45,7 @@
         ismine          = false,
         desaturate      = true,
         match_spellid   = false,
+        move_ingame     = true,
         alpha = {
           found = {
             frame = 1,
@@ -71,6 +72,7 @@
         ismine          = false,
         desaturate      = true,
         match_spellid   = false,
+        move_ingame     = true,
         alpha = {
           found = {
             frame = 1,
@@ -123,9 +125,9 @@
       },
       [5] = {
         spec = 1, 
-        spellid = 60503, --free rage cast
-        size = 50, 
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
+        spellid = 60503, --overpower
+        size = 36, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -65, y = 142 },
         unit = "player",
         ismine = true,
         desaturate = true,
@@ -259,8 +261,8 @@
       [5] = {
         spec = 1, 
         spellid = 86346, --colossus smash
-        size = 36, 
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 107 },
+        size = 50, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -117, y = 142 },
         unit = "target",
         validate_unit = true, --only show the icon if unit is found
         hide_ooc      = true, --hide icon out of combat

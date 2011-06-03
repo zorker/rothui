@@ -32,21 +32,89 @@
     end
     return text
   end
-
+  
+  local applySize = function(i)    
+    local w = i:GetWidth()
+    if w < i.minsize then w = i.minsize end    
+    i:SetSize(w,w)
+    i.glow:SetPoint("TOPLEFT",i,"TOPLEFT",-w*3.3/32,w*3.3/32)
+    i.glow:SetPoint("BOTTOMRIGHT",i,"BOTTOMRIGHT",w*3.3/32,-w*3.3/32)  
+    i.icon:SetPoint("TOPLEFT",i,"TOPLEFT",w*3/32,-w*3/32)
+    i.icon:SetPoint("BOTTOMRIGHT",i,"BOTTOMRIGHT",-w*3/32,w*3/32)
+    i.time:SetFont(STANDARD_TEXT_FONT, w*16/36, "THINOUTLINE")
+    i.time:SetPoint("BOTTOM", 0, 0)    
+    i.count:SetFont(STANDARD_TEXT_FONT, w*18/32, "OUTLINE")
+    i.count:SetPoint("TOPRIGHT", 0,0)
+  end
+  
+  --generate the frame name if a global one is needed
+  local makeFrameName = function(f,type)
+    if not f.move_ingame then return nil end
+    local _, class = UnitClass("player")
+    local spec = "None"
+    if f.spec then spec = f.spec end
+    return "rFilter3"..type.."Frame"..f.spellid.."Spec"..spec..class
+  end
+  
+  --simple frame movement
+  local appyMoveFunctionality = function(f,i)
+    if not f.move_ingame then 
+      if i:IsUserPlaced() then
+        i:SetUserPlaced(false)
+      end
+      return
+    end
+    i:SetHitRectInsets(-5,-5,-5,-5)
+    i:SetClampedToScreen(true)
+    i:SetMovable(true)
+    i:SetResizable(true)
+    i:SetUserPlaced(true)
+    i:EnableMouse(true)    
+    --[[
+    local t = i:CreateTexture(nil,"OVERLAY",nil,6)
+    t:SetAllPoints(i)
+    t:SetTexture(0,1,0)
+    t:SetAlpha(0.3)
+    i.dragtexture = t   
+    ]]--
+    i:RegisterForDrag("LeftButton","RightButton")
+    --[[
+    i:SetScript("OnEnter", function(s) 
+      GameTooltip:SetOwner(s, "ANCHOR_BOTTOMRIGHT")
+      GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:AddLine("LEFT MOUSE + ALT + SHIFT to DRAG", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine("RIGHT MOUSE + ALT + SHIFT to SIZE", 1, 1, 1, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    i:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+    ]]--
+    i:SetScript("OnDragStart", function(s,b) 
+      if IsAltKeyDown() and IsShiftKeyDown() and b == "LeftButton" then
+        s:StartMoving()
+      end
+      if IsAltKeyDown() and IsShiftKeyDown() and b == "RightButton" then
+        s:StartSizing()
+      end
+    end)
+    i:SetScript("OnDragStop", function(s) 
+      s:StopMovingOrSizing() 
+    end)
+    i:SetScript("OnSizeChanged", function(s) 
+      applySize(s)
+    end)
+    
+  end
   
   local createIcon = function(f,index,type)
-    
+
     local gsi_name, gsi_rank, gsi_icon, gsi_powerCost, gsi_isFunnel, gsi_powerType, gsi_castingTime, gsi_minRange, gsi_maxRange = GetSpellInfo(f.spellid)
     
-    local i = CreateFrame("FRAME",nil,UIParent)
+    local i = CreateFrame("FRAME",makeFrameName(f,type),UIParent)
     i:SetSize(f.size,f.size)
     i:SetPoint(f.pos.a1,f.pos.af,f.pos.a2,f.pos.x,f.pos.y)
-    
-    local w = f.size
+    i.minsize = f.size
     
     local gl = i:CreateTexture(nil, "BACKGROUND",nil,-8)
-    gl:SetPoint("TOPLEFT",i,"TOPLEFT",-w*3.3/32,w*3.3/32)
-    gl:SetPoint("BOTTOMRIGHT",i,"BOTTOMRIGHT",w*3.3/32,-w*3.3/32)
     gl:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_glow")
     gl:SetVertexColor(0, 0, 0, 1)
 
@@ -55,8 +123,6 @@
     ba:SetTexture("Interface\\AddOns\\rTextures\\d3portrait_back2")
     
     local t = i:CreateTexture(nil,"BACKGROUND",nil,-6)
-    t:SetPoint("TOPLEFT",i,"TOPLEFT",w*3/32,-w*3/32)
-    t:SetPoint("BOTTOMRIGHT",i,"BOTTOMRIGHT",-w*3/32,w*3/32)
     t:SetTexture(gsi_icon)
     t:SetTexCoord(0.1,0.9,0.1,0.9)
     if f.desaturate then
@@ -64,22 +130,14 @@
     end
 
     local bo = i:CreateTexture(nil,"BACKGROUND",nil,-4)
-    bo:SetTexture("Interface\\AddOns\\rTextures\\gloss2")
+    bo:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_roth")
     bo:SetVertexColor(0.37,0.3,0.3,1)
     bo:SetAllPoints(i)
     
     local time = i:CreateFontString(nil, "BORDER")
-    time:SetFont(STANDARD_TEXT_FONT, w*16/36, "THINOUTLINE")
-    time:SetPoint("BOTTOM", 0, 0)
     time:SetTextColor(1, 0.8, 0)
-    --time:SetShadowColor(0,0,0,1)
-    --time:SetShadowOffset(w*1/32, -w*1/32)
     
     local count = i:CreateFontString(nil, "BORDER")
-    count:SetFont(STANDARD_TEXT_FONT, w*18/32, "OUTLINE")
-    count:SetPoint("TOPRIGHT", 0,0)
-    --count:SetShadowColor(0,0,0,1)
-    --count:SetShadowOffset(-w*1/32, -w*1/32)
     count:SetTextColor(1, 1, 1)
     count:SetJustifyH("RIGHT")
     
@@ -88,9 +146,10 @@
     i.back = ba
     i.time = time
     i.count = count
-    i.icon = t
+    i.icon = t    
+    applySize(i)
+    appyMoveFunctionality(f,i)
     f.iconframe = i
-
     f.name = gsi_name
     f.rank = gsi_rank
     f.texture = gsi_icon    
@@ -375,16 +434,12 @@
     count=count+1
   end
   
-  if count > 0 then
-    
-    local a = CreateFrame("Frame")
-  
+  if count > 0 then    
+    local a = CreateFrame("Frame")  
     a:SetScript("OnEvent", function(self, event)
       if(event=="PLAYER_LOGIN") then
         self:SetScript("OnUpdate", rFilterOnUpdate)
       end
-    end)
-    
-    a:RegisterEvent("PLAYER_LOGIN")
-  
+    end)    
+    a:RegisterEvent("PLAYER_LOGIN")  
   end

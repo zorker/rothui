@@ -162,9 +162,6 @@
           scale = 1,
       },
       art = {
-        minimapdifficulty = {
-          scale = 0.8,
-        },
         actionbarbackground = {
           show = true,
           pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 1, y = 0 },

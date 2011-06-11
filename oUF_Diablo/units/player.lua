@@ -245,7 +245,7 @@
     
     --orb filling
     orb.Filling = orb:CreateTexture(nil, "BACKGROUND", nil, -4)
-    local MAX_ORBTEX_NUM = 14
+    local MAX_ORBTEX_NUM = 15
     if type == "power" then
       if cfg.manatexture >= 1 and cfg.manatexture <= MAX_ORBTEX_NUM then
         orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling"..cfg.manatexture)
@@ -655,29 +655,6 @@
       r.noOCC = true
     end
   end
-  
-
-  
-  --adjust minimap difficulty
-  local adjustMinimapDifficulty = function(self)
-    
-    local m = _G["MiniMapInstanceDifficulty"]
-		local g = _G["GuildInstanceDifficulty"]
-		local c = _G["MinimapCluster"]
-		
-		if m then
-		  m:SetScale(self.cfg.art.minimapdifficulty.scale)
-		  func.applyDragFunctionality(m)
-		end
-		
-		if g then
-		  g:SetScale(self.cfg.art.minimapdifficulty.scale)
-		  func.applyDragFunctionality(g)
-		end
-		
-		func.applyDragFunctionality(c)
-		
-  end
 
   ---------------------------------------------
   -- PLAYER STYLE FUNC
@@ -786,9 +763,6 @@
     if self.cfg.portrait.show then
       func.createStandAlonePortrait(self)
     end
-    
-    --adjust minimap difficulty frames
-    adjustMinimapDifficulty(self)
     
     --make alternative power bar movable
     if self.cfg.altpower.show then

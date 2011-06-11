@@ -176,7 +176,8 @@
     
     local fill = f:CreateTexture(nil,"BACKGROUND",nil,-7)
     fill:SetAllPoints(f)
-    fill:SetTexture("Interface\\AddOns\\DiscoKugel\\media\\orb_filling")
+    --fill:SetTexture("Interface\\AddOns\\DiscoKugel\\media\\orb_filling")
+    fill:SetTexture("Interface\\AddOns\\rTextures\\orb_filling10")
     fill:SetVertexColor(listentry.color.r,listentry.color.g,listentry.color.b)
     
     f.fill = fill

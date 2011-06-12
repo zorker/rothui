@@ -30,13 +30,13 @@
   -- 0 = red fog, 1 = purple fog, 2 = green fog, 3 = yellow fog, 4 = turquoise fog
   -- 5 = red portal, 6 = blue rune portal, 7 = red ghost, 8 = purple ghost, 9 = water planet, 
   -- 10 = swirling cloud, 11 = white fog, 12 = red glowing eye, 13 = sandy swirl, 14 = green fire
-  -- 15 = purple swirl, 16 = white tornado, 17 = white tornado, 18 = orange fog, 19 = water bubble
+  -- 15 = purple swirl, 16 = white tornado, 17 = blue swirly, 18 = orange fog, 19 = water bubble
   -- 20 = red magnet, 21 = blue portal, 22 = purple portal
   
   --health animation
-  cfg.animhealth = 7 --default 7
+  cfg.animhealth = 20 --default 7
   --power animation
-  cfg.animmana = 8 --default 8
+  cfg.animmana = 6 --default 8
 
   ----------------------------------------
   -- orb color settings
@@ -84,7 +84,7 @@
   ----------------------------------------
   
   --setting this to false will use the default frame positions, true allows moving
-  cfg.framesUserplaced = false 
+  cfg.framesUserplaced = true 
   
   --setting this to true will lock the frames in place, false unlocks them
   cfg.framesLocked = true
@@ -557,7 +557,7 @@
     [3] = {displayid = 17286, r = 1, g = 0.9, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- yellow fog
     [4] = {displayid = 18075, r = 0, g = 0.8, b = 1, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- turquoise fog
     [5] = {displayid = 23422, r = 0.7, g = 0, b = 0, camdistancescale = 2.5, portraitzoom = 1, x = 0, y = 0.2, rotation = 0, },         -- red portal
-    [6] = {displayid = 27393, r = 0, g = 0.4, b = 1, camdistancescale = 3, portraitzoom = 1, x = 0, y = 0.4, rotation = 0, },           -- blue rune portal
+    [6] = {displayid = 27393, r = 0, g = 0.4, b = 1, camdistancescale = 3, portraitzoom = 1, x = 0, y = 0.9, rotation = 0, },           -- blue rune portal
     [7] = {displayid = 20894, r = 0.6, g = 0, b = 0, camdistancescale = 6, portraitzoom = 1, x = -0.3, y = 0.5, rotation = 0, },        -- red ghost
     [8] = {displayid = 15438, r = 0, g = 0.4, b = 1, camdistancescale = 6, portraitzoom = 1, x = -0.3, y = 0.5, rotation = 0, },        -- purple ghost
     [9] = {displayid = 20782, r = 0, g = 0.7, b = 1, camdistancescale = 1.1, portraitzoom = 1, x = -0.45, y = 0.55, rotation = 0, },    -- water planet
@@ -568,7 +568,7 @@
     [14] = {displayid = 27625, r = 0.4, g = 0.6, b = 0, camdistancescale = 0.8, portraitzoom = 1, x = 0, y = 0, rotation = 0, },        -- green fire
     [15] = {displayid = 28460, r = 0.5, g = 0, b = 1, camdistancescale = 0.56, portraitzoom = 1, x = -0.4, y = 0.2, rotation = 0, },    -- purple swirl
     [16] = {displayid = 29286, r = 1, g = 1, b = 1, camdistancescale = 0.6, portraitzoom = 1, x = -0.6, y = -0.2, rotation = 0, },      -- white tornado
-    [17] = {displayid = 29561, r = 0, g = 0.6, b = 0.9, camdistancescale = 2.5, portraitzoom = 1, x = 0, y = 0, rotation = -3.9, },     -- white tornado
+    [17] = {displayid = 29561, r = 0, g = 0.6, b = 0.9, camdistancescale = 2.5, portraitzoom = 1, x = 0, y = 0, rotation = -3.9, },     -- blue swirly
     [18] = {displayid = 30660, r = 1, g = 0.5, b = 0, camdistancescale = 0.13, portraitzoom = 1, x = -0.02, y = -0.06, rotation = 0, }, -- orange fog
     [19] = {displayid = 32368, r = 1, g = 1, b = 1, camdistancescale = 1.03, portraitzoom = 1, x = 0, y = 0.65, rotation = 0, },        -- water bubble
     [20] = {displayid = 33853, r = 1, g = 0, b = 0, camdistancescale = 0.83, portraitzoom = 1, x = 0, y = -0.05, rotation = 0, },       -- red magnet

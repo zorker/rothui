@@ -65,19 +65,13 @@
   --create the angel
   local createAngelFrame = function(self)
     if not self.cfg.art.angel.show then return end
-    local f, t, strata
-    f = CreateFrame("Frame","oUF_DiabloAngelFrame",self)
-    if cfg.useAnimationSystem then
-      strata = "LOW"
-    else
-      strata = "BACKGROUND"
-    end
-    f:SetFrameLevel(self.Power.Helper:GetFrameLevel())
+    local f = CreateFrame("Frame","oUF_DiabloAngelFrame",self)
+    f:SetFrameStrata("LOW")
     f:SetSize(320,160)
     f:SetPoint(self.cfg.art.angel.pos.a1, self.cfg.art.angel.pos.af, self.cfg.art.angel.pos.a2, self.cfg.art.angel.pos.x, self.cfg.art.angel.pos.y)
     f:SetScale(self.cfg.art.angel.scale)
     func.applyDragFunctionality(f)
-    t = f:CreateTexture(nil,strata,nil,-1)
+    local t = f:CreateTexture(nil,"LOW",nil,5)
     t:SetAllPoints(f)
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_angel2")
   end
@@ -85,19 +79,13 @@
   --create the demon
   local createDemonFrame = function(self)
     if not self.cfg.art.demon.show then return end
-    local f, t, strata
-    f = CreateFrame("Frame","oUF_DiabloDemonFrame",self)
-    if cfg.useAnimationSystem then
-      strata = "LOW"
-    else
-      strata = "BACKGROUND"
-    end
-    f:SetFrameLevel(self.Health.Helper:GetFrameLevel())
+    local f = CreateFrame("Frame","oUF_DiabloDemonFrame",self)
+    f:SetFrameStrata("LOW")
     f:SetSize(320,160)
     f:SetPoint(self.cfg.art.demon.pos.a1, self.cfg.art.demon.pos.af, self.cfg.art.demon.pos.a2, self.cfg.art.demon.pos.x, self.cfg.art.demon.pos.y)
     f:SetScale(self.cfg.art.demon.scale)
     func.applyDragFunctionality(f)
-    t = f:CreateTexture(nil,stata,nil,-1)
+    local t = f:CreateTexture(nil,"LOW",nil,5)
     t:SetAllPoints(f)
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_demon2")
   end
@@ -108,7 +96,7 @@
     if not cfg.show then return end
     local f = CreateFrame("Frame","oUF_DiabloBottomLine",self)
     f:SetFrameStrata("LOW")
-    f:SetFrameLevel(6)
+    --f:SetFrameLevel(6)
     f:SetSize(500,112)
     f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
     f:SetScale(cfg.scale)
@@ -423,7 +411,8 @@
     end
     bar.Filling:SetHeight((d) * bar:GetWidth())
     bar.Filling:SetTexCoord(0,1,  math.abs(d - 1),1)
-    
+
+    local powertype = select(2, UnitPowerType(unit))
     if cfg.useAnimationSystem then
       bar.Anim:SetAlpha(d)
     else
@@ -431,7 +420,6 @@
       bar.galaxy[2]:SetAlpha(d)
       bar.galaxy[3]:SetAlpha(d)
       
-      local powertype = select(2, UnitPowerType(unit))
       local color = cfg.powercolors[powertype]
   
       if color and cfg.automana then

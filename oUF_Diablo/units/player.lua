@@ -67,6 +67,7 @@
     if not self.cfg.art.angel.show then return end
     local f = CreateFrame("Frame","oUF_DiabloAngelFrame",self)
     f:SetFrameStrata("LOW")
+    f:SetFrameLevel(6)
     f:SetSize(320,160)
     f:SetPoint(self.cfg.art.angel.pos.a1, self.cfg.art.angel.pos.af, self.cfg.art.angel.pos.a2, self.cfg.art.angel.pos.x, self.cfg.art.angel.pos.y)
     f:SetScale(self.cfg.art.angel.scale)
@@ -81,6 +82,7 @@
     if not self.cfg.art.demon.show then return end
     local f = CreateFrame("Frame","oUF_DiabloDemonFrame",self)
     f:SetFrameStrata("LOW")
+    f:SetFrameLevel(6)
     f:SetSize(320,160)
     f:SetPoint(self.cfg.art.demon.pos.a1, self.cfg.art.demon.pos.af, self.cfg.art.demon.pos.a2, self.cfg.art.demon.pos.x, self.cfg.art.demon.pos.y)
     f:SetScale(self.cfg.art.demon.scale)
@@ -96,7 +98,7 @@
     if not cfg.show then return end
     local f = CreateFrame("Frame","oUF_DiabloBottomLine",self)
     f:SetFrameStrata("LOW")
-    --f:SetFrameLevel(6)
+    f:SetFrameLevel(7)
     f:SetSize(500,112)
     f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
     f:SetScale(cfg.scale)
@@ -225,6 +227,10 @@
   end
   
   local function setModelValues(self)
+    self:ClearFog()
+    self:ClearModel()
+    --self:SetModel("interface\\buttons\\talktomequestionmark.m2") --in case setdisplayinfo fails 
+    self:SetDisplayInfo(self.cfg.displayid)
     self:SetPortraitZoom(self.cfg.portraitzoom)
     self:SetCamDistanceScale(self.cfg.camdistancescale)
     self:SetPosition(0,self.cfg.x,self.cfg.y)
@@ -275,7 +281,6 @@
     if cfg.useAnimationSystem then
       local m = CreateFrame("PlayerModel", nil,orb)
       m:SetAllPoints(orb)
-      m:SetModel("interface\\buttons\\talktomequestionmark.m2") --in case setdisplayinfo fails 
       if type == "power" then
         m.cfg = cfg.animtab[cfg.animmana]
         m.type = type
@@ -284,9 +289,9 @@
         m.type = type
       end
       orb.Filling:SetVertexColor(m.cfg.r, m.cfg.g, m.cfg.b)
-      m:SetDisplayInfo(m.cfg.displayid)
       setModelValues(m)
       m:SetScript("OnShow", setModelValues)
+      m:SetScript("OnSizeChanged", setModelValues)
 
       local helper = CreateFrame("Frame",nil,orb)
       helper:SetFrameLevel(m:GetFrameLevel()+2)

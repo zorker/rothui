@@ -64,28 +64,40 @@
   
   --create the angel
   local createAngelFrame = function(self)
-    local cfg = self.cfg.art.angel
-    if not cfg.show then return end
-    local f = CreateFrame("Frame","oUF_DiabloAngelFrame",self)
+    if not self.cfg.art.angel.show then return end
+    local f, t, strata
+    f = CreateFrame("Frame","oUF_DiabloAngelFrame",self)
+    if cfg.useAnimationSystem then
+      strata = "LOW"
+    else
+      strata = "BACKGROUND"
+    end
+    f:SetFrameLevel(self.Power.Helper:GetFrameLevel())
     f:SetSize(320,160)
-    f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
-    f:SetScale(cfg.scale)
+    f:SetPoint(self.cfg.art.angel.pos.a1, self.cfg.art.angel.pos.af, self.cfg.art.angel.pos.a2, self.cfg.art.angel.pos.x, self.cfg.art.angel.pos.y)
+    f:SetScale(self.cfg.art.angel.scale)
     func.applyDragFunctionality(f)
-    local t = f:CreateTexture(nil,"BACKGROUND",nil,-1)
+    t = f:CreateTexture(nil,strata,nil,-1)
     t:SetAllPoints(f)
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_angel2")
   end
 
   --create the demon
   local createDemonFrame = function(self)
-    local cfg = self.cfg.art.demon
-    if not cfg.show then return end
-    local f = CreateFrame("Frame","oUF_DiabloDemonFrame",self)
+    if not self.cfg.art.demon.show then return end
+    local f, t, strata
+    f = CreateFrame("Frame","oUF_DiabloDemonFrame",self)
+    if cfg.useAnimationSystem then
+      strata = "LOW"
+    else
+      strata = "BACKGROUND"
+    end
+    f:SetFrameLevel(self.Health.Helper:GetFrameLevel())
     f:SetSize(320,160)
-    f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
-    f:SetScale(cfg.scale)
+    f:SetPoint(self.cfg.art.demon.pos.a1, self.cfg.art.demon.pos.af, self.cfg.art.demon.pos.a2, self.cfg.art.demon.pos.x, self.cfg.art.demon.pos.y)
+    f:SetScale(self.cfg.art.demon.scale)
     func.applyDragFunctionality(f)
-    local t = f:CreateTexture(nil,"BACKGROUND",nil,-1)
+    t = f:CreateTexture(nil,stata,nil,-1)
     t:SetAllPoints(f)
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_demon2")
   end
@@ -224,6 +236,13 @@
   
   end
   
+  local function setModelValues(self)
+    self:SetPortraitZoom(self.cfg.portraitzoom)
+    self:SetCamDistanceScale(self.cfg.camdistancescale)
+    self:SetPosition(0,self.cfg.x,self.cfg.y)
+    self:SetRotation(self.cfg.rotation)
+  end
+  
   --create orb func
   local createOrb = function(self,type)
     local orb
@@ -265,22 +284,51 @@
     orb.Filling:SetWidth(self.cfg.width)
     --orb.Filling:SetBlendMode("ADD")
     
-    --textures can be animated by animationgroups...awesome!
-    orb.galaxy = {}
-    if type == "power" then
-      orb.Filling:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
-      orb.galaxy[1] = createGalaxy(orb,0,-10,self.cfg.width-0,90,"galaxy2",-3)
-      orb.galaxy[2] = createGalaxy(orb,-2,-10,self.cfg.width-20,60,"galaxy",-3)
-      orb.galaxy[3] = createGalaxy(orb,-4,-10,self.cfg.width-5,45,"galaxy4",-3)
+    if cfg.useAnimationSystem then
+      local m = CreateFrame("PlayerModel", nil,orb)
+      m:SetAllPoints(orb)
+      m:SetModel("interface\\buttons\\talktomequestionmark.m2") --in case setdisplayinfo fails 
+      if type == "power" then
+        m.cfg = cfg.animtab[cfg.animmana]
+        m.type = type
+      else
+        m.cfg = cfg.animtab[cfg.animhealth]
+        m.type = type
+      end
+      orb.Filling:SetVertexColor(m.cfg.r, m.cfg.g, m.cfg.b)
+      m:SetDisplayInfo(m.cfg.displayid)
+      setModelValues(m)
+      m:SetScript("OnShow", setModelValues)
+
+      local helper = CreateFrame("Frame",nil,orb)
+      helper:SetFrameLevel(m:GetFrameLevel()+2)
+      helper:SetAllPoints(orb)
+
+      orb.Anim = m
+      orb.Helper = helper
+    
     else
-      orb.Filling:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
-      orb.galaxy[1] = createGalaxy(orb,0,-10,self.cfg.width-0,90,"galaxy2",-3)
-      orb.galaxy[2] = createGalaxy(orb,2,-10,self.cfg.width-20,60,"galaxy",-3)
-      orb.galaxy[3] = createGalaxy(orb,4,-10,self.cfg.width-5,45,"galaxy4",-3)
+      --textures can be animated by animationgroups...awesome!
+      orb.galaxy = {}
+      if type == "power" then
+        orb.Filling:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
+        orb.galaxy[1] = createGalaxy(orb,0,-10,self.cfg.width-0,90,"galaxy2",-3)
+        orb.galaxy[2] = createGalaxy(orb,-2,-10,self.cfg.width-20,60,"galaxy",-3)
+        orb.galaxy[3] = createGalaxy(orb,-4,-10,self.cfg.width-5,45,"galaxy4",-3)
+      else
+        orb.Filling:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
+        orb.galaxy[1] = createGalaxy(orb,0,-10,self.cfg.width-0,90,"galaxy2",-3)
+        orb.galaxy[2] = createGalaxy(orb,2,-10,self.cfg.width-20,60,"galaxy",-3)
+        orb.galaxy[3] = createGalaxy(orb,4,-10,self.cfg.width-5,45,"galaxy4",-3)
+      end
     end
     
     --orb gloss
-    orb.Gloss = orb:CreateTexture(nil, "BACKGROUND", nil, -2)
+    if cfg.useAnimationSystem then
+      orb.Gloss = orb.Helper:CreateTexture(nil, "BACKGROUND", nil, -2)
+    else
+      orb.Gloss = orb:CreateTexture(nil, "BACKGROUND", nil, -2)
+    end
     orb.Gloss:SetTexture("Interface\\AddOns\\rTextures\\orb_gloss")
     orb.Gloss:SetAllPoints(orb)
     --orb.Gloss:SetBlendMode("ADD")
@@ -306,9 +354,13 @@
       self.DebuffHighlightFilter = false
       
       --low hp glow
-      orb.LowHP = orb:CreateTexture(nil, "BACKGROUND", nil, -5)
+      if cfg.useAnimationSystem then
+        orb.LowHP = orb.Helper:CreateTexture(nil, "BACKGROUND", nil, -5)
+      else
+        orb.LowHP = orb:CreateTexture(nil, "BACKGROUND", nil, -5)
+      end
       orb.LowHP:SetPoint("CENTER",0,0)
-      orb.LowHP:SetSize(self.cfg.width-5,self.cfg.width-5)
+      orb.LowHP:SetSize(self.cfg.width-15,self.cfg.width-15)
       orb.LowHP:SetTexture("Interface\\AddOns\\rTextures\\orb_lowhp_glow")
       orb.LowHP:SetBlendMode("ADD")
       orb.LowHP:SetVertexColor(1, 0, 0, 1)
@@ -326,29 +378,30 @@
     local d = floor(min/max*100)
     bar.Filling:SetHeight((min / max) * bar:GetWidth())
     bar.Filling:SetTexCoord(0,1,  math.abs(min / max - 1),1)
-    bar.galaxy[1]:SetAlpha(min/max)
-    bar.galaxy[2]:SetAlpha(min/max)
-    bar.galaxy[3]:SetAlpha(min/max)
     
-    local status = UnitInVehicle("player")
-    
-    if status and swapper ~= "v" then
-      local color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
-      if color then
-        bar.Filling:SetVertexColor(color.r,color.g,color.b)
-        bar.galaxy[1]:SetVertexColor(color.r,color.g,color.b)
-        bar.galaxy[2]:SetVertexColor(color.r,color.g,color.b)
-        bar.galaxy[3]:SetVertexColor(color.r,color.g,color.b)
+    if cfg.useAnimationSystem then
+      bar.Anim:SetAlpha(min/max)
+    else
+      bar.galaxy[1]:SetAlpha(min/max)
+      bar.galaxy[2]:SetAlpha(min/max)
+      bar.galaxy[3]:SetAlpha(min/max)      
+      local status = UnitInVehicle("player")      
+      if status and swapper ~= "v" then
+        local color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
+        if color then
+          bar.Filling:SetVertexColor(color.r,color.g,color.b)
+          bar.galaxy[1]:SetVertexColor(color.r,color.g,color.b)
+          bar.galaxy[2]:SetVertexColor(color.r,color.g,color.b)
+          bar.galaxy[3]:SetVertexColor(color.r,color.g,color.b)
+        end
+        swapper = "v"
+      elseif not status and swapper ~= "n" then
+        bar.Filling:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
+        bar.galaxy[1]:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
+        bar.galaxy[2]:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
+        bar.galaxy[3]:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
+        swapper = "n"
       end
-      swapper = "v"
-      --print("ding")
-    elseif not status and swapper ~= "n" then
-      bar.Filling:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
-      bar.galaxy[1]:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
-      bar.galaxy[2]:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
-      bar.galaxy[3]:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
-      swapper = "n"
-      --print("dong")
     end
     
     if d <= 25 and min > 1 then
@@ -370,23 +423,28 @@
     end
     bar.Filling:SetHeight((d) * bar:GetWidth())
     bar.Filling:SetTexCoord(0,1,  math.abs(d - 1),1)
-    bar.galaxy[1]:SetAlpha(d)
-    bar.galaxy[2]:SetAlpha(d)
-    bar.galaxy[3]:SetAlpha(d)
     
-    local powertype = select(2, UnitPowerType(unit))
-    local color = cfg.powercolors[powertype]
-
-    if color and cfg.automana then
-      bar.Filling:SetVertexColor(color.r, color.g, color.b)
-      bar.galaxy[1]:SetVertexColor(color.r, color.g, color.b)
-      bar.galaxy[2]:SetVertexColor(color.r, color.g, color.b)
-      bar.galaxy[3]:SetVertexColor(color.r, color.g, color.b)
+    if cfg.useAnimationSystem then
+      bar.Anim:SetAlpha(d)
     else
-      bar.Filling:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
-      bar.galaxy[1]:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
-      bar.galaxy[2]:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
-      bar.galaxy[3]:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
+      bar.galaxy[1]:SetAlpha(d)
+      bar.galaxy[2]:SetAlpha(d)
+      bar.galaxy[3]:SetAlpha(d)
+      
+      local powertype = select(2, UnitPowerType(unit))
+      local color = cfg.powercolors[powertype]
+  
+      if color and cfg.automana then
+        bar.Filling:SetVertexColor(color.r, color.g, color.b)
+        bar.galaxy[1]:SetVertexColor(color.r, color.g, color.b)
+        bar.galaxy[2]:SetVertexColor(color.r, color.g, color.b)
+        bar.galaxy[3]:SetVertexColor(color.r, color.g, color.b)
+      else
+        bar.Filling:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
+        bar.galaxy[1]:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
+        bar.galaxy[2]:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
+        bar.galaxy[3]:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
+      end
     end
     
     if powertype ~= "MANA" then

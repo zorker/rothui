@@ -17,6 +17,26 @@
   ---------------------------------------------
   -- // CONFIG // --
   ---------------------------------------------
+  
+  ----------------------------------------
+  -- orb animation system
+  ----------------------------------------
+  
+  --make this value true to enable the animation system
+  --animations use preset colors, so class and stance coloring is not possible, but you may change the animation based on class in the charspecific.lua
+  cfg.useAnimationSystem = true --true/false
+
+  -- defines the animation used in the orbs, following animations are available
+  -- 0 = red fog, 1 = purple fog, 2 = green fog, 3 = yellow fog, 4 = turquoise fog
+  -- 5 = red portal, 6 = blue rune portal, 7 = red ghost, 8 = purple ghost, 9 = water planet, 
+  -- 10 = swirling cloud, 11 = white fog, 12 = red glowing eye, 13 = sandy swirl, 14 = green fire
+  -- 15 = purple swirl, 16 = white tornado, 17 = white tornado, 18 = orange fog, 19 = water bubble
+  -- 20 = red magnet, 21 = blue portal, 22 = purple portal
+  
+  --health animation
+  cfg.animhealth = 7 --default 7
+  --power animation
+  cfg.animmana = 8 --default 8
 
   ----------------------------------------
   -- orb color settings
@@ -40,11 +60,11 @@
 
   --the texture of the health orb. you can choose between 11 different textures.
   --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = city
-  cfg.healthtexture = 1
+  cfg.healthtexture = 10
   
   --the texture of the mana orb. you can choose between 11 different textures.
   --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = city
-  cfg.manatexture = 3
+  cfg.manatexture = 10
 
   ----------------------------------------
   -- colorswitcher define your color for healthbars here
@@ -64,7 +84,7 @@
   ----------------------------------------
   
   --setting this to false will use the default frame positions, true allows moving
-  cfg.framesUserplaced = true 
+  cfg.framesUserplaced = false 
   
   --setting this to true will lock the frames in place, false unlocks them
   cfg.framesLocked = true
@@ -527,6 +547,34 @@
     [3] = {r = 0, g = 0.35,   b = 0.9, }, -- blue
     [4] = {r = 0.9, g = 0.8, b = 0.35, }, -- yellow
     [5] = {r = 0.35, g = 0.9,   b = 0.9, }, -- runic
+  }
+  
+  --orb animation table 
+  cfg.animtab = {
+    [0] = {displayid = 17010, r = 1, g = 0, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },          -- red fog
+    [1] = {displayid = 17054, r = 0.8, g = 0, b = 0.8, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },      -- purple fog
+    [2] = {displayid = 17055, r = 0, g = 0.5, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- green fog
+    [3] = {displayid = 17286, r = 1, g = 0.9, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- yellow fog
+    [4] = {displayid = 18075, r = 0, g = 0.8, b = 1, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- turquoise fog
+    [5] = {displayid = 23422, r = 0.7, g = 0, b = 0, camdistancescale = 2.5, portraitzoom = 1, x = 0, y = 0.2, rotation = 0, },         -- red portal
+    [6] = {displayid = 27393, r = 0, g = 0.4, b = 1, camdistancescale = 3, portraitzoom = 1, x = 0, y = 0.4, rotation = 0, },           -- blue rune portal
+    [7] = {displayid = 20894, r = 0.6, g = 0, b = 0, camdistancescale = 6, portraitzoom = 1, x = -0.3, y = 0.5, rotation = 0, },        -- red ghost
+    [8] = {displayid = 15438, r = 0, g = 0.4, b = 1, camdistancescale = 6, portraitzoom = 1, x = -0.3, y = 0.5, rotation = 0, },        -- purple ghost
+    [9] = {displayid = 20782, r = 0, g = 0.7, b = 1, camdistancescale = 1.1, portraitzoom = 1, x = -0.45, y = 0.55, rotation = 0, },    -- water planet
+    [10] = {displayid = 23310, r = 1, g = 1, b = 1, camdistancescale = 4.2, portraitzoom = 1, x = 0, y = 0.7, rotation = 0, },          -- swirling cloud
+    [11] = {displayid = 23343, r = 0.8, g = 0.8, b = 0.8, camdistancescale = 1.6, portraitzoom = 1, x = 0, y = 0, rotation = 0, },      -- white fog
+    [12] = {displayid = 24813, r = 0.4, g = 0, b = 0, camdistancescale = 1.8, portraitzoom = 1.2, x = 0, y = -0.3, rotation = 0, },     -- red glowing eye
+    [13] = {displayid = 25392, r = 0.4, g = 0.6, b = 0, camdistancescale = 2.4, portraitzoom = 1, x = 0, y = -0.5, rotation = 0, },     -- sandy swirl
+    [14] = {displayid = 27625, r = 0.4, g = 0.6, b = 0, camdistancescale = 0.8, portraitzoom = 1, x = 0, y = 0, rotation = 0, },        -- green fire
+    [15] = {displayid = 28460, r = 0.5, g = 0, b = 1, camdistancescale = 0.56, portraitzoom = 1, x = -0.4, y = 0.2, rotation = 0, },    -- purple swirl
+    [16] = {displayid = 29286, r = 1, g = 1, b = 1, camdistancescale = 0.6, portraitzoom = 1, x = -0.6, y = -0.2, rotation = 0, },      -- white tornado
+    [17] = {displayid = 29561, r = 0, g = 0.6, b = 0.9, camdistancescale = 2.5, portraitzoom = 1, x = 0, y = 0, rotation = -3.9, },     -- white tornado
+    [18] = {displayid = 30660, r = 1, g = 0.5, b = 0, camdistancescale = 0.13, portraitzoom = 1, x = -0.02, y = -0.06, rotation = 0, }, -- orange fog
+    [19] = {displayid = 32368, r = 1, g = 1, b = 1, camdistancescale = 1.03, portraitzoom = 1, x = 0, y = 0.65, rotation = 0, },        -- water bubble
+    [20] = {displayid = 33853, r = 1, g = 0, b = 0, camdistancescale = 0.83, portraitzoom = 1, x = 0, y = -0.05, rotation = 0, },       -- red magnet
+    [21] = {displayid = 34319, r = 0, g = 0, b = 0.4, camdistancescale = 1.55, portraitzoom = 1, x = 0, y = 0.8, rotation = 0, },       -- blue portal
+    [22] = {displayid = 34645, r = 0.3, g = 0, b = 0.3, camdistancescale = 1.7, portraitzoom = 1, x = 0, y = 0.8, rotation = 0, },      -- purple portal
+    
   }
   
   cfg.powercolors = {

@@ -38,17 +38,22 @@
   --power animation
   cfg.animmana = 21 --default 8
   
+  --set your class specific settings here, you can even activate automatic class and powertype coloring
+  --BEWARE enabling class or powertype coloring will disable the selected animation, instead always the pearl animation is used internally
+  --it is the only animation that can be colored in some kind of fashion
+  --muliplier: is a setting that will be multiplied with the alpha value of the animation (to make it a bit less attracting)
+  --decrease alpha on value: by default the alpha of an animation is multiplied with the value (to make it fade once you loose hp or mana) but in sometimes you don't want that, so that value can disable that
   cfg.animClassOverride = {
-    ["DEATHKNIGHT"]   = { enable = true, animhealth = 13, animmana = 4, },
-    ["DRUID"]         = { enable = true, animhealth = 18, animmana = 9, },
-    ["HUNTER"]        = { enable = true, animhealth = 14, animmana = 18, },
-    ["MAGE"]          = { enable = true, animhealth = 4, animmana = 6, },
-    ["ROGUE"]         = { enable = true, animhealth = 3, animmana = 22, },
-    ["PRIEST"]        = { enable = true, animhealth = 19, animmana = 11, },
-    ["PALADIN"]       = { enable = true, animhealth = 1, animmana = 17, },
-    ["SHAMAN"]        = { enable = true, animhealth = 16, animmana = 15, },
-    ["WARRIOR"]       = { enable = true, animhealth = 2, animmana = 0, },
-    ["WARLOCK"]       = { enable = true, animhealth = 15, animmana = 22, },
+    ["DEATHKNIGHT"]   = { enable = true, animhealth = 13, animmana = 4,   classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true, },
+    ["DRUID"]         = { enable = true, animhealth = 18, animmana = 9,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.25, manamultiplier = 0.25, healthdecreasealpha = false, manadecreasealpha = false, },
+    ["HUNTER"]        = { enable = true, animhealth = 14, animmana = 18,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true, },
+    ["MAGE"]          = { enable = true, animhealth = 4,  animmana = 6,   classcolored = true,  powertypecolored = false, healthmultiplier = 0.2,  manamultiplier = 1,    healthdecreasealpha = false,  manadecreasealpha = true, },
+    ["ROGUE"]         = { enable = true, animhealth = 3,  animmana = 22,  classcolored = false, powertypecolored = true,  healthmultiplier = 1,    manamultiplier = 0.3,  healthdecreasealpha = true, manadecreasealpha = false, },
+    ["PRIEST"]        = { enable = true, animhealth = 19, animmana = 11,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true, },
+    ["PALADIN"]       = { enable = true, animhealth = 1,  animmana = 17,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true, },
+    ["SHAMAN"]        = { enable = true, animhealth = 16, animmana = 15,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true, },
+    ["WARRIOR"]       = { enable = true, animhealth = 20, animmana = 19,  classcolored = true,  powertypecolored = true,  healthmultiplier = 0.25, manamultiplier = 0.25, healthdecreasealpha = false, manadecreasealpha = false, },
+    ["WARLOCK"]       = { enable = true, animhealth = 15, animmana = 22,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true, },
   }
 
   ----------------------------------------
@@ -72,12 +77,12 @@
   ----------------------------------------
 
   --the texture of the health orb. you can choose between 11 different textures.
-  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = city
-  cfg.healthtexture = 10
+  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = city, 15 = diablo3
+  cfg.healthtexture = 15
   
   --the texture of the mana orb. you can choose between 11 different textures.
-  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = city
-  cfg.manatexture = 10
+  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = city, 15 = diablo3
+  cfg.manatexture = 15
 
   ----------------------------------------
   -- colorswitcher define your color for healthbars here
@@ -569,7 +574,7 @@
     [2] = {displayid = 17055, r = 0, g = 0.5, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- green fog
     [3] = {displayid = 17286, r = 1, g = 0.9, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- yellow fog
     [4] = {displayid = 18075, r = 0, g = 0.8, b = 1, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- turquoise fog
-    [5] = {displayid = 23422, r = 0.5, g = 0.2, b = 0.2, camdistancescale = 2.8, portraitzoom = 1, x = 0, y = 0.1, rotation = 0, },         -- red portal
+    [5] = {displayid = 23422, r = 0.4, g = 0, b = 0, camdistancescale = 2.8, portraitzoom = 1, x = 0, y = 0.1, rotation = 0, },         -- red portal
     [6] = {displayid = 27393, r = 0, g = 0.4, b = 1, camdistancescale = 3, portraitzoom = 1, x = 0, y = 0.6, rotation = 0, },           -- blue rune portal
     [7] = {displayid = 20894, r = 0.6, g = 0, b = 0, camdistancescale = 6, portraitzoom = 1, x = -0.3, y = 0.4, rotation = 0, },        -- red ghost
     [8] = {displayid = 15438, r = 0.4, g = 0.3, b = 1, camdistancescale = 6, portraitzoom = 1, x = -0.3, y = 0.4, rotation = 0, },        -- purple ghost
@@ -581,18 +586,13 @@
     [14] = {displayid = 27625, r = 0.4, g = 0.6, b = 0, camdistancescale = 0.8, portraitzoom = 1, x = 0, y = 0, rotation = 0, },        -- green fire
     [15] = {displayid = 28460, r = 0.5, g = 0, b = 1, camdistancescale = 0.56, portraitzoom = 1, x = -0.4, y = 0, rotation = 0, },    -- purple swirl
     [16] = {displayid = 29286, r = 1, g = 1, b = 1, camdistancescale = 0.6, portraitzoom = 1, x = -0.6, y = -0.2, rotation = 0, },      -- white tornado
-    [17] = {displayid = 29561, r = 0, g = 0.6, b = 0.9, camdistancescale = 2.5, portraitzoom = 1, x = 0, y = 0, rotation = -3.9, },     -- blue swirly
+    [17] = {displayid = 29561, r = 0, g = 0.6, b = 1, camdistancescale = 2.5, portraitzoom = 1, x = 0, y = 0, rotation = -3.9, },     -- blue swirly
     [18] = {displayid = 30660, r = 1, g = 0.5, b = 0, camdistancescale = 0.12, portraitzoom = 1, x = -0.04, y = -0.08, rotation = 0, }, -- orange fog
-    [19] = {displayid = 32368, r = 1, g = 1, b = 1, camdistancescale = 1.15, portraitzoom = 1, x = 0, y = 0.4, rotation = 0, },        -- water bubble
+    [19] = {displayid = 32368, r = 1, g = 1, b = 1, camdistancescale = 1.15, portraitzoom = 1, x = 0, y = 0.4, rotation = 0, },        -- pearl
     [20] = {displayid = 33853, r = 1, g = 0, b = 0, camdistancescale = 0.83, portraitzoom = 1, x = 0, y = -0.05, rotation = 0, },       -- red magnet
     [21] = {displayid = 34319, r = 0, g = 0, b = 0.4, camdistancescale = 1.55, portraitzoom = 1, x = 0, y = 0.8, rotation = 0, },       -- blue portal
     [22] = {displayid = 34645, r = 0.3, g = 0, b = 0.3, camdistancescale = 1.7, portraitzoom = 1, x = 0, y = 0.8, rotation = 0, },      -- purple portal
   }
-  
-  if cfg.animClassOverride[cfg.playerclass].enable then
-    cfg.animhealth = cfg.animClassOverride[cfg.playerclass].animhealth
-    cfg.animmana = cfg.animClassOverride[cfg.playerclass].animmana
-  end
   
   cfg.powercolors = {
     ["MANA"] = { r = 0, g = 0.4, b = 1 },

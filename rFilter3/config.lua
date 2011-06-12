@@ -353,6 +353,30 @@
     }
   end
   
+  if player_name == "Loral" and player_class == "DRUID" then
+    cfg.rf3_CooldownList = {
+      [1] = {
+        spec            = nil, 
+        spellid         = 18562, --swiftmend
+        pos             = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        size            = 50,
+        desaturate      = true,
+        hide_ooc        = true,
+        move_ingame     = true,
+        alpha           = {
+                            cooldown = {
+                              frame = 0.3,
+                              icon = 0.6,
+                            },
+                            no_cooldown = {
+                              frame = 1,
+                              icon = 1,          
+                            },
+                          },
+      },     
+    }
+  end
+  
   -----------------------------
   -- HANDOVER
   -----------------------------

@@ -6,7 +6,7 @@
   a:RegisterEvent("CHAT_MSG_MONSTER_EMOTE")
   --a:RegisterEvent("CHAT_MSG_MONSTER_SAY")
   --a:RegisterEvent("CHAT_MSG_MONSTER_WHISPER")
-  --a:RegisterEvent("CHAT_MSG_MONSTER_YELL")
+  a:RegisterEvent("CHAT_MSG_MONSTER_YELL")
   
   --setscript
   a:SetScript("OnEvent", function (self,event,arg1,arg2)    

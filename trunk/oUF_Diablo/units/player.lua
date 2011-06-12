@@ -18,6 +18,23 @@
   -- UNIT SPECIFIC FUNCTIONS
   ---------------------------------------------
   
+  --adjust some values depending on animation settings
+  if cfg.animClassOverride[cfg.playerclass].enable then
+    if cfg.animClassOverride[cfg.playerclass].classcolored then
+      cfg.animhealth = 19
+      cfg.animtab[19].r = cfg.playercolor.r
+      cfg.animtab[19].g = cfg.playercolor.g
+      cfg.animtab[19].b = cfg.playercolor.b
+    else
+      cfg.animhealth = cfg.animClassOverride[cfg.playerclass].animhealth
+    end
+    if cfg.animClassOverride[cfg.playerclass].powertypecolored then
+      cfg.animmana = 19
+    else
+      cfg.animmana = cfg.animClassOverride[cfg.playerclass].animmana
+    end
+  end
+  
   --init parameters
   local initUnitParameters = function(self)
     self:SetFrameStrata("BACKGROUND")
@@ -277,6 +294,7 @@
     orb.Filling:SetHeight(self.cfg.height)
     orb.Filling:SetWidth(self.cfg.width)
     --orb.Filling:SetBlendMode("ADD")
+    --orb.Filling:SetAlpha(0.8)
     
     if cfg.useAnimationSystem then
       local m = CreateFrame("PlayerModel", nil,orb)
@@ -284,9 +302,11 @@
       if type == "power" then
         m.cfg = cfg.animtab[cfg.animmana]
         m.type = type
+        m:SetAlpha(1*cfg.animClassOverride[cfg.playerclass].manamultiplier)
       else
         m.cfg = cfg.animtab[cfg.animhealth]
         m.type = type
+        m:SetAlpha(1*cfg.animClassOverride[cfg.playerclass].healthmultiplier)
       end
       orb.Filling:SetVertexColor(m.cfg.r, m.cfg.g, m.cfg.b)
       setModelValues(m)
@@ -373,7 +393,9 @@
     bar.Filling:SetTexCoord(0,1,  math.abs(min / max - 1),1)
     
     if cfg.useAnimationSystem then
-      bar.Anim:SetAlpha(min/max)
+      if cfg.animClassOverride[cfg.playerclass].healthdecreasealpha then
+        bar.Anim:SetAlpha((min/max)*cfg.animClassOverride[cfg.playerclass].healthmultiplier or 1)
+      end
     else
       bar.galaxy[1]:SetAlpha(min/max)
       bar.galaxy[2]:SetAlpha(min/max)
@@ -419,7 +441,17 @@
 
     local powertype = select(2, UnitPowerType(unit))
     if cfg.useAnimationSystem then
-      bar.Anim:SetAlpha(d)
+      if cfg.animClassOverride[cfg.playerclass].powertypecolored then
+        local color = cfg.powercolors[powertype]
+        if color then
+          bar.Filling:SetVertexColor(color.r, color.g, color.b)
+        else
+          bar.Filling:SetVertexColor(1,1,1)
+        end
+      end
+      if cfg.animClassOverride[cfg.playerclass].manadecreasealpha then
+        bar.Anim:SetAlpha(d*cfg.animClassOverride[cfg.playerclass].manamultiplier or 1)
+      end
     else
       bar.galaxy[1]:SetAlpha(d)
       bar.galaxy[2]:SetAlpha(d)

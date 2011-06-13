@@ -44,16 +44,16 @@
   --muliplier: is a setting that will be multiplied with the alpha value of the animation (to make it a bit less attracting)
   --decrease alpha on value: by default the alpha of an animation is multiplied with the value (to make it fade once you loose hp or mana) but in sometimes you don't want that, so that value can disable that
   cfg.animClassOverride = {
-    ["DEATHKNIGHT"]   = { enable = true, animhealth = 13, animmana = 4,   classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true, },
-    ["DRUID"]         = { enable = true, animhealth = 18, animmana = 9,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.25, manamultiplier = 0.25, healthdecreasealpha = false, manadecreasealpha = false, },
-    ["HUNTER"]        = { enable = true, animhealth = 14, animmana = 18,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true, },
-    ["MAGE"]          = { enable = true, animhealth = 4,  animmana = 6,   classcolored = true,  powertypecolored = false, healthmultiplier = 0.2,  manamultiplier = 1,    healthdecreasealpha = false,  manadecreasealpha = true, },
-    ["ROGUE"]         = { enable = true, animhealth = 3,  animmana = 22,  classcolored = false, powertypecolored = true,  healthmultiplier = 1,    manamultiplier = 0.3,  healthdecreasealpha = true, manadecreasealpha = false, },
-    ["PRIEST"]        = { enable = true, animhealth = 19, animmana = 11,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true, },
-    ["PALADIN"]       = { enable = true, animhealth = 1,  animmana = 17,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true, },
-    ["SHAMAN"]        = { enable = true, animhealth = 16, animmana = 15,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true, },
-    ["WARRIOR"]       = { enable = true, animhealth = 20, animmana = 19,  classcolored = true,  powertypecolored = true,  healthmultiplier = 0.25, manamultiplier = 0.25, healthdecreasealpha = false, manadecreasealpha = false, },
-    ["WARLOCK"]       = { enable = true, animhealth = 15, animmana = 22,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true, },
+    ["DEATHKNIGHT"]   = { enable = true, animhealth = 13, animmana = 4,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.3,  manamultiplier = 0.3,  healthdecreasealpha = false, manadecreasealpha = false, },
+    ["DRUID"]         = { enable = true, animhealth = 18, animmana = 9,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.3,  manamultiplier = 0.3,  healthdecreasealpha = false, manadecreasealpha = false, },
+    ["HUNTER"]        = { enable = true, animhealth = 2, animmana = 18,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["MAGE"]          = { enable = true, animhealth = 4,  animmana = 6,   classcolored = true,  powertypecolored = false, healthmultiplier = 0.3,  manamultiplier = 1,    healthdecreasealpha = false, manadecreasealpha = true,  },
+    ["ROGUE"]         = { enable = true, animhealth = 3,  animmana = 22,  classcolored = false, powertypecolored = true,  healthmultiplier = 1,    manamultiplier = 0.3,  healthdecreasealpha = true,  manadecreasealpha = false, },
+    ["PRIEST"]        = { enable = true, animhealth = 19, animmana = 11,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["PALADIN"]       = { enable = true, animhealth = 1,  animmana = 17,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["SHAMAN"]        = { enable = true, animhealth = 16, animmana = 15,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["WARRIOR"]       = { enable = true, animhealth = 2, animmana = 20,  classcolored = false,  powertypecolored = false, healthmultiplier = 1,    manamultiplier = 0.3,  healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["WARLOCK"]       = { enable = true, animhealth = 15, animmana = 22,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
   }
 
   ----------------------------------------

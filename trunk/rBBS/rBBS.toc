@@ -1,7 +1,7 @@
 ## Interface: 40100
 ## Author: zork	
 ## Title: rBBS
-## Version: 1.01
+## Version: 1.02
 ## Notes: zork's art framework. Does nothing by itself.
 
 core.lua

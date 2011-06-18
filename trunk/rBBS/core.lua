@@ -13,10 +13,6 @@
 
   rBBS.movableFrames = {}
   
-  local playerName, _     = UnitName("player")
-  local _, playerClass    = UnitClass("player")
-  local playerColor       = RAID_CLASS_COLORS[playerClass]
-  
   local animtab = {
     [0] = {displayid = 17010, r = 1, g = 0, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },          -- red fog
     [1] = {displayid = 17054, r = 1, g = 0.4, b = 1, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },      -- purple fog
@@ -81,52 +77,79 @@
     fs:SetShadowColor(0,0,0,1)
     return fs
   end 
+  
+  --update health func
+  local updateHealth = function(self, event, unit, ...)
+    if unit and unit ~= self.unit then return end
+    local uh, uhm, p, d = UnitHealth(self.unit) or 0, UnitHealthMax(self.unit), 0, 0
+    if uhm and uhm > 0 then
+      p = floor(uh/uhm*100)
+      d = uh/uhm
+    end
+    self.filling:SetHeight(d*self.filling:GetWidth())
+    self.filling:SetTexCoord(0,1,  math.abs(d-1),1)
+    self.v1:SetText(p)
+    self.v2:SetText(numFormat(uh))
+    if self.anim and self.anim.decreaseAlpha then
+      self.anim:SetAlpha(d*self.anim.multiplier or 1)
+    end
+    local class = select(2, UnitClass(self.unit))
+    local classcolor = RAID_CLASS_COLORS[class]
+    local factioncolor = FACTION_BAR_COLORS[UnitReaction(self.unit, "player")]
+    if IsAddOnLoaded("rColor") then
+      classcolor = rRAID_CLASS_COLORS[class]
+    end
+    if self.classcolored then
+      --enter this condition in case the user does not want animation coloring
+      if UnitIsDeadOrGhost(self.unit) or not UnitIsConnected(self.unit) then
+        self.filling:SetVertexColor(0.4,0.4,0.4)
+      elseif classcolor and UnitIsPlayer(self.unit) then
+        self.filling:SetVertexColor(classcolor.r, classcolor.g, classcolor.b)
+      elseif factioncolor then
+        self.filling:SetVertexColor(factioncolor.r, factioncolor.g, factioncolor.b)
+      else
+        self.filling:SetVertexColor(1,0,1)
+      end
+    end
+  end
 
   --update power func
   local updatePower = function(self, event, unit, ...)
-    if event == "UPDATE_SHAPESHIFT_FORM" or event == "PLAYER_ENTERING_WORLD" or unit == "player" then      
-      local uh, uhm = UnitMana("player"), UnitManaMax("player")
-      local p = floor(uh/uhm*100)
-      self.filling:SetHeight((uh/uhm) * self.filling:GetWidth())
-      self.filling:SetTexCoord(0,1,  math.abs(uh/uhm - 1),1)
-      local powertype = select(2, UnitPowerType(unit or "player"))
-      if powertype ~= "MANA" then
-        self.v1:SetText(numFormat(uh))
-        self.v2:SetText(p)
-      else
-        self.v1:SetText(p)
-        self.v2:SetText(numFormat(uh))
-      end
-      local color = PowerBarColor[powertype]
-      if color and self.powertypecolored then
-        self.filling:SetVertexColor(color.r, color.g, color.b)
-         if self.anim and self.anim.decreaseAlpha then
-          self.anim:SetAlpha((uh/uhm)*self.anim.multiplier or 1)
-        end        
-      end
+    if unit and unit ~= self.unit then return end
+    local uh, uhm, p, d = UnitMana(self.unit) or 0, UnitManaMax(self.unit), 0, 0
+    if uhm and uhm > 0 then
+      p = floor(uh/uhm*100)
+      d = uh/uhm
     end
-  end
-
-  --update health func
-  local updateHealth = function(self, event, unit, ...)
-    if event == "PLAYER_ENTERING_WORLD" or unit == "player" then      
-      local uh, uhm = UnitHealth("player"), UnitHealthMax("player")
-      local p = floor(uh/uhm*100)
-      self.filling:SetHeight((uh/uhm) * self.filling:GetWidth())
-      self.filling:SetTexCoord(0,1,  math.abs(uh/uhm - 1),1)
+    self.filling:SetHeight(d*self.filling:GetWidth())
+    self.filling:SetTexCoord(0,1,  math.abs(d-1),1)
+    local powertype = select(2, UnitPowerType(self.unit))
+    if powertype ~= "MANA" then
+      self.v1:SetText(numFormat(uh))
+      self.v2:SetText(p)
+    else
       self.v1:SetText(p)
       self.v2:SetText(numFormat(uh))
-      if self.anim and self.anim.decreaseAlpha then
-        self.anim:SetAlpha((uh/uhm)*self.anim.multiplier or 1)
+    end
+    local color = PowerBarColor[powertype]
+    if color and self.powertypecolored then
+      if powertype == "MANA" then
+        --fix deep blue mana color (it sucks!)
+        self.filling:SetVertexColor(0,0.2,1)
+      else
+        self.filling:SetVertexColor(color.r, color.g, color.b)
       end
     end
+    if self.anim and self.anim.decreaseAlpha then
+      self.anim:SetAlpha(d*self.anim.multiplier or 1)
+    end 
   end
-  
+
   --set orb text strings
   local createOrbValues = function(f,cfg)
     local h = CreateFrame("FRAME", nil, f)
     h:SetAllPoints(f)
-    f.vc = 140
+    f.vc = 135
     local v1 = createFontString(h, cfg.font or "FONTS\\FRIZQT__.ttf", f:GetWidth()*28/f.vc, "THINOUTLINE")
     v1:SetPoint("CENTER", 0, f:GetWidth()*10/f.vc)
     local v2 = createFontString(h, cfg.font or "FONTS\\FRIZQT__.ttf", f:GetWidth()*16/f.vc, "THINOUTLINE")
@@ -181,11 +204,8 @@
     f:RegisterForClicks("AnyUp")
     f:SetAttribute("unit", "player")
     f:SetAttribute("*type1", "target")
-    local showmenu = function() 
-      ToggleDropDownMenu(1, nil, PlayerFrameDropDown, "cursor", 0, 0) 
-    end
+    local showmenu = function() ToggleDropDownMenu(1, nil, PlayerFrameDropDown, "cursor", 0, 0) end
     f.showmenu = showmenu
-    f.unit = "player"
     f:SetAttribute("*type2", "showmenu")
     f:SetScript("OnEnter", UnitFrame_OnEnter)
     f:SetScript("OnLeave", UnitFrame_OnLeave)
@@ -211,20 +231,28 @@
     if w < 20 then w = 20 end
     f:SetSize(w,w*f.ratio)
     if f.type == "healthorb" then
-      local uh, uhm = UnitHealth("player"), UnitHealthMax("player")
-      f.filling:SetHeight((uh/uhm) * f.filling:GetWidth())
+      local uh, uhm = UnitHealth(f.unit) or 0, UnitHealthMax(f.unit)
+      if uhm and uhm > 0 then
+        f.filling:SetHeight((uh/uhm) * w)
+      else
+        f.filling:SetHeight(0)
+      end
     end
     if f.type == "powerorb" then
-      local uh, uhm = UnitMana("player"), UnitManaMax("player")
-      f.filling:SetHeight((uh/uhm) * f.filling:GetWidth())
+      local uh, uhm = UnitMana(f.unit) or 0, UnitManaMax(f.unit)
+      if uhm and uhm > 0 then
+        f.filling:SetHeight((uh/uhm) * w)
+      else
+        f.filling:SetHeight(0)
+      end
     end
     if f.type == "healthorb" or f.type == "powerorb" then
       local font,size,flag = f.v1:GetFont()
-      f.v1:SetFont(font,f:GetWidth()*28/f.vc,flag)
-      f.v1:SetPoint("CENTER", 0, f:GetWidth()*10/f.vc)
+      f.v1:SetFont(font,w*28/f.vc,flag)
+      f.v1:SetPoint("CENTER", 0, w*10/f.vc)
       local font,size,flag = f.v2:GetFont()
-      f.v2:SetFont(font,f:GetWidth()*16/f.vc,flag)
-      f.v2:SetPoint("CENTER", 0, (-1)*f:GetWidth()*10/f.vc)
+      f.v2:SetFont(font,w*16/f.vc,flag)
+      f.v2:SetPoint("CENTER", 0, (-1)*w*10/f.vc)
     end
   end
   
@@ -315,7 +343,10 @@
     f.movable = cfg.movable or false
     f.type = "healthorb"
     f.classcolored = cfg.classcolored
-    createPlayerClickFrame(f)
+    f.unit = cfg.unit or "player"
+    if f.unit == "player" then
+      createPlayerClickFrame(f)
+    end
     --frame strata
     f:SetFrameStrata(cfg.strata or "LOW") 
     --framelevel
@@ -348,9 +379,7 @@
     h:SetPoint("LEFT",0,0)
     h:SetPoint("RIGHT",0,0)
     h:SetHeight(cfg.size)
-    if playerColor and f.classcolored then
-      h:SetVertexColor(playerColor.r, playerColor.g, playerColor.b)
-    elseif cfg.color then
+    if cfg.color then
       h:SetVertexColor(cfg.color.r or 1, cfg.color.g or 0, cfg.color.b or 0, cfg.color.a or 1)
     else
       h:SetVertexColor(1,0,0,1)
@@ -363,9 +392,6 @@
     if cfg.animation and cfg.animation.enable then
       if f.classcolored then
         m.cfg = animtab[19]
-        m.cfg.r = playerColor.r
-        m.cfg.g = playerColor.g
-        m.cfg.b = playerColor.b
       else
         m.cfg = animtab[cfg.animation.anim]
       end
@@ -397,6 +423,8 @@
     --register events
     f:RegisterEvent("UNIT_HEALTH")
     f:RegisterEvent("PLAYER_ENTERING_WORLD")
+    if f.unit == "target" then f:RegisterEvent("PLAYER_TARGET_CHANGED") end
+    
     --event
     f:SetScript("OnEvent", updateHealth)
   end
@@ -413,6 +441,7 @@
     f.movable = cfg.movable or false
     f.type = "powerorb"
     f.powertypecolored = cfg.powertypecolored
+    f.unit = cfg.unit or "player"
     --frame strata
     f:SetFrameStrata(cfg.strata or "LOW") 
     --framelevel
@@ -492,6 +521,7 @@
     f:RegisterEvent("UNIT_MAXPOWER")
     f:RegisterEvent("PLAYER_ENTERING_WORLD")
     f:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+    if f.unit == "target" then f:RegisterEvent("PLAYER_TARGET_CHANGED") end
     --event
     f:SetScript("OnEvent", updatePower)
   end

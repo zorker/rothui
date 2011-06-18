@@ -1,7 +1,7 @@
 ## Interface: 40100
 ## Author: zork	
 ## Title: rBBS_OrbsOnly
-## Notes: Roth UI Layout For rBBS
+## Notes: OrbsOnly: an layout for rBBS, showing player health and power orbs
 ## RequiredDeps: rBBS
 
 config.lua

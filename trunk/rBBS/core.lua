@@ -12,10 +12,52 @@
   ---------------------------------
 
   rBBS.movableFrames = {}
+  
+  local playerName, _     = UnitName("player")
+  local _, playerClass    = UnitClass("player")
+  local playerColor       = RAID_CLASS_COLORS[playerClass]
+  
+  local animtab = {
+    [0] = {displayid = 17010, r = 1, g = 0, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },          -- red fog
+    [1] = {displayid = 17054, r = 1, g = 0.4, b = 1, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },      -- purple fog
+    [2] = {displayid = 17055, r = 0, g = 0.5, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- green fog
+    [3] = {displayid = 17286, r = 1, g = 0.9, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- yellow fog
+    [4] = {displayid = 18075, r = 0, g = 0.8, b = 1, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- turquoise fog
+    [5] = {displayid = 23422, r = 0.4, g = 0, b = 0, camdistancescale = 2.8, portraitzoom = 1, x = 0, y = 0.1, rotation = 0, },         -- red portal
+    [6] = {displayid = 27393, r = 0, g = 0.4, b = 1, camdistancescale = 3, portraitzoom = 1, x = 0, y = 0.6, rotation = 0, },           -- blue rune portal
+    [7] = {displayid = 20894, r = 0.6, g = 0, b = 0, camdistancescale = 6, portraitzoom = 1, x = -0.3, y = 0.4, rotation = 0, },        -- red ghost
+    [8] = {displayid = 15438, r = 0, g = 0.3, b = 0.6, camdistancescale = 6, portraitzoom = 1, x = -0.3, y = 0.4, rotation = 0, },        -- purple ghost
+    [9] = {displayid = 20782, r = 0, g = 0.7, b = 1, camdistancescale = 1.2, portraitzoom = 1, x = -0.22, y = 0.18, rotation = 0, },    -- water planet
+    [10] = {displayid = 23310, r = 1, g = 1, b = 1, camdistancescale = 3.5, portraitzoom = 1, x = 0, y = 3, rotation = 0, },          -- swirling cloud
+    [11] = {displayid = 23343, r = 0.8, g = 0.8, b = 0.8, camdistancescale = 1.6, portraitzoom = 1, x = -0.2, y = 0, rotation = 0, },      -- white fog
+    [12] = {displayid = 24813, r = 0.4, g = 0, b = 0, camdistancescale = 2.4, portraitzoom = 1.1, x = 0, y = -0.3, rotation = 0, },     -- red glowing eye
+    [13] = {displayid = 25392, r = 0.4, g = 0.6, b = 0, camdistancescale = 2.6, portraitzoom = 1, x = 0, y = -0.5, rotation = 0, },     -- sandy swirl
+    [14] = {displayid = 27625, r = 0.4, g = 0.6, b = 0, camdistancescale = 0.8, portraitzoom = 1, x = 0, y = 0, rotation = 0, },        -- green fire
+    [15] = {displayid = 28460, r = 0.5, g = 0, b = 1, camdistancescale = 0.56, portraitzoom = 1, x = -0.4, y = 0, rotation = 0, },    -- purple swirl
+    [16] = {displayid = 29286, r = 1, g = 1, b = 1, camdistancescale = 0.6, portraitzoom = 1, x = -0.6, y = -0.2, rotation = 0, },      -- white tornado
+    [17] = {displayid = 29561, r = 0, g = 0.6, b = 1, camdistancescale = 2.5, portraitzoom = 1, x = 0, y = 0, rotation = -3.9, },     -- blue swirly
+    [18] = {displayid = 30660, r = 1, g = 0.5, b = 0, camdistancescale = 0.12, portraitzoom = 1, x = -0.04, y = -0.08, rotation = 0, }, -- orange fog
+    [19] = {displayid = 32368, r = 1, g = 1, b = 1, camdistancescale = 1.15, portraitzoom = 1, x = 0, y = 0.4, rotation = 0, },        -- pearl
+    [20] = {displayid = 33853, r = 1, g = 0, b = 0, camdistancescale = 0.83, portraitzoom = 1, x = 0, y = -0.05, rotation = 0, },       -- red magnet
+    [21] = {displayid = 34319, r = 0, g = 0, b = 0.4, camdistancescale = 1.55, portraitzoom = 1, x = 0, y = 0.8, rotation = 0, },       -- blue portal
+    [22] = {displayid = 34645, r = 0.3, g = 0, b = 0.3, camdistancescale = 1.7, portraitzoom = 1, x = 0, y = 0.8, rotation = 0, },      -- purple portal
+  }
 
   ---------------------------------
   -- FUNCTIONS
   ---------------------------------
+
+  --set model values
+  local setModelValues = function(self)
+    self:ClearFog()
+    self:ClearModel()
+    --self:SetModel("interface\\buttons\\talktomequestionmark.m2") --in case setdisplayinfo fails 
+    self:SetDisplayInfo(self.cfg.displayid)
+    self:SetPortraitZoom(self.cfg.portraitzoom)
+    self:SetCamDistanceScale(self.cfg.camdistancescale)
+    self:SetPosition(0,self.cfg.x,self.cfg.y)
+    self:SetRotation(self.cfg.rotation)
+  end
 
   --num format func
   local numFormat = function(v)
@@ -55,6 +97,13 @@
         self.v1:SetText(p)
         self.v2:SetText(numFormat(uh))
       end
+      local color = PowerBarColor[powertype]
+      if color and self.powertypecolored then
+        self.filling:SetVertexColor(color.r, color.g, color.b)
+         if self.anim and self.anim.decreaseAlpha then
+          self.anim:SetAlpha((uh/uhm)*self.anim.multiplier or 1)
+        end        
+      end
     end
   end
 
@@ -67,14 +116,18 @@
       self.filling:SetTexCoord(0,1,  math.abs(uh/uhm - 1),1)
       self.v1:SetText(p)
       self.v2:SetText(numFormat(uh))
+      if self.anim and self.anim.decreaseAlpha then
+        self.anim:SetAlpha((uh/uhm)*self.anim.multiplier or 1)
+      end
     end
   end
   
+  --set orb text strings
   local createOrbValues = function(f,cfg)
     local h = CreateFrame("FRAME", nil, f)
     h:SetAllPoints(f)
-    f.vc = 130
-    local v1 = createFontString(h, cfg.font or "FONTS\\FRIZQT__.ttf", f:GetWidth()*32/f.vc, "THINOUTLINE")
+    f.vc = 140
+    local v1 = createFontString(h, cfg.font or "FONTS\\FRIZQT__.ttf", f:GetWidth()*28/f.vc, "THINOUTLINE")
     v1:SetPoint("CENTER", 0, f:GetWidth()*10/f.vc)
     local v2 = createFontString(h, cfg.font or "FONTS\\FRIZQT__.ttf", f:GetWidth()*16/f.vc, "THINOUTLINE")
     v2:SetPoint("CENTER", 0, (-1)*f:GetWidth()*10/f.vc)
@@ -112,14 +165,30 @@
   
   --lock frame func
   local lockFrame = function(f)
-    f:EnableMouse(nil)
-    f.locked = true
+    if f.type ~= "healthorb" then
+      f:EnableMouse(nil)
+      f.locked = true
+    end
     f.dragtexture:SetAlpha(0)
     f:RegisterForDrag(nil)
     f:SetScript("OnEnter", nil)
     f:SetScript("OnLeave", nil)
     f:SetScript("OnDragStart", nil)
     f:SetScript("OnDragStop", nil)
+  end
+
+  local createPlayerClickFrame = function(f)
+    f:RegisterForClicks("AnyUp")
+    f:SetAttribute("unit", "player")
+    f:SetAttribute("*type1", "target")
+    local showmenu = function() 
+      ToggleDropDownMenu(1, nil, PlayerFrameDropDown, "cursor", 0, 0) 
+    end
+    f.showmenu = showmenu
+    f.unit = "player"
+    f:SetAttribute("*type2", "showmenu")
+    f:SetScript("OnEnter", UnitFrame_OnEnter)
+    f:SetScript("OnLeave", UnitFrame_OnLeave)
   end
 
   --unlock all frames
@@ -151,7 +220,7 @@
     end
     if f.type == "healthorb" or f.type == "powerorb" then
       local font,size,flag = f.v1:GetFont()
-      f.v1:SetFont(font,f:GetWidth()*32/f.vc,flag)
+      f.v1:SetFont(font,f:GetWidth()*28/f.vc,flag)
       f.v1:SetPoint("CENTER", 0, f:GetWidth()*10/f.vc)
       local font,size,flag = f.v2:GetFont()
       f.v2:SetFont(font,f:GetWidth()*16/f.vc,flag)
@@ -240,11 +309,13 @@
     --add the name of the opener addon to the frame name
     if cfg.name then cfg.name = opener.."_"..cfg.name end
     --create frame based on given config settings
-    local f = CreateFrame("Frame", cfg.name or nil, cfg.parent or UIParent, cfg.inherit or nil)
+    local f = CreateFrame("Button", cfg.name or nil, cfg.parent or UIParent, cfg.inherit or "SecureUnitButtonTemplate")
     --print(f:GetName().." loaded.")
     --save movable and sizable to the frame object
     f.movable = cfg.movable or false
     f.type = "healthorb"
+    f.classcolored = cfg.classcolored
+    createPlayerClickFrame(f)
     --frame strata
     f:SetFrameStrata(cfg.strata or "LOW") 
     --framelevel
@@ -277,15 +348,42 @@
     h:SetPoint("LEFT",0,0)
     h:SetPoint("RIGHT",0,0)
     h:SetHeight(cfg.size)
-    if cfg.color then
-      h:SetVertexColor(cfg.texture.color.r or 1, cfg.texture.color.g or 0, cfg.texture.color.b or 0, cfg.texture.color.a or 1)
+    if playerColor and f.classcolored then
+      h:SetVertexColor(playerColor.r, playerColor.g, playerColor.b)
+    elseif cfg.color then
+      h:SetVertexColor(cfg.color.r or 1, cfg.color.g or 0, cfg.color.b or 0, cfg.color.a or 1)
     else
       h:SetVertexColor(1,0,0,1)
     end    
     f.filling = h
     
+    --animation holder
+    local m = CreateFrame("PlayerModel", nil, f)
+    m:SetAllPoints(f)
+    if cfg.animation and cfg.animation.enable then
+      if f.classcolored then
+        m.cfg = animtab[19]
+        m.cfg.r = playerColor.r
+        m.cfg.g = playerColor.g
+        m.cfg.b = playerColor.b
+      else
+        m.cfg = animtab[cfg.animation.anim]
+      end
+      m:SetAlpha(1*cfg.animation.multiplier)
+      f.filling:SetVertexColor(m.cfg.r, m.cfg.g, m.cfg.b)
+      setModelValues(m)
+      m:SetScript("OnShow", setModelValues)
+      m:SetScript("OnSizeChanged", setModelValues)
+      m.multiplier       = cfg.animation.multiplier
+      m.decreaseAlpha    = cfg.animation.decreaseAlpha
+    end
+    f.anim = m
+   
+    local gh = CreateFrame("Frame", nil, f)
+    gh:SetFrameLevel(m:GetFrameLevel()+2)
+    gh:SetAllPoints()    
     --gloss
-    local g = f:CreateTexture(nil, "BACKGROUND", nil, -2)
+    local g = gh:CreateTexture(nil, "BACKGROUND", nil, -2)
     g:SetTexture(cfg.gloss or "Interface\\AddOns\\rBBS\\media\\orb_gloss")
     g:SetAllPoints(f)
     f.gloss = b
@@ -314,6 +412,7 @@
     --save movable and sizable to the frame object
     f.movable = cfg.movable or false
     f.type = "powerorb"
+    f.powertypecolored = cfg.powertypecolored
     --frame strata
     f:SetFrameStrata(cfg.strata or "LOW") 
     --framelevel
@@ -353,8 +452,31 @@
     end    
     f.filling = h
     
+    --animation holder
+    local m = CreateFrame("PlayerModel", nil, f)
+    m:SetAllPoints(f)
+    if cfg.animation and cfg.animation.enable then
+      if f.powertypecolored then
+        m.cfg = animtab[19]
+      else
+        m.cfg = animtab[cfg.animation.anim]
+      end
+      m:SetAlpha(1*cfg.animation.multiplier)
+      f.filling:SetVertexColor(m.cfg.r, m.cfg.g, m.cfg.b)
+      setModelValues(m)
+      m:SetScript("OnShow", setModelValues)
+      m:SetScript("OnSizeChanged", setModelValues)
+      m.multiplier       = cfg.animation.multiplier
+      m.decreaseAlpha    = cfg.animation.decreaseAlpha
+    end
+    f.anim = m
+   
+    local gh = CreateFrame("Frame", nil, f)
+    gh:SetFrameLevel(m:GetFrameLevel()+2)
+    gh:SetAllPoints()    
+    
     --gloss
-    local g = f:CreateTexture(nil, "BACKGROUND", nil, -2)
+    local g = gh:CreateTexture(nil, "BACKGROUND", nil, -2)
     g:SetTexture(cfg.gloss or "Interface\\AddOns\\rBBS\\media\\orb_gloss")
     g:SetAllPoints(f)
     f.gloss = b

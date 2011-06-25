@@ -5,15 +5,21 @@
   local addon, ns = ...
   ns.cfg = {}
   local cfg = ns.cfg
-  
+
   ---------------------------------
   -- CONFIG
   ---------------------------------
 
-  --actionbar background  
+  --drag frame (only has strata, level and position)
+  cfg.dragframe = {
+    strata      = "BACKGROUND",  --frame strata
+    level       = 0, --frame level
+    pos         = { a1="BOTTOM", x=0, y=1, },
+  }
+
+  --actionbar background
   cfg.actionbarbg = {
-    name        = "ActionBar",    --this is needed if you want this frame to be movable ingame
-    movable     = false,           --true/false: if this frame should be movable/sizable via /rbbs command in game
+    name        = "ActionBar",    --this is needed and has to be unique per addon, if you want to move this frame seperately
     --parent      = "UIParent",
     width       = 512,
     height      = 256,
@@ -21,7 +27,7 @@
     --alpha       = 1,
     --strata      = "BACKGROUND",  --frame strata
     --level       = 0, --frame level
-    pos         = { a1="BOTTOM", a2="BOTTOM", af="UIParent", x=0, y=1, },
+    pos         = { a1="BOTTOM", x=0, y=1, }, --no anchorframe, we want it to point to the frame parented.
     texture     = {
                     file        = "Interface\\AddOns\\rBBS_RothUI\\media\\bar3.tga",
                     --strata      = "BACKGROUND", --texture strata
@@ -29,89 +35,85 @@
                     --color       = { r=1, g=0, b=0, a = 1, },
                     --blendmode   = "ADD",
                   },
-  } 
-  
-  --bottomline texture  
+  }
+
+  --bottomline texture
   cfg.healthorb = {
     name              = "HealthOrb",
-    movable           = false,
+    --movable           = true,
     size              = 150,
     scale             = 0.82,
-    classcolored      = true,
+    classcolored      = false,
     animation         = {
                           enable          = true,
                           anim            = 20,
-                          decreaseAlpha   = false,
-                          multiplier      = 0.3,                          
+                          decreaseAlpha   = true,
+                          multiplier      = 0.13,
                         },
     --color             = { r=1, g=1, b=0, a=1, },
-    pos               = { a1="BOTTOM", a2="BOTTOM", af="UIParent", x=-260, y=-10, },
+    pos               = { a1="BOTTOM", x=-260, y=-10, },
     --strata      = "BACKGRROUND",
     --level       = 1,
     --filling        = "Interface\\AddOns\\rBBS_RothUI\\media\\orb_filling15.tga",
-  } 
+  }
 
-  --bottomline texture  
+  --bottomline texture
   cfg.powerorb = {
     name              = "PowerOrb",
-    movable           = false,
     size              = 150,
     scale             = 0.82,
-    powertypecolored  = true,
+    powertypecolored  = false,
     animation         = {
                           enable          = true,
                           anim            = 6,
-                          decreaseAlpha   = false,
-                          multiplier      = 0.3,                          
+                          decreaseAlpha   = true,
+                          multiplier      = 0.13,
                         },
-    pos               = { a1="BOTTOM", a2="BOTTOM", af="UIParent", x=260, y=-10, },
-  } 
-  
-  --angel texture  
+    pos               = { a1="BOTTOM", x=260, y=-10, },
+  }
+
+  --angel texture
   cfg.angel = {
     name        = "Angel",
-    movable     = false,
     width       = 512,
     height      = 256,
     strata      = "LOW",
     level       = 5,
     scale       = 0.55,
-    pos         = { a1="BOTTOM", a2="BOTTOM", af="UIParent", x=400, y=0, },
+    pos         = { a1="BOTTOM", x=400, y=-2, },
     texture     = {
                     file        = "Interface\\AddOns\\rBBS_RothUI\\media\\d3_angel2.tga",
                   },
-  } 
-  
-  --demon texture  
+  }
+
+  --demon texture
   cfg.demon = {
     name        = "Demon",
-    movable     = false,
     width       = 512,
     height      = 256,
     strata      = "LOW",
     level       = 5,
     scale       = 0.55,
-    pos         = { a1="BOTTOM", a2="BOTTOM", af="UIParent", x=-405, y=0, },
+    pos         = { a1="BOTTOM", x=-405, y=-2, },
     texture     = {
                     file        = "Interface\\AddOns\\rBBS_RothUI\\media\\d3_demon2.tga",
                   },
   }
-  
-  --bottomline texture  
+
+  --bottomline texture
   cfg.bottom = {
     name        = "BottomLine",
-    movable     = false,
     width       = 512,
     height      = 128,
     strata      = "LOW",
     level       = 6,
     scale       = 0.82,
-    pos         = { a1="BOTTOM", a2="BOTTOM", af="UIParent", x=0, y=-10, },
+    pos         = { a1="BOTTOM", x=0, y=-10, },
     texture     = {
                     file        = "Interface\\AddOns\\rBBS_RothUI\\media\\d3_bottom.tga",
                   },
-  } 
-  
+  }
+
   ---------------------------------
   -- CONFIG
   ---------------------------------

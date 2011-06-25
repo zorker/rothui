@@ -272,6 +272,7 @@
     end
     applySetPoint(f,f.default.pos) --apply default position to frame
     applySetSize(f,f.default.size) --apply default size to frame
+    applyVisibility(f,f.default.visibility)
   end
 
   --unlock frame func
@@ -437,6 +438,7 @@
     f.default.size.w      = cfg.width or 100
     f.default.size.h      = cfg.height or 100
     f.default.size.ratio  = f.ratio
+    f.default.visibility  = cfg.visibility or "show" -- show/hide
   end
 
   --SPAWN DRAGFRAME FUNCTION
@@ -713,32 +715,48 @@
   -- THE INGAME MENU
   ---------------------------------
   local dropdown = CreateFrame("Frame", "rBBSMenuFrame", nil, "UIDropDownMenuTemplate")
-  local menuTable = {
-    { text = "rBBS", isTitle = true, notCheckable = true, notClickable = true },
-    { text = "Addon", notCheckable = true, hasArrow = true,
-      menuList = {
-        { text = "TItle", isTitle = true, notCheckable = true, notClickable = true },
-        { text = "DoDat", arg1 = "petsmerged", func = function() print("optionfunc") end, checked = function() return true end, keepShownOnClick = true },
-        { text = "Say", arg1 = "SAY", func = function() print("say") end, notCheckable = 1 },
-        --{ text = "Raid", arg1 = "RAID", func = reportFunction, notCheckable = 1 },
-        --{ text = "Party", arg1 = "PARTY", func = reportFunction, notCheckable = 1 },
-        --{ text = "Guild", arg1 = "GUILD", func = reportFunction, notCheckable = 1 },
-        --{ text = "Officer", arg1 = "OFFICER", func = reportFunction, notCheckable = 1 },
-        --{ text = "Whisper", func = function() window:ShowWhisperWindow() end, notCheckable = 1 },
-        --{ text = "Channel  ", notCheckable = 1, keepShownOnClick = true, hasArrow = true, menuList = {} }
-      },
-    },
-    --{ text = "Options", notCheckable = true, hasArrow = true,
-      --menuList = {
-        --{ text = "Merge Pets w/ Owners", arg1 = "petsmerged", func = optionFunction, checked = function() return addon:GetOption("petsmerged") end, keepShownOnClick = true },
-        --{ text = "Keep Only Boss Segments", arg1 = "keeponlybosses", func = optionFunction, checked = function() return addon:GetOption("keeponlybosses") end, keepShownOnClick = true },
-        --{ text = "Record Only In Instances", arg1 = "onlyinstance", func = optionFunction, checked = function() return addon:GetOption("onlyinstance") end, keepShownOnClick = true },
-        --{ text = "Show Minimap Icon", func = function(f, a1, a2, checked) addon:MinimapIconShow(checked) end, checked = function() return not NumerationCharOptions.minimap.hide end, keepShownOnClick = true },
-      --},
-    --},
-    --{ text = "", notClickable = true },
-    { text = "Close", func = function() CloseDropDownMenus() end, notCheckable = true },
-  }
+  local menuTable = {}
+  local line, submenu = nil, {}
+
+  local createMenuTitle = function(title)
+    --title
+    line = { text = title, isTitle = true, notCheckable = true, notClickable = true }
+    table.insert(menuTable,line)
+  end
+
+  local createMenuCloseButton = function(title)
+    --close
+    line = { text = title, func = function() CloseDropDownMenus() end, notCheckable = true }
+    table.insert(menuTable,line)
+  end
+
+  local createMenuGeneralSettings = function()
+    --general
+    submenu = {
+      { text = "Unlock All", func = unlockAllFrames, notCheckable = 1, keepShownOnClick = true, },
+      { text = "Lock All", func = lockAllFrames, notCheckable = 1, keepShownOnClick = true, },
+      { text = "Show All", func = showAllFrames, notCheckable = 1, keepShownOnClick = true, },
+      { text = "Hide All", func = hideAllFrames, notCheckable = 1, keepShownOnClick = true, },
+      { text = "-----------", notCheckable = true, notClickable = true },
+      { text = "Reset All", func = resetAllFrames, notCheckable = 1, keepShownOnClick = true, },
+    }
+    line = { text = "General", notCheckable = true, hasArrow = true, menuList = submenu }
+    table.insert(menuTable,line)
+  end
+
+  local createMenuForFrames = function(f,title)
+    --general
+    submenu = {
+      { text = "Unlock", func = function() unlockFrame(f) end, notCheckable = 1, keepShownOnClick = true, },
+      { text = "Lock", func = function() lockFrame(f) end, notCheckable = 1, keepShownOnClick = true, },
+      { text = "Show", func = function() showFrame(f) end, notCheckable = 1, keepShownOnClick = true, },
+      { text = "Hide", func = function() hideFrame(f) end, notCheckable = 1, keepShownOnClick = true, },
+      { text = "-----------", notCheckable = true, notClickable = true },
+      { text = "Reset", func = function() resetFrame(f) end, notCheckable = 1, keepShownOnClick = true, },
+    }
+    line = { text = title, notCheckable = true, hasArrow = true, menuList = submenu }
+    table.insert(menuTable,line)
+  end
 
   ---------------------------------
   -- LOAD SAVEDVARIABLES
@@ -753,7 +771,7 @@
       _G["rBBS_DB"] = _DB
       for i,v in ipairs(rBBS.movableFrames) do
         --loading data from db (overwriting the default values)
-        print(v)
+        --print(v)
         --load position from db
         if _DB[v] and _DB[v].pos then
           applySetPoint(_G[v],_DB[v].pos)
@@ -774,6 +792,15 @@
       for i,v in ipairs(rBBS.movableFrames) do
         calcPoint(_G[v])
       end
+
+      --create the ingame menu
+      createMenuTitle("rBBS")
+      createMenuGeneralSettings()
+      for i,v in ipairs(rBBS.movableFrames) do
+        createMenuForFrames(_G[v],v)
+      end
+      createMenuCloseButton("Close Menu")
+
       self:UnregisterEvent("PLAYER_LOGIN")
     end
     f:RegisterEvent("PLAYER_LOGIN")
@@ -786,31 +813,31 @@
 
   --slash command functionality
   local function SlashCmd(cmd)
-    if (cmd:match"unlock") then
-      unlockAllFrames()
-    elseif (cmd:match"lock") then
-      lockAllFrames()
-    elseif (cmd:match"reset") then
-      resetAllFrames()
-    elseif (cmd:match"show") then
-      showAllFrames()
-    elseif (cmd:match"hide") then
-      hideAllFrames()
-    else
+    --if (cmd:match"unlock") then
+      --unlockAllFrames()
+    --elseif (cmd:match"lock") then
+      --lockAllFrames()
+    --elseif (cmd:match"reset") then
+      --resetAllFrames()
+    --elseif (cmd:match"show") then
+      --showAllFrames()
+    --elseif (cmd:match"hide") then
+      --hideAllFrames()
+    --else
       EasyMenu(menuTable, dropdown, "cursor", 0 , 0, "MENU")
-      print("|c0033AAFFrBBS command list:|r")
-      print("|c0033AAFF\/rBBS lock|r, to lock all frames")
-      print("|c0033AAFF\/rBBS unlock|r, to unlock all frames")
-      print("|c0033AAFF\/rBBS reset|r, to reset all frames to default")
-      print("|c0033AAFF\/rBBS show|r, to show all frames")
-      print("|c0033AAFF\/rBBS hide|r, to hide all frames")
-    end
+      --print("|c0033AAFFrBBS command list:|r")
+      --print("|c0033AAFF\/rBBS lock|r, to lock all frames")
+      --print("|c0033AAFF\/rBBS unlock|r, to unlock all frames")
+      --print("|c0033AAFF\/rBBS reset|r, to reset all frames to default")
+      --print("|c0033AAFF\/rBBS show|r, to show all frames")
+      --print("|c0033AAFF\/rBBS hide|r, to hide all frames")
+    --end
   end
 
   SlashCmdList["rbbs"] = SlashCmd;
   SLASH_rbbs1 = "/rbbs";
   print("|c0033AAFFrBBS loaded.|r")
-  print("|c0033AAFF\/rBBS|r to display the command list")
+  print("|c0033AAFF\/rBBS|r to display the menu")
 
   ---------------------------------
   -- REGISTER

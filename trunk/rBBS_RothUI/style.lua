@@ -1,31 +1,34 @@
-  
+
   ---------------------------------
   -- INIT
   ---------------------------------
-  
+
   --get the addon namespace
   local addon, ns = ...
   --get rBBS namespace
-  local rBBS = ns.rBBS or rBBS 
+  local rBBS = ns.rBBS or rBBS
   --get the cfg
   local cfg = ns.cfg
 
   ---------------------------------
   -- SPAWN
   ---------------------------------
-  
-  --spawn actionbar background
-  rBBS:spawnFrame(addon, cfg.actionbarbg)
-  
+
+  --spawn the drag frame
+  local dragframe = rBBS:spawnDragFrame(addon, cfg.dragframe)
+
+  --spawn actionbar background and hand over the dragframe as parent frame
+  rBBS:spawnFrame(addon, cfg.actionbarbg, dragframe)
+
   --spawn health orb
-  rBBS:spawnHealthOrb(addon, cfg.healthorb)
+  rBBS:spawnHealthOrb(addon, cfg.healthorb, dragframe)
 
   --spawn power orb
-  rBBS:spawnPowerOrb(addon, cfg.powerorb)
-  
+  rBBS:spawnPowerOrb(addon, cfg.powerorb, dragframe)
+
   --spawn angel
-  rBBS:spawnFrame(addon, cfg.angel)
+  rBBS:spawnFrame(addon, cfg.angel, dragframe)
   --spawn demon
-  rBBS:spawnFrame(addon, cfg.demon)  
+  rBBS:spawnFrame(addon, cfg.demon, dragframe)
   --spawn bottomline
-  rBBS:spawnFrame(addon, cfg.bottom)  
+  rBBS:spawnFrame(addon, cfg.bottom, dragframe)

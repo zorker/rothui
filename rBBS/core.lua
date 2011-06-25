@@ -6,13 +6,13 @@
   local addon, ns = ...
   ns.rBBS = {}
   local rBBS = ns.rBBS
-  local _G = _G
-
-  ---------------------------------
-  -- VARIABLES
-  ---------------------------------
-
   rBBS.movableFrames = {}
+  local _G = _G
+  local _DB
+
+  ---------------------------------
+  -- ANIMATION SETTINGS
+  ---------------------------------
 
   local animtab = {
     [0] = {displayid = 17010, r = 1, g = 0, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },          -- red fog
@@ -87,6 +87,33 @@
     end
   end
 
+  --apply given position to frame
+  local applySetPoint = function(f,pos)
+    f:ClearAllPoints()
+    --setpoint
+    if pos then
+      if pos.af and pos.a2 then
+        f:SetPoint(pos.a1 or "CENTER", pos.af, pos.a2, pos.x or 0, pos.y or 0)
+      elseif pos.af then
+        f:SetPoint(pos.a1 or "CENTER", pos.af, pos.x or 0, pos.y or 0)
+      --elseif pos.a2 then
+        --f:SetPoint(pos.a1 or "CENTER", pos.a2, pos.x or 0, pos.y or 0)
+      else
+        f:SetPoint(pos.a1 or "CENTER", pos.x or 0, pos.y or 0)
+      end
+    else
+      f:SetPoint("CENTER",UIParent,"CENTER",0,0)
+    end
+  end
+
+  --apply given position to frame
+  local applySetSize = function(f,size)
+    if f.hookup then
+      f.hookup:SetScale(size.w/100) --apply the size of the one frame as scale to the hookup frame
+    end
+    f:SetSize(size.w,size.w*size.ratio)
+  end
+
   --fontstring func
   local createFontString = function(f, font, size, outline,layer)
     local fs = f:CreateFontString(nil, layer or "OVERLAY")
@@ -97,10 +124,6 @@
 
   --update health func
   local updateHealth = function(self, event, unit, ...)
-    if event == "PLAYER_LOGIN" then
-      calcPoint(self)
-      return
-    end
     if unit and unit ~= self.unit then return end
     local uh, uhm, p, d = UnitHealth(self.unit) or 0, UnitHealthMax(self.unit), 0, 0
     if uhm and uhm > 0 then
@@ -136,10 +159,6 @@
 
   --update power func
   local updatePower = function(self, event, unit, ...)
-    if event == "PLAYER_LOGIN" then
-      calcPoint(self)
-      return
-    end
     if unit and unit ~= self.unit then return end
     local uh, uhm, p, d = UnitMana(self.unit) or 0, UnitManaMax(self.unit), 0, 0
     if uhm and uhm > 0 then
@@ -184,11 +203,82 @@
     f.v2 = v2
   end
 
+  --save the size of the frame to the db
+  local saveFrameSize = function(f)
+    local n = f:GetName()
+    if not _DB[n] then _DB[n] = {} end
+    if not _DB[n].size then _DB[n].size = {} end
+    local w, h = f:GetWidth(), f:GetHeight()
+    _DB[n].size = {} --reset all values
+    _DB[n].size.w = w
+    _DB[n].size.h = h
+    _DB[n].size.ratio = f.ratio
+  end
+
+  --save the position of the frame to db
+  local saveFramePosition = function(f)
+    local n = f:GetName()
+    if not _DB[n] then _DB[n] = {} end
+    if not _DB[n].pos then _DB[n].pos = {} end
+    local a1, af, a2, x, y = f:GetPoint()
+    _DB[n].pos = {} --reset all values
+    _DB[n].pos.a1 = a1
+    if af and af:GetName() then
+      _DB[n].pos.af = af:GetName()
+    end
+    _DB[n].pos.a2 = a2
+    _DB[n].pos.x = x
+    _DB[n].pos.y = y
+  end
+
+  --apply given position to frame
+  local applyVisibility = function(f,visibility)
+    if visibility == "show" then
+      f:Show()
+    else
+      f:Hide()
+    end
+  end
+
+  --save the visibility status to db
+  local saveVisibility = function(f,visibility)
+    local n = f:GetName()
+    if not _DB[n] then _DB[n] = {} end
+    if visibility == "show" then
+      _DB[n].visibility = "show"
+    else
+      _DB[n].visibility = "hide"
+    end
+  end
+
+  --hide the frame
+  local hideFrame = function(f)
+    saveVisibility(f,"hide")
+    applyVisibility(f,"hide")
+  end
+
+  --show the frame
+  local showFrame = function(f)
+    saveVisibility(f,"show")
+    applyVisibility(f,"show")
+  end
+
+  --reset frame to default data and empty the DB
+  local resetFrame = function(f)
+    local n = f:GetName()
+    --empty db for that frame
+    if n and _DB[n] then
+      _DB[n] = nil
+    end
+    applySetPoint(f,f.default.pos) --apply default position to frame
+    applySetSize(f,f.default.size) --apply default size to frame
+  end
+
   --unlock frame func
   local unlockFrame = function(f)
     f:EnableMouse(true)
     f.locked = false
-    f.dragtexture:SetAlpha(0.2)
+    f.dragtexture:SetAlpha(0.3)
     f:RegisterForDrag("LeftButton","RightButton")
     f:SetScript("OnEnter", function(s)
       GameTooltip:SetOwner(s, "ANCHOR_BOTTOMRIGHT")
@@ -209,6 +299,9 @@
     f:SetScript("OnDragStop", function(s)
       s:StopMovingOrSizing()
       calcPoint(s)
+      --save frame data to db
+      saveFramePosition(s)
+      saveFrameSize(s)
     end)
   end
 
@@ -236,6 +329,27 @@
     f:SetAttribute("*type2", "showmenu")
     f:SetScript("OnEnter", UnitFrame_OnEnter)
     f:SetScript("OnLeave", UnitFrame_OnLeave)
+  end
+
+  --reset all frames to default values
+  local resetAllFrames = function()
+    for index,v in ipairs(rBBS.movableFrames) do
+      resetFrame(_G[v])
+    end
+  end
+
+  --hide all frames
+  local hideAllFrames = function()
+    for index,v in ipairs(rBBS.movableFrames) do
+      hideFrame(_G[v])
+    end
+  end
+
+  --show all frames
+  local showAllFrames = function()
+    for index,v in ipairs(rBBS.movableFrames) do
+      showFrame(_G[v])
+    end
   end
 
   --unlock all frames
@@ -294,18 +408,18 @@
       return
     end
     f:SetHitRectInsets(-5,-5,-5,-5)
-    if f.type == "healthorb" or f.type == "powerorb" or f.type == "dragframe" then
+    --if f.type == "healthorb" or f.type == "powerorb" or f.type == "dragframe" then
       f:SetClampedToScreen(false)
-    else
-      f:SetClampedToScreen(true)
-    end
+    --else
+      --f:SetClampedToScreen(true)
+    --end
     f:SetMovable(true)
     f:SetResizable(true)
     f:SetUserPlaced(true)
     local t = f:CreateTexture(nil,"OVERLAY",nil,6)
     t:SetAllPoints(f)
     if f.type == "dragframe" then
-      t:SetTexture(1,0,0)
+      t:SetTexture(0,1,1)
     else
       t:SetTexture(0,1,0)
     end
@@ -316,21 +430,13 @@
     table.insert(rBBS.movableFrames,f:GetName()) --load all the frames that can be moved into the global table
   end
 
-  local applySetPoint = function(f,pos)
-    --setpoint
-    if pos then
-      if pos.af and pos.a2 then
-        f:SetPoint(pos.a1 or "CENTER", pos.af, pos.a2, pos.x or 0, pos.y or 0)
-      elseif pos.af then
-        f:SetPoint(pos.a1 or "CENTER", pos.af, pos.x or 0, pos.y or 0)
-      elseif pos.a2 then
-        f:SetPoint(pos.a1 or "CENTER", pos.a2, pos.x or 0, pos.y or 0)
-      else
-        f:SetPoint(pos.a1 or "CENTER", pos.x or 0, pos.y or 0)
-      end
-    else
-      f:SetPoint("CENTER",UIParent,"CENTER",0,0)
-    end
+  local saveDefaultSettings = function(f,cfg)
+    f.default             = {}
+    f.default.pos         = cfg.pos
+    f.default.size        = {}
+    f.default.size.w      = cfg.width or 100
+    f.default.size.h      = cfg.height or 100
+    f.default.size.ratio  = f.ratio
   end
 
   --SPAWN DRAGFRAME FUNCTION
@@ -358,6 +464,8 @@
     f.hookup = hookup
     --add the movability function
     applyMoveFunctionality(f)
+    --save default settings for reset
+    saveDefaultSettings(f,cfg)
     return hookup --return the hookup to be parented by frame that parent the dragframe
   end
 
@@ -403,12 +511,8 @@
     end
     --add the movability function
     applyMoveFunctionality(f)
-    --when using setUserPlaced Blizzard is removing the parentedFrame, we need to fix that
-    if parent then
-      --event
-      f:RegisterEvent("PLAYER_LOGIN") --hello my friend
-      f:SetScript("OnEvent", calcPoint)
-    end
+    --save default settings for reset
+    saveDefaultSettings(f,cfg)
   end
 
   --SPAWN HealthOrb FUNCTION
@@ -432,7 +536,8 @@
     --framelevel
     f:SetFrameLevel(cfg.level or 1)
     --size
-    f:SetSize(cfg.size or 100, cfg.size or 100)
+    cfg.width, cfg.height = cfg.size, cfg.size
+    f:SetSize(cfg.width or 100, cfg.height or 100)
     --save the width/height ratio in case frame gets resized
     f.ratio = 1
     --alpha
@@ -494,6 +599,8 @@
 
     --add the movability function
     applyMoveFunctionality(f)
+    --save default settings for reset
+    saveDefaultSettings(f,cfg)
 
     --register events
     f:RegisterEvent("UNIT_HEALTH")
@@ -523,7 +630,8 @@
     --framelevel
     f:SetFrameLevel(cfg.level or 1)
     --size
-    f:SetSize(cfg.size or 100, cfg.size or 100)
+    cfg.width, cfg.height = cfg.size, cfg.size
+    f:SetSize(cfg.width or 100, cfg.height or 100)
     --save the width/height ratio in case frame gets resized
     f.ratio = 1
     --alpha
@@ -587,6 +695,8 @@
 
     --add the movability function
     applyMoveFunctionality(f)
+    --save default settings for reset
+    saveDefaultSettings(f,cfg)
 
     --register events
     f:RegisterEvent("UNIT_POWER")
@@ -631,6 +741,46 @@
   }
 
   ---------------------------------
+  -- LOAD SAVEDVARIABLES
+  ---------------------------------
+  do
+    local f = CreateFrame("Frame")
+    f:SetScript("OnEvent", function(self, event)
+      return self[event](self)
+    end)
+    function f:VARIABLES_LOADED()
+      _DB = _G["rBBS_DB"] or {}
+      _G["rBBS_DB"] = _DB
+      for i,v in ipairs(rBBS.movableFrames) do
+        --loading data from db (overwriting the default values)
+        print(v)
+        --load position from db
+        if _DB[v] and _DB[v].pos then
+          applySetPoint(_G[v],_DB[v].pos)
+        end
+        if _DB[v] and _DB[v].size then
+          applySetSize(_G[v],_DB[v].size)
+        end
+        if _DB[v] and _DB[v].visibility then
+          applyVisibility(_G[v],_DB[v].visibility)
+        end
+      end
+      self:UnregisterEvent("VARIABLES_LOADED")
+    end
+    f:RegisterEvent("VARIABLES_LOADED")
+
+    function f:PLAYER_LOGIN()
+      --fix frame position anchor (frames that are dragable loose the parented anchorframe, fix that on loadup)
+      for i,v in ipairs(rBBS.movableFrames) do
+        calcPoint(_G[v])
+      end
+      self:UnregisterEvent("PLAYER_LOGIN")
+    end
+    f:RegisterEvent("PLAYER_LOGIN")
+
+  end
+
+  ---------------------------------
   -- SLASH COMMAND
   ---------------------------------
 
@@ -640,11 +790,20 @@
       unlockAllFrames()
     elseif (cmd:match"lock") then
       lockAllFrames()
+    elseif (cmd:match"reset") then
+      resetAllFrames()
+    elseif (cmd:match"show") then
+      showAllFrames()
+    elseif (cmd:match"hide") then
+      hideAllFrames()
     else
       EasyMenu(menuTable, dropdown, "cursor", 0 , 0, "MENU")
       print("|c0033AAFFrBBS command list:|r")
-      print("|c0033AAFF\/rBBS lock|r, to lock")
-      print("|c0033AAFF\/rBBS unlock|r, to unlock")
+      print("|c0033AAFF\/rBBS lock|r, to lock all frames")
+      print("|c0033AAFF\/rBBS unlock|r, to unlock all frames")
+      print("|c0033AAFF\/rBBS reset|r, to reset all frames to default")
+      print("|c0033AAFF\/rBBS show|r, to show all frames")
+      print("|c0033AAFF\/rBBS hide|r, to hide all frames")
     end
   end
 

@@ -716,42 +716,63 @@
   ---------------------------------
   local dropdown = CreateFrame("Frame", "rBBSMenuFrame", nil, "UIDropDownMenuTemplate")
   local menuTable = {}
-  local line, submenu = nil, {}
+  local line, submenu, delim = nil, {}, "~~~~~~~~~~~~~~~~~~~~~~~"
 
   local createMenuTitle = function(title)
     --title
     line = { text = title, isTitle = true, notCheckable = true, notClickable = true }
     table.insert(menuTable,line)
+    line = { text = delim, notCheckable = true, notClickable = true }
+    table.insert(menuTable,line)
   end
 
   local createMenuCloseButton = function(title)
     --close
+    line = { text = delim, notCheckable = true, notClickable = true }
+    table.insert(menuTable,line)
     line = { text = title, func = function() CloseDropDownMenus() end, notCheckable = true }
     table.insert(menuTable,line)
   end
 
   local createMenuGeneralSettings = function()
+    local f = _G["rBBS_Menugem"]
+    --menugem
+    local subsubmenu = {
+      { text = "Menugem", isTitle = true, notCheckable = true, notClickable = true },
+      { text = delim, notCheckable = true, notClickable = true },
+      { text = "Show", func = function() showFrame(f) end, notCheckable = 1, keepShownOnClick = true, },
+      { text = "Hide", func = function() hideFrame(f) end, notCheckable = 1, keepShownOnClick = true, },
+    }
+    --table.insert(menuTable,line)
     --general
     submenu = {
+      { text = "General", isTitle = true, notCheckable = true, notClickable = true },
+      { text = delim, notCheckable = true, notClickable = true },
+      { text = "Menugem", notCheckable = true, hasArrow = true, menuList = subsubmenu },
+      { text = delim, notCheckable = true, notClickable = true },
       { text = "Unlock All", func = unlockAllFrames, notCheckable = 1, keepShownOnClick = true, },
       { text = "Lock All", func = lockAllFrames, notCheckable = 1, keepShownOnClick = true, },
       { text = "Show All", func = showAllFrames, notCheckable = 1, keepShownOnClick = true, },
       { text = "Hide All", func = hideAllFrames, notCheckable = 1, keepShownOnClick = true, },
-      { text = "-----------", notCheckable = true, notClickable = true },
+      { text = delim, notCheckable = true, notClickable = true },
       { text = "Reset All", func = resetAllFrames, notCheckable = 1, keepShownOnClick = true, },
     }
     line = { text = "General", notCheckable = true, hasArrow = true, menuList = submenu }
+    table.insert(menuTable,line)
+    line = { text = delim, notCheckable = true, notClickable = true }
     table.insert(menuTable,line)
   end
 
   local createMenuForFrames = function(f,title)
     --general
     submenu = {
+      { text = title, isTitle = true, notCheckable = true, notClickable = true },
+      { text = delim, notCheckable = true, notClickable = true },
       { text = "Unlock", func = function() unlockFrame(f) end, notCheckable = 1, keepShownOnClick = true, },
       { text = "Lock", func = function() lockFrame(f) end, notCheckable = 1, keepShownOnClick = true, },
       { text = "Show", func = function() showFrame(f) end, notCheckable = 1, keepShownOnClick = true, },
       { text = "Hide", func = function() hideFrame(f) end, notCheckable = 1, keepShownOnClick = true, },
-      { text = "-----------", notCheckable = true, notClickable = true },
+      { text = delim, notCheckable = true, notClickable = true },
       { text = "Reset", func = function() resetFrame(f) end, notCheckable = 1, keepShownOnClick = true, },
     }
     line = { text = title, notCheckable = true, hasArrow = true, menuList = submenu }
@@ -783,6 +804,10 @@
           applyVisibility(_G[v],_DB[v].visibility)
         end
       end
+      --get menugem visibility
+      if _DB["rBBS_Menugem"] and _DB["rBBS_Menugem"].visibility then
+        applyVisibility(_G["rBBS_Menugem"],_DB["rBBS_Menugem"].visibility)
+      end
       self:UnregisterEvent("VARIABLES_LOADED")
     end
     f:RegisterEvent("VARIABLES_LOADED")
@@ -813,31 +838,70 @@
 
   --slash command functionality
   local function SlashCmd(cmd)
-    --if (cmd:match"unlock") then
-      --unlockAllFrames()
-    --elseif (cmd:match"lock") then
-      --lockAllFrames()
-    --elseif (cmd:match"reset") then
-      --resetAllFrames()
-    --elseif (cmd:match"show") then
-      --showAllFrames()
-    --elseif (cmd:match"hide") then
-      --hideAllFrames()
-    --else
-      EasyMenu(menuTable, dropdown, "cursor", 0 , 0, "MENU")
-      --print("|c0033AAFFrBBS command list:|r")
-      --print("|c0033AAFF\/rBBS lock|r, to lock all frames")
-      --print("|c0033AAFF\/rBBS unlock|r, to unlock all frames")
-      --print("|c0033AAFF\/rBBS reset|r, to reset all frames to default")
-      --print("|c0033AAFF\/rBBS show|r, to show all frames")
-      --print("|c0033AAFF\/rBBS hide|r, to hide all frames")
-    --end
+    EasyMenu(menuTable, dropdown, "cursor", 10 , -15, "MENU")
   end
 
   SlashCmdList["rbbs"] = SlashCmd;
   SLASH_rbbs1 = "/rbbs";
   print("|c0033AAFFrBBS loaded.|r")
   print("|c0033AAFF\/rBBS|r to display the menu")
+
+  ---------------------------------
+  -- RBBS_MENUGEM ICON
+  ---------------------------------
+  --tooltip for icon func
+  local showIconTooltip = function(f)
+    local g = GameTooltip
+    g:SetOwner(f, "ANCHOR_CURSOR")
+    g:AddLine("rBBS Menugem", 0, 1, 0.5, 1, 1, 1)
+    g:AddLine("Click the gem to open the menu.", 1, 1, 1, 1, 1, 1)
+    g:AddLine("ALT+LEFT MOUSE to move the icon.", 1, 1, 1, 1, 1, 1)
+    g:Show()
+  end
+
+  local swapIconTexture = function(s)
+    if s.switch then
+      s.switch = false
+      s.t:SetTexture("Interface\\AddOns\\rBBS\\media\\chatgem_active.tga")
+    else
+      s.switch = true
+      s.t:SetTexture("Interface\\AddOns\\rBBS\\media\\chatgem_inactive.tga")
+    end
+    EasyMenu(menuTable, dropdown, "cursor", 10 , -15, "MENU")
+  end
+
+  local createIcon = function(f)
+    local i = CreateFrame("Frame","rBBS_Menugem",UIParent)
+    i:SetSize(32,32)
+    i:SetPoint("CENTER",0,0)
+    i:SetScale(0.82)
+    local t = i:CreateTexture(nil, "BACKGROUND",nil,-8)
+    t:SetTexture("Interface\\AddOns\\rBBS\\media\\chatgem_inactive.tga")
+    t:SetAllPoints(i)
+    i.t = t
+    i.switch = true
+    i:SetMovable(true)
+    i:SetUserPlaced(true)
+    i:EnableMouse(true)
+    i:SetClampedToScreen(true)
+    i:RegisterForDrag("LeftButton","RightButton")
+    i:SetScript("OnDragStart", function(s) if IsAltKeyDown() then s:StartMoving() end end)
+    i:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
+    i:SetScript("OnMouseDown", function(s)
+      if not IsAltKeyDown() then
+        swapIconTexture(s)
+      end
+    end)
+    i:SetScript("OnEnter", function(s)
+      showIconTooltip(s)
+    end)
+    i:SetScript("OnLeave", function(s)
+      GameTooltip:Hide()
+    end)
+  end
+
+  --call
+  createIcon()
 
   ---------------------------------
   -- REGISTER

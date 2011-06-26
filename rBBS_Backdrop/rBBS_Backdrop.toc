@@ -1,0 +1,8 @@
+## Interface: 40100
+## Author: zork
+## Title: rBBS_Backdrop
+## Notes: Backdrop Example Layout For rBBS
+## RequiredDeps: rBBS
+
+config.lua
+style.lua

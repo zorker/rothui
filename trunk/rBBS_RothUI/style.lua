@@ -16,16 +16,12 @@
 
   --spawn the drag frame
   local dragframe = rBBS:spawnDragFrame(addon, cfg.dragframe)
-
   --spawn actionbar background and hand over the dragframe as parent frame
   rBBS:spawnFrame(addon, cfg.actionbarbg, dragframe)
-
   --spawn health orb
   rBBS:spawnHealthOrb(addon, cfg.healthorb, dragframe)
-
   --spawn power orb
   rBBS:spawnPowerOrb(addon, cfg.powerorb, dragframe)
-
   --spawn angel
   rBBS:spawnFrame(addon, cfg.angel, dragframe)
   --spawn demon

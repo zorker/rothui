@@ -14,20 +14,19 @@
   cfg.dragframe = {
     strata      = "BACKGROUND",  --frame strata
     level       = 0, --frame level
-    pos         = { a1="BOTTOM", x=0, y=1, },
+    pos         = { a1="BOTTOM", x=0, y=0, },
   }
 
   --actionbar background
   cfg.actionbarbg = {
-    name        = "ActionBar",    --this is needed and has to be unique per addon, if you want to move this frame seperately
-    --parent      = "UIParent",
+    name        = "ActionBar",    --has to be unique per addon
     width       = 512,
     height      = 256,
     scale       = 0.82,
     --alpha       = 1,
     --strata      = "BACKGROUND",  --frame strata
     --level       = 0, --frame level
-    pos         = { a1="BOTTOM", x=0, y=1, }, --no anchorframe, we want it to point to the frame parented.
+    pos         = { a1="BOTTOM", x=0, y=1, }, --position
     texture     = {
                     file        = "Interface\\AddOns\\rBBS_RothUI\\media\\bar3.tga",
                     --strata      = "BACKGROUND", --texture strata
@@ -40,7 +39,6 @@
   --bottomline texture
   cfg.healthorb = {
     name              = "HealthOrb",
-    --movable           = true,
     size              = 150,
     scale             = 0.82,
     classcolored      = false,

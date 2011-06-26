@@ -5,15 +5,14 @@
   local addon, ns = ...
   ns.cfg = {}
   local cfg = ns.cfg
-  
+
   ---------------------------------
   -- CONFIG
   ---------------------------------
 
-  --playerhealthorb  
+  --playerhealthorb
   cfg.playerhealthorb = {
     name              = "PlayerHealthOrb",
-    movable           = true,
     size              = 150,
     scale             = 0.82,
     classcolored      = true,
@@ -21,19 +20,18 @@
                           enable          = true,
                           anim            = 20,
                           decreaseAlpha   = false,
-                          multiplier      = 0.3,                          
+                          multiplier      = 0.3,
                         },
     --color             = { r=1, g=1, b=0, a=1, },
-    pos               = { a1="CENTER", a2="CENTER", af="UIParent", x=-260, y=0, },
+    pos               = { a1="CENTER", x=-260, y=0, },
     --strata      = "BACKGRROUND",
     --level       = 1,
     --filling        = "Interface\\AddOns\\rBBS_RothUI\\media\\orb_filling15.tga",
-  } 
+  }
 
-  --playerpowerorb  
+  --playerpowerorb
   cfg.playerpowerorb = {
     name              = "PlayerPowerOrb",
-    movable           = true,
     size              = 150,
     scale             = 0.82,
     powertypecolored  = true,
@@ -41,16 +39,15 @@
                           enable          = true,
                           anim            = 6,
                           decreaseAlpha   = false,
-                          multiplier      = 0.3,                          
+                          multiplier      = 0.3,
                         },
-    pos               = { a1="CENTER", a2="CENTER", af="UIParent", x=260, y=0, },
-  } 
-  
-  --targethealthorb   
+    pos               = { a1="CENTER", x=260, y=0, },
+  }
+
+  --targethealthorb
   cfg.targethealthorb = {
     name              = "TargetHealthOrb",
     unit              = "target",         --default unit is "player" but in this case we want target
-    movable           = true,
     size              = 120,
     scale             = 0.82,
     classcolored      = true,
@@ -58,16 +55,15 @@
                           enable          = true,
                           anim            = 2,
                           decreaseAlpha   = false,
-                          multiplier      = 0.3,                          
+                          multiplier      = 0.3,
                         },
-    pos               = { a1="CENTER", a2="CENTER", af="UIParent", x=-130, y=0, },
+    pos               = { a1="CENTER", x=-130, y=0, },
   }
-  
-  --targetpowerorb   
+
+  --targetpowerorb
   cfg.targetpowerorb = {
     name              = "TargetPowerOrb",
     unit              = "target",         --default unit is "player" but in this case we want target
-    movable           = true,
     size              = 120,
     scale             = 0.82,
     powertypecolored  = true,
@@ -75,11 +71,11 @@
                           enable          = true,
                           anim            = 0,
                           decreaseAlpha   = false,
-                          multiplier      = 0.3,                          
+                          multiplier      = 0.3,
                         },
-    pos               = { a1="CENTER", a2="CENTER", af="UIParent", x=130, y=0, },
-  } 
-  
+    pos               = { a1="CENTER", x=130, y=0, },
+  }
+
   ---------------------------------
   -- CONFIG
   ---------------------------------

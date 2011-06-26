@@ -111,7 +111,11 @@
     if f.hookup then
       f.hookup:SetScale(size.w/100) --apply the size of the one frame as scale to the hookup frame
     end
-    f:SetSize(size.w,size.w*size.ratio)
+    if size.ratio then
+      f:SetSize(size.w,size.w*size.ratio)
+    else
+      f:SetSize(size.w,size.h)
+    end
   end
 
   --fontstring func
@@ -373,7 +377,11 @@
     if f.hookup then
       f.hookup:SetScale(w/100) --apply the size of the one frame as scale to the hookup frame
     end
-    f:SetSize(w,w*f.ratio)
+    if f.ratio then
+      f:SetSize(w,w*f.ratio)
+    else
+      f:SetSize(w,h)
+    end
     if f.type == "healthorb" then
       local uh, uhm = UnitHealth(f.unit) or 0, UnitHealthMax(f.unit)
       if uhm and uhm > 0 then
@@ -431,6 +439,7 @@
     table.insert(rBBS.movableFrames,f:GetName()) --load all the frames that can be moved into the global table
   end
 
+  --save the default values
   local saveDefaultSettings = function(f,cfg)
     f.default             = {}
     f.default.pos         = cfg.pos
@@ -439,6 +448,43 @@
     f.default.size.h      = cfg.height or 100
     f.default.size.ratio  = f.ratio
     f.default.visibility  = cfg.visibility or "show" -- show/hide
+  end
+
+  --create backdrop
+  local createBackdrop = function(f,cfg)
+    if not cfg then return end
+    local backdrop = {
+      bgFile = cfg.bgFile or nil,
+      edgeFile = cfg.edgeFile or nil,
+      tile = cfg.tile or false,
+      tileSize = cfg.tileSize or 16,
+      edgeSize = cfg.edgeSize or 16,
+      insets = {
+        left = cfg.inset or 0,
+        right = cfg.inset or 0,
+        top = cfg.inset or 0,
+        bottom = cfg.inset or 0,
+      },
+    }
+    local b = CreateFrame("FRAME",nil,f.lastActiveBackdrop or f)
+    b:SetPoint("TOPLEFT",f,"TOPLEFT",cfg.padding or 0,-cfg.padding or 0)
+    b:SetPoint("BOTTOMRIGHT",f,"BOTTOMRIGHT",-cfg.padding or 0,cfg.padding or 0)
+    b:SetBackdrop(backdrop)
+    if cfg.bgColor then
+      b:SetBackdropColor(cfg.bgColor.r or 1, cfg.bgColor.g or 1, cfg.bgColor.b or 1, cfg.bgColor.a or 1)
+    end
+    if cfg.edgeColor then
+      b:SetBackdropBorderColor(cfg.edgeColor.r or 1, cfg.edgeColor.g or 1, cfg.edgeColor.b or 1, cfg.edgeColor.a or 1)
+    end
+    f.lastActiveBackdrop = b
+  end
+
+  --create all backdrops
+  local createAllBackdrops = function(f,backdrops)
+    if not backdrops then return end
+    for i,v in ipairs(backdrops) do
+      createBackdrop(f,v)
+    end
   end
 
   --SPAWN DRAGFRAME FUNCTION
@@ -469,6 +515,38 @@
     --save default settings for reset
     saveDefaultSettings(f,cfg)
     return hookup --return the hookup to be parented by frame that parent the dragframe
+  end
+
+  --SPAWN BACKDROP FUNCTION
+  function rBBS:spawnBackdropFrame(opener, cfg, parent)
+    if parent then cfg.parent = parent end
+    --add the name of the opener addon to the frame name
+    if cfg.name then cfg.name = opener.."_"..cfg.name end
+    --create frame based on given config settings
+    local f = CreateFrame("Frame", cfg.name or nil, cfg.parent or UIParent, cfg.inherit or nil)
+    --save movable and sizable to the frame object
+    f.movable = cfg.movable or true
+    f.type = "backdrop"
+    --frame strata
+    f:SetFrameStrata(cfg.strata or "BACKGROUND")
+    --framelevel
+    f:SetFrameLevel(cfg.level or 0)
+    --size
+    f:SetSize(cfg.width or 100, cfg.height or 100)
+    --save the width/height ratio in case frame gets resized
+    f.ratio = nil --ignore the ratio value for backdrops
+    --alpha
+    if cfg.alpha then f:SetAlpha(cfg.alpha or 1) end
+    --scale
+    if cfg.scale then f:SetScale(cfg.scale or 1) end
+    --setpoint
+    applySetPoint(f,cfg.pos)
+    --backdrops
+    createAllBackdrops(f,cfg.backdrops)
+    --add the movability function
+    applyMoveFunctionality(f)
+    --save default settings for reset
+    saveDefaultSettings(f,cfg)
   end
 
   --SPAWN FRAME FUNCTION

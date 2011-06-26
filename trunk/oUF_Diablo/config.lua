@@ -2,58 +2,58 @@
   ---------------------------------------------
   --  oUF_Diablo
   ---------------------------------------------
-  
+
   --  A unitframe layout for oUF 1.5.x
   --  by zork - 2010
-  
+
   ---------------------------------------------
-  
+
   --get the addon namespace
   local addon, ns = ...
-  
+
   --object container
-  local cfg = CreateFrame("Frame") 
-  
+  local cfg = CreateFrame("Frame")
+
   ---------------------------------------------
   -- // CONFIG // --
   ---------------------------------------------
-  
+
   ----------------------------------------
   -- orb animation system
   ----------------------------------------
-  
+
   --make this value true to enable the animation system
   --animations use preset colors, so class and stance coloring is not possible, but you may change the animation based on class in the charspecific.lua
   cfg.useAnimationSystem = true --true/false
 
   -- defines the animation used in the orbs, following animations are available
   -- 0 = red fog,         1 = purple fog,       2 = green fog,          3 = yellow fog,     4 = turquoise fog
-  -- 5 = red portal,      6 = blue rune portal, 7 = red ghost,          8 = purple ghost,   9 = water planet, 
+  -- 5 = red portal,      6 = blue rune portal, 7 = red ghost,          8 = purple ghost,   9 = water planet,
   -- 10 = swirling cloud, 11 = white fog,       12 = red glowing eye,   13 = sandy swirl,   14 = green fire
   -- 15 = purple swirl,   16 = white tornado,   17 = blue swirly,       18 = orange fog,    19 = pearl
   -- 20 = red magnet,     21 = blue portal,     22 = purple portal
-  
+
   --health animation
   cfg.animhealth = 20 --default 7
   --power animation
   cfg.animmana = 21 --default 8
-  
+
   --set your class specific settings here, you can even activate automatic class and powertype coloring
   --BEWARE enabling class or powertype coloring will disable the selected animation, instead always the pearl animation is used internally
   --it is the only animation that can be colored in some kind of fashion
   --muliplier: is a setting that will be multiplied with the alpha value of the animation (to make it a bit less attracting)
-  --decrease alpha on value: by default the alpha of an animation is multiplied with the value (to make it fade once you loose hp or mana) but in sometimes you don't want that, so that value can disable that
+  --decrease alpha on value: by default the alpha of an animation is multiplied with the value (to make it fade once you loose hp or mana) but in some cases you don't want that, so that value can disable that
   cfg.animClassOverride = {
-    ["DEATHKNIGHT"]   = { enable = true, animhealth = 13, animmana = 4,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.3,  manamultiplier = 0.3,  healthdecreasealpha = false, manadecreasealpha = false, },
-    ["DRUID"]         = { enable = true, animhealth = 18, animmana = 9,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.3,  manamultiplier = 0.3,  healthdecreasealpha = false, manadecreasealpha = false, },
-    ["HUNTER"]        = { enable = true, animhealth = 2, animmana = 18,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
-    ["MAGE"]          = { enable = true, animhealth = 4,  animmana = 6,   classcolored = true,  powertypecolored = false, healthmultiplier = 0.3,  manamultiplier = 1,    healthdecreasealpha = false, manadecreasealpha = true,  },
+    ["DEATHKNIGHT"]   = { enable = true, animhealth = 13, animmana = 4,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.4,  manamultiplier = 0.4,  healthdecreasealpha = false, manadecreasealpha = false, },
+    ["DRUID"]         = { enable = true, animhealth = 18, animmana = 9,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.4,  manamultiplier = 0.4,  healthdecreasealpha = false, manadecreasealpha = false, },
+    ["HUNTER"]        = { enable = true, animhealth = 20,  animmana = 6,  classcolored = false, powertypecolored = false, healthmultiplier = 0.13,    manamultiplier = 0.13,    healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["MAGE"]          = { enable = true, animhealth = 4,  animmana = 6,   classcolored = true,  powertypecolored = false, healthmultiplier = 0.4,  manamultiplier = 1,    healthdecreasealpha = false, manadecreasealpha = true,  },
     ["ROGUE"]         = { enable = true, animhealth = 3,  animmana = 22,  classcolored = false, powertypecolored = true,  healthmultiplier = 1,    manamultiplier = 0.3,  healthdecreasealpha = true,  manadecreasealpha = false, },
     ["PRIEST"]        = { enable = true, animhealth = 19, animmana = 11,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["PALADIN"]       = { enable = true, animhealth = 1,  animmana = 17,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["SHAMAN"]        = { enable = true, animhealth = 16, animmana = 15,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
-    ["WARRIOR"]       = { enable = true, animhealth = 2, animmana = 20,  classcolored = false,  powertypecolored = false, healthmultiplier = 1,    manamultiplier = 0.3,  healthdecreasealpha = true,  manadecreasealpha = true,  },
-    ["WARLOCK"]       = { enable = true, animhealth = 15, animmana = 22,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["WARRIOR"]       = { enable = true, animhealth = 20,  animmana = 6,  classcolored = false, powertypecolored = false, healthmultiplier = 0.13,    manamultiplier = 0.13,  healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["WARLOCK"]       = { enable = true, animhealth = 15, animmana = 22,  classcolored = false, powertypecolored = false, healthmultiplier = 0.2,    manamultiplier = 0.4,    healthdecreasealpha = true,  manadecreasealpha = true,  },
   }
 
   ----------------------------------------
@@ -63,7 +63,7 @@
   -- healthcolor defines what healthcolor will be used
   -- 0 = class color, 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
   cfg.healthcolor = 0
-  
+
   -- manacolor defines what manacolor will be used
   -- 1 = red, 2 = green, 3 = blue, 4 = yellow, 5 = runic
   cfg.manacolor = 1
@@ -78,16 +78,16 @@
 
   --the texture of the health orb. you can choose between 11 different textures.
   --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = city, 15 = diablo3
-  cfg.healthtexture = 15
-  
+  cfg.healthtexture = 15 --default 15
+
   --the texture of the mana orb. you can choose between 11 different textures.
   --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = city, 15 = diablo3
-  cfg.manatexture = 15
+  cfg.manatexture = 15 --default 15
 
   ----------------------------------------
   -- colorswitcher define your color for healthbars here
   ----------------------------------------
-  
+
   --color is in RGB (red (r), green (g), blue (b), alpha (a)), values are from 0 (dark color) to 1 (bright color). 1,1,1 = white / 0,0,0 = black / 1,0,0 = red etc
   cfg.colorswitcher = {
     bright              = { r = 1, g = 0, b = 0, a = 0.9, },          -- the bright color
@@ -100,18 +100,18 @@
   ----------------------------------------
   -- frame movement
   ----------------------------------------
-  
+
   --setting this to false will use the default frame positions, true allows moving
-  cfg.framesUserplaced = false 
-  
+  cfg.framesUserplaced = false
+
   --setting this to true will lock the frames in place, false unlocks them
   cfg.framesLocked = true
-  
-  
+
+
   ----------------------------------------
   --units
   ----------------------------------------
-  
+
   cfg.units = {
     -- PLAYER
     player = {
@@ -122,7 +122,7 @@
       power = {
         frequentUpdates = false,
       },
-      pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -260, y = -9 }, 
+      pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -260, y = -9 },
       icons = {
         pvp = {
           show = false,
@@ -146,42 +146,49 @@
           bar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
           bg = { r = 0.96, g = 0.7, b = 0, a = 1, },
         },
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 180.5 }, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 180.5 },
       },
-      soulshards = { 
+      soulshards = {
         show = true,
         scale = 0.45,
         color = {r = 150/255, g = 135/255, b = 200/255, },
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 }, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 },
         alpha = {
           ooc = 0.7, --alpha value out of combat
           ic = 1, --alpha value in comat
         },
       },
-      holypower = { 
+      holypower = {
         show = true,
         scale = 0.45,
         color = {r = 200/255, g = 135/255, b = 190/255, },
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 }, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 },
         alpha = {
           ooc = 0.7, --alpha value out of combat
           ic = 1, --alpha value in comat
         },
       },
-      eclipsebar = { 
+      eclipsebar = {
         show = true,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 }, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 },
         scale = 1,
       },
       runes = {
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 170 }, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 170 },
       },
-      altpower = { 
+      altpower = {
         show = true,
         scale = 0.5,
         color = {r = 1, g = 0, b = 1, },
         texture = "Interface\\AddOns\\rTextures\\statusbar",
-        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 }, 
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+      },
+      vengeance = {
+        show = true,
+        scale = 0.5,
+        color = {r = 1, g = 0, b = 0, },
+        texture = "Interface\\AddOns\\rTextures\\statusbar",
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
       },
       expbar = { --experience
         show = true,
@@ -229,12 +236,12 @@
         use3D = true,
       },
     },
-    
+
     -- TARGET
     target = {
       show = true,
       scale = 1,
-      pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 250 }, 
+      pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 250 },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
         tag = "[diablo:hpval]",
@@ -251,13 +258,13 @@
         showDebuffType = false,
         desaturateDebuffs = false,
         buffs = {
-          pos = { a1 = "BOTTOMLEFT", a2 = "TOPRIGHT", x = 0, y = -15 }, 
+          pos = { a1 = "BOTTOMLEFT", a2 = "TOPRIGHT", x = 0, y = -15 },
           initialAnchor = "BOTTOMLEFT",
           growthx = "RIGHT",
           growthy = "UP",
-        },        
+        },
         debuffs = {
-          pos = { a1 = "TOPLEFT", a2 = "BOTTOMRIGHT", x = 0, y = 15 }, 
+          pos = { a1 = "TOPLEFT", a2 = "BOTTOMRIGHT", x = 0, y = 15 },
           initialAnchor = "TOPLEFT",
           growthx = "RIGHT",
           growthy = "DOWN",
@@ -273,13 +280,13 @@
           shieldbar = { r = 0.5, g = 0.5, b = 0.5, a = 1, }, --the castbar color while target casting a shielded spell
           shieldbg = { r = 0.8, g = 0.8, b = 0.8, a = 1, },  --the castbar background color while target casting a shielded spell
         },
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 350 }, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 350 },
       },
-      combobar = { 
+      combobar = {
         show = true,
         scale = 0.5,
         color = {r = 0.9, g = 0.59, b = 0, },
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 480 }, 
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 480 },
       },
       portrait = {
         pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 100, y = 0 },
@@ -288,12 +295,12 @@
         use3D = true,
       },
     },
-    
+
     --TARGETTARGET
     targettarget = {
       show = true,
       scale = 1,
-      pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -195, y = 250 }, 
+      pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -195, y = 250 },
       auras = {
         show = true,
         size = 22,
@@ -308,12 +315,12 @@
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
       },
     },
-    
+
     --PET
     pet = {
       show = true,
       scale = 0.85,
-      pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 10, y = -140 }, 
+      pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 10, y = -140 },
       auras = {
         show = true,
         size = 22,
@@ -327,24 +334,24 @@
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
       },
-      altpower = { 
+      altpower = {
         show = true,
         scale = 0.5,
         color = {r = 1, g = 0, b = 1, },
         texture = "Interface\\AddOns\\rTextures\\statusbar",
-        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 }, 
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
       },
       portrait = {
         show = true,
         use3D = true,
       },
     },
-    
+
     --FOCUS
     focus = {
       show = true,
       scale = 0.85,
-      pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 10, y = 40 }, 
+      pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 10, y = 40 },
       aurawatch = {
         show            = true,
         size            = 20,
@@ -374,15 +381,15 @@
           bar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
           bg = { r = 0.96, g = 0.7, b = 0, a = 1, },
         },
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 420 }, 
-      },  
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 420 },
+      },
     },
-    
+
     --PETTARGET
     pettarget = {
       show = false,
       scale = 0.85,
-      pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 140, y = -140 }, 
+      pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 140, y = -140 },
       auras = {
         show = true,
         size = 22,
@@ -401,12 +408,12 @@
         use3D = true,
       },
     },
-    
+
     --FOCUSTARGET
     focustarget = {
       show = false,
       scale = 0.85,
-      pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 140, y = 40 }, 
+      pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 140, y = 40 },
       auras = {
         show = true,
         size = 22,
@@ -425,7 +432,7 @@
         use3D = true,
       },
     },
-    
+
     --PARTY
     party = {
       show = true,
@@ -433,7 +440,7 @@
         notinrange = 0.5,
       },
       scale = 0.85,
-      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -80 }, 
+      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -80 },
       aurawatch = {
         show            = true,
         size            = 20.1,
@@ -464,7 +471,7 @@
         point               = "LEFT",
       },
     },
-    
+
     --RAID
     raid = {
       show = true,
@@ -472,7 +479,7 @@
         notinrange = 0.5,
       },
       scale = 1.05,
-      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 }, 
+      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
         tag1 = "[diablo:name]",     --tag for the first line
@@ -487,20 +494,20 @@
         --maximum number of icons displayed at a time = 1
         --this is for important boss mechanics only, this is not for tracking healing HOTs etc
         spelllist = {
-          
+
           --test
-          32407, 
-                    
-          --CATACLYSM RAIDS          
+          32407,
+
+          --CATACLYSM RAIDS
           86622,
-          
+
           --maloriak
           92980, --ice bomb
           77786, --red phase consuming flames
-          
+
           --chimaeron
           89084 , --skull icon chimaeron <10k life
-          
+
         },
         show            = true,
         disableCooldown = true,
@@ -520,15 +527,15 @@
         maxColumns          = 8,
         unitsPerColumn      = 5,
         columnSpacing       = -20,
-        columnAnchorPoint   = "LEFT",        
+        columnAnchorPoint   = "LEFT",
       },
     },
-    
+
     --BOSSFRAMES
     boss = {
       show = true,
       scale = 1,
-      pos = { a1 = "TOP", a2 = "BOTTOM", af = "Minimap", x = 0, y = -80 }, 
+      pos = { a1 = "TOP", a2 = "BOTTOM", af = "Minimap", x = 0, y = -80 },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
         tag = "[diablo:altbosspower][perhp]%",
@@ -538,7 +545,7 @@
         tag = "[perpp]%",
       },
     },
-    
+
   }
 
   ----------------------------------------
@@ -566,8 +573,8 @@
     [4] = {r = 0.9, g = 0.8, b = 0.35, }, -- yellow
     [5] = {r = 0.35, g = 0.9,   b = 0.9, }, -- runic
   }
-  
-  --orb animation table 
+
+  --orb animation table
   cfg.animtab = {
     [0] = {displayid = 17010, r = 1, g = 0, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },          -- red fog
     [1] = {displayid = 17054, r = 1, g = 0.4, b = 1, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },      -- purple fog
@@ -577,7 +584,7 @@
     [5] = {displayid = 23422, r = 0.4, g = 0, b = 0, camdistancescale = 2.8, portraitzoom = 1, x = 0, y = 0.1, rotation = 0, },         -- red portal
     [6] = {displayid = 27393, r = 0, g = 0.4, b = 1, camdistancescale = 3, portraitzoom = 1, x = 0, y = 0.6, rotation = 0, },           -- blue rune portal
     [7] = {displayid = 20894, r = 0.6, g = 0, b = 0, camdistancescale = 6, portraitzoom = 1, x = -0.3, y = 0.4, rotation = 0, },        -- red ghost
-    [8] = {displayid = 15438, r = 0.4, g = 0.3, b = 1, camdistancescale = 6, portraitzoom = 1, x = -0.3, y = 0.4, rotation = 0, },        -- purple ghost
+    [8] = {displayid = 15438, r = 0, g = 0.3, b = 0.6, camdistancescale = 6, portraitzoom = 1, x = -0.3, y = 0.4, rotation = 0, },        -- purple ghost
     [9] = {displayid = 20782, r = 0, g = 0.7, b = 1, camdistancescale = 1.2, portraitzoom = 1, x = -0.22, y = 0.18, rotation = 0, },    -- water planet
     [10] = {displayid = 23310, r = 1, g = 1, b = 1, camdistancescale = 3.5, portraitzoom = 1, x = 0, y = 3, rotation = 0, },          -- swirling cloud
     [11] = {displayid = 23343, r = 0.8, g = 0.8, b = 0.8, camdistancescale = 1.6, portraitzoom = 1, x = -0.2, y = 0, rotation = 0, },      -- white fog
@@ -593,7 +600,7 @@
     [21] = {displayid = 34319, r = 0, g = 0, b = 0.4, camdistancescale = 1.55, portraitzoom = 1, x = 0, y = 0.8, rotation = 0, },       -- blue portal
     [22] = {displayid = 34645, r = 0.3, g = 0, b = 0.3, camdistancescale = 1.7, portraitzoom = 1, x = 0, y = 0.8, rotation = 0, },      -- purple portal
   }
-  
+
   cfg.powercolors = {
     ["MANA"] = { r = 0, g = 0.4, b = 1 },
     ["RAGE"] = { r = 1.00, g = 0.00, b = 0.00 },
@@ -605,7 +612,7 @@
     ["AMMOSLOT"] = { r = 0.80, g = 0.60, b = 0.00 },
     ["FUEL"] = { r = 0.0, g = 0.55, b = 0.5 },
   }
-  
+
   cfg.happycolors = {
     [0] = {r = 1, g = 1, b = 1},
     [1] = {r = 1, g = 0, b = 0},
@@ -614,26 +621,26 @@
   }
 
   --font
-  cfg.font = "FONTS\\FRIZQT__.ttf"   
+  cfg.font = "FONTS\\FRIZQT__.ttf"
 
   --backdrop
-  cfg.backdrop = { 
-    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
+  cfg.backdrop = {
+    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
     edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
     tile = false,
-    tileSize = 0, 
-    edgeSize = 5, 
-    insets = { 
-      left = 5, 
-      right = 5, 
-      top = 5, 
+    tileSize = 0,
+    edgeSize = 5,
+    insets = {
+      left = 5,
+      right = 5,
+      top = 5,
       bottom = 5,
     },
   }
-  
+
   -----------------------------
   -- HANDOVER
   -----------------------------
-  
+
   --object container to addon namespace
   ns.cfg = cfg

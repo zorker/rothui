@@ -1,20 +1,20 @@
-  
+
   --get the addon namespace
-  local addon, ns = ...  
+  local addon, ns = ...
 
   --get oUF namespace (just in case needed)
-  local oUF = ns.oUF or oUF  
-  
+  local oUF = ns.oUF or oUF
+
   --get the config
-  local cfg = ns.cfg  
-  
+  local cfg = ns.cfg
+
   --object container
   local func = CreateFrame("Frame")
-  
+
   ---------------------------------------------
   -- FUNCTIONS
   ---------------------------------------------
-  
+
   --number format func
   func.numFormat = function(v)
     local string = ""
@@ -24,10 +24,10 @@
       string = (floor((v/1E3)*10)/10).."k"
     else
       string = v
-    end  
+    end
     return string
   end
-  
+
   --format time func
   func.GetFormattedTime = function(time)
     local hr, m, s, text
@@ -46,20 +46,20 @@
     end
     return text
   end
-  
+
   --backdrop func
   func.createBackdrop = function(f)
     f:SetBackdrop(cfg.backdrop)
     f:SetBackdropColor(0,0,0,0.7)
     f:SetBackdropBorderColor(0,0,0,1)
   end
-  
+
   --menu function from phanx
   local dropdown = CreateFrame("Frame", "MyAddOnUnitDropDownMenu", UIParent, "UIDropDownMenuTemplate")
-  
+
   UIDropDownMenu_Initialize(dropdown, function(self)
     local unit = self:GetParent().unit
-    if not unit then return end  
+    if not unit then return end
     local menu, name, id
     if UnitIsUnit(unit, "player") then
       menu = "SELF"
@@ -85,14 +85,14 @@
       UnitPopup_ShowMenu(self, menu, unit, name, id)
     end
   end, "MENU")
-  
+
   func.menu = function(self)
     dropdown:SetParent(self)
     ToggleDropDownMenu(1, nil, dropdown, "cursor", 0, 0)
   end
-  
+
   --remove focus from menu list
-  do 
+  do
     for k,v in pairs(UnitPopupMenus) do
       for x,y in pairs(UnitPopupMenus[k]) do
         if y == "SET_FOCUS" then
@@ -103,7 +103,7 @@
       end
     end
   end
-  
+
   --create debuff func
   func.createDebuffs = function(self)
     local f = CreateFrame("Frame", nil, self)
@@ -121,10 +121,10 @@
     f["growth-y"] = "DOWN"
     f.spacing = 5
     f.showDebuffType = self.cfg.auras.showDebuffType
-    f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerDebuffs    
-    self.Debuffs = f    
+    f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerDebuffs
+    self.Debuffs = f
   end
-  
+
   --Desaturated and Button CD
   func.postUpdateDebuff = function(element, unit, button, index, duration, expirationTime)
     if(UnitIsFriend("player", unit) or button.isPlayer) then
@@ -133,12 +133,12 @@
     else
       button.icon:SetDesaturated(true)
       --button.cd:Hide()
-    end 
+    end
     button.icon.duration = duration
     button.icon.timeLeft = expirationTime
-    button.icon.first = true                
+    button.icon.first = true
   end
-  
+
   --aura icon func
   func.createAuraIcon = function(icons, button)
     local bw = button:GetWidth()
@@ -158,17 +158,17 @@
     button.overlay:SetPoint("BOTTOMRIGHT", 1, -1)
     button.overlay:SetVertexColor(0.4,0.35,0.35,1)
     button.overlay:Show()
-    button.overlay.Hide = function() end    
+    button.overlay.Hide = function() end
     local back = button:CreateTexture(nil, "BACKGROUND")
     back:SetPoint("TOPLEFT",button.icon,"TOPLEFT",-0.18*bw,0.18*bw)
     back:SetPoint("BOTTOMRIGHT",button.icon,"BOTTOMRIGHT",0.18*bw,-0.18*bw)
     back:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_glow")
-    back:SetVertexColor(0, 0, 0, 1)    
+    back:SetVertexColor(0, 0, 0, 1)
   end
-  
+
   --create AltPowerBar
   func.createAltPowerBar = function(self,name)
-    
+
     local t,f
     local num = 4
     local w = 64*num
@@ -181,7 +181,7 @@
     bar:SetStatusBarColor(self.cfg.altpower.color.r, self.cfg.altpower.color.g, self.cfg.altpower.color.b)
     --bar:SetMinMaxValues(0,100)
     --bar:SetValue(70)
-    
+
     t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetSize(64,64)
     t:SetPoint("LEFT",-64,0)
@@ -193,27 +193,36 @@
     t:SetPoint("RIGHT",64,0)
     t:SetTexture("Interface\\AddOns\\rTextures\\combo_right")
     bar.rightedge = t
-    
-    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)  
+
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetSize(64*num,64)
     t:SetPoint("LEFT",0,0)
     t:SetTexture("Interface\\AddOns\\rTextures\\combo_back")
     bar.back = t
 
-    f = func.createFontString(bar, cfg.font, 24, "THINOUTLINE")
+    local g = CreateFrame("Frame",nil,bar)
+    g:SetAllPoints(bar)
+
+    t = g:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64*num,64)
+    t:SetPoint("LEFT",0,0)
+    t:SetBlendMode("ADD")
+    t:SetTexture("Interface\\AddOns\\rTextures\\combo_highlight2")
+
+    f = func.createFontString(g, cfg.font, 24, "THINOUTLINE")
     f:SetPoint("CENTER", 0, 0)
     f:SetTextColor(0.8,0.8,0.8)
     self:Tag(f, "[diablo:altpower]")
 
-    bar:SetScale(self.cfg.altpower.scale)    
-    func.simpleDragFunc(bar)    
+    bar:SetScale(self.cfg.altpower.scale)
+    func.simpleDragFunc(bar)
     self.AltPowerBar = bar
 
   end
-  
+
   --create aura watch func
   func.createAuraWatch = function(self)
-    
+
     --start the DRUID setup
     if cfg.playerclass == "DRUID" then
 
@@ -226,9 +235,9 @@
       }
 
       auras.onlyShowPresent = true
-      auras.presentAlpha = 1      
+      auras.presentAlpha = 1
       auras.PostCreateIcon = func.createAuraIcon
-      
+
       -- Set any other AuraWatch settings
       auras.icons = {}
       for i, sid in pairs(spellIDs) do
@@ -239,12 +248,12 @@
         icon:SetPoint("BOTTOM", self, "BOTTOM", 60, ((self.cfg.aurawatch.size+6) * i)+20)
         auras.icons[sid] = icon
         -- Set any other AuraWatch icon settings
-      end      
+      end
       --call aurawatch
       self.AuraWatch = auras
     end
   end
-  
+
   --update health func
   func.updateHealth = function(bar, unit, min, max)
     local d = floor(min/max*100)
@@ -293,12 +302,12 @@
     local color = cfg.powercolors[select(2, UnitPowerType(unit))]
     if not color then
       --prevent powertype from bugging out on certain encounters.
-      color = {r=1,g=0.5,b=0.25}      
+      color = {r=1,g=0.5,b=0.25}
     end
     bar:SetStatusBarColor(color.r, color.g, color.b,1)
     bar.bg:SetVertexColor(color.r, color.g, color.b,0.2)
   end
-  
+
   --debuffglow
   func.createDebuffGlow = function(self)
     local t = self:CreateTexture(nil,"LOW",nil,-5)
@@ -314,7 +323,7 @@
     self.DebuffHighlightAlpha = 1
     self.DebuffHighlightFilter = true
   end
-  
+
   --check threat
   func.checkThreat = function(self,event,unit)
     if unit then
@@ -334,15 +343,15 @@
       end
     end
   end
-  
+
   --create portrait func
   func.createPortrait = function(self)
-    
+
     local back = CreateFrame("Frame",nil,self)
     back:SetSize(self.cfg.width,self.cfg.width)
     back:SetPoint("BOTTOM", self, "TOP", 0, -35)
     self.PortraitHolder = back
-    
+
     local t = back:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetAllPoints(back)
     t:SetTexture("Interface\\AddOns\\rTextures\\portrait_back")
@@ -353,11 +362,11 @@
       self.Portrait = CreateFrame("PlayerModel", nil, back)
       self.Portrait:SetPoint("TOPLEFT",back,"TOPLEFT",27,-27)
       self.Portrait:SetPoint("BOTTOMRIGHT",back,"BOTTOMRIGHT",-27,27)
-      
+
       local borderholder = CreateFrame("Frame", nil, self.Portrait)
       borderholder:SetAllPoints(back)
       self.BorderHolder = borderholder
-      
+
       local border = borderholder:CreateTexture(nil,"BACKGROUND",nil,-6)
       border:SetAllPoints(borderholder)
       border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
@@ -369,13 +378,13 @@
       gloss:SetAllPoints(borderholder)
       gloss:SetTexture("Interface\\AddOns\\rTextures\\portrait_gloss")
       gloss:SetVertexColor(0.9,0.95,1,0.6)
-      
+
     else
       self.Portrait = back:CreateTexture(nil,"BACKGROUND",nil,-7)
       self.Portrait:SetPoint("TOPLEFT",back,"TOPLEFT",27,-27)
       self.Portrait:SetPoint("BOTTOMRIGHT",back,"BOTTOMRIGHT",-27,27)
       self.Portrait:SetTexCoord(0.15,0.85,0.15,0.85)
-      
+
       local border = back:CreateTexture(nil,"BACKGROUND",nil,-6)
       border:SetAllPoints(back)
       border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
@@ -388,29 +397,29 @@
       gloss:SetVertexColor(0.9,0.95,1,0.6)
 
     end
-    
+
     self.Name:SetPoint("BOTTOM", self, "TOP", 0, self.cfg.width-53)
-  
+
   end
-  
+
   --create standalone portrait func
   func.createStandAlonePortrait = function(self)
-  
+
     local fname
     if self.cfg.style == "player" then
       fname = "oUF_DiabloPlayerPortrait"
     elseif self.cfg.style == "target" then
       fname = "oUF_DiabloTargetPortrait"
     end
-    
+
     local pcfg = self.cfg.portrait
-    
+
     local back = CreateFrame("Frame",fname,self)
     back:SetSize(pcfg.size,pcfg.size)
     back:SetPoint(pcfg.pos.a1,pcfg.pos.af,pcfg.pos.a2,pcfg.pos.x,pcfg.pos.y)
-    
+
     func.applyDragFunctionality(back)
-    
+
     local t = back:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetAllPoints(back)
     t:SetTexture("Interface\\AddOns\\rTextures\\portrait_back")
@@ -420,10 +429,10 @@
       self.Portrait = CreateFrame("PlayerModel", nil, back)
       self.Portrait:SetPoint("TOPLEFT",back,"TOPLEFT",pcfg.size*27/128,-pcfg.size*27/128)
       self.Portrait:SetPoint("BOTTOMRIGHT",back,"BOTTOMRIGHT",-pcfg.size*27/128,pcfg.size*27/128)
-      
+
       local borderholder = CreateFrame("Frame", nil, self.Portrait)
       borderholder:SetAllPoints(back)
-      
+
       local border = borderholder:CreateTexture(nil,"BACKGROUND",nil,-6)
       border:SetAllPoints(borderholder)
       border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
@@ -433,13 +442,13 @@
       gloss:SetAllPoints(borderholder)
       gloss:SetTexture("Interface\\AddOns\\rTextures\\portrait_gloss")
       gloss:SetVertexColor(0.9,0.95,1,0.6)
-      
+
     else
       self.Portrait = back:CreateTexture(nil,"BACKGROUND",nil,-7)
       self.Portrait:SetPoint("TOPLEFT",back,"TOPLEFT",pcfg.size*27/128,-pcfg.size*27/128)
       self.Portrait:SetPoint("BOTTOMRIGHT",back,"BOTTOMRIGHT",-pcfg.size*27/128,pcfg.size*27/128)
       self.Portrait:SetTexCoord(0.15,0.85,0.15,0.85)
-      
+
       local border = back:CreateTexture(nil,"BACKGROUND",nil,-6)
       border:SetAllPoints(back)
       border:SetTexture("Interface\\AddOns\\rTextures\\portrait_border")
@@ -451,12 +460,12 @@
       gloss:SetVertexColor(0.9,0.95,1,0.6)
 
     end
-    
+
   end
-  
+
   --create castbar func
   func.createCastbar = function(f)
-  
+
     local cname
     if f.cfg.style == "player" then
       cname = "oUF_DiabloPlayerCastbar"
@@ -465,7 +474,7 @@
     elseif f.cfg.style == "focus" then
       cname = "oUF_DiabloFocusCastbar"
     end
-    
+
     c = CreateFrame("StatusBar", cname, f)
     c:SetSize(186.8,20.2)
     c:SetStatusBarTexture(f.cfg.castbar.texture)
@@ -489,19 +498,19 @@
     c.Text =  func.createFontString(c, cfg.font, 11, "THINOUTLINE")
     c.Text:SetPoint("LEFT", 5, 0)
     c.Text:SetJustifyH("LEFT")
-    
+
     c.Time =  func.createFontString(c, cfg.font, 11, "THINOUTLINE")
     c.Time:SetPoint("RIGHT", -2, 0)
-    
+
     c.Text:SetPoint("RIGHT", -50, 0)
     --c.Text:SetPoint("RIGHT", c.Time, "LEFT", -10, 0) --right point of text will anchor left point of time
-    
+
     --icon
     c.Icon = c:CreateTexture(nil, "OVERLAY",nil,-5)
     c.Icon:SetSize(20.2,20.2)
     c.Icon:SetPoint("LEFT", -20.2, 0)
     c.Icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-    
+
     c.Spark = c:CreateTexture(nil,"LOW",nil,-7)
     c.Spark:SetBlendMode("ADD")
     c.Spark:SetVertexColor(0.8,0.6,0,1)
@@ -510,12 +519,12 @@
     c.glow:SetTexture("Interface\\AddOns\\rTextures\\castbar_glow")
     c.glow:SetAllPoints(c.background)
     c.glow:SetVertexColor(0,0,0,1)
-    
+
     if f.cfg.style == "target" then
       c.Shield = c:CreateTexture(nil,"BACKGROUND",nil,-8)
       c.Shield:SetTexture(0,0,0,0)
     end
-    
+
     --safezone
     if f.cfg.style == "player" and f.cfg.castbar.latency then
       c.SafeZone = c:CreateTexture(nil,"OVERLAY")
@@ -524,36 +533,36 @@
       c.SafeZone:SetPoint("TOPRIGHT")
       c.SafeZone:SetPoint("BOTTOMRIGHT")
     end
-    
+
     func.applyDragFunctionality(c)
-    
-    f.Castbar = c    
-  
+
+    f.Castbar = c
+
   end
-  
+
   --fontstring func
   func.createFontString = function(f, font, size, outline,layer)
     local fs = f:CreateFontString(nil, layer or "OVERLAY")
     fs:SetFont(font, size, outline)
     fs:SetShadowColor(0,0,0,1)
     return fs
-  end 
-  
+  end
+
   --allows frames to become movable but frames can be locked or set to default positions
   func.applyDragFunctionality = function(f,special)
     f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
     f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
-    
+
     local t = f:CreateTexture(nil,"OVERLAY",nil,6)
     t:SetAllPoints(f)
     t:SetTexture(0,1,0)
     t:SetAlpha(0)
-    f.dragtexture = t    
+    f.dragtexture = t
     f:SetHitRectInsets(-15,-15,-15,-15)
-    if not special then    
+    if not special then
       f:SetClampedToScreen(true)
     end
-    
+
     if not cfg.framesUserplaced then
       f:SetMovable(false)
     else
@@ -563,7 +572,7 @@
         f.dragtexture:SetAlpha(0.2)
         f:EnableMouse(true)
         f:RegisterForDrag("LeftButton")
-        f:SetScript("OnEnter", function(s) 
+        f:SetScript("OnEnter", function(s)
           GameTooltip:SetOwner(s, "ANCHOR_TOP")
           GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
           GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
@@ -571,13 +580,13 @@
         end)
         f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
       end
-    end  
+    end
 
     --print(f:GetName())
     --print(f:IsUserPlaced())
-    
+
   end
-  
+
   --simple frame movement
   func.simpleDragFunc = function(f)
 
@@ -585,12 +594,12 @@
     f:SetClampedToScreen(true)
     f:SetMovable(true)
     f:SetUserPlaced(true)
-    
-    f:EnableMouse(true)    
-    
+
+    f:EnableMouse(true)
+
     f:RegisterForDrag("LeftButton")
     --[[
-    f:SetScript("OnEnter", function(s) 
+    f:SetScript("OnEnter", function(s)
       GameTooltip:SetOwner(s, "ANCHOR_CURSOR")
       GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
       GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
@@ -601,9 +610,9 @@
     --f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
     f:SetScript("OnDragStart", function(s) s:StartMoving() end)
     f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
-    
+
   end
-  
+
   --create icon func
   func.createIcon = function(f,layer,size,anchorframe,anchorpoint1,anchorpoint2,posx,posy,sublevel)
     local icon = f:CreateTexture(nil,layer,nil,sublevel)
@@ -611,10 +620,10 @@
     icon:SetPoint(anchorpoint1,anchorframe,anchorpoint2,posx,posy)
     return icon
   end
-  
+
   ---------------------------------------------
   -- HANDOVER
   ---------------------------------------------
-  
+
   --object container to addon namespace
   ns.func = func

@@ -1,5 +1,5 @@
-## Interface: 40100
-## Author: zork	
+## Interface: 40200
+## Author: zork
 ## Title: rBBS_RothUI
 ## Notes: Roth UI Layout For rBBS
 ## RequiredDeps: rBBS

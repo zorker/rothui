@@ -52,7 +52,7 @@
     ["PRIEST"]        = { enable = true, animhealth = 19, animmana = 11,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["PALADIN"]       = { enable = true, animhealth = 1,  animmana = 17,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["SHAMAN"]        = { enable = true, animhealth = 16, animmana = 15,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
-    ["WARRIOR"]       = { enable = true, animhealth = 20,  animmana = 6,  classcolored = false, powertypecolored = false, healthmultiplier = 0.13,    manamultiplier = 0.13,  healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["WARRIOR"]       = { enable = true, animhealth = 20,  animmana = 6,  classcolored = false, powertypecolored = false, healthmultiplier = 0.15,    manamultiplier = 0.15,  healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["WARLOCK"]       = { enable = true, animhealth = 15, animmana = 22,  classcolored = false, powertypecolored = false, healthmultiplier = 0.2,    manamultiplier = 0.4,    healthdecreasealpha = true,  manadecreasealpha = true,  },
   }
 
@@ -102,7 +102,7 @@
   ----------------------------------------
 
   --setting this to false will use the default frame positions, true allows moving
-  cfg.framesUserplaced = false
+  cfg.framesUserplaced = true
 
   --setting this to true will lock the frames in place, false unlocks them
   cfg.framesLocked = true

@@ -1,20 +1,20 @@
-  
+
   --get the addon namespace
-  local addon, ns = ...  
-  
+  local addon, ns = ...
+
   --get oUF namespace (just in case needed)
-  local oUF = ns.oUF or oUF  
-  
+  local oUF = ns.oUF or oUF
+
   --get the config
   local cfg = ns.cfg
-  
+
   --get the functions
   local func = ns.func
-    
+
   ---------------------------------------------
   -- TAGS
   ---------------------------------------------
-  
+
   --rgb to hex func
   local function RGBPercToHex(r, g, b)
     r = r <= 1 and r >= 0 and r or 1
@@ -22,9 +22,9 @@
     b = b <= 1 and b >= 0 and b or 1
     return string.format("%02x%02x%02x", r*255, g*255, b*255)
   end
-  
+
   ---------------------------------------------
-  
+
   --color tag
   oUF.Tags["diablo:color"] = function(unit)
     local color = { r=1, g=1, b=1, }
@@ -46,7 +46,7 @@
       return "ffffff"
     end
   end
-  
+
   ---------------------------------------------
 
   --colorsimple tag
@@ -61,21 +61,21 @@
       return "ffffff"
     end
   end
-  
+
   ---------------------------------------------
-  
+
   --name tag
-  oUF.Tags["diablo:name"] = function(unit, rolf) 
+  oUF.Tags["diablo:name"] = function(unit, rolf)
     local color = oUF.Tags["diablo:color"](unit)
     local name = UnitName(rolf or unit)
     return "|cff"..color..(name or "").."|r"
   end
   oUF.TagEvents["diablo:name"] = "UNIT_NAME_UPDATE UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
-  
+
   ---------------------------------------------
-  
+
   --hp value
-  oUF.Tags["diablo:hpval"] = function(unit) 
+  oUF.Tags["diablo:hpval"] = function(unit)
     local color = oUF.Tags["diablo:colorsimple"](unit)
     local hpval
     if UnitIsDeadOrGhost(unit) then
@@ -88,11 +88,11 @@
     return "|cff"..color..(hpval or "").."|r"
   end
   oUF.TagEvents["diablo:hpval"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
-  
+
     ---------------------------------------------
-  
+
   --short hp value
-  oUF.Tags["diablo:shorthpval"] = function(unit) 
+  oUF.Tags["diablo:shorthpval"] = function(unit)
     --local color = oUF.Tags["diablo:colorsimple"](unit)
     local hpval
     if UnitIsDeadOrGhost(unit) then
@@ -106,19 +106,19 @@
     return hpval or ""
   end
   oUF.TagEvents["diablo:shorthpval"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
-  
+
   ---------------------------------------------
-  
+
   --power value
-  oUF.Tags["diablo:ppval"] = function(unit) 
+  oUF.Tags["diablo:ppval"] = function(unit)
     local ppval = func.numFormat(UnitPower(unit) or 0).." / "..oUF.Tags["perpp"](unit).."%"
     return ppval or ""
   end
   oUF.TagEvents["diablo:ppval"] = "UNIT_POWER UNIT_MAXPOWER"
-  
+
   ---------------------------------------------
-  
-  oUF.Tags["diablo:misshp"] = function(unit) 
+
+  oUF.Tags["diablo:misshp"] = function(unit)
     local color = oUF.Tags["diablo:colorsimple"](unit)
     local hpval
     if UnitIsDeadOrGhost(unit) then
@@ -130,14 +130,14 @@
       if max-min > 0 then
         hpval = "-"..func.numFormat(max-min)
       end
-    end    
+    end
     return "|cff"..color..(hpval or "").."|r"
   end
   oUF.TagEvents["diablo:misshp"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
-  
+
   ---------------------------------------------
-  
-  oUF.Tags["diablo:raidhp"] = function(unit, rolf) 
+
+  oUF.Tags["diablo:raidhp"] = function(unit, rolf)
     local color = oUF.Tags["diablo:color"](unit)
     local hpval
     if UnitIsDeadOrGhost(unit) then
@@ -155,13 +155,13 @@
       else
         hpval = UnitName(rolf or unit)
       end
-    end    
+    end
     return "|cff"..color..(hpval or "").."|r"
   end
   oUF.TagEvents["diablo:raidhp"] = "UNIT_NAME_UPDATE UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
-  
+
   ---------------------------------------------
-  
+
   oUF.Tags["diablo:altbosspower"] = function(unit)
     local cur = UnitPower(unit, ALTERNATE_POWER_INDEX)
     local max = UnitPowerMax(unit, ALTERNATE_POWER_INDEX)
@@ -175,14 +175,11 @@
   oUF.TagEvents["diablo:altbosspower"] = "UNIT_POWER"
 
   ---------------------------------------------
-  
+
   oUF.Tags["diablo:altpower"] = function(unit)
     local cur = UnitPower(unit, ALTERNATE_POWER_INDEX)
-    local max = UnitPowerMax(unit, ALTERNATE_POWER_INDEX)
-    if(max > 0) then
-      return ("%s%%"):format(math.floor(cur/max*100))
-    --else
-      --return "97%"
+    if cur then
+      return math.floor(cur)
     end
   end
   oUF.TagEvents["diablo:altpower"] = "UNIT_POWER"

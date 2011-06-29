@@ -1,7 +1,7 @@
-## Interface: 40100
+## Interface: 40200
 ## Author: zork
 ## Title: rBBS
-## Version: 1.04
+## Version: 1.05
 ## Notes: zork's art framework. Does nothing by itself.
 ## SavedVariablesPerCharacter: rBBS_DB
 

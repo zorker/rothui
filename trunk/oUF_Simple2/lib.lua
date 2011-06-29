@@ -136,7 +136,7 @@
     
     --debuff highlight
     local dbh = s:CreateTexture(nil, "OVERLAY")
-    dbh:SetAllPoints(s)
+    dbh:SetAllPoints(f)
     dbh:SetTexture("Interface\\AddOns\\oUF_Simple2\\media\\debuff_highlight")
     dbh:SetBlendMode("ADD")
     dbh:SetVertexColor(0,0,0,0)
@@ -255,7 +255,6 @@
     b:SetTexture(cfg.statusbar_texture)
     b:SetAllPoints(s)
     b:SetVertexColor(1*0.3,0.8*0.3,0,0.7)  
-    s.bg = b
     
     local txt = lib.gen_fontstring(s, cfg.font, 16, "THINOUTLINE")
     txt:SetPoint("LEFT", 2, 0)
@@ -289,22 +288,6 @@
       s.SafeZone = z
     end
     
-    --shield for uninterruptable casts
-    s.Shield = s:CreateTexture(nil,"BACKGROUND",nil,-8)
-    s.Shield:SetTexture(0,0,0,0)
-    --now hook the function and make them do sth else for us
-    s.Shield.Show = function(self)
-      local bar = self:GetParent()
-      bar:SetStatusBarColor(0.6,0.6,0.6,1) --we want to recolor the statusbar in case the shield pops up
-      bar.bg:SetVertexColor(0.2,0.2,0.2,0.7)
-    end
-    s.Shield.Hide = function(self)
-      local bar = self:GetParent()
-      bar:SetStatusBarColor(1,0.8,0,1) --back to normal
-      bar.bg:SetVertexColor(1*0.3,0.8*0.3,0,0.7)
-    end
-    s.Shield:Hide()
-        
     f.Castbar = s
     f.Castbar.Text = txt
     f.Castbar.Time = t

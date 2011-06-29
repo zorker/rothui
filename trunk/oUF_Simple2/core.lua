@@ -9,10 +9,6 @@
   local cfg = ns.cfg
   --get the library
   local lib = ns.lib
-
-  -----------------------------
-  -- VARIABLES
-  -----------------------------
   
   --fix oUF mana color
   oUF.colors.power["MANA"] = {0, 0.4, 0.9}
@@ -43,8 +39,8 @@
   --the player style
   local function CreatePlayerStyle(self)
     --style specific stuff
-    self.width = cfg.player.width
-    self.height = cfg.player.height
+    self.width = 270
+    self.height = 25
     self.mystyle = "player"
     init(self)
     self.Health.colorClass = true
@@ -59,8 +55,8 @@
   --the target style
   local function CreateTargetStyle(self)
     --style specific stuff
-    self.width = cfg.target.width
-    self.height = cfg.target.height
+    self.width = 270
+    self.height = 25
     self.mystyle = "target"
     init(self)
     self.Health.colorTapping = true
@@ -80,12 +76,10 @@
   --the tot style
   local function CreateToTStyle(self)
     --style specific stuff
-    self.width = cfg.tot.width
-    self.height = cfg.tot.height
+    self.width = 150
+    self.height = 25
     self.mystyle = "tot"
-    if cfg.tot.hptag then
-      self.hptag = cfg.tot.hptag
-    end
+    self.hptag = "[simple:hpperc]"
     init(self)
     self.Health.colorTapping = true
     self.Health.colorDisconnected = true
@@ -101,8 +95,8 @@
   --the focus style
   local function CreateFocusStyle(self)
     --style specific stuff
-    self.width = cfg.focus.width
-    self.height = cfg.focus.height
+    self.width = 180
+    self.height = 25
     self.mystyle = "focus"
     init(self)
     self.Health.colorDisconnected = true
@@ -120,10 +114,12 @@
   --the pet style
   local function CreatePetStyle(self)
     --style specific stuff
-    self.width = cfg.pet.width
-    self.height = cfg.pet.height
+    self.width = 180
+    self.height = 25
     self.mystyle = "pet"
+    --init
     init(self)
+    --stuff
     self.Health.colorDisconnected = true
     self.Health.colorClass = true
     self.Health.colorReaction = true
@@ -141,10 +137,12 @@
   --party frames
   local function CreatePartyStyle(self)
     --style specific stuff
-    self.width = cfg.party.width
-    self.height = cfg.party.height
+    self.width = 180
+    self.height = 25
     self.mystyle = "party"
+    --init
     initHeader(self)
+    --stuff
     self.Health.colorDisconnected = true
     self.Health.colorClass = true
     self.Health.colorReaction = true
@@ -154,77 +152,63 @@
     self.Power.bg.multiplier = 0.3
     lib.gen_portrait(self)
     lib.createDebuffs(self)
-    --range
-    self.Range = {
-      insideAlpha = 1, 
-      outsideAlpha = 0.4,
-    }
   end  
   
   --party frames
   local function CreateRaidStyle(self)
     --style specific stuff
-    self.width = cfg.raid.width
-    self.height = cfg.raid.height
+    self.width = 100
+    self.height = 30
     self.mystyle = "raid"
-    if cfg.raid.hptag then
-      self.hptag = cfg.raid.hptag
-    end
+    self.hptag = "[simple:hpraid]"
     self.hidename = true
+    --init
     initHeader(self)
+    --stuff
     self.Health.colorDisconnected = true
     self.Health.colorClass = true
     self.Health.colorReaction = true
     self.Health.colorHealth = true
     self.Health.bg.multiplier = 0.3
     self.Power.colorPower = true
-    self.Power.bg.multiplier = 0.3    
-    --range
-    self.Range = {
-      insideAlpha = 1, 
-      outsideAlpha = 0.4,
-    }    
+    self.Power.bg.multiplier = 0.3
   end 
 
   -----------------------------
   -- SPAWN UNITS
   -----------------------------
 
-  if cfg.player.show then
+  if cfg.showplayer then
     oUF:RegisterStyle("oUF_SimplePlayer", CreatePlayerStyle)
     oUF:SetActiveStyle("oUF_SimplePlayer")
     oUF:Spawn("player")  
   end
   
-  if cfg.target.show then
+  if cfg.showtarget then
     oUF:RegisterStyle("oUF_SimpleTarget", CreateTargetStyle)
     oUF:SetActiveStyle("oUF_SimpleTarget")
     oUF:Spawn("target")  
   end
 
-  if cfg.tot.show then
+  if cfg.showtot then
     oUF:RegisterStyle("oUF_SimpleToT", CreateToTStyle)
     oUF:SetActiveStyle("oUF_SimpleToT")
     oUF:Spawn("targettarget")  
   end
   
-  if cfg.focus.show then
+  if cfg.showfocus then
     oUF:RegisterStyle("oUF_SimpleFocus", CreateFocusStyle)
     oUF:SetActiveStyle("oUF_SimpleFocus")
     oUF:Spawn("focus")  
   end
   
-  if cfg.pet.show then
+  if cfg.showpet then
     oUF:RegisterStyle("oUF_SimplePet", CreatePetStyle)
     oUF:SetActiveStyle("oUF_SimplePet")
     oUF:Spawn("pet")  
   end
-  
-  -----------------------------
-  -- SPAWN HEADER UNITS
-  -----------------------------
 
-  if cfg.party.show and not cfg.useRaidLayoutInParty then
+  if cfg.showparty then
     oUF:RegisterStyle("oUF_SimpleParty", CreatePartyStyle)
     oUF:SetActiveStyle("oUF_SimpleParty")
     
@@ -239,41 +223,17 @@
       "point",              "TOP",
       "yOffset",            -44,
       "xoffset",            0,
-      "oUF-initialConfigFunction", ([[
-        self:SetWidth(%d)
-        self:SetHeight(%d)
-      ]]):format(cfg.party.width, cfg.party.height)
+      "oUF-initialConfigFunction", [[
+        self:SetHeight(25)
+        self:SetWidth(180)
+      ]]
     )
     party:SetPoint("CENTER",UIParent,"CENTER",0,0)    
         
   end
   
-  if cfg.party.show and cfg.useRaidLayoutInParty then
-    --spawn party but with raid style
-    oUF:RegisterStyle("oUF_SimpleRaid5", CreateRaidStyle)
-    oUF:SetActiveStyle("oUF_SimpleRaid5")
-    
-    local raid5 = oUF:SpawnHeader(
-      "oUF_SimpleRaid5", 
-      nil, 
-      "custom [@raid1,exists] hide; [group:party,nogroup:raid] show; hide",
-      "showPlayer",         true,
-      "showSolo",           false,
-      "showParty",          true,
-      "showRaid",           false,
-      "point",              "LEFT",
-      "yOffset",            0,
-      "xoffset",            10,
-      "oUF-initialConfigFunction", ([[
-        self:SetWidth(%d)
-        self:SetHeight(%d)
-      ]]):format(cfg.raid.width, cfg.raid.height)
-    )
-    raid5:SetPoint("CENTER",UIParent,"CENTER",0,0)    
-        
-  end
 
-  if cfg.raid.show then
+  if cfg.showraid then
     
     --die raid panel, die
     CompactRaidFrameManager:UnregisterAllEvents()
@@ -307,10 +267,10 @@
       "sortMethod",         "NAME",
       "maxColumns",         8,
       "unitsPerColumn",     5,
-      "oUF-initialConfigFunction", ([[
-        self:SetWidth(%d)
-        self:SetHeight(%d)
-      ]]):format(cfg.raid.width, cfg.raid.height)
+      "oUF-initialConfigFunction", [[
+        self:SetHeight(30)
+        self:SetWidth(100)
+      ]]
     )
     raid10:SetPoint("CENTER",UIParent,"CENTER",0,0)
     
@@ -338,10 +298,10 @@
       "sortMethod",         "NAME",
       "maxColumns",         8,
       "unitsPerColumn",     5,
-      "oUF-initialConfigFunction", ([[
-        self:SetWidth(%d)
-        self:SetHeight(%d)
-      ]]):format(cfg.raid.width, cfg.raid.height)
+      "oUF-initialConfigFunction", [[
+        self:SetHeight(30)
+        self:SetWidth(100)
+      ]]
     )
     raid25:SetPoint("CENTER",UIParent,"CENTER",0,0)
     
@@ -369,41 +329,11 @@
       "sortMethod",         "NAME",
       "maxColumns",         8,
       "unitsPerColumn",     5,
-      "oUF-initialConfigFunction", ([[
-        self:SetWidth(%d)
-        self:SetHeight(%d)
-      ]]):format(cfg.raid.width, cfg.raid.height)
+      "oUF-initialConfigFunction", [[
+        self:SetHeight(30)
+        self:SetWidth(100)
+      ]]
     )
     raid40:SetPoint("CENTER",UIParent,"CENTER",0,0)
         
-  end
-  
-  if cfg.partypet.show then
-    
-    --pets that will be spawned in party or raid
-    oUF:RegisterStyle("oUF_SimplePartyPet", CreateRaidStyle)
-    oUF:SetActiveStyle("oUF_SimplePartyPet")
-    
-    local partypet = oUF:SpawnHeader(
-      "oUF_SimplePartyPet", 
-      nil, 
-      "party,raid",  
-      "showParty",          true,
-      "showRaid",           true,
-      "point",              "LEFT",
-      "yOffset",            0,
-      "xoffset",            10,
-      "columnSpacing",      17,
-      "columnAnchorPoint",  "TOP",
-      "sortMethod",         "NAME",
-      "filterOnPet",        true,
-      "maxColumns",         8,
-      "unitsPerColumn",     5,
-      "oUF-initialConfigFunction", ([[
-        self:SetWidth(%d)
-        self:SetHeight(%d)
-        self:SetAttribute("unitsuffix", "pet")
-      ]]):format(cfg.raid.width, cfg.raid.height)
-    )
-    partypet:SetPoint("CENTER",UIParent,"CENTER",0,0)
   end

@@ -1,4 +1,4 @@
-## Interface: 40100
+## Interface: 40200
 ## Title: oUF_Simple2
 ## Author: zork
 ## Version: 2.0

@@ -1,25 +1,25 @@
-  
+
   -- // rActionBarStyler
   -- // zork - 2010
-  
+
   -----------------------------
   -- INIT
   -----------------------------
-  
+
   --get the addon namespace
   local addon, ns = ...
-  
+
   --generate a holder for the config data
   local cfg = CreateFrame("Frame")
-  
+
   -----------------------------
   -- CONFIG
   -----------------------------
-  
+
   --notice on locking
   --keep bars locked, you now have a slash command to lock/unlock your bars ingame
   --use "/rabs" to see the command list
-  
+
   cfg.bars = {
     bar1 = {
       buttonsize      = 26,
@@ -28,7 +28,7 @@
       uselayout2x6    = false,
       userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
-      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 22 }, 
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 22 },
       testmode        = false,
     },
     bar2 = {
@@ -39,7 +39,7 @@
       showonmouseover = false,
       userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
-      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 53 }, 
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 53 },
       testmode        = false,
     },
     bar3 = {
@@ -50,7 +50,7 @@
       showonmouseover = false,
       userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
-      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 92 }, 
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 92 },
       testmode        = false,
     },
     bar4 = {
@@ -60,7 +60,7 @@
       showonmouseover = true,
       userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
-      pos             = { a1 = "RIGHT", a2 = "RIGHT", af = "UIParent", x = -10, y = 0 }, 
+      pos             = { a1 = "RIGHT", a2 = "RIGHT", af = "UIParent", x = -10, y = 0 },
       testmode        = false,
     },
     bar5 = {
@@ -70,7 +70,7 @@
       showonmouseover = true,
       userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
-      pos             = { a1 = "RIGHT", a2 = "RIGHT", af = "UIParent", x = -46, y = 0 }, 
+      pos             = { a1 = "RIGHT", a2 = "RIGHT", af = "UIParent", x = -46, y = 0 },
       testmode        = false,
     },
     stancebar = {
@@ -80,7 +80,7 @@
       showonmouseover = false,
       userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
-      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 140 }, 
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 140 },
       testmode        = false,
       disable         = false,
     },
@@ -91,7 +91,7 @@
       showonmouseover = false,
       userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
-      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 180 }, 
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 180 },
       testmode        = false,
       disable         = false,
     },
@@ -100,7 +100,7 @@
       showonmouseover = true,
       userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
-      pos             = { a1 = "TOP", a2 = "TOP", af = "UIParent", x = 0, y = -5 }, 
+      pos             = { a1 = "TOP", a2 = "TOP", af = "UIParent", x = 0, y = -5 },
       testmode        = false,
       disable         = false,
     },
@@ -109,7 +109,7 @@
       showonmouseover = true,
       userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
-      pos             = { a1 = "BOTTOMRIGHT", a2 = "BOTTOMRIGHT", af = "UIParent", x = -10, y = 10 }, 
+      pos             = { a1 = "BOTTOMRIGHT", a2 = "BOTTOMRIGHT", af = "UIParent", x = -10, y = 10 },
       testmode        = false,
       disable         = false,
     },
@@ -117,7 +117,7 @@
       barscale        = 0.82,
       userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
-      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 140 }, 
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 140 },
       testmode        = false,
       disable         = false,
     },
@@ -126,7 +126,7 @@
       barscale        = 0.82,
       userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
-      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 210, y = 135 }, 
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 210, y = 135 },
       testmode        = false,
     },
   }
@@ -137,11 +137,11 @@
 
   local playername, _ = UnitName("player")
   local _, playerclass = UnitClass("player")
-  
+
   cfg.playername = playername
   cfg.playerclass = playerclass
-  
-  
+
+
   -----------------------------------
   -- SPECIAL CHARACTER CONDITIONS
   -----------------------------------
@@ -149,42 +149,42 @@
     cfg.bars.bar1.uselayout2x6    = true
     cfg.bars.bar2.uselayout2x6    = true
     cfg.bars.stancebar.disable    = true
-  end  
+  end
 
   --font
   cfg.font = "FONTS\\FRIZQT__.ttf"
-  
+
   --how many pixels around a bar reserved for dragging?
   cfg.barinset = 10
 
   --backdrop settings
-  cfg.backdrop = { 
-    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
+  cfg.backdrop = {
+    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
     edgeFile = "",
     tile = false,
-    tileSize = 0, 
-    edgeSize = 0, 
-    insets = { 
-      left = -cfg.barinset, 
-      right = -cfg.barinset, 
-      top = -cfg.barinset, 
+    tileSize = 0,
+    edgeSize = 0,
+    insets = {
+      left = -cfg.barinset,
+      right = -cfg.barinset,
+      top = -cfg.barinset,
       bottom = -cfg.barinset,
     },
   }
-  
+
   --allows frames to become movable but frames can be locked or set to default positions
   cfg.applyDragFunctionality = function(f,userplaced,locked)
     f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
     f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
-    
+
     local t = f:CreateTexture(nil,"OVERLAY",nil,6)
     t:SetAllPoints(f)
     t:SetTexture(0,1,0)
     t:SetAlpha(0)
-    f.dragtexture = t    
+    f.dragtexture = t
     f:SetHitRectInsets(-15,-15,-15,-15)
     f:SetClampedToScreen(true)
-    
+
     if not userplaced then
       f:SetMovable(false)
     else
@@ -194,7 +194,7 @@
         f.dragtexture:SetAlpha(0.2)
         f:EnableMouse(true)
         f:RegisterForDrag("LeftButton")
-        f:SetScript("OnEnter", function(s) 
+        f:SetScript("OnEnter", function(s)
           GameTooltip:SetOwner(s, "ANCHOR_TOP")
           GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
           GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
@@ -208,16 +208,16 @@
         f:SetScript("OnEnter", nil)
         f:SetScript("OnLeave", nil)
       end
-    end  
+    end
 
     --print(f:GetName())
     --print(f:IsUserPlaced())
 
   end
-  
+
   -----------------------------
   -- HANDOVER
   -----------------------------
-  
+
   --hand the config to the namespace for usage in other lua files (remember: those lua files must be called after the cfg.lua)
   ns.cfg = cfg

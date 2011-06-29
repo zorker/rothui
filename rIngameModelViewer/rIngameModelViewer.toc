@@ -1,7 +1,7 @@
-## Interface: 40100
+## Interface: 40200
 ## Author: zork
-## Version: 1.4
-## Title: |cff00FF66rIngameModelViewer |r|cff666666 1.4|r
+## Version: 1.5
+## Title: |cff00FF66rIngameModelViewer |r|cff666666 1.5|r
 ## Notes: Zork's ingame model viewer, supported by |cffff0000Mulocs|r from hell!
 
 rIngameModelViewer.lua

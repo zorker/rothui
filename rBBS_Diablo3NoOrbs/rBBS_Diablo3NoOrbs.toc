@@ -1,5 +1,5 @@
-## Interface: 40100
-## Author: zork	
+## Interface: 40200
+## Author: zork
 ## Title: rBBS_Diablo3NoOrbs
 ## Notes: Diablo3 flavoured layout for rBBS. With 12 button texture and without any orb.
 ## RequiredDeps: rBBS

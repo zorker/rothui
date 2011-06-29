@@ -773,7 +773,17 @@
     t:SetTexture("Interface\\AddOns\\rTextures\\combo_back")
     bar.back = t
 
-    f = func.createFontString(bar, cfg.font, 24, "THINOUTLINE")
+    local g = CreateFrame("Frame",nil,bar)
+    g:SetAllPoints(bar)
+
+    t = g:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64*num,64)
+    t:SetPoint("LEFT",0,0)
+    t:SetAlpha(0.7)
+    t:SetBlendMode("ADD")
+    t:SetTexture("Interface\\AddOns\\rTextures\\combo_highlight2")
+
+    f = func.createFontString(g, cfg.font, 24, "THINOUTLINE")
     f:SetPoint("CENTER", 0, 0)
     f:SetTextColor(0.8,0.8,0.8)
     bar.Text = f

@@ -35,23 +35,26 @@ end
 
 --check aura func
 local function checkAura(self, event, unit)
-  print(event) --debug
   if not unit or (unit and unit ~= "player") then return end
   local bar = self.Vengeance
   bar:Hide() --hide bar by default
   if not bar.isTank or not bar.max or bar.max == 0 then return end
+  --print("checkAura: "..event) --debug
   local name = UnitBuff("player", vengeance)
   if not name then return end
   tooltip:ClearLines()
   tooltip:SetUnitBuff("player", name)
   local text = getTooltipText(tooltip:GetRegions())
-  print(text) --debug
-  local value = floor(tonumber(string.match(text,"%d+"))) or 0
-  print(value) --debug
+  --print(text) --debug
+  if not bar.value then bar.value = 0 end
+  local value = floor(tonumber(string.match(text,"%d+")) or 0)
   if value > 0 then
     bar:Show() --show bar, all conditions are met
     if value > bar.max then value = bar.max end
+    if value == bar.value then return end --no need to set already given values
+    --print(value) --debug
     bar:SetValue(value)
+    bar.value = value
     if bar.Text then
       if bar.OverrideText then
         bar:OverrideText(value)
@@ -66,6 +69,7 @@ end
 local function checkHealth(self,event)
   local bar = self.Vengeance
   if not bar.isTank then return end
+  --print("checkHealth: "..event) --debug
   bar.max = 0 --disable max health by default
   local health = UnitHealthMax("player")
   local _, stamina = UnitStat("player", 3)
@@ -77,6 +81,7 @@ end
 
 --check tank func
 local function checkTank(self,event)
+  --print("checkTank: "..event) --debug
   local bar = self.Vengeance
   bar.isTank = false  --by default no tank
   bar:Hide()          --hide bar by default
@@ -105,14 +110,7 @@ local function Enable(self, unit)
     self:RegisterEvent("UNIT_AURA", checkAura)
     self:RegisterEvent("UNIT_MAXHEALTH", checkHealth)
     self:RegisterEvent("UNIT_LEVEL", checkHealth)
-    self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", checkTank)
-    self:RegisterEvent("PLAYER_TALENT_UPDATE", checkTank)
-    self:RegisterEvent("PLAYER_LOGIN", checkTank)
-    self:RegisterEvent("PLAYER_ENTERING_WORLD", checkTank)
-    self:RegisterEvent("PLAYER_ALIVE", checkTank)
-    if class == "DRUID" then
-      self:RegisterEvent("UPDATE_SHAPESHIFT_FORM", checkTank)
-    end
+    self:RegisterEvent("PLAYER_REGEN_DISABLED", checkTank)
     bar:Hide()
     return true
   end
@@ -125,14 +123,7 @@ local function Disable(self)
     self:UnregisterEvent("UNIT_AURA", checkAura)
     self:UnregisterEvent("UNIT_MAXHEALTH", checkHealth)
     self:UnregisterEvent("UNIT_LEVEL", checkHealth)
-    self:UnregisterEvent("ACTIVE_TALENT_GROUP_CHANGED", checkTank)
-    self:UnregisterEvent("PLAYER_TALENT_UPDATE", checkTank)
-    self:UnregisterEvent("PLAYER_LOGIN", checkTank)
-    self:UnregisterEvent("PLAYER_ENTERING_WORLD", checkTank)
-    self:UnregisterEvent("PLAYER_ALIVE", checkTank)
-    if class == "DRUID" then
-      self:UnregisterEvent("UPDATE_SHAPESHIFT_FORM", checkTank)
-    end
+    self:UnregisterEvent("PLAYER_REGEN_DISABLED", checkTank)
   end
 end
 

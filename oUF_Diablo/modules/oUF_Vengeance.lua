@@ -24,13 +24,19 @@ tooltip:SetOwner(UIParent, "ANCHOR_NONE")
 --get tooltip text func
 local function getTooltipText(...)
   local text = ""
-  for i=1,select("#",...) do
+  local count = select("#",...)
+  for i=1,count do
     local rgn = select(i,...)
-    if rgn and rgn:GetObjectType() == "FontString" then
-      text = text .. (rgn:GetText() or "")
+    if rgn and rgn:GetObjectType() == "FontString" and rgn:GetText() then
+      text = text..rgn:GetText()
+      local val = tonumber(string.match(rgn:GetText(),"%d+"))
+      if val then
+        return val
+      end
     end
   end
-  return text
+  print("ALERT, NO NUMBER FOUND: "..text)
+  return nil
 end
 
 --check aura func
@@ -39,20 +45,19 @@ local function checkAura(self, event, unit)
   local bar = self.Vengeance
   bar:Hide() --hide bar by default
   if not bar.isTank or not bar.max or bar.max == 0 then return end
-  --print("checkAura: "..event) --debug
   local name = UnitBuff("player", vengeance)
   if not name then return end
   tooltip:ClearLines()
-  tooltip:SetUnitBuff("player", name)
-  local text = getTooltipText(tooltip:GetRegions())
-  --print(text) --debug
+  tooltip:SetUnitBuff("player", vengeance)
+  if not tooltip:GetRegions() then
+    print("ALERT, NO REGIONS FOUND")
+  end
+  local value = getTooltipText(tooltip:GetRegions()) or -1
   if not bar.value then bar.value = 0 end
-  local value = floor(tonumber(string.match(text,"%d+")) or 0)
   if value > 0 then
     bar:Show() --show bar, all conditions are met
     if value > bar.max then value = bar.max end
     if value == bar.value then return end --no need to set already given values
-    --print(value) --debug
     bar:SetValue(value)
     bar.value = value
     if bar.Text then
@@ -69,7 +74,6 @@ end
 local function checkHealth(self,event)
   local bar = self.Vengeance
   if not bar.isTank then return end
-  --print("checkHealth: "..event) --debug
   bar.max = 0 --disable max health by default
   local health = UnitHealthMax("player")
   local _, stamina = UnitStat("player", 3)
@@ -81,7 +85,6 @@ end
 
 --check tank func
 local function checkTank(self,event)
-  --print("checkTank: "..event) --debug
   local bar = self.Vengeance
   bar.isTank = false  --by default no tank
   bar:Hide()          --hide bar by default

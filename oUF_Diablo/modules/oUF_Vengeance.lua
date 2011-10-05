@@ -14,29 +14,15 @@ local _, ns = ...
 local oUF = oUF or ns.oUF
 local _, class = UnitClass("player")
 local vengeance = GetSpellInfo(93098)
+--tooltip
 local tooltip = CreateFrame("GameTooltip", "VengeanceTooltip", UIParent, "GameTooltipTemplate")
+local tooltiptext = _G[tooltip:GetName().."TextLeft2"]
 tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+tooltiptext:SetText("")
 
 ----------------------------------
 -- FUNCTIONS
 ----------------------------------
-
---get tooltip text func
-local function getTooltipText(...)
-  --local count = select("#",...)
-  --for i=1,count do
-    --local rgn = select(i,...)
-    local rgn = select(12,...)
-    if rgn and rgn:GetObjectType() == "FontString" and rgn:GetText() then
-      local val = tonumber(string.match(rgn:GetText(),"%d+"))
-      if val then
-        return val
-      end
-    end
-  --end
-  print("ALERT, NO NUMBER FOUND")
-  return -1
-end
 
 --check aura func
 local function checkAura(self, event, unit)
@@ -49,7 +35,7 @@ local function checkAura(self, event, unit)
   if not name then return end
   tooltip:ClearLines()
   tooltip:SetUnitBuff("player", name)
-  local value = getTooltipText(tooltip:GetRegions())
+  local value = (tooltiptext:GetText() and tonumber(string.match(tostring(tooltiptext:GetText()), "%d+"))) or -1
   if value > 0 then
     bar:Show() --show bar, all conditions are met
     if value > bar.max then value = bar.max end

@@ -23,37 +23,33 @@ tooltip:SetOwner(UIParent, "ANCHOR_NONE")
 
 --get tooltip text func
 local function getTooltipText(...)
-  local text = ""
-  local count = select("#",...)
-  for i=1,count do
-    local rgn = select(i,...)
+  --local count = select("#",...)
+  --for i=1,count do
+    --local rgn = select(i,...)
+    local rgn = select(12,...)
     if rgn and rgn:GetObjectType() == "FontString" and rgn:GetText() then
-      text = text..rgn:GetText()
       local val = tonumber(string.match(rgn:GetText(),"%d+"))
       if val then
         return val
       end
     end
-  end
-  print("ALERT, NO NUMBER FOUND: "..text)
-  return nil
+  --end
+  print("ALERT, NO NUMBER FOUND")
+  return -1
 end
 
 --check aura func
 local function checkAura(self, event, unit)
   if not unit or (unit and unit ~= "player") then return end
   local bar = self.Vengeance
+  if not bar.value then bar.value = 0 end
   bar:Hide() --hide bar by default
   if not bar.isTank or not bar.max or bar.max == 0 then return end
   local name = UnitBuff("player", vengeance)
   if not name then return end
   tooltip:ClearLines()
-  tooltip:SetUnitBuff("player", vengeance)
-  if not tooltip:GetRegions() then
-    print("ALERT, NO REGIONS FOUND")
-  end
-  local value = getTooltipText(tooltip:GetRegions()) or -1
-  if not bar.value then bar.value = 0 end
+  tooltip:SetUnitBuff("player", name)
+  local value = getTooltipText(tooltip:GetRegions())
   if value > 0 then
     bar:Show() --show bar, all conditions are met
     if value > bar.max then value = bar.max end
@@ -91,10 +87,7 @@ local function checkTank(self,event)
   local masteryIndex = GetPrimaryTalentTree()
   if masteryIndex then
     if class == "DRUID" and masteryIndex == 2 then
-      local form = GetShapeshiftFormID()
-      if form and form == BEAR_FORM then
-        bar.isTank = true
-      end
+      bar.isTank = true
     elseif class == "DEATHKNIGHT" and masteryIndex == 1 then
       bar.isTank = true
     elseif class == "PALADIN" and masteryIndex == 2 then

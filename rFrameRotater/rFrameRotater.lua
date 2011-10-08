@@ -13,7 +13,7 @@
         pos = { a1 = "CENTER", x = -120, y = -120, },
       },
       texture = {
-        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        file = "Interface\\AddOns\\rFramerotater\\media\\rectangle",
         color = { r = 255/255, g = 255/255, b = 0/255, },
         blendmode = "BLEND", --ADD or BLEND
       },
@@ -34,7 +34,7 @@
         pos = { a1 = "CENTER", x = 0, y = -120, },
       },
       texture = {
-        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        file = "Interface\\AddOns\\rFramerotater\\media\\rectangle",
         color = { r = 255/255, g = 0/255, b = 0/255, },
         blendmode = "BLEND", --ADD or BLEND
       },
@@ -55,7 +55,7 @@
         pos = { a1 = "CENTER", x = -120, y = 0, },
       },
       texture = {
-        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        file = "Interface\\AddOns\\rFramerotater\\media\\rectangle",
         color = { r = 255/255, g = 255/255, b = 0/255, },
         blendmode = "BLEND", --ADD or BLEND
       },
@@ -76,7 +76,7 @@
         pos = { a1 = "CENTER", x = 0, y = 0, },
       },
       texture = {
-        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        file = "Interface\\AddOns\\rFramerotater\\media\\rectangle",
         color = { r = 255/255, g = 0/255, b = 0/255, },
         blendmode = "BLEND", --ADD or BLEND
       },
@@ -97,7 +97,7 @@
         pos = { a1 = "CENTER", x = -120, y = 120, },
       },
       texture = {
-        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        file = "Interface\\AddOns\\rFramerotater\\media\\rectangle",
         color = { r = 255/255, g = 255/255, b = 0/255, },
         blendmode = "BLEND", --ADD or BLEND
       },
@@ -118,7 +118,7 @@
         pos = { a1 = "CENTER", x = 0, y = 120, },
       },
       texture = {
-        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        file = "Interface\\AddOns\\rFramerotater\\media\\rectangle",
         color = { r = 255/255, g = 0/255, b = 0/255, },
         blendmode = "BLEND", --ADD or BLEND
       },
@@ -139,7 +139,7 @@
         pos = { a1 = "CENTER", x = -120, y = 240, },
       },
       texture = {
-        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        file = "Interface\\AddOns\\rFramerotater\\media\\rectangle",
         color = { r = 255/255, g = 255/255, b = 0/255, },
         blendmode = "BLEND", --ADD or BLEND
       },
@@ -160,7 +160,7 @@
         pos = { a1 = "CENTER", x = 0, y = 240, },
       },
       texture = {
-        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        file = "Interface\\AddOns\\rFramerotater\\media\\rectangle",
         color = { r = 255/255, g = 0/255, b = 0/255, },
         blendmode = "BLEND", --ADD or BLEND
       },
@@ -205,6 +205,8 @@
     local ag = o:CreateAnimationGroup()
     o.ag = ag
 
+    o.ag:SetLooping("REPEAT")
+
     local a1 = o.ag:CreateAnimation("Rotation")
     if cfg.anim.direction == 0 then
       a1:SetDegrees(360)
@@ -215,7 +217,7 @@
     o.ag.a1 = a1
 
     o.ag:Play()
-    o.ag:SetLooping("REPEAT")
+
 
     --debug
     h:SetScript("OnShow", function() print("id: "..i.." duration: "..cfg.anim.duration.." time: "..floor(GetTime()-h.time)) end)

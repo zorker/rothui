@@ -1,128 +1,232 @@
 
-  --[[-------------------------------------------------------------------------
-    Copyright (c) 2009, zork
-    All rights reserved.
-  
-    Redistribution and use in source and binary forms, with or without
-    modification, are permitted provided that the following conditions are
-    met:
-  
-        * Redistributions of source code must retain the above copyright
-          notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above
-          copyright notice, this list of conditions and the following
-          disclaimer in the documentation and/or other materials provided
-          with the distribution.
-        * Neither the name of rFrameRotater nor the names of its contributors may
-          be used to endorse or promote products derived from this
-          software without specific prior written permission.
-  
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-    A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-    OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-    SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-    LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES LOSS OF USE,
-    DATA, OR PROFITS OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-    THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  ---------------------------------------------------------------------------]]
-  
-  -----------------------
-  -- CONFIG AREA START --
-  -----------------------
+  -- cfg
 
-  frames_to_rotate = {
-    [1] = { 
-      texture = "ring", --texturename under media folder
-      width = 190, 
-      height = 190,
-      scale = 0.82,
-      anchorframe = Minimap,
-      framelevel = "3", --defines the framelevel to overlay or underlay other stuff
-      color_red = 0/255,
-      color_green = 0/255,
-      color_blue = 0/255,
-      alpha = 0.4,
-      duration = 60, --how long should the rotation need to finish 360°
-      direction = 1, --0 = counter-clockwise, 1 = clockwise
-      blendmode = "BLEND", --ADD or BLEND
-      setpoint = "CENTER",
-      setpointx = 0,
-      setpointy = 0,
+  local db = {
+    [1] = {
+      frame = {
+        parent = UIParent,
+        width = 100,
+        height = 100,
+        scale = 1,
+        alpha = 0.5,
+        level = 0,
+        pos = { a1 = "CENTER", x = -120, y = -120, },
+      },
+      texture = {
+        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        color = { r = 255/255, g = 255/255, b = 0/255, },
+        blendmode = "BLEND", --ADD or BLEND
+      },
+      anim = {
+        rotateframe = true, --rotateframe, if false rotates the texture only
+        duration = 90, --how long should the rotation need to finish 360°
+        direction = 0, --0 = counter-clockwise, 1 = clockwise
+      },
     },
-    
-    [2] = { 
-      texture = "zahnrad", --texturename under media folder
-      width = 210, 
-      height = 210,
-      scale = 0.82,
-      anchorframe = Minimap,
-      framelevel = "0",
-      color_red = 48/255,
-      color_green = 44/255,
-      color_blue = 35/255,
-      alpha = 1,
-      duration = 60, --how long should the rotation need to finish 360°
-      direction = 1, --0 = counter-clockwise, 1 = clockwise
-      blendmode = "BLEND", --ADD or BLEND
-      setpoint = "CENTER",
-      setpointx = 0,
-      setpointy = 0,
+    [2] = {
+      frame = {
+        parent = UIParent,
+        width = 100,
+        height = 100,
+        scale = 1,
+        alpha = 0.5,
+        level = 0,
+        pos = { a1 = "CENTER", x = 0, y = -120, },
+      },
+      texture = {
+        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        color = { r = 255/255, g = 0/255, b = 0/255, },
+        blendmode = "BLEND", --ADD or BLEND
+      },
+      anim = {
+        rotateframe = true, --rotateframe, if false rotates the texture only
+        duration = 90, --how long should the rotation need to finish 360°
+        direction = 1, --0 = counter-clockwise, 1 = clockwise
+      },
     },
-
+    [3] = {
+      frame = {
+        parent = UIParent,
+        width = 100,
+        height = 100,
+        scale = 1,
+        alpha = 0.5,
+        level = 0,
+        pos = { a1 = "CENTER", x = -120, y = 0, },
+      },
+      texture = {
+        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        color = { r = 255/255, g = 255/255, b = 0/255, },
+        blendmode = "BLEND", --ADD or BLEND
+      },
+      anim = {
+        rotateframe = false, --rotateframe, if false rotates the texture only
+        duration = 60, --how long should the rotation need to finish 360°
+        direction = 0, --0 = counter-clockwise, 1 = clockwise
+      },
+    },
+    [4] = {
+      frame = {
+        parent = UIParent,
+        width = 100,
+        height = 100,
+        scale = 1,
+        alpha = 0.5,
+        level = 0,
+        pos = { a1 = "CENTER", x = 0, y = 0, },
+      },
+      texture = {
+        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        color = { r = 255/255, g = 0/255, b = 0/255, },
+        blendmode = "BLEND", --ADD or BLEND
+      },
+      anim = {
+        rotateframe = false, --rotateframe, if false rotates the texture only
+        duration = 60, --how long should the rotation need to finish 360°
+        direction = 1, --0 = counter-clockwise, 1 = clockwise
+      },
+    },
+    [5] = {
+      frame = {
+        parent = UIParent,
+        width = 100,
+        height = 100,
+        scale = 1,
+        alpha = 0.5,
+        level = 0,
+        pos = { a1 = "CENTER", x = -120, y = 120, },
+      },
+      texture = {
+        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        color = { r = 255/255, g = 255/255, b = 0/255, },
+        blendmode = "BLEND", --ADD or BLEND
+      },
+      anim = {
+        rotateframe = false, --rotateframe, if false rotates the texture only
+        duration = 30, --how long should the rotation need to finish 360°
+        direction = 0, --0 = counter-clockwise, 1 = clockwise
+      },
+    },
+    [6] = {
+      frame = {
+        parent = UIParent,
+        width = 100,
+        height = 100,
+        scale = 1,
+        alpha = 0.5,
+        level = 0,
+        pos = { a1 = "CENTER", x = 0, y = 120, },
+      },
+      texture = {
+        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        color = { r = 255/255, g = 0/255, b = 0/255, },
+        blendmode = "BLEND", --ADD or BLEND
+      },
+      anim = {
+        rotateframe = false, --rotateframe, if false rotates the texture only
+        duration = 30, --how long should the rotation need to finish 360°
+        direction = 1, --0 = counter-clockwise, 1 = clockwise
+      },
+    },
+    [7] = {
+      frame = {
+        parent = UIParent,
+        width = 100,
+        height = 100,
+        scale = 1,
+        alpha = 0.5,
+        level = 0,
+        pos = { a1 = "CENTER", x = -120, y = 240, },
+      },
+      texture = {
+        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        color = { r = 255/255, g = 255/255, b = 0/255, },
+        blendmode = "BLEND", --ADD or BLEND
+      },
+      anim = {
+        rotateframe = false, --rotateframe, if false rotates the texture only
+        duration = 15, --how long should the rotation need to finish 360°
+        direction = 0, --0 = counter-clockwise, 1 = clockwise
+      },
+    },
+    [8] = {
+      frame = {
+        parent = UIParent,
+        width = 100,
+        height = 100,
+        scale = 1,
+        alpha = 0.5,
+        level = 0,
+        pos = { a1 = "CENTER", x = 0, y = 240, },
+      },
+      texture = {
+        file = "Interface\\AddOns\\rFramerotater\\media\\zahnrad",
+        color = { r = 255/255, g = 0/255, b = 0/255, },
+        blendmode = "BLEND", --ADD or BLEND
+      },
+      anim = {
+        rotateframe = false, --rotateframe, if false rotates the texture only
+        duration = 15, --how long should the rotation need to finish 360°
+        direction = 1, --0 = counter-clockwise, 1 = clockwise
+      },
+    },
   }
-    
-  
-  ---------------------  
+
+  ---------------------
   -- CONFIG AREA END --
   ---------------------
 
-  
-  local a = CreateFrame("Frame", nil, UIParent)
-  
-  a:RegisterEvent("PLAYER_LOGIN")
-  
-  a:SetScript("OnEvent", function (self,event,arg1)
-    if(event=="PLAYER_LOGIN") then
-      for index,value in ipairs(frames_to_rotate) do 
-        local ftr = frames_to_rotate[index]
-        a:rotateme(ftr.texture, ftr.width, ftr.height, ftr.scale, ftr.anchorframe, ftr.framelevel, ftr.color_red, ftr.color_green, ftr.color_blue, ftr.alpha, ftr.duration, ftr.direction, ftr.blendmode, ftr.setpoint, ftr.setpointx, ftr.setpointy)
-      end
-    end
-  end)    
-  
-  function a:rotateme(texture,width,height,scale,anchorframe,framelevel,texr,texg,texb,alpha,duration,side,blendmode,point,pointx,pointy)
+  function init(id)
 
-    local h = CreateFrame("Frame",nil,anchorframe)
-    h:SetHeight(height)
-    h:SetWidth(width)		  
-    h:SetPoint(point,pointx,pointy)
-    h:SetScale(scale)
-    h:SetFrameLevel(framelevel)
-  
-    local t = h:CreateTexture()
+    local cfg = db[id]
+
+    local h = CreateFrame("Frame",nil,cfg.frame.parent)
+    h:SetHeight(cfg.frame.height)
+    h:SetWidth(cfg.frame.width)
+    h:SetPoint(cfg.frame.pos.a1,cfg.frame.pos.x,cfg.frame.pos.y)
+    h:SetScale(cfg.frame.scale)
+    h:SetAlpha(cfg.frame.alpha)
+    h:SetFrameLevel(cfg.frame.level)
+
+    h.time = GetTime()
+
+    local t = h:CreateTexture(nil,"BACKGROUND")
     t:SetAllPoints(h)
-    t:SetTexture("Interface\\AddOns\\rFramerotater\\media\\"..texture)
-    t:SetBlendMode(blendmode)
-    t:SetVertexColor(texr,texg,texb,alpha)
+    t:SetTexture(cfg.texture.file)
+    t:SetBlendMode(cfg.texture.blendmode)
+    t:SetVertexColor(cfg.texture.color.r,cfg.texture.color.g,cfg.texture.color.b)
     h.t = t
-    
-    local ag = h:CreateAnimationGroup()
-    h.ag = ag
-    
-    local a1 = h.ag:CreateAnimation("Rotation")
-    if side == 0 then
+
+    local o = t --object to animate
+    if cfg.anim.rotateframe then
+      o = h --frame is object to animate
+    end
+
+    local ag = o:CreateAnimationGroup()
+    o.ag = ag
+
+    local a1 = o.ag:CreateAnimation("Rotation")
+    if cfg.anim.direction == 0 then
       a1:SetDegrees(360)
     else
       a1:SetDegrees(-360)
     end
-    a1:SetDuration(duration)
-    h.ag.a1 = a1
-    
-    h.ag:Play()
-    h.ag:SetLooping("REPEAT")  
+    a1:SetDuration(cfg.anim.duration)
+    o.ag.a1 = a1
+
+    o.ag:Play()
+    o.ag:SetLooping("REPEAT")
+
+    --debug
+    h:SetScript("OnShow", function() print("id: "..i.." duration: "..cfg.anim.duration.." time: "..floor(GetTime()-h.time)) end)
+    h:SetScript("OnHide", function() print("id: "..i.." duration: "..cfg.anim.duration.." time: "..floor(GetTime()-h.time)) end)
 
   end
+
+  local a = CreateFrame("Frame")
+  a:RegisterEvent("PLAYER_LOGIN")
+  a:SetScript("OnEvent", function (self,event,...)
+    for i,v in ipairs(db) do
+      init(i)
+    end
+  end)

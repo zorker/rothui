@@ -600,18 +600,25 @@
 
     bar:RegisterEvent("PLAYER_REGEN_ENABLED")
     bar:RegisterEvent("PLAYER_REGEN_DISABLED")
+    bar:RegisterEvent("PLAYER_TARGET_CHANGED")
     bar.cfg = self.cfg.soulshards
     bar:SetScript("OnEvent", function(self,event)
+      if not UnitExists("target") and self.cfg.alpha.hidenotarget then
+        self:Hide()
+        return
+      end
+      self:Show()
       if event == "PLAYER_REGEN_DISABLED" then
         self:SetAlpha(self.cfg.alpha.ic)
       elseif event == "PLAYER_REGEN_ENABLED" then
         self:SetAlpha(self.cfg.alpha.ooc)
       end
     end)
+    if bar.cfg.alpha.hidenotarget then
+      bar:Hide()
+    end
     bar:SetAlpha(bar.cfg.alpha.ooc)
-
     self.SoulShardBar = bar
-
   end
 
   --update holy power
@@ -695,16 +702,25 @@
     bar:SetScale(self.cfg.holypower.scale)
     func.applyDragFunctionality(bar)
 
+    bar:RegisterEvent("PLAYER_TARGET_CHANGED")
     bar:RegisterEvent("PLAYER_REGEN_ENABLED")
     bar:RegisterEvent("PLAYER_REGEN_DISABLED")
     bar.cfg = self.cfg.holypower
     bar:SetScript("OnEvent", function(self,event)
+      if not UnitExists("target") and self.cfg.alpha.hidenotarget then
+        self:Hide()
+        return
+      end
+      self:Show()
       if event == "PLAYER_REGEN_DISABLED" then
         self:SetAlpha(self.cfg.alpha.ic)
       elseif event == "PLAYER_REGEN_ENABLED" then
         self:SetAlpha(self.cfg.alpha.ooc)
       end
     end)
+    if bar.cfg.alpha.hidenotarget then
+      bar:Hide()
+    end
     bar:SetAlpha(bar.cfg.alpha.ooc)
 
     self.HolyPowerBar = bar

@@ -289,8 +289,15 @@
       end
     end
 
-    if d <= 25 and min > 1 then
-      bar.glow:SetVertexColor(1,0,0,1)
+    --if d <= 25 and min > 1 and dead ~= 1 then
+    if d <= 25 and dead ~= 1 then
+      if cfg.colorswitcher.useBrightForeground then
+        bar.glow:SetVertexColor(0.3,0,0,0.9)
+        bar:SetStatusBarColor(1,0,0,1)
+        bar.bg:SetVertexColor(0.15,0,0,0.7)
+      else
+        bar.glow:SetVertexColor(1,0,0,1)
+      end
     else
       bar.glow:SetVertexColor(0,0,0,0.7)
     end

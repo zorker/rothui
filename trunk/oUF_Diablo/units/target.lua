@@ -1,12 +1,12 @@
-  
+
   --get the addon namespace
-  local addon, ns = ...  
-  
+  local addon, ns = ...
+
   --get oUF namespace (just in case needed)
-  local oUF = ns.oUF or oUF  
-  
+  local oUF = ns.oUF or oUF
+
   --get the config
-  local cfg = ns.cfg  
+  local cfg = ns.cfg
 
   --get the functions
   local func = ns.func
@@ -17,7 +17,7 @@
   ---------------------------------------------
   -- UNIT SPECIFIC FUNCTIONS
   ---------------------------------------------
-  
+
   --init parameters
   local initUnitParameters = function(self)
     self:SetFrameStrata("BACKGROUND")
@@ -33,7 +33,7 @@
     func.applyDragFunctionality(self)
     self:SetHitRectInsets(10,10,10,10)
   end
-  
+
   --actionbar background
   local createArtwork = function(self)
     local t = self:CreateTexture(nil,"BACKGROUND",nil,-8)
@@ -54,22 +54,22 @@
         end
       else
         PlaySound("INTERFACESOUND_LOSTTARGETUNIT")
-      end  
+      end
     end
   end
-  
+
   --create health frames
   local createHealthFrame = function(self)
-    
+
     local cfg = self.cfg.health
-    
+
     --health
     local h = CreateFrame("StatusBar", nil, self)
     h:SetPoint("TOP",0,-21.9)
     h:SetPoint("LEFT",24.5,0)
     h:SetPoint("RIGHT",-24.5,0)
     h:SetPoint("BOTTOM",0,28.7)
-    
+
     h:SetStatusBarTexture(cfg.texture)
     h.bg = h:CreateTexture(nil,"BACKGROUND",nil,-6)
     h.bg:SetTexture(cfg.texture)
@@ -79,16 +79,16 @@
     h.glow:SetTexture("Interface\\AddOns\\rTextures\\target_hpglow")
     h.glow:SetAllPoints(self)
     h.glow:SetVertexColor(0,0,0,1)
-    
+
     self.Health = h
     self.Health.Smooth = true
   end
-  
+
   --create power frames
   local createPowerFrame = function(self)
-    
+
     local cfg = self.cfg.power
-    
+
     --power
     local h = CreateFrame("StatusBar", nil, self)
     h:SetPoint("TOP",0,-38.5)
@@ -97,7 +97,7 @@
     h:SetPoint("BOTTOM",0,21.9)
 
     h:SetStatusBarTexture(cfg.texture)
-    
+
     h.bg = h:CreateTexture(nil,"BACKGROUND",nil,-6)
     h.bg:SetTexture(cfg.texture)
     h.bg:SetAllPoints(h)
@@ -106,10 +106,10 @@
     h.glow:SetTexture("Interface\\AddOns\\rTextures\\target_ppglow")
     h.glow:SetAllPoints(self)
     h.glow:SetVertexColor(0,0,0,1)
-    
+
     self.Power = h
     self.Power.Smooth = true
-    
+
   end
 
   --create the elite head texture
@@ -124,10 +124,10 @@
     bubblehead = head
     bubblehead:Hide()
   end
-  
+
   --create health power strings
   local createHealthPowerStrings = function(self)
-  
+
     local name = func.createFontString(self, cfg.font, 16, "THINOUTLINE")
     name:SetPoint("BOTTOM", self, "TOP", 0, 0)
     name:SetPoint("LEFT", self.Health, 0, 0)
@@ -142,12 +142,12 @@
 
     local classtext = func.createFontString(self, cfg.font, 13, "THINOUTLINE")
     classtext:SetPoint("BOTTOM", self, "TOP", 0, -15)
-    
+
     self:Tag(name, "[diablo:name]")
     self:Tag(hpval, self.cfg.health.tag or "")
     self:Tag(ppval, self.cfg.power.tag or "")
     self:Tag(classtext, "[diablo:classtext]")
-    
+
   end
 
   --check for interruptable spellcast
@@ -171,14 +171,14 @@
   local checkCast = function(bar, unit, name, rank, castid)
     checkShield(bar, unit)
   end
-  
+
   --check for interruptable spellcast
   local checkChannel = function(bar, unit, name, rank)
     checkShield(bar, unit)
   end
-  
+
   --create buffs
-  local createBuffs = function(self)    
+  local createBuffs = function(self)
     local f = CreateFrame("Frame", nil, self)
     f.size = self.cfg.auras.size
     f.num = 40
@@ -188,11 +188,11 @@
     f.initialAnchor = self.cfg.auras.buffs.initialAnchor
     f["growth-x"] = self.cfg.auras.buffs.growthx
     f["growth-y"] = self.cfg.auras.buffs.growthy
-    f.spacing = 5   
+    f.spacing = 5
     f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerBuffs
     self.Buffs = f
   end
-  
+
   --create debuff func
   local createDebuffs = function(self)
     local f = CreateFrame("Frame", nil, self)
@@ -206,28 +206,28 @@
     f["growth-y"] = self.cfg.auras.debuffs.growthy
     f.spacing = 5
     f.showDebuffType = self.cfg.auras.showDebuffType
-    f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerDebuffs    
-    self.Debuffs = f    
+    f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerDebuffs
+    self.Debuffs = f
   end
-  
+
   --update combo
   local function updateCombo(self, event, unit)
     if unit == "pet" then return end
     local bar = self.ComboBar
-  
-    local cp
-    if(UnitExists("vehicle")) then
+
+    local cp = 0
+    if(UnitExists("vehicle") and GetComboPoints("vehicle") >= 1) then
       cp = GetComboPoints("vehicle")
     else
       cp = GetComboPoints("player")
     end
-  
+
     if cp < 1 then
       bar:Hide()
     else
       bar:Show()
     end
-        
+
     for i=1, MAX_COMBO_POINTS do
       local adjust = cp/MAX_COMBO_POINTS
       if(i <= cp) then
@@ -247,12 +247,12 @@
     end
 
   end
-  
+
   --create combo
   local createComboBar = function(self)
-    
+
     self.CPoints = {}
-    
+
     local t
     local bar = CreateFrame("Frame","oUF_DiabloComboPoints",self)
     local w = 64*(MAX_COMBO_POINTS+2)
@@ -261,7 +261,7 @@
     bar:SetPoint(self.cfg.combobar.pos.a1,self.cfg.combobar.pos.af,self.cfg.combobar.pos.a2,self.cfg.combobar.pos.x,self.cfg.combobar.pos.y)
     bar:SetWidth(w)
     bar:SetHeight(h)
-    
+
     t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetSize(64,64)
     t:SetPoint("LEFT",0,0)
@@ -278,50 +278,51 @@
     bar.filling = {}
     bar.glow = {}
     bar.gloss = {}
-    
+
     for i = 1, MAX_COMBO_POINTS do
       local back = "back"..i
-      bar.back[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-8)  
+      bar.back[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
       bar.back[i]:SetSize(64,64)
       bar.back[i]:SetPoint("LEFT",i*64,0)
       bar.back[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_back")
+      bar.back[i]:SetAlpha(0.7)
 
-      bar.filling[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-7)  
+      bar.filling[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-7)
       bar.filling[i]:SetSize(64,64)
       bar.filling[i]:SetPoint("LEFT",i*64,0)
       bar.filling[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_fill")
       bar.filling[i]:SetVertexColor(self.cfg.combobar.color.r,self.cfg.combobar.color.g,self.cfg.combobar.color.b,1)
       bar.filling[i]:SetBlendMode("ADD")
 
-      bar.glow[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-6)  
+      bar.glow[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-6)
       bar.glow[i]:SetSize(64*1.25,64*1.25)
       bar.glow[i]:SetPoint("CENTER", bar.filling[i], "CENTER", 0, 0)
       bar.glow[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_glow")
       bar.glow[i]:SetBlendMode("ADD")
       bar.glow[i]:SetVertexColor(self.cfg.combobar.color.r,self.cfg.combobar.color.g,self.cfg.combobar.color.b,1)
 
-      bar.gloss[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-5)  
+      bar.gloss[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-5)
       bar.gloss[i]:SetSize(64,64)
       bar.gloss[i]:SetPoint("LEFT",i*64,0)
       bar.gloss[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_highlight")
       bar.gloss[i]:SetBlendMode("ADD")
-      
+
       bar.color = self.cfg.combobar.color
 
       self.CPoints[i] = bar.filling[i]
     end
 
-    bar:SetScale(self.cfg.combobar.scale)    
-    func.applyDragFunctionality(bar)    
+    bar:SetScale(self.cfg.combobar.scale)
+    func.applyDragFunctionality(bar)
     self.ComboBar = bar
-    
+
   end
 
   ---------------------------------------------
   -- UNIT SPECIFIC TAG
   ---------------------------------------------
 
-  oUF.Tags["diablo:classtext"] = function(unit) 
+  oUF.Tags["diablo:classtext"] = function(unit)
     bubblehead:Hide()
     local string, tmpstring, sp = "", "", " "
     if UnitLevel(unit) == 0 then
@@ -330,17 +331,17 @@
       string = UnitLevel(unit)
     else
       string = "??"
-    end    
+    end
     string = string..sp
     local unitrace = UnitRace(unit)
-    local creatureType = UnitCreatureType(unit)    
+    local creatureType = UnitCreatureType(unit)
     if unitrace and UnitIsPlayer(unit) then
       string = string..unitrace..sp
-    end   
+    end
     if creatureType and not UnitIsPlayer(unit) then
       string = string..creatureType..sp
-    end    
-    local unit_classification = UnitClassification(unit)    
+    end
+    local unit_classification = UnitClassification(unit)
     if unit_classification == "worldboss" or UnitLevel(unit) == -1 then
       tmpstring = "Boss"
       bubblehead:Show()
@@ -356,14 +357,14 @@
       tmpstring = "Elite"
       bubblehead:Show()
       bubblehead:SetTexture("Interface\\AddOns\\rTextures\\d3_head_garg")
-    end    
+    end
     if tmpstring ~= "" then
-      tmpstring = tmpstring..sp  
-    end    
+      tmpstring = tmpstring..sp
+    end
     string = string..tmpstring
-    tmpstring = ""    
+    tmpstring = ""
     local localizedClass, englishClass = UnitClass(unit)
-    
+
     if localizedClass and UnitIsPlayer(unit) then
       string = string..localizedClass..sp
     end
@@ -376,20 +377,20 @@
   ---------------------------------------------
 
   local function createStyle(self)
-  
+
     --apply config to self
     self.cfg = cfg.units.target
     self.cfg.style = "target"
-    
+
     self.cfg.width = 256
     self.cfg.height = 64
-    
+
     --init
     initUnitParameters(self)
-    
-    --create the art    
+
+    --create the art
     createArtwork(self)
-    
+
     --createhealthPower
     createHealthFrame(self)
     createPowerFrame(self)
@@ -398,59 +399,59 @@
     self:RegisterEvent("PLAYER_TARGET_CHANGED", playTargetSound)
     self.Health:SetScript("OnShow",function(s)
       playTargetSound(self,"PLAYER_TARGET_CHANGED")
-    end)    
-    
+    end)
+
     --create bubblehead
     createBubbleHead(self)
-    
+
     --health power strings
     createHealthPowerStrings(self)
-    
+
     --health power update
     self.Health.PostUpdate = func.updateHealth
     self.Power.PostUpdate = func.updatePower
-    
+
     --auras
     if self.cfg.auras.show then
       createBuffs(self)
-      createDebuffs(self)      
+      createDebuffs(self)
       self.Buffs.PostCreateIcon = func.createAuraIcon
       self.Debuffs.PostCreateIcon = func.createAuraIcon
       if self.cfg.auras.desaturateDebuffs then
         self.Debuffs.PostUpdateIcon = func.postUpdateDebuff
       end
     end
-    
+
     --castbar
     if self.cfg.castbar.show then
       func.createCastbar(self)
       self.Castbar.cfg = self.cfg.castbar
       self.Castbar.PostCastStart = checkCast
-      self.Castbar.PostChannelStart = checkChannel   
-      
+      self.Castbar.PostChannelStart = checkChannel
+
     end
-    
+
     --combobar
     if self.cfg.combobar.show then
       createComboBar(self)
       self.CPoints.Override = updateCombo
     end
-    
+
     --debuffglow
     func.createDebuffGlow(self)
-    
+
     --icons
     self.RaidIcon = func.createIcon(self,"BACKGROUND",24,self.Name,"BOTTOM","TOP",0,0,-1)
-    
+
     --create portrait
     if self.cfg.portrait.show then
       func.createStandAlonePortrait(self)
     end
-    
+
     --add self to unit container (maybe access to that unit is needed in another style)
-    unit.target = self  
-    
-  end  
+    unit.target = self
+
+  end
 
   ---------------------------------------------
   -- SPAWN TARGET UNIT
@@ -459,5 +460,5 @@
   if cfg.units.target.show then
     oUF:RegisterStyle("diablo:target", createStyle)
     oUF:SetActiveStyle("diablo:target")
-    oUF:Spawn("target", "oUF_DiabloTargetFrame")  
+    oUF:Spawn("target", "oUF_DiabloTargetFrame")
   end

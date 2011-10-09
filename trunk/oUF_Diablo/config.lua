@@ -44,15 +44,15 @@
   --muliplier: is a setting that will be multiplied with the alpha value of the animation (to make it a bit less attracting)
   --decrease alpha on value: by default the alpha of an animation is multiplied with the value (to make it fade once you loose hp or mana) but in some cases you don't want that, so that value can disable that
   cfg.animClassOverride = {
-    ["DEATHKNIGHT"]   = { enable = true, animhealth = 13, animmana = 4,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.4,  manamultiplier = 0.4,  healthdecreasealpha = false, manadecreasealpha = false, },
+    ["DEATHKNIGHT"]   = { enable = true, animhealth = 13, animmana = 4,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.5,  manamultiplier = 1,  healthdecreasealpha = true, manadecreasealpha = true, },
     ["DRUID"]         = { enable = true, animhealth = 18, animmana = 9,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.4,  manamultiplier = 0.4,  healthdecreasealpha = false, manadecreasealpha = false, },
     ["HUNTER"]        = { enable = true, animhealth = 20,  animmana = 6,  classcolored = false, powertypecolored = false, healthmultiplier = 0.13,    manamultiplier = 0.13,    healthdecreasealpha = true,  manadecreasealpha = true,  },
-    ["MAGE"]          = { enable = true, animhealth = 4,  animmana = 6,   classcolored = true,  powertypecolored = false, healthmultiplier = 0.4,  manamultiplier = 1,    healthdecreasealpha = false, manadecreasealpha = true,  },
+    ["MAGE"]          = { enable = true, animhealth = 4,  animmana = 6,   classcolored = true,  powertypecolored = true, healthmultiplier = 0.4,  manamultiplier = 0.4,    healthdecreasealpha = true, manadecreasealpha = true,  },
     ["ROGUE"]         = { enable = true, animhealth = 3,  animmana = 22,  classcolored = false, powertypecolored = true,  healthmultiplier = 1,    manamultiplier = 0.3,  healthdecreasealpha = true,  manadecreasealpha = false, },
     ["PRIEST"]        = { enable = true, animhealth = 19, animmana = 11,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["PALADIN"]       = { enable = true, animhealth = 1,  animmana = 17,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["SHAMAN"]        = { enable = true, animhealth = 16, animmana = 15,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
-    ["WARRIOR"]       = { enable = true, animhealth = 20,  animmana = 6,  classcolored = false, powertypecolored = false, healthmultiplier = 0.15,    manamultiplier = 0.15,  healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["WARRIOR"]       = { enable = true, animhealth = 2,  animmana = 0,  classcolored = true, powertypecolored = true, healthmultiplier = 0.4,    manamultiplier = 0.4,  healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["WARLOCK"]       = { enable = true, animhealth = 15, animmana = 22,  classcolored = false, powertypecolored = false, healthmultiplier = 0.2,    manamultiplier = 0.4,    healthdecreasealpha = true,  manadecreasealpha = true,  },
   }
 
@@ -78,11 +78,17 @@
 
   --the texture of the health orb. you can choose between 11 different textures.
   --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = city, 15 = diablo3
-  cfg.healthtexture = 15 --default 15
+  cfg.healthtexture = 1 --default 15
 
   --the texture of the mana orb. you can choose between 11 different textures.
   --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = city, 15 = diablo3
-  cfg.manatexture = 15 --default 15
+  cfg.manatexture = 3 --default 15
+
+  if cfg.useAnimationSystem == true then
+    --rewrite to a more plain texture (better for animation models)
+    cfg.healthtexture = 15
+    cfg.manatexture = 15
+  end
 
   ----------------------------------------
   -- colorswitcher define your color for healthbars here
@@ -91,9 +97,9 @@
   --color is in RGB (red (r), green (g), blue (b), alpha (a)), values are from 0 (dark color) to 1 (bright color). 1,1,1 = white / 0,0,0 = black / 1,0,0 = red etc
   cfg.colorswitcher = {
     bright              = { r = 1, g = 0, b = 0, a = 0.9, },          -- the bright color
-    dark                = { r = 0.15, g = 0.15, b = 0.15, a = 1, },   -- the dark color
-    classcolored        = false,   -- true   -> override the bright color with the unit specific color (class, faction, happiness)
-    useBrightForeground = false,  -- true   -> use bright color in foreground and dark color in background
+    dark                = { r = 0.1, g = 0.1, b = 0.1, a = 0.7, },   -- the dark color
+    classcolored        = true,   -- true   -> override the bright color with the unit specific color (class, faction, happiness)
+    useBrightForeground = true,  -- true   -> use bright color in foreground and dark color in background
                                   -- false  -> use dark color in foreground and bright color in background
   }
 
@@ -102,7 +108,7 @@
   ----------------------------------------
 
   --setting this to false will use the default frame positions, true allows moving
-  cfg.framesUserplaced = true
+  cfg.framesUserplaced = false
 
   --setting this to true will lock the frames in place, false unlocks them
   cfg.framesLocked = true
@@ -156,6 +162,7 @@
         alpha = {
           ooc = 0.7, --alpha value out of combat
           ic = 1, --alpha value in comat
+          hidenotarget = true, --hide if no target is found
         },
       },
       holypower = {
@@ -166,6 +173,7 @@
         alpha = {
           ooc = 0.7, --alpha value out of combat
           ic = 1, --alpha value in comat
+          hidenotarget = true, --hide if no target is found
         },
       },
       eclipsebar = {
@@ -184,7 +192,7 @@
         pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
       },
       vengeance = {
-        show = true,
+        show = false,
         scale = 0.5,
         color = {r = 1, g = 0, b = 0, },
         texture = "Interface\\AddOns\\rTextures\\statusbar",
@@ -284,9 +292,9 @@
       },
       combobar = {
         show = true,
-        scale = 0.5,
+        scale = 0.43,
         color = {r = 0.9, g = 0.59, b = 0, },
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 480 },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 560 },
       },
       portrait = {
         pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 100, y = 0 },
@@ -475,11 +483,12 @@
     --RAID
     raid = {
       show = true,
+      hideManager = false,
       alpha = {
         notinrange = 0.5,
       },
-      scale = 1.05,
-      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -10 },
+      scale = 1.15,
+      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = 10 },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
         tag1 = "[diablo:name]",     --tag for the first line
@@ -567,7 +576,7 @@
   --galaxy color stuff
   cfg.galaxytab = {
     [0] = {r = playercolor.r, g = playercolor.g, b = playercolor.b, }, -- class color
-    [1] = {r = 0.90, g = 0.1, b = 0.1, }, -- red
+    [1] = {r = 0.9, g = 0.3, b = 0.1, }, -- red
     [2] = {r = 0.25, g = 0.9, b = 0.25, }, -- green
     [3] = {r = 0, g = 0.35,   b = 0.9, }, -- blue
     [4] = {r = 0.9, g = 0.8, b = 0.35, }, -- yellow
@@ -576,9 +585,9 @@
 
   --orb animation table
   cfg.animtab = {
-    [0] = {displayid = 17010, r = 1, g = 0, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },          -- red fog
+    [0] = {displayid = 17010, r = 255/255, g = 70/255, b = 20/255, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },          -- red fog
     [1] = {displayid = 17054, r = 1, g = 0.4, b = 1, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },      -- purple fog
-    [2] = {displayid = 17055, r = 0, g = 0.5, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- green fog
+    [2] = {displayid = 17055, r = 150/255, g = 186/255, b = 1/255, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- green fog
     [3] = {displayid = 17286, r = 1, g = 0.9, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- yellow fog
     [4] = {displayid = 18075, r = 0, g = 0.8, b = 1, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- turquoise fog
     [5] = {displayid = 23422, r = 0.4, g = 0, b = 0, camdistancescale = 2.8, portraitzoom = 1, x = 0, y = 0.1, rotation = 0, },         -- red portal

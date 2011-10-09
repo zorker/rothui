@@ -14,7 +14,7 @@ modules\oUF_AuraWatch.lua
 modules\oUF_Vengeance.lua
 
 config.lua
-charspecific.lua
+##charspecific.lua
 
 libs\slashcmd.lua
 libs\functions.lua

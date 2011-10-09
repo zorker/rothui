@@ -1,7 +1,7 @@
 ## Interface: 40200
 ## Author: zork
 ## Title: rBBS_OrbsOnly
-## Notes: OrbsOnly: an layout for rBBS, showing player health and power orbs
+## Notes: OrbsOnly: an layout for rBBS, showing player, target and pet health and power orbs
 ## RequiredDeps: rBBS
 
 config.lua

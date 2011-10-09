@@ -14,7 +14,15 @@
   -- SPAWN
   ---------------------------------
 
-  --spawn health orb
-  rBBS:spawnHealthOrb(addon, cfg.healthorb)
-  --spawn power orb
-  rBBS:spawnPowerOrb(addon, cfg.powerorb)
+  --spawn player health orb
+  rBBS:spawnHealthOrb(addon, cfg.playerhealthorb)
+  --spawn player power orb
+  rBBS:spawnPowerOrb(addon, cfg.playerpowerorb)
+  --spawn target health orb
+  rBBS:spawnHealthOrb(addon, cfg.targethealthorb)
+  --spawn target power orb
+  rBBS:spawnPowerOrb(addon, cfg.targetpowerorb)
+  --spawn pet health orb
+  rBBS:spawnHealthOrb(addon, cfg.pethealthorb)
+  --spawn pet power orb
+  rBBS:spawnPowerOrb(addon, cfg.petpowerorb)

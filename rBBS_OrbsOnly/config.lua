@@ -10,40 +10,109 @@
   -- CONFIG
   ---------------------------------
 
-  --bottomline texture
-  cfg.healthorb = {
-    name              = "HealthOrb",    --has to be unique per addon
+  --playerhealthorb
+  cfg.playerhealthorb = {
+    name              = "PlayerHealthOrb",
     size              = 150,
     scale             = 0.82,
-    classcolored      = false,
+    classcolored      = true,
+    strata            = "BACKGROUND",
     animation         = {
                           enable          = true,
                           anim            = 20,
-                          decreaseAlpha   = true,
-                          multiplier      = 0.2,
+                          decreaseAlpha   = false,
+                          multiplier      = 0.3,
                         },
     --color             = { r=1, g=1, b=0, a=1, },
-    pos               = { a1="CENTER", x=-260, y=-10, },
+    pos               = { a1="CENTER", x=-260, y=0, },
     --strata      = "BACKGRROUND",
     --level       = 1,
     --filling        = "Interface\\AddOns\\rBBS_RothUI\\media\\orb_filling15.tga",
   }
 
-  --bottomline texture
-  cfg.powerorb = {
-    name              = "PowerOrb",
+  --playerpowerorb
+  cfg.playerpowerorb = {
+    name              = "PlayerPowerOrb",
     size              = 150,
     scale             = 0.82,
-    powertypecolored  = false,
+    powertypecolored  = true,
+    strata            = "LOW",
     animation         = {
                           enable          = true,
                           anim            = 6,
-                          decreaseAlpha   = true,
-                          multiplier      = 0.2,
+                          decreaseAlpha   = false,
+                          multiplier      = 0.3,
                         },
-    pos               = { a1="CENTER", x=260, y=-10, },
+    pos               = { a1="CENTER", x=260, y=0, },
   }
 
+  --targethealthorb
+  cfg.targethealthorb = {
+    name              = "TargetHealthOrb",
+    unit              = "target",         --default unit is "player" but in this case we want target
+    size              = 120,
+    scale             = 0.82,
+    classcolored      = true,
+    strata            = "BACKGROUND",
+    animation         = {
+                          enable          = true,
+                          anim            = 2,
+                          decreaseAlpha   = false,
+                          multiplier      = 0.3,
+                        },
+    pos               = { a1="CENTER", x=-130, y=0, },
+  }
+
+  --targetpowerorb
+  cfg.targetpowerorb = {
+    name              = "TargetPowerOrb",
+    unit              = "target",         --default unit is "player" but in this case we want target
+    size              = 120,
+    scale             = 0.82,
+    powertypecolored  = true,
+    strata            = "LOW",
+    animation         = {
+                          enable          = true,
+                          anim            = 0,
+                          decreaseAlpha   = false,
+                          multiplier      = 0.3,
+                        },
+    pos               = { a1="CENTER", x=130, y=0, },
+  }
+
+  --pethealthorb
+  cfg.pethealthorb = {
+    name              = "PetHealthOrb",
+    unit              = "pet",         --default unit is "player" but in this case we want target
+    size              = 100,
+    scale             = 0.82,
+    classcolored      = true,
+    strata            = "BACKGROUND",
+    animation         = {
+                          enable          = true,
+                          anim            = 2,
+                          decreaseAlpha   = false,
+                          multiplier      = 0.3,
+                        },
+    pos               = { a1="CENTER", x=-130, y=-100, },
+  }
+
+  -- petpowerorb
+  cfg.petpowerorb = {
+    name              = "PetPowerOrb",
+    unit              = "pet",         --default unit is "player" but in this case we want target
+    size              = 100,
+    scale             = 0.82,
+    powertypecolored  = true,
+    strata            = "LOW",
+    animation         = {
+                          enable          = true,
+                          anim            = 0,
+                          decreaseAlpha   = false,
+                          multiplier      = 0.3,
+                        },
+    pos               = { a1="CENTER", x=130, y=-100, },
+  }
 
   ---------------------------------
   -- CONFIG

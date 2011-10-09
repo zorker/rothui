@@ -312,26 +312,65 @@
 
   --lock frame func
   local lockFrame = function(f)
-    if f.type ~= "healthorb" then
-      f:EnableMouse(nil)
-      f.locked = true
-    end
+    f.locked = true
     f.dragtexture:SetAlpha(0)
     f:RegisterForDrag(nil)
-    f:SetScript("OnEnter", nil)
-    f:SetScript("OnLeave", nil)
+    if f.unit then
+      f:SetScript("OnEnter", UnitFrame_OnEnter)
+      f:SetScript("OnLeave", UnitFrame_OnLeave)
+    else
+      f:EnableMouse(nil)
+      f:SetScript("OnEnter", nil)
+      f:SetScript("OnLeave", nil)
+    end
     f:SetScript("OnDragStart", nil)
     f:SetScript("OnDragStop", nil)
   end
 
+  --menu function from phanx
+  local dropdown = CreateFrame("Frame", "rBBSUnitDropDownMenu", UIParent, "UIDropDownMenuTemplate")
+
+  UIDropDownMenu_Initialize(dropdown, function(self)
+    local unit = self:GetParent().unit
+    if not unit then return end
+    local menu, name, id
+    if UnitIsUnit(unit, "player") then
+      menu = "SELF"
+    elseif UnitIsUnit(unit, "vehicle") then
+      menu = "VEHICLE"
+    elseif UnitIsUnit(unit, "pet") then
+      menu = "PET"
+    elseif UnitIsPlayer(unit) then
+      id = UnitInRaid(unit)
+      if id then
+        menu = "RAID_PLAYER"
+        name = GetRaidRosterInfo(id)
+      elseif UnitInParty(unit) then
+        menu = "PARTY"
+      else
+        menu = "PLAYER"
+      end
+    else
+      menu = "TARGET"
+      name = RAID_TARGET_ICON
+    end
+    if menu then
+      UnitPopup_ShowMenu(self, menu, unit, name, id)
+    end
+  end, "MENU")
+
+  local menu = function(self)
+    dropdown:SetParent(self)
+    ToggleDropDownMenu(1, nil, dropdown, "cursor", 0, 0)
+  end
+
   --player frame menu and click events
-  local createPlayerClickFrame = function(f)
+  local createClickFrame = function(f)
     f:RegisterForClicks("AnyUp")
-    f:SetAttribute("unit", "player")
+    f:SetAttribute("unit", f.unit)
+    f.menu = menu
     f:SetAttribute("*type1", "target")
-    local showmenu = function() ToggleDropDownMenu(1, nil, PlayerFrameDropDown, "cursor", 0, 0) end
-    f.showmenu = showmenu
-    f:SetAttribute("*type2", "showmenu")
+    f:SetAttribute("*type2", "menu")
     f:SetScript("OnEnter", UnitFrame_OnEnter)
     f:SetScript("OnLeave", UnitFrame_OnLeave)
   end
@@ -608,8 +647,10 @@
     f.type = "healthorb"
     f.classcolored = cfg.classcolored
     f.unit = cfg.unit or "player"
-    if f.unit == "player" then
-      createPlayerClickFrame(f)
+    if f.unit then
+    --if f.unit == "player" then
+      --createPlayerClickFrame(f)
+      createClickFrame(f)
     end
     --frame strata
     f:SetFrameStrata(cfg.strata or "LOW")
@@ -686,6 +727,7 @@
     f:RegisterEvent("UNIT_HEALTH")
     f:RegisterEvent("PLAYER_ENTERING_WORLD")
     if f.unit == "target" then f:RegisterEvent("PLAYER_TARGET_CHANGED") end
+    if f.unit == "pet" then f:RegisterEvent("UNIT_PET") end
     if parent then f:RegisterEvent("PLAYER_LOGIN") end
     --event
     f:SetScript("OnEvent", updateHealth)

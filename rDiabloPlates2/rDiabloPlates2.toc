@@ -1,0 +1,7 @@
+## Interface: 40300
+## Author: zork
+## Version: 1.0
+## Title: rDiabloPlates2
+## Notes: Diablo 3 themed nameplates
+
+core.lua

@@ -11,6 +11,17 @@
       scale       = 0.7,
       adjust_pos  = { x = 0, y = 0, },
     },
+    castbar = {
+      scale       = 0.7,
+      adjust_pos  = { x = 0, y = -24, },
+      icon = {
+        size = 20,
+      },
+      color = {
+        default   = { r = 1, g = 0.6, b = 0 },
+        shielded  = { r = 0.8, g = 0.8, b = 0.8 },
+      },
+    },
     textures = {
       bg          = "Interface\\Addons\\rDiabloPlates2\\media\\nameplate_bg",
       bar         = "Interface\\Addons\\rDiabloPlates2\\media\\nameplate_bar",
@@ -18,6 +29,7 @@
       highlight   = "Interface\\Addons\\rDiabloPlates2\\media\\nameplate_highlight",
       left        = "Interface\\Addons\\rDiabloPlates2\\media\\nameplate_left",
       right       = "Interface\\Addons\\rDiabloPlates2\\media\\nameplate_right",
+      icon_border = "Interface\\Addons\\rDiabloPlates2\\media\\icon_border",
     },
     font = {
       scale       = 0.9,
@@ -164,62 +176,6 @@
     end
   end
 
-  --update the castbar positioning
-  local updateCastbarPosition = function(castBar)
-
-    --local point, relativeTo, relativePoint, xOfs, yOfs = castBar:GetPoint(n)
-    --xOfs = floor(xOfs+0.5)
-    --yOfs = floor(yOfs+0.5)
-
-    castBar.border:ClearAllPoints()
-    castBar.border:SetPoint("CENTER",castBar:GetParent(),0,-29)
-
-    --change castbar color to dark red if the cast is shielded
-    if castBar.shield:IsShown() == 1 then
-      castBar:SetStatusBarColor(0.7,0,0)
-    else
-      castBar:SetStatusBarColor(1,0.7,0)
-    end
-    castBar.shield:ClearAllPoints()
-    castBar.shield:SetPoint("CENTER",castBar:GetParent(),0,-29)
-
-    castBar:SetPoint("RIGHT",castBar.border,-1,0)
-    castBar:SetPoint("TOP",castBar.border,0,-10)
-    castBar:SetPoint("BOTTOM",castBar.border,0,12)
-    castBar:SetPoint("LEFT",castBar.border,24,0)
-
-    castBar.icon:ClearAllPoints()
-    castBar.icon:SetPoint("LEFT",castBar.border,3,0)
-
-  end
-
-  --init the castbar objects
-  local initCastbars = function(castBar,castborderTexture, shield, castbaricon)
-    castborderTexture:SetTexture("Interface\\Tooltips\\Nameplate-CastBar")
-    castborderTexture:SetSize(castBar.w+25,(castBar.w+25)/4)
-    castborderTexture:SetTexCoord(0,1,0,1)
-    castBar.border = castborderTexture
-
-    shield:SetSize(castBar.w+25,(castBar.w+25)/4)
-    shield:SetTexCoord(0,1,0,1)
-    castBar.shield = shield
-
-    castbaricon:SetTexCoord(0.1,0.9,0.1,0.9)
-    castBar.icon = castbaricon
-
-    castBar:SetStatusBarColor(1,0.7,0)
-    createCastbarBG(castBar)
-
-    castBar:HookScript("OnShow", function(s)
-      s.bg:Show()
-      updateCastbarPosition(s)
-    end)
-
-    castBar:HookScript("OnHide", function(s)
-      s.bg:Hide()
-    end)
-  end
-
   local hideStuff = function(f)
     f.name:Hide()
     f.level:Hide()
@@ -228,6 +184,8 @@
     f.boss:SetTexture("")
     --f.healthbar:SetStatusBarTexture("")
     f.highlight:SetTexture("")
+    f.castbar.border:SetTexture("")
+    f.castbar.shield:SetTexture("")
   end
 
   local fixStuff = function(f)
@@ -239,10 +197,29 @@
     f.healthbar:SetParent(f.back_holder)
   end
 
+  local fixCastbar = function(cb)
+    cb:ClearAllPoints()
+    cb:SetAllPoints(cb.parent)
+    cb:SetParent(cb.parent)
+  end
+
+  --update castbar
+  local updateCastbar = function(cb)
+    fixCastbar(cb)
+    if cb.shield:IsShown() then
+      cb:SetStatusBarColor(cfg.castbar.color.shielded.r,cfg.castbar.color.shielded.g,cfg.castbar.color.shielded.b)
+    else
+      cb:SetStatusBarColor(cfg.castbar.color.default.r,cfg.castbar.color.default.g,cfg.castbar.color.default.b)
+    end
+    --print(cb.texture)
+    --print(cb.icon)
+  end
+
   --update style func
   local updateStyle = function(f)
     hideStuff(f)
     fixStuff(f)
+    fixCastbar(f.castbar)
     --apply text
     --applyText(f,levelText,dragonTexture,bossIcon,nameText,healthBar)
   end
@@ -256,7 +233,8 @@
     --threat holder
     local th = CreateFrame("Frame",nil,f)
     th:SetSize(w*threat_adjust,h*threat_adjust)
-    th:SetPoint("CENTER",f,"TOP",cfg.frame.adjust_pos.x,cfg.frame.adjust_pos.y) --anchor the plates to the top of the damn frame
+    th:SetPoint("CENTER",cfg.frame.adjust_pos.x,cfg.frame.adjust_pos.y)
+    --th:SetPoint("CENTER",f,"CENTER",cfg.frame.adjust_pos.x,cfg.frame.adjust_pos.y) --anchor the plates to the top of the damn frame
     --threat glow
     f.threat:SetTexCoord(0,1,0,1)
     f.threat:SetTexture(cfg.textures.threat)
@@ -297,22 +275,79 @@
     f.back_holder = bf
   end
 
+  --create castbar art
+  local createCastbarArt = function(f)
+    f.w, f.h = f:GetWidth(), f:GetHeight()
+    local w,h = f.w*cfg.castbar.scale, f.w*cfg.castbar.scale/4 --width/height ratio is 4:1
+    --background frame
+    local bf = CreateFrame("Frame",nil,f)
+    bf:SetSize(w,h)
+    bf:SetPoint("CENTER",cfg.castbar.adjust_pos.x,cfg.castbar.adjust_pos.y)
+    --bg texture
+    local bg = bf:CreateTexture(nil,"BACKGROUND",nil,1)
+    bg:SetAllPoints(bf)
+    bg:SetTexture(cfg.textures.bg)
+    --left texture
+    local left = bf:CreateTexture(nil,"BACKGROUND",nil,2)
+    left:SetPoint("RIGHT",bf,"LEFT",0,0)
+    left:SetSize(h,h)
+    left:SetTexture(cfg.textures.left)
+    --right texture
+    local right = bf:CreateTexture(nil,"BACKGROUND",nil,2)
+    right:SetPoint("LEFT",bf,"RIGHT",0,0)
+    right:SetSize(h,h)
+    right:SetTexture(cfg.textures.right)
+    --position castbar
+    f.castbar:SetStatusBarTexture(cfg.textures.bar)
+    f.castbar:ClearAllPoints()
+    f.castbar:SetAllPoints(bf)
+    f.castbar:SetParent(bf)
+    --reparent textures to make them fade out with castbar
+    right:SetParent(f.castbar)
+    left:SetParent(f.castbar)
+    bg:SetParent(f.castbar)
+    --highlight frame
+    local hl = CreateFrame("Frame",nil,f.castbar)
+    hl:SetAllPoints(bf)
+    --highlight texture
+    local gl = hl:CreateTexture(nil,"BACKGROUND",nil,3)
+    gl:SetAllPoints(hl)
+    gl:SetTexture(cfg.textures.highlight)
+    --move icon to gloss frame
+    local ic = CreateFrame("Frame",nil,hl)
+    ic:SetSize(cfg.castbar.icon.size,cfg.castbar.icon.size)
+    ic:SetPoint("CENTER",0,0)
+    --castbar icon adjust
+    f.castbar.icon:SetTexCoord(0.1,0.9,0.1,0.9)
+    f.castbar.icon:ClearAllPoints()
+    f.castbar.icon:SetAllPoints(ic)
+    f.castbar.icon:SetParent(ic)
+    f.castbar.icon:SetDrawLayer("BACKGROUND",3)
+    local ib = ic:CreateTexture(nil,"BACKGROUND",nil,5)
+    ib:SetTexture(cfg.textures.icon_border)
+    ib:SetPoint("TOPLEFT", ic, "TOPLEFT", -2, 2)
+    ib:SetPoint("BOTTOMRIGHT", ic, "BOTTOMRIGHT", 2, -2)
+    f.castbar.parent = bf --keep reference to parent element for later
+    f.castbar_holder = bf
+  end
+
   --init style func
   local initStyle = function(f)
 
     f.healthbar, f.castbar = f:GetChildren()
     f.threat, f.border, f.highlight, f.name, f.level, f.boss, f.raid, f.dragon = f:GetRegions()
     f.castbar.texture, f.castbar.border, f.castbar.shield, f.castbar.icon = f.castbar:GetRegions()
-
-    --init the size of health and castbar
+    f.unit = {}
+    --create art
     createArt(f)
-
+    createCastbarArt(f)
     --hide stuff
     hideStuff(f)
+    --hook stuff
+    f:HookScript("OnShow", updateStyle)
+    f.castbar:HookScript("OnShow", updateCastbar)
 
-    f:HookScript("OnShow", function(self)
-      updateStyle(self)
-    end)
+
 
     --[[
     --create new fontstrings

@@ -13,14 +13,30 @@
     },
     castbar = {
       scale       = 0.7,
-      adjust_pos  = { x = 0, y = -24, },
+      adjust_pos  = { x = 0, y = -20, },
       icon = {
-        size = 20,
+        size = 18,
+        pos = { a1 = "LEFT", x = 0, y = 0}
       },
       color = {
         default   = { r = 1, g = 0.6, b = 0 },
         shielded  = { r = 0.8, g = 0.8, b = 0.8 },
       },
+    },
+    raidmark = {
+      icon = {
+        size = 25,
+        pos = { a1 = "CENTER", x = 0, y = 35}
+      },
+    },
+    name = {
+      enable = true,
+      font = STANDARD_TEXT_FONT,
+      size = 10,
+      outline = "THINOUTLINE",
+      pos_1 = { a1 = "LEFT", x = -10, y = 0},
+      pos_2 = { a1 = "RIGHT", x = 10, y = 0},
+      pos_3 = { a1 = "TOP", x = 0, y = 7},
     },
     textures = {
       bg          = "Interface\\Addons\\rDiabloPlates2\\media\\nameplate_bg",
@@ -48,141 +64,12 @@
     return string.format("%02x%02x%02x", r*255, g*255, b*255)
   end
 
-  --set txt func
-  local applyText = function(f,levelText,dragonTexture,bossIcon,nameText,healthBar)
-
-    local r,g,b = levelText:GetTextColor()
-    r,g,b = floor(r*100+.5)/100, floor(g*100+.5)/100, floor(b*100+.5)/100
-    local colorstring = RGBPercToHex(r,g,b)
-
-    local r,g,b = healthBar:GetStatusBarColor()
-    r,g,b = floor(r*100+.5)/100, floor(g*100+.5)/100, floor(b*100+.5)/100
-    if r==0 and g==0 and b==1 then
-      --dark blue color of members of the own faction is barely readable
-      f.na:SetTextColor(1,0,1)
-    else
-      f.na:SetTextColor(r,g,b)
-    end
-
-    local color = {
-      r = r,
-      g = g,
-      b = b,
-    }
-
-    if not colorswitcher.classcolored then
-      color = colorswitcher.bright
-    end
-    if colorswitcher.useBrightForeground then
-      healthBar.new:SetVertexColor(color.r,color.g,color.b,color.a or 1)
-      healthBar.bg:SetVertexColor(colorswitcher.dark.r,colorswitcher.dark.g,colorswitcher.dark.b,colorswitcher.dark.a)
-    else
-      healthBar.new:SetVertexColor(colorswitcher.dark.r,colorswitcher.dark.g,colorswitcher.dark.b,colorswitcher.dark.a)
-      healthBar.bg:SetVertexColor(color.r,color.g,color.b,color.a or 1)
-    end
-
-    local name = nameText:GetText() or ""
-    local level = levelText:GetText() or ""
-    if bossIcon:IsShown() == 1 then
-      level = "??"
-      colorstring = "ff6600"
-    elseif dragonTexture:IsShown() == 1 then
-      level = level.."+"
-    end
-
-    f.na:SetText("|c00"..colorstring..""..level.."|r "..name)
-
-  end
-
-  --number format func
-  local numFormat = function(v)
-    local string = ""
-    if v > 1E6 then
-      string = (floor((v/1E6)*10)/10).."m"
-    elseif v > 1E3 then
-      string = (floor((v/1E3)*10)/10).."k"
-    else
-      string = v
-    end
-    return string
-  end
-
-  --update healthbar function (only called when certain config settings are made)
-  local updateHealthbar = function(healthBar,value)
-    if healthBar and value then
-      local min, max = healthBar:GetMinMaxValues()
-      if value == 'x' then value = max end
-      local p = floor(value/max*100)
-      if colorswitcher then
-        if p == 100 then
-          healthBar.bg:SetWidth(0.01) --fix (0) makes the bar go anywhere
-        elseif p < 100 then
-          if p <= 25 then
-            healthBar.shadow:SetVertexColor(1,0,0,1)
-          else
-            healthBar.shadow:SetVertexColor(0,0,0,0.7)
-          end
-          local w = healthBar.w
-          healthBar.bg:SetWidth(w-(w*p/100)) --calc new width of bar based on size of healthbar
-        end
-      end
-      if showhpvalue then
-        if p < 100 then
-          healthBar.hpval:SetText(numFormat(value).." / "..p.."%")
-        elseif p == 100 and alwaysshowhp then
-          healthBar.hpval:SetText(numFormat(value).." / "..p.."%")
-        else
-          healthBar.hpval:SetText("")
-        end
-      end
-    end
-
-  end
-
-  --move raid icon func
-  local moveRaidIcon = function(raidIcon,f)
-    raidIcon:ClearAllPoints()
-    raidIcon:SetSize(20,20)
-    raidIcon:SetPoint("BOTTOM",f,"TOP",0,7)
-  end
-
-  --create castbar background func
-  local createCastbarBG = function(castBar)
-    local t = castBar:CreateTexture(nil,"BACKGROUND",nil,-8)
-    t:SetAllPoints(castBar)
-    t:SetTexture("Interface\\Addons\\rTextures\\statusbar5")
-    t:SetVertexColor(0,0,0,0.4)
-    t:Hide()
-    castBar.bg = t
-  end
-
-
-  --new fontstrings for name and lvl func
-  local createNewFontStrings = function(f,healthBar)
-    --new name
-    local na = f:CreateFontString(nil, "BORDER")
-    na:SetFont(STANDARD_TEXT_FONT, 12*fontscale, "THINOUTLINE")
-    na:SetPoint("BOTTOM", f.back, "TOP", 0, -9*scale)
-    na:SetPoint("RIGHT", f.back, -20*scale, 0)
-    na:SetPoint("LEFT", f.back, 20*scale, 0)
-    na:SetJustifyH("CENTER")
-    f.na = na
-    if showhpvalue then
-      local hp = f.helper:CreateFontString(nil, "OVERLAY")
-      hp:SetFont(STANDARD_TEXT_FONT, 10*fontscale, "THINOUTLINE")
-      hp:SetPoint("RIGHT",f.helper,"RIGHT",0,0)
-      hp:SetJustifyH("RIGHT")
-      healthBar.hpval = hp
-    end
-  end
-
   local hideStuff = function(f)
     f.name:Hide()
     f.level:Hide()
     f.dragon:SetTexture("")
     f.border:SetTexture("")
     f.boss:SetTexture("")
-    --f.healthbar:SetStatusBarTexture("")
     f.highlight:SetTexture("")
     f.castbar.border:SetTexture("")
     f.castbar.shield:SetTexture("")
@@ -203,6 +90,46 @@
     cb:SetParent(cb.parent)
   end
 
+  local fixColor = function(color)
+    color.r,color.g,color.b = floor(color.r*100+.5)/100, floor(color.g*100+.5)/100, floor(color.b*100+.5)/100
+  end
+
+  local getDifficultyColorString = function(f)
+    local color = {}
+    color.r,color.g,color.b = f.level:GetTextColor()
+    fixColor(color)
+    return RGBPercToHex(color.r,color.g,color.b)
+  end
+
+  local getHealthbarColor = function(f)
+    local color = {}
+    color.r,color.g,color.b = f.healthbar:GetStatusBarColor()
+    fixColor(color)
+    return color
+  end
+
+  --set txt func
+  local updateText = function(f)
+    if not cfg.name.enable then return end
+    local cs = getDifficultyColorString(f)
+    local color = getHealthbarColor(f)
+    if color.r==0 and color.g==0 and color.b==1 then
+      --dark blue color of members of the own faction is barely readable
+      f.ns:SetTextColor(0,0.6,1)
+    else
+      f.ns:SetTextColor(color.r,color.g,color.b)
+    end
+    local name = f.name:GetText() or "Nobody"
+    local level = f.level:GetText() or "-1"
+    if f.boss:IsShown() == 1 then
+      level = "??"
+      cs = "ff6600"
+    elseif f.dragon:IsShown() == 1 then
+      level = level.."+"
+    end
+    f.ns:SetText("|c00"..cs..""..level.."|r "..name)
+  end
+
   --update castbar
   local updateCastbar = function(cb)
     fixCastbar(cb)
@@ -211,8 +138,6 @@
     else
       cb:SetStatusBarColor(cfg.castbar.color.default.r,cfg.castbar.color.default.g,cfg.castbar.color.default.b)
     end
-    --print(cb.texture)
-    --print(cb.icon)
   end
 
   --update style func
@@ -220,10 +145,20 @@
     hideStuff(f)
     fixStuff(f)
     fixCastbar(f.castbar)
-    --apply text
-    --applyText(f,levelText,dragonTexture,bossIcon,nameText,healthBar)
+    updateText(f)
   end
 
+  --new fontstrings for name and lvl func
+  local createNameString = function(f)
+    if not cfg.name.enable then return end
+    local n = f:CreateFontString(nil, "BORDER")
+    n:SetFont(cfg.name.font, cfg.name.size, cfg.name.outline)
+    n:SetPoint(cfg.name.pos_1.a1, f.back_holder, cfg.name.pos_1.x, cfg.name.pos_1.y)
+    n:SetPoint(cfg.name.pos_2.a1, f.back_holder, cfg.name.pos_2.x, cfg.name.pos_2.y)
+    n:SetPoint(cfg.name.pos_3.a1, f.back_holder, cfg.name.pos_3.x, cfg.name.pos_3.y)
+    n:SetJustifyH("CENTER")
+    f.ns = n
+  end
 
   --create art
   local createArt = function(f)
@@ -271,6 +206,12 @@
     local gl = hl:CreateTexture(nil,"BACKGROUND",nil,3)
     gl:SetAllPoints(hl)
     gl:SetTexture(cfg.textures.highlight)
+    --raid icon
+    f.raid:ClearAllPoints()
+    f.raid:SetSize(cfg.raidmark.icon.size,cfg.raidmark.icon.size)
+    f.raid:SetPoint(cfg.raidmark.icon.pos.a1,cfg.raidmark.icon.pos.x,cfg.raidmark.icon.pos.y)
+    f.raid:SetParent(hl)
+    --parent frames
     f.threat_holder = th
     f.back_holder = bf
   end
@@ -316,7 +257,7 @@
     --move icon to gloss frame
     local ic = CreateFrame("Frame",nil,hl)
     ic:SetSize(cfg.castbar.icon.size,cfg.castbar.icon.size)
-    ic:SetPoint("CENTER",0,0)
+    ic:SetPoint(cfg.castbar.icon.pos.a1,cfg.castbar.icon.pos.x,cfg.castbar.icon.pos.y)
     --castbar icon adjust
     f.castbar.icon:SetTexCoord(0.1,0.9,0.1,0.9)
     f.castbar.icon:ClearAllPoints()
@@ -332,48 +273,27 @@
   end
 
   --init style func
-  local initStyle = function(f)
-
+  local styleNameplate = function(f)
+    --make objects available for later
     f.healthbar, f.castbar = f:GetChildren()
     f.threat, f.border, f.highlight, f.name, f.level, f.boss, f.raid, f.dragon = f:GetRegions()
     f.castbar.texture, f.castbar.border, f.castbar.shield, f.castbar.icon = f.castbar:GetRegions()
     f.unit = {}
-    --create art
+    --create stuff
     createArt(f)
     createCastbarArt(f)
+    createNameString(f)
+    updateText(f)
     --hide stuff
     hideStuff(f)
     --hook stuff
     f:HookScript("OnShow", updateStyle)
     f.castbar:HookScript("OnShow", updateCastbar)
-
-
-
-    --[[
-    --create new fontstrings
-    createNewFontStrings(f,healthBar)
-
-    --apply text
-    applyText(f,levelText,dragonTexture,bossIcon,nameText,healthBar)
-
-    --move some icons
-    moveRaidIcon(raidIcon,f)
-
-    --initialize the castbars
-    initCastbars(castBar,castborderTexture, shield, castbaricon)
-
-    ]]--
-
-    return true
-
+    --set var
+    f.styled = true
   end
 
-
-  --STYLE NAMEPLATE FUNC
-  local styleNamePlate = function(f)
-    f.styled = initStyle(f)
-  end
-
+  --check
   local IsNamePlateFrame = function(f)
     local o = select(2,f:GetRegions())
     if not o or o:GetObjectType() ~= "Texture" or o:GetTexture() ~= "Interface\\Tooltips\\Nameplate-Border" then
@@ -383,8 +303,8 @@
     return true
   end
 
+  --onupdate
   local lastupdate = 0
-
   local searchNamePlates = function(self,elapsed)
     lastupdate = lastupdate + elapsed
     if lastupdate > 0.33 then
@@ -393,13 +313,14 @@
       for i = 1, num do
         local f = select(i, WorldFrame:GetChildren())
         if not f.styled and IsNamePlateFrame(f) then
-          styleNamePlate(f)
+          styleNameplate(f)
         end
       end
 
     end
   end
 
+  --init
   local a = CreateFrame("Frame")
   a:SetScript("OnEvent", function(self, event)
     if(event=="PLAYER_LOGIN") then
@@ -410,5 +331,4 @@
       self:SetScript("OnUpdate", searchNamePlates)
     end
   end)
-
   a:RegisterEvent("PLAYER_LOGIN")

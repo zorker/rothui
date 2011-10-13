@@ -1,6 +1,6 @@
 
-  -- // rDiabloPlates
-  -- // zork - 2010
+  -- // rDiabloPlates2
+  -- // zork - 2011
 
   -----------------------------
   -- CONFIG

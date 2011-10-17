@@ -11,6 +11,13 @@
       scale       = 0.7,
       adjust_pos  = { x = 0, y = 0, },
     },
+    healthbar = {
+      lowHpWarning = {
+        enable = true,
+        treshold = 25,
+        color   = { r = 1, g = 0, b = 0 },
+      },
+    },
     castbar = {
       scale       = 0.7,
       adjust_pos  = { x = 0, y = -20, },
@@ -38,6 +45,13 @@
       pos_2 = { a1 = "RIGHT", x = 10, y = 0},
       pos_3 = { a1 = "TOP", x = 0, y = 7},
     },
+    hpvalue = {
+      enable = true,
+      font = STANDARD_TEXT_FONT,
+      size = 8,
+      outline = "THINOUTLINE",
+      pos_1 = { a1 = "RIGHT", x = 0, y = 0},
+    },
     textures = {
       bg          = "Interface\\Addons\\rDiabloPlates2\\media\\nameplate_bg",
       bar         = "Interface\\Addons\\rDiabloPlates2\\media\\nameplate_bar",
@@ -57,6 +71,7 @@
   -- FUNCTIONS
   -----------------------------
 
+  --calc hex color from rgb
   local function RGBPercToHex(r, g, b)
     r = r <= 1 and r >= 0 and r or 0
     g = g <= 1 and g >= 0 and g or 0
@@ -64,6 +79,7 @@
     return string.format("%02x%02x%02x", r*255, g*255, b*255)
   end
 
+  --i dont like that
   local hideStuff = function(f)
     f.name:Hide()
     f.level:Hide()
@@ -75,6 +91,7 @@
     f.castbar.shield:SetTexture("")
   end
 
+  --fix some more stuff
   local fixStuff = function(f)
     f.threat:ClearAllPoints()
     f.threat:SetAllPoints(f.threat_holder)
@@ -84,16 +101,19 @@
     f.healthbar:SetParent(f.back_holder)
   end
 
+  --fix the damn castbar hopping
   local fixCastbar = function(cb)
     cb:ClearAllPoints()
     cb:SetAllPoints(cb.parent)
     cb:SetParent(cb.parent)
   end
 
+  --get the actual color
   local fixColor = function(color)
     color.r,color.g,color.b = floor(color.r*100+.5)/100, floor(color.g*100+.5)/100, floor(color.b*100+.5)/100
   end
 
+  --get colorstring for level color
   local getDifficultyColorString = function(f)
     local color = {}
     color.r,color.g,color.b = f.level:GetTextColor()
@@ -101,6 +121,7 @@
     return RGBPercToHex(color.r,color.g,color.b)
   end
 
+  --get healthbar color func
   local getHealthbarColor = function(f)
     local color = {}
     color.r,color.g,color.b = f.healthbar:GetStatusBarColor()
@@ -140,12 +161,49 @@
     end
   end
 
-  --update style func
-  local updateStyle = function(f)
-    hideStuff(f)
-    fixStuff(f)
-    fixCastbar(f.castbar)
-    updateText(f)
+  --number format func
+  local numFormat = function(v)
+    if v > 1E10 then
+      return (floor(v/1E9)).."b"
+    elseif v > 1E9 then
+      return (floor((v/1E9)*10)/10).."b"
+    elseif v > 1E7 then
+      return (floor(v/1E6)).."m"
+    elseif v > 1E6 then
+      return (floor((v/1E6)*10)/10).."m"
+    elseif v > 1E4 then
+      return (floor(v/1E3)).."k"
+    elseif v > 1E3 then
+      return (floor((v/1E3)*10)/10).."k"
+    else
+      return v
+    end
+  end
+
+  --update health
+  local updateHealth = function(hb,v)
+    if not hb then return end
+    local min, max = hb:GetMinMaxValues()
+    local val = v or hb:GetValue()
+    local p = floor(val/max*100)
+    if cfg.healthbar.lowHpWarning.enable then
+      if p <= cfg.healthbar.lowHpWarning.treshold then
+        local c = cfg.healthbar.lowHpWarning.color
+        hb:SetStatusBarColor(c.r,c.g,c.b)
+      end
+    end
+    if cfg.hpvalue.enable then
+      hb.hpvalue:SetText(numFormat(val).." / "..p.."%")
+    end
+  end
+
+  --health value string
+  local createHpValueString = function(f)
+    if not cfg.hpvalue.enable then return end
+    local n = f.gloss_holder:CreateFontString(nil, "BORDER")
+    n:SetFont(cfg.hpvalue.font, cfg.hpvalue.size, cfg.hpvalue.outline)
+    n:SetPoint(cfg.hpvalue.pos_1.a1, f.healthbar, cfg.hpvalue.pos_1.x, cfg.hpvalue.pos_1.y)
+    f.healthbar.hpvalue = n
   end
 
   --new fontstrings for name and lvl func
@@ -214,6 +272,7 @@
     --parent frames
     f.threat_holder = th
     f.back_holder = bf
+    f.gloss_holder = hl
   end
 
   --create castbar art
@@ -272,6 +331,15 @@
     f.castbar_holder = bf
   end
 
+  --update style func
+  local updateStyle = function(f)
+    hideStuff(f)
+    fixStuff(f)
+    fixCastbar(f.castbar)
+    updateText(f)
+    updateHealth(f.healthbar)
+  end
+
   --init style func
   local styleNameplate = function(f)
     --make objects available for later
@@ -283,12 +351,15 @@
     createArt(f)
     createCastbarArt(f)
     createNameString(f)
+    createHpValueString(f)
     updateText(f)
     --hide stuff
     hideStuff(f)
     --hook stuff
     f:HookScript("OnShow", updateStyle)
     f.castbar:HookScript("OnShow", updateCastbar)
+    f.healthbar:SetScript("OnValueChanged", updateHealth)
+    updateHealth(f.healthbar)
     --set var
     f.styled = true
   end

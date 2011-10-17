@@ -1,4 +1,4 @@
-## Interface: 40300
+## Interface: 40200
 ## Author: zork
 ## Version: 1.0
 ## Title: rDiabloPlates2

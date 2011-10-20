@@ -146,11 +146,11 @@
       castbar = {
         show = true,
         latency = true,
-        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        texture = "Interface\\AddOns\\rTextures\\statusbar256_2",
         scale = 1/0.82, --divide 1 by current unit scale if you want to prevent scaling of the castbar based on unit scale
         color = {
-          bar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
-          bg = { r = 0.96, g = 0.7, b = 0, a = 1, },
+          bar = { r = 1, g = 0.7, b = 0, a = 1, },
+          bg = { r = 0.1, g = 0.1, b = 0.1, a = 0.7, },
         },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 180.5 },
       },
@@ -251,11 +251,11 @@
       scale = 1,
       pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 250 },
       health = {
-        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        texture = "Interface\\AddOns\\rTextures\\statusbar256_3",
         tag = "[diablo:hpval]",
       },
       power = {
-        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        texture = "Interface\\AddOns\\rTextures\\statusbar",
         tag = "", --more tags see oUF/elements/tags.lua | example: "[curpp] / [perpp]%" or "[diablo:ppval]"
       },
       auras = {
@@ -280,13 +280,13 @@
       },
       castbar = {
         show = true,
-        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        texture = "Interface\\AddOns\\rTextures\\statusbar256_2",
         scale = 1/1, --divide 1 by current unit scale if you want to prevent scaling of the castbar based on unit scale
         color = {
-          bar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
-          bg = { r = 0.96, g = 0.7, b = 0, a = 1, },
+          bar = { r = 1, g = 0.7, b = 0, a = 1, },
+          bg = { r = 0.1, g = 0.1, b = 0.1, a = 0.7, },
           shieldbar = { r = 0.5, g = 0.5, b = 0.5, a = 1, }, --the castbar color while target casting a shielded spell
-          shieldbg = { r = 0.8, g = 0.8, b = 0.8, a = 1, },  --the castbar background color while target casting a shielded spell
+          shieldbg = { r = 0.1, g = 0.1, b = 0.1, a = 0.7, },  --the castbar background color while target casting a shielded spell
         },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 350 },
       },
@@ -316,7 +316,7 @@
         showDebuffType = false,
       },
       health = {
-        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        texture = "Interface\\AddOns\\rTextures\\statusbar128_3",
         tag = "[diablo:misshp]",
       },
       power = {
@@ -336,7 +336,7 @@
         showDebuffType = false,
       },
       health = {
-        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        texture = "Interface\\AddOns\\rTextures\\statusbar128_3",
         tag = "[diablo:misshp]",
       },
       power = {
@@ -371,7 +371,7 @@
         showDebuffType = false,
       },
       health = {
-        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        texture = "Interface\\AddOns\\rTextures\\statusbar128_3",
         tag = "[diablo:misshp]",
       },
       power = {
@@ -383,11 +383,11 @@
       },
       castbar = {
         show = true,
-        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        texture = "Interface\\AddOns\\rTextures\\statusbar256_2",
         scale = 1/0.85, --divide 1 by current unit scale if you want to prevent scaling of the castbar based on unit scale
         color = {
-          bar = { r = 0.15, g = 0.15, b = 0.15, a = 1, },
-          bg = { r = 0.96, g = 0.7, b = 0, a = 1, },
+          bar = { r = 1, g = 0.7, b = 0, a = 1, },
+          bg = { r = 0.1, g = 0.1, b = 0.1, a = 0.7, },
         },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 420 },
       },
@@ -405,7 +405,7 @@
         showDebuffType = false,
       },
       health = {
-        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        texture = "Interface\\AddOns\\rTextures\\statusbar128_3",
         tag = "[diablo:misshp]",
       },
       power = {
@@ -429,7 +429,7 @@
         showDebuffType = false,
       },
       health = {
-        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        texture = "Interface\\AddOns\\rTextures\\statusbar128_3",
         tag = "[diablo:misshp]",
       },
       power = {
@@ -460,7 +460,7 @@
         showDebuffType = false,
       },
       health = {
-        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        texture = "Interface\\AddOns\\rTextures\\statusbar128_3",
         tag = "[diablo:misshp]",
       },
       power = {

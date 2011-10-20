@@ -1,4 +1,4 @@
- 
+
   oUF_Diablo_Bars = {
     "oUF_DiabloPlayerCastbar",
     "oUF_DiabloTargetCastbar",
@@ -12,7 +12,7 @@
     "oUF_DiabloComboPoints",
     "oUF_DiabloPowerOrb", --special bar :)
   }
-  
+
   oUF_Diablo_Units = {
     "oUF_DiabloPlayerFrame",
     "oUF_DiabloTargetFrame",
@@ -22,14 +22,16 @@
     "oUF_DiabloFocusTargetFrame",
     "oUF_DiabloFocusFrame",
     "oUF_DiabloRaidHeader",
+    "oUF_DiabloRaidHeader2",
+    "oUF_DiabloRaidHeader3",
     "oUF_DiabloPartyHeader",
     "oUF_DiabloBossFrame1",
     "oUF_DiabloBossFrame2",
     "oUF_DiabloBossFrame3",
     "oUF_DiabloBossFrame4",
     "oUF_DiabloBossFrame5",
-  } 
-  
+  }
+
   oUF_Diablo_Art = {
     "oUF_DiabloActionBarBackground",
     "oUF_DiabloAngelFrame",
@@ -40,8 +42,8 @@
     "MiniMapInstanceDifficulty",
     "GuildInstanceDifficulty",
     "MinimapCluster",
-  } 
-  
+  }
+
   function oUF_DiabloUnlock(c)
     print("oUF_Diablo: "..c.." unlocked")
     local a
@@ -58,7 +60,7 @@
         --print(f:GetName())
         if v:match"Header" or c ~= "units" then
           f:EnableMouse(true)
-          f:SetScript("OnEnter", function(s) 
+          f:SetScript("OnEnter", function(s)
             GameTooltip:SetOwner(s, "ANCHOR_TOP")
             GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
             GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
@@ -70,8 +72,8 @@
         f:RegisterForDrag("LeftButton")
       end
     end
-  end  
-  
+  end
+
   function oUF_DiabloLock(c)
     print("oUF_Diablo: "..c.." locked")
     local a
@@ -95,8 +97,8 @@
       end
     end
   end
-  
-  local function SlashCmd(cmd)    
+
+  local function SlashCmd(cmd)
     if (cmd:match"unlockart") then
       oUF_DiabloUnlock("art")
     elseif (cmd:match"lockart") then
@@ -122,6 +124,6 @@
 
   SlashCmdList["diablo"] = SlashCmd;
   SLASH_diablo1 = "/diablo";
-  
+
   print("|c00FF3300oUF_Diablo loaded.|r")
   print("|c00FF3300\/diablo|r to display the command list")

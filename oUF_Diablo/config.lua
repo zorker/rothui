@@ -485,15 +485,13 @@
       show = true,
       hideManager = false,
       alpha = {
-        notinrange = 0.5,
+        notinrange = 0.4,
       },
-      scale = 1.15,
-      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = 10 },
+      scale = 0.85,
+      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 5, y = -5 },
       health = {
-        texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag1 = "[diablo:name]",     --tag for the first line
-        tag2 = "[diablo:misshp]",   --tag for the second line
-        classcoloroverride = false, --even if you set the colorswitcher to no classcolor this value can be used to make the raid class colored
+        texture = "Interface\\AddOns\\rTextures\\statusbar128_3",
+        tag = "[diablo:misshp]",   --tag for the second line
       },
       aurawatch = {
         show            = true,
@@ -525,7 +523,9 @@
         size            = 20,
       },
       attributes = {
-        visibility          = "custom [@raid6,exists,group:raid] show;hide", --use "party,raid" to show this in party aswell
+        visibility          = "custom [@raid11,exists] hide;[@raid6,exists,group:raid] show; hide", --use "party,raid" to show this in party aswell
+        visibility10plus    = "custom [@raid26,exists] hide; [@raid11,exists] show; hide", --special display for raid > 10 players (lower scale)
+        visibility25plus    = "custom [@raid26,exists] show; hide", --special display for raid > 25 players (lower scale)
         showPlayer          = false,  --make this true to show player in party
         showSolo            = false,  --make this true to show while solo (only works if solo is in visiblity aswell
         showParty           = false,  --make this true to show raid in party

@@ -349,6 +349,61 @@
     end
   end
 
+  --actionbar background
+  local createArtwork = function(self)
+    local t = self:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetAllPoints(self)
+    t:SetTexture("Interface\\AddOns\\rTextures\\targettarget")
+  end
+
+  --create health frames
+  local createHealthFrame = function(self)
+
+    local cfg = self.cfg.health
+
+    --health
+    local h = CreateFrame("StatusBar", nil, self)
+    h:SetPoint("TOP",0,-21.9)
+    h:SetPoint("LEFT",24.5,0)
+    h:SetPoint("RIGHT",-24.5,0)
+    h:SetPoint("BOTTOM",0,28.7)
+
+    h:SetStatusBarTexture(cfg.texture)
+    h.bg = h:CreateTexture(nil,"BACKGROUND",nil,-6)
+    h.bg:SetTexture(cfg.texture)
+    h.bg:SetAllPoints(h)
+
+    h.glow = h:CreateTexture(nil,"OVERLAY",nil,-5)
+    h.glow:SetTexture("Interface\\AddOns\\rTextures\\targettarget_hpglow")
+    h.glow:SetAllPoints(self)
+    h.glow:SetVertexColor(0,0,0,1)
+
+    h.highlight = h:CreateTexture(nil,"OVERLAY",nil,-4)
+    h.highlight:SetTexture("Interface\\AddOns\\rTextures\\targettarget_highlight")
+    h.highlight:SetAllPoints(self)
+
+    self.Health = h
+    self.Health.Smooth = false
+  end
+
+  --create health power strings
+  local createHealthPowerStrings = function(self)
+
+    local name = func.createFontString(self, cfg.font, 12, "THINOUTLINE")
+    name:SetPoint("BOTTOM", self, "TOP", 0, -16)
+    name:SetPoint("LEFT", self.Health, 0, 0)
+    name:SetPoint("RIGHT", self.Health, 0, 0)
+    --name:SetJustifyH("LEFT")
+    self.Name = name
+
+    local hpval = func.createFontString(self.Health, cfg.font, 11, "THINOUTLINE")
+    hpval:SetPoint("RIGHT", -2,0)
+
+    self:Tag(name, "[diablo:name]")
+    self:Tag(hpval, self.cfg.health.tag or "")
+
+  end
+
 
   ---------------------------------------------
   -- RAID STYLE FUNC
@@ -360,11 +415,41 @@
     self.cfg = cfg.units.raid
     self.cfg.style = "raid"
 
-    self.cfg.width = 64
+    self.cfg.width = 128
     self.cfg.height = 64
 
     --init
     initUnitParameters(self)
+
+    --create the art
+    createArtwork(self)
+
+    --createhealthPower
+    createHealthFrame(self)
+
+    --health power strings
+    createHealthPowerStrings(self)
+
+    --health update
+    self.Health.PostUpdate = func.updateHealth
+
+    --debuffglow
+    func.createDebuffGlow(self)
+
+    --range
+    self.Range = {
+      insideAlpha = 1,
+      outsideAlpha = self.cfg.alpha.notinrange
+    }
+
+    --icons
+    self.RaidIcon = func.createIcon(self.Health,"LOW",14,self.Health,"BOTTOM","TOP",0,-6,-1)
+    self.ReadyCheck = func.createIcon(self.Health,"OVERLAY",24,self.Health,"CENTER","CENTER",0,0,-1)
+    self.LFDRole = func.createIcon(self.Health,"LOW",12,self.Health,"TOP","BOTTOM",0,-2,-1)
+    self.LFDRole:SetTexture("Interface\\AddOns\\rTextures\\lfd_role")
+    self.LFDRole:SetDesaturated(1)
+
+    --[[
 
     --create frame
     createHealthFrame(self)
@@ -398,6 +483,7 @@
     self.LFDRole = func.createIcon(self.Health,"LOW",12,self.Health,"TOP","BOTTOM",0,4,-1)
     self.LFDRole:SetTexture("Interface\\AddOns\\rTextures\\lfd_role")
     self.LFDRole:SetDesaturated(1)
+    ]]--
 
 
   end
@@ -478,10 +564,70 @@
         self:SetWidth(%d)
         self:SetHeight(%d)
         self:SetScale(%f)
-      ]]):format(64, 64, cfg.units.raid.scale)
+      ]]):format(128, 64, cfg.units.raid.scale)
     )
     raid:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
 
+    --spawn raid for above 10 people but < 25people (same attributes, but lower scale)
+    local raid2 = oUF:SpawnHeader(
+      "oUF_DiabloRaidHeader2", --name
+      nil,
+      attr.visibility10plus,
+      "showPlayer",         attr.showPlayer,
+      "showSolo",           attr.showSolo,
+      "showParty",          attr.showParty,
+      "showRaid",           attr.showRaid,
+      "point",              attr.point,
+      "yOffset",            attr.yOffset,
+      "xoffset",            attr.xoffset,
+      "groupFilter",        "1,2,3,4,5,6,7,8",
+      "groupBy",            "GROUP",
+      "groupingOrder",      "1,2,3,4,5,6,7,8",
+      "sortMethod",         "NAME",
+      "maxColumns",         attr.maxColumns,
+      "unitsPerColumn",     attr.unitsPerColumn,
+      "columnSpacing",      attr.columnSpacing,
+      "columnAnchorPoint",  attr.columnAnchorPoint,
+
+      "oUF-initialConfigFunction", ([[
+        self:SetWidth(%d)
+        self:SetHeight(%d)
+        self:SetScale(%f)
+      ]]):format(128, 64, cfg.units.raid.scale*0.95)
+    )
+    raid2:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
+
+    --spawn raid for above 25 people (same attributes, but lower scale)
+    local raid3 = oUF:SpawnHeader(
+      "oUF_DiabloRaidHeader3", --name
+      nil,
+      attr.visibility25plus,
+      "showPlayer",         attr.showPlayer,
+      "showSolo",           attr.showSolo,
+      "showParty",          attr.showParty,
+      "showRaid",           attr.showRaid,
+      "point",              attr.point,
+      "yOffset",            attr.yOffset,
+      "xoffset",            attr.xoffset,
+      "groupFilter",        "1,2,3,4,5,6,7,8",
+      "groupBy",            "GROUP",
+      "groupingOrder",      "1,2,3,4,5,6,7,8",
+      "sortMethod",         "NAME",
+      "maxColumns",         attr.maxColumns,
+      "unitsPerColumn",     attr.unitsPerColumn,
+      "columnSpacing",      attr.columnSpacing,
+      "columnAnchorPoint",  attr.columnAnchorPoint,
+
+      "oUF-initialConfigFunction", ([[
+        self:SetWidth(%d)
+        self:SetHeight(%d)
+        self:SetScale(%f)
+      ]]):format(128, 64, cfg.units.raid.scale*0.8)
+    )
+    raid3:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
+
     func.applyDragFunctionality(raid)
+    func.applyDragFunctionality(raid2)
+    func.applyDragFunctionality(raid3)
 
   end

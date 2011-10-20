@@ -20,10 +20,10 @@
     },
     castbar = {
       scale       = 0.7,
-      adjust_pos  = { x = 0, y = -20, },
+      adjust_pos  = { x = 0, y = -17, },
       icon = {
-        size = 18,
-        pos = { a1 = "LEFT", x = 0, y = 0}
+        size = 30,
+        pos = { a1 = "LEFT", x = -50, y = 8}
       },
       color = {
         default   = { r = 1, g = 0.6, b = 0 },
@@ -61,10 +61,6 @@
       right       = "Interface\\Addons\\rDiabloPlates2\\media\\nameplate_right",
       icon_border = "Interface\\Addons\\rDiabloPlates2\\media\\icon_border",
     },
-    font = {
-      scale       = 0.9,
-    },
-
   }
 
   -----------------------------

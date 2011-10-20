@@ -80,6 +80,10 @@
     h.glow:SetAllPoints(self)
     h.glow:SetVertexColor(0,0,0,1)
 
+    h.highlight = h:CreateTexture(nil,"OVERLAY",nil,-4)
+    h.highlight:SetTexture("Interface\\AddOns\\rTextures\\target_highlight")
+    h.highlight:SetAllPoints(self)
+
     self.Health = h
     self.Health.Smooth = true
   end
@@ -356,7 +360,7 @@
     elseif unit_classification == "elite" then
       tmpstring = "Elite"
       bubblehead:Show()
-      bubblehead:SetTexture("Interface\\AddOns\\rTextures\\d3_head_garg")
+      bubblehead:SetTexture("Interface\\AddOns\\rTextures\\d3_head_new")
     end
     if tmpstring ~= "" then
       tmpstring = tmpstring..sp

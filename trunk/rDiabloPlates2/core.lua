@@ -46,7 +46,7 @@
       pos_3 = { a1 = "TOP", x = 0, y = 7},
     },
     hpvalue = {
-      enable = true,
+      enable = false,
       font = STANDARD_TEXT_FONT,
       size = 8,
       outline = "THINOUTLINE",
@@ -354,6 +354,7 @@
     --hook stuff
     f:HookScript("OnShow", updateStyle)
     f.castbar:HookScript("OnShow", updateCastbar)
+    f.castbar:SetScript("OnValueChanged", fixCastbar)
     f.healthbar:SetScript("OnValueChanged", updateHealth)
     updateHealth(f.healthbar)
     --set var

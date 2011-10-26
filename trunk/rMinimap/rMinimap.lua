@@ -8,10 +8,10 @@
 
   -- map scale
   local mapscale = 0.82
-  
+
   --want frames around minimap to be animated?!
   local enableframerotation = true
-  
+
   -- size of icons (tracking icon for example)
   local iconsize = 20
 
@@ -26,12 +26,12 @@
       [6] = { frame = "TimeManagerClockButton",   anchor1 = "BOTTOM",       anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 0,    posy = 0 },
     },
   }
-  
+
   --rotation data
   local frames_to_rotate = {
-    [1] = { 
+    [1] = {
       texture = "ring", --texturename under media folder
-      width = 190, 
+      width = 190,
       height = 190,
       scale = 0.82,
       anchorframe = Minimap,
@@ -47,10 +47,10 @@
       setpointx = 0,
       setpointy = 0,
     },
-    
-    [2] = { 
+
+    [2] = {
       texture = "zahnrad", --texturename under media folder
-      width = 210, 
+      width = 210,
       height = 210,
       scale = 0.82,
       anchorframe = Minimap,
@@ -75,26 +75,39 @@
 
   local _G = _G
   local dummy = function() end
-  
+
+  --simple frame movement
+  local simpleDragFunc = function(f)
+    f:SetHitRectInsets(-15,-15,-15,-15)
+    f:SetClampedToScreen(true)
+    f:SetMovable(true)
+    f:SetUserPlaced(true)
+    f:EnableMouse(true)
+    f:RegisterForDrag("LeftButton")
+    f:SetScript("OnDragStart", function(s) s:StartMoving() end)
+    f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
+
+  end
+
   local rotateme = function(texture,width,height,scale,anchorframe,framelevel,texr,texg,texb,alpha,duration,side,blendmode,point,pointx,pointy)
 
     local h = CreateFrame("Frame",nil,anchorframe)
     h:SetHeight(height)
-    h:SetWidth(width)		  
+    h:SetWidth(width)
     h:SetPoint(point,pointx,pointy)
     h:SetScale(scale)
     h:SetFrameLevel(framelevel)
-  
+
     local t = h:CreateTexture()
     t:SetAllPoints(h)
     t:SetTexture("Interface\\AddOns\\rTextures\\"..texture)
     t:SetBlendMode(blendmode)
     t:SetVertexColor(texr,texg,texb,alpha)
     h.t = t
-    
+
     local ag = h:CreateAnimationGroup()
     h.ag = ag
-    
+
     local a1 = h.ag:CreateAnimation("Rotation")
     if side == 0 then
       a1:SetDegrees(360)
@@ -103,9 +116,9 @@
     end
     a1:SetDuration(duration)
     h.ag.a1 = a1
-    
+
     if enableframerotation then
-      h.ag:SetLooping("REPEAT")  
+      h.ag:SetLooping("REPEAT")
     else
       h.ag.a1:SetDuration(0)
     end
@@ -113,7 +126,7 @@
     h.ag:Play()
 
   end
-  
+
   local positionme = function(f,a1,af,a2,px,py)
     f = _G[f]
     af = _G[af]
@@ -121,7 +134,7 @@
     f:SetPoint(a1,af,a2,px,py)
     f.SetPoint = dummy
   end
-  
+
   local zoomer = function()
     Minimap:EnableMouseWheel()
     Minimap:SetScript("OnMouseWheel", function(self, direction)
@@ -132,7 +145,7 @@
       end
     end)
   end
-  
+
   local createMapOverlay = function()
     local t = Minimap:CreateTexture(nil,"ARTWORK",nil,-8)
     t:SetTexture("Interface\\AddOns\\rTextures\\d3_map2")
@@ -140,7 +153,7 @@
     t:SetPoint("CENTER", Minimap, "CENTER", -2*d3mapscale, -11*d3mapscale)
     t:SetWidth(Minimap:GetHeight()*2*d3mapscale)
     t:SetHeight(Minimap:GetHeight()*d3mapscale)
-    
+
     local t2 = Minimap:CreateTexture(nil,"ARTWORK",nil,-7)
     t2:SetTexture("Interface\\AddOns\\rTextures\\orb_gloss2")
     t2:SetBlendMode("ADD")
@@ -148,16 +161,16 @@
     t2:SetWidth(Minimap:GetHeight()*1.06)
     t2:SetHeight(Minimap:GetHeight()*1.06)
     t2:SetVertexColor(0.9,0.95,1,1)
-    
+
     local t3 = Minimap:CreateTexture(nil,"ARTWORK",nil,-6)
     t3:SetTexture("Interface\\AddOns\\rTextures\\orb_innershadow")
     t3:SetAllPoints(t2)
     t3:SetVertexColor(0,0,0,1)
-    
+
   end
-  
+
   local adjustBlizzard = function()
-    
+
     if TimeManagerClockButton then
       local timerframe = _G["TimeManagerClockButton"]
       local region1 = timerframe:GetRegions()
@@ -165,20 +178,20 @@
       TimeManagerClockTicker:SetFont(NAMEPLATE_FONT, 14, "THINOUTLINE")
 
     end
-  
-    MiniMapWorldMapButton:Hide()    
+
+    MiniMapWorldMapButton:Hide()
     MiniMapTrackingBackground:Hide()
     MiniMapTrackingButtonBorder:Hide()
-    MiniMapTrackingButton:SetHighlightTexture("")    
+    MiniMapTrackingButton:SetHighlightTexture("")
     MiniMapTracking:SetWidth(iconsize)
-    MiniMapTracking:SetHeight(iconsize)    
+    MiniMapTracking:SetHeight(iconsize)
     MiniMapTrackingButton:SetAllPoints(MiniMapTracking)
     MiniMapTrackingButton:SetHighlightTexture("")
-    MiniMapTrackingButton:SetPushedTexture("")    
+    MiniMapTrackingButton:SetPushedTexture("")
     local tftb = MiniMapTracking:CreateTexture(nil,"BACKGROUND")
     tftb:SetTexture(0,0,0,1)
     tftb:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 2, -2)
-    tftb:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", -2, 2)        
+    tftb:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", -2, 2)
     MiniMapTrackingIcon:ClearAllPoints()
     MiniMapTrackingIcon:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", 2, -2)
     MiniMapTrackingIcon:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", -2, 2)
@@ -187,12 +200,12 @@
     local tft = MiniMapTracking:CreateTexture(nil,"OVERLAY")
     tft:SetTexture("Interface\\AddOns\\rTextures\\minimap_button2")
     tft:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", -2, 2)
-    tft:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", 2, -2)    
+    tft:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", 2, -2)
     MinimapZoomOut:Hide()
     MinimapZoomIn:Hide()
     MiniMapMailBorder:Hide()
     MiniMapMailFrame:SetWidth(iconsize)
-    MiniMapMailFrame:SetHeight(iconsize)    
+    MiniMapMailFrame:SetHeight(iconsize)
     MiniMapMailIcon:ClearAllPoints()
     MiniMapMailIcon:SetPoint("TOPLEFT", MiniMapMailFrame, "TOPLEFT", 1, -1)
     MiniMapMailIcon:SetPoint("BOTTOMRIGHT", MiniMapMailFrame, "BOTTOMRIGHT", -1, 1)
@@ -217,58 +230,59 @@
     bu:SetWidth(iconsize)
     bu:SetHeight(iconsize)
     bu:SetHitRectInsets(0, 0, 0, 0)
-    
+
     select(5, GameTimeFrame:GetRegions()):SetTextColor(1, 1, 1)
     select(5, GameTimeFrame:GetRegions()):SetFont(NAMEPLATE_FONT,12,"THINOUTLINE")
     select(5, GameTimeFrame:GetRegions()):ClearAllPoints()
     select(5, GameTimeFrame:GetRegions()):SetPoint("CENTER",bu,"CENTER",0,1)
-    
+
     local gtftb = bu:CreateTexture(nil,"BACKGROUND")
     gtftb:SetTexture(0,0,0,1)
     gtftb:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
     gtftb:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
-    
+
     local gtft = bu:CreateTexture(nil,"ARTWORK")
     gtft:SetTexture("Interface\\AddOns\\rTextures\\minimap_button2")
     gtft:SetPoint("TOPLEFT", bu, "TOPLEFT", -2, 2)
     gtft:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 2, -2)
-   
+
     nt = bu:GetNormalTexture()
     nt:SetTexCoord(0,1,0,1)
     nt:SetAllPoints(bu)
-    
+
     pu = bu:GetPushedTexture()
     pu:SetTexCoord(0,1,0,1)
     pu:SetAllPoints(bu)
-    
+
     bu:SetNormalTexture("")
     bu:SetPushedTexture("")
     bu:SetHighlightTexture("")
 
   end
-  
-  
-  local init = function()    
+
+
+  local init = function()
     LoadAddOn("Blizzard_TimeManager")
+    simpleDragFunc(_G["MiniMapLFGFrame"])
     adjustBlizzard()
     createMapOverlay()
-    zoomer() --zoomer taken from pminimap by p3lim      
-    for index,value in ipairs(map_positions.position) do 
+    zoomer() --zoomer taken from pminimap by p3lim
+    for index,value in ipairs(map_positions.position) do
       local var = map_positions.position[index]
       positionme(var.frame,var.anchor1,var.anchorframe,var.anchor2,var.posx,var.posy)
     end
-    for index,value in ipairs(frames_to_rotate) do 
+    for index,value in ipairs(frames_to_rotate) do
       local ftr = frames_to_rotate[index]
       rotateme(ftr.texture, ftr.width, ftr.height, ftr.scale, ftr.anchorframe, ftr.framelevel, ftr.color_red, ftr.color_green, ftr.color_blue, ftr.alpha, ftr.duration, ftr.direction, ftr.blendmode, ftr.setpoint, ftr.setpointx, ftr.setpointy)
-    end    
-    Minimap:SetScale(mapscale)  
+    end
+    Minimap:SetScale(mapscale)
   end
-  
+
   local a = CreateFrame("Frame")
   a:SetScript("OnEvent", function(self, event)
     if(event=="PLAYER_LOGIN") then
       init()
     end
   end)
-  
+
   a:RegisterEvent("PLAYER_LOGIN")

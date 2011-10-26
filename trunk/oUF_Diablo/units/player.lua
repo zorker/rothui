@@ -236,8 +236,8 @@
     local anim = ag:CreateAnimation("Rotation")
     anim:SetDegrees(360)
     anim:SetDuration(duration)
-    ag:Play()
     ag:SetLooping("REPEAT")
+    ag:Play()
 
     return t
 

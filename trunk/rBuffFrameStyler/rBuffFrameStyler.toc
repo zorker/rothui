@@ -1,4 +1,4 @@
-## Interface: 40200
+## Interface: 40300
 ## Author: zork
 ## Version: 0.1
 ## Title: rBuffFrameStyler

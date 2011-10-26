@@ -95,6 +95,16 @@
       testmode        = false,
       disable         = false,
     },
+    extrabar = {
+      buttonsize      = 36,
+      buttonspacing   = 5,
+      barscale        = 0.82,
+      userplaced      = true,
+      locked          = true,
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -210, y = 135 },
+      testmode        = false,
+      disable         = false,
+    },
     micromenu = {
       barscale        = 0.82,
       showonmouseover = true,
@@ -178,11 +188,12 @@
     f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
 
     local t = f:CreateTexture(nil,"OVERLAY",nil,6)
-    t:SetAllPoints(f)
+    --t:SetAllPoints(f)
+    t:SetPoint("TOPLEFT",-cfg.barinset,cfg.barinset)
+    t:SetPoint("BOTTOMRIGHT",cfg.barinset,-cfg.barinset)
     t:SetTexture(0,1,0)
     t:SetAlpha(0)
     f.dragtexture = t
-    f:SetHitRectInsets(-15,-15,-15,-15)
     f:SetClampedToScreen(true)
 
     if not userplaced then

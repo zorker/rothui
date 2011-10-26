@@ -99,6 +99,7 @@
 
   --fix the damn castbar hopping
   local fixCastbar = function(cb)
+    --print("fix castbar")
     cb:ClearAllPoints()
     cb:SetAllPoints(cb.parent)
     cb:SetParent(cb.parent)
@@ -149,7 +150,6 @@
 
   --update castbar
   local updateCastbar = function(cb)
-    fixCastbar(cb)
     if cb.shield:IsShown() then
       cb:SetStatusBarColor(cfg.castbar.color.shielded.r,cfg.castbar.color.shielded.g,cfg.castbar.color.shielded.b)
     else
@@ -331,7 +331,6 @@
   local updateStyle = function(f)
     hideStuff(f)
     fixStuff(f)
-    fixCastbar(f.castbar)
     updateText(f)
     updateHealth(f.healthbar)
   end
@@ -354,7 +353,11 @@
     --hook stuff
     f:HookScript("OnShow", updateStyle)
     f.castbar:HookScript("OnShow", updateCastbar)
+    --fix castbar
     f.castbar:SetScript("OnValueChanged", fixCastbar)
+    --f.castbar:SetScript("OnMinMaxChanged", fixCastbar)
+    --f.castbar:SetScript("OnSizeChanged", fixCastbar)
+    --update health
     f.healthbar:SetScript("OnValueChanged", updateHealth)
     updateHealth(f.healthbar)
     --set var

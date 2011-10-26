@@ -77,17 +77,17 @@
   ----------------------------------------
 
   --the texture of the health orb. you can choose between 11 different textures.
-  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = city, 15 = diablo3
+  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = dmars, 15 = diablo3
   cfg.healthtexture = 1 --default 15
 
   --the texture of the mana orb. you can choose between 11 different textures.
-  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = city, 15 = diablo3
+  --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = dmars, 15 = diablo3
   cfg.manatexture = 3 --default 15
 
   if cfg.useAnimationSystem == true then
     --rewrite to a more plain texture (better for animation models)
-    cfg.healthtexture = 15
-    cfg.manatexture = 15
+    cfg.healthtexture = 14
+    cfg.manatexture = 14
   end
 
   ----------------------------------------
@@ -523,15 +523,15 @@
         size            = 20,
       },
       attributes = {
-        visibility          = "custom [@raid11,exists] hide;[@raid6,exists,group:raid] show; hide", --use "party,raid" to show this in party aswell
-        visibility10plus    = "custom [@raid26,exists] hide; [@raid11,exists] show; hide", --special display for raid > 10 players (lower scale)
-        visibility25plus    = "custom [@raid26,exists] show; hide", --special display for raid > 25 players (lower scale)
+        visibility          = "custom [@raid21,exists] hide;[@raid6,exists,group:raid] show; hide", --use "party,raid" to show this in party aswell
+        visibility10plus    = "custom [@raid36,exists] hide; [@raid21,exists] show; hide", --special display for raid > 10 players (lower scale)
+        visibility25plus    = "custom [@raid36,exists] show; hide", --special display for raid > 25 players (lower scale)
         showPlayer          = false,  --make this true to show player in party
         showSolo            = false,  --make this true to show while solo (only works if solo is in visiblity aswell
         showParty           = false,  --make this true to show raid in party
         showRaid            = true,   --show in raid
         point               = "TOP",
-        yOffset             = 20,
+        yOffset             = 15,
         xoffset             = 0,
         maxColumns          = 8,
         unitsPerColumn      = 5,

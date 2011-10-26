@@ -1,4 +1,4 @@
-## Interface: 40200
+## Interface: 40300
 ## Author: zork
 ## Version: 2.1
 ## Title: rActionBarStyler
@@ -18,3 +18,4 @@ bars\totembar.lua
 bars\vehicleexit.lua
 bars\bags.lua
 bars\micromenu.lua
+bars\extra.lua

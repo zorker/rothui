@@ -131,6 +131,27 @@
     self.Debuffs = f
   end
 
+  --create buff func
+  func.createBuffs = function(self)
+    local f = CreateFrame("Frame", nil, self)
+    f.size = self.cfg.auras.size
+    if self.cfg.style == "targettarget" then
+      f.num = 6
+    else
+      f.num = 3
+    end
+    f:SetWidth((f.size+5)*(f.num/3))
+    f:SetHeight((f.size+5)*3)
+    f:SetPoint("TOPLEFT", self, "TOPRIGHT", -13, 66)
+    f.initialAnchor = "TOPLEFT"
+    f["growth-x"] = "RIGHT"
+    f["growth-y"] = "DOWN"
+    f.spacing = 5
+    f.showBuffType = self.cfg.auras.showBuffType
+    f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerBuffs
+    self.Buffs = f
+  end
+
   --Desaturated and Button CD
   func.postUpdateDebuff = function(element, unit, button, index, duration, expirationTime)
     if(UnitIsFriend("player", unit) or button.isPlayer) then
@@ -268,24 +289,22 @@
     if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) then
       color = {r = 0.4, g = 0.4, b = 0.4}
       dead = 1
+    elseif not cfg.colorswitcher.classcolored then
+      color = cfg.colorswitcher.bright
+    --elseif cfg.colorswitcher.threatColored and unit and UnitThreatSituation(unit) == 3 then
+      --color = { r = 1, g = 0, b = 0, }
     elseif UnitIsPlayer(unit) then
       color = rRAID_CLASS_COLORS[select(2, UnitClass(unit))] or RAID_CLASS_COLORS[select(2, UnitClass(unit))]
-    --happiness removed in 4.1
-    --elseif UnitIsUnit(unit, "pet") and GetPetHappiness() then
-      --color = cfg.happycolors[GetPetHappiness()]
     else
       color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
     end
-
     if not color then color = { r = 0.5, g = 0.5, b = 0.5, } end
-
+    --dead
     if dead == 1 then
       bar:SetStatusBarColor(0,0,0,0)
       bar.bg:SetVertexColor(0,0,0,0)
     else
-      if not cfg.colorswitcher.classcolored then
-        color = cfg.colorswitcher.bright
-      end
+      --alive
       if cfg.colorswitcher.useBrightForeground then
         bar:SetStatusBarColor(color.r,color.g,color.b,color.a or 1)
         bar.bg:SetVertexColor(cfg.colorswitcher.dark.r,cfg.colorswitcher.dark.g,cfg.colorswitcher.dark.b,cfg.colorswitcher.dark.a)
@@ -294,8 +313,7 @@
         bar.bg:SetVertexColor(color.r,color.g,color.b,color.a or 1)
       end
     end
-
-    --if d <= 25 and min > 1 and dead ~= 1 then
+    --low hp
     if d <= 25 and dead ~= 1 then
       if cfg.colorswitcher.useBrightForeground then
         bar.glow:SetVertexColor(0.3,0,0,0.9)
@@ -305,9 +323,9 @@
         bar.glow:SetVertexColor(1,0,0,1)
       end
     else
+      --inner shadow
       bar.glow:SetVertexColor(0,0,0,0.7)
     end
-
   end
 
   --update power func

@@ -98,9 +98,10 @@
   cfg.colorswitcher = {
     bright              = { r = 1, g = 0, b = 0, a = 0.9, },          -- the bright color
     dark                = { r = 0.1, g = 0.1, b = 0.1, a = 0.7, },   -- the dark color
-    classcolored        = true,   -- true   -> override the bright color with the unit specific color (class, faction, happiness)
+    classcolored        = true,  -- true   -> override the bright color with the unit specific color (class, faction, happiness, threat), if false uses the predefined color
     useBrightForeground = true,  -- true   -> use bright color in foreground and dark color in background
-                                  -- false  -> use dark color in foreground and bright color in background
+                                 -- false  -> use dark color in foreground and bright color in background
+    threatColored       = true,  -- true/false -> enable threat coloring of the health plate for raidframes
   }
 
   ----------------------------------------
@@ -369,6 +370,9 @@
         size = 22,
         onlyShowPlayerDebuffs = false,
         showDebuffType = false,
+        showBuffs = true,
+        onlyShowPlayerBuffs = false,
+        showBuffType = false,
       },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar128_3",
@@ -523,9 +527,9 @@
         size            = 20,
       },
       attributes = {
-        visibility          = "custom [@raid21,exists] hide;[@raid6,exists,group:raid] show; hide", --use "party,raid" to show this in party aswell
-        visibility10plus    = "custom [@raid36,exists] hide; [@raid21,exists] show; hide", --special display for raid > 10 players (lower scale)
-        visibility25plus    = "custom [@raid36,exists] show; hide", --special display for raid > 25 players (lower scale)
+        visibility1         = "custom [@raid21,exists] hide;[@raid6,exists,group:raid] show; hide", --use "party,raid" to show this in party aswell
+        visibility2         = "custom [@raid36,exists] hide; [@raid21,exists] show; hide", --special display for raid > 10 players (lower scale)
+        visibility3         = "custom [@raid36,exists] show; hide", --special display for raid > 25 players (lower scale)
         showPlayer          = false,  --make this true to show player in party
         showSolo            = false,  --make this true to show while solo (only works if solo is in visiblity aswell
         showParty           = false,  --make this true to show raid in party

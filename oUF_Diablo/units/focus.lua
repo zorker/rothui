@@ -159,6 +159,10 @@
     if self.cfg.auras.show then
       func.createDebuffs(self)
       self.Debuffs.PostCreateIcon = func.createAuraIcon
+      if self.cfg.auras.showBuffs then
+        func.createBuffs(self)
+        self.Buffs.PostCreateIcon = func.createAuraIcon
+      end
     end
 
     --aurawatch

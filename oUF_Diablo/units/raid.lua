@@ -154,22 +154,56 @@
     end
   end
 
-  --check threat
-  local checkThreat = function(self,event,unit)
-    if unit then
-      if self.unit ~= unit then return end
-      local threat = UnitThreatSituation(unit)
-      if(threat and threat > 0) then
-        local r, g, b = GetThreatStatusColor(threat)
-        if self.Health.border then
-          self.Health.border:SetVertexColor(r,g,b)
-        end
+  --update health func
+  local updateHealth = function(bar, unit, min, max)
+    local d = floor(min/max*100)
+    local color
+    local dead
+    if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) then
+      color = {r = 0.4, g = 0.4, b = 0.4}
+      dead = 1
+    elseif not cfg.colorswitcher.classcolored then
+      color = cfg.colorswitcher.bright
+    elseif cfg.colorswitcher.threatColored and unit and UnitThreatSituation(unit) == 3 then
+      color = { r = 1, g = 0, b = 0, }
+    elseif UnitIsPlayer(unit) then
+      color = rRAID_CLASS_COLORS[select(2, UnitClass(unit))] or RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+    else
+      color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
+    end
+    if not color then color = { r = 0.5, g = 0.5, b = 0.5, } end
+    --dead
+    if dead == 1 then
+      bar:SetStatusBarColor(0,0,0,0)
+      bar.bg:SetVertexColor(0,0,0,0)
+    else
+      --alive
+      if cfg.colorswitcher.useBrightForeground then
+        bar:SetStatusBarColor(color.r,color.g,color.b,color.a or 1)
+        bar.bg:SetVertexColor(cfg.colorswitcher.dark.r,cfg.colorswitcher.dark.g,cfg.colorswitcher.dark.b,cfg.colorswitcher.dark.a)
       else
-        if self.Health.border then
-          self.Health.border:SetVertexColor(0.8,0.65,0.65)
-        end
+        bar:SetStatusBarColor(cfg.colorswitcher.dark.r,cfg.colorswitcher.dark.g,cfg.colorswitcher.dark.b,cfg.colorswitcher.dark.a)
+        bar.bg:SetVertexColor(color.r,color.g,color.b,color.a or 1)
       end
     end
+    --low hp
+    if d <= 25 and dead ~= 1 then
+      if cfg.colorswitcher.useBrightForeground then
+        bar.glow:SetVertexColor(0.3,0,0,0.9)
+        bar:SetStatusBarColor(1,0,0,1)
+        bar.bg:SetVertexColor(0.15,0,0,0.7)
+      else
+        bar.glow:SetVertexColor(1,0,0,1)
+      end
+    else
+      --inner shadow
+      bar.glow:SetVertexColor(0,0,0,0.7)
+    end
+  end
+
+  --check threat
+  local checkThreat = function(self,event,unit)
+    self.Health:ForceUpdate()
   end
 
   --actionbar background
@@ -267,7 +301,8 @@
     createHealthPowerStrings(self)
 
     --health update
-    self.Health.PostUpdate = func.updateHealth
+    self.Health.PostUpdate = updateHealth
+    self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", checkThreat)
 
     --debuffglow
     func.createDebuffGlow(self)
@@ -278,30 +313,7 @@
       outsideAlpha = self.cfg.alpha.notinrange
     }
 
-    --icons
-    self.RaidIcon = func.createIcon(self.Health,"LOW",14,self.Health,"BOTTOM","TOP",0,-6,-1)
-    self.ReadyCheck = func.createIcon(self.Health,"OVERLAY",24,self.Health,"CENTER","CENTER",0,0,-1)
-    self.LFDRole = func.createIcon(self.Health,"LOW",12,self.Health,"TOP","BOTTOM",0,-2,-1)
-    self.LFDRole:SetTexture("Interface\\AddOns\\rTextures\\lfd_role")
-    self.LFDRole:SetDesaturated(1)
-
     --[[
-
-    --create frame
-    createHealthFrame(self)
-
-    --health update
-    self.Health.PostUpdate = updateHealth
-
-    --threat
-    self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", checkThreat)
-
-    --range
-    self.Range = {
-      insideAlpha = 1,
-      outsideAlpha = self.cfg.alpha.notinrange
-    }
-
     --auras
     if self.cfg.auras.show then
       createAuras(self)
@@ -312,15 +324,14 @@
     if self.cfg.aurawatch.show then
       createAuraWatch(self)
     end
-
-    --icons
-    self.RaidIcon = func.createIcon(self.Health,"LOW",14,self.Health,"BOTTOM","TOP",0,-6,-1)
-    self.ReadyCheck = func.createIcon(self.Health,"OVERLAY",24,self.Health,"CENTER","CENTER",0,0,-1)
-    self.LFDRole = func.createIcon(self.Health,"LOW",12,self.Health,"TOP","BOTTOM",0,4,-1)
-    self.LFDRole:SetTexture("Interface\\AddOns\\rTextures\\lfd_role")
-    self.LFDRole:SetDesaturated(1)
     ]]--
 
+    --icons
+    self.RaidIcon = func.createIcon(self.Health,"OVERLAY",14,self.Health,"BOTTOM","TOP",0,-6,-1)
+    self.ReadyCheck = func.createIcon(self.Health,"OVERLAY",24,self.Health,"CENTER","CENTER",0,0,-1)
+    self.LFDRole = func.createIcon(self.Health,"LOW",12,self.Health,"TOP","BOTTOM",0,-2,-1)
+    self.LFDRole:SetTexture("Interface\\AddOns\\rTextures\\lfd_role")
+    self.LFDRole:SetDesaturated(1)
 
   end
 
@@ -336,6 +347,7 @@
       CompactRaidFrameManager:HookScript("OnShow", function(s) s:Hide() end)
       CompactRaidFrameManager:Hide()
     else
+      --add fading to the raidframe manager (code by Alza)
       local listener = CreateFrame("Frame")
       listener.check = function(self, event, addon)
         if(addon~="Blizzard_CompactRaidFrames") then return end
@@ -376,10 +388,10 @@
     local attr = cfg.units.raid.attributes
 
     --spawn raid
-    local raid = oUF:SpawnHeader(
+    local raid1 = oUF:SpawnHeader(
       "oUF_DiabloRaidHeader", --name
       nil,
-      attr.visibility,
+      attr.visibility1,
       "showPlayer",         attr.showPlayer,
       "showSolo",           attr.showSolo,
       "showParty",          attr.showParty,
@@ -402,13 +414,13 @@
         self:SetScale(%f)
       ]]):format(128, 64, cfg.units.raid.scale)
     )
-    raid:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
+    raid1:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
 
     --spawn raid for above 10 people but < 25people (same attributes, but lower scale)
     local raid2 = oUF:SpawnHeader(
       "oUF_DiabloRaidHeader2", --name
       nil,
-      attr.visibility10plus,
+      attr.visibility2,
       "showPlayer",         attr.showPlayer,
       "showSolo",           attr.showSolo,
       "showParty",          attr.showParty,
@@ -437,7 +449,7 @@
     local raid3 = oUF:SpawnHeader(
       "oUF_DiabloRaidHeader3", --name
       nil,
-      attr.visibility25plus,
+      attr.visibility3,
       "showPlayer",         attr.showPlayer,
       "showSolo",           attr.showSolo,
       "showParty",          attr.showParty,
@@ -462,7 +474,7 @@
     )
     raid3:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
 
-    func.applyDragFunctionality(raid)
+    func.applyDragFunctionality(raid1)
     func.applyDragFunctionality(raid2)
     func.applyDragFunctionality(raid3)
 

@@ -98,12 +98,18 @@
     local na  = _G[name.."Name"]
     local fl  = _G[name.."Flash"]
     local nt  = _G[name.."NormalTexture"]
+    local fbg  = _G[name.."FloatingBG"]
 
     if not nt then
       --error no button to style found, get out asap
       self.rABS_Styled = true
       --print(name)
       return
+    end
+
+    if fbg then
+      fbg:Hide()
+      fbg.Show = nomoreplay
     end
 
     --hide the border (plain ugly, sry blizz)

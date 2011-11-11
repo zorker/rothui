@@ -24,7 +24,7 @@
     bar1 = {
       buttonsize      = 26,
       buttonspacing   = 5,
-      barscale        = 0.82,
+      barscale        = 1.2,
       uselayout2x6    = false,
       userplaced      = false, --want to place the bar somewhere else?
       locked          = true, --frame locked
@@ -34,7 +34,7 @@
     bar2 = {
       buttonsize      = 26,
       buttonspacing   = 5,
-      barscale        = 0.82,
+      barscale        = 1.2,
       uselayout2x6    = false,
       showonmouseover = false,
       userplaced      = false, --want to place the bar somewhere else?
@@ -45,7 +45,7 @@
     bar3 = {
       buttonsize      = 26,
       buttonspacing   = 5,
-      barscale        = 0.82,
+      barscale        = 1.2,
       uselayout2x6    = false,
       showonmouseover = false,
       userplaced      = false, --want to place the bar somewhere else?
@@ -76,9 +76,9 @@
     stancebar = {
       buttonsize      = 26,
       buttonspacing   = 5,
-      barscale        = 0.82,
+      barscale        = 1.2,
       showonmouseover = false,
-      userplaced      = true, --want to place the bar somewhere else?
+      userplaced      = false, --want to place the bar somewhere else?
       locked          = true, --frame locked
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 140 },
       testmode        = false,

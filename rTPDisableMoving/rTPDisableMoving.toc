@@ -1,0 +1,6 @@
+## Interface: 40200
+## Author: zork
+## Title: rTPDisableMoving
+## Notes: Disable Titan Panel moving of Blizzard frames
+
+core.lua

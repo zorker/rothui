@@ -4,23 +4,23 @@
 
   --get the addon namespace
   local addon, ns = ...
-  
+
   --object container
-  local cfg = CreateFrame("Frame") 
-  
+  local cfg = CreateFrame("Frame")
+
   -----------------------------
   -- CONFIG
-  -----------------------------  
+  -----------------------------
 
   -- general settings
-  cfg.timespan      = 0.1    -- time that has to pass in seconds before a new table will be drawn to prevent spamming in raids  
-  cfg.scale         = 1       -- global scale  
+  cfg.timespan      = 0.1    -- time that has to pass in seconds before a new table will be drawn to prevent spamming in raids
+  cfg.scale         = 1       -- global scale
   cfg.hide          = true   -- true/false hides frame out of combat/without target, otherwise it will be visible all the time
   cfg.partyonly     = true    -- frame will only be available in party/raid (overrides hide setting)
-  
+
   -- frame position (you can move the frame ingame via "/rthreat")
   cfg.position = {
-    coord           = { a1 = "CENTER", af = UIParent, a2 = "CENTER", x = 0, y = 0 }, -- default position
+    coord           = { a1 = "LEFT", af = UIParent, a2 = "LEFT", x = 50, y = 0 }, -- default position
     userplaced      = true,   -- want to place the bar somewhere else?
     locked          = true,   -- frame locked, can be unlocked ingame via /rthreat
   }
@@ -33,9 +33,9 @@
     edgeFile        = "Interface\\AddOns\\rThreat\\media\\shadow",
     edgeColor       = { r = 0, g = 0, b = 0, a = 1 },
     tile            = false,
-    tileSize        = 32, 
-    edgeSize        = 4, 
-    inset           = 4,  
+    tileSize        = 32,
+    edgeSize        = 4,
+    inset           = 4,
   }
 
   -- border settings
@@ -46,9 +46,9 @@
     edgeFile        = "Interface\\AddOns\\rThreat\\media\\border",
     edgeColor       = { r = 1, g = 1, b = 1, a = 1 },
     tile            = false,
-    tileSize        = 16, 
-    edgeSize        = 8, 
-    inset           = 2, 
+    tileSize        = 16,
+    edgeSize        = 8,
+    inset           = 2,
   }
 
   -- title bar settings
@@ -66,7 +66,7 @@
     bg = {
       texture       = "Interface\\AddOns\\rThreat\\media\\statusbar",
       color         = { r = 0.2, g = 0.2, b = 0.2, a = 0.8 },
-    },    
+    },
   }
 
   -- threat bar settings
@@ -85,7 +85,7 @@
     bg = {
       texture       = "Interface\\AddOns\\rThreat\\media\\statusbar",
       color         = { r = 0, g = 0, b = 0, a = 0.7 },
-    }, 
+    },
     texture = {
       texture       = "Interface\\AddOns\\rThreat\\media\\statusbar",
       multiplier    = 0.5,    -- multiplier allows darker background colors
@@ -93,13 +93,13 @@
     },
     inactive = {
       color         = { r = 0.5, g = 0.5, b = 0.5, a = 0.1 },
-    },    
+    },
   }
 
-  
+
   -----------------------------
   -- HANDOVER
   -----------------------------
-  
+
   --object container to addon namespace
   ns.cfg = cfg

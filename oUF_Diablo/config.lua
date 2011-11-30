@@ -109,7 +109,7 @@
   ----------------------------------------
 
   --setting this to false will use the default frame positions, true allows moving
-  cfg.framesUserplaced = false
+  cfg.framesUserplaced = true
 
   --setting this to true will lock the frames in place, false unlocks them
   cfg.framesLocked = true
@@ -504,27 +504,24 @@
         --put every single spellid here that you want to be tracked, be it buff or debuff doesn't matter
         --maximum number of icons displayed at a time = 1
         --this is for important boss mechanics only, this is not for tracking healing HOTs etc
-        spelllist = {
-
+        whitelist = {
           --test
           32407,
-
           --CATACLYSM RAIDS
           86622,
-
           --maloriak
           92980, --ice bomb
           77786, --red phase consuming flames
-
           --chimaeron
           89084 , --skull icon chimaeron <10k life
-
         },
         show            = true,
         disableCooldown = true,
         showBuffType    = false,
         showDebuffType  = false,
-        size            = 20,
+        size            = 10,
+        num             = 5,
+        spacing         = 4,
       },
       attributes = {
         visibility1         = "custom [@raid21,exists] hide;[@raid6,exists,group:raid] show; hide", --use "party,raid" to show this in party aswell

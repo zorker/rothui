@@ -34,42 +34,68 @@
   end
 
 
-  --fill the whitelist table automatically with all the spellids
+  --whitelist
   local whitelist = {}
-  for i,spellid in pairs(cfg.units.raid.auras.spelllist) do
-    local spell = GetSpellInfo(spellid)
-    if spell then whitelist[spell] = true end
-    --if spell then whitelist[spellid] = true end
+  if cfg.units.raid.auras.whitelist then
+    for _,spellid in pairs(cfg.units.raid.auras.whitelist) do
+      local spell = GetSpellInfo(spellid)
+      if spell then whitelist[spellid] = true end
+    end
+  end
+
+  --blacklist
+  local blacklist = {}
+  if cfg.units.raid.auras.blacklist then
+    for _,spellid in pairs(cfg.units.raid.auras.blacklist) do
+      local spell = GetSpellInfo(spellid)
+      if spell then blacklist[spellid] = true end
+    end
   end
 
   --custom aura filter
-  local customFilter = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
-    if(whitelist[name]) then return true end
-    --if(whitelist[spellID]) then return true end
+  local customFilter = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID, canApplyAura, isBossDebuff)
+    local ret = false
+    if(blacklist[spellID]) then
+      ret = false
+    elseif(whitelist[spellID]) then
+      ret = true
+    elseif isBossDebuff then
+      ret = true
+    elseif caster and caster:match("(boss)%d?$") == "boss" then
+      ret = true
+    end
+    return ret
   end
 
   --create aura func
   local createAuras = function(self)
     local f = CreateFrame("Frame", nil, self)
-    f.size = self.cfg.auras.size
-    f.num = 1
+    local cfg = self.cfg.auras
+    f.size = cfg.size or 26
+    f.num = cfg.num or 5
+    f.spacing = cfg.spacing or 5
+    f.initialAnchor = cfg.initialAnchor or "TOPLEFT"
+    f["growth-x"] = cfg.growthX or "RIGHT"
+    f["growth-y"] = cfg.growthY or "DOWN"
+    f.disableCooldown = cfg.disableCooldown or false
+    f.showDebuffType = cfg.showDebuffType or false
+    f.showBuffType = cfg.showBuffType or false
+    if not cfg.doNotUseCustomFilter then
+      f.CustomFilter = customFilter
+    end
     f:SetHeight(f.size)
-    f:SetWidth(f.size)
-    f:SetPoint("CENTER", self, "CENTER", 0, 0)
-    f.initialAnchor = "TOPLEFT"
-    f["growth-x"] = "RIGHT"
-    f["growth-y"] = "DOWN"
-    f.spacing = -f.size
-    f.disableCooldown = self.cfg.auras.disableCooldown
-    f.showDebuffType  = self.cfg.auras.showDebuffType
-    f.showBuffType    = self.cfg.auras.showBuffType
-    f.CustomFilter = customFilter
+    f:SetWidth((f.size+f.spacing)*f.num)
+    if cfg.pos then
+      f:SetPoint(cfg.pos.a1 or "CENTER", self, cfg.pos.a2 or "CENTER", cfg.pos.x or 0, cfg.pos.y or 0)
+    else
+      f:SetPoint("CENTER",0,-5)
+    end
     self.Auras = f
   end
 
   --aura icon func
   local createAuraIcon = function(icons, button)
-    button:EnableMouse(false)
+    --button:EnableMouse(false)
     local bw = button:GetWidth()
     if button.cd then
       button.cd:SetPoint("TOPLEFT", 1, -1)
@@ -81,7 +107,7 @@
     button.count:SetTextColor(0.9,0.9,0.9)
     button.count:SetFont(cfg.font,bw/1.8,"THINOUTLINE")
     button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-    button.overlay:SetTexture("Interface\\AddOns\\rTextures\\aura_square")
+    button.overlay:SetTexture("Interface\\AddOns\\rTextures\\default_border")
     button.overlay:SetTexCoord(0,1,0,1)
     button.overlay:SetPoint("TOPLEFT", -1, 1)
     button.overlay:SetPoint("BOTTOMRIGHT", 1, -1)
@@ -313,13 +339,13 @@
       outsideAlpha = self.cfg.alpha.notinrange
     }
 
-    --[[
     --auras
     if self.cfg.auras.show then
       createAuras(self)
       self.Auras.PostCreateIcon = createAuraIcon
     end
 
+    --[[
     --aurawatch
     if self.cfg.aurawatch.show then
       createAuraWatch(self)

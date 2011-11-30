@@ -395,7 +395,6 @@
   local a = CreateFrame("Frame")
   a:SetScript("OnEvent", function(self, event)
     if(event=="PLAYER_LOGIN") then
-      SetCVar("ShowClassColorInNameplate",1)--1
       SetCVar("bloattest",0)--0.0
       SetCVar("bloatnameplates",0)--0.0
       SetCVar("bloatthreat",0)--1

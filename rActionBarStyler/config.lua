@@ -24,9 +24,9 @@
     bar1 = {
       buttonsize      = 26,
       buttonspacing   = 5,
-      barscale        = 1.2,
+      barscale        = 0.82,
       uselayout2x6    = false,
-      userplaced      = false, --want to place the bar somewhere else?
+      userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 22 },
       testmode        = false,
@@ -34,10 +34,10 @@
     bar2 = {
       buttonsize      = 26,
       buttonspacing   = 5,
-      barscale        = 1.2,
+      barscale        = 0.82,
       uselayout2x6    = false,
       showonmouseover = false,
-      userplaced      = false, --want to place the bar somewhere else?
+      userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 53 },
       testmode        = false,
@@ -45,10 +45,10 @@
     bar3 = {
       buttonsize      = 26,
       buttonspacing   = 5,
-      barscale        = 1.2,
+      barscale        = 0.82,
       uselayout2x6    = false,
       showonmouseover = false,
-      userplaced      = false, --want to place the bar somewhere else?
+      userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 92 },
       testmode        = false,
@@ -76,9 +76,9 @@
     stancebar = {
       buttonsize      = 26,
       buttonspacing   = 5,
-      barscale        = 1.2,
+      barscale        = 0.82,
       showonmouseover = false,
-      userplaced      = false, --want to place the bar somewhere else?
+      userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 140 },
       testmode        = false,

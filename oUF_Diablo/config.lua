@@ -163,7 +163,7 @@
         alpha = {
           ooc = 0.7, --alpha value out of combat
           ic = 1, --alpha value in comat
-          hidenotarget = true, --hide if no target is found
+          hidenotarget = false, --hide if no target is found
         },
       },
       holypower = {
@@ -174,7 +174,7 @@
         alpha = {
           ooc = 0.7, --alpha value out of combat
           ic = 1, --alpha value in comat
-          hidenotarget = true, --hide if no target is found
+          hidenotarget = false, --hide if no target is found
         },
       },
       eclipsebar = {
@@ -475,7 +475,7 @@
         use3D = true,
       },
       attributes = {
-        visibility          = "custom [group:party,nogroup:raid][@raid6,noexists,group:raid] show;hide",  --show this header in party
+        visibility          = "custom [group:party,nogroup:raid] show;hide",  --show this header in party
         showPlayer          = true,     --make this true to show player in party
         showSolo            = false,    --make this true to show while solo (only works if solo is in visiblity aswell
         showParty           = true,     --make this true to show headerin party
@@ -524,7 +524,7 @@
         spacing         = 4,
       },
       attributes = {
-        visibility1         = "custom [@raid21,exists] hide;[@raid6,exists,group:raid] show; hide", --use "party,raid" to show this in party aswell
+        visibility1         = "custom [@raid21,exists] hide;[group:raid] show; hide", --use "party,raid" to show this in party aswell
         visibility2         = "custom [@raid36,exists] hide; [@raid21,exists] show; hide", --special display for raid > 10 players (lower scale)
         visibility3         = "custom [@raid36,exists] show; hide", --special display for raid > 25 players (lower scale)
         showPlayer          = false,  --make this true to show player in party

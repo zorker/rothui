@@ -37,7 +37,8 @@
 
   local function applyBackground(bu)
     --shadows+background
-    if cfg.background.showbg or cfg.background.showshadow then
+    if bu:GetFrameLevel() > 0 and (cfg.background.showbg or cfg.background.showshadow) then
+    --if cfg.background.showbg or cfg.background.showshadow then
       bu.bg = CreateFrame("Frame", nil, bu)
       bu.bg:SetAllPoints(bu)
       bu.bg:SetPoint("TOPLEFT", bu, "TOPLEFT", -4, 4)

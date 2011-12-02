@@ -37,8 +37,9 @@
 
   local function applyBackground(bu)
     --shadows+background
-    if bu:GetFrameLevel() > 0 and (cfg.background.showbg or cfg.background.showshadow) then
-    --if cfg.background.showbg or cfg.background.showshadow then
+    if bu:GetFrameLevel() < 1 then bu:SetFrameLevel(1) end
+    --if bu:GetFrameLevel() > 0 and (cfg.background.showbg or cfg.background.showshadow) then
+    if cfg.background.showbg or cfg.background.showshadow then
       bu.bg = CreateFrame("Frame", nil, bu)
       bu.bg:SetAllPoints(bu)
       bu.bg:SetPoint("TOPLEFT", bu, "TOPLEFT", -4, 4)
@@ -86,7 +87,12 @@
 
   --initial style func
   local function rActionButtonStyler_AB_style(self)
-    if self.rABS_Styled then return end
+    if self.rABS_Styled then
+      --print(self:GetName().." is styled already, pass by")
+      return
+    end
+
+    --print("styling: "..self:GetName())
 
     local action = self.action
     local name = self:GetName()

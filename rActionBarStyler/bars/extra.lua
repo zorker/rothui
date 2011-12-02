@@ -34,7 +34,7 @@
           local button = _G["ExtraActionButton"..i]
           if not button then return end
           if button.style then
-            --print(button.style:GetTexture()) --debug
+            print(button.style:GetTexture()) --debug
             button.style:SetTexture("")
             hooksecurefunc(button.style, "SetTexture", disableTexture)
           end

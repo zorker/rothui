@@ -403,9 +403,19 @@
       end
     end
 
-    CompactRaidFrameContainer:UnregisterAllEvents()
-    CompactRaidFrameContainer:HookScript("OnShow", function(s) s:Hide() end)
-    CompactRaidFrameContainer:Hide()
+    for _, v in pairs({
+        CompactUnitFrame_UpdateVisible, CompactUnitFrame_UpdateAll,
+    }) do
+        v = function() return end
+    end
+
+    for _, v in pairs({
+        _G["CompactRaidFrameContainer"],
+    }) do
+        v:UnregisterAllEvents()
+        v.Show = function() return end
+        v:Hide()
+    end
 
     --register style
     oUF:RegisterStyle("diablo:raid", createStyle)

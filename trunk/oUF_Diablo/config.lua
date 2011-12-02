@@ -525,8 +525,8 @@
       },
       attributes = {
         visibility1         = "custom [@raid21,exists] hide;[group:raid] show; hide", --use "party,raid" to show this in party aswell
-        visibility2         = "custom [@raid36,exists] hide; [@raid21,exists] show; hide", --special display for raid > 10 players (lower scale)
-        visibility3         = "custom [@raid36,exists] show; hide", --special display for raid > 25 players (lower scale)
+        visibility2         = "custom [@raid31,exists] hide; [@raid21,exists] show; hide", --special display for raid > 20 players (lower scale)
+        visibility3         = "custom [@raid31,exists] show; hide", --special display for raid > 30 players (lower scale)
         showPlayer          = false,  --make this true to show player in party
         showSolo            = false,  --make this true to show while solo (only works if solo is in visiblity aswell
         showParty           = false,  --make this true to show raid in party

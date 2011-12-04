@@ -7,8 +7,6 @@
 
   local _G = _G
 
-  local nomoreplay = function() end
-
   local classcolor = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
 
   if cfg.color.classcolored then
@@ -86,14 +84,8 @@
   end
 
   --initial style func
-  local function rActionButtonStyler_AB_style(self)
-    if self.rABS_Styled then
-      --print(self:GetName().." is styled already, pass by")
-      return
-    end
-
-    --print("styling: "..self:GetName())
-
+  local function styleActionButton(self)
+    if self.rABS_Styled then return end
     local action = self.action
     local name = self:GetName()
     local bu  = _G[name]
@@ -106,33 +98,23 @@
     local fl  = _G[name.."Flash"]
     local nt  = _G[name.."NormalTexture"]
     local fbg  = _G[name.."FloatingBG"]
-
     if not nt then
-      --error no button to style found, get out asap
       self.rABS_Styled = true
-      --print(name)
       return
     end
-
     if fbg then
-      fbg:Hide()
-      fbg.Show = nomoreplay
+      fbg:Hide() --floating background
     end
-
     --hide the border (plain ugly, sry blizz)
-    bo:Hide()
-    bo.Show = nomoreplay
-
-    if cfg.hotkeys.show then
-      ho:SetFont(cfg.font, cfg.hotkeys.fontsize, "OUTLINE")
-      ho:ClearAllPoints()
-      ho:SetPoint(cfg.hotkeys.pos1.a1,bu,cfg.hotkeys.pos1.x,cfg.hotkeys.pos1.y)
-      ho:SetPoint(cfg.hotkeys.pos2.a1,bu,cfg.hotkeys.pos2.x,cfg.hotkeys.pos2.y)
-    else
+    bo:SetTexture(nil)
+    --hotkey
+    ho:SetFont(cfg.font, cfg.hotkeys.fontsize, "OUTLINE")
+    ho:ClearAllPoints()
+    ho:SetPoint(cfg.hotkeys.pos1.a1,bu,cfg.hotkeys.pos1.x,cfg.hotkeys.pos1.y)
+    ho:SetPoint(cfg.hotkeys.pos2.a1,bu,cfg.hotkeys.pos2.x,cfg.hotkeys.pos2.y)
+    if not cfg.hotkeys.show then
       ho:Hide()
-      ho.Show = nomoreplay
     end
-
     if cfg.macroname.show then
       na:SetFont(cfg.font, cfg.macroname.fontsize, "OUTLINE")
       na:ClearAllPoints()
@@ -141,7 +123,6 @@
     else
       na:Hide()
     end
-
     if cfg.itemcount.show then
       co:SetFont(cfg.font, cfg.itemcount.fontsize, "OUTLINE")
       co:ClearAllPoints()
@@ -149,23 +130,19 @@
     else
       co:Hide()
     end
-
     --applying the textures
     fl:SetTexture(cfg.textures.flash)
     bu:SetHighlightTexture(cfg.textures.hover)
     bu:SetPushedTexture(cfg.textures.pushed)
     bu:SetCheckedTexture(cfg.textures.checked)
     bu:SetNormalTexture(cfg.textures.normal)
-
     --cut the default border of the icons and make them shiny
     ic:SetTexCoord(0.1,0.9,0.1,0.9)
     ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
     ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
-
     --adjust the cooldown frame
     cd:SetPoint("TOPLEFT", bu, "TOPLEFT", cfg.cooldown.spacing, -cfg.cooldown.spacing)
     cd:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -cfg.cooldown.spacing, cfg.cooldown.spacing)
-
     --apply the normaltexture
     if ( IsEquippedAction(action) ) then
       bu:SetNormalTexture(cfg.textures.equipped)
@@ -174,89 +151,84 @@
       bu:SetNormalTexture(cfg.textures.normal)
       nt:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
     end
-
     --make the normaltexture match the buttonsize
     nt:SetAllPoints(bu)
-
-    --disable resetting of textures
-    fl.SetTexture = nomoreplay
-    bu.SetHighlightTexture = nomoreplay
-    bu.SetPushedTexture = nomoreplay
-    bu.SetCheckedTexture = nomoreplay
-    bu.SetNormalTexture = nomoreplay
-
     --hook to prevent Blizzard from reseting our colors
     hooksecurefunc(nt, "SetVertexColor", ntSetVertexColorFunc)
-
     --shadows+background
     if not bu.bg then applyBackground(bu) end
-
     self.rABS_Styled = true
+  end
 
+
+  local function updateHotkey(self, actionButtonType)
+    local ho = _G[self:GetName() .. "HotKey"]
+    if not cfg.hotkeys.show then
+      ho:Hide()
+    end
+  end
+
+  local function ntFixPet(bu,texture)
+    --make sure the normaltexture stays the way we want it
+    if texture ~= cfg.textures.normal then
+      bu:SetNormalTexture(cfg.textures.normal)
+    end
   end
 
   --style pet buttons
-  local function rActionButtonStyler_AB_stylepet()
-
+  local function stylePetButton()
     for i=1, NUM_PET_ACTION_SLOTS do
       local name = "PetActionButton"..i
       local bu  = _G[name]
+      if bu.rABS_Styled then return end
       local ic  = _G[name.."Icon"]
       local fl  = _G[name.."Flash"]
       local nt  = _G[name.."NormalTexture2"]
-
       nt:SetAllPoints(bu)
-
       --applying color
       nt:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
-
       --setting the textures
       fl:SetTexture(cfg.textures.flash)
       bu:SetHighlightTexture(cfg.textures.hover)
       bu:SetPushedTexture(cfg.textures.pushed)
       bu:SetCheckedTexture(cfg.textures.checked)
       bu:SetNormalTexture(cfg.textures.normal)
-
+      hooksecurefunc(bu, "SetNormalTexture", ntFixPet)
       --cut the default border of the icons and make them shiny
       ic:SetTexCoord(0.1,0.9,0.1,0.9)
       ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
       ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
-
       --shadows+background
       if not bu.bg then applyBackground(bu) end
-
+      bu.rABS_Styled = true
     end
   end
 
   --style shapeshift buttons
-  local function rActionButtonStyler_AB_styleshapeshift()
+  local function styleShapeShiftButton()
     for i=1, NUM_SHAPESHIFT_SLOTS do
       local name = "ShapeshiftButton"..i
       local bu  = _G[name]
+      if bu.rABS_Styled then return end
       local ic  = _G[name.."Icon"]
       local fl  = _G[name.."Flash"]
       local nt  = _G[name.."NormalTexture2"]
-
       nt:SetAllPoints(bu)
-
       --applying color
       nt:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
-
       --setting the textures
       fl:SetTexture(cfg.textures.flash)
       bu:SetHighlightTexture(cfg.textures.hover)
       bu:SetPushedTexture(cfg.textures.pushed)
       bu:SetCheckedTexture(cfg.textures.checked)
       bu:SetNormalTexture(cfg.textures.normal)
-
       --cut the default border of the icons and make them shiny
       ic:SetTexCoord(0.1,0.9,0.1,0.9)
       ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
       ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
-
       --shadows+background
       if not bu.bg then applyBackground(bu) end
-
+      bu.rABS_Styled = true
     end
   end
 
@@ -264,7 +236,8 @@
   -- CALLS // HOOKS
   ---------------------------------------
 
-  hooksecurefunc("ActionButton_Update",         rActionButtonStyler_AB_style)
-  hooksecurefunc("ShapeshiftBar_Update",        rActionButtonStyler_AB_styleshapeshift)
-  hooksecurefunc("ShapeshiftBar_UpdateState",   rActionButtonStyler_AB_styleshapeshift)
-  hooksecurefunc("PetActionBar_Update",         rActionButtonStyler_AB_stylepet)
+  hooksecurefunc("ActionButton_Update",         styleActionButton)
+  hooksecurefunc("ActionButton_UpdateHotkeys",  updateHotkey)
+  hooksecurefunc("ShapeshiftBar_Update",        styleShapeShiftButton)
+  hooksecurefunc("ShapeshiftBar_UpdateState",   styleShapeShiftButton)
+  hooksecurefunc("PetActionBar_Update",         stylePetButton)

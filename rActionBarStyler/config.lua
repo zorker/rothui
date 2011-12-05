@@ -73,6 +73,16 @@
       pos             = { a1 = "RIGHT", a2 = "RIGHT", af = "UIParent", x = -46, y = 0 },
       testmode        = false,
     },
+    extrabar = {
+      buttonsize      = 36,
+      buttonspacing   = 5,
+      barscale        = 0.82,
+      userplaced      = true,
+      locked          = true,
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -210, y = 135 },
+      testmode        = false,
+      disable         = false,
+    },
     stancebar = {
       buttonsize      = 26,
       buttonspacing   = 5,
@@ -92,16 +102,6 @@
       userplaced      = true, --want to place the bar somewhere else?
       locked          = true, --frame locked
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 180 },
-      testmode        = false,
-      disable         = false,
-    },
-    extrabar = {
-      buttonsize      = 36,
-      buttonspacing   = 5,
-      barscale        = 0.82,
-      userplaced      = true,
-      locked          = true,
-      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -210, y = 135 },
       testmode        = false,
       disable         = false,
     },
@@ -158,7 +158,7 @@
   if playername == "Rothar" or playername == "Grombur" or playername == "Wolowizard" or playername == "Loral" then
     cfg.bars.bar1.uselayout2x6    = true
     cfg.bars.bar2.uselayout2x6    = true
-    cfg.bars.stancebar.disable    = true
+    --cfg.bars.stancebar.disable    = true
   end
 
   --font

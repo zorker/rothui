@@ -1,11 +1,11 @@
-  
+
   --get the addon namespace
   local addon, ns = ...
-  
+
   --get the config values
   local cfg = ns.cfg
   local barcfg = cfg.bars.totembar
-  
+
   if not barcfg.disable and cfg.playerclass == "SHAMAN" then
 
     local bar = _G['MultiCastActionBarFrame']
@@ -18,24 +18,25 @@
       if barcfg.testmode then
         bar:SetBackdrop(cfg.backdrop)
         bar:SetBackdropColor(1,0.8,1,0.6)
-      end  
+      end
       cfg.applyDragFunctionality(holder,barcfg.userplaced,barcfg.locked)
-            
+
+      bar.ignoreFramePositionManager = true
       bar:SetParent(holder)
       bar:SetAllPoints(holder)
       bar:EnableMouse(false)
-      
+
       bar.SetPoint = function() end
-      
+
       local function moveTotem(self,a1,af,a2,x,y,...)
         if InCombatLockdown() then return end
       end
-            
-      --hooksecurefunc(bar, "SetPoint", moveTotem)  
-      holder:SetPoint(barcfg.pos.a1,barcfg.pos.af,barcfg.pos.a2,barcfg.pos.x,barcfg.pos.y)  
+
+      --hooksecurefunc(bar, "SetPoint", moveTotem)
+      holder:SetPoint(barcfg.pos.a1,barcfg.pos.af,barcfg.pos.a2,barcfg.pos.x,barcfg.pos.y)
       holder:SetScale(barcfg.barscale)
 
 
     end
-  
+
   end --disable

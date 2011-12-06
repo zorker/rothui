@@ -104,6 +104,9 @@
     threatColored       = true,  -- true/false -> enable threat coloring of the health plate for raidframes
   }
 
+  --frames have a new highlight that fades on hp loss, if that is still not enough you can adjust a multiplier here
+  cfg.highlightMultiplier = 0.5 --range 0-1
+
   ----------------------------------------
   -- frame movement
   ----------------------------------------

@@ -99,6 +99,7 @@
     local nt  = _G[name.."NormalTexture"]
     local fbg  = _G[name.."FloatingBG"]
     if not nt then
+      applyBackground(bu)
       self.rABS_Styled = true
       return
     end

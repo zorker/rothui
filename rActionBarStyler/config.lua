@@ -158,7 +158,7 @@
   if playername == "Rothar" or playername == "Grombur" or playername == "Wolowizard" or playername == "Loral" then
     cfg.bars.bar1.uselayout2x6    = true
     cfg.bars.bar2.uselayout2x6    = true
-    --cfg.bars.stancebar.disable    = true
+    cfg.bars.stancebar.disable    = true
   end
 
   --font

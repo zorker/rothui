@@ -326,6 +326,7 @@
       --inner shadow
       bar.glow:SetVertexColor(0,0,0,0.7)
     end
+    bar.highlight:SetAlpha((min/max)*cfg.highlightMultiplier)
   end
 
   --update power func

@@ -403,19 +403,43 @@
       end
     end
 
-    for _, v in pairs({
-        CompactUnitFrame_UpdateVisible, CompactUnitFrame_UpdateAll,
-    }) do
-        v = function() return end
+    --helper frame
+    local checkRaid = CreateFrame("Frame")
+
+    --kill raid func
+    local killRaid = function(self)
+      self:Hide()
+      self:UnregisterAllEvents()
     end
 
-    for _, v in pairs({
-        _G["CompactRaidFrameContainer"],
-    }) do
-        v:UnregisterAllEvents()
-        v.Show = function() return end
-        v:Hide()
+    --hook the raid:Show() and hide it again
+    local hideRaid = function(self)
+      if not InCombatLockdown() then
+        killRaid(self)
+      else
+        checkRaid:RegisterEvent("PLAYER_REGEN_ENABLED")
+      end
     end
+
+    --check the compactraidframecontainer (crfc)
+    checkRaid:RegisterEvent("PLAYER_LOGIN")
+    checkRaid:SetScript("OnEvent", function(self,event,...)
+      local crfc = _G["CompactRaidFrameContainer"]
+      if event == "PLAYER_LOGIN" then
+        if crfc then
+          crfc:SetScale(0.0001)
+          crfc:SetAlpha(0)
+          killRaid(crfc)
+          hooksecurefunc(crfc, "Show", hideRaid)
+        end
+      end
+      if event == "PLAYER_REGEN_ENABLED" then
+        if crfc and crfc:IsShown() then
+          killRaid(crfc)
+          self:UnregisterEvent("PLAYER_REGEN_ENABLED") --kill the regen event
+        end
+      end
+    end)
 
     --register style
     oUF:RegisterStyle("diablo:raid", createStyle)

@@ -550,7 +550,7 @@
       scale = 1,
       pos = { a1 = "TOP", a2 = "BOTTOM", af = "Minimap", x = 0, y = -80 },
       health = {
-        texture = "Interface\\AddOns\\rTextures\\statusbar5",
+        texture = "Interface\\AddOns\\rTextures\\statusbar128_3",
         tag = "[diablo:altbosspower][perhp]%",
       },
       power = {

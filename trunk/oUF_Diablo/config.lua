@@ -105,7 +105,7 @@
   }
 
   --frames have a new highlight that fades on hp loss, if that is still not enough you can adjust a multiplier here
-  cfg.highlightMultiplier = 0.5 --range 0-1
+  cfg.highlightMultiplier = 0.9 --range 0-1
 
   ----------------------------------------
   -- frame movement
@@ -518,7 +518,7 @@
           --chimaeron
           89084 , --skull icon chimaeron <10k life
         },
-        show            = true,
+        show            = false,
         disableCooldown = true,
         showBuffType    = false,
         showDebuffType  = false,
@@ -527,8 +527,8 @@
         spacing         = 4,
       },
       attributes = {
-        visibility1         = "custom [@raid21,exists] hide;[group:raid] show; hide", --use "party,raid" to show this in party aswell
-        visibility2         = "custom [@raid31,exists] hide; [@raid21,exists] show; hide", --special display for raid > 20 players (lower scale)
+        visibility1         = "custom [@raid26,exists] hide;[group:raid] show; hide", --use "party,raid" to show this in party aswell
+        visibility2         = "custom [@raid31,exists] hide; [@raid26,exists] show; hide", --special display for raid > 20 players (lower scale)
         visibility3         = "custom [@raid31,exists] show; hide", --special display for raid > 30 players (lower scale)
         showPlayer          = false,  --make this true to show player in party
         showSolo            = false,  --make this true to show while solo (only works if solo is in visiblity aswell

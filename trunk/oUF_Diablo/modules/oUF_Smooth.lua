@@ -32,15 +32,11 @@ oUF:RegisterInitCallback(hook)
 
 local f, min, max = CreateFrame("Frame"), math.min, math.max
 f:SetScript("OnUpdate", function()
-	local limit = 30/GetFramerate()
 	for bar, value in pairs(smoothing) do
 		local cur = bar:GetValue()
 		local barmin, barmax = bar:GetMinMaxValues()
-		local new = cur + min((value-cur)/20, max(value-cur, limit))
-		if new ~= new then
-			new = value
-		end
-		bar:SetValue_(new)
+    local new = cur + (value-cur)/30
+    bar:SetValue_(new)
     if bar.Filling then
       if barmax == 0 then
         bar.Filling:SetHeight(0)

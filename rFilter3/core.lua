@@ -1,21 +1,21 @@
 
   -- // rFilter3
   -- // zork - 2010
-  
+
   --get the addon namespace
-  local addon, ns = ...  
-  
+  local addon, ns = ...
+
   --get the config
-  local cfg = ns.cfg  
-  
+  local cfg = ns.cfg
+
   local rf3_BuffList, rf3_DebuffList, rf3_CooldownList = cfg.rf3_BuffList, cfg.rf3_DebuffList, cfg.rf3_CooldownList
-  
+
   rFilter3Frames = {}  --global variable gather all frames that can be moved ingame, will be accessed by slash command function later
-  
+
   -----------------------------
   -- FUNCTIONS
   -----------------------------
-  
+
   --format time func
   local GetFormattedTime = function(time)
     local hr, m, s, text
@@ -34,21 +34,21 @@
     end
     return text
   end
-  
-  local applySize = function(i)    
+
+  local applySize = function(i)
     local w = i:GetWidth()
-    if w < i.minsize then w = i.minsize end    
+    if w < i.minsize then w = i.minsize end
     i:SetSize(w,w)
     i.glow:SetPoint("TOPLEFT",i,"TOPLEFT",-w*3.3/32,w*3.3/32)
-    i.glow:SetPoint("BOTTOMRIGHT",i,"BOTTOMRIGHT",w*3.3/32,-w*3.3/32)  
+    i.glow:SetPoint("BOTTOMRIGHT",i,"BOTTOMRIGHT",w*3.3/32,-w*3.3/32)
     i.icon:SetPoint("TOPLEFT",i,"TOPLEFT",w*3/32,-w*3/32)
     i.icon:SetPoint("BOTTOMRIGHT",i,"BOTTOMRIGHT",-w*3/32,w*3/32)
     i.time:SetFont(STANDARD_TEXT_FONT, w*16/36, "THINOUTLINE")
-    i.time:SetPoint("BOTTOM", 0, 0)    
+    i.time:SetPoint("BOTTOM", 0, 0)
     i.count:SetFont(STANDARD_TEXT_FONT, w*18/32, "OUTLINE")
     i.count:SetPoint("TOPRIGHT", 0,0)
   end
-  
+
   --generate the frame name if a global one is needed
   local makeFrameName = function(f,type)
     if not f.move_ingame then return nil end
@@ -57,16 +57,16 @@
     if f.spec then spec = f.spec end
     return "rFilter3"..type.."Frame"..f.spellid.."Spec"..spec..class
   end
-  
+
   local unlockFrame = function(i)
     if i.spec and i.spec ~= GetActiveTalentGroup() then
       return --only show icons that are visible for the current spec
-    end    
+    end
     i:EnableMouse(true)
     i.locked = false
     i.dragtexture:SetAlpha(0.2)
     i:RegisterForDrag("LeftButton","RightButton")
-    i:SetScript("OnEnter", function(s) 
+    i:SetScript("OnEnter", function(s)
       GameTooltip:SetOwner(s, "ANCHOR_BOTTOMRIGHT")
       GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
       GameTooltip:AddLine("LEFT MOUSE + ALT + SHIFT to DRAG", 1, 1, 1, 1, 1, 1)
@@ -74,7 +74,7 @@
       GameTooltip:Show()
     end)
     i:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
-    i:SetScript("OnDragStart", function(s,b) 
+    i:SetScript("OnDragStart", function(s,b)
       if IsAltKeyDown() and IsShiftKeyDown() and b == "LeftButton" then
         s:StartMoving()
       end
@@ -82,11 +82,11 @@
         s:StartSizing()
       end
     end)
-    i:SetScript("OnDragStop", function(s) 
-      s:StopMovingOrSizing() 
+    i:SetScript("OnDragStop", function(s)
+      s:StopMovingOrSizing()
     end)
   end
-  
+
   local lockFrame = function(i)
     i:EnableMouse(nil)
     i.locked = true
@@ -97,10 +97,10 @@
     i:SetScript("OnDragStart", nil)
     i:SetScript("OnDragStop", nil)
   end
-  
+
   --simple frame movement
   local appyMoveFunctionality = function(f,i)
-    if not f.move_ingame then 
+    if not f.move_ingame then
       if i:IsUserPlaced() then
         i:SetUserPlaced(false)
       end
@@ -116,29 +116,29 @@
     t:SetTexture(0,1,0)
     t:SetAlpha(0)
     i.dragtexture = t
-    i:SetScript("OnSizeChanged", function(s) 
+    i:SetScript("OnSizeChanged", function(s)
       applySize(s)
     end)
     lockFrame(i) --lock frame by default
     table.insert(rFilter3Frames,i:GetName()) --load all the frames that can be moved into the global table
   end
-  
+
   --unlock all frames
   local unlockAllFrames = function()
-    for index,v in ipairs(rFilter3Frames) do 
+    for index,v in ipairs(rFilter3Frames) do
       unlockFrame(_G[v])
     end
   end
 
   --lock all frames
   local lockAllFrames = function()
-    for index,v in ipairs(rFilter3Frames) do 
+    for index,v in ipairs(rFilter3Frames) do
       lockFrame(_G[v])
     end
   end
-  
+
   --slash command functionality
-  local function SlashCmd(cmd)    
+  local function SlashCmd(cmd)
     if (cmd:match"unlock") then
       unlockAllFrames()
     elseif (cmd:match"lock") then
@@ -152,19 +152,19 @@
 
   SlashCmdList["rfilter"] = SlashCmd;
   SLASH_rfilter1 = "/rfilter";
-  SLASH_rfilter2 = "/rf";  
+  SLASH_rfilter2 = "/rf";
   print("|c0033AAFFrFilter3 loaded.|r")
   print("|c0033AAFF\/rfilter|r or |c0033AAFF\/rf|r to display the command list")
-  
+
   local createIcon = function(f,index,type)
 
     local gsi_name, gsi_rank, gsi_icon, gsi_powerCost, gsi_isFunnel, gsi_powerType, gsi_castingTime, gsi_minRange, gsi_maxRange = GetSpellInfo(f.spellid)
-    
+
     local i = CreateFrame("FRAME",makeFrameName(f,type),UIParent)
     i:SetSize(f.size,f.size)
     i:SetPoint(f.pos.a1,f.pos.af,f.pos.a2,f.pos.x,f.pos.y)
     i.minsize = f.size
-    
+
     local gl = i:CreateTexture(nil, "BACKGROUND",nil,-8)
     gl:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_glow")
     gl:SetVertexColor(0, 0, 0, 1)
@@ -172,7 +172,7 @@
     local ba = i:CreateTexture(nil, "BACKGROUND",nil,-7)
     ba:SetAllPoints(i)
     ba:SetTexture("Interface\\AddOns\\rTextures\\d3portrait_back2")
-    
+
     local t = i:CreateTexture(nil,"BACKGROUND",nil,-6)
     t:SetTexture(gsi_icon)
     t:SetTexCoord(0.1,0.9,0.1,0.9)
@@ -184,14 +184,14 @@
     bo:SetTexture("Interface\\AddOns\\rTextures\\simplesquare_roth")
     bo:SetVertexColor(0.37,0.3,0.3,1)
     bo:SetAllPoints(i)
-    
+
     local time = i:CreateFontString(nil, "BORDER")
     time:SetTextColor(1, 0.8, 0)
-    
+
     local count = i:CreateFontString(nil, "BORDER")
     count:SetTextColor(1, 1, 1)
     count:SetJustifyH("RIGHT")
-    
+
     i.glow = gl
     i.border = bo
     i.back = ba
@@ -204,10 +204,10 @@
     f.iconframe = i
     f.name = gsi_name
     f.rank = gsi_rank
-    f.texture = gsi_icon    
+    f.texture = gsi_icon
 
   end
-  
+
   local checkDebuff = function(f,spellid)
     if f.move_ingame and not f.iconframe.locked then --make the icon visible in case we want to move it
       f.iconframe.icon:SetAlpha(1)
@@ -227,7 +227,7 @@
     end
     if not InCombatLockdown() and f.hide_ooc then
       f.iconframe:SetAlpha(0)
-      return      
+      return
     end
     local tmp_spellid = f.spellid
     if spellid then
@@ -249,7 +249,7 @@
           f.iconframe.border:SetVertexColor(0.2,0.6,0.8,1)
         elseif cfg.highlightPlayerSpells then
           f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
-        end        
+        end
         f.iconframe.icon:SetAlpha(f.alpha.found.icon)
         f.iconframe:SetAlpha(f.alpha.found.frame)
         if spellid then
@@ -283,14 +283,14 @@
         f.iconframe.time:SetTextColor(1, 0.8, 0)
         if cfg.highlightPlayerSpells then
           f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
-        end 
+        end
         if f.desaturate then
           f.iconframe.icon:SetDesaturated(1)
         end
       end
     end
   end
-  
+
   local checkBuff = function(f,spellid)
     if f.move_ingame and not f.iconframe.locked then --make the icon visible in case we want to move it
       f.iconframe.icon:SetAlpha(1)
@@ -310,7 +310,7 @@
     end
     if not InCombatLockdown() and f.hide_ooc then
       f.iconframe:SetAlpha(0)
-      return      
+      return
     end
     local tmp_spellid = f.spellid
     if spellid then
@@ -366,14 +366,14 @@
         f.iconframe.time:SetTextColor(1, 0.8, 0)
         if cfg.highlightPlayerSpells then
           f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
-        end 
+        end
         if f.desaturate then
           f.iconframe.icon:SetDesaturated(1)
         end
       end
     end
   end
-  
+
   local checkCooldown = function(f)
     if f.move_ingame and not f.iconframe.locked then --make the icon visible in case we want to move it
       f.iconframe.icon:SetAlpha(1)
@@ -389,12 +389,12 @@
     end
     if not InCombatLockdown() and f.hide_ooc then
       f.iconframe:SetAlpha(0)
-      return      
+      return
     end
     if f.name and f.spellid then
       local start, duration, enable = GetSpellCooldown(f.spellid)
       if start and duration then
-        local now = GetTime()        
+        local now = GetTime()
         local value = start+duration-now
         if(value > 0) and duration > 2 then
           --item is on cooldown show time
@@ -425,9 +425,9 @@
       end
     end
   end
-  
+
   local searchBuffs = function()
-    for i,_ in ipairs(rf3_BuffList) do 
+    for i,_ in ipairs(rf3_BuffList) do
       local f = rf3_BuffList[i]
       if f.spelllist and f.spelllist[1] then
         --print('buff spelllist exists')
@@ -436,7 +436,7 @@
           if not f.bufffound then
             checkBuff(f,spellid)
           end
-        end        
+        end
       else
         checkBuff(f)
       end
@@ -444,7 +444,7 @@
   end
 
   local searchDebuffs = function()
-    for i,_ in ipairs(rf3_DebuffList) do 
+    for i,_ in ipairs(rf3_DebuffList) do
       local f = rf3_DebuffList[i]
       if  f.spelllist and f.spelllist[1] then
         --print('debuff spelllist exists')
@@ -461,7 +461,7 @@
   end
 
   local searchCooldowns = function()
-    for i,_ in ipairs(rf3_CooldownList) do 
+    for i,_ in ipairs(rf3_CooldownList) do
       local f = rf3_CooldownList[i]
       checkCooldown(f)
     end
@@ -469,53 +469,53 @@
 
   local lastupdate = 0
   local rFilterOnUpdate = function(self,elapsed)
-    lastupdate = lastupdate + elapsed    
+    lastupdate = lastupdate + elapsed
     if lastupdate > cfg.updatetime then
       lastupdate = 0
       searchBuffs()
       searchDebuffs()
       searchCooldowns()
     end
-  end  
-  
+  end
 
-  
+
+
   -----------------------------
   -- CALL
   -----------------------------
 
   local count = 0
 
-  for i,_ in ipairs(rf3_BuffList) do 
+  for i,_ in ipairs(rf3_BuffList) do
     local f = rf3_BuffList[i]
-    if not f.icon then 
+    if not f.icon then
       createIcon(f,i,"Buff")
     end
     count=count+1
   end
-  
-  for i,_ in ipairs(rf3_DebuffList) do 
+
+  for i,_ in ipairs(rf3_DebuffList) do
     local f = rf3_DebuffList[i]
-    if not f.icon then 
+    if not f.icon then
       createIcon(f,i,"Debuff")
     end
     count=count+1
   end
-  
-  for i,_ in ipairs(rf3_CooldownList) do 
+
+  for i,_ in ipairs(rf3_CooldownList) do
     local f = rf3_CooldownList[i]
-    if not f.icon then 
+    if not f.icon then
       createIcon(f,i,"Cooldown")
     end
     count=count+1
   end
-  
-  if count > 0 then    
-    local a = CreateFrame("Frame")  
+
+  if count > 0 then
+    local a = CreateFrame("Frame")
     a:SetScript("OnEvent", function(self, event)
       if(event=="PLAYER_LOGIN") then
         self:SetScript("OnUpdate", rFilterOnUpdate)
       end
-    end)    
-    a:RegisterEvent("PLAYER_LOGIN")  
+    end)
+    a:RegisterEvent("PLAYER_LOGIN")
   end

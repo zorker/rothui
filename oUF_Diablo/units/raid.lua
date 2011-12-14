@@ -367,77 +367,70 @@
 
   if cfg.units.raid.show then
 
-    if cfg.units.raid.hideManager then
-      --disable the blizzard raidframe container+manager
-      CompactRaidFrameManager:UnregisterAllEvents()
-      CompactRaidFrameManager:HookScript("OnShow", function(s) s:Hide() end)
-      CompactRaidFrameManager:Hide()
-    else
-      --add fading to the raidframe manager (code by Alza)
-      local listener = CreateFrame("Frame")
-      listener.check = function(self, event, addon)
-        if(addon~="Blizzard_CompactRaidFrames") then return end
-        CompactRaidFrameManagerToggleButton:EnableMouse(false)
-        local man = CompactRaidFrameManager
-        man:SetAlpha(0)
-        man.container:SetParent(UIParent)
-        man:SetScript("OnMouseUp", CompactRaidFrameManager_Toggle)
-        man:SetScript("OnEnter", function(self)
-          if(self.collapsed) then
-            UIFrameFadeIn(man, .2, 0, 1)
-          end
-        end)
-        man:SetScript("OnLeave", function(self)
-          if(self.collapsed) then
-            UIFrameFadeOut(man, .2, 1, 0)
-          end
-        end)
-        self:UnregisterEvent(event)
-        self:SetScript("OnEvent", nil)
-      end
-      if(IsAddOnLoaded("Blizzard_CompactRaidFrames")) then
-        listener.check(listener, "ADDON_LOADED", "Blizzard_CompactRaidFrames")
-      else
-        listener:RegisterEvent("ADDON_LOADED")
-        listener:SetScript("OnEvent", listener.check)
-      end
-    end
+    local crfm = _G["CompactRaidFrameManager"]
+    local crfb = _G["CompactRaidFrameManagerToggleButton"]
 
-    --helper frame
-    local checkRaid = CreateFrame("Frame")
+    local ag1, ag2, a1, a2
 
-    --kill raid func
-    local killRaid = function(self)
-      self:Hide()
-      self:UnregisterAllEvents()
-    end
+    --fade in anim
+    ag1 = crfm:CreateAnimationGroup()
+    a1 = ag1:CreateAnimation("Alpha")
+    a1:SetDuration(0.4)
+    a1:SetSmoothing("OUT")
+    a1:SetChange(1)
+    ag1.a1 = a1
+    crfm.ag1 = ag1
 
-    --hook the raid:Show() and hide it again
-    local hideRaid = function(self)
-      if not InCombatLockdown() then
-        killRaid(self)
-      else
-        checkRaid:RegisterEvent("PLAYER_REGEN_ENABLED")
+    --fade out anim
+    ag2 = crfm:CreateAnimationGroup()
+    a2 = ag2:CreateAnimation("Alpha")
+    a2:SetDuration(0.3)
+    a2:SetSmoothing("IN")
+    a2:SetChange(-1)
+    ag2.a2 = a2
+    crfm.ag2 = ag2
+
+    crfm.ag1:SetScript("OnFinished", function(ag1)
+      local self = ag1:GetParent()
+      if not self.ag2:IsPlaying() then
+        self:SetAlpha(1)
       end
-    end
+    end)
 
-    --check the compactraidframecontainer (crfc)
-    checkRaid:RegisterEvent("PLAYER_LOGIN")
-    checkRaid:SetScript("OnEvent", function(self,event,...)
-      local crfc = _G["CompactRaidFrameContainer"]
-      if event == "PLAYER_LOGIN" then
-        if crfc then
-          crfc:SetScale(0.0001)
-          crfc:SetAlpha(0)
-          killRaid(crfc)
-          hooksecurefunc(crfc, "Show", hideRaid)
-        end
+    crfm.ag2:SetScript("OnFinished", function(ag2)
+      local self = ag2:GetParent()
+      if not self.ag1:IsPlaying() then
+        self:SetAlpha(0)
       end
-      if event == "PLAYER_REGEN_ENABLED" then
-        if crfc and crfc:IsShown() then
-          killRaid(crfc)
-          self:UnregisterEvent("PLAYER_REGEN_ENABLED") --kill the regen event
-        end
+    end)
+
+    crfm:SetAlpha(0)
+
+    crfm:SetScript("OnEnter", function(m)
+      if m.collapsed and not m.ag1:IsPlaying() then
+        m.ag2:Stop()
+        m:SetAlpha(0)
+        m.ag1:Play()
+      end
+    end)
+    crfm:SetScript("OnMouseUp", function(self)
+      if self.collapsed and not InCombatLockdown() then
+        CompactRaidFrameManager_Toggle(self)
+      end
+    end)
+    crfb:SetScript("OnMouseUp", function(self)
+      local m = self:GetParent()
+      if not m.collapsed and not m.ag2:IsPlaying() then
+        m.ag1:Stop()
+        m:SetAlpha(1)
+        m.ag2:Play()
+      end
+    end)
+    crfm:SetScript("OnLeave", function(m)
+      if m.collapsed and GetMouseFocus():GetName() == "WorldFrame" and not m.ag2:IsPlaying() then
+        m.ag1:Stop()
+        m:SetAlpha(1)
+        m.ag2:Play()
       end
     end)
 

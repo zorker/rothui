@@ -52,8 +52,9 @@
     ["PRIEST"]        = { enable = true, animhealth = 19, animmana = 11,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["PALADIN"]       = { enable = true, animhealth = 1,  animmana = 17,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["SHAMAN"]        = { enable = true, animhealth = 16, animmana = 15,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
-    ["WARRIOR"]       = { enable = true, animhealth = 2,  animmana = 0,  classcolored = true, powertypecolored = true, healthmultiplier = 0.4,    manamultiplier = 0.4,  healthdecreasealpha = true,  manadecreasealpha = true,  },
-    ["WARLOCK"]       = { enable = true, animhealth = 15, animmana = 22,  classcolored = false, powertypecolored = false, healthmultiplier = 0.2,    manamultiplier = 0.4,    healthdecreasealpha = true,  manadecreasealpha = true,  },
+    --["WARRIOR"]       = { enable = true, animhealth = 2,  animmana = 0,  classcolored = true, powertypecolored = true, healthmultiplier = 0.4,    manamultiplier = 0.4,  healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["WARRIOR"]       = { enable = true, animhealth = 23,  animmana = 20,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,  healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["WARLOCK"]       = { enable = true, animhealth = 26, animmana = 22,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 0.4,    healthdecreasealpha = true,  manadecreasealpha = true,  },
   }
 
   ----------------------------------------
@@ -494,7 +495,7 @@
       alpha = {
         notinrange = 0.4,
       },
-      scale = 0.85,
+      scale = 0.95,
       pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 5, y = -5 },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar128_3",
@@ -509,6 +510,9 @@
         --this is for important boss mechanics only, this is not for tracking healing HOTs etc
         whitelist = {
           --test
+          --6673,--test1, battle shout
+          --72968,--test2
+          --93805,--test3
           32407,
           --CATACLYSM RAIDS
           86622,
@@ -518,18 +522,19 @@
           --chimaeron
           89084 , --skull icon chimaeron <10k life
         },
-        show            = false,
+        show            = true,
         disableCooldown = true,
         showBuffType    = false,
         showDebuffType  = false,
-        size            = 10,
+        size            = 12,
         num             = 5,
-        spacing         = 4,
+        spacing         = 3,
+        pos = { a1 = "CENTER", x = 0, y = -9},
       },
       attributes = {
-        visibility1         = "custom [@raid26,exists] hide;[group:raid] show; hide", --use "party,raid" to show this in party aswell
-        visibility2         = "custom [@raid31,exists] hide; [@raid26,exists] show; hide", --special display for raid > 20 players (lower scale)
-        visibility3         = "custom [@raid31,exists] show; hide", --special display for raid > 30 players (lower scale)
+        visibility1         = "custom [@raid11,exists] hide;[group:raid] show; hide", --use "party,raid" to show this in party aswell
+        visibility2         = "custom [@raid26,exists] hide; [@raid11,exists] show; hide", --special display for raid > 20 players (lower scale)
+        visibility3         = "custom [@raid26,exists] show; hide", --special display for raid > 30 players (lower scale)
         showPlayer          = false,  --make this true to show player in party
         showSolo            = false,  --make this true to show while solo (only works if solo is in visiblity aswell
         showParty           = false,  --make this true to show raid in party
@@ -612,6 +617,12 @@
     [20] = {displayid = 33853, r = 1, g = 0, b = 0, camdistancescale = 0.83, portraitzoom = 1, x = 0, y = -0.05, rotation = 0, },       -- red magnet
     [21] = {displayid = 34319, r = 0, g = 0, b = 0.4, camdistancescale = 1.55, portraitzoom = 1, x = 0, y = 0.8, rotation = 0, },       -- blue portal
     [22] = {displayid = 34645, r = 0.3, g = 0, b = 0.3, camdistancescale = 1.7, portraitzoom = 1, x = 0, y = 0.8, rotation = 0, },      -- purple portal
+    [23] = {displayid = 38699, r = 253/255, g = 58/255, b = 12/255, camdistancescale = 0.28, portraitzoom = 0, x = 0, y = 0, rotation = 0, },         -- dwarf floarting artifact (red glow)
+    [24] = {displayid = 38548, r = 253/255, g = 58/255, b = 12/255, camdistancescale = 0.8, portraitzoom = 0, x = -0.1, y = -0.1, rotation = 0, },    -- burning blob from hell
+    [25] = {displayid = 38327, r = 253/255, g = 58/255, b = 12/255, camdistancescale = 3.35, portraitzoom = 0, x = -0.3, y = -7, rotation = -9.4, },  -- fire
+    [26] = {displayid = 39108, r = 106/255, g = 48/255, b = 158/255, camdistancescale = 0.8, portraitzoom = 0, x = 0, y = 0, rotation = 0, },         -- top down rotation purple (warlock color)
+    [27] = {displayid = 39581, r = 76/255, g = 141/255, b = 195/255, camdistancescale = 3.5, portraitzoom = 0, x = 0, y = 2, rotation = 0, },         -- magic swirl
+    [28] = {displayid = 37939, r = 86/255, g = 129/255, b = 49/255, camdistancescale = 1, portraitzoom = 0, x = 0, y = 2, rotation = 0, },         -- poison bubbles
   }
 
   cfg.powercolors = {

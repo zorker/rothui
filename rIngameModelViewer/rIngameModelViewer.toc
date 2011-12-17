@@ -1,4 +1,4 @@
-## Interface: 40200
+## Interface: 40300
 ## Author: zork
 ## Version: 1.5
 ## Title: |cff00FF66rIngameModelViewer |r|cff666666 1.5|r

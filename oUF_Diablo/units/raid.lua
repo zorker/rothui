@@ -111,7 +111,7 @@
     button.overlay:SetTexCoord(0,1,0,1)
     button.overlay:SetPoint("TOPLEFT", -1, 1)
     button.overlay:SetPoint("BOTTOMRIGHT", 1, -1)
-    button.overlay:SetVertexColor(0,0,0,1)
+    button.overlay:SetVertexColor(0.2,0.15,0.15,1)
     button.overlay:Show()
     button.overlay.Hide = function() end
   end
@@ -225,6 +225,7 @@
       --inner shadow
       bar.glow:SetVertexColor(0,0,0,0.7)
     end
+    bar.highlight:SetAlpha((min/max)*cfg.highlightMultiplier)
   end
 
   --check threat
@@ -494,7 +495,7 @@
         self:SetWidth(%d)
         self:SetHeight(%d)
         self:SetScale(%f)
-      ]]):format(128, 64, cfg.units.raid.scale*0.95)
+      ]]):format(128, 64, cfg.units.raid.scale*0.9)
     )
     raid2:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
 
@@ -523,7 +524,7 @@
         self:SetWidth(%d)
         self:SetHeight(%d)
         self:SetScale(%f)
-      ]]):format(128, 64, cfg.units.raid.scale*0.8)
+      ]]):format(128, 64, cfg.units.raid.scale*0.75)
     )
     raid3:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
 

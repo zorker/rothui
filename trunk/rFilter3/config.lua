@@ -20,7 +20,8 @@
   cfg.highlightPlayerSpells = true  --player spells will have a blue border
   cfg.updatetime            = 0.2   --how fast should the timer update itself
 
-  if player_name == "Rothar" and player_class == "WARRIOR" then
+  --if player_name == "Rothar" and player_class == "WARRIOR" then
+  if player_class == "WARRIOR" then
     --Rothars Buff List
     cfg.rf3_BuffList = {
       [1] = {
@@ -79,7 +80,7 @@
         },
       },
       [3] = {
-        spec            = 2,
+        spec            = 3,
         spellid         = 2565, --shield block
         size            = 26,
         pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 138 },
@@ -100,7 +101,7 @@
         },
       },
       [4] = {
-        spec = 2,
+        spec = 3,
         spellid = 87096, --thunderclap dps boost
         size = 26,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -100, y = 138 },
@@ -139,12 +140,31 @@
           },
         },
       },
+      [6] = {
+        spec = 2,
+        spellid = 107951, --trinket proc
+        size = 36,
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        unit = "player",
+        ismine = true,
+        desaturate = true,
+        move_ingame     = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0,
+          },
+        },
+      },
 
 
     }
 
     --Rothars Debuff List
-
     cfg.rf3_DebuffList = {
       [1] = {
         spec = nil,

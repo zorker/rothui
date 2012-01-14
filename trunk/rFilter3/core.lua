@@ -59,7 +59,7 @@
   end
 
   local unlockFrame = function(i)
-    if i.spec and i.spec ~= GetActiveTalentGroup() then
+    if i.spec and i.spec ~= GetPrimaryTalentTree(false, false, GetActiveTalentGroup()) then
       return --only show icons that are visible for the current spec
     end
     i:EnableMouse(true)
@@ -217,7 +217,7 @@
       f.iconframe.count:SetText("3")
       return
     end
-    if f.spec and f.spec ~= GetActiveTalentGroup() then
+    if f.spec and f.spec ~= GetPrimaryTalentTree(false, false, GetActiveTalentGroup()) then
       f.iconframe:SetAlpha(0)
       return
     end
@@ -300,7 +300,7 @@
       f.iconframe.count:SetText("3")
       return
     end
-    if f.spec and f.spec ~= GetActiveTalentGroup() then
+    if f.spec and f.spec ~= GetPrimaryTalentTree(false, false, GetActiveTalentGroup()) then
       f.iconframe:SetAlpha(0)
       return
     end
@@ -383,7 +383,7 @@
       f.iconframe.count:SetText("3")
       return
     end
-    if f.spec and f.spec ~= GetActiveTalentGroup() then
+    if f.spec and f.spec ~= GetPrimaryTalentTree(false, false, GetActiveTalentGroup()) then
       f.iconframe:SetAlpha(0)
       return
     end

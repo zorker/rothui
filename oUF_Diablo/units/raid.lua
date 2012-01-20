@@ -346,12 +346,12 @@
       self.Auras.PostCreateIcon = createAuraIcon
     end
 
-    --[[
+    --[[]]--
     --aurawatch
     if self.cfg.aurawatch.show then
       createAuraWatch(self)
     end
-    ]]--
+
 
     --icons
     self.RaidIcon = func.createIcon(self.Health,"OVERLAY",14,self.Health,"BOTTOM","TOP",0,-6,-1)

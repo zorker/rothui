@@ -83,6 +83,30 @@
     end
   end
 
+  local function styleExtraActionButton(button)
+    --remove the background texture
+    button.style:SetTexture(nil)
+    local disableTexture = function(self, texture)
+      if texture and string.sub(texture,1,9) == "Interface" then
+        self:SetTexture(nil)
+      end
+    end
+    hooksecurefunc(button.style, "SetTexture", disableTexture)
+    --remove default texture border
+    button.icon:SetTexCoord(0.1,0.9,0.1,0.9)
+    button.icon:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
+    button.icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2)
+    --add a border texture (like normaltexture)
+    local layer, sublayer = button.icon:GetDrawLayer()
+    local border = button:CreateTexture(nil,layer,sublayer+1)
+    border:SetTexture(cfg.textures.normal)
+    border:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
+    border:SetAllPoints(button)
+    button.border = border
+    --apply background
+    applyBackground(button)
+  end
+
   --initial style func
   local function styleActionButton(self)
     if self.rABS_Styled then return end
@@ -99,7 +123,9 @@
     local nt  = _G[name.."NormalTexture"]
     local fbg  = _G[name.."FloatingBG"]
     if not nt then
-      applyBackground(bu)
+      if name == "ExtraActionButton1" then
+        styleExtraActionButton(bu)
+      end
       self.rABS_Styled = true
       return
     end

@@ -25,27 +25,4 @@ if barcfg and not barcfg.disable then
   b:SetSize(barcfg.buttonsize,barcfg.buttonsize)
   bar.button = b
 
-  --style texture
-  local s = b.style
-  s:SetTexture(nil)
-  local disableTexture = function(style, texture)
-    if not texture then return end
-    if string.sub(texture,1,9) == "Interface" then
-      style:SetTexture(nil) --bzzzzzzzz
-    end
-  end
-  hooksecurefunc(s, "SetTexture", disableTexture)
-
-  --register the event, make sure the damn button shows up
-  bar:RegisterEvent("UPDATE_EXTRA_ACTIONBAR")
-  bar:RegisterEvent("PLAYER_REGEN_ENABLED")
-  bar:SetScript("OnEvent", function(self, event, ...)
-    if (HasExtraActionBar()) then
-      self:Show()
-      self.button:Show()
-    else
-      self:Hide()
-    end
-  end)
-
 end --disable

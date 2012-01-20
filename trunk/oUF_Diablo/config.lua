@@ -32,6 +32,12 @@
   -- 10 = swirling cloud, 11 = white fog,       12 = red glowing eye,   13 = sandy swirl,   14 = green fire
   -- 15 = purple swirl,   16 = white tornado,   17 = blue swirly,       18 = orange fog,    19 = pearl
   -- 20 = red magnet,     21 = blue portal,     22 = purple portal
+  -- 23 dwarf floarting artifact (red glow)
+  -- 24 burning blob from hell
+  -- 25 fire
+  -- 26 top down rotation purple (warlock color)
+  -- 27 magic swirl
+  -- 28  poison bubbles
 
   --health animation
   cfg.animhealth = 20 --default 7
@@ -53,8 +59,8 @@
     ["PALADIN"]       = { enable = true, animhealth = 1,  animmana = 17,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["SHAMAN"]        = { enable = true, animhealth = 16, animmana = 15,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     --["WARRIOR"]       = { enable = true, animhealth = 2,  animmana = 0,  classcolored = true, powertypecolored = true, healthmultiplier = 0.4,    manamultiplier = 0.4,  healthdecreasealpha = true,  manadecreasealpha = true,  },
-    ["WARRIOR"]       = { enable = true, animhealth = 23,  animmana = 20,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,  healthdecreasealpha = true,  manadecreasealpha = true,  },
-    ["WARLOCK"]       = { enable = true, animhealth = 26, animmana = 22,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 0.4,    healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["WARRIOR"]       = { enable = true, animhealth = 23,  animmana = 20,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 0.6,  healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["WARLOCK"]       = { enable = true, animhealth = 26, animmana = 9,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
   }
 
   ----------------------------------------

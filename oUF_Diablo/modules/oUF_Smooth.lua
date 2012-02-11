@@ -35,7 +35,7 @@ f:SetScript("OnUpdate", function()
 	for bar, value in pairs(smoothing) do
 		local cur = bar:GetValue()
 		local barmin, barmax = bar:GetMinMaxValues()
-    local new = cur + (value-cur)/10
+    local new = cur + (value-cur)/15
     bar:SetValue_(new)
     if bar.Filling then
       if barmax == 0 then

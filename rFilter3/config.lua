@@ -18,7 +18,7 @@
   -----------------------------
 
   cfg.highlightPlayerSpells = true  --player spells will have a blue border
-  cfg.updatetime            = 0.2   --how fast should the timer update itself
+  cfg.updatetime            = 0.3   --how fast should the timer update itself
 
   --if player_name == "Rothar" and player_class == "WARRIOR" then
   if player_class == "WARRIOR" then
@@ -141,9 +141,29 @@
         },
       },
       [6] = {
-        spec = 2,
-        spellid = 107951, --trinket proc
+        spec = 3,
+        spellid = 57516, --enrage
         size = 36,
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        unit = "player",
+        ismine = true,
+        desaturate = true,
+        move_ingame     = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0,
+          },
+        },
+      },
+      [7] = {
+        spec = 3,
+        spellid = 84620, --parry proc
+        size = 26,
         pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
         unit = "player",
         ismine = true,

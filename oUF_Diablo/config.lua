@@ -58,8 +58,8 @@
     ["PRIEST"]        = { enable = true, animhealth = 19, animmana = 11,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["PALADIN"]       = { enable = true, animhealth = 1,  animmana = 17,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["SHAMAN"]        = { enable = true, animhealth = 16, animmana = 15,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
-    --["WARRIOR"]       = { enable = true, animhealth = 2,  animmana = 0,  classcolored = true, powertypecolored = true, healthmultiplier = 0.4,    manamultiplier = 0.4,  healthdecreasealpha = true,  manadecreasealpha = true,  },
-    ["WARRIOR"]       = { enable = true, animhealth = 23,  animmana = 20,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 0.6,  healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["WARRIOR"]       = { enable = true, animhealth = 2,  animmana = 0,  classcolored = true, powertypecolored = true, healthmultiplier = 0.4,    manamultiplier = 0.4,  healthdecreasealpha = true,  manadecreasealpha = true,  },
+    --["WARRIOR"]       = { enable = true, animhealth = 29,  animmana = 29,  classcolored = false, powertypecolored = false, healthmultiplier = 0.6,    manamultiplier = 0.6,  healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["WARLOCK"]       = { enable = true, animhealth = 26, animmana = 9,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
   }
 
@@ -528,7 +528,7 @@
           --chimaeron
           89084 , --skull icon chimaeron <10k life
         },
-        show            = true,
+        show            = false,
         disableCooldown = true,
         showBuffType    = false,
         showDebuffType  = false,
@@ -562,11 +562,11 @@
       pos = { a1 = "TOP", a2 = "BOTTOM", af = "Minimap", x = 0, y = -80 },
       health = {
         texture = "Interface\\AddOns\\rTextures\\statusbar128_3",
-        tag = "[diablo:altbosspower][perhp]%",
+        tag = "[perhp]%",
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
-        tag = "[perpp]%",
+        tag = "[diablo:bosspp]",
       },
     },
 
@@ -629,6 +629,7 @@
     [26] = {displayid = 39108, r = 106/255, g = 48/255, b = 158/255, camdistancescale = 0.8, portraitzoom = 0, x = 0, y = 0, rotation = 0, },         -- top down rotation purple (warlock color)
     [27] = {displayid = 39581, r = 76/255, g = 141/255, b = 195/255, camdistancescale = 3.5, portraitzoom = 0, x = 0, y = 2, rotation = 0, },         -- magic swirl
     [28] = {displayid = 37939, r = 86/255, g = 129/255, b = 49/255, camdistancescale = 1, portraitzoom = 0, x = 0, y = 2, rotation = 0, },         -- poison bubbles
+    [29] = {displayid = 37867, r = 93/255, g = 52/255,  b = 92/255, camdistancescale = 0.75, portraitzoom = 0, x = 0, y = 0.8, rotation = 0, },         -- cthun eye
   }
 
   cfg.powercolors = {

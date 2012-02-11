@@ -183,3 +183,32 @@
     end
   end
   oUF.TagEvents["diablo:altpower"] = "UNIT_POWER"
+
+  ---------------------------------------------
+
+  --boss power value
+  oUF.Tags["diablo:bosspp"] = function(unit)
+    if UnitIsDeadOrGhost(unit) then return "" end
+    local str = ""
+    --power value tracking (show percentage if max power > 0)
+    local pp_max = UnitPowerMax(unit)
+    if pp_max > 0 then
+      str = str..oUF.Tags["perpp"](unit).."%"
+    end
+    --additional altpower tracking
+    local ap_max = UnitPowerMax(unit, ALTERNATE_POWER_INDEX)
+    local color = "0099ff"
+    if pp_max > 0 and ap_max > 0 then
+      str = str.." ("
+    end
+    if ap_max > 0 then
+      local ap_cur = UnitPower(unit, ALTERNATE_POWER_INDEX)
+      str = str.."|cff"..color..("%s%%"):format(math.floor(ap_cur/ap_max*100)).."|r"
+    end
+    if pp_max > 0 and ap_max > 0 then
+      str = str..")"
+    end
+    --return "93% (|cff"..color..("%s%%"):format(30).."|r)" --debug
+    return str or ""
+  end
+  oUF.TagEvents["diablo:bosspp"] = "UNIT_POWER UNIT_MAXPOWER"

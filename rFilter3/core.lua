@@ -467,19 +467,6 @@
     end
   end
 
-  local lastupdate = 0
-  local rFilterOnUpdate = function(self,elapsed)
-    lastupdate = lastupdate + elapsed
-    if lastupdate > cfg.updatetime then
-      lastupdate = 0
-      searchBuffs()
-      searchDebuffs()
-      searchCooldowns()
-    end
-  end
-
-
-
   -----------------------------
   -- CALL
   -----------------------------
@@ -512,10 +499,14 @@
 
   if count > 0 then
     local a = CreateFrame("Frame")
-    a:SetScript("OnEvent", function(self, event)
-      if(event=="PLAYER_LOGIN") then
-        self:SetScript("OnUpdate", rFilterOnUpdate)
-      end
+    local ag = a:CreateAnimationGroup()
+    local anim = ag:CreateAnimation()
+    anim:SetDuration(cfg.updatetime)
+    ag:SetLooping("REPEAT")
+    ag:SetScript("OnLoop", function(self, event, ...)
+      searchBuffs()
+      searchDebuffs()
+      searchCooldowns()
     end)
-    a:RegisterEvent("PLAYER_LOGIN")
+    ag:Play()
   end

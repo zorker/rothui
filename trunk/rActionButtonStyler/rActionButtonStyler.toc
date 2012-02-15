@@ -5,4 +5,4 @@
 ## Notes: The default ActionButtonTemplate with style!
 
 config.lua
-func\functions.lua
+core.lua

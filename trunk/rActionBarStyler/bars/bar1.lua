@@ -66,7 +66,7 @@
 
       self:Execute([[
         buttons = table.new()
-        for i = 1, NUM_ACTIONBAR_BUTTONS do
+        for i = 1, 12 do
           table.insert(buttons, self:GetFrameRef("ActionButton"..i))
         end
       ]])

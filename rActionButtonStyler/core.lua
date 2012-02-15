@@ -64,27 +64,32 @@
 
   --style extraactionbutton
   local function styleExtraActionButton(bu)
-    --remove the background texture
+    if bu.rabs_styled then return end
+    local name = bu:GetName()
+    --remove the style background theme
     bu.style:SetTexture(nil)
-    local disableTexture = function(self, texture)
+    hooksecurefunc(bu.style, "SetTexture", function(self, texture)
       if texture and string.sub(texture,1,9) == "Interface" then
         self:SetTexture(nil)
       end
-    end
-    hooksecurefunc(bu.style, "SetTexture", disableTexture)
-    --remove default texture border
+    end)
+    --icon
     bu.icon:SetTexCoord(0.1,0.9,0.1,0.9)
     bu.icon:SetAllPoints(bu)
-    --add a border texture (like normaltexture)
-    local layer, sublayer = bu.icon:GetDrawLayer()
-    local border = bu:CreateTexture(nil,layer,sublayer+1)
-    border:SetTexture(cfg.textures.normal)
+    --cooldown
+    bu.cooldown:SetAllPoints(bu.icon)
+    --hotkey
+    local ho = _G[name.."HotKey"]
+    ho:Hide()
+    --add button normaltexture
+    bu:SetNormalTexture(cfg.textures.normal)
+    local border = bu:GetNormalTexture()
+    print(border:GetTexture())
     border:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
-    border:SetPoint("TOPLEFT", bu, "TOPLEFT", -1, 1)
-    border:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", 1, -1)
-    bu.border = border
+    border:SetAllPoints(bu)
     --apply background
     if not bu.bg then applyBackground(bu) end
+    bu.rabs_styled = true
   end
 
   --initial style func

@@ -84,7 +84,6 @@
     --add button normaltexture
     bu:SetNormalTexture(cfg.textures.normal)
     local border = bu:GetNormalTexture()
-    print(border:GetTexture())
     border:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
     border:SetAllPoints(bu)
     --apply background

@@ -89,7 +89,7 @@
 
   --initial style func
   local function styleActionButton(bu)
-    if self.rabs_styled then return end
+    if bu.rabs_styled then return end
     local action = bu.action
     local name = bu:GetName()
     local ic  = _G[name.."Icon"]
@@ -164,7 +164,7 @@
     end)
     --shadows+background
     if not bu.bg then applyBackground(bu) end
-    self.rabs_styled = true
+    bu.rabs_styled = true
   end
 
 

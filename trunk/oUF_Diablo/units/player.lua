@@ -396,6 +396,17 @@
       if cfg.animClassOverride[cfg.playerclass].healthdecreasealpha then
         bar.Anim:SetAlpha((min/max)*cfg.animClassOverride[cfg.playerclass].healthmultiplier or 1)
       end
+      if cfg.animClassOverride[cfg.playerclass].classcolored then
+        local status = UnitInVehicle("player")
+        if status and swapper ~= "v" then
+          local color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
+          if color then bar.Filling:SetVertexColor(color.r,color.g,color.b) end
+          swapper = "v"
+        elseif not status and swapper ~= "n" then
+          bar.Filling:SetVertexColor(cfg.playercolor.r,cfg.playercolor.g,cfg.playercolor.b)
+          swapper = "n"
+        end
+      end
     else
       bar.galaxy[1]:SetAlpha(min/max)
       bar.galaxy[2]:SetAlpha(min/max)

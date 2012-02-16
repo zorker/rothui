@@ -34,6 +34,7 @@
   }
 
   local function applyBackground(bu)
+    if not bu or (bu and bu.bg) then return end
     --shadows+background
     if bu:GetFrameLevel() < 1 then bu:SetFrameLevel(1) end
     if cfg.background.showbg or cfg.background.showshadow then
@@ -64,8 +65,9 @@
 
   --style extraactionbutton
   local function styleExtraActionButton(bu)
-    if bu.rabs_styled then return end
+    if not bu or (bu and bu.rabs_styled) then return end
     local name = bu:GetName()
+    local ho = _G[name.."HotKey"]
     --remove the style background theme
     bu.style:SetTexture(nil)
     hooksecurefunc(bu.style, "SetTexture", function(self, texture)
@@ -79,13 +81,12 @@
     --cooldown
     bu.cooldown:SetAllPoints(bu.icon)
     --hotkey
-    local ho = _G[name.."HotKey"]
     ho:Hide()
     --add button normaltexture
     bu:SetNormalTexture(cfg.textures.normal)
-    local border = bu:GetNormalTexture()
-    border:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
-    border:SetAllPoints(bu)
+    local nt = bu:GetNormalTexture()
+    nt:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
+    nt:SetAllPoints(bu)
     --apply background
     if not bu.bg then applyBackground(bu) end
     bu.rabs_styled = true
@@ -93,7 +94,7 @@
 
   --initial style func
   local function styleActionButton(bu)
-    if bu.rabs_styled then return end
+    if not bu or (bu and bu.rabs_styled) then return end
     local action = bu.action
     local name = bu:GetName()
     local ic  = _G[name.."Icon"]
@@ -174,7 +175,7 @@
 
   --style pet buttons
   local function stylePetButton(bu)
-    if bu.rabs_styled then return end
+    if not bu or (bu and bu.rabs_styled) then return end
     local name = bu:GetName()
     local ic  = _G[name.."Icon"]
     local fl  = _G[name.."Flash"]
@@ -205,7 +206,7 @@
 
   --style shapeshift buttons
   local function styleShapeShiftButton(bu)
-    if bu.rabs_styled then return end
+    if not bu or (bu and bu.rabs_styled) then return end
     local name = bu:GetName()
     local ic  = _G[name.."Icon"]
     local fl  = _G[name.."Flash"]

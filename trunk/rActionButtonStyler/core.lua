@@ -8,6 +8,8 @@
   local _G = _G
   local i
   local classcolor = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
+  local dominos = IsAddOnLoaded("Dominos")
+  local bartender4 = IsAddOnLoaded("Bartender4")
 
   if cfg.color.classcolored then
     cfg.color.normal = classcolor
@@ -113,7 +115,7 @@
     ho:ClearAllPoints()
     ho:SetPoint(cfg.hotkeys.pos1.a1,bu,cfg.hotkeys.pos1.x,cfg.hotkeys.pos1.y)
     ho:SetPoint(cfg.hotkeys.pos2.a1,bu,cfg.hotkeys.pos2.x,cfg.hotkeys.pos2.y)
-    if not cfg.hotkeys.show then
+    if not dominos and not bartender4 and not cfg.hotkeys.show then
       ho:Hide()
     end
     if cfg.macroname.show then
@@ -121,14 +123,14 @@
       na:ClearAllPoints()
       na:SetPoint(cfg.macroname.pos1.a1,bu,cfg.macroname.pos1.x,cfg.macroname.pos1.y)
       na:SetPoint(cfg.macroname.pos2.a1,bu,cfg.macroname.pos2.x,cfg.macroname.pos2.y)
-    else
+    elseif not dominos and not bartender4 then
       na:Hide()
     end
     if cfg.itemcount.show then
       co:SetFont(cfg.font, cfg.itemcount.fontsize, "OUTLINE")
       co:ClearAllPoints()
       co:SetPoint(cfg.itemcount.pos1.a1,bu,cfg.itemcount.pos1.x,cfg.itemcount.pos1.y)
-    else
+    elseif not dominos and not bartender4 then
       co:Hide()
     end
     --applying the textures
@@ -170,6 +172,11 @@
     --shadows+background
     if not bu.bg then applyBackground(bu) end
     bu.rabs_styled = true
+    if bartender4 then --fix the normaltexture
+      nt:SetTexCoord(0,1,0,1)
+      nt.SetTexCoord = function() return end
+      bu.SetNormalTexture = function() return end
+    end
   end
 
 
@@ -245,6 +252,8 @@
     --style the actionbar buttons
     for i = 1, NUM_ACTIONBAR_BUTTONS do
       styleActionButton(_G["ActionButton"..i])
+      styleActionButton(_G["VehicleMenuBarActionButton"..i])
+      styleActionButton(_G["BonusActionButton"..i])
       styleActionButton(_G["MultiBarBottomLeftButton"..i])
       styleActionButton(_G["MultiBarBottomRightButton"..i])
       styleActionButton(_G["MultiBarRightButton"..i])
@@ -260,8 +269,25 @@
     end
     --extraactionbutton1
     styleExtraActionButton(_G["ExtraActionButton1"])
+    --dominos styling
+    if dominos then
+      --print("Dominos found")
+      for i = 1, 60 do
+        styleActionButton(_G["DominosActionButton"..i])
+      end
+    end
+    --bartender4 styling
+    if bartender4 then
+      --print("Bartender4 found")
+      for i = 1, 120 do
+        styleActionButton(_G["BT4Button"..i])
+      end
+      for i = 1, 10 do
+        styleShapeShiftButton(_G["BT4StanceButton"..i])
+      end
+    end
     --hide the hotkeys if needed
-    if not cfg.hotkeys.show then
+    if not dominos and not bartender4 and not cfg.hotkeys.show then
       hooksecurefunc("ActionButton_UpdateHotkeys",  updateHotkey)
     end
   end

@@ -3,6 +3,7 @@
 ## Version: 2.0
 ## Title: rActionButtonStyler
 ## Notes: The default ActionButtonTemplate with style!
+## OptionalDeps: Dominos, Bartender4
 
 config.lua
 core.lua

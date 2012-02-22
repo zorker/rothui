@@ -61,7 +61,7 @@
   end
 
   --menu function from phanx
-  local dropdown = CreateFrame("Frame", "MyAddOnUnitDropDownMenu", UIParent, "UIDropDownMenuTemplate")
+  local dropdown = CreateFrame("Frame", "oUF_DiabloUnitMenu", UIParent, "UIDropDownMenuTemplate")
 
   UIDropDownMenu_Initialize(dropdown, function(self)
     local unit = self:GetParent().unit

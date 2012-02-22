@@ -441,95 +441,72 @@
 
     local attr = cfg.units.raid.attributes
 
-    --spawn raid
-    local raid1 = oUF:SpawnHeader(
-      "oUF_DiabloRaidHeader", --name
-      nil,
-      attr.visibility1,
-      "showPlayer",         attr.showPlayer,
-      "showSolo",           attr.showSolo,
-      "showParty",          attr.showParty,
-      "showRaid",           attr.showRaid,
-      "point",              attr.point,
-      "yOffset",            attr.yOffset,
-      "xoffset",            attr.xoffset,
-      "groupFilter",        "1,2,3,4,5,6,7,8",
-      "groupBy",            "GROUP",
-      "groupingOrder",      "1,2,3,4,5,6,7,8",
-      "sortMethod",         "NAME",
-      "maxColumns",         attr.maxColumns,
-      "unitsPerColumn",     attr.unitsPerColumn,
-      "columnSpacing",      attr.columnSpacing,
-      "columnAnchorPoint",  attr.columnAnchorPoint,
+    local function getRaidScale(id)
+      if id == 1 then
+        return cfg.units.raid.scale*0.95
+      elseif id == 2 then
+        return cfg.units.raid.scale*0.9
+      else
+        return cfg.units.raid.scale*0.75
+      end
+    end
 
-      "oUF-initialConfigFunction", ([[
-        self:SetWidth(%d)
-        self:SetHeight(%d)
-        self:SetScale(%f)
-      ]]):format(128, 64, cfg.units.raid.scale)
-    )
-    raid1:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
+    local function getRaidVisibility(id)
+      if id == 1 then
+        return attr.visibility1
+      elseif id == 2 then
+        return attr.visibility2
+      else
+        return attr.visibility3
+      end
+    end
 
-    --spawn raid for above 10 people but < 25people (same attributes, but lower scale)
-    local raid2 = oUF:SpawnHeader(
-      "oUF_DiabloRaidHeader2", --name
-      nil,
-      attr.visibility2,
-      "showPlayer",         attr.showPlayer,
-      "showSolo",           attr.showSolo,
-      "showParty",          attr.showParty,
-      "showRaid",           attr.showRaid,
-      "point",              attr.point,
-      "yOffset",            attr.yOffset,
-      "xoffset",            attr.xoffset,
-      "groupFilter",        "1,2,3,4,5,6,7,8",
-      "groupBy",            "GROUP",
-      "groupingOrder",      "1,2,3,4,5,6,7,8",
-      "sortMethod",         "NAME",
-      "maxColumns",         attr.maxColumns,
-      "unitsPerColumn",     attr.unitsPerColumn,
-      "columnSpacing",      attr.columnSpacing,
-      "columnAnchorPoint",  attr.columnAnchorPoint,
+    local raid, group, i, j
 
-      "oUF-initialConfigFunction", ([[
-        self:SetWidth(%d)
-        self:SetHeight(%d)
-        self:SetScale(%f)
-      ]]):format(128, 64, cfg.units.raid.scale*0.9)
-    )
-    raid2:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
-
-    --spawn raid for above 25 people (same attributes, but lower scale)
-    local raid3 = oUF:SpawnHeader(
-      "oUF_DiabloRaidHeader3", --name
-      nil,
-      attr.visibility3,
-      "showPlayer",         attr.showPlayer,
-      "showSolo",           attr.showSolo,
-      "showParty",          attr.showParty,
-      "showRaid",           attr.showRaid,
-      "point",              attr.point,
-      "yOffset",            attr.yOffset,
-      "xoffset",            attr.xoffset,
-      "groupFilter",        "1,2,3,4,5,6,7,8",
-      "groupBy",            "GROUP",
-      "groupingOrder",      "1,2,3,4,5,6,7,8",
-      "sortMethod",         "NAME",
-      "maxColumns",         attr.maxColumns,
-      "unitsPerColumn",     attr.unitsPerColumn,
-      "columnSpacing",      attr.columnSpacing,
-      "columnAnchorPoint",  attr.columnAnchorPoint,
-
-      "oUF-initialConfigFunction", ([[
-        self:SetWidth(%d)
-        self:SetHeight(%d)
-        self:SetScale(%f)
-      ]]):format(128, 64, cfg.units.raid.scale*0.75)
-    )
-    raid3:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
-
-    func.applyDragFunctionality(raid1)
-    func.applyDragFunctionality(raid2)
-    func.applyDragFunctionality(raid3)
-
+    for i=1, 3 do
+      raid = {}
+      for j=1, NUM_RAID_GROUPS do
+        group = oUF:SpawnHeader(
+          "oUF_DiabloRaid"..i.."Group"..j, --name of raid group header
+          nil,
+          getRaidVisibility(i),
+          "showPlayer",         attr.showPlayer,
+          "showSolo",           attr.showSolo,
+          "showParty",          attr.showParty,
+          "showRaid",           attr.showRaid,
+          "point",              attr.point,
+          "yOffset",            attr.yOffset,
+          "xoffset",            attr.xoffset,
+          --"groupFilter",        "1,2,3,4,5,6,7,8",
+          "groupFilter",        tostring(j),
+          --"groupBy",            "GROUP",
+          --"groupingOrder",      "1,2,3,4,5,6,7,8",
+          --"sortMethod",         "NAME",
+          --"maxColumns",         attr.maxColumns,
+          "unitsPerColumn",     5,
+          --"unitsPerColumn",     attr.unitsPerColumn,
+          --"columnSpacing",      attr.columnSpacing,
+          --"columnAnchorPoint",  attr.columnAnchorPoint,
+          "oUF-initialConfigFunction", ([[
+            self:SetWidth(%d)
+            self:SetHeight(%d)
+          ]]):format(128, 64)
+        )
+        group:SetScale(getRaidScale(i))
+        if j == 1 then
+          group:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
+        else
+          if attr.columnAnchorPoint == "TOP" then
+            group:SetPoint("TOPLEFT", raid[j-1], "BOTTOMLEFT", 0, attr.columnSpacing)
+          elseif attr.columnAnchorPoint == "BOTTOM" then
+            group:SetPoint("BOTTOMLEFT", raid[j-1], "TOPLEFT", 0, attr.columnSpacing)
+          elseif attr.columnAnchorPoint == "LEFT" then
+            group:SetPoint("TOPLEFT", raid[j-1], "TOPRIGHT", attr.columnSpacing, 0)
+          else
+            group:SetPoint("TOPRIGHT", raid[j-1], "TOPLEFT", attr.columnSpacing, 0)
+          end
+        end
+        raid[j] = group
+      end
+    end
   end

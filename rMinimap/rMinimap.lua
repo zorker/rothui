@@ -24,6 +24,7 @@
       [4] = { frame = "MiniMapBattlefieldFrame",  anchor1 = "CENTER",          anchor2 = "CENTER",     anchorframe = "Minimap",    posx = -75,   posy = 0 },
       [5] = { frame = "GameTimeFrame",            anchor1 = "CENTER",          anchor2 = "CENTER",     anchorframe = "Minimap",    posx = 52,    posy = 52 },
       [6] = { frame = "TimeManagerClockButton",   anchor1 = "BOTTOM",       anchor2 = "BOTTOM",     anchorframe = "Minimap",    posx = 0,    posy = 0 },
+      [7] = { frame = "MiniMapLFGFrame",          anchor1 = "CENTER",       anchor2 = "CENTER",     anchorframe = "Minimap",    posx = -75,     posy = -60 },
     },
   }
 
@@ -197,6 +198,17 @@
     MiniMapTrackingIcon:SetPoint("BOTTOMRIGHT", MiniMapTracking, "BOTTOMRIGHT", -2, 2)
     MiniMapTrackingIcon.SetPoint = dummy
     MiniMapTrackingIcon:SetTexCoord(0.1,0.9,0.1,0.9)
+
+    local lfgf = _G["MiniMapLFGFrame"]
+    local lfgfb = _G["MiniMapLFGFrameBorder"]
+    local lfgfi = _G["MiniMapLFGFrameIcon"]
+    simpleDragFunc(lfgf)
+    lfgf:SetScale(0.75)
+    lfgf.ignoreFramePositionManager = true
+    lfgfb:SetAllPoints(lfgf)
+    lfgfb:SetTexture("Interface\\AddOns\\rTextures\\minimap_button2")
+
+
     local tft = MiniMapTracking:CreateTexture(nil,"OVERLAY")
     tft:SetTexture("Interface\\AddOns\\rTextures\\minimap_button2")
     tft:SetPoint("TOPLEFT", MiniMapTracking, "TOPLEFT", -2, 2)
@@ -225,6 +237,7 @@
     MinimapBorderTop:Hide()
     MinimapBorder:Hide()
     MinimapNorthTag:Hide()
+
 
     local bu = _G["GameTimeFrame"]
     bu:SetWidth(iconsize)
@@ -263,7 +276,6 @@
 
   local init = function()
     LoadAddOn("Blizzard_TimeManager")
-    simpleDragFunc(_G["MiniMapLFGFrame"])
     adjustBlizzard()
     createMapOverlay()
     zoomer() --zoomer taken from pminimap by p3lim

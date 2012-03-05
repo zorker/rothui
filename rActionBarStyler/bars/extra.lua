@@ -18,6 +18,7 @@ if barcfg and not barcfg.disable then
   f:SetParent(bar)
   f:ClearAllPoints()
   f:SetPoint("CENTER", 0, 0)
+  f:EnableMouse(false)
   f.ignoreFramePositionManager = true
 
   --the button

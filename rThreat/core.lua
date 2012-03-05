@@ -241,7 +241,9 @@
   --check status func
   local function checkStatus(self,event,...)
     --print(event)
-    if cfg.partyonly and (GetNumRaidMembers() + GetNumPartyMembers() == 0) then
+    local _, type = GetInstanceInfo()
+    --print("you are in this type of instance: "..type)
+    if (cfg.partyonly and (GetNumRaidMembers() + GetNumPartyMembers() == 0)) or (cfg.hideinpvp and (type == "arena" or type == "pvp")) then
       self:Hide()
       return
     end

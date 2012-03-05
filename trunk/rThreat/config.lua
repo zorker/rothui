@@ -17,6 +17,7 @@
   cfg.scale         = 1       -- global scale
   cfg.hide          = true   -- true/false hides frame out of combat/without target, otherwise it will be visible all the time
   cfg.partyonly     = true    -- frame will only be available in party/raid (overrides hide setting)
+  cfg.hideinpvp     = true    -- hide while being in arena / battleground
 
   -- frame position (you can move the frame ingame via "/rthreat")
   cfg.position = {

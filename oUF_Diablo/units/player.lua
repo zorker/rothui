@@ -857,11 +857,18 @@
     self.Power.PostUpdate = updatePlayerPower
 
     --fix to update druid power correctly when cat has 100 power
+    --update health and power when the player enters a vehicle (sometimes health/pover values do not change und call an automatic update)
+    self.Health:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+    self.Health:RegisterEvent("UNIT_ENTERED_VEHICLE")
+    self.Health:RegisterEvent("UNIT_EXITED_VEHICLE")
+    self.Health:SetScript("OnEvent", function(s,e)
+      updatePlayerHealth(s,"player",UnitHealth("player"),UnitHealthMax("player"))
+    end)
     self.Power:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
+    self.Power:RegisterEvent("UNIT_ENTERED_VEHICLE")
+    self.Power:RegisterEvent("UNIT_EXITED_VEHICLE")
     self.Power:SetScript("OnEvent", function(s,e)
-      if e == "UPDATE_SHAPESHIFT_FORM" then
-        updatePlayerPower(s,"player",UnitPower("player"),UnitPowerMax("player"))
-      end
+      updatePlayerPower(s,"player",UnitPower("player"),UnitPowerMax("player"))
     end)
 
     --create art textures do this now for correct frame stacking

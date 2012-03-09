@@ -244,11 +244,12 @@
     end
   end
 
+  --create drag frames
+  createTempEnchantHolder()
+  createBuffFrameHolder()
+
   --init func
   local function init()
-    --create drag frames
-    createTempEnchantHolder()
-    createBuffFrameHolder()
     --BuffFrame scale
     BuffFrame:SetScale(cfg.buffframe.scale)
     --temp enchantframe scale

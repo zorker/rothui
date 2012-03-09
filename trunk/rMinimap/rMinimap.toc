@@ -4,3 +4,4 @@
 ## Notes: Minimap with Diablo flavour.
 
 rMinimap.lua
+slashcmd.lua

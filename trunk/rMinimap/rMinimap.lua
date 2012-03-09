@@ -9,6 +9,9 @@
   -- map scale
   local mapscale = 0.82
 
+  --mimimap movement
+  local minimap_userplaced = true
+
   --want frames around minimap to be animated?!
   local enableframerotation = true
 
@@ -202,7 +205,6 @@
     local lfgf = _G["MiniMapLFGFrame"]
     local lfgfb = _G["MiniMapLFGFrameBorder"]
     local lfgfi = _G["MiniMapLFGFrameIcon"]
-    simpleDragFunc(lfgf)
     lfgf:SetScale(0.75)
     lfgf.ignoreFramePositionManager = true
     lfgfb:SetAllPoints(lfgf)
@@ -273,6 +275,27 @@
 
   end
 
+  local enableMinimapClusterMovement = function(f)
+    if not minimap_userplaced then
+      f:SetMovable(false)
+      f:SetUserPlaced(false)
+    else
+      f:SetHitRectInsets(-15,-15,-15,-15)
+      f:SetClampedToScreen(true)
+      f:SetMovable(true)
+      f:SetUserPlaced(true)
+      f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
+      f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
+      local t = f:CreateTexture(nil,"OVERLAY",nil,6)
+      t:SetAllPoints(f)
+      t:SetTexture(0,1,1)
+      t:SetAlpha(0)
+      f.dragtexture = t
+    end
+  end
+
+  --do this now...doing it on login will reset positon which is bad!
+  enableMinimapClusterMovement(MinimapCluster)
 
   local init = function()
     LoadAddOn("Blizzard_TimeManager")

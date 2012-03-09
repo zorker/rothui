@@ -314,7 +314,7 @@
         use3D = true,
       },
       healprediction = {
-        show = true,
+        show = false,
         texture = "Interface\\AddOns\\rTextures\\statusbar",
         color = {
           myself  = {r = 0, g = 1, b = 0, a = 1 },
@@ -424,7 +424,7 @@
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 420 },
       },
       healprediction = {
-        show = true,
+        show = false,
         texture = "Interface\\AddOns\\rTextures\\statusbar",
         color = {
           myself  = {r = 0, g = 1, b = 0, a = 1 },
@@ -520,7 +520,7 @@
         point               = "LEFT",
       },
       healprediction = {
-        show = true,
+        show = false,
         texture = "Interface\\AddOns\\rTextures\\statusbar",
         color = {
           myself  = {r = 0, g = 1, b = 0, a = 1 },
@@ -590,7 +590,7 @@
         columnAnchorPoint   = "LEFT",
       },
       healprediction = {
-        show = true,
+        show = false,
         texture = "Interface\\AddOns\\rTextures\\statusbar",
         color = {
           myself  = {r = 0, g = 1, b = 0, a = 1 },

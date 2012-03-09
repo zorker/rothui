@@ -657,6 +657,37 @@
     return icon
   end
 
+  --heal prediction
+  func.healPrediction = function(self)
+    if not self.cfg.healprediction or (self.cfg.healprediction and not self.cfg.healprediction.show) then return end
+    local w = self.Health:GetWidth()
+    if w == 0 then
+      w = self:GetWidth()-24.5-24.5 --raids and party have no width on the health frame for whatever reason, thus use self and subtract the setpoint values
+    end
+    -- my heals
+    local mhpb = CreateFrame("StatusBar", nil, self.Health)
+    mhpb:SetFrameLevel(self.Health:GetFrameLevel())
+    mhpb:SetPoint("TOPLEFT", self.Health:GetStatusBarTexture(), "TOPRIGHT", 0, 0)
+    mhpb:SetPoint("BOTTOMLEFT", self.Health:GetStatusBarTexture(), "BOTTOMRIGHT", 0, 0)
+    mhpb:SetWidth(w)
+    mhpb:SetStatusBarTexture(self.cfg.healprediction.texture)
+    mhpb:SetStatusBarColor(self.cfg.healprediction.color.myself.r,self.cfg.healprediction.color.myself.g,self.cfg.healprediction.color.myself.b,self.cfg.healprediction.color.myself.a)
+    -- other heals
+    local ohpb = CreateFrame("StatusBar", nil, self.Health)
+    ohpb:SetFrameLevel(self.Health:GetFrameLevel())
+    ohpb:SetPoint("TOPLEFT", mhpb:GetStatusBarTexture(), "TOPRIGHT", 0, 0)
+    ohpb:SetPoint("BOTTOMLEFT", mhpb:GetStatusBarTexture(), "BOTTOMRIGHT", 0, 0)
+    ohpb:SetWidth(w)
+    ohpb:SetStatusBarTexture(self.cfg.healprediction.texture)
+    ohpb:SetStatusBarColor(self.cfg.healprediction.color.other.r,self.cfg.healprediction.color.other.g,self.cfg.healprediction.color.other.b,self.cfg.healprediction.color.other.a)
+    -- Register it with oUF
+    self.HealPrediction = {
+      myBar = mhpb,
+      otherBar = ohpb,
+      maxOverflow = self.cfg.healprediction.maxoverflow,
+    }
+  end
+
   ---------------------------------------------
   -- HANDOVER
   ---------------------------------------------

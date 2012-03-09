@@ -179,6 +179,9 @@
     --icons
     self.RaidIcon = func.createIcon(self,"BACKGROUND",18,self.Name,"BOTTOM","TOP",0,0,-1)
 
+    --add heal prediction
+    func.healPrediction(self)
+
     --add self to unit container (maybe access to that unit is needed in another style)
     unit.focus = self
 

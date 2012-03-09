@@ -352,13 +352,15 @@
       createAuraWatch(self)
     end
 
-
     --icons
     self.RaidIcon = func.createIcon(self.Health,"OVERLAY",14,self.Health,"BOTTOM","TOP",0,-6,-1)
     self.ReadyCheck = func.createIcon(self.Health,"OVERLAY",24,self.Health,"CENTER","CENTER",0,0,-1)
     self.LFDRole = func.createIcon(self.Health,"LOW",12,self.Health,"TOP","BOTTOM",0,-2,-1)
     self.LFDRole:SetTexture("Interface\\AddOns\\rTextures\\lfd_role")
     self.LFDRole:SetDesaturated(1)
+
+    --add heal prediction
+    func.healPrediction(self)
 
   end
 

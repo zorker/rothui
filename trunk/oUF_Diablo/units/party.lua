@@ -187,6 +187,9 @@
     self.LFDRole:SetTexture("Interface\\AddOns\\rTextures\\lfd_role")
     --self.LFDRole:SetDesaturated(1)
 
+    --add heal prediction
+    func.healPrediction(self)
+
     --threat
     self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", func.checkThreat)
 

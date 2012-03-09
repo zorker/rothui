@@ -119,7 +119,7 @@
   ----------------------------------------
 
   --setting this to false will use the default frame positions, true allows moving
-  cfg.framesUserplaced = false
+  cfg.framesUserplaced = true
 
   --setting this to true will lock the frames in place, false unlocks them
   cfg.framesLocked = true
@@ -313,6 +313,15 @@
         show = false,
         use3D = true,
       },
+      healprediction = {
+        show = true,
+        texture = "Interface\\AddOns\\rTextures\\statusbar",
+        color = {
+          myself  = {r = 0, g = 1, b = 0, a = 1 },
+          other   = {r = 0, g = 1, b = 0, a = 0.7 },
+        },
+        maxoverflow = 1.05,
+      },
     },
 
     --TARGETTARGET
@@ -332,6 +341,15 @@
       },
       power = {
         texture = "Interface\\AddOns\\rTextures\\statusbar5",
+      },
+      healprediction = {
+        show = false,
+        texture = "Interface\\AddOns\\rTextures\\statusbar",
+        color = {
+          myself  = {r = 0, g = 1, b = 0, a = 1 },
+          other   = {r = 0, g = 1, b = 0, a = 0.7 },
+        },
+        maxoverflow = 1.00,
       },
     },
 
@@ -404,6 +422,15 @@
           bg = { r = 0.1, g = 0.1, b = 0.1, a = 0.7, },
         },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 420 },
+      },
+      healprediction = {
+        show = true,
+        texture = "Interface\\AddOns\\rTextures\\statusbar",
+        color = {
+          myself  = {r = 0, g = 1, b = 0, a = 1 },
+          other   = {r = 0, g = 1, b = 0, a = 0.7 },
+        },
+        maxoverflow = 1.05,
       },
     },
 
@@ -492,6 +519,15 @@
         showRaid            = false,    --show in raid
         point               = "LEFT",
       },
+      healprediction = {
+        show = true,
+        texture = "Interface\\AddOns\\rTextures\\statusbar",
+        color = {
+          myself  = {r = 0, g = 1, b = 0, a = 1 },
+          other   = {r = 0, g = 1, b = 0, a = 0.7 },
+        },
+        maxoverflow = 1.05,
+      },
     },
 
     --RAID
@@ -552,6 +588,15 @@
         unitsPerColumn      = 5,
         columnSpacing       = -20,
         columnAnchorPoint   = "LEFT",
+      },
+      healprediction = {
+        show = true,
+        texture = "Interface\\AddOns\\rTextures\\statusbar",
+        color = {
+          myself  = {r = 0, g = 1, b = 0, a = 1 },
+          other   = {r = 0, g = 1, b = 0, a = 0.7 },
+        },
+        maxoverflow = 1.05,
       },
     },
 

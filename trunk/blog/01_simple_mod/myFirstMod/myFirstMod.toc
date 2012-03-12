@@ -1,8 +1,0 @@
-## Interface: 31337
-## Author: roth
-## Title: myFirstMod
-## Notes: The is my first mod. Its simple and can talk.
-
-core.lua
-core2.lua
-core3.lua

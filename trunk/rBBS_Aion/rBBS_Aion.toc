@@ -1,8 +1,0 @@
-## Interface: 40200
-## Author: zork
-## Title: rBBS_Aion
-## Notes: Aion Layout For rBBS
-## RequiredDeps: rBBS
-
-config.lua
-style.lua

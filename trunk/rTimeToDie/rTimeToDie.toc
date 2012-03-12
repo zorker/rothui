@@ -1,6 +1,0 @@
-## Interface: 30200
-## Author: roth
-## Title: rTimeToDie
-## Notes: Calculates when the target is going to die.
-
-rTimeToDie.lua

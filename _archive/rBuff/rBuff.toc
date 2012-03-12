@@ -1,0 +1,6 @@
+## Interface: 40000
+## Author: zork
+## Title: rBuff
+## Notes: Blizzard buffs/debuffs with a twist
+
+rBuff.lua

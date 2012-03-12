@@ -1,6 +1,0 @@
-﻿## Interface: 20400
-## Title: Diablo3Orbs
-## Notes: Mimics the Health and Mana orbs in the upcoming Diablo 3
-## Author: Christoph Bähr
-
-core.lua

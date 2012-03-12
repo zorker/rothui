@@ -1,9 +1,0 @@
-## Interface: 21337
-## Author: roth	
-## Title: oUF_Orbs
-## Notes: Future orb oUF layout
-## RequiredDeps: oUF
-## OptionalDeps: oUF_Banzai, oUF_DruidMana, oUF_CombatFeedback, oUF_DebuffHighlight, oUF_BarFader, oUF_ReadyCheck
-## X-Category: UnitFrame
-
-oUF_Orbs.lua

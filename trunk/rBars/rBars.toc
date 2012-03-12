@@ -1,6 +1,0 @@
-## Interface: 21337
-## Author: rothar
-## Title: rBars
-## Notes: fucking simple actionbars
-
-rBars.lua

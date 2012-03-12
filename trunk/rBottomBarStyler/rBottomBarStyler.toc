@@ -1,6 +1,0 @@
-## Interface: 40100
-## Author: roth	
-## Title: rBottomBarStyler
-## Notes: Styles your bottom back background. Use /rbbs for more.
-## SavedVariablesPerCharacter: rBottomBarStyler
-core.lua

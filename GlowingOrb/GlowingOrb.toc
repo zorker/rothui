@@ -1,5 +1,0 @@
-## Interface: 21337
-## Title: GlowingOrb
-## Notes: Diablo HP And Mana Orbs.
-
-GlowingOrb.lua

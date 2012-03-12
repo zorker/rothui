@@ -1,8 +1,0 @@
-## Interface: 40100
-## Author: zork
-## Version: 0.2
-## Title: DiscoKugel
-## Notes: Mod to test fog animations on orbs
-
-config.lua
-core.lua

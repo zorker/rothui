@@ -1,6 +1,0 @@
-## Interface: 40300
-## Author: zork
-## Title: rFrameRotater
-## Notes: Test addon to animate (rotate) frames and/or textures
-
-rFrameRotater.lua

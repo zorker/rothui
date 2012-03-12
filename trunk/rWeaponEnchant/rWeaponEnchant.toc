@@ -1,8 +1,0 @@
-## Interface: 40000
-## Author: zork
-## Version: 0.1
-## Title: rWeaponEnchant
-## Notes: Simple mod to display temporary weapon enchants
-
-config.lua
-core.lua

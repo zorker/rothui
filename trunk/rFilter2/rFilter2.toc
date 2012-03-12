@@ -1,6 +1,0 @@
-## Interface: 30300
-## Author: roth
-## Title: rFilter2
-## Notes: buff/debuff/cooldown filtering
-
-rFilter2.lua

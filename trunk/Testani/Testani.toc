@@ -1,6 +1,0 @@
-## Interface: 21337
-## Author: rothar
-## Title: Testani
-## Notes: Test Animation Stuff
-
-Testani.lua

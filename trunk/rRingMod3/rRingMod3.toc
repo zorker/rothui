@@ -1,6 +1,0 @@
-## Author: zork
-## Interface: 30300
-## Notes: Ring
-## Title: RingMod3
-
-bla.lua

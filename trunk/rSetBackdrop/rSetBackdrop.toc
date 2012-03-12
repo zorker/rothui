@@ -1,8 +1,0 @@
-## Interface: 40000
-## Author: zork
-## Version: 0.1
-## Title: rSetBackdrop
-## Notes: Mod to test different SetBackdrop settings
-
-config.lua
-core.lua

@@ -1,6 +1,0 @@
-## Interface: 21337
-## Author: rothar
-## Title: rFader
-## Notes: combat fader for bars
-
-core.lua

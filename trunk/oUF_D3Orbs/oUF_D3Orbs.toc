@@ -1,9 +1,0 @@
-## Interface: 30300
-## Author: roth	
-## Title: oUF_D3Orbs
-## Notes: oUF layout - Diablo 3 style
-## RequiredDeps: oUF, rColors
-## OptionalDeps: oUF_DebuffHighlight, oUF_Smooth, oUF_AuraWatch, oUF_ReadyCheck, oUF_WeaponEnchant
-## X-Category: UnitFrame
-
-oUF_D3Orbs.lua

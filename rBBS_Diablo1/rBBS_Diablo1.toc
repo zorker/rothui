@@ -1,8 +1,0 @@
-## Interface: 40200
-## Author: zork
-## Title: rBBS_Diablo1
-## Notes: Diablo1 layout for rBBS
-## RequiredDeps: rBBS
-
-config.lua
-style.lua

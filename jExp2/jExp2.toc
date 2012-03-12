@@ -1,7 +1,0 @@
-## Interface: 31337
-## Author: jin & roth
-## Title: jExp2
-## Notes: movable xp and repbar
-## SavedVariables: jExp2
-
-jExp2.lua

@@ -1,6 +1,0 @@
-## Interface: 21337
-## Author: rothar
-## Title: rSpellCheck
-## Notes: icon textures in middle of the screen when spell is ready and some conditions are met
-
-rSpellCheck.lua

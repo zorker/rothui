@@ -1,6 +1,0 @@
-## Interface: 30100
-## Author: roth
-## Title: rRingMod
-## Notes: The ring thing!
-
-rRingMod.lua

@@ -1,6 +1,0 @@
-## Interface: 40000
-## Author: roth
-## Title: rGalaxy
-## Notes: DooDaad animation system
-
-rGalaxy.lua

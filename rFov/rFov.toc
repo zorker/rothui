@@ -1,6 +1,0 @@
-## Interface: 30200
-## Author: roth
-## Title: rFov
-## Notes: Creates a quake-like field of view.
-
-rFov.lua

@@ -1,6 +1,0 @@
-## Interface: 30200
-## Author: rothar
-## Title: rBuff
-## Notes: fucking simple buffs
-
-rBuff.lua

@@ -1,16 +1,10 @@
   -- // rQuestWatchFrameMover
-  -- // zork - 2010
-  
-  -----------------------------
-  -- INIT
-  -----------------------------
+  -- // zork - 2012
 
-  local _G = _G
-  
   -----------------------------
   -- CONFIG
   -----------------------------
-  
+
   local pos = { a1 = "TOPRIGHT", a2 = "TOPRIGHT", af = "UIParent", x = -100, y = -250 }
   local watchframeheight = 450
 
@@ -25,46 +19,32 @@
     GameTooltip:Show()
   end
 
-  local function init()
-    
-    --make the quest watchframe movable
-    local wf = _G['WatchFrame']
-    wf:SetClampedToScreen(false)
-    wf:SetMovable(1)
-    wf:SetUserPlaced(true)
-    wf:ClearAllPoints()	
-    wf.ClearAllPoints = function() end
-    wf:SetPoint(pos.a1,pos.af,pos.a2,pos.x,pos.y)
-    wf.SetPoint = function() end
-    wf:SetHeight(watchframeheight)  
-        
-    local wfh = _G['WatchFrameHeader']
-    wfh:EnableMouse(true)
-    wfh:RegisterForDrag("LeftButton")
-    wfh:SetHitRectInsets(-15, -15, -5, -5)
-    wfh:SetScript("OnDragStart", function(s) 
-      local f = s:GetParent()
-      f:StartMoving()
-    end)
-    wfh:SetScript("OnDragStop", function(s) 
-      local f = s:GetParent()
-      f:StopMovingOrSizing()
-    end)
-    wfh:SetScript("OnEnter", function(s) 
-      rQWFM_Tooltip(s) 
-    end)
-    wfh:SetScript("OnLeave", function(s) 
-      GameTooltip:Hide() 
-    end)
+  --make the quest watchframe movable
+  local wf = WatchFrame
+  wf:SetClampedToScreen(true)
+  wf:SetMovable(true)
+  wf:SetUserPlaced(true)
+  wf:ClearAllPoints()
+  wf.ClearAllPoints = function() end
+  wf:SetPoint(pos.a1,pos.af,pos.a2,pos.x,pos.y)
+  wf.SetPoint = function() end
+  wf:SetHeight(watchframeheight)
 
-  end
-
-  local a = CreateFrame("Frame")
-
-  a:SetScript("OnEvent", function(self, event)
-    if(event=="PLAYER_LOGIN") then
-      init()
-    end
+  local wfh = WatchFrameHeader
+  wfh:EnableMouse(true)
+  wfh:RegisterForDrag("LeftButton")
+  wfh:SetHitRectInsets(-15, -15, -5, -5)
+  wfh:SetScript("OnDragStart", function(s)
+    local f = s:GetParent()
+    f:StartMoving()
   end)
-  
-  a:RegisterEvent("PLAYER_LOGIN")
+  wfh:SetScript("OnDragStop", function(s)
+    local f = s:GetParent()
+    f:StopMovingOrSizing()
+  end)
+  wfh:SetScript("OnEnter", function(s)
+    rQWFM_Tooltip(s)
+  end)
+  wfh:SetScript("OnLeave", function(s)
+    GameTooltip:Hide()
+  end)

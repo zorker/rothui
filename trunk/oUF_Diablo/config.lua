@@ -533,7 +533,9 @@
     --RAID
     raid = {
       show = true,
-      hideManager = false,
+      special = {
+        chains = true, --should the raidframe include the chain textures?
+      },
       alpha = {
         notinrange = 0.4,
       },

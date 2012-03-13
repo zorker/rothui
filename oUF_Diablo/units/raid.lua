@@ -239,17 +239,18 @@
     t:SetAllPoints(self)
     t:SetTexture("Interface\\AddOns\\rTextures\\targettarget")
 
-    local c1 = self:CreateTexture(nil,"BACKGROUND",nil,-7)
-    c1:SetTexture("Interface\\AddOns\\rTextures\\chain2")
-    c1:SetSize(32,32)
-    c1:SetPoint("CENTER",-32,28)
-    c1:SetAlpha(0.9)
-
-    local c2 = self:CreateTexture(nil,"BACKGROUND",nil,-7)
-    c2:SetTexture("Interface\\AddOns\\rTextures\\chain2")
-    c2:SetSize(32,32)
-    c2:SetPoint("CENTER",32,28)
-    c2:SetAlpha(0.9)
+    if self.cfg.special.chains then
+      local c1 = self:CreateTexture(nil,"BACKGROUND",nil,-7)
+      c1:SetTexture("Interface\\AddOns\\rTextures\\chain2")
+      c1:SetSize(32,32)
+      c1:SetPoint("CENTER",-32,28)
+      c1:SetAlpha(0.9)
+      local c2 = self:CreateTexture(nil,"BACKGROUND",nil,-7)
+      c2:SetTexture("Interface\\AddOns\\rTextures\\chain2")
+      c2:SetSize(32,32)
+      c2:SetPoint("CENTER",32,28)
+      c2:SetAlpha(0.9)
+    end
 
   end
 
@@ -508,6 +509,7 @@
             group:SetPoint("TOPRIGHT", raid[j-1], "TOPLEFT", attr.columnSpacing, 0)
           end
         end
+        func.applyDragFunctionality(group)
         raid[j] = group
       end
     end

@@ -586,41 +586,43 @@
 
   --allows frames to become movable but frames can be locked or set to default positions
   func.applyDragFunctionality = function(f,special)
-    f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
-    f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
-
-    local t = f:CreateTexture(nil,"OVERLAY",nil,6)
-    t:SetAllPoints(f)
+    --new form of dragframe
+    local df = CreateFrame("Frame",nil,f)
+    df:SetAllPoints(f)
+    df:SetFrameStrata("HIGH")
+    --df:SetHitRectInsets(-15,-15,-15,-15)
+    df:SetScript("OnDragStart", function(self) if IsAltKeyDown() and IsShiftKeyDown() then self:GetParent():StartMoving() end end)
+    df:SetScript("OnDragStop", function(self) self:GetParent():StopMovingOrSizing() end)
+    local t = df:CreateTexture(nil,"OVERLAY",nil,6)
+    t:SetAllPoints(df)
     t:SetTexture(0,1,0)
-    t:SetAlpha(0)
-    f.dragtexture = t
-    f:SetHitRectInsets(-15,-15,-15,-15)
+    t:SetAlpha(0.2)
+    df.texture = t
+    f.dragframe = df
+    f.dragframe:Hide()
     if not special then
       f:SetClampedToScreen(true)
     end
-
     if not cfg.framesUserplaced then
       f:SetMovable(false)
     else
       f:SetMovable(true)
       f:SetUserPlaced(true)
       if not cfg.framesLocked then
-        f.dragtexture:SetAlpha(0.2)
-        f:EnableMouse(true)
-        f:RegisterForDrag("LeftButton")
-        f:SetScript("OnEnter", function(s)
+        f.dragframe:Show()
+        f.dragframe:EnableMouse(true)
+        f.dragframe:RegisterForDrag("LeftButton")
+        f.dragframe:SetScript("OnEnter", function(s)
           GameTooltip:SetOwner(s, "ANCHOR_TOP")
-          GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
+          GameTooltip:AddLine(s:GetParent():GetName(), 0, 1, 0.5, 1, 1, 1)
           GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
           GameTooltip:Show()
         end)
-        f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+        f.dragframe:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
       end
     end
-
     --print(f:GetName())
     --print(f:IsUserPlaced())
-
   end
 
   --simple frame movement

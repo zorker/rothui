@@ -21,9 +21,30 @@
     "oUF_DiabloPetFrame",
     "oUF_DiabloFocusTargetFrame",
     "oUF_DiabloFocusFrame",
-    "oUF_DiabloRaidHeader",
-    "oUF_DiabloRaidHeader2",
-    "oUF_DiabloRaidHeader3",
+    "oUF_DiabloRaid1Group1",
+    "oUF_DiabloRaid1Group2",
+    "oUF_DiabloRaid1Group3",
+    "oUF_DiabloRaid1Group4",
+    "oUF_DiabloRaid1Group5",
+    "oUF_DiabloRaid1Group6",
+    "oUF_DiabloRaid1Group7",
+    "oUF_DiabloRaid1Group8",
+    "oUF_DiabloRaid2Group1",
+    "oUF_DiabloRaid2Group2",
+    "oUF_DiabloRaid2Group3",
+    "oUF_DiabloRaid2Group4",
+    "oUF_DiabloRaid2Group5",
+    "oUF_DiabloRaid2Group6",
+    "oUF_DiabloRaid2Group7",
+    "oUF_DiabloRaid2Group8",
+    "oUF_DiabloRaid3Group1",
+    "oUF_DiabloRaid3Group2",
+    "oUF_DiabloRaid3Group3",
+    "oUF_DiabloRaid3Group4",
+    "oUF_DiabloRaid3Group5",
+    "oUF_DiabloRaid3Group6",
+    "oUF_DiabloRaid3Group7",
+    "oUF_DiabloRaid3Group8",
     "oUF_DiabloPartyHeader",
     "oUF_DiabloBossFrame1",
     "oUF_DiabloBossFrame2",
@@ -39,9 +60,6 @@
     "oUF_DiabloBottomLine",
     "oUF_DiabloPlayerPortrait",
     "oUF_DiabloTargetPortrait",
-    "MiniMapInstanceDifficulty",
-    "GuildInstanceDifficulty",
-    "MinimapCluster",
   }
 
   function oUF_DiabloUnlock(c)
@@ -58,18 +76,16 @@
       f = _G[v]
       if f and f:IsUserPlaced() then
         --print(f:GetName())
-        if v:match"Header" or c ~= "units" then
-          f:EnableMouse(true)
-          f:SetScript("OnEnter", function(s)
-            GameTooltip:SetOwner(s, "ANCHOR_TOP")
-            GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
-            GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
-            GameTooltip:Show()
-          end)
-          f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
-        end
-        f.dragtexture:SetAlpha(0.2)
-        f:RegisterForDrag("LeftButton")
+        f.dragframe:Show()
+        f.dragframe:EnableMouse(true)
+        f.dragframe:RegisterForDrag("LeftButton")
+        f.dragframe:SetScript("OnEnter", function(s)
+          GameTooltip:SetOwner(s, "ANCHOR_TOP")
+          GameTooltip:AddLine(s:GetParent():GetName(), 0, 1, 0.5, 1, 1, 1)
+          GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
+          GameTooltip:Show()
+        end)
+        f.dragframe:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
       end
     end
   end
@@ -87,13 +103,11 @@
     for _, v in pairs(a) do
       f = _G[v]
       if f and f:IsUserPlaced() then
-        if v:match"Header" or c ~= "units" then
-          f:EnableMouse(nil)
-          f:SetScript("OnEnter", nil)
-          f:SetScript("OnLeave", nil)
-        end
-        f.dragtexture:SetAlpha(0)
-        f:RegisterForDrag(nil)
+        f.dragframe:Hide()
+        f.dragframe:EnableMouse(false)
+        f.dragframe:RegisterForDrag(nil)
+        f.dragframe:SetScript("OnEnter", nil)
+        f.dragframe:SetScript("OnLeave", nil)
       end
     end
   end

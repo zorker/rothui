@@ -165,7 +165,7 @@
   cfg.font = "FONTS\\FRIZQT__.ttf"
 
   --how many pixels around a bar reserved for dragging?
-  cfg.barinset = 10
+  cfg.barinset = 0
 
   --backdrop settings
   cfg.backdrop = {
@@ -184,46 +184,46 @@
 
   --allows frames to become movable but frames can be locked or set to default positions
   cfg.applyDragFunctionality = function(f,userplaced,locked)
-    f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
-    f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
-
-    local t = f:CreateTexture(nil,"OVERLAY",nil,6)
-    --t:SetAllPoints(f)
-    t:SetPoint("TOPLEFT",-cfg.barinset,cfg.barinset)
-    t:SetPoint("BOTTOMRIGHT",cfg.barinset,-cfg.barinset)
+    local getPoint = function(self)
+      local pos = {}
+      pos.a1, pos.af, pos.a2, pos.x, pos.y = self:GetPoint()
+      if pos.af and pos.af:GetName() then pos.af = pos.af:GetName() end
+      return pos
+    end
+    f.defaultPosition = getPoint(f)
+    --new form of dragframe
+    local df = CreateFrame("Frame",nil,f)
+    df:SetAllPoints(f)
+    df:SetFrameStrata("HIGH")
+    df:SetHitRectInsets(-cfg.barinset,-cfg.barinset,-cfg.barinset,-cfg.barinset)
+    df:SetScript("OnDragStart", function(self) if IsAltKeyDown() and IsShiftKeyDown() then self:GetParent():StartMoving() end end)
+    df:SetScript("OnDragStop", function(self) self:GetParent():StopMovingOrSizing() end)
+    local t = df:CreateTexture(nil,"OVERLAY",nil,6)
+    t:SetAllPoints(df)
     t:SetTexture(0,1,0)
-    t:SetAlpha(0)
-    f.dragtexture = t
+    t:SetAlpha(0.2)
+    df.texture = t
+    f.dragframe = df
+    f.dragframe:Hide()
     f:SetClampedToScreen(true)
-
     if not userplaced then
       f:SetMovable(false)
     else
       f:SetMovable(true)
       f:SetUserPlaced(true)
       if not locked then
-        f.dragtexture:SetAlpha(0.2)
-        f:EnableMouse(true)
-        f:RegisterForDrag("LeftButton")
-        f:SetScript("OnEnter", function(s)
+        f.dragframe:Show()
+        f.dragframe:EnableMouse(true)
+        f.dragframe:RegisterForDrag("LeftButton")
+        f.dragframe:SetScript("OnEnter", function(s)
           GameTooltip:SetOwner(s, "ANCHOR_TOP")
-          GameTooltip:AddLine(s:GetName(), 0, 1, 0.5, 1, 1, 1)
+          GameTooltip:AddLine(s:GetParent():GetName(), 0, 1, 0.5, 1, 1, 1)
           GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
           GameTooltip:Show()
         end)
-        f:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
-      else
-        f.dragtexture:SetAlpha(0)
-        f:EnableMouse(nil)
-        f:RegisterForDrag(nil)
-        f:SetScript("OnEnter", nil)
-        f:SetScript("OnLeave", nil)
+        f.dragframe:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
       end
     end
-
-    --print(f:GetName())
-    --print(f:IsUserPlaced())
-
   end
 
   -----------------------------

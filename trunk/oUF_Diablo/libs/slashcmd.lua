@@ -21,36 +21,7 @@
     "oUF_DiabloPetFrame",
     "oUF_DiabloFocusTargetFrame",
     "oUF_DiabloFocusFrame",
-    "oUF_DiabloRaid1Group1",
-    "oUF_DiabloRaid1Group2",
-    "oUF_DiabloRaid1Group3",
-    "oUF_DiabloRaid1Group4",
-    "oUF_DiabloRaid1Group5",
-    "oUF_DiabloRaid1Group6",
-    "oUF_DiabloRaid1Group7",
-    "oUF_DiabloRaid1Group8",
-    "oUF_DiabloRaid2Group1",
-    "oUF_DiabloRaid2Group2",
-    "oUF_DiabloRaid2Group3",
-    "oUF_DiabloRaid2Group4",
-    "oUF_DiabloRaid2Group5",
-    "oUF_DiabloRaid2Group6",
-    "oUF_DiabloRaid2Group7",
-    "oUF_DiabloRaid2Group8",
-    "oUF_DiabloRaid3Group1",
-    "oUF_DiabloRaid3Group2",
-    "oUF_DiabloRaid3Group3",
-    "oUF_DiabloRaid3Group4",
-    "oUF_DiabloRaid3Group5",
-    "oUF_DiabloRaid3Group6",
-    "oUF_DiabloRaid3Group7",
-    "oUF_DiabloRaid3Group8",
     "oUF_DiabloPartyHeader",
-    "oUF_DiabloBossFrame1",
-    "oUF_DiabloBossFrame2",
-    "oUF_DiabloBossFrame3",
-    "oUF_DiabloBossFrame4",
-    "oUF_DiabloBossFrame5",
   }
 
   oUF_Diablo_Art = {
@@ -73,7 +44,7 @@
       a = oUF_Diablo_Units
     end
     for _, v in pairs(a) do
-      f = _G[v]
+      local f = _G[v]
       if f and f:IsUserPlaced() then
         --print(f:GetName())
         f.dragframe:Show()
@@ -101,13 +72,39 @@
       a = oUF_Diablo_Units
     end
     for _, v in pairs(a) do
-      f = _G[v]
+      local f = _G[v]
       if f and f:IsUserPlaced() then
         f.dragframe:Hide()
         f.dragframe:EnableMouse(false)
         f.dragframe:RegisterForDrag(nil)
         f.dragframe:SetScript("OnEnter", nil)
         f.dragframe:SetScript("OnLeave", nil)
+      end
+    end
+  end
+
+  function oUF_DiabloReset(c)
+    print("oUF_Diablo: "..c.." reset")
+    local a
+    if c == "art" then
+      a = oUF_Diablo_Art
+    elseif c == "bars" then
+      a = oUF_Diablo_Bars
+    elseif c == "units" then
+      a = oUF_Diablo_Units
+    end
+    for _, v in pairs(a) do
+      local f = _G[v]
+      if f and f.defaultPosition then
+        f:ClearAllPoints()
+        local pos = f.defaultPosition
+        if pos.af and pos.a2 then
+          f:SetPoint(pos.a1 or "CENTER", pos.af, pos.a2, pos.x or 0, pos.y or 0)
+        elseif pos.af then
+          f:SetPoint(pos.a1 or "CENTER", pos.af, pos.x or 0, pos.y or 0)
+        else
+          f:SetPoint(pos.a1 or "CENTER", pos.x or 0, pos.y or 0)
+        end
       end
     end
   end
@@ -125,6 +122,12 @@
       oUF_DiabloUnlock("units")
     elseif (cmd:match"lockunits") then
       oUF_DiabloLock("units")
+    elseif (cmd:match"resetart") then
+      oUF_DiabloReset("art")
+    elseif (cmd:match"resetbars") then
+      oUF_DiabloReset("bars")
+    elseif (cmd:match"resetunits") then
+      oUF_DiabloReset("units")
     else
       print("|c00FF3300oUF_Diablo command list:|r")
       print("|c00FF3300\/diablo lockart|r, to lock the art")
@@ -133,6 +136,9 @@
       print("|c00FF3300\/diablo unlockbars|r, to unlock the bars")
       print("|c00FF3300\/diablo lockunits|r, to lock the units")
       print("|c00FF3300\/diablo unlockunits|r, to unlock the units")
+      print("|c00FF3300\/diablo resetart|r, to reset the art")
+      print("|c00FF3300\/diablo resetbars|r, to reset the bars")
+      print("|c00FF3300\/diablo resetunits|r, to reset the units")
     end
   end
 

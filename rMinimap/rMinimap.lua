@@ -275,27 +275,39 @@
 
   end
 
-  local enableMinimapClusterMovement = function(f)
-    if not minimap_userplaced then
+  --allows frames to become movable but frames can be locked or set to default positions
+  local applyDragFunctionality = function(f,userplaced)
+    local getPoint = function(self)
+      local pos = {}
+      pos.a1, pos.af, pos.a2, pos.x, pos.y = self:GetPoint()
+      if pos.af and pos.af:GetName() then pos.af = pos.af:GetName() end
+      return pos
+    end
+    f.defaultPosition = getPoint(f)
+    --new form of dragframe
+    local df = CreateFrame("Frame",nil,f)
+    df:SetAllPoints(f)
+    df:SetFrameStrata("HIGH")
+    df:SetScript("OnDragStart", function(self) if IsAltKeyDown() and IsShiftKeyDown() then self:GetParent():StartMoving() end end)
+    df:SetScript("OnDragStop", function(self) self:GetParent():StopMovingOrSizing() end)
+    local t = df:CreateTexture(nil,"OVERLAY",nil,6)
+    t:SetAllPoints(df)
+    t:SetTexture(0,1,0)
+    t:SetAlpha(0.2)
+    df.texture = t
+    f.dragframe = df
+    f.dragframe:Hide()
+    f:SetClampedToScreen(true)
+    if not userplaced then
       f:SetMovable(false)
-      f:SetUserPlaced(false)
     else
-      f:SetHitRectInsets(-15,-15,-15,-15)
-      f:SetClampedToScreen(true)
       f:SetMovable(true)
       f:SetUserPlaced(true)
-      f:SetScript("OnDragStart", function(s) if IsAltKeyDown() and IsShiftKeyDown() then s:StartMoving() end end)
-      f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
-      local t = f:CreateTexture(nil,"OVERLAY",nil,6)
-      t:SetAllPoints(f)
-      t:SetTexture(0,1,1)
-      t:SetAlpha(0)
-      f.dragtexture = t
     end
   end
 
   --do this now...doing it on login will reset positon which is bad!
-  enableMinimapClusterMovement(MinimapCluster)
+  applyDragFunctionality(MinimapCluster,minimap_userplaced)
 
   local init = function()
     LoadAddOn("Blizzard_TimeManager")

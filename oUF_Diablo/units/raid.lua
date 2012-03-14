@@ -469,8 +469,9 @@
     for i=1, 3 do
       raid = {}
       for j=1, NUM_RAID_GROUPS do
+        local name = "oUF_DiabloRaid"..i.."Group"..j
         group = oUF:SpawnHeader(
-          "oUF_DiabloRaid"..i.."Group"..j, --name of raid group header
+          name, --name of raid group header
           nil,
           getRaidVisibility(i),
           "showPlayer",         attr.showPlayer,
@@ -510,6 +511,7 @@
           end
         end
         func.applyDragFunctionality(group)
+        table.insert(oUF_Diablo_Units,name) --add raid frames to the slash command function
         raid[j] = group
       end
     end

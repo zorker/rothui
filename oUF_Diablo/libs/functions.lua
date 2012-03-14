@@ -586,6 +586,14 @@
 
   --allows frames to become movable but frames can be locked or set to default positions
   func.applyDragFunctionality = function(f,special)
+    --save the default position
+    local getPoint = function(self)
+      local pos = {}
+      pos.a1, pos.af, pos.a2, pos.x, pos.y = self:GetPoint()
+      if pos.af and pos.af:GetName() then pos.af = pos.af:GetName() end
+      return pos
+    end
+    f.defaultPosition = getPoint(f)
     --new form of dragframe
     local df = CreateFrame("Frame",nil,f)
     df:SetAllPoints(f)

@@ -172,12 +172,14 @@
     oUF:SetActiveStyle("diablo:boss")
     local boss = {}
     for i = 1, MAX_BOSS_FRAMES do
-      local unit = oUF:Spawn("boss"..i, "oUF_DiabloBossFrame"..i)
+      local name = "oUF_DiabloBossFrame"..i
+      local unit = oUF:Spawn("boss"..i, name)
       if i==1 then
         unit:SetPoint(cfg.units.boss.pos.a1,cfg.units.boss.pos.af,cfg.units.boss.pos.a2,cfg.units.boss.pos.x,cfg.units.boss.pos.y)
       else
         unit:SetPoint("TOP", boss[i-1], "BOTTOM", 0, -5)
       end
+      table.insert(oUF_Diablo_Units,name) --add frames to the slash command function
       boss[i] = unit
     end
   end

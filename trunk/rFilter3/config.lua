@@ -328,6 +328,7 @@
     cfg.rf3_CooldownList = {
       [1] = {
         spec = nil,
+        visibility_state = "[stance:2] show; hide",
         spellid = 100, --charge
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 70, y = 107 },
         size = 26,

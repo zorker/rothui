@@ -160,7 +160,7 @@
 
     local gsi_name, gsi_rank, gsi_icon, gsi_powerCost, gsi_isFunnel, gsi_powerType, gsi_castingTime, gsi_minRange, gsi_maxRange = GetSpellInfo(f.spellid)
 
-    local i = CreateFrame("FRAME",makeFrameName(f,type),UIParent)
+    local i = CreateFrame("FRAME",makeFrameName(f,type),UIParent, "SecureHandlerStateTemplate")
     i:SetSize(f.size,f.size)
     i:SetPoint(f.pos.a1,f.pos.af,f.pos.a2,f.pos.x,f.pos.y)
     i.minsize = f.size
@@ -201,6 +201,9 @@
     i.spec = f.spec --save the spec to the icon
     applySize(i)
     appyMoveFunctionality(f,i)
+    if f.visibility_state then
+      RegisterStateDriver(i, "visibility", f.visibility_state)
+    end
     f.iconframe = i
     f.name = gsi_name
     f.rank = gsi_rank
@@ -429,6 +432,7 @@
   local searchBuffs = function()
     for i,_ in ipairs(rf3_BuffList) do
       local f = rf3_BuffList[i]
+      if not f.iconframe:IsShown() then return end
       if f.spelllist and f.spelllist[1] then
         --print('buff spelllist exists')
         f.bufffound = false
@@ -446,6 +450,7 @@
   local searchDebuffs = function()
     for i,_ in ipairs(rf3_DebuffList) do
       local f = rf3_DebuffList[i]
+      if not f.iconframe:IsShown() then return end
       if  f.spelllist and f.spelllist[1] then
         --print('debuff spelllist exists')
         f.debufffound = false
@@ -463,6 +468,7 @@
   local searchCooldowns = function()
     for i,_ in ipairs(rf3_CooldownList) do
       local f = rf3_CooldownList[i]
+      if not f.iconframe:IsShown() then return end
       checkCooldown(f)
     end
   end

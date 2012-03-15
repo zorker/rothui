@@ -15,6 +15,7 @@
   -------------------------------------
 
   spec            = nil,          --nil, 1, 2 or 3 (optional), the talent tree you want to track the spell (nil will make it work in any tree)
+  visibility_state = "[combat] show; hide",         --attribute that lets you show/hide the frame on a given state condition. example: "[stance:2] show; hide"
   spellid         = 469,          --NUMBER, the spellid to track this will represent the icon if none is found
   spelllist       = {             --TABLE (optional), you can check spell lists in case the same effect is given by more that one buff/debuff. your spell needs to be in the list aswell! list is sorted by index.
                       [1] = 469,
@@ -53,6 +54,7 @@
   -------------------------------------
 
   spec            = nil,          --nil, 1, 2 or 3 (optional), the talent tree you want to track the spell (nil will make it work in any tree)
+  visibility_state = "[combat] show; hide",         --attribute that lets you show/hide the frame on a given state condition. example: "[stance:2] show; hide"
   spellid         = 469,          --NUMBER, the spellid to track this will represent the icon if none is found
   size            = 26,           --NUMBER, the size of the icon
   pos             = {             --TABLE, the position of the icon (http://www.wowwiki.com/API_Region_SetPoint)

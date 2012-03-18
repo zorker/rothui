@@ -1,0 +1,8 @@
+## Interface: 40300
+## Title: rConfig
+## Author: zork
+## Notes: First steps for zork, great step for mankind?
+## Version: 0.001
+## SavedVariables: RCONFIG_DB_GLOB
+## SavedVariablesPerCharacter: RCONFIG_DB_CHAR
+core.lua

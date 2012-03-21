@@ -122,8 +122,10 @@
       },
       [5] = {
         spec = 1,
-        spellid = 60503, --overpower
-        size = 36,
+        spellid = 85730, --deadly calm
+        visibility_state = "[stance:1/3] show; hide",
+        hide_ooc      = true,
+        size = 50,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -65, y = 142 },
         unit = "player",
         ismine = true,
@@ -135,8 +137,8 @@
             icon = 1,
           },
           not_found = {
-            frame = 0,
-            icon = 0,
+            frame = 0.2,
+            icon = 1,
           },
         },
       },
@@ -180,8 +182,49 @@
           },
         },
       },
-
-
+      [8] = {
+        spec = 1,
+        spellid = 90806, --exec
+        visibility_state = "[stance:1/3] show; hide",
+        size = 36,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -0, y = 142 },
+        unit = "player",
+        ismine = true,
+        desaturate = true,
+        move_ingame     = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0,
+          },
+        },
+      },
+      [9] = {
+        spec = 1,
+        spellid = 12964, --battle trance
+        visibility_state = "[stance:1/3] show; hide",
+        hide_ooc      = true,
+        size = 50,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -200, y = 142 },
+        unit = "player",
+        ismine = true,
+        desaturate = true,
+        move_ingame     = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0.2,
+            icon = 1,
+          },
+        },
+      },
     }
 
     --Rothars Debuff List
@@ -302,7 +345,7 @@
       [5] = {
         spec            = 1,
         spellid         = 86346, --colossus smash
-        size            = 50,
+        size            = 36,
         pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -117, y = 142 },
         unit            = "target",
         validate_unit   = true,

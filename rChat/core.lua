@@ -1,36 +1,36 @@
 
   -- // rChat
   -- // zork - 2010
-  
+
   -----------------------------
   -- INIT
   -----------------------------
 
   local _G = _G
-  
+
   -----------------------------
   -- FUNCTIONS
   -----------------------------
-  
+
 	for i = 1, 23 do
 		CHAT_FONT_HEIGHTS[i] = i+7
 	end
-  
+
   for i = 1, NUM_CHAT_WINDOWS do
     local bf = _G['ChatFrame'..i..'ButtonFrame']
-    if bf then 
-      bf:Hide() 
+    if bf then
+      bf:Hide()
       bf:HookScript("OnShow", function(s) s:Hide(); end)
     end
     local ebtl = _G['ChatFrame'..i..'EditBoxLeft']
     if ebtl then ebtl:Hide() end
     local ebtm = _G['ChatFrame'..i..'EditBoxMid']
-    if ebtm then ebtm:Hide() end      
+    if ebtm then ebtm:Hide() end
     local ebtr = _G['ChatFrame'..i..'EditBoxRight']
     if ebtr then ebtr:Hide() end
     local cf = _G['ChatFrame'..i]
-    if cf then 
-      cf:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE") 
+    if cf then
+      cf:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE")
       cf:SetShadowOffset(1,-1)
       cf:SetShadowColor(0,0,0,0.6)
       cf:SetFrameStrata("LOW")
@@ -60,21 +60,25 @@
   local function init()
 
     local mb = _G['ChatFrameMenuButton']
-    if mb then 
-      mb:Hide() 
+    if mb then
+      mb:Hide()
       mb:HookScript("OnShow", function(s) s:Hide(); end)
     end
-    
+
     local fmb = _G['FriendsMicroButton']
-    if fmb then 
+    if fmb then
       fmb:Hide()
       fmb:HookScript("OnShow", function(s) s:Hide(); end)
     end
 
-    ChatFontNormal:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE") 
+    ChatFontNormal:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE")
     ChatFontNormal:SetShadowOffset(1,-1)
     ChatFontNormal:SetShadowColor(0,0,0,0.6)
-    
+
+    --don't cut the toastframe
+    BNToastFrame:SetClampedToScreen(true)
+    BNToastFrame:SetClampRectInsets(-15,15,15,-15)
+
     local bcq = _G["CombatLogQuickButtonFrame_Custom"];
     if bcq then
       bcq:Hide()
@@ -82,8 +86,8 @@
       bcq:SetHeight(0)
     end
 
-  end  
-  
+  end
+
   local a = CreateFrame("Frame")
 
   a:SetScript("OnEvent", function(self, event)
@@ -91,6 +95,6 @@
       init()
     end
   end)
-  
+
   a:RegisterEvent("PLAYER_LOGIN")
-  
+

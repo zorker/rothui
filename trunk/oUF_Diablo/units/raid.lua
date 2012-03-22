@@ -411,7 +411,7 @@
     crfm:SetAlpha(0)
 
     crfm:SetScript("OnEnter", function(m)
-      if m.collapsed and not m.ag1:IsPlaying() then
+      if m.collapsed and m:GetAlpha() < 0.8 then
         m.ag2:Stop()
         m:SetAlpha(0)
         m.ag1:Play()
@@ -424,14 +424,12 @@
     end)
     crfb:SetScript("OnMouseUp", function(self)
       local m = self:GetParent()
-      if not m.collapsed and not m.ag2:IsPlaying() then
-        m.ag1:Stop()
-        m:SetAlpha(1)
+      if not m.collapsed then
         m.ag2:Play()
       end
     end)
     crfm:SetScript("OnLeave", function(m)
-      if m.collapsed and GetMouseFocus():GetName() == "WorldFrame" and not m.ag2:IsPlaying() then
+      if m.collapsed and GetMouseFocus():GetName() ~= "CompactRaidFrameManagerToggleButton" and GetMouseFocus():GetName() ~= "CompactRaidFrameManager" then
         m.ag1:Stop()
         m:SetAlpha(1)
         m.ag2:Play()

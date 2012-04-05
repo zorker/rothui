@@ -244,9 +244,11 @@
         end
         bar.filling[i]:Show()
         bar.glow[i]:Show()
+        bar.gloss[i]:Show()
       else
         bar.filling[i]:Hide()
         bar.glow[i]:Hide()
+        bar.gloss[i]:Hide()
       end
     end
 
@@ -288,8 +290,8 @@
       bar.back[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
       bar.back[i]:SetSize(64,64)
       bar.back[i]:SetPoint("LEFT",i*64,0)
-      bar.back[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_back")
-      bar.back[i]:SetAlpha(0.7)
+      bar.back[i]:SetTexture("Interface\\AddOns\\rTextures\\combo_back2")
+      bar.back[i]:SetAlpha(0.96)
 
       bar.filling[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-7)
       bar.filling[i]:SetSize(64,64)

@@ -56,29 +56,30 @@
   bar:RegisterEvent("KNOWN_CURRENCY_TYPES_UPDATE")
   bar:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
   bar:RegisterEvent("BAG_UPDATE")
+  bar:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
   bar:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
-      local button, buttons
-      for i = 1, NUM_ACTIONBAR_BUTTONS do
-        button = _G["ActionButton"..i]
-        self:SetFrameRef("ActionButton"..i, button)
+
+      local name
+      for id = 1, NUM_ACTIONBAR_BUTTONS do
+        name = "ActionButton"..id
+        self:SetFrameRef(name, _G[name])
       end
-
-      self:Execute([[
+      self:Execute(([[
         buttons = table.new()
-        for i = 1, 12 do
-          table.insert(buttons, self:GetFrameRef("ActionButton"..i))
+        for id = 1, %s do
+          buttons[id] = self:GetFrameRef("ActionButton"..id)
         end
-      ]])
-
-      self:SetAttribute("_onstate-page", [[
-        for i, button in ipairs(buttons) do
-          button:SetAttribute("actionpage", tonumber(newstate))
+      ]]):format(NUM_ACTIONBAR_BUTTONS))
+      self:SetAttribute('_onstate-page', ([[
+        if not newstate then return end
+        newstate = tonumber(newstate)
+        for id = 1, %s do
+          buttons[id]:SetAttribute("actionpage", newstate)
         end
-      ]])
-
+      ]]):format(NUM_ACTIONBAR_BUTTONS))
       RegisterStateDriver(self, "page", GetBar())
-    elseif event == "PLAYER_ENTERING_WORLD" then
+
       local button
       for i = 1, 12 do
         button = _G["ActionButton"..i]
@@ -97,6 +98,11 @@
           end
         end
       end
+    --elseif event == "PLAYER_ENTERING_WORLD" then
+      --nothing
+    elseif event == "ACTIVE_TALENT_GROUP_CHANGED" then
+      -- attempt to fix blocked glyph change after switching spec.
+      LoadAddOn("Blizzard_GlyphUI")
     else
        MainMenuBar_OnEvent(self, event, ...)
     end

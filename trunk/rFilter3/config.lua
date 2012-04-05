@@ -438,6 +438,29 @@
   end
 
   if player_name == "Loral" and player_class == "DRUID" then
+    cfg.rf3_BuffList = {
+      [1] = {
+        spec = 3,
+        spellid = 16870, --free heal
+        size = 50,
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        unit = "player",
+        ismine = true,
+        desaturate = true,
+        move_ingame     = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 1,
+          },
+        },
+      },
+    }
+
     cfg.rf3_CooldownList = {
       [1] = {
         spec            = nil,
@@ -445,12 +468,11 @@
         pos             = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
         size            = 50,
         desaturate      = true,
-        hide_ooc        = true,
         move_ingame     = true,
         alpha           = {
                             cooldown = {
-                              frame = 0.3,
-                              icon = 0.6,
+                              frame = 0,
+                              icon = 1,
                             },
                             no_cooldown = {
                               frame = 1,

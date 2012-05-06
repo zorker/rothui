@@ -205,6 +205,12 @@
 
     local attr = cfg.units.party.attributes
 
+    local partyDragFrame = CreateFrame("Frame", "oUF_DiabloPartyDragFrame", UIParent)
+    partyDragFrame:SetSize(50,50)
+    partyDragFrame:SetPoint(cfg.units.party.pos.a1,cfg.units.party.pos.af,cfg.units.party.pos.a2,cfg.units.party.pos.x,cfg.units.party.pos.y)
+    func.applyDragFunctionality(partyDragFrame)
+    table.insert(oUF_Diablo_Units,"oUF_DiabloPartyDragFrame") --add frames to the slash command function
+
     local party = oUF:SpawnHeader(
       "oUF_DiabloPartyHeader",
       nil,
@@ -220,8 +226,7 @@
         self:SetScale(%f)
       ]]):format(128, 64, cfg.units.party.scale)
     )
-    party:SetPoint(cfg.units.party.pos.a1,cfg.units.party.pos.af,cfg.units.party.pos.a2,cfg.units.party.pos.x,cfg.units.party.pos.y)
+    party:SetPoint("TOPLEFT",partyDragFrame,0,0)
 
-    func.applyDragFunctionality(party)
 
   end

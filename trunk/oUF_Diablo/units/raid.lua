@@ -464,6 +464,12 @@
 
     local raid, group, i, j
 
+    local raidDragFrame = CreateFrame("Frame", "oUF_DiabloRaidDragFrame", UIParent)
+    raidDragFrame:SetSize(50,50)
+    raidDragFrame:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
+    func.applyDragFunctionality(raidDragFrame)
+    table.insert(oUF_Diablo_Units,"oUF_DiabloRaidDragFrame") --add frames to the slash command function
+
     for i=1, 3 do
       raid = {}
       for j=1, NUM_RAID_GROUPS do
@@ -496,7 +502,8 @@
         )
         group:SetScale(getRaidScale(i))
         if j == 1 then
-          group:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
+          --group:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
+          group:SetPoint("TOPLEFT",raidDragFrame,0,0)
         else
           if attr.columnAnchorPoint == "TOP" then
             group:SetPoint("TOPLEFT", raid[j-1], "BOTTOMLEFT", 0, attr.columnSpacing)
@@ -508,8 +515,8 @@
             group:SetPoint("TOPRIGHT", raid[j-1], "TOPLEFT", attr.columnSpacing, 0)
           end
         end
-        func.applyDragFunctionality(group)
-        table.insert(oUF_Diablo_Units,name) --add raid frames to the slash command function
+        --func.applyDragFunctionality(group)
+        --table.insert(oUF_Diablo_Units,name) --add raid frames to the slash command function
         raid[j] = group
       end
     end

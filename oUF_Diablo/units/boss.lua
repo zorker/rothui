@@ -30,7 +30,6 @@
     self:SetScript("OnEnter", UnitFrame_OnEnter)
     self:SetScript("OnLeave", UnitFrame_OnLeave)
     --func.createBackdrop(self)
-    func.applyDragFunctionality(self)
     self:SetHitRectInsets(10,10,10,10)
   end
 
@@ -180,6 +179,7 @@
         unit:SetPoint("TOP", boss[i-1], "BOTTOM", 0, -5)
       end
       table.insert(oUF_Diablo_Units,name) --add frames to the slash command function
+      func.applyDragFunctionality(unit)
       boss[i] = unit
     end
   end

@@ -59,7 +59,7 @@
     ["PALADIN"]       = { enable = true, animhealth = 1,  animmana = 17,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["SHAMAN"]        = { enable = true, animhealth = 16, animmana = 15,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["WARRIOR"]       = { enable = true, animhealth = 2,  animmana = 0,  classcolored = true, powertypecolored = true, healthmultiplier = 0.4,    manamultiplier = 0.4,  healthdecreasealpha = true,  manadecreasealpha = true,  },
-    --["WARRIOR"]       = { enable = true, animhealth = 29,  animmana = 29,  classcolored = false, powertypecolored = false, healthmultiplier = 0.6,    manamultiplier = 0.6,  healthdecreasealpha = true,  manadecreasealpha = true,  },
+    --["WARRIOR"]       = { enable = true, animhealth = 2,  animmana = 0,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,  healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["WARLOCK"]       = { enable = true, animhealth = 26, animmana = 9,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
   }
 
@@ -112,7 +112,7 @@
   }
 
   --frames have a new highlight that fades on hp loss, if that is still not enough you can adjust a multiplier here
-  cfg.highlightMultiplier = 0.9 --range 0-1
+  cfg.highlightMultiplier = 1 --range 0-1
 
   ----------------------------------------
   -- frame movement
@@ -489,7 +489,7 @@
         notinrange = 0.5,
       },
       scale = 0.85,
-      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 10, y = -80 },
+      pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 5, y = -77 },
       aurawatch = {
         show            = true,
         size            = 20.1,
@@ -647,9 +647,9 @@
 
   --orb animation table
   cfg.animtab = {
-    [0] = {displayid = 17010, r = 255/255, g = 70/255, b = 20/255, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },          -- red fog
+    [0] = {displayid = 17010, r = 255/255, g = 0/255, b = 0/255, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },          -- red fog
     [1] = {displayid = 17054, r = 1, g = 0.4, b = 1, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },      -- purple fog
-    [2] = {displayid = 17055, r = 150/255, g = 186/255, b = 1/255, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- green fog
+    [2] = {displayid = 17055, r = 0/255, g = 150/255, b = 0/255, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- green fog
     [3] = {displayid = 17286, r = 1, g = 0.9, b = 0, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- yellow fog
     [4] = {displayid = 18075, r = 0, g = 0.8, b = 1, camdistancescale = 1.1, portraitzoom = 1, x = 0, y = -0.6, rotation = 0, },        -- turquoise fog
     [5] = {displayid = 23422, r = 0.4, g = 0, b = 0, camdistancescale = 2.8, portraitzoom = 1, x = 0, y = 0.1, rotation = 0, },         -- red portal

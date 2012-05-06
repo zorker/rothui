@@ -84,6 +84,10 @@
   end
 
   function oUF_DiabloReset(c)
+    if InCombatLockdown() then
+      print("Reseting frames is not possible in combat.")
+      return
+    end
     print("oUF_Diablo: "..c.." reset")
     local a
     if c == "art" then

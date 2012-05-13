@@ -315,18 +315,20 @@
     end
     --low hp
     if d <= 25 and dead ~= 1 then
+      bar.highlight:SetAlpha(0)
       if cfg.colorswitcher.useBrightForeground then
-        bar.glow:SetVertexColor(0.3,0,0,0.9)
+        bar.glow:SetVertexColor(1,0,0,0.6)
         bar:SetStatusBarColor(1,0,0,1)
-        bar.bg:SetVertexColor(0.15,0,0,0.7)
+        bar.bg:SetVertexColor(0.2,0,0,0.9)
       else
         bar.glow:SetVertexColor(1,0,0,1)
       end
     else
       --inner shadow
       bar.glow:SetVertexColor(0,0,0,0.7)
+      bar.highlight:SetAlpha(cfg.highlightMultiplier)
     end
-    bar.highlight:SetAlpha((min/max)*cfg.highlightMultiplier)
+    --bar.highlight:SetAlpha((min/max)*cfg.highlightMultiplier)
   end
 
   --update power func

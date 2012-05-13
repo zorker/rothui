@@ -112,7 +112,7 @@
   }
 
   --frames have a new highlight that fades on hp loss, if that is still not enough you can adjust a multiplier here
-  cfg.highlightMultiplier = 1 --range 0-1
+  cfg.highlightMultiplier = 0 --range 0-1
 
   ----------------------------------------
   -- frame movement
@@ -204,9 +204,9 @@
       },
       vengeance = {
         show = false,
-        scale = 0.5,
+        scale = 0.7,
         color = {r = 1, g = 0, b = 0, },
-        texture = "Interface\\AddOns\\rTextures\\statusbar",
+        texture = "Interface\\AddOns\\rTextures\\statusbar5",
         pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
       },
       expbar = { --experience

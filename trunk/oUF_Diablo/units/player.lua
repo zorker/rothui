@@ -821,6 +821,46 @@
 
   end
 
+  --create VengeanceBar2 func
+  local createVengeanceBar2 = function(self)
+
+    local t,f
+    local w = 256
+    local h = 32
+
+    local bar = CreateFrame("StatusBar","oUF_DiabloVengeanceBar",self)
+    bar:SetPoint(self.cfg.vengeance.pos.a1,self.cfg.vengeance.pos.af,self.cfg.vengeance.pos.a2,self.cfg.vengeance.pos.x,self.cfg.vengeance.pos.y)
+    bar:SetSize(w,h)
+    bar:SetStatusBarTexture(self.cfg.vengeance.texture)
+    bar:SetStatusBarColor(self.cfg.vengeance.color.r, self.cfg.vengeance.color.g, self.cfg.vengeance.color.b)
+    bar:SetScale(self.cfg.vengeance.scale)
+    --bar:SetMinMaxValues(0,100)
+    --bar:SetValue(70)
+
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetAllPoints(bar)
+    t:SetTexture(0,0,0,0.45)
+
+    --overlay frame to hold the border texture and fontstring (using frame layers does not work reliable, frame stacking does)
+    local g = CreateFrame("Frame",nil,bar)
+    g:SetAllPoints(bar)
+
+    t = g:CreateTexture(nil,"BACKGROUND",nil,-8)
+    local adjust = 0.8
+    t:SetSize(512*adjust,64*adjust)
+    t:SetPoint("CENTER",0,0)
+    t:SetTexture("Interface\\AddOns\\rTextures\\d3_altpower_border")
+
+    f = func.createFontString(g, cfg.font, 24, "THINOUTLINE")
+    f:SetPoint("CENTER", 0, 0)
+    f:SetTextColor(0.8,0.8,0.8)
+    bar.Text = f
+
+    func.simpleDragFunc(bar)
+    self.Vengeance = bar
+
+  end
+
   ---------------------------------------------
   -- PLAYER STYLE FUNC
   ---------------------------------------------
@@ -943,9 +983,9 @@
 
     --vengeance bar
     if self.cfg.vengeance.show then
-      createVengeanceBar(self)
+      --createVengeanceBar(self)
+      createVengeanceBar2(self)
     end
-
 
     --add self to unit container (maybe access to that unit is needed in another style)
     unit.player = self

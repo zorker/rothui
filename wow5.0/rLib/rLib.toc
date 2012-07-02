@@ -1,0 +1,7 @@
+## Interface: 50001
+## Author: zork
+## Title: rLib
+## Notes: Library for rAddons
+
+core\dragframe.lua
+core\fader.lua

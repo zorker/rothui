@@ -1,0 +1,10 @@
+## Interface: 50001
+## Author: zork
+## Title: rActionBarStyler
+## Notes: Simple actionbars
+## RequiredDeps: rLib
+
+config.lua
+charspecific.lua
+core\slashcmd.lua
+core\micromenu.lua

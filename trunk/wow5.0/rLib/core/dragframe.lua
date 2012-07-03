@@ -49,8 +49,8 @@
       self.visibilityState = true
     end
     self.opacityValue = self:GetAlpha()
-    self.dragFrame:Show()
     self:SetAlpha(1)
+    self.dragFrame:Show()
   end
 
   --rLockFrame func
@@ -91,12 +91,13 @@
   end
 
   --rCreateDragFrame func
-  function rCreateDragFrame(self, tab, inset, clamp)
+  function rCreateDragFrame(self, dragFrameList, inset, clamp)
     if not self then return end
+    if not dragFrameList then return end
     --save the default position for later
     self.defaultPoint = rGetPoint(self)
     if self:GetName() then
-      table.insert(tab,self:GetName())
+      table.insert(dragFrameList,self:GetName()) --add frame to the list
     end
     --anchor a dragable frame on self
     local df = CreateFrame("Frame",nil,self)

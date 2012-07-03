@@ -6,7 +6,9 @@
   --get the addon namespace
   local addon, ns = ...
   local gcfg = ns.cfg
+  --get some values from the namespace
   local cfg = gcfg.bars.micromenu
+  local dragFrameList = ns.dragFrameList
 
   -----------------------------
   -- FUNCTIONS
@@ -51,10 +53,8 @@
   CharacterMicroButton:SetPoint("LEFT", padding, 0)
 
   --create drag frame and drag functionality
-  rCreateDragFrame(frame, rABSMovableFrames, -10 , false) --frame, table, inset, clamp
+  rCreateDragFrame(frame, dragFrameList, -10 , false) --frame, dragFrameList, inset, clamp
 
-  if cfg.showonmouseover then
-    local fadeIn  = {time = 0.4, alpha = 1}
-    local fadeOut = {time = 0.3, alpha = 0}
-    rFrameFading(frame, mircoButtons, fadeIn, fadeOut) --frame, table, fadeIn, fadeOut
+  if cfg.mouseover.enable then
+    rButtonBarFader(frame, mircoButtons, cfg.mouseover.fadeIn, cfg.mouseover.fadeOut) --frame, buttonList, fadeIn, fadeOut
   end

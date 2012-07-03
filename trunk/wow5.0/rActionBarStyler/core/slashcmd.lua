@@ -3,16 +3,25 @@
   -- INIT
   -----------------------------
 
-  --global variable to hold all the movable rABS frames
-  rABSMovableFrames = {}
+  --addon namespace
+  local addon, ns = ...
+
+  --create a list of dragable frames for the addon
+  local dragFrameList = {}
+  --make the list (object reference) available in the namespace for later usage
+  ns.dragFrameList = dragFrameList
+
+  -----------------------------
+  -- FUNCTIONS
+  -----------------------------
 
   local function SlashCmd(cmd)
     if (cmd:match"unlock") then
-      rUnlockAllFrames(rABSMovableFrames, "rABS: frames unlocked")
+      rUnlockAllFrames(dragFrameList, "rABS: frames unlocked")
     elseif (cmd:match"lock") then
-      rLockAllFrames(rABSMovableFrames, "rABS: frames locked")
+      rLockAllFrames(dragFrameList, "rABS: frames locked")
     elseif (cmd:match"reset") then
-      rResetAllFramesToDefault(rABSMovableFrames, "rABS: frames reseted")
+      rResetAllFramesToDefault(dragFrameList, "rABS: frames reseted")
     else
       print("|c0000FF00rActionBarStyler command list:|r")
       print("|c0000FF00\/rabs lock|r, to lock all bars")

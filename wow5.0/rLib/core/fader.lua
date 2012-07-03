@@ -21,6 +21,7 @@
     frame:SetScript("OnLeave", function() UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha) end)
     UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha)
     for _, button in pairs(buttonList) do
+      --local button = _G[name]
       if button then
         button:HookScript("OnEnter", function() UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) end)
         button:HookScript("OnLeave", function() UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha) end)

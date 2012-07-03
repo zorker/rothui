@@ -59,7 +59,9 @@
     if not self then return end
     if not self:IsUserPlaced() then return end
     self.dragFrame:Hide()
-    self:SetAlpha(self.opacityValue)
+    if self.opacityValue then
+      self:SetAlpha(self.opacityValue)
+    end
     if not self.visibilityState then
       self:Hide()
     end

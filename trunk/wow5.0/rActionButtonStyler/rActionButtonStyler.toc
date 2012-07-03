@@ -1,0 +1,8 @@
+## Interface: 50001
+## Author: zork
+## Title: rActionButtonStyler
+## Notes: The default ActionButtonTemplate with style!
+## OptionalDeps: rActionBarStyler, Dominos, Bartender4
+
+config.lua
+core\core.lua

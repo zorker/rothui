@@ -8,4 +8,7 @@ config.lua
 charspecific.lua
 core\slashcmd.lua
 core\micromenu.lua
+core\bags.lua
 core\stancebar.lua
+core\bar4.lua
+core\bar5.lua

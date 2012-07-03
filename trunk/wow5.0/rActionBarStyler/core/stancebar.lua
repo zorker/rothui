@@ -20,7 +20,7 @@
   local stanceButtons = {}
 
   for i=1, num do
-    table.insert(stanceButtons, "StanceButton"..i) --add the stancebuttons to the list
+    table.insert(stanceButtons, _G["StanceButton"..i]) --add the button object to the list
   end
 
   --make a frame that fits the size of all microbuttons
@@ -45,6 +45,7 @@
       local previous = _G["StanceButton"..i-1]
       button:SetPoint("LEFT", previous, "RIGHT", cfg.buttons.margin, 0)
     end
+    --normal texture hack
     local nt  = _G[name.."NormalTexture2"]
     nt:ClearAllPoints()
     nt:SetPoint("TOPLEFT",button,-9,9)

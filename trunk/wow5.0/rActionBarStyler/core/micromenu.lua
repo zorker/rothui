@@ -36,12 +36,11 @@
   local buttonWidth = CharacterMicroButton:GetWidth()
   local buttonHeight = CharacterMicroButton:GetHeight()
   local gap = -3
-  local padding = cfg.padding
 
-  --make a frame that fits the size of all microbuttons
+  --create the frame to hold the buttons
   local frame = CreateFrame("Frame", "rABS_MicroMenu", UIParent, "SecureHandlerStateTemplate")
-  frame:SetWidth(NUM_MICROBUTTONS*buttonWidth + (NUM_MICROBUTTONS-1)*gap + 2*padding)
-  frame:SetHeight(buttonHeight+2*padding)
+  frame:SetWidth(NUM_MICROBUTTONS*buttonWidth + (NUM_MICROBUTTONS-1)*gap + 2*cfg.padding)
+  frame:SetHeight(buttonHeight + 2*cfg.padding)
   frame:SetPoint(cfg.pos.a1,cfg.pos.af,cfg.pos.a2,cfg.pos.x,cfg.pos.y)
   frame:SetScale(cfg.scale)
 
@@ -50,11 +49,11 @@
     button:SetParent(frame)
   end
   CharacterMicroButton:ClearAllPoints();
-  CharacterMicroButton:SetPoint("LEFT", padding, 0)
+  CharacterMicroButton:SetPoint("LEFT", cfg.padding, 0)
 
   --create drag frame and drag functionality
   if cfg.userplaced.enable then
-    rCreateDragFrame(frame, dragFrameList, -10 , false) --frame, dragFrameList, inset, clamp
+    rCreateDragFrame(frame, dragFrameList, -2 , false) --frame, dragFrameList, inset, clamp
   end
 
   --create the mouseover functionality

@@ -15,5 +15,5 @@
   local _, playerclass = UnitClass("player")
 
   if playername == "Rothar" or playername == "Wolowizard" or playername == "Loral" then
-    --do dat
+    cfg.bars.stancebar.enable = false
   end

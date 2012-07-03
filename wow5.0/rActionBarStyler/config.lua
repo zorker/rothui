@@ -23,6 +23,10 @@
       scale           = 0.82,
       padding         = 10, --frame padding
       pos             = { a1 = "TOP", a2 = "TOP", af = "UIParent", x = 0, y = 10 },
-      showonmouseover = true,
+      mouseover = {
+        enable        = true,
+        fadeIn        = {time = 0.4, alpha = 1},
+        fadeOut       = {time = 0.3, alpha = 0},
+      },
     },
   }

@@ -10,6 +10,7 @@
 
   --rGetPoint func
   function rGetPoint(self)
+    if not self then return end
     local point = {}
     point.a1, point.af, point.a2, point.x, point.y = self:GetPoint()
     if point.af and point.af:GetName() then
@@ -27,8 +28,7 @@
 
   --rResetToPoint func
   function rResetToPoint(self,point)
-    if not self then return end
-    if not point then return end
+    if not self or not point then return end
     self:ClearAllPoints()
     if point.af and point.a2 then
       self:SetPoint(point.a1 or "CENTER", point.af, point.a2, point.x or 0, point.y or 0)
@@ -41,7 +41,8 @@
 
   --rUnlockFrame func
   function rUnlockFrame(self)
-    if not self and not self:IsUserPlaced() then return end
+    if not self then return end
+    if not self:IsUserPlaced() then return end
     if not self:IsShown() then
       self.visibilityState = false
       self:Show()
@@ -55,7 +56,8 @@
 
   --rLockFrame func
   function rLockFrame(self)
-    if not self and not self:IsUserPlaced() then return end
+    if not self then return end
+    if not self:IsUserPlaced() then return end
     self.dragFrame:Hide()
     self:SetAlpha(self.opacityValue)
     if not self.visibilityState then
@@ -64,27 +66,30 @@
   end
 
   --rUnlockAllFrames func
-  function rUnlockAllFrames(tab,txt)
+  function rUnlockAllFrames(dragFrameList,txt)
+    if not dragFrameList then return end
     if txt then print(txt) end
-    for _, v in pairs(tab) do
+    for _, v in pairs(dragFrameList) do
       local f = _G[v]
       rUnlockFrame(f)
     end
   end
 
   --rLockAllFrames func
-  function rLockAllFrames(tab,txt)
+  function rLockAllFrames(dragFrameList,txt)
+    if not dragFrameList then return end
     if txt then print(txt) end
-    for _, v in pairs(tab) do
+    for _, v in pairs(dragFrameList) do
       local f = _G[v]
       rLockFrame(f)
     end
   end
 
   --rResetAllFramesToDefault func
-  function rResetAllFramesToDefault(tab,txt)
+  function rResetAllFramesToDefault(dragFrameList,txt)
+    if not dragFrameList then return end
     if txt then print(txt) end
-    for _, v in pairs(tab) do
+    for _, v in pairs(dragFrameList) do
       local f = _G[v]
       rResetToDefaultPoint(f)
     end
@@ -92,8 +97,7 @@
 
   --rCreateDragFrame func
   function rCreateDragFrame(self, dragFrameList, inset, clamp)
-    if not self then return end
-    if not dragFrameList then return end
+    if not self or not dragFrameList then return end
     --save the default position for later
     self.defaultPoint = rGetPoint(self)
     if self:GetName() then

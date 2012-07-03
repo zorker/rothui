@@ -8,10 +8,11 @@
 
   --add some global functions
 
+  local defaultColor = "00FFFFFF"
+
   --rCreateSlashCmdFunction func
   function rCreateSlashCmdFunction(addon, shortcut, dragFrameList, color)
     if not addon or not shortcut or not dragFrameList then return end
-    local defaultColor = "00FFFFFF"
     local slashCmdFunction = function(cmd)
       if (cmd:match"unlock") then
         rUnlockAllFrames(dragFrameList, addon..": frames unlocked")

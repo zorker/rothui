@@ -18,7 +18,62 @@
   --use "/rabs" to see the command list
 
   cfg.bars = {
-
+    bar1 = {
+      enable          = true,
+      uselayout2x6    = false,
+      scale           = 0.82,
+      padding         = 10, --frame padding
+      buttons         = {
+        size            = 26,
+        margin          = 5,
+      },
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 22 },
+      userplaced      = {
+        enable          = true,
+      },
+      mouseover       = {
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
+    },
+    bar2 = {
+      enable          = true,
+      uselayout2x6    = false,
+      scale           = 0.82,
+      padding         = 10, --frame padding
+      buttons         = {
+        size            = 26,
+        margin          = 5,
+      },
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 53 },
+      userplaced      = {
+        enable          = true,
+      },
+      mouseover       = {
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
+    },
+    bar3 = {
+      enable          = true,
+      scale           = 0.82,
+      padding         = 10, --frame padding
+      buttons         = {
+        size            = 26,
+        margin          = 5,
+      },
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 92 },
+      userplaced      = {
+        enable          = true,
+      },
+      mouseover       = {
+        enable          = true,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
+    },
     bar4 = {
       enable          = true,
       combineBar4AndBar5  = true, --by choosing true both bar 4 and 5 will react to the same hover effect, thus show/hide at the same time, settings for bar5 will be ignored
@@ -59,7 +114,7 @@
     stancebar = {
       enable          = true,
       scale           = 0.82,
-      padding         = 0, --frame padding
+      padding         = 2, --frame padding
       buttons         = {
         size            = 26,
         margin          = 5,

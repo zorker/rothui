@@ -53,8 +53,11 @@
   CharacterMicroButton:SetPoint("LEFT", padding, 0)
 
   --create drag frame and drag functionality
-  rCreateDragFrame(frame, dragFrameList, -10 , false) --frame, dragFrameList, inset, clamp
+  if cfg.userplaced.enable then
+    rCreateDragFrame(frame, dragFrameList, -10 , false) --frame, dragFrameList, inset, clamp
+  end
 
+  --create the mouseover functionality
   if cfg.mouseover.enable then
     rButtonBarFader(frame, mircoButtons, cfg.mouseover.fadeIn, cfg.mouseover.fadeOut) --frame, buttonList, fadeIn, fadeOut
   end

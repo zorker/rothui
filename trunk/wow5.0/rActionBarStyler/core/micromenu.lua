@@ -16,8 +16,8 @@
 
   if not cfg.enable then return end
 
-  --mircro menu
-  local mircoButtons = {
+  --micro menu
+  local buttonList = {
     CharacterMicroButton,
     SpellbookMicroButton,
     TalentMicroButton,
@@ -32,7 +32,7 @@
     HelpMicroButton,
   }
 
-  local NUM_MICROBUTTONS = # mircoButtons
+  local NUM_MICROBUTTONS = # buttonList
   local buttonWidth = CharacterMicroButton:GetWidth()
   local buttonHeight = CharacterMicroButton:GetHeight()
   local gap = -3
@@ -45,7 +45,7 @@
   frame:SetScale(cfg.scale)
 
   --move the buttons into position and reparent them
-  for _, button in pairs(mircoButtons) do
+  for _, button in pairs(buttonList) do
     button:SetParent(frame)
   end
   CharacterMicroButton:ClearAllPoints();
@@ -58,5 +58,5 @@
 
   --create the mouseover functionality
   if cfg.mouseover.enable then
-    rButtonBarFader(frame, mircoButtons, cfg.mouseover.fadeIn, cfg.mouseover.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    rButtonBarFader(frame, buttonList, cfg.mouseover.fadeIn, cfg.mouseover.fadeOut) --frame, buttonList, fadeIn, fadeOut
   end

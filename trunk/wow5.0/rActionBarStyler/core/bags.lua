@@ -17,7 +17,7 @@
   if not cfg.enable then return end
 
   --mircro menu
-  local bagButtons = {
+  local buttonList = {
       MainMenuBarBackpackButton,
       CharacterBag0Slot,
       CharacterBag1Slot,
@@ -25,7 +25,7 @@
       CharacterBag3Slot,
   }
 
-  local NUM_BAG_BUTTONS = # bagButtons
+  local NUM_BAG_BUTTONS = # buttonList
   local buttonWidth = MainMenuBarBackpackButton:GetWidth()
   local buttonHeight = MainMenuBarBackpackButton:GetHeight()
   local gap = 2
@@ -38,7 +38,7 @@
   frame:SetScale(cfg.scale)
 
   --move the buttons into position and reparent them
-  for _, button in pairs(bagButtons) do
+  for _, button in pairs(buttonList) do
     button:SetParent(frame)
   end
   MainMenuBarBackpackButton:ClearAllPoints();
@@ -51,5 +51,5 @@
 
   --create the mouseover functionality
   if cfg.mouseover.enable then
-    rButtonBarFader(frame, bagButtons, cfg.mouseover.fadeIn, cfg.mouseover.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    rButtonBarFader(frame, buttonList, cfg.mouseover.fadeIn, cfg.mouseover.fadeOut) --frame, buttonList, fadeIn, fadeOut
   end

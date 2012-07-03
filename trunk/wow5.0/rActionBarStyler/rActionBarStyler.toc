@@ -10,5 +10,8 @@ core\slashcmd.lua
 core\micromenu.lua
 core\bags.lua
 core\stancebar.lua
+core\bar1.lua
+core\bar2.lua
+core\bar3.lua
 core\bar4.lua
 core\bar5.lua

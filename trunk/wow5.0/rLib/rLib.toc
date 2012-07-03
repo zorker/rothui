@@ -3,5 +3,6 @@
 ## Title: rLib
 ## Notes: Library for rAddons
 
+core\slashcmd.lua
 core\dragframe.lua
 core\fader.lua

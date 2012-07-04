@@ -109,11 +109,12 @@
     if fbg then fbg:Hide() end  --floating background
     bo:SetTexture(nil) --hide the border (plain ugly, sry blizz)
     --hotkey
-    ho:SetFont(cfg.font, cfg.hotkeys.fontsize, "OUTLINE")
-    ho:ClearAllPoints()
-    ho:SetPoint(cfg.hotkeys.pos1.a1,bu,cfg.hotkeys.pos1.x,cfg.hotkeys.pos1.y)
-    ho:SetPoint(cfg.hotkeys.pos2.a1,bu,cfg.hotkeys.pos2.x,cfg.hotkeys.pos2.y)
     if cfg.hotkeys.show then
+      ho:SetFont(cfg.font, cfg.hotkeys.fontsize, "OUTLINE")
+      ho:ClearAllPoints()
+      ho:SetPoint(cfg.hotkeys.pos1.a1,bu,cfg.hotkeys.pos1.x,cfg.hotkeys.pos1.y)
+      ho:SetPoint(cfg.hotkeys.pos2.a1,bu,cfg.hotkeys.pos2.x,cfg.hotkeys.pos2.y)
+    else
       ho:Hide()
     end
     if cfg.macroname.show then

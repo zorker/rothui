@@ -2,7 +2,7 @@
 ## Author: zork
 ## Title: rActionButtonStyler
 ## Notes: The default ActionButtonTemplate with style!
-## OptionalDeps: rActionBarStyler, Dominos, Bartender4
+## OptionalDeps: rActionBarStyler
 
 config.lua
 core\core.lua

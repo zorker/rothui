@@ -8,8 +8,6 @@
   local _G = _G
   local i
   local classcolor = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
-  local dominos = IsAddOnLoaded("Dominos")
-  local bartender4 = IsAddOnLoaded("Bartender4")
 
   if cfg.color.classcolored then
     cfg.color.normal = classcolor
@@ -115,7 +113,7 @@
     ho:ClearAllPoints()
     ho:SetPoint(cfg.hotkeys.pos1.a1,bu,cfg.hotkeys.pos1.x,cfg.hotkeys.pos1.y)
     ho:SetPoint(cfg.hotkeys.pos2.a1,bu,cfg.hotkeys.pos2.x,cfg.hotkeys.pos2.y)
-    if not dominos and not bartender4 and not cfg.hotkeys.show then
+    if cfg.hotkeys.show then
       ho:Hide()
     end
     if cfg.macroname.show then
@@ -123,14 +121,14 @@
       na:ClearAllPoints()
       na:SetPoint(cfg.macroname.pos1.a1,bu,cfg.macroname.pos1.x,cfg.macroname.pos1.y)
       na:SetPoint(cfg.macroname.pos2.a1,bu,cfg.macroname.pos2.x,cfg.macroname.pos2.y)
-    elseif not dominos and not bartender4 then
+    else
       na:Hide()
     end
     if cfg.itemcount.show then
       co:SetFont(cfg.font, cfg.itemcount.fontsize, "OUTLINE")
       co:ClearAllPoints()
       co:SetPoint(cfg.itemcount.pos1.a1,bu,cfg.itemcount.pos1.x,cfg.itemcount.pos1.y)
-    elseif not dominos and not bartender4 then
+    else
       co:Hide()
     end
     --applying the textures
@@ -172,11 +170,6 @@
     --shadows+background
     if not bu.bg then applyBackground(bu) end
     bu.rabs_styled = true
-    if bartender4 then --fix the normaltexture
-      nt:SetTexCoord(0,1,0,1)
-      nt.SetTexCoord = function() return end
-      bu.SetNormalTexture = function() return end
-    end
   end
 
 
@@ -270,7 +263,7 @@
     --extraactionbutton1
     styleExtraActionButton(_G["ExtraActionButton1"])
     --hide the hotkeys if needed
-    if not dominos and not bartender4 and not cfg.hotkeys.show then
+    if not cfg.hotkeys.show then
       hooksecurefunc("ActionButton_UpdateHotkeys",  updateHotkey)
     end
   end

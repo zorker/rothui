@@ -20,10 +20,6 @@
   local num = NUM_ACTIONBAR_BUTTONS
   local buttonList = {}
 
-  for i=1, num do
-    table.insert(buttonList, _G["MultiBarLeftButton"..i]) --add the button object to the list
-  end
-
   --create the frame to hold the buttons
   local frame = CreateFrame("Frame", "rABS_MultiBarLeft", UIParent, "SecureHandlerStateTemplate")
   frame:SetWidth(cfg.buttons.size + 2*cfg.padding)
@@ -37,6 +33,7 @@
 
   for i=1, num do
     local button = _G["MultiBarLeftButton"..i]
+    table.insert(buttonList, button) --add the button object to the list
     button:SetSize(cfg.buttons.size, cfg.buttons.size)
     button:ClearAllPoints()
     if i == 1 then

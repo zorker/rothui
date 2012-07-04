@@ -16,7 +16,7 @@
 
   if not cfg.enable then return end
 
-  --micro menu
+  --micro menu button objects
   local buttonList = {
     CharacterMicroButton,
     SpellbookMicroButton,

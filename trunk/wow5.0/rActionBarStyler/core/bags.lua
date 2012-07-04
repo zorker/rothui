@@ -16,7 +16,7 @@
 
   if not cfg.enable then return end
 
-  --mircro menu
+  --bag button objects
   local buttonList = {
       MainMenuBarBackpackButton,
       CharacterBag0Slot,

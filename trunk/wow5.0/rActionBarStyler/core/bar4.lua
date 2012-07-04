@@ -19,13 +19,6 @@
   local num = NUM_ACTIONBAR_BUTTONS
   local buttonList = {}
 
-  for i=1, num do
-    table.insert(buttonList, _G["MultiBarRightButton"..i]) --add the button object to the list
-    if cfg.combineBar4AndBar5 then
-      table.insert(buttonList, _G["MultiBarLeftButton"..i]) --add the button object to the list
-    end
-  end
-
   --create the frame to hold the buttons
   local frame = CreateFrame("Frame", "rABS_MultiBarRight", UIParent, "SecureHandlerStateTemplate")
   if cfg.combineBar4AndBar5 then
@@ -47,6 +40,7 @@
 
   for i=1, num do
     local button = _G["MultiBarRightButton"..i]
+    table.insert(buttonList, button) --add the button object to the list
     button:SetSize(cfg.buttons.size, cfg.buttons.size)
     button:ClearAllPoints()
     if i == 1 then
@@ -60,6 +54,7 @@
   if cfg.combineBar4AndBar5 then
     for i=1, num do
       local button = _G["MultiBarLeftButton"..i]
+      table.insert(buttonList, button) --add the button object to the list
       button:SetSize(cfg.buttons.size, cfg.buttons.size)
       button:ClearAllPoints()
       if i == 1 then

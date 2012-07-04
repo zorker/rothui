@@ -71,9 +71,8 @@
   function rUnlockAllFrames(dragFrameList,txt)
     if not dragFrameList then return end
     if txt then print(txt) end
-    for _, v in pairs(dragFrameList) do
-      local f = _G[v]
-      rUnlockFrame(f)
+    for _, frame in pairs(dragFrameList) do
+      rUnlockFrame(frame)
     end
   end
 
@@ -81,9 +80,8 @@
   function rLockAllFrames(dragFrameList,txt)
     if not dragFrameList then return end
     if txt then print(txt) end
-    for _, v in pairs(dragFrameList) do
-      local f = _G[v]
-      rLockFrame(f)
+    for _, frame in pairs(dragFrameList) do
+      rLockFrame(frame)
     end
   end
 
@@ -91,9 +89,8 @@
   function rResetAllFramesToDefault(dragFrameList,txt)
     if not dragFrameList then return end
     if txt then print(txt) end
-    for _, v in pairs(dragFrameList) do
-      local f = _G[v]
-      rResetToDefaultPoint(f)
+    for _, frame in pairs(dragFrameList) do
+      rResetToDefaultPoint(frame)
     end
   end
 
@@ -102,9 +99,7 @@
     if not self or not dragFrameList then return end
     --save the default position for later
     self.defaultPoint = rGetPoint(self)
-    if self:GetName() then
-      table.insert(dragFrameList,self:GetName()) --add frame to the list
-    end
+    table.insert(dragFrameList,self) --add frame object to the list
     --anchor a dragable frame on self
     local df = CreateFrame("Frame",nil,self)
     df:SetAllPoints(self)

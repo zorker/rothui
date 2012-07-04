@@ -19,10 +19,6 @@
   local num = NUM_ACTIONBAR_BUTTONS
   local buttonList = {}
 
-  for i=1, num do
-    table.insert(buttonList, _G["ActionButton"..i]) --add the button object to the list
-  end
-
   --create the frame to hold the buttons
   local frame = CreateFrame("Frame", "rABS_MainMenuBar", UIParent, "SecureHandlerStateTemplate")
 
@@ -40,12 +36,40 @@
   end
   frame:SetScale(cfg.scale)
 
-  --hide blizzard
-  local blizzHider = CreateFrame("Frame")
-  blizzHider:Hide()
-  MainMenuBar:SetParent(blizzHider)
-  PossessBarFrame:SetParent(blizzHider)
+  for i=1, num do
+    local button = _G["ActionButton"..i]
+    table.insert(buttonList, button) --add the button object to the list
+    button:SetSize(cfg.buttons.size, cfg.buttons.size)
+    button:ClearAllPoints()
+    button:SetParent(self)
+    if i == 1 then
+      button:SetPoint("BOTTOMLEFT", self, cfg.padding, cfg.padding)
+    else
+      local previous = _G["ActionButton"..i-1]
+      if cfg.uselayout2x6 and i == (num/2+1) then
+        previous = _G["ActionButton1"]
+        button:SetPoint("BOTTOM", previous, "TOP", 0, cfg.buttons.margin)
+      else
+        button:SetPoint("LEFT", previous, "RIGHT", cfg.buttons.margin, 0)
+      end
+    end
+  end
 
+  --create drag frame and drag functionality
+  if cfg.userplaced.enable then
+    rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+  end
+
+  --create the mouseover functionality
+  if cfg.mouseover.enable then
+    rButtonBarFader(frame, buttonList, cfg.mouseover.fadeIn, cfg.mouseover.fadeOut) --frame, buttonList, fadeIn, fadeOut
+  end
+
+  -----------------------------
+  -- ACTIONBUTTON SETFRAMEREF
+  -----------------------------
+
+  --generate a frame reference for all actionbuttons
   local Page = {
     ["DRUID"]     = "[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] 8; [bonusbar:2] 8; [bonusbar:3] 9; [bonusbar:4] 10;",
     ["WARRIOR"]   = "[bonusbar:1] 7; [bonusbar:2] 8; [bonusbar:3] 9;",
@@ -93,34 +117,7 @@
         end
       ]]):format(NUM_ACTIONBAR_BUTTONS))
       RegisterStateDriver(self, "page", GetBar())
-      for i=1, num do
-        local button = _G["ActionButton"..i]
-        button:SetSize(cfg.buttons.size, cfg.buttons.size)
-        button:ClearAllPoints()
-        button:SetParent(self)
-        if i == 1 then
-          button:SetPoint("BOTTOMLEFT", self, cfg.padding, cfg.padding)
-        else
-          local previous = _G["ActionButton"..i-1]
-          if cfg.uselayout2x6 and i == (num/2+1) then
-            previous = _G["ActionButton1"]
-            button:SetPoint("BOTTOM", previous, "TOP", 0, cfg.buttons.margin)
-          else
-            button:SetPoint("LEFT", previous, "RIGHT", cfg.buttons.margin, 0)
-          end
-        end
-      end
     else
        MainMenuBar_OnEvent(self, event, ...)
     end
   end)
-
-  --create drag frame and drag functionality
-  if cfg.userplaced.enable then
-    rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
-  end
-
-  --create the mouseover functionality
-  if cfg.mouseover.enable then
-    rButtonBarFader(frame, buttonList, cfg.mouseover.fadeIn, cfg.mouseover.fadeOut) --frame, buttonList, fadeIn, fadeOut
-  end

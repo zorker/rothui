@@ -47,6 +47,7 @@
   --move the buttons into position and reparent them
   for _, button in pairs(buttonList) do
     button:SetParent(frame)
+    --RegisterStateDriver(button, "visibility", "[vehicleui] hide; show")
   end
   CharacterMicroButton:ClearAllPoints();
   CharacterMicroButton:SetPoint("LEFT", cfg.padding, 0)

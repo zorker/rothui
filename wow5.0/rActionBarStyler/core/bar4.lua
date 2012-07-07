@@ -66,6 +66,9 @@
     end
   end
 
+  --hide the frame when in a vehicle!
+  RegisterStateDriver(frame, "visibility", "[vehicleui] hide;show")
+
   --create drag frame and drag functionality
   if cfg.userplaced.enable then
     rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp

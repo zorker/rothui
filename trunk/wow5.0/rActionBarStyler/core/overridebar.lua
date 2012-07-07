@@ -31,7 +31,7 @@
   OverrideActionBar:EnableMouse(false)
   OverrideActionBar:SetScript("OnShow", nil) --remove the onshow script
 
-  for i=1, num+1 do
+  for i=1, num do
     local button =  _G["OverrideActionBarButton"..i]
     if not button then
       button = OverrideActionBar.LeaveButton --the magic 7th button

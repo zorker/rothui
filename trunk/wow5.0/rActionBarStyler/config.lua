@@ -37,7 +37,7 @@
         fadeOut         = {time = 0.3, alpha = 0.2},
       },
     },
-    overridebar = {
+    overridebar = { --the new vehicle and override bar
       enable          = true,
       scale           = 0.82,
       padding         = 2, --frame padding
@@ -163,6 +163,24 @@
         enable          = true,
         fadeIn          = {time = 0.4, alpha = 1},
         fadeOut         = {time = 0.3, alpha = 0.1},
+      },
+    },
+    extrabar = {
+      enable          = true,
+      scale           = 0.82,
+      padding         = 10, --frame padding
+      buttons         = {
+        size            = 36,
+        margin          = 5,
+      },
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -210, y = 135 },
+      userplaced      = {
+        enable          = true,
+      },
+      mouseover       = {
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
       },
     },
     micromenu = {

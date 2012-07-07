@@ -18,3 +18,4 @@ core\bar4.lua
 core\bar5.lua
 core\petbar.lua
 core\stancebar.lua
+core\extrabar.lua

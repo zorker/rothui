@@ -41,11 +41,6 @@
       local previous = _G["StanceButton"..i-1]
       button:SetPoint("LEFT", previous, "RIGHT", cfg.buttons.margin, 0)
     end
-    --normal texture hack for stance buttons
-    local nt  = _G[button:GetName().."NormalTexture2"]
-    nt:ClearAllPoints()
-    nt:SetPoint("TOPLEFT",button,-9,9)
-    nt:SetPoint("BOTTOMRIGHT",button,9,-9)
   end
 
   local function fixStanceButton1(self,a1,af,a2,x,y)
@@ -54,7 +49,10 @@
       StanceButton1:SetPoint("BOTTOMLEFT", frame, cfg.padding, cfg.padding)
     end
   end
-  hooksecurefunc(StanceButton1, "SetPoint", fixStanceButton1)
+  --hooksecurefunc(StanceButton1, "SetPoint", fixStanceButton1)
+
+  --hide the frame when in a vehicle!
+  RegisterStateDriver(frame, "visibility", "[vehicleui] hide; show")
 
   --create drag frame and drag functionality
   if cfg.userplaced.enable then

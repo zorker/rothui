@@ -1,0 +1,11 @@
+## Interface: 50001
+## Author: zork
+## Title: rChat
+## Notes: Simple Chatmod
+
+core\core.lua
+core\fading.lua
+core\scroll.lua
+core\channelreplacements.lua
+core\altinvite.lua
+core\urlcopy.lua

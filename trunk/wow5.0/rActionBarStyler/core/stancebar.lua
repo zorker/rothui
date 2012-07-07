@@ -36,20 +36,13 @@
     button:SetSize(cfg.buttons.size, cfg.buttons.size)
     button:ClearAllPoints()
     if i == 1 then
-      button:SetPoint("LEFT", frame, cfg.padding, 0)
+      button:SetPoint("TOPLEFT", frame, cfg.padding, -cfg.padding)
+      --button:SetPoint("BOTTOMLEFT", frame, cfg.padding, cfg.padding)
     else
       local previous = _G["StanceButton"..i-1]
       button:SetPoint("LEFT", previous, "RIGHT", cfg.buttons.margin, 0)
     end
   end
-
-  local function fixStanceButton1(self,a1,af,a2,x,y)
-    if af == "StanceBarFrame" then
-      --print("fixing stanceButton1, it was moved")
-      StanceButton1:SetPoint("BOTTOMLEFT", frame, cfg.padding, cfg.padding)
-    end
-  end
-  --hooksecurefunc(StanceButton1, "SetPoint", fixStanceButton1)
 
   --hide the frame when in a vehicle!
   RegisterStateDriver(frame, "visibility", "[vehicleui] hide; show")

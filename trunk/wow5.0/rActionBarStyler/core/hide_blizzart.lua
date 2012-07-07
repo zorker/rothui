@@ -14,10 +14,11 @@
   --hide blizzard
   local blizzHider = CreateFrame("Frame","rABS_BizzardHider")
   blizzHider:Hide()
-  MainMenuBar:SetParent(rABS_BizzardHider)
+  MainMenuBar:SetParent(blizzHider)
   OverrideActionBarExpBar:SetParent(blizzHider)
   OverrideActionBarHealthBar:SetParent(blizzHider)
   OverrideActionBarPowerBar:SetParent(blizzHider)
+  OverrideActionBarPitchFrame:SetParent(blizzHider) --maybe we can use that frame later for pitchig and such
 
   --remove the default background texture on the stance bar frame
   StanceBarLeft:SetTexture(nil)
@@ -42,33 +43,8 @@
     "ButtonBGL",
     "ButtonBGR",
     "_ButtonBGMid",
-    "PitchOverlay",
-    "PitchButtonBG",
-    "PitchBG",
-    "PitchMarker",
-    "PitchUpUp",
-    "PitchUpDown",
-    "PitchUpHighlight",
-    "PitchDownUp",
-    "PitchDownDown",
-    "PitchDownHighlight",
-    --"LeaveUp",
-    --"LeaveDown",
-    --"LeaveHighlight",
-    "HealthBarBG",
-    "HealthBarOverlay",
-    "PowerBarBG",
-    "PowerBarOverlay",
-  };
-  local xpBarTextureList = {
-    "XpMid",
-    "XpL",
-    "XpR",
   }
 
   for _,tex in pairs(textureList) do
     OverrideActionBar[tex]:SetAlpha(0)
-  end
-  for _,tex in pairs(xpBarTextureList) do
-    OverrideActionBar.xpBar[tex]:SetAlpha(0)
   end

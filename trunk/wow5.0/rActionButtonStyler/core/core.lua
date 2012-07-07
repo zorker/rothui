@@ -94,7 +94,9 @@
 
   --initial style func
   local function styleActionButton(bu)
-    if not bu or (bu and bu.rabs_styled) then return end
+    if not bu or (bu and bu.rabs_styled) then
+      return
+    end
     local action = bu.action
     local name = bu:GetName()
     local ic  = _G[name.."Icon"]
@@ -173,6 +175,12 @@
     bu.rabs_styled = true
   end
 
+  local function styleLeaveButton(bu)
+    if not bu or (bu and bu.rabs_styled) then return end
+    --shadows+background
+    if not bu.bg then applyBackground(bu) end
+    bu.rabs_styled = true
+  end
 
   --style pet buttons
   local function stylePetButton(bu)
@@ -246,13 +254,16 @@
     --style the actionbar buttons
     for i = 1, NUM_ACTIONBAR_BUTTONS do
       styleActionButton(_G["ActionButton"..i])
-      styleActionButton(_G["VehicleMenuBarActionButton"..i])
-      styleActionButton(_G["BonusActionButton"..i])
       styleActionButton(_G["MultiBarBottomLeftButton"..i])
       styleActionButton(_G["MultiBarBottomRightButton"..i])
       styleActionButton(_G["MultiBarRightButton"..i])
       styleActionButton(_G["MultiBarLeftButton"..i])
     end
+    for i = 1, 6 do
+      styleActionButton(_G["OverrideActionBarButton"..i])
+    end
+    --style leave button
+    styleLeaveButton(_G["OverrideActionBarLeaveFrameLeaveButton"])
     --petbar buttons
     for i=1, NUM_PET_ACTION_SLOTS do
       stylePetButton(_G["PetActionButton"..i])
@@ -265,7 +276,7 @@
     styleExtraActionButton(_G["ExtraActionButton1"])
     --hide the hotkeys if needed
     if not cfg.hotkeys.show then
-      hooksecurefunc("ActionButton_UpdateHotkeys",  updateHotkey)
+      --hooksecurefunc("ActionButton_UpdateHotkeys",  updateHotkey)
     end
   end
 

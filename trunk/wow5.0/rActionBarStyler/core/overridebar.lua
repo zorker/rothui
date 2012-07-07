@@ -16,7 +16,7 @@
 
   if not cfg.enable then return end
 
-  local num = 6 --there seems to be no MAX_OVERRIDE_NUM or the like
+  local num = 7 --there seems to be no MAX_OVERRIDE_NUM or the like
   local buttonList = {}
 
   --create the frame to hold the buttons
@@ -31,8 +31,11 @@
   OverrideActionBar:EnableMouse(false)
   OverrideActionBar:SetScript("OnShow", nil) --remove the onshow script
 
-  for i=1, num do
-    local button = OverrideActionBar["SpellButton"..i]
+  for i=1, num+1 do
+    local button =  _G["OverrideActionBarButton"..i]
+    if not button then
+      button = OverrideActionBar.LeaveButton --the magic 7th button
+    end
     --button:SetParent(frame)
     table.insert(buttonList, button) --add the button object to the list
     button:SetSize(cfg.buttons.size, cfg.buttons.size)
@@ -40,7 +43,7 @@
     if i == 1 then
       button:SetPoint("BOTTOMLEFT", frame, cfg.padding, cfg.padding)
     else
-      local previous = OverrideActionBar["SpellButton"..i-1]
+      local previous = _G["OverrideActionBarButton"..i-1]
       button:SetPoint("LEFT", previous, "RIGHT", cfg.buttons.margin, 0)
     end
   end

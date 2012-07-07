@@ -238,6 +238,31 @@
     bu.rabs_styled = true
   end
 
+  --style possess buttons
+  local function stylePossessButton(bu)
+    if not bu or (bu and bu.rabs_styled) then return end
+    local name = bu:GetName()
+    local ic  = _G[name.."Icon"]
+    local fl  = _G[name.."Flash"]
+    local nt  = _G[name.."NormalTexture"]
+    nt:SetAllPoints(bu)
+    --applying color
+    nt:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
+    --setting the textures
+    fl:SetTexture(cfg.textures.flash)
+    bu:SetHighlightTexture(cfg.textures.hover)
+    bu:SetPushedTexture(cfg.textures.pushed)
+    bu:SetCheckedTexture(cfg.textures.checked)
+    bu:SetNormalTexture(cfg.textures.normal)
+    --cut the default border of the icons and make them shiny
+    ic:SetTexCoord(0.1,0.9,0.1,0.9)
+    ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
+    ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
+    --shadows+background
+    if not bu.bg then applyBackground(bu) end
+    bu.rabs_styled = true
+  end
+
   --update hotkey func
   local function updateHotkey(self, actionButtonType)
     local ho = _G[self:GetName() .. "HotKey"]
@@ -271,6 +296,10 @@
     --stancebar buttons
     for i=1, NUM_STANCE_SLOTS do
       styleStanceButton(_G["StanceButton"..i])
+    end
+    --possess buttons
+    for i=1, NUM_POSSESS_SLOTS do
+      stylePossessButton(_G["PossessButton"..i])
     end
     --extraactionbutton1
     styleExtraActionButton(_G["ExtraActionButton1"])

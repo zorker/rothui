@@ -36,7 +36,6 @@
     if not button then
       button = OverrideActionBar.LeaveButton --the magic 7th button
     end
-    --button:SetParent(frame)
     table.insert(buttonList, button) --add the button object to the list
     button:SetSize(cfg.buttons.size, cfg.buttons.size)
     button:ClearAllPoints()

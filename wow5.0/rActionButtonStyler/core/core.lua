@@ -161,13 +161,26 @@
     hooksecurefunc(nt, "SetVertexColor", function(nt, r, g, b, a)
       local bu = nt:GetParent()
       local action = bu.action
+      --print("bu"..bu:GetName().."R"..r.."G"..g.."B"..b)
       if r==1 and g==1 and b==1 and action and (IsEquippedAction(action)) then
-        nt:SetVertexColor(cfg.color.equipped.r,cfg.color.equipped.g,cfg.color.equipped.b,1)
+        if cfg.color.equipped.r == 1 and  cfg.color.equipped.g == 1 and  cfg.color.equipped.b == 1 then
+          nt:SetVertexColor(0.999,0.999,0.999,1)
+        else
+          nt:SetVertexColor(cfg.color.equipped.r,cfg.color.equipped.g,cfg.color.equipped.b,1)
+        end
       elseif r==0.5 and g==0.5 and b==1 then
         --blizzard oom color
-        nt:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
+        if cfg.color.normal.r == 0.5 and  cfg.color.normal.g == 0.5 and  cfg.color.normal.b == 1 then
+          nt:SetVertexColor(0.499,0.499,0.999,1)
+        else
+          nt:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
+        end
       elseif r==1 and g==1 and b==1 then
-        nt:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
+        if cfg.color.normal.r == 1 and  cfg.color.normal.g == 1 and  cfg.color.normal.b == 1 then
+          nt:SetVertexColor(0.999,0.999,0.999,1)
+        else
+          nt:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b,1)
+        end
       end
     end)
     --shadows+background

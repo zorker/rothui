@@ -23,12 +23,14 @@
   function rResetToDefaultPoint(self)
     if not self then return end
     if not self.defaultPoint then return end
+    if InCombatLockdown() then return end --sorry not in combat
     rResetToPoint(self,self.defaultPoint)
   end
 
   --rResetToPoint func
   function rResetToPoint(self,point)
     if not self or not point then return end
+    if InCombatLockdown() then return end --sorry not in combat
     self:ClearAllPoints()
     if point.af and point.a2 then
       self:SetPoint(point.a1 or "CENTER", point.af, point.a2, point.x or 0, point.y or 0)
@@ -45,7 +47,9 @@
     if not self:IsUserPlaced() then return end
     if not self:IsShown() then
       self.visibilityState = false
-      self:Show()
+      if not InCombatLockdown() then --impossible for protected frames
+        self:Show()
+      end
     else
       self.visibilityState = true
     end
@@ -63,7 +67,9 @@
       self:SetAlpha(self.opacityValue)
     end
     if not self.visibilityState then
-      self:Hide()
+      if not InCombatLockdown() then --impossible for protected frames
+        self:Hide()
+      end
     end
   end
 

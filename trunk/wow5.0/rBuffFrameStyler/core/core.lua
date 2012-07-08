@@ -53,7 +53,9 @@
     local frame = CreateFrame("Frame", "rBFS_TempEnchantHolder", UIParent)
     frame:SetSize(50,50)
     frame:SetPoint(cfg.tempenchant.pos.a1,cfg.tempenchant.pos.af,cfg.tempenchant.pos.a2,cfg.tempenchant.pos.x,cfg.tempenchant.pos.y)
-    rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+    if cfg.tempenchant.userplaced then
+      rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+    end
   end
 
   --create drag frame for buff icons
@@ -61,7 +63,9 @@
     local frame = CreateFrame("Frame", "rBFS_BuffFrameHolder", UIParent)
     frame:SetSize(50,50)
     frame:SetPoint(cfg.buffframe.pos.a1,cfg.buffframe.pos.af,cfg.buffframe.pos.a2,cfg.buffframe.pos.x,cfg.buffframe.pos.y)
-    rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+    if cfg.buffframe.userplaced then
+      rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+    end
   end
 
   --create the drag frames

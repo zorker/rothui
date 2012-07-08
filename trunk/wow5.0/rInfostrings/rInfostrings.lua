@@ -19,15 +19,21 @@
 
   --number format func
   local numformat = function(v)
-    local string = ""
-    if v > 1E6 then
-      string = (floor((v/1E6)*10)/10).."m"
+    if v > 1E10 then
+      return (floor(v/1E9)).."b"
+    elseif v > 1E9 then
+      return (floor((v/1E9)*10)/10).."b"
+    elseif v > 1E7 then
+      return (floor(v/1E6)).."m"
+    elseif v > 1E6 then
+      return (floor((v/1E6)*10)/10).."m"
+    elseif v > 1E4 then
+      return (floor(v/1E3)).."k"
     elseif v > 1E3 then
-      string = (floor((v/1E3)*10)/10).."k"
+      return (floor((v/1E3)*10)/10).."k"
     else
-      string = v
-    end  
-    return string
+      return v
+    end
   end
 
   local f1 = CreateFrame("Frame", "rInfoStringsContainer1", UIParent)
@@ -110,14 +116,15 @@
   
   local function rsiExpRep()
     local xp = ""
-    if (UnitLevel("player")<MAX_PLAYER_LEVEL) then
-      xp = "|c00FA58F4XP: "..numformat(UnitXP("player")).."/"..numformat(UnitXPMax("player")).." | "..string.format("%.0f", (UnitXP("player")/UnitXPMax("player")*100)).."%|r"
+
+    if not IsXPUserDisabled() and (UnitLevel("player")<MAX_PLAYER_LEVEL) then
+      xp = "|c00FA58F4"..numformat(UnitXP("player")).."/"..numformat(UnitXPMax("player")).." |r|c00ffb400("..numformat(GetXPExhaustion())..")|r|c00FA58F4 | "..string.format("%.0f", (UnitXP("player")/UnitXPMax("player")*100)).."%|r"
     else
       local _, _, minimum, maximum, value = GetWatchedFactionInfo()
       if ((value-minimum)==999) and ((maximum-minimum)==1000) then
-        xp = "|c0000FF00REP: FULL|r"
+        xp = "|c0000FF00MAXED OUT|r"
       else
-        xp = "|c0000FF00REP: "..numformat(value-minimum).."/"..numformat(maximum-minimum).." | "..string.format("%.0f", (value-minimum)/(maximum-minimum)*100).."%|r"
+        xp = "|c0000FF00"..numformat(value-minimum).."/"..numformat(maximum-minimum).." | "..string.format("%.0f", (value-minimum)/(maximum-minimum)*100).."%|r"
       end
     end
     return xp

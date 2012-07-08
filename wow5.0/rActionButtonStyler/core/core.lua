@@ -276,14 +276,6 @@
     bu.rabs_styled = true
   end
 
-  --update hotkey func
-  local function updateHotkey(self, actionButtonType)
-    local ho = _G[self:GetName() .. "HotKey"]
-    if ho and not cfg.hotkeys.show then
-      ho:Hide()
-    end
-  end
-
   ---------------------------------------
   -- INIT
   ---------------------------------------
@@ -316,10 +308,6 @@
     end
     --extraactionbutton1
     styleExtraActionButton(_G["ExtraActionButton1"])
-    --hide the hotkeys if needed
-    if not cfg.hotkeys.show then
-      --hooksecurefunc("ActionButton_UpdateHotkeys",  updateHotkey)
-    end
   end
 
   ---------------------------------------

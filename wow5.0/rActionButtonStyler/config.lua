@@ -45,14 +45,14 @@
   }
 
   cfg.hotkeys = {
-    show            = false,
+    show            = true,
     fontsize        = 12,
     pos1             = { a1 = "TOPRIGHT", x = 0, y = 0 },
     pos2             = { a1 = "TOPLEFT", x = 0, y = 0 }, --important! two points are needed to make the hotkeyname be inside of the button
   }
 
   cfg.macroname = {
-    show            = false,
+    show            = true,
     fontsize        = 12,
     pos1             = { a1 = "BOTTOMLEFT", x = 0, y = 0 },
     pos2             = { a1 = "BOTTOMRIGHT", x = 0, y = 0 }, --important! two points are needed to make the macroname be inside of the button

@@ -71,7 +71,8 @@
     --remove the style background theme
     bu.style:SetTexture(nil)
     hooksecurefunc(bu.style, "SetTexture", function(self, texture)
-      if texture and string.sub(texture,1,9) == "Interface" then
+      if texture then
+        --print("reseting texture: "..texture)
         self:SetTexture(nil)
       end
     end)

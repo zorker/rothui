@@ -1,0 +1,7 @@
+## Interface: 50001
+## Author: zork
+## Title: rBBS
+## Notes: zork's art framework. Does nothing by itself. Make sure to load an rBBS layout aswell.
+## SavedVariablesPerCharacter: rBBS_DB
+
+core.lua

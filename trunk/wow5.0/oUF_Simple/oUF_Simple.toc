@@ -1,0 +1,14 @@
+## Interface: 50001
+## Title: oUF_Simple
+## Author: zork
+## Notes: Simple oUF layout
+## Dependencies: oUF, rLib
+
+config.lua
+
+modules\oUF_DebuffHighlight.lua
+
+core\slashcmd.lua
+core\tags.lua
+core\core.lua
+core\style.lua

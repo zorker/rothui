@@ -1,0 +1,6 @@
+## Interface: 50001
+## Author: zork
+## Title: rInfostrings
+## Notes: Some data strings
+
+rInfostrings.lua

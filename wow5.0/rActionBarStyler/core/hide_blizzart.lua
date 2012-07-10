@@ -14,15 +14,16 @@
   --hide blizzard
   local blizzHider = CreateFrame("Frame","rABS_BizzardHider")
   blizzHider:Hide()
-  --hide main menu bar
+  --hide main menu bar frames
   MainMenuBar:SetParent(blizzHider)
+  MainMenuBarPageNumber:SetParent(blizzHider)
+  ActionBarDownButton:SetParent(blizzHider)
+  ActionBarUpButton:SetParent(blizzHider)
   --hide override actionbar frames
   OverrideActionBarExpBar:SetParent(blizzHider)
   OverrideActionBarHealthBar:SetParent(blizzHider)
   OverrideActionBarPowerBar:SetParent(blizzHider)
   OverrideActionBarPitchFrame:SetParent(blizzHider) --maybe we can use that frame later for pitchig and such
-  --hide the possessbar frame
-  --PossessBarFrame:SetParent(blizzHider) --the possessbar is part of the stancebar because they replace each other
 
   -----------------------------
   -- HIDE TEXTURES
@@ -36,6 +37,12 @@
   SlidingActionBarTexture1:SetTexture(nil)
   PossessBackground1:SetTexture(nil)
   PossessBackground2:SetTexture(nil)
+  MainMenuBarTexture0:SetTexture(nil)
+  MainMenuBarTexture1:SetTexture(nil)
+  MainMenuBarTexture2:SetTexture(nil)
+  MainMenuBarTexture3:SetTexture(nil)
+  MainMenuBarLeftEndCap:SetTexture(nil)
+  MainMenuBarRightEndCap:SetTexture(nil)
 
   --remove OverrideBar textures
   local textureList =  {

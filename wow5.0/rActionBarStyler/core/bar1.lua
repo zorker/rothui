@@ -35,14 +35,15 @@
   end
   frame:SetScale(cfg.scale)
 
+  --move the buttons into position and reparent them
+  MainMenuBarArtFrame:SetParent(frame)
+  MainMenuBarArtFrame:EnableMouse(false)
+
   for i=1, num do
     local button = _G["ActionButton"..i]
     table.insert(buttonList, button) --add the button object to the list
     button:SetSize(cfg.buttons.size, cfg.buttons.size)
     button:ClearAllPoints()
-    button:SetParent(frame)
-    --set frame reference to the button
-    frame:SetFrameRef(button:GetName(), button)
     if i == 1 then
       button:SetPoint("BOTTOMLEFT", frame, cfg.padding, cfg.padding)
     else

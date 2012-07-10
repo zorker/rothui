@@ -144,7 +144,7 @@
       mouseover       = {
         enable          = true,
         fadeIn          = {time = 0.4, alpha = 1},
-        fadeOut         = {time = 0.3, alpha = 0.2},
+        fadeOut         = {time = 0.3, alpha = 0.05},
       },
     },
     stancebar = {
@@ -162,7 +162,7 @@
       mouseover       = {
         enable          = true,
         fadeIn          = {time = 0.4, alpha = 1},
-        fadeOut         = {time = 0.3, alpha = 0.1},
+        fadeOut         = {time = 0.3, alpha = 0},
       },
     },
     extrabar = {
@@ -174,6 +174,24 @@
         margin          = 5,
       },
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -210, y = 135 },
+      userplaced      = {
+        enable          = true,
+      },
+      mouseover       = {
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
+    },
+    leave_vehicle = {
+      enable          = true,
+      scale           = 0.82,
+      padding         = 10, --frame padding
+      buttons         = {
+        size            = 26,
+        margin          = 5,
+      },
+      pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 210, y = 135 },
       userplaced      = {
         enable          = true,
       },

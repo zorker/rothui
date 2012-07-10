@@ -144,7 +144,7 @@
       mouseover       = {
         enable          = true,
         fadeIn          = {time = 0.4, alpha = 1},
-        fadeOut         = {time = 0.3, alpha = 0.05},
+        fadeOut         = {time = 0.3, alpha = 0.4},
       },
     },
     stancebar = {
@@ -160,9 +160,9 @@
         enable          = true,
       },
       mouseover       = {
-        enable          = true,
+        enable          = false,
         fadeIn          = {time = 0.4, alpha = 1},
-        fadeOut         = {time = 0.3, alpha = 0},
+        fadeOut         = {time = 0.3, alpha = 0.4},
       },
     },
     extrabar = {

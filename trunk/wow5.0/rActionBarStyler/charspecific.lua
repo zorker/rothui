@@ -14,7 +14,7 @@
   local playername, _ = UnitName("player")
   local _, playerclass = UnitClass("player")
 
-  if playername == "Rothor" or playername == "Wolowizard" or playername == "Loral" then
+  if playername == "Rothar" or playername == "Wolowizard" or playername == "Loral" then
     cfg.bars.stancebar.enable = true --disable stance bar completly
     cfg.bars.bar2.mouseover.enable = false
     --cfg.bars.bar3.mouseover.enable = false

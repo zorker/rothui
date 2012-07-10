@@ -24,7 +24,7 @@
   cfg.showfocus = true
 
   cfg.hideportraits = false
-  cfg.unitscale = 0.82
+  cfg.unitscale = 0.7
 
   cfg.statusbar_texture = "Interface\\AddOns\\oUF_Simple\\media\\statusbar2"
   cfg.backdrop_texture = "Interface\\AddOns\\oUF_Simple\\media\\backdrop"

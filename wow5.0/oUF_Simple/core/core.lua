@@ -226,14 +226,16 @@
   --gen castbar
   lib.gen_castbar = function(f)
 
-    local s = CreateFrame("StatusBar", "oUF_SimpleCastbar"..f.mystyle, f)
+    local s = CreateFrame("StatusBar", "oUF_SimpleCastbar"..f.mystyle:sub(1,1):upper()..f.mystyle:sub(2), f)
     s:SetHeight(f.height)
     s:SetWidth(f.width)
     if f.mystyle == "player" then
-      lib.moveme(s)
+      --lib.moveme(s)
+      rCreateDragFrame(s, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
       s:SetPoint("CENTER",UIParent,0,-50)
     elseif f.mystyle == "target" then
-      lib.moveme(s)
+      --lib.moveme(s)
+      rCreateDragFrame(s, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
       s:SetPoint("CENTER",UIParent,0,0)
     else
       s:SetPoint("BOTTOM",f,"TOP",0,5)

@@ -6,7 +6,7 @@
 
 config.lua
 
-modules\oUF_DebuffHighlight.lua
+##modules\oUF_DebuffHighlight.lua
 
 core\slashcmd.lua
 core\tags.lua

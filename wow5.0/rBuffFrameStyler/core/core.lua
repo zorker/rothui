@@ -74,16 +74,14 @@
 
   --move tempenchant frame
   local function moveTempEnchantFrame()
-    local f = rBFS_TempEnchantHolder
-    TemporaryEnchantFrame:SetParent(f)
+    TemporaryEnchantFrame:SetParent(rBFS_TempEnchantHolder)
     TemporaryEnchantFrame:ClearAllPoints()
     TemporaryEnchantFrame:SetPoint("TOPRIGHT",0,0)
   end
 
   --move buff frame
   local function moveBuffFrame()
-    local f = rBFS_BuffFrameHolder
-    BuffFrame:SetParent(f)
+    BuffFrame:SetParent(rBFS_BuffFrameHolder)
     BuffFrame:ClearAllPoints()
     BuffFrame:SetPoint("TOPRIGHT",0,0)
   end

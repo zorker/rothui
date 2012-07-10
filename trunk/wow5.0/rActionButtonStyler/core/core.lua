@@ -5,8 +5,6 @@
   --get the config values
   local cfg = ns.cfg
 
-  local _G = _G
-  local i
   local classcolor = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
 
   if cfg.color.classcolored then
@@ -294,7 +292,8 @@
       styleActionButton(_G["OverrideActionBarButton"..i])
     end
     --style leave button
-    styleLeaveButton(_G["OverrideActionBarLeaveFrameLeaveButton"])
+    styleLeaveButton(OverrideActionBarLeaveFrameLeaveButton)
+    styleLeaveButton(rABS_LeaveVehicleButton)
     --petbar buttons
     for i=1, NUM_PET_ACTION_SLOTS do
       stylePetButton(_G["PetActionButton"..i])
@@ -308,7 +307,7 @@
       stylePossessButton(_G["PossessButton"..i])
     end
     --extraactionbutton1
-    styleExtraActionButton(_G["ExtraActionButton1"])
+    styleExtraActionButton(ExtraActionButton1)
   end
 
   ---------------------------------------

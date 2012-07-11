@@ -77,7 +77,6 @@
 
   --rButtonBarFader func
   function rButtonBarFader(frame,buttonList,fadeIn,fadeOut)
-    --if 1 == 1 then return end
     if not frame or not buttonList then return end
     if not fadeIn then fadeIn = defaultFadeIn end
     if not fadeOut then fadeOut = defaultFadeOut end
@@ -95,7 +94,6 @@
 
   --rFrameFader func
   function rFrameFader(frame,fadeIn,fadeOut)
-    --if 1 == 1 then return end
     if not frame then return end
     if not fadeIn then fadeIn = defaultFadeIn end
     if not fadeOut then fadeOut = defaultFadeOut end
@@ -103,4 +101,21 @@
     frame:SetScript("OnEnter", function(self) UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) end)
     frame:SetScript("OnLeave", function(self) UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha) end)
     UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha)
+  end
+
+  --rCombatFrameFader func
+  function rCombatFrameFader(frame,fadeIn,fadeOut)
+    if not frame then return end
+    if not fadeIn then fadeIn = defaultFadeIn end
+    if not fadeOut then fadeOut = defaultFadeOut end
+    frame:RegisterEvent("PLAYER_REGEN_ENABLED")
+    frame:RegisterEvent("PLAYER_REGEN_DISABLED")
+    frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+    frame:SetScript("OnEvent", function(self,event,...) 
+      if event == "PLAYER_REGEN_DISABLED" then
+        UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) 
+      else
+        UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha)
+      end
+    end)
   end

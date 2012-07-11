@@ -47,10 +47,14 @@
   --move the buttons into position and reparent them
   for _, button in pairs(buttonList) do
     button:SetParent(frame)
-    --RegisterStateDriver(button, "visibility", "[vehicleui] hide; show")
   end
   CharacterMicroButton:ClearAllPoints();
   CharacterMicroButton:SetPoint("LEFT", cfg.padding, 0)
+
+  if not cfg.show then --wait...you no see me? :(
+    frame:SetParent(rABS_BizzardHider)
+    return
+  end
 
   --create drag frame and drag functionality
   if cfg.userplaced.enable then

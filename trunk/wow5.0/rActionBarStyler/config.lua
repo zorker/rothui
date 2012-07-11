@@ -37,6 +37,11 @@
         fadeIn          = {time = 0.4, alpha = 1},
         fadeOut         = {time = 0.3, alpha = 0.2},
       },
+      combat          = { --fade the bar in/out in combat/out of combat
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
     },
     --OVERRIDE BAR (vehicle ui)
     overridebar = { --the new vehicle and override bar
@@ -53,6 +58,11 @@
       },
       mouseover       = {
         enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
+      combat          = { --fade the bar in/out in combat/out of combat
+        enable          = true,
         fadeIn          = {time = 0.4, alpha = 1},
         fadeOut         = {time = 0.3, alpha = 0.2},
       },
@@ -76,6 +86,11 @@
         fadeIn          = {time = 0.4, alpha = 1},
         fadeOut         = {time = 0.3, alpha = 0.2},
       },
+      combat          = { --fade the bar in/out in combat/out of combat
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
     },
     --BAR 3
     bar3 = {
@@ -95,11 +110,16 @@
         fadeIn          = {time = 0.4, alpha = 1},
         fadeOut         = {time = 0.3, alpha = 0.2},
       },
+      combat          = { --fade the bar in/out in combat/out of combat
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
     },
     --BAR 4
     bar4 = {
       enable          = true, --enable module
-      combineBar4AndBar5  = true, --by choosing true both bar 4 and 5 will react to the same hover effect, thus show/hide at the same time, settings for bar5 will be ignored
+      combineBar4AndBar5  = true, --by choosing true both bar 4 and 5 will react to the same hover effect, thus true/false at the same time, settings for bar5 will be ignored
       scale           = 0.82,
       padding         = 10, --frame padding
       buttons         = {
@@ -112,6 +132,11 @@
       },
       mouseover       = {
         enable          = true,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
+      combat          = { --fade the bar in/out in combat/out of combat
+        enable          = false,
         fadeIn          = {time = 0.4, alpha = 1},
         fadeOut         = {time = 0.3, alpha = 0.2},
       },
@@ -134,11 +159,16 @@
         fadeIn          = {time = 0.4, alpha = 1},
         fadeOut         = {time = 0.3, alpha = 0.2},
       },
+      combat          = { --fade the bar in/out in combat/out of combat
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
     },
     --PETBAR
     petbar = {
       enable          = true, --enable module
-      show            = true, --show/hide
+      show            = true, --true/false
       scale           = 0.82,
       padding         = 2, --frame padding
       buttons         = {
@@ -154,11 +184,16 @@
         fadeIn          = {time = 0.4, alpha = 1},
         fadeOut         = {time = 0.3, alpha = 0.4},
       },
+      combat          = { --fade the bar in/out in combat/out of combat
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
     },
     --STANCE- + POSSESSBAR
     stancebar = {
       enable          = true, --enable module
-      show            = true, --show/hide
+      show            = true, --true/false
       scale           = 0.82,
       padding         = 2, --frame padding
       buttons         = {
@@ -173,6 +208,11 @@
         enable          = false,
         fadeIn          = {time = 0.4, alpha = 1},
         fadeOut         = {time = 0.3, alpha = 0.4},
+      },
+      combat          = { --fade the bar in/out in combat/out of combat
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
       },
     },
     --EXTRABAR
@@ -216,7 +256,7 @@
     --MICROMENU
     micromenu = {
       enable          = true, --enable module
-      show            = true, --show/hide
+      show            = true, --true/false
       scale           = 0.82,
       padding         = 10, --frame padding
       pos             = { a1 = "TOP", a2 = "TOP", af = "UIParent", x = 0, y = 25 },
@@ -232,7 +272,7 @@
     --BAGS
     bags = {
       enable          = true, --enable module
-      show            = true, --show/hide
+      show            = true, --true/false
       scale           = 0.82,
       padding         = 15, --frame padding
       pos             = { a1 = "BOTTOMRIGHT", a2 = "BOTTOMRIGHT", af = "UIParent", x = -0, y = 0 },

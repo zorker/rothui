@@ -44,6 +44,11 @@
   MainMenuBarBackpackButton:ClearAllPoints();
   MainMenuBarBackpackButton:SetPoint("RIGHT", -cfg.padding, 0)
 
+  if not cfg.show then --wait...you no see me? :(
+    frame:SetParent(rABS_BizzardHider)
+    return
+  end
+
   --create drag frame and drag functionality
   if cfg.userplaced.enable then
     rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp

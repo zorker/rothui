@@ -46,6 +46,11 @@
     cd:SetAllPoints(button)
   end
 
+  if not cfg.show then --wait...you no see me? :(
+    frame:SetParent(rABS_BizzardHider)
+    return
+  end
+
   --hide the frame when in a vehicle!
   RegisterStateDriver(frame, "visibility", "[vehicleui] hide; [@pet,exists,nodead] show; hide")
 

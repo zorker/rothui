@@ -35,7 +35,7 @@
     backgroundcolor   = { r = 0.2, g = 0.2, b = 0.2, a = 0.3},
     shadowcolor       = { r = 0, g = 0, b = 0, a = 0.9},
     classcolored      = false,
-    inset             = 6,
+    inset             = 5,
   }
 
   cfg.color = {

@@ -107,7 +107,12 @@
     local fl  = _G[name.."Flash"]
     local nt  = _G[name.."NormalTexture"]
     local fbg  = _G[name.."FloatingBG"]
+    local fob = _G[name.."FlyoutBorder"]
+    local fobs = _G[name.."FlyoutBorderShadow"]
     if fbg then fbg:Hide() end  --floating background
+    --flyout border stuff
+    if fob then fob:SetTexture(nil) end
+    if fobs then fobs:SetTexture(nil) end
     bo:SetTexture(nil) --hide the border (plain ugly, sry blizz)
     --hotkey
     if cfg.hotkeys.show then
@@ -139,6 +144,10 @@
     bu:SetPushedTexture(cfg.textures.pushed)
     bu:SetCheckedTexture(cfg.textures.checked)
     bu:SetNormalTexture(cfg.textures.normal)
+    if not nt then
+      --fix the non existent texture problem (no clue what is causing this)
+      nt = bu:GetNormalTexture()
+    end
     --cut the default border of the icons and make them shiny
     ic:SetTexCoord(0.1,0.9,0.1,0.9)
     ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
@@ -147,7 +156,7 @@
     cd:SetPoint("TOPLEFT", bu, "TOPLEFT", cfg.cooldown.spacing, -cfg.cooldown.spacing)
     cd:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -cfg.cooldown.spacing, cfg.cooldown.spacing)
     --apply the normaltexture
-    if ( IsEquippedAction(action) ) then
+    if action and  IsEquippedAction(action) then
       bu:SetNormalTexture(cfg.textures.equipped)
       nt:SetVertexColor(cfg.color.equipped.r,cfg.color.equipped.g,cfg.color.equipped.b,1)
     else
@@ -308,6 +317,18 @@
     end
     --extraactionbutton1
     styleExtraActionButton(ExtraActionButton1)
+    --spell flyout
+    SpellFlyoutBackgroundEnd:SetTexture(nil)
+    SpellFlyoutHorizontalBackground:SetTexture(nil)
+    SpellFlyoutVerticalBackground:SetTexture(nil)
+    local function checkForFlyoutButtons(self)
+      local NUM_FLYOUT_BUTTONS = 10
+      for i = 1, NUM_FLYOUT_BUTTONS do
+        styleActionButton(_G["SpellFlyoutButton"..i])
+      end
+    end
+    SpellFlyout:HookScript("OnShow",checkForFlyoutButtons)
+  
   end
 
   ---------------------------------------

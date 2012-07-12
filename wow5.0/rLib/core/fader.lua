@@ -92,6 +92,22 @@
     end
   end
 
+  --rSpellFlyoutFader func
+  --the flyout is special, when hovering the flyout the parented bar must not fade out
+  function rSpellFlyoutFader(frame,buttonList,fadeIn,fadeOut)
+    if not frame or not buttonList then return end
+    if not fadeIn then fadeIn = defaultFadeIn end
+    if not fadeOut then fadeOut = defaultFadeOut end
+    SpellFlyout:SetScript("OnEnter", function() UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) end)
+    SpellFlyout:SetScript("OnLeave", function() UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha) end)    
+    for _, button in pairs(buttonList) do
+      if button then
+        button:HookScript("OnEnter", function() UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) end)
+        button:HookScript("OnLeave", function() UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha) end)
+      end
+    end
+  end
+
   --rFrameFader func
   function rFrameFader(frame,fadeIn,fadeOut)
     if not frame then return end

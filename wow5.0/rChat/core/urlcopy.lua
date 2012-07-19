@@ -19,8 +19,8 @@
 
     foundurl = false
 
-    if string.find(text, "%pTInterface%p+") then
-      --disable interface textures (lol)
+    if string.find(string.upper(text), "%pINTERFACE%p+") then
+      --do not touch interface textures
       foundurl = true
     end
 

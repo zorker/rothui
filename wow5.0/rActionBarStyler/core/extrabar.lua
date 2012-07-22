@@ -38,8 +38,8 @@
   table.insert(buttonList, button) --add the button object to the list
   button:SetSize(cfg.buttons.size,cfg.buttons.size)
 
-  --hide the frame when in a vehicle!
-  RegisterStateDriver(frame, "visibility", "[vehicleui] hide; show")
+  --show/hide the frame on a given state driver
+  RegisterStateDriver(frame, "visibility", "[petbattle] hide; [vehicleui] hide; show")
 
   --create drag frame and drag functionality
   if cfg.userplaced.enable then

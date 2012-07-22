@@ -46,9 +46,9 @@
   hi:SetBlendMode("ADD")
 
   --the button will spawn if a vehicle exists, but no vehicle ui is in place (the vehicle ui has its own exit button)
-  RegisterStateDriver(button, "visibility", "[vehicleui] hide; [@vehicle,exists] show; hide")
+  RegisterStateDriver(button, "visibility", "[petbattle] hide; [vehicleui] hide; [@vehicle,exists] show; hide")
   --frame is visibile when no vehicle ui is visible
-  RegisterStateDriver(frame, "visibility", "[vehicleui] hide; show")
+  RegisterStateDriver(frame, "visibility", "[petbattle] hide; [vehicleui] hide; show")
 
   --create drag frame and drag functionality
   if cfg.userplaced.enable then

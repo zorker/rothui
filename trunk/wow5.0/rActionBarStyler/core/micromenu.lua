@@ -56,6 +56,9 @@
     return
   end
 
+  --show/hide the frame on a given state driver
+  RegisterStateDriver(frame, "visibility", "[petbattle] hide; show")
+
   --create drag frame and drag functionality
   if cfg.userplaced.enable then
     rCreateDragFrame(frame, dragFrameList, -2 , false) --frame, dragFrameList, inset, clamp

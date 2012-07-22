@@ -337,6 +337,7 @@
 
   --init style func
   local styleNameplate = function(f)
+    if not f then return end
     --make objects available for later
     f.healthbar, f.castbar = f:GetChildren()
     f.threat, f.border, f.highlight, f.name, f.level, f.boss, f.raid, f.dragon = f:GetRegions()
@@ -361,17 +362,17 @@
     f.healthbar:SetScript("OnValueChanged", updateHealth)
     updateHealth(f.healthbar)
     --set var
-    f.styled = true
+    f.RDP_styled = true
   end
 
   --check
   local IsNamePlateFrame = function(f)
-    local o = select(2,f:GetRegions())
-    if not o or o:GetObjectType() ~= "Texture" or o:GetTexture() ~= "Interface\\Tooltips\\Nameplate-Border" then
-      f.styled = true --don't touch this frame again
-      return false
+    local name = f:GetName()
+    if name and name:find("NamePlate") then
+      return true
     end
-    return true
+    f.RDP_styled = true --don't touch this frame again
+    return false
   end
 
   --onupdate
@@ -383,7 +384,7 @@
       local num = select("#", WorldFrame:GetChildren())
       for i = 1, num do
         local f = select(i, WorldFrame:GetChildren())
-        if not f.styled and IsNamePlateFrame(f) then
+        if not f.RDP_styled and IsNamePlateFrame(f) then
           styleNameplate(f)
         end
       end
@@ -395,9 +396,9 @@
   local a = CreateFrame("Frame")
   a:SetScript("OnEvent", function(self, event)
     if(event=="PLAYER_LOGIN") then
-      SetCVar("bloattest",0)--0.0
-      SetCVar("bloatnameplates",0)--0.0
-      SetCVar("bloatthreat",0)--1
+      --SetCVar("bloattest",0)--0.0
+      --SetCVar("bloatnameplates",0)--0.0
+      --SetCVar("bloatthreat",0)--1
       self:SetScript("OnUpdate", searchNamePlates)
     end
   end)

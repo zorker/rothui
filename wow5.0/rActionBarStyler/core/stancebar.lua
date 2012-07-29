@@ -33,11 +33,6 @@
   StanceBarFrame:SetParent(frame)
   StanceBarFrame:EnableMouse(false)
 
-  --fix for button1 placement with only one form
-  StanceBarFrame:ClearAllPoints()
-  StanceBarFrame:SetPoint("BOTTOMLEFT",frame,cfg.padding-12,cfg.padding-3)
-  StanceBarFrame.ignoreFramePositionManager = true
-
   for i=1, num do
     local button = _G["StanceButton"..i]
     table.insert(buttonList, button) --add the button object to the list

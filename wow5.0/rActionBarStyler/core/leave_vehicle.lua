@@ -46,7 +46,7 @@
   hi:SetBlendMode("ADD")
 
   --the button will spawn if a vehicle exists, but no vehicle ui is in place (the vehicle ui has its own exit button)
-  RegisterStateDriver(button, "visibility", "[petbattle] hide; [vehicleui] hide; [@vehicle,exists] show; hide")
+  RegisterStateDriver(button, "visibility", "[petbattle] hide; [vehicleui] hide; [possessbar] show; [@vehicle,exists] show; hide")
   --frame is visibile when no vehicle ui is visible
   RegisterStateDriver(frame, "visibility", "[petbattle] hide; [vehicleui] hide; show")
 

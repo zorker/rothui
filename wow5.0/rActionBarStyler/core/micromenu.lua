@@ -50,6 +50,9 @@
   end
   CharacterMicroButton:ClearAllPoints();
   CharacterMicroButton:SetPoint("LEFT", cfg.padding, 0)
+  
+  --disable reanchoring of the micro menu by the petbattle ui
+  PetBattleFrame.BottomFrame.MicroButtonFrame:SetScript("OnShow", nil) --remove the onshow script
 
   if not cfg.show then --wait...you no see me? :(
     frame:SetParent(rABS_BizzardHider)

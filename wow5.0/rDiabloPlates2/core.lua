@@ -338,6 +338,8 @@
   --init style func
   local styleNameplate = function(f)
     if not f then return end
+    if f and f.rDB_styled then return end
+    --print(f:GetName())
     --make objects available for later
     f.healthbar, f.castbar = f:GetChildren()
     f.threat, f.border, f.highlight, f.name, f.level, f.boss, f.raid, f.dragon = f:GetRegions()
@@ -362,44 +364,40 @@
     f.healthbar:SetScript("OnValueChanged", updateHealth)
     updateHealth(f.healthbar)
     --set var
-    f.RDP_styled = true
-  end
-
-  --check
-  local IsNamePlateFrame = function(f)
-    local name = f:GetName()
-    if name and name:find("NamePlate") then
-      return true
-    end
-    f.RDP_styled = true --don't touch this frame again
-    return false
-  end
-
-  --onupdate
-  local lastupdate = 0
-  local searchNamePlates = function(self,elapsed)
-    lastupdate = lastupdate + elapsed
-    if lastupdate > 0.33 then
-      lastupdate = 0
-      local num = select("#", WorldFrame:GetChildren())
-      for i = 1, num do
-        local f = select(i, WorldFrame:GetChildren())
-        if not f.RDP_styled and IsNamePlateFrame(f) then
-          styleNameplate(f)
-        end
-      end
-
-    end
+    f.rDP_styled = true
   end
 
   --init
+  local _DB
   local a = CreateFrame("Frame")
-  a:SetScript("OnEvent", function(self, event)
-    if(event=="PLAYER_LOGIN") then
-      --SetCVar("bloattest",0)--0.0
-      --SetCVar("bloatnameplates",0)--0.0
-      --SetCVar("bloatthreat",0)--1
-      self:SetScript("OnUpdate", searchNamePlates)
+  local index = 1
+  --timer  
+  local ag = a:CreateAnimationGroup()
+  ag.anim = ag:CreateAnimation()
+  ag.anim:SetDuration(0.33)
+  ag:SetLooping("REPEAT")
+  ag:SetScript("OnLoop", function(self, event, ...)
+    if _DB.namePlateIndex and _G["NamePlate".._DB.namePlateIndex] then
+      index = _DB.namePlateIndex
+      _DB.namePlateIndex = nil
+    end
+    while(_G["NamePlate" .. index]) do
+      local frame = _G['NamePlate' .. index]
+      if frame and not frame.rDB_styled then
+        styleNameplate(frame)
+      end
+      index = index + 1
     end
   end)
+  ag:Play()
+  --load some variable stuff
   a:RegisterEvent("PLAYER_LOGIN")
+  a:RegisterEvent("PLAYER_LOGOUT")
+  a:SetScript("OnEvent", function(self,event,...) 
+    if event == "PLAYER_LOGIN" then
+      _DB = _G["rDP_DB"] or {}
+      _G["rDP_DB"] = _DB
+    else
+      _DB.namePlateIndex = index + 0
+    end
+  end)

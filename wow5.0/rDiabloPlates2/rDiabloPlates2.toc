@@ -2,6 +2,6 @@
 ## Author: zork
 ## Title: rDiabloPlates2
 ## Notes: Diablo 3 themed nameplates
-## SavedVariablesPerCharacter: rDP_DB
 
-core.lua
+config.lua
+core\core.lua

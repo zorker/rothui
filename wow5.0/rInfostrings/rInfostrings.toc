@@ -2,5 +2,8 @@
 ## Author: zork
 ## Title: rInfostrings
 ## Notes: Some data strings
+## RequiredDeps: rLib
 
-rInfostrings.lua
+config.lua
+core\slashcmd.lua
+core\core.lua

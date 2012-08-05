@@ -1,12 +1,11 @@
 
-  -- // rChat
-  -- // zork - 2010
-
   -----------------------------
   -- INIT
   -----------------------------
 
-  local _G = _G
+  --get the addon namespace
+  local addon, ns = ...
+  local cfg = ns.cfg
 
   -----------------------------
   -- FUNCTIONS

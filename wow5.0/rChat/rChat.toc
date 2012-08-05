@@ -3,6 +3,7 @@
 ## Title: rChat
 ## Notes: Simple Chatmod
 
+config.lua
 core\core.lua
 core\fading.lua
 core\scroll.lua

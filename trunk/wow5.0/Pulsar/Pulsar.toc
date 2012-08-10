@@ -1,0 +1,7 @@
+## Interface: 50001
+## Author: zork
+## Title: Pulsar
+## Notes: Orb unit frame addon
+
+config.lua
+core\core.lua

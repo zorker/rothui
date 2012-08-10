@@ -1,7 +1,9 @@
 ## Interface: 50001
 ## Author: zork
 ## Title: Pulsar
-## Notes: Orb unit frame addon
+## Notes: Orb unitframe addon
+## SavedVariables: PULSAR_DB_GLOB
+## SavedVariablesPerCharacter: PULSAR_DB_CHAR
 
 config.lua
 core\core.lua

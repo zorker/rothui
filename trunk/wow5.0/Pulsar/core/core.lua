@@ -6,6 +6,7 @@ local cfg = ns.cfg
 --Pulsar
 local Pulsar = CreateFrame("Frame", "Pulsar", UIParent)
 Pulsar.units = {}
+Pulsar.db = {}
 Pulsar:Hide()
 ns.Pulsar = Pulsar
 
@@ -103,9 +104,11 @@ function Pulsar:CreateHealthOrb(parent)
   f:RegisterEvent("PLAYER_ENTERING_WORLD")
   --event
   f:SetScript("OnEvent", updateHealth)
+
+  return f
 end
 
---createUnitFrame
+--CreateUnitFrame
 function Pulsar:CreateUnitFrame(unit,cfg)
   local name = addon..unit:sub(1,1):upper()..unit:sub(2).."Frame"
   local f = CreateFrame("Button", name, UIParent, "SecureUnitButtonTemplate")
@@ -113,14 +116,53 @@ function Pulsar:CreateUnitFrame(unit,cfg)
   f.cfg = cfg
   f:SetScale(cfg.scale)
   f:SetSize(cfg.size,cfg.size)
-  Pulsar:SetPoint(f,cfg.point)
-  Pulsar:CreateHealthOrb(f)
+  self:SetPoint(f,cfg.point)
+  f.health = self:CreateHealthOrb(f)
   return f
+end
+
+--LoadDefaultsChar
+function Pulsar:LoadDefaultsChar()
+  PULSAR_DB_CHAR = {
+    init = true,
+  }
+  print("loading db defaults char")
+end
+
+--LoadDefaultsGlob
+function Pulsar:LoadDefaultsGlob()
+  PULSAR_DB_GLOB = {
+    init = true,
+  }
+  print("loading db defaults glob")
+end
+
+--ResetDBChar
+function Pulsar:ResetDBChar()
+  self:LoadDefaultsChar()
+  self.db.char = PULSAR_DB_CHAR
+end
+
+--ResetDBGlob
+function Pulsar:ResetDBGlob()
+  self:LoadDefaultsGlob()
+  self.db.glob = PULSAR_DB_GLOB
 end
 
 --player login
 function Pulsar:PLAYER_LOGIN()
   print("login")
+
+  --get db from savedvariables per account
+  if not PULSAR_DB_GLOB then
+    self:LoadDefaultsGlob()
+  end
+  self.db.glob = PULSAR_DB_GLOB
+  --get db from savedvariables per character
+  if not PULSAR_DB_CHAR then
+    self:LoadDefaultsChar()
+  end
+  self.db.char = PULSAR_DB_CHAR
 end
 
 --event handler
@@ -136,7 +178,7 @@ function Pulsar:Init()
   self:SetScript("OnEvent", self.OnEvent)
   self:RegisterEvent("PLAYER_LOGIN")
   --create player frame
-  Pulsar.units.player = Pulsar:CreateUnitFrame("player",cfg.unit.player)
+  self.units.player = self:CreateUnitFrame("player",cfg.unit.player)
 end
 
 

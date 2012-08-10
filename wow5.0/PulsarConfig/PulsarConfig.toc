@@ -1,0 +1,8 @@
+## Interface: 50001
+## Author: zork
+## Title: PulsarConfig
+## Notes: The GUI config for the Pulsar addon
+## Dependencies: Pulsar
+## LoadOnDemand: 1
+
+core\core.lua

@@ -6,4 +6,5 @@
 ## SavedVariablesPerCharacter: PULSAR_DB_CHAR
 
 config.lua
+core\system.lua
 core\core.lua

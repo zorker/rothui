@@ -5,8 +5,9 @@ local addon, ns = ...
 local cfg = ns.cfg
 --Pulsar
 local Pulsar = CreateFrame("Frame", "Pulsar", UIParent)
-Pulsar.units = {}
+Pulsar.unit = {}
 Pulsar.db = {}
+Pulsar.db.sys = ns.sys
 Pulsar:Hide()
 ns.Pulsar = Pulsar
 
@@ -14,36 +15,34 @@ ns.Pulsar = Pulsar
 -- FUNCTIONS
 -----------------------------
 
---SetPoint
-function Pulsar:SetPoint(parent,point)
-  if not parent then return end
-  parent:ClearAllPoints()
+--SetPosition
+function Pulsar:SetPosition(f,pos)
+  if not f then return end
+  f:ClearAllPoints()
   --setpoint
-  if point then
-    if point.af and point.a2 then
-      parent:SetPoint(point.a1 or "CENTER", point.af, point.a2, point.x or 0, point.y or 0)
-    elseif point.af then
-      parent:SetPoint(point.a1 or "CENTER", point.af, point.x or 0, point.y or 0)
-    --elseif point.a2 then
-      --parent:SetPoint(point.a1 or "CENTER", point.a2, point.x or 0, point.y or 0)
+  if pos then
+    if pos.af and pos.a2 then
+      f:SetPoint(pos.a1 or "CENTER", pos.af, pos.a2, pos.x or 0, pos.y or 0)
+    elseif pos.af then
+      f:SetPoint(pos.a1 or "CENTER", pos.af, pos.x or 0, pos.y or 0)
+    --elseif pos.a2 then
+      --f:SetPoint(pos.a1 or "CENTER", pos.a2, pos.x or 0, pos.y or 0)
     else
-      parent:SetPoint(point.a1 or "CENTER", point.x or 0, point.y or 0)
+      f:SetPoint(pos.a1 or "CENTER", pos.x or 0, pos.y or 0)
+      print(f:GetName())
+      print(pos.x)
     end
   else
-    parent:SetPoint("CENTER",UIParent,"CENTER",0,0)
+    f:SetPoint("CENTER",UIParent,"CENTER",0,0)
   end
 end
 
---createHealthOrb
-function Pulsar:CreateHealthOrb(parent)
-  local unit = parent.unit
-  local cfg = parent.cfg
-  local name = addon..unit:sub(1,1):upper()..unit:sub(2).."HealthOrb"
+--create the orb textures/frames
+function Pulsar:CreateOrb(parent,name)
   local f = CreateFrame("StatusBar", name, parent)
   f:SetMinMaxValues(0,1)
-  f.orbtype = "health"
-  f.unit = unit
-  f:SetAllPoints(parent)
+  f:SetSize(parent.cfg.size,parent.cfg.size)
+  f:SetPoint("CENTER")
   --background
   local t = f:CreateTexture(nil, "BACKGROUND", nil, -6)
   t:SetTexture("Interface\\AddOns\\Pulsar\\media\\orb_back")
@@ -52,10 +51,9 @@ function Pulsar:CreateHealthOrb(parent)
   --filling
   local t = f:CreateTexture(nil, "BACKGROUND", nil, -4)
   t:SetTexture("Interface\\AddOns\\Pulsar\\media\\filling\\orb_filling1")
-  t:SetVertexColor(1,0,0)
   t:SetPoint("BOTTOMLEFT",0,0)
   t:SetPoint("BOTTOMRIGHT",0,0)
-  t:SetHeight(cfg.size)
+  t:SetHeight(parent.cfg.size)
   f.filling = t
   --animation frame
   local h = CreateFrame("PlayerModel", nil, f)
@@ -84,7 +82,17 @@ function Pulsar:CreateHealthOrb(parent)
   t:SetTexture("Interface\\AddOns\\Pulsar\\media\\orb_gloss")
   t:SetAllPoints(f)
   f.highlight = t
+  return f
+end
 
+--CreateHealthOrb
+function Pulsar:CreateHealthOrb(parent)
+  local unit = parent.unit
+  local cfg = parent.cfg
+  local name = addon..unit:sub(1,1):upper()..unit:sub(2).."HealthOrb"
+  local f = self:CreateOrb(parent,name)
+  f.type = "health"
+  f.unit = unit
   --update health func
   local updateHealth = function(self, event, unit, ...)
     if unit and unit ~= self.unit then return end
@@ -98,13 +106,40 @@ function Pulsar:CreateHealthOrb(parent)
     self.filling:SetHeight(d*self.filling:GetWidth())
     self.filling:SetTexCoord(0,1, math.abs(d-1),1)
   end
-
   --register events
   f:RegisterEvent("UNIT_HEALTH")
   f:RegisterEvent("PLAYER_ENTERING_WORLD")
   --event
   f:SetScript("OnEvent", updateHealth)
+  return f
+end
 
+--CreatePowerOrb
+function Pulsar:CreatePowerOrb(parent)
+  local unit = parent.unit
+  local cfg = parent.cfg
+  local name = addon..unit:sub(1,1):upper()..unit:sub(2).."PowerOrb"
+  local f = self:CreateOrb(parent,name)
+  f.type = "power"
+  f.unit = unit
+  --update power func
+  local updatePower = function(self, event, unit, ...)
+    if unit and unit ~= self.unit then return end
+    local up, upm, p, d = UnitPower(self.unit) or 0, UnitPowerMax(self.unit), 0, 0
+    if upm and upm > 0 then
+      p = floor(up/upm*100)
+      d = up/upm
+      self:SetValue(d)
+      --print(self:GetValue())
+    end
+    self.filling:SetHeight(d*self.filling:GetWidth())
+    self.filling:SetTexCoord(0,1, math.abs(d-1),1)
+  end
+  --register events
+  f:RegisterEvent("UNIT_POWER")
+  f:RegisterEvent("PLAYER_ENTERING_WORLD")
+  --event
+  f:SetScript("OnEvent", updatePower)
   return f
 end
 
@@ -116,8 +151,9 @@ function Pulsar:CreateUnitFrame(unit,cfg)
   f.cfg = cfg
   f:SetScale(cfg.scale)
   f:SetSize(cfg.size,cfg.size)
-  self:SetPoint(f,cfg.point)
+  self:SetPosition(f,cfg.pos)
   f.health = self:CreateHealthOrb(f)
+  f.power = self:CreatePowerOrb(f)
   return f
 end
 
@@ -152,7 +188,6 @@ end
 --player login
 function Pulsar:PLAYER_LOGIN()
   print("login")
-
   --get db from savedvariables per account
   if not PULSAR_DB_GLOB then
     self:LoadDefaultsGlob()
@@ -163,6 +198,17 @@ function Pulsar:PLAYER_LOGIN()
     self:LoadDefaultsChar()
   end
   self.db.char = PULSAR_DB_CHAR
+
+  --create player frame
+  self.unit.player = self:CreateUnitFrame("player",cfg.unit.player)
+
+  --adjust the power orb position
+  self:SetPosition(self.unit.player.power,cfg.unit.player.power.pos)
+
+  --color stuff for testing
+  self.unit.player.health.filling:SetVertexColor(1,0,0)
+  self.unit.player.power.filling:SetVertexColor(0,0.6,1)
+
 end
 
 --event handler
@@ -177,10 +223,7 @@ end
 function Pulsar:Init()
   self:SetScript("OnEvent", self.OnEvent)
   self:RegisterEvent("PLAYER_LOGIN")
-  --create player frame
-  self.units.player = self:CreateUnitFrame("player",cfg.unit.player)
 end
-
 
 
 -----------------------------

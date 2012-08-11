@@ -17,8 +17,9 @@ cfg.unit = {
   player = {
     scale = 0.82,
     size = 150,
-    point = { a1="BOTTOM", x=-260, y=-10, },
+    pos = { a1="BOTTOM", af=UIParent, x=-260, y=-10, },
+    power = {
+      pos = { a1="BOTTOM", af=UIParent, x=260, y=-10, },
+    }
   },
 }
-
---stuff

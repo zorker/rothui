@@ -105,6 +105,7 @@ function Pulsar:CreateHealthOrb(parent)
     self.filling:SetHeight(d*self.filling:GetWidth())
     self.filling:SetTexCoord(0,1, math.abs(d-1),1)
   end
+  f.forceUpdate = function() updateHealth(f,nil,unit) end
   --register events
   f:RegisterEvent("UNIT_HEALTH")
   f:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -228,7 +229,7 @@ function Pulsar:PLAYER_LOGIN()
     if not IsAddOnLoaded("PulsarConfig") then
       LoadAddOn("PulsarConfig")
     end
-    InterfaceOptionsFrame_OpenToCategory("Pulsar")
+    InterfaceOptionsFrame_OpenToCategory("PulsarHealthOrb")
   end
 
   --load the unitframes

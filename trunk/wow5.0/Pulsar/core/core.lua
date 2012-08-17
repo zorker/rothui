@@ -7,7 +7,6 @@ local cfg = ns.cfg
 local Pulsar = CreateFrame("Frame", "Pulsar", UIParent)
 Pulsar.unit = {}
 Pulsar.db = {}
-Pulsar.db.sys = ns.sys
 Pulsar:Hide()
 ns.Pulsar = Pulsar
 
@@ -90,7 +89,7 @@ function Pulsar:CreateHealthOrb(parent)
   local unit = parent.unit
   local cfg = parent.cfg
   local name = addon..unit:sub(1,1):upper()..unit:sub(2).."HealthOrb"
-  local f = self:CreateOrb(parent,name)
+  local f = Pulsar:CreateOrb(parent,name)
   f.type = "health"
   f.unit = unit
   --update health func
@@ -119,7 +118,7 @@ function Pulsar:CreatePowerOrb(parent)
   local unit = parent.unit
   local cfg = parent.cfg
   local name = addon..unit:sub(1,1):upper()..unit:sub(2).."PowerOrb"
-  local f = self:CreateOrb(parent,name)
+  local f = Pulsar:CreateOrb(parent,name)
   f.type = "power"
   f.unit = unit
   --update power func
@@ -151,9 +150,9 @@ function Pulsar:CreateUnitFrame(unit,cfg)
   f.cfg = cfg
   f:SetScale(cfg.scale)
   f:SetSize(cfg.size,cfg.size)
-  self:SetPosition(f,cfg.pos)
-  f.health = self:CreateHealthOrb(f)
-  f.power = self:CreatePowerOrb(f)
+  Pulsar:SetPosition(f,cfg.pos)
+  f.health = Pulsar:CreateHealthOrb(f)
+  f.power = Pulsar:CreatePowerOrb(f)
   return f
 end
 
@@ -175,39 +174,65 @@ end
 
 --ResetDBChar
 function Pulsar:ResetDBChar()
-  self:LoadDefaultsChar()
+  Pulsar:LoadDefaultsChar()
   self.db.char = PULSAR_DB_CHAR
 end
 
 --ResetDBGlob
 function Pulsar:ResetDBGlob()
-  self:LoadDefaultsGlob()
+  Pulsar:LoadDefaultsGlob()
   self.db.glob = PULSAR_DB_GLOB
 end
 
---player login
-function Pulsar:PLAYER_LOGIN()
-  print("login")
-  --get db from savedvariables per account
-  if not PULSAR_DB_GLOB then
-    self:LoadDefaultsGlob()
-  end
-  self.db.glob = PULSAR_DB_GLOB
-  --get db from savedvariables per character
-  if not PULSAR_DB_CHAR then
-    self:LoadDefaultsChar()
-  end
-  self.db.char = PULSAR_DB_CHAR
-
+--CreateUnitFrames
+function Pulsar:CreateUnitFrames()
   --create player frame
-  self.unit.player = self:CreateUnitFrame("player",cfg.unit.player)
+  self.unit.player = Pulsar:CreateUnitFrame("player",cfg.unit.player)
 
   --adjust the power orb position
-  self:SetPosition(self.unit.player.power,cfg.unit.player.power.pos)
+  Pulsar:SetPosition(self.unit.player.power,cfg.unit.player.power.pos)
 
   --color stuff for testing
   self.unit.player.health.filling:SetVertexColor(1,0,0)
   self.unit.player.power.filling:SetVertexColor(0,0.6,1)
+end
+
+--player login
+function Pulsar:PLAYER_LOGIN()
+
+  print("login")
+
+  --get db from savedvariables per account
+  if not PULSAR_DB_GLOB then
+    Pulsar:LoadDefaultsGlob()
+  end
+  self.db.glob = PULSAR_DB_GLOB
+
+  --get db from savedvariables per character
+  if not PULSAR_DB_CHAR then
+    Pulsar:LoadDefaultsChar()
+  end
+  self.db.char = PULSAR_DB_CHAR
+
+  --config loads when the interfaceoptionsframe is shown
+  local f = CreateFrame("Frame", nil, InterfaceOptionsFrame)
+  f:SetScript("OnShow", function(self)
+    if not IsAddOnLoaded("PulsarConfig") then
+      LoadAddOn("PulsarConfig")
+      self:SetScript("OnShow",nil)
+    end
+  end)
+  --config loads when slash command is used
+  SLASH_PULSARCONFIG1, SLASH_PULSARCONFIG2 = '/pulsar', '/pulsarconfig'
+  function SlashCmdList.PULSARCONFIG(msg, editbox)
+    if not IsAddOnLoaded("PulsarConfig") then
+      LoadAddOn("PulsarConfig")
+    end
+    InterfaceOptionsFrame_OpenToCategory("Pulsar")
+  end
+
+  --load the unitframes
+  Pulsar:CreateUnitFrames()
 
 end
 

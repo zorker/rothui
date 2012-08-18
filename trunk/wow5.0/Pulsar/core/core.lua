@@ -14,8 +14,8 @@ ns.Pulsar = Pulsar
 -- FUNCTIONS
 -----------------------------
 
---SetPosition
-function Pulsar:SetPosition(f,pos)
+--applyPosition
+function Pulsar:applyPosition(f,pos)
   if not f then return end
   f:ClearAllPoints()
   --setpoint
@@ -28,8 +28,6 @@ function Pulsar:SetPosition(f,pos)
       --f:SetPoint(pos.a1 or "CENTER", pos.a2, pos.x or 0, pos.y or 0)
     else
       f:SetPoint(pos.a1 or "CENTER", pos.x or 0, pos.y or 0)
-      print(f:GetName())
-      print(pos.x)
     end
   else
     f:SetPoint("CENTER",UIParent,"CENTER",0,0)
@@ -40,7 +38,6 @@ end
 function Pulsar:CreateOrb(parent,name)
   local f = CreateFrame("StatusBar", name, parent)
   f:SetMinMaxValues(0,1)
-  f:SetSize(parent.cfg.size,parent.cfg.size)
   f:SetPoint("CENTER")
   --background
   local t = f:CreateTexture(nil, "BACKGROUND", nil, -6)
@@ -52,7 +49,6 @@ function Pulsar:CreateOrb(parent,name)
   t:SetTexture("Interface\\AddOns\\Pulsar\\media\\filling\\orb_filling1")
   t:SetPoint("BOTTOMLEFT",0,0)
   t:SetPoint("BOTTOMRIGHT",0,0)
-  t:SetHeight(parent.cfg.size)
   f.filling = t
   --animation frame
   local h = CreateFrame("PlayerModel", nil, f)
@@ -87,7 +83,6 @@ end
 --CreateHealthOrb
 function Pulsar:CreateHealthOrb(parent)
   local unit = parent.unit
-  local cfg = parent.cfg
   local name = addon..unit:sub(1,1):upper()..unit:sub(2).."HealthOrb"
   local f = Pulsar:CreateOrb(parent,name)
   f.type = "health"
@@ -106,9 +101,20 @@ function Pulsar:CreateHealthOrb(parent)
     self.filling:SetTexCoord(0,1, math.abs(d-1),1)
   end
   f.forceUpdate = function() updateHealth(f,nil,unit) end
+  f.applySize = function(size)
+    parent:SetSize(size,size) --the health orb needs to be the same size as the player frame (it is positioned at the center of the unitButton)
+    f:SetSize(size,size)
+    --force an update to make sure the filling texture is set up correct
+    f.forceUpdate()
+  end
+  f.applyColor = function(r,g,b)
+    f.filling:SetVertexColor(r,g,b)
+  end
+  f.applyPosition = function(pos)
+    Pulsar:applyPosition(parent, pos) --position the parent element, not the health orb (the orb is positioned center)
+  end
   --register events
   f:RegisterEvent("UNIT_HEALTH")
-  f:RegisterEvent("PLAYER_ENTERING_WORLD")
   --event
   f:SetScript("OnEvent", updateHealth)
   return f
@@ -117,7 +123,6 @@ end
 --CreatePowerOrb
 function Pulsar:CreatePowerOrb(parent)
   local unit = parent.unit
-  local cfg = parent.cfg
   local name = addon..unit:sub(1,1):upper()..unit:sub(2).."PowerOrb"
   local f = Pulsar:CreateOrb(parent,name)
   f.type = "power"
@@ -135,23 +140,34 @@ function Pulsar:CreatePowerOrb(parent)
     self.filling:SetHeight(d*self.filling:GetWidth())
     self.filling:SetTexCoord(0,1, math.abs(d-1),1)
   end
+  --frame functions
+  f.forceUpdate = function() updatePower(f,nil,unit) end
+  f.applySize = function(size)
+    f:SetSize(size,size)
+    --force an update to make sure the filling texture is set up correct
+    f.forceUpdate()
+  end
+  f.applyColor = function(r,g,b)
+    f.filling:SetVertexColor(r,g,b)
+  end
+  f.applyPosition = function(pos)
+    Pulsar:applyPosition(f, pos) --position the parent element, not the health orb (the orb is positioned center)
+  end
   --register events
   f:RegisterEvent("UNIT_POWER")
-  f:RegisterEvent("PLAYER_ENTERING_WORLD")
   --event
   f:SetScript("OnEvent", updatePower)
   return f
 end
 
 --CreateUnitFrame
-function Pulsar:CreateUnitFrame(unit,cfg)
+function Pulsar:CreateUnitFrame(unit)
   local name = addon..unit:sub(1,1):upper()..unit:sub(2).."Frame"
   local f = CreateFrame("Button", name, UIParent, "SecureUnitButtonTemplate")
   f.unit = unit
-  f.cfg = cfg
-  f:SetScale(cfg.scale)
-  f:SetSize(cfg.size,cfg.size)
-  Pulsar:SetPosition(f,cfg.pos)
+  f.applyScale = function(scale)
+    f:SetScale(scale)
+  end
   f.health = Pulsar:CreateHealthOrb(f)
   f.power = Pulsar:CreatePowerOrb(f)
   return f
@@ -159,17 +175,13 @@ end
 
 --LoadDefaultsChar
 function Pulsar:LoadDefaultsChar()
-  PULSAR_DB_CHAR = {
-    init = true,
-  }
+  PULSAR_DB_CHAR = cfg --load the config file into the db for the character
   print("loading db defaults char")
 end
 
 --LoadDefaultsGlob
 function Pulsar:LoadDefaultsGlob()
-  PULSAR_DB_GLOB = {
-    init = true,
-  }
+  PULSAR_DB_GLOB = {}
   print("loading db defaults glob")
 end
 
@@ -188,21 +200,24 @@ end
 --CreateUnitFrames
 function Pulsar:CreateUnitFrames()
   --create player frame
-  self.unit.player = Pulsar:CreateUnitFrame("player",cfg.unit.player)
-
-  --adjust the power orb position
-  Pulsar:SetPosition(self.unit.player.power,cfg.unit.player.power.pos)
-
-  --color stuff for testing
-  self.unit.player.health.filling:SetVertexColor(1,0,0)
-  self.unit.player.power.filling:SetVertexColor(0,0.6,1)
+  self.unit.player = Pulsar:CreateUnitFrame("player")
+  --apply db settings to player
+  self.unit.player.applyScale(self.db.char.unit.player.scale)
+  print("scale: "..self.db.char.unit.player.scale)
+  --apply db settings to player health
+  self.unit.player.health.applyPosition(self.db.char.unit.player.health.pos)
+  self.unit.player.health.filling:SetHeight(self.db.char.unit.player.health.size) --fix filling texture display on first loadup
+  self.unit.player.health.applySize(self.db.char.unit.player.health.size)
+  self.unit.player.health.applyColor(unpack(self.db.char.unit.player.health.color))
+  --apply db settings to player power
+  self.unit.player.power.applyPosition(self.db.char.unit.player.power.pos)
+  self.unit.player.power.filling:SetHeight(self.db.char.unit.player.power.size) --fix filling texture display on first loadup
+  self.unit.player.power.applySize(self.db.char.unit.player.power.size)
+  self.unit.player.power.applyColor(unpack(self.db.char.unit.player.power.color))
 end
 
---player login
-function Pulsar:PLAYER_LOGIN()
-
-  print("login")
-
+--LoadDatabase
+function Pulsar:LoadDatabase()
   --get db from savedvariables per account
   if not PULSAR_DB_GLOB then
     Pulsar:LoadDefaultsGlob()
@@ -231,6 +246,18 @@ function Pulsar:PLAYER_LOGIN()
     end
     InterfaceOptionsFrame_OpenToCategory("PulsarHealthOrb")
   end
+
+  --DEBUG - hard reset of config values
+  Pulsar:ResetDBChar()
+  Pulsar:ResetDBGlob()
+
+end
+
+--player login
+function Pulsar:PLAYER_LOGIN()
+
+  --load the database
+  Pulsar:LoadDatabase()
 
   --load the unitframes
   Pulsar:CreateUnitFrames()

@@ -65,18 +65,18 @@
     slider.textLow = _G[name.."Low"]
     slider.textHigh = _G[name.."High"]
     slider.text = _G[name.."Text"]
-    slider:SetMinMaxValues(50, 300)
+    slider:SetMinMaxValues(50, 500)
     slider.minValue, slider.maxValue = slider:GetMinMaxValues()
     slider.textLow:SetText(slider.minValue)
     slider.textHigh:SetText(slider.maxValue)
     slider.text:SetText("Size")
-    print("width: "..Pulsar.unit.player.health:GetWidth())
     slider:SetValue(Pulsar.unit.player.health:GetWidth())
     slider:SetValueStep(1)
     slider:SetScript("OnValueChanged", function(self,value)
       print(value)
-      Pulsar.unit.player.health:SetSize(value,value)
-      Pulsar.unit.player.health.forceUpdate()
+      Pulsar.unit.player.health.applySize(value)
+      print("player size: "..Pulsar.unit.player:GetWidth())
+      print("player health size: "..Pulsar.unit.player.health:GetWidth())
     end)
     InterfaceOptions_AddCategory(panel)
     return panel

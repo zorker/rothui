@@ -107,8 +107,8 @@ function Pulsar:CreateHealthOrb(parent)
     --force an update to make sure the filling texture is set up correct
     f.forceUpdate()
   end
-  f.applyColor = function(r,g,b)
-    f.filling:SetVertexColor(r,g,b)
+  f.applyColor = function(color)
+    f.filling:SetVertexColor(unpack(color))
   end
   f.applyPosition = function(pos)
     Pulsar:applyPosition(parent, pos) --position the parent element, not the health orb (the orb is positioned center)
@@ -147,8 +147,8 @@ function Pulsar:CreatePowerOrb(parent)
     --force an update to make sure the filling texture is set up correct
     f.forceUpdate()
   end
-  f.applyColor = function(r,g,b)
-    f.filling:SetVertexColor(r,g,b)
+  f.applyColor = function(color)
+    f.filling:SetVertexColor(unpack(color))
   end
   f.applyPosition = function(pos)
     Pulsar:applyPosition(f, pos) --position the parent element, not the health orb (the orb is positioned center)
@@ -203,17 +203,16 @@ function Pulsar:CreateUnitFrames()
   self.unit.player = Pulsar:CreateUnitFrame("player")
   --apply db settings to player
   self.unit.player.applyScale(self.db.char.unit.player.scale)
-  print("scale: "..self.db.char.unit.player.scale)
   --apply db settings to player health
-  self.unit.player.health.applyPosition(self.db.char.unit.player.health.pos)
   self.unit.player.health.filling:SetHeight(self.db.char.unit.player.health.size) --fix filling texture display on first loadup
+  self.unit.player.health.applyPosition(self.db.char.unit.player.health.pos)
   self.unit.player.health.applySize(self.db.char.unit.player.health.size)
-  self.unit.player.health.applyColor(unpack(self.db.char.unit.player.health.color))
+  self.unit.player.health.applyColor(self.db.char.unit.player.health.color)
   --apply db settings to player power
-  self.unit.player.power.applyPosition(self.db.char.unit.player.power.pos)
   self.unit.player.power.filling:SetHeight(self.db.char.unit.player.power.size) --fix filling texture display on first loadup
+  self.unit.player.power.applyPosition(self.db.char.unit.player.power.pos)
   self.unit.player.power.applySize(self.db.char.unit.player.power.size)
-  self.unit.player.power.applyColor(unpack(self.db.char.unit.player.power.color))
+  self.unit.player.power.applyColor(self.db.char.unit.player.power.color)
 end
 
 --LoadDatabase
@@ -248,8 +247,8 @@ function Pulsar:LoadDatabase()
   end
 
   --DEBUG - hard reset of config values
-  Pulsar:ResetDBChar()
-  Pulsar:ResetDBGlob()
+  --Pulsar:ResetDBChar()
+  --Pulsar:ResetDBGlob()
 
 end
 

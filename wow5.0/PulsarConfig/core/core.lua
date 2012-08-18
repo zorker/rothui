@@ -73,10 +73,10 @@
     slider:SetValue(Pulsar.unit.player.health:GetWidth())
     slider:SetValueStep(1)
     slider:SetScript("OnValueChanged", function(self,value)
-      print(value)
+      --apply value
       Pulsar.unit.player.health.applySize(value)
-      print("player size: "..Pulsar.unit.player:GetWidth())
-      print("player health size: "..Pulsar.unit.player.health:GetWidth())
+      --save value in db
+      Pulsar.db.char.unit.player.health.size = value
     end)
     InterfaceOptions_AddCategory(panel)
     return panel

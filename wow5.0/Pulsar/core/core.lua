@@ -1,12 +1,12 @@
 
 --get the addon namespace
 local addon, ns = ...
---config
-local cfg = ns.cfg
 --Pulsar
-local Pulsar = CreateFrame("Frame", "Pulsar", UIParent)
+local Pulsar = CreateFrame("Frame", "Pulsar")
 Pulsar.unit = {}
 Pulsar.db = {}
+Pulsar.db.default_char = ns.default_char --save the default values in the db, thus we can reset any setting to the default value
+Pulsar.db.default_glob = ns.default_glob --save the default values in the db, thus we can reset any setting to the default value
 Pulsar:Hide()
 ns.Pulsar = Pulsar
 
@@ -175,13 +175,13 @@ end
 
 --LoadDefaultsChar
 function Pulsar:LoadDefaultsChar()
-  PULSAR_DB_CHAR = cfg --load the config file into the db for the character
+  PULSAR_DB_CHAR = self.db.default_char --load the config file into the db for the character
   print("loading db defaults char")
 end
 
 --LoadDefaultsGlob
 function Pulsar:LoadDefaultsGlob()
-  PULSAR_DB_GLOB = {}
+  PULSAR_DB_GLOB = self.db.default_glob
   print("loading db defaults glob")
 end
 
@@ -215,20 +215,8 @@ function Pulsar:CreateUnitFrames()
   self.unit.player.power.applyColor(self.db.char.unit.player.power.color)
 end
 
---LoadDatabase
-function Pulsar:LoadDatabase()
-  --get db from savedvariables per account
-  if not PULSAR_DB_GLOB then
-    Pulsar:LoadDefaultsGlob()
-  end
-  self.db.glob = PULSAR_DB_GLOB
-
-  --get db from savedvariables per character
-  if not PULSAR_DB_CHAR then
-    Pulsar:LoadDefaultsChar()
-  end
-  self.db.char = PULSAR_DB_CHAR
-
+--LoadGuiConfig
+function Pulsar:LoadGuiConfig()
   --config loads when the interfaceoptionsframe is shown
   local f = CreateFrame("Frame", nil, InterfaceOptionsFrame)
   f:SetScript("OnShow", function(self)
@@ -245,22 +233,33 @@ function Pulsar:LoadDatabase()
     end
     InterfaceOptionsFrame_OpenToCategory("PulsarHealthOrb")
   end
+end
 
+--LoadDatabase
+function Pulsar:LoadDatabase()
+  --get db from savedvariables per account
+  if not PULSAR_DB_GLOB then
+    Pulsar:LoadDefaultsGlob()
+  end
+  self.db.glob = PULSAR_DB_GLOB
+  --get db from savedvariables per character
+  if not PULSAR_DB_CHAR then
+    Pulsar:LoadDefaultsChar()
+  end
+  self.db.char = PULSAR_DB_CHAR
   --DEBUG - hard reset of config values
   --Pulsar:ResetDBChar()
   --Pulsar:ResetDBGlob()
-
 end
 
 --player login
 function Pulsar:PLAYER_LOGIN()
-
   --load the database
   Pulsar:LoadDatabase()
-
+  --gui config loader
+  Pulsar:LoadGuiConfig()
   --load the unitframes
   Pulsar:CreateUnitFrames()
-
 end
 
 --event handler

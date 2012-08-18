@@ -16,10 +16,15 @@ ns.cfg = cfg
 cfg.unit = {
   player = {
     scale = 0.82,
-    size = 150,
-    pos = { a1="BOTTOM", af=UIParent, x=-260, y=-10, },
+    health = {
+      color = {1,0,0},
+      pos = { a1="BOTTOM", af=UIParent, x=-260, y=-10, },
+      size = 150,
+    },
     power = {
+      color = {0,0.8,1},
       pos = { a1="BOTTOM", af=UIParent, x=260, y=-10, },
-    }
+      size = 150,
+    },
   },
 }

@@ -61,9 +61,20 @@
 
     local gsi_name, gsi_rank, gsi_icon, gsi_powerCost, gsi_isFunnel, gsi_powerType, gsi_castingTime, gsi_minRange, gsi_maxRange = GetSpellInfo(f.spellid)
 
+    --check if the spellid exists
     if not gsi_name then
-      print("rFilter3 info: The following spell could not be found! Type: "..type.." SpellID: "..f.spellid)
+      print("|c"..ns.addonColor.."rFilter3:|r Spell not found! > "..type.." ["..index.."] | spellid: "..f.spellid)
       return
+    end
+
+    --if a spelllist is used, check every spell in the list for existence
+    if f.spelllist then
+      for _, spellid in ipairs(f.spelllist) do
+        if not GetSpellInfo(spellid) then
+          print("|c"..ns.addonColor.."rFilter3:|r Spelllist spell not found! > "..type.." ["..index.."] | spellid: "..spellid)
+          return
+        end
+      end
     end
 
     local i = CreateFrame("FRAME",makeFrameName(f,type),UIParent, "SecureHandlerStateTemplate")

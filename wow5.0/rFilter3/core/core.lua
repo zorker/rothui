@@ -61,6 +61,11 @@
 
     local gsi_name, gsi_rank, gsi_icon, gsi_powerCost, gsi_isFunnel, gsi_powerType, gsi_castingTime, gsi_minRange, gsi_maxRange = GetSpellInfo(f.spellid)
 
+    if not gsi_name then
+      print("rFilter3 info: The following spell could not be found! Type: "..type.." SpellID: "..f.spellid)
+      return
+    end
+
     local i = CreateFrame("FRAME",makeFrameName(f,type),UIParent, "SecureHandlerStateTemplate")
     i:SetSize(f.size,f.size)
     i:SetPoint(f.pos.a1,f.pos.af,f.pos.a2,f.pos.x,f.pos.y)
@@ -345,6 +350,7 @@
   local searchBuffs = function()
     for i,_ in ipairs(rf3_BuffList) do
       local f = rf3_BuffList[i]
+      if not f.iconframe then return end
       if f.spelllist and f.spelllist[1] then
         --print('buff spelllist exists')
         f.bufffound = false
@@ -362,6 +368,7 @@
   local searchDebuffs = function()
     for i,_ in ipairs(rf3_DebuffList) do
       local f = rf3_DebuffList[i]
+      if not f.iconframe then return end
       if  f.spelllist and f.spelllist[1] then
         --print('debuff spelllist exists')
         f.debufffound = false
@@ -379,6 +386,7 @@
   local searchCooldowns = function()
     for i,_ in ipairs(rf3_CooldownList) do
       local f = rf3_CooldownList[i]
+      if not f.iconframe then return end
       checkCooldown(f)
     end
   end

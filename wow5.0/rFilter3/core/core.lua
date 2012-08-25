@@ -42,8 +42,8 @@
     if not InCombatLockdown() then
       i:SetSize(w,w) --readjusting is impossible in combat
     end
-    i.shadow:SetSize(w*1.3,w*1.3)
-    i.border:SetSize(w*1.1,w*1.1)
+    i.shadow:SetSize(w*1.45,w*1.45)
+    i.border:SetSize(w*1.18,w*1.18)
     i.time:SetFont(STANDARD_TEXT_FONT, w*cfg.timeFontSize/36, "THINOUTLINE")
     i.count:SetFont(STANDARD_TEXT_FONT, w*cfg.countFontSize/32, "OUTLINE")
   end

@@ -80,7 +80,6 @@
     local i = CreateFrame("FRAME",makeFrameName(f,type),UIParent, "SecureHandlerStateTemplate")
     i:SetSize(f.size,f.size)
     i:SetPoint(f.pos.a1,f.pos.af,f.pos.a2,f.pos.x,f.pos.y)
-    i:SetAlpha(0)
     i.minsize = f.size
 
     local sh = i:CreateTexture(nil, "BACKGROUND",nil,-8)
@@ -138,6 +137,7 @@
   end
 
   local checkDebuff = function(f,spellid)
+    if not f.iconframe then return end
     if not f.iconframe:IsShown() then return end
     if f.iconframe.dragFrame:IsShown() then --make the icon visible in case we want to move it
       f.iconframe.icon:SetAlpha(1)
@@ -222,6 +222,7 @@
   end
 
   local checkBuff = function(f,spellid)
+    if not f.iconframe then return end
     if not f.iconframe:IsShown() then return end
     if f.iconframe.dragFrame:IsShown() then --make the icon visible in case we want to move it
       f.iconframe.icon:SetAlpha(1)
@@ -306,6 +307,7 @@
   end
 
   local checkCooldown = function(f)
+    if not f.iconframe then return end
     if not f.iconframe:IsShown() then return end
     if f.iconframe.dragFrame:IsShown() then --make the icon visible in case we want to move it
       f.iconframe.icon:SetAlpha(1)
@@ -361,7 +363,6 @@
   local searchBuffs = function()
     for i,_ in ipairs(rf3_BuffList) do
       local f = rf3_BuffList[i]
-      if not f.iconframe then return end
       if f.spelllist and f.spelllist[1] then
         --print('buff spelllist exists')
         f.bufffound = false
@@ -379,7 +380,6 @@
   local searchDebuffs = function()
     for i,_ in ipairs(rf3_DebuffList) do
       local f = rf3_DebuffList[i]
-      if not f.iconframe then return end
       if  f.spelllist and f.spelllist[1] then
         --print('debuff spelllist exists')
         f.debufffound = false
@@ -397,7 +397,6 @@
   local searchCooldowns = function()
     for i,_ in ipairs(rf3_CooldownList) do
       local f = rf3_CooldownList[i]
-      if not f.iconframe then return end
       checkCooldown(f)
     end
   end

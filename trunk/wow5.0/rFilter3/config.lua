@@ -31,10 +31,7 @@
         spec = nil,
         spellid = 469, --commanding shout
         spelllist = {
-          [1] = 469,
-          [2] = 79105,
-          [3] = 6307,
-          [4] = 90364,
+          469, 6307, 90364,
         },
         size = 24,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 130, y = 107 },
@@ -59,10 +56,7 @@
         spec = nil,
         spellid = 6673, --battle shout
         spelllist = {
-          [1] = 6673,
-          [2] = 57330,
-          [3] = 8076,
-          [4] = 93435,
+          6673, 57330, 93435,
         },
         size = 24,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 100, y = 107 },

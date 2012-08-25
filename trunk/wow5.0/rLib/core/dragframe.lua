@@ -19,12 +19,28 @@
     return point
   end
 
+  --rGetSize func
+  function rGetSize(self)
+    if not self then return end
+    local size = {}
+    size.w, size.h = self:GetWidth(), self:GetHeight()
+    return size
+  end
+
   --rResetToDefaultPoint func
   function rResetToDefaultPoint(self)
     if not self then return end
     if not self.defaultPoint then return end
     if InCombatLockdown() then return end --sorry not in combat
     rResetToPoint(self,self.defaultPoint)
+  end
+
+  --rResetToDefaultSize func
+  function rResetToDefaultSize(self)
+    if not self then return end
+    if not self.defaultSize then return end
+    if InCombatLockdown() then return end --sorry not in combat
+    self:SetSize(self.defaultSize.w,self.defaultSize.h)
   end
 
   --rResetToPoint func
@@ -97,6 +113,7 @@
     if txt then print(txt) end
     for _, frame in pairs(dragFrameList) do
       rResetToDefaultPoint(frame)
+      rResetToDefaultSize(frame)
     end
   end
 
@@ -141,6 +158,7 @@
     if not self or not dragFrameList then return end
     --save the default position for later
     self.defaultPoint = rGetPoint(self)
+    self.defaultSize = rGetSize(self)
     table.insert(dragFrameList,self) --add frame object to the list
     --anchor a dragable frame on self
     local df = CreateFrame("Frame",nil,self)

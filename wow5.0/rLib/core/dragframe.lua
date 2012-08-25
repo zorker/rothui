@@ -135,3 +135,47 @@
     self:SetMovable(true)
     self:SetUserPlaced(true)
   end
+
+  --rCreateDragResizeFrame func
+  function rCreateDragResizeFrame(self, dragFrameList, inset, clamp)
+    if not self or not dragFrameList then return end
+    --save the default position for later
+    self.defaultPoint = rGetPoint(self)
+    table.insert(dragFrameList,self) --add frame object to the list
+    --anchor a dragable frame on self
+    local df = CreateFrame("Frame",nil,self)
+    df:SetAllPoints(self)
+    df:SetFrameStrata("HIGH")
+    df:SetHitRectInsets(inset or 0,inset or 0,inset or 0,inset or 0)
+    df:EnableMouse(true)
+    df:RegisterForDrag("LeftButton","RightButton")
+    df:SetScript("OnDragStart", function(self, button)
+      if IsAltKeyDown() and IsShiftKeyDown() and button == "LeftButton" then
+        self:GetParent():StartMoving()
+      elseif IsAltKeyDown() and IsShiftKeyDown() and button == "RightButton" then
+        self:GetParent():StartSizing()
+      end
+    end)
+    df:SetScript("OnDragStop", function(self) self:GetParent():StopMovingOrSizing() end)
+    df:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine(self:GetParent():GetName(), 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:AddLine("ALT+SHIFT+LeftButton to drag!", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine("ALT+SHIFT+RightButton to resize!", 1, 1, 1, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    df:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+    df:Hide()
+    --overlay texture
+    local t = df:CreateTexture(nil,"OVERLAY",nil,6)
+    t:SetAllPoints(df)
+    t:SetTexture(1,0.6,1)
+    t:SetAlpha(0.2)
+    df.texture = t
+    --self stuff
+    self.dragFrame = df
+    self:SetClampedToScreen(clamp or false)
+    self:SetMovable(true)
+    self:SetResizable(true)
+    self:SetUserPlaced(true)
+  end

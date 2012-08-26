@@ -145,7 +145,7 @@
   MiniMapTrackingButton:SetPushedTexture(nil)
   MiniMapTrackingButton:SetAllPoints(MiniMapTracking)
   --minimap tracking background
-  MiniMapTrackingBackground:SetTexture(0,0,0,1)
+  MiniMapTrackingBackground:SetTexture(20/255,15/255,10/255,1)
   MiniMapTrackingBackground:SetAlpha(1)
   MiniMapTrackingBackground:SetAllPoints(MiniMapTracking)
   --minimap tracking border
@@ -167,6 +167,7 @@
   MiniMapMailFrame:SetPoint(cfg.mail.pos.a1,cfg.mail.pos.af,cfg.mail.pos.a2,cfg.mail.pos.x,cfg.mail.pos.y)
   --mail icon border
   MiniMapMailBorder:SetTexture("Interface\\AddOns\\rMinimap\\media\\button_overlay")
+  --MiniMapMailBorder:SetVertexColor(1,0,1)
   MiniMapMailBorder:SetPoint("TOPLEFT", MiniMapMailFrame, "TOPLEFT", -5, 5)
   MiniMapMailBorder:SetPoint("BOTTOMRIGHT", MiniMapMailFrame, "BOTTOMRIGHT", 5, -5)
   --mail icon
@@ -184,18 +185,14 @@
   GameTimeFrame:SetHighlightTexture(nil)
   --background
   local GameTimeFrameBackground = GameTimeFrame:CreateTexture(nil,"BACKGROUND",nil,-6)
-  GameTimeFrameBackground:SetTexture(0,0,0,1)
+  GameTimeFrameBackground:SetTexture(20/255,15/255,10/255,1)
   GameTimeFrameBackground:SetAlpha(1)
   GameTimeFrameBackground:SetAllPoints(GameTimeFrame)
   --text
-  local OldGameTimeFrameText = select(5, GameTimeFrame:GetRegions())
-  OldGameTimeFrameText:Hide()
-  local GameTimeFrameText = GameTimeFrame:CreateFontString(nil, "BACKGROUND")
+  local GameTimeFrameText = select(5, GameTimeFrame:GetRegions())
   GameTimeFrameText:SetFont(cfg.calendar.font.family,cfg.calendar.font.size,cfg.calendar.font.outline)
   GameTimeFrameText:SetPoint("CENTER",1,1)
-  GameTimeFrameText:SetText(OldGameTimeFrameText:GetText())
-  GameTimeFrameText:SetJustifyH("CENTER")
-  GameTimeFrameText:SetJustifyV("MIDDLE")
+  GameTimeFrameText:SetTextColor(195/255,186/255,140/255)
   --border
   local GameTimeFrameBorder = GameTimeFrame:CreateTexture(nil,"ARTWORK",nil,-6)
   GameTimeFrameBorder:SetTexture("Interface\\AddOns\\rMinimap\\media\\button_overlay")

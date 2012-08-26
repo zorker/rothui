@@ -124,7 +124,7 @@
     --add drag+resize function
     rCreateDragResizeFrame(i, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
     --apply size change
-    i:SetScript("OnSizeChanged", function() applySizeChange(i) end)
+    i:SetScript("OnSizeChanged", applySizeChange)
     applySizeChange(i)
 
     --visibility state

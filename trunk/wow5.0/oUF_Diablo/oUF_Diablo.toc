@@ -1,0 +1,31 @@
+## Interface: 50001
+## Author: zork
+## Title: oUF_Diablo
+## Notes: zork's oUF layout with Diablo flavour!
+## RequiredDeps: oUF, rLib
+
+modules\oUF_Experience.lua
+modules\oUF_Reputation.lua
+##modules\oUF_DebuffHighlight.lua
+modules\oUF_Smooth.lua
+##modules\oUF_AuraWatch.lua
+##modules\oUF_Vengeance.lua
+
+config.lua
+##charspecific.lua
+
+core\slashcmd.lua
+core\lib.lua
+core\tags.lua
+core\units.lua
+
+units\player.lua
+units\target.lua
+units\targettarget.lua
+units\pet.lua
+units\focus.lua
+units\pettarget.lua
+units\focustarget.lua
+units\party.lua
+units\raid.lua
+units\boss.lua

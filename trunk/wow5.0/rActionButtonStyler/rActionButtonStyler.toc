@@ -5,4 +5,5 @@
 ## OptionalDeps: rActionBarStyler
 
 config.lua
+charspecific.lua
 core\core.lua

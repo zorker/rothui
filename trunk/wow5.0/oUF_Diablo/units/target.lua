@@ -185,7 +185,6 @@
   local createBuffs = function(self)
     local f = CreateFrame("Frame", nil, self)
     f.size = self.cfg.auras.size
-    print("f.size: "..f.size)
     f.num = 40
     f:SetHeight((f.size+5)*4)
     f:SetWidth((f.size+5)*10)

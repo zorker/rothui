@@ -17,7 +17,7 @@
   -----------------------------
 
   cfg.buffframe = {
-    scale           = 0.9,
+    scale           = 0.82,
     pos             = { a1 = "TOPRIGHT", af = "Minimap", a2 = "TOPLEFT", x = -35, y = 0 },
     userplaced      = true, --want to place the bar somewhere else?
     locked          = true, --frame locked, can be unlocked ingame via /rbuff
@@ -28,7 +28,7 @@
   }
 
   cfg.tempenchant = {
-    scale           = 0.9,
+    scale           = 0.82,
     pos             = { a1 = "TOP", af = "Minimap", a2 = "BOTTOM", x = 40, y = -70 },
     userplaced      = true, --want to place the bar somewhere else?
     locked          = true, --frame locked, can be unlocked ingame via /rbuff
@@ -52,12 +52,12 @@
   }
 
   cfg.duration = {
-    fontsize        = 13,
+    fontsize        = 14,
     pos             = { a1 = "BOTTOM", x = 0, y = 0 },
   }
 
   cfg.count = {
-    fontsize        = 12,
+    fontsize        = 14,
     pos             = { a1 = "TOPRIGHT", x = 0, y = 0 },
   }
 

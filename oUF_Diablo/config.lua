@@ -58,8 +58,8 @@
     ["PRIEST"]        = { enable = true, animhealth = 19, animmana = 11,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["PALADIN"]       = { enable = true, animhealth = 1,  animmana = 17,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["SHAMAN"]        = { enable = true, animhealth = 16, animmana = 15,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
-    ["WARRIOR"]       = { enable = true, animhealth = 2,  animmana = 0,  classcolored = true, powertypecolored = true, healthmultiplier = 0.4,    manamultiplier = 0.4,  healthdecreasealpha = true,  manadecreasealpha = true,  },
-    --["WARRIOR"]       = { enable = true, animhealth = 2,  animmana = 0,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,  healthdecreasealpha = true,  manadecreasealpha = true,  },
+    --["WARRIOR"]       = { enable = true, animhealth = 2,  animmana = 0,  classcolored = true, powertypecolored = true, healthmultiplier = 0.4,    manamultiplier = 0.4,  healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["WARRIOR"]       = { enable = true, animhealth = 23,  animmana = 20,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,  healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["WARLOCK"]       = { enable = true, animhealth = 26, animmana = 9,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
   }
 
@@ -85,11 +85,11 @@
 
   --the texture of the health orb. you can choose between 11 different textures.
   --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = dmars, 15 = diablo3
-  cfg.healthtexture = 1 --default 15
+  cfg.healthtexture = 16 --default 15
 
   --the texture of the mana orb. you can choose between 11 different textures.
   --0 = random, 1 = moon, 2 = earth, 3 = mars, 4 = galaxy, 5 = jupiter, 6 = fraktal_circle, 7 = sun, 8 = icecream, 9 = marble, 10 = gradient, 11 = bubbles, 12 = woodpepples, 13 = golf, 14 = dmars, 15 = diablo3
-  cfg.manatexture = 3 --default 15
+  cfg.manatexture = 16 --default 15
 
   if cfg.useAnimationSystem == true then
     --rewrite to a more plain texture (better for animation models)
@@ -488,7 +488,7 @@
       alpha = {
         notinrange = 0.5,
       },
-      scale = 0.85,
+      scale = 0.82,
       pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 5, y = -77 },
       aurawatch = {
         show            = true,

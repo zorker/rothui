@@ -275,7 +275,7 @@
 
     --orb filling
     orb.Filling = orb:CreateTexture(nil, "BACKGROUND", nil, -4)
-    local MAX_ORBTEX_NUM = 15
+    local MAX_ORBTEX_NUM = 16
     if type == "power" then
       if cfg.manatexture >= 1 and cfg.manatexture <= MAX_ORBTEX_NUM then
         orb.Filling:SetTexture("Interface\\AddOns\\rTextures\\orb_filling"..cfg.manatexture)

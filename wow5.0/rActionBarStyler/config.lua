@@ -133,7 +133,7 @@
       mouseover       = {
         enable          = true,
         fadeIn          = {time = 0.4, alpha = 1},
-        fadeOut         = {time = 0.3, alpha = 0.2},
+        fadeOut         = {time = 0.3, alpha = 0},
       },
       combat          = { --fade the bar in/out in combat/out of combat
         enable          = false,
@@ -266,7 +266,7 @@
       mouseover       = {
         enable          = true,
         fadeIn          = {time = 0.4, alpha = 1},
-        fadeOut         = {time = 0.3, alpha = 0.1},
+        fadeOut         = {time = 0.3, alpha = 0},
       },
     },
     --BAGS
@@ -282,7 +282,7 @@
       mouseover       = {
         enable          = true,
         fadeIn          = {time = 0.4, alpha = 1},
-        fadeOut         = {time = 0.3, alpha = 0.1},
+        fadeOut         = {time = 0.3, alpha = 0},
       },
     },
   }

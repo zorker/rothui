@@ -171,6 +171,7 @@
   func.createAuraIcon = function(icons, button)
     --button:SetSize(icons.size,icons.size)
     --button.cd:SetReverse()
+    local size = icons.size or button:GetWidth()
     button.cd:SetPoint("TOPLEFT", 1, -1)
     button.cd:SetPoint("BOTTOMRIGHT", -1, 1)
     button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
@@ -179,7 +180,7 @@
     button.count:SetPoint("TOPRIGHT", 4, 4)
     button.count:SetTextColor(0.9,0.9,0.9)
     --fix fontsize to be based on button size
-    button.count:SetFont(cfg.font,icons.size/1.8,"THINOUTLINE")
+    button.count:SetFont(cfg.font,size/1.8,"THINOUTLINE")
     button.overlay:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\gloss2")
     button.overlay:SetTexCoord(0,1,0,1)
     button.overlay:SetPoint("TOPLEFT", -1, 1)
@@ -188,8 +189,8 @@
     button.overlay:Show()
     button.overlay.Hide = function() end
     local back = button:CreateTexture(nil, "BACKGROUND")
-    back:SetPoint("TOPLEFT",button.icon,"TOPLEFT",-0.18*icons.size,0.18*icons.size)
-    back:SetPoint("BOTTOMRIGHT",button.icon,"BOTTOMRIGHT",0.18*icons.size,-0.18*icons.size)
+    back:SetPoint("TOPLEFT",button.icon,"TOPLEFT",-0.18*size,0.18*size)
+    back:SetPoint("BOTTOMRIGHT",button.icon,"BOTTOMRIGHT",0.18*size,-0.18*size)
     back:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\simplesquare_glow")
     back:SetVertexColor(0, 0, 0, 1)
   end

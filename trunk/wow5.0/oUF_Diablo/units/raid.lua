@@ -193,7 +193,7 @@
     elseif cfg.colorswitcher.threatColored and unit and UnitThreatSituation(unit) == 3 then
       color = { r = 1, g = 0, b = 0, }
     elseif UnitIsPlayer(unit) then
-      color = rRAID_CLASS_COLORS[select(2, UnitClass(unit))] or RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+      color = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
     else
       color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
     end

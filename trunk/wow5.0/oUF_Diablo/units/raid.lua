@@ -160,6 +160,7 @@
         local icon = CreateFrame("Frame", nil, self)
         icon.spellID = sid
         -- set the dimensions and positions
+        icon.size = dir[i].size
         icon:SetSize(dir[i].size,dir[i].size)
         --position icon
         icon:SetPoint(dir[i].pos, self, dir[i].pos, dir[i].x, dir[i].y)

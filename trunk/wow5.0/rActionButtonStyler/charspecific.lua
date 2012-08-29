@@ -16,4 +16,5 @@
 
   if playername == "Rothar" or playername == "Rothor" or playername == "Wolowizard" or playername == "Loral" then
     cfg.hotkeys.show = false
+    cfg.macroname.show = false
   end

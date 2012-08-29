@@ -395,7 +395,7 @@
         size            = 20,
       },
       auras = {
-        show = true,
+        show = false,
         size = 22,
         onlyShowPlayerDebuffs = false,
         showDebuffType = false,

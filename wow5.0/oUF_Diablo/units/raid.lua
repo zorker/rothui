@@ -14,6 +14,8 @@
   --get the unit container
   local unit = ns.unit
 
+  local dragFrameList = ns.dragFrameList
+
   ---------------------------------------------
   -- UNIT SPECIFIC FUNCTIONS
   ---------------------------------------------
@@ -348,7 +350,6 @@
       self.Auras.PostCreateIcon = createAuraIcon
     end
 
-    --[[]]--
     --aurawatch
     if self.cfg.aurawatch.show then
       createAuraWatch(self)
@@ -372,69 +373,29 @@
 
   if cfg.units.raid.show then
 
+    --rCreateDragFrame(CompactRaidFrameManager, dragFrameList, -2 , false) --frame, dragFrameList, inset, clamp
+
     local crfm = _G["CompactRaidFrameManager"]
-    local crfb = _G["CompactRaidFrameManagerToggleButton"]
-
-    local ag1, ag2, a1, a2
-
-    --fade in anim
-    ag1 = crfm:CreateAnimationGroup()
-    a1 = ag1:CreateAnimation("Alpha")
-    a1:SetDuration(0.4)
-    a1:SetSmoothing("OUT")
-    a1:SetChange(1)
-    ag1.a1 = a1
-    crfm.ag1 = ag1
-
-    --fade out anim
-    ag2 = crfm:CreateAnimationGroup()
-    a2 = ag2:CreateAnimation("Alpha")
-    a2:SetDuration(0.3)
-    a2:SetSmoothing("IN")
-    a2:SetChange(-1)
-    ag2.a2 = a2
-    crfm.ag2 = ag2
-
-    crfm.ag1:SetScript("OnFinished", function(ag1)
-      local self = ag1:GetParent()
-      if not self.ag2:IsPlaying() then
-        self:SetAlpha(1)
+    CompactRaidFrameManagerToggleButton:HookScript("OnClick", function(m)
+      if CompactRaidFrameManager.collapsed then
+        CompactRaidFrameManager:SetAlpha(0.2)
+      else
+        CompactRaidFrameManager:SetAlpha(1)
       end
     end)
-
-    crfm.ag2:SetScript("OnFinished", function(ag2)
-      local self = ag2:GetParent()
-      if not self.ag1:IsPlaying() then
-        self:SetAlpha(0)
+    CompactRaidFrameManager:SetAlpha(0.2)
+    CompactRaidFrameManagerToggleButton:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+      GameTooltip:AddLine("RaidFrameManger", 0, 1, 0.5, 1, 1, 1)
+      if CompactRaidFrameManager.collapsed then
+        GameTooltip:AddLine("Click to open.", 1, 1, 1, 1, 1, 1)
+      else
+        GameTooltip:AddLine("Click to close.", 1, 1, 1, 1, 1, 1)
       end
+      GameTooltip:Show()
     end)
-
-    crfm:SetAlpha(0)
-
-    crfm:SetScript("OnEnter", function(m)
-      if m.collapsed and m:GetAlpha() < 0.8 then
-        m.ag2:Stop()
-        m:SetAlpha(0)
-        m.ag1:Play()
-      end
-    end)
-    crfm:SetScript("OnMouseUp", function(self)
-      if self.collapsed and not InCombatLockdown() then
-        CompactRaidFrameManager_Toggle(self)
-      end
-    end)
-    crfb:SetScript("OnMouseUp", function(self)
-      local m = self:GetParent()
-      if not m.collapsed then
-        m.ag2:Play()
-      end
-    end)
-    crfm:SetScript("OnLeave", function(m)
-      if m.collapsed and GetMouseFocus():GetName() ~= "CompactRaidFrameManagerToggleButton" and GetMouseFocus():GetName() ~= "CompactRaidFrameManager" then
-        m.ag1:Stop()
-        m:SetAlpha(1)
-        m.ag2:Play()
-      end
+    CompactRaidFrameManagerToggleButton:SetScript("OnLeave", function(self)
+      GameTooltip:Hide()
     end)
 
     --register style

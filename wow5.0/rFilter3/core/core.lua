@@ -109,7 +109,7 @@
     time:SetTextColor(1, 0.8, 0)
 
     local count = i:CreateFontString(nil, "BORDER")
-    count:SetPoint("TOPRIGHT", 0,0)
+    count:SetPoint("TOPRIGHT", 2,2)
     count:SetTextColor(1, 1, 1)
     count:SetJustifyH("RIGHT")
 

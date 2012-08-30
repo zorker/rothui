@@ -21,7 +21,7 @@
     scale           = 0.82,
   }
 
-  cfg.map = {    
+  cfg.map = {
     pos             = { a1 = "TOP", x = 10, y = -20 }, --set the position of the minimap inside the minimap cluster
   }
 

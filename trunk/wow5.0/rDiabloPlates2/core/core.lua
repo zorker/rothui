@@ -319,7 +319,7 @@
   end
 
   local startSearch = function(self)
-    --timer  
+    --timer
     local ag = self:CreateAnimationGroup()
     ag.anim = ag:CreateAnimation()
     ag.anim:SetDuration(0.33)
@@ -339,8 +339,11 @@
   --init
   local a = CreateFrame("Frame")
   a:RegisterEvent("PLAYER_LOGIN")
-  a:SetScript("OnEvent", function(self,event,...) 
+  a:SetScript("OnEvent", function(self,event,...)
     if event == "PLAYER_LOGIN" then
+      SetCVar("bloattest",0)--0.0
+      SetCVar("bloatnameplates",0)--0.0
+      SetCVar("bloatthreat",0)--1
       startSearch(self)
     end
   end)

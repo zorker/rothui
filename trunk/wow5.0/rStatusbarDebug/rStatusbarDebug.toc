@@ -1,0 +1,6 @@
+## Interface: 50001
+## Author: zork
+## Title: rStatusbarDebug
+## Notes: Testing horizontal and vertical statusbar with non-rectuangular statusbar textures
+
+core.lua

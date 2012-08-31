@@ -16,7 +16,7 @@ local createStatusbarVertical = function()
   bar.minValue, bar.maxValue = bar:GetMinMaxValues()
   bar.bg = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
   bar.bg:SetAllPoints(bar)
-  bar.bg:SetTexture(0,0,0)
+  bar.bg:SetTexture(0,0,1)
   bar.bg:SetAlpha(0.2)
   local tex = bar:CreateTexture(nil,"BACKGROUND",nil,-6)
   tex:SetTexture(textureVertical)
@@ -32,7 +32,7 @@ local createStatusbarHorizontal = function()
   bar.minValue, bar.maxValue = bar:GetMinMaxValues()
   bar.bg = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
   bar.bg:SetAllPoints(bar)
-  bar.bg:SetTexture(0,0,0)
+  bar.bg:SetTexture(1,0,0)
   bar.bg:SetAlpha(0.2)
   local tex = bar:CreateTexture(nil,"BACKGROUND",nil,-6)
   tex:SetTexture(textureHorizontal)
@@ -51,4 +51,33 @@ for i=1,10 do
   local bar = createStatusbarHorizontal()
   bar:SetValue(i*10)
   bar:SetPoint("CENTER",(-1*5*35)+i*35,50)
+end
+
+
+for i=1,10 do
+  local bar = createStatusbarVertical()
+  bar:SetSize(50,50)
+  bar:SetValue(i*10)
+  bar:SetPoint("CENTER",(-1*5*50)+i*50,120)
+end
+
+for i=1,10 do
+  local bar = createStatusbarHorizontal()
+  bar:SetSize(50,50)
+  bar:SetValue(i*10)
+  bar:SetPoint("CENTER",(-1*5*50)+i*50,190)
+end
+
+for i=1,10 do
+  local bar = createStatusbarVertical()
+  bar:SetSize(30,50)
+  bar:SetValue(i*10)
+  bar:SetPoint("CENTER",(-1*5*50)+i*50,-70)
+end
+
+for i=1,10 do
+  local bar = createStatusbarHorizontal()
+  bar:SetSize(50,30)
+  bar:SetValue(i*10)
+  bar:SetPoint("CENTER",(-1*5*50)+i*50,-140)
 end

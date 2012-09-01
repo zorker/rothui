@@ -9,7 +9,6 @@ modules\oUF_Reputation.lua
 modules\oUF_DebuffHighlight.lua
 modules\oUF_Smooth.lua
 modules\oUF_AuraWatch.lua
-##modules\oUF_Vengeance.lua
 
 config.lua
 ##charspecific.lua

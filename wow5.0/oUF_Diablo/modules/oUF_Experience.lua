@@ -1,30 +1,16 @@
-local _, ns = ...
+local __, ns = ...
 local oUF = ns.oUF or oUF
 assert(oUF, 'oUF Experience was unable to locate oUF install')
 
 for tag, func in pairs({
 	['curxp'] = function(unit)
-		if(unit == 'pet') then
-			return GetPetExperience()
-		else
-			return UnitXP(unit)
-		end
+		return UnitXP(unit)
 	end,
 	['maxxp'] = function(unit)
-		if(unit == 'pet') then
-			local _, max = GetPetExperience()
-			return max
-		else
-			return UnitXPMax(unit)
-		end
+		return UnitXPMax(unit)
 	end,
 	['perxp'] = function(unit)
-		if(unit == 'pet') then
-			local min, max = GetPetExperience()
-			return math.floor(min / max * 100 + 0.5)
-		else
-			return math.floor(UnitXP(unit) / UnitXPMax(unit) * 100 + 0.5)
-		end
+		return math.floor(UnitXP(unit) / UnitXPMax(unit) * 100 + 0.5)
 	end,
 	['currested'] = function()
 		return GetXPExhaustion()
@@ -37,22 +23,7 @@ for tag, func in pairs({
 	end,
 }) do
 	oUF.Tags.Methods[tag] = func
-	oUF.Tags.Events[tag] = 'PLAYER_XP_UPDATE PLAYER_LEVEL_UP UNIT_PET_EXPERIENCE UPDATE_EXHAUSTION'
-end
-
-local function Unbeneficial(self, unit)
-	if(unit == 'player') then
-		if(UnitLevel(unit) == MAX_PLAYER_LEVEL) then
-			return true
-		end
-	elseif(unit == 'pet') then
-		local _, hunterPet = HasPetUI()
-		if(not self.disallowVehicleSwap and UnitHasVehicleUI('player')) then
-			return true
-		elseif(not hunterPet or (UnitLevel(unit) == UnitLevel('player'))) then
-			return true
-		end
-	end
+	oUF.Tags.Events[tag] = 'PLAYER_XP_UPDATE PLAYER_LEVEL_UP UPDATE_EXHAUSTION'
 end
 
 local function Update(self, event, unit)
@@ -61,24 +32,18 @@ local function Update(self, event, unit)
 	local experience = self.Experience
 	if(experience.PreUpdate) then experience:PreUpdate(unit) end
 
-	if(Unbeneficial(self, unit)) then
+	if(UnitLevel(unit) == MAX_PLAYER_LEVEL or UnitHasVehicleUI('player')) then
 		return experience:Hide()
 	else
 		experience:Show()
 	end
 
-	local min, max
-	if(unit == 'pet') then
-		min, max = GetPetExperience()
-	else
-		min, max = UnitXP(unit), UnitXPMax(unit)
-	end
-
+	local min, max = UnitXP(unit), UnitXPMax(unit)
 	experience:SetMinMaxValues(0, max)
 	experience:SetValue(min)
 
 	if(experience.Rested) then
-		local exhaustion = unit == 'player' and GetXPExhaustion() or 0
+		local exhaustion = GetXPExhaustion() or 0
 		experience.Rested:SetMinMaxValues(0, max)
 		experience.Rested:SetValue(math.min(min + exhaustion, max))
 	end
@@ -96,7 +61,7 @@ local function ForceUpdate(element)
 	return Path(element.__owner, 'ForceUpdate', element.__owner.unit)
 end
 
-local function Enable(self)
+local function Enable(self, unit)
 	local experience = self.Experience
 	if(experience) then
 		experience.__owner = self
@@ -104,7 +69,6 @@ local function Enable(self)
 
 		self:RegisterEvent('PLAYER_XP_UPDATE', Path)
 		self:RegisterEvent('PLAYER_LEVEL_UP', Path)
-		self:RegisterEvent('UNIT_PET_EXPERIENCE', Path)
 
 		local rested = experience.Rested
 		if(rested) then
@@ -129,7 +93,6 @@ local function Disable(self)
 	if(experience) then
 		self:UnregisterEvent('PLAYER_XP_UPDATE', Path)
 		self:UnregisterEvent('PLAYER_LEVEL_UP', Path)
-		self:UnregisterEvent('UNIT_PET_EXPERIENCE', Path)
 
 		if(experience.Rested) then
 			self:UnregisterEvent('UPDATE_EXHAUSTION', Path)

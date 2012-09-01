@@ -122,7 +122,9 @@
     i.spec = f.spec --save the spec to the icon
 
     --add drag+resize function
-    rCreateDragResizeFrame(i, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+    if f.move_ingame then
+      rCreateDragResizeFrame(i, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+    end
     --apply size change
     i:SetScript("OnSizeChanged", applySizeChange)
     applySizeChange(i)
@@ -139,16 +141,19 @@
   local checkDebuff = function(f,spellid)
     if not f.iconframe then return end
     if not f.iconframe:IsShown() then return end
-    if f.iconframe.dragFrame:IsShown() then --make the icon visible in case we want to move it
+    if f.spec and f.spec ~= GetSpecialization() then
+      if f.move_ingame and f.iconframe.dragFrame:IsShown() then
+        f.iconframe.dragFrame:Hide() --do not show icons that do not match the spec set by the player
+      end
+      f.iconframe:SetAlpha(0)
+      return
+    end
+    if f.move_ingame and f.iconframe.dragFrame:IsShown() then --make the icon visible in case we want to move it
       f.iconframe.icon:SetAlpha(1)
       f.iconframe:SetAlpha(1)
       f.iconframe.icon:SetDesaturated(nil)
       f.iconframe.time:SetText("30m")
       f.iconframe.count:SetText("3")
-      return
-    end
-    if f.spec and f.spec ~= GetActiveSpecGroup() then
-      f.iconframe:SetAlpha(0)
       return
     end
     if not UnitExists(f.unit) and f.validate_unit then
@@ -224,16 +229,19 @@
   local checkBuff = function(f,spellid)
     if not f.iconframe then return end
     if not f.iconframe:IsShown() then return end
-    if f.iconframe.dragFrame:IsShown() then --make the icon visible in case we want to move it
+    if f.spec and f.spec ~= GetSpecialization() then
+      if f.move_ingame and f.iconframe.dragFrame:IsShown() then
+        f.iconframe.dragFrame:Hide() --do not show icons that do not match the spec set by the player
+      end
+      f.iconframe:SetAlpha(0)
+      return
+    end
+    if f.move_ingame and f.iconframe.dragFrame:IsShown() then --make the icon visible in case we want to move it
       f.iconframe.icon:SetAlpha(1)
       f.iconframe:SetAlpha(1)
       f.iconframe.icon:SetDesaturated(nil)
       f.iconframe.time:SetText("30m")
       f.iconframe.count:SetText("3")
-      return
-    end
-    if f.spec and f.spec ~= GetActiveSpecGroup() then
-      f.iconframe:SetAlpha(0)
       return
     end
     if not UnitExists(f.unit) and f.validate_unit then
@@ -309,16 +317,19 @@
   local checkCooldown = function(f)
     if not f.iconframe then return end
     if not f.iconframe:IsShown() then return end
-    if f.iconframe.dragFrame:IsShown() then --make the icon visible in case we want to move it
+    if f.spec and f.spec ~= GetSpecialization() then
+      if f.move_ingame and f.iconframe.dragFrame:IsShown() then
+        f.iconframe.dragFrame:Hide() --do not show icons that do not match the spec set by the player
+      end
+      f.iconframe:SetAlpha(0)
+      return
+    end
+    if f.move_ingame and f.iconframe.dragFrame:IsShown() then --make the icon visible in case we want to move it
       f.iconframe.icon:SetAlpha(1)
       f.iconframe:SetAlpha(1)
       f.iconframe.icon:SetDesaturated(nil)
       f.iconframe.time:SetText("30m")
       f.iconframe.count:SetText("3")
-      return
-    end
-    if f.spec and f.spec ~= GetActiveSpecGroup() then
-      f.iconframe:SetAlpha(0)
       return
     end
     if not InCombatLockdown() and f.hide_ooc then

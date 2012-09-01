@@ -63,6 +63,29 @@
   Minimap:ClearAllPoints()
   Minimap:SetPoint(cfg.map.pos.a1,cfg.map.pos.x,cfg.map.pos.y)
 
+  --vehicle seat indicator
+  local frame = CreateFrame("Frame", "rMM_VehicleSeatIndicatorDragFrame", UIParent)
+  frame:SetSize(VehicleSeatIndicator:GetWidth(),VehicleSeatIndicator:GetHeight())
+  --frame:SetPoint(VehicleSeatIndicator:GetPoint())
+  frame:SetPoint("TOPRIGHT",rMM_MinimapClusterDragFrame,"BOTTOMRIGHT",0,-4)
+  rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+  VehicleSeatIndicator:SetParent(frame)
+  VehicleSeatIndicator:SetAllPoints(frame)
+  hooksecurefunc(VehicleSeatIndicator, "SetPoint", function(...)
+    VehicleSeatIndicator:SetAllPoints(frame)
+  end)
+
+  --durability frame
+  local frame = CreateFrame("Frame", "rMM_DurabilityDragFrame", UIParent)
+  frame:SetSize(DurabilityFrame:GetWidth(),DurabilityFrame:GetHeight())
+  frame:SetPoint("TOPRIGHT",rMM_VehicleSeatIndicatorDragFrame,"TOPLEFT",-4,0)
+  rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+  DurabilityFrame:SetParent(frame)
+  DurabilityFrame:SetAllPoints(frame)
+  hooksecurefunc(DurabilityFrame, "SetPoint", function(...)
+    DurabilityFrame:SetAllPoints(frame)
+  end)
+
   --button positions
 
   ---------------------------------------

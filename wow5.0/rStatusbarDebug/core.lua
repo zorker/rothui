@@ -81,3 +81,9 @@ for i=1,10 do
   bar:SetValue(i*10)
   bar:SetPoint("CENTER",(-1*5*50)+i*50,-140)
 end
+
+for i=0,20 do
+  local bar = createStatusbarVertical()
+  bar:SetValue(i*0.5)
+  bar:SetPoint("CENTER",(-1*10*35)+i*35,-190)
+end

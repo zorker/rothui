@@ -214,6 +214,8 @@
     self.Debuffs = f
   end
 
+  local MAX_COMBO_POINTS = MAX_COMBO_POINTS
+
   --update combo
   local function updateCombo(self, event, unit)
     if unit == "pet" then return end
@@ -228,27 +230,29 @@
 
     if cp < 1 then
       bar:Hide()
+      return
     else
       bar:Show()
     end
 
     for i=1, MAX_COMBO_POINTS do
-      local adjust = cp/MAX_COMBO_POINTS
+      local orb = self.CPoints[i]
+      local full = cp/MAX_COMBO_POINTS
       if(i <= cp) then
-        if adjust == 1 then
-          bar.filling[i]:SetVertexColor(60/255,220/255,20/255,1)
-          bar.glow[i]:SetVertexColor(60/255,220/255,20/255,1)
+        if full == 1 then
+          orb.fill:SetVertexColor(1,0,0)
+          orb.glow:SetVertexColor(1,0,0)
         else
-          bar.filling[i]:SetVertexColor(bar.color.r,bar.color.g,bar.color.b,1)
-          bar.glow[i]:SetVertexColor(bar.color.r,bar.color.g,bar.color.b,1)
+          orb.fill:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
+          orb.glow:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
         end
-        bar.filling[i]:Show()
-        bar.glow[i]:Show()
-        bar.gloss[i]:Show()
+        orb.fill:Show()
+        orb.glow:Show()
+        orb.highlight:Show()
       else
-        bar.filling[i]:Hide()
-        bar.glow[i]:Hide()
-        bar.gloss[i]:Hide()
+        orb.fill:Hide()
+        orb.glow:Hide()
+        orb.highlight:Hide()
       end
     end
 
@@ -268,54 +272,76 @@
     bar:SetWidth(w)
     bar:SetHeight(h)
 
+    --color
+    bar.color = self.cfg.combobar.color
+
+    --left edge
     t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetSize(64,64)
     t:SetPoint("LEFT",0,0)
     t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_left")
-    bar.leftedge = t
+    bar.leftEdge = t
 
+    --right edge
     t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetSize(64,64)
     t:SetPoint("RIGHT",0,0)
     t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_right")
-    bar.rightedge = t
-
-    bar.back = {}
-    bar.filling = {}
-    bar.glow = {}
-    bar.gloss = {}
+    bar.rightEdge = t
 
     for i = 1, MAX_COMBO_POINTS do
-      local back = "back"..i
-      bar.back[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
-      bar.back[i]:SetSize(64,64)
-      bar.back[i]:SetPoint("LEFT",i*64,0)
-      bar.back[i]:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_back2")
-      bar.back[i]:SetAlpha(0.96)
 
-      bar.filling[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-7)
-      bar.filling[i]:SetSize(64,64)
-      bar.filling[i]:SetPoint("LEFT",i*64,0)
-      bar.filling[i]:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_fill")
-      bar.filling[i]:SetVertexColor(self.cfg.combobar.color.r,self.cfg.combobar.color.g,self.cfg.combobar.color.b,1)
-      bar.filling[i]:SetBlendMode("ADD")
+      local orb = CreateFrame("Frame",nil,bar)
+      self.CPoints[i] = orb
 
-      bar.glow[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-6)
-      bar.glow[i]:SetSize(64*1.25,64*1.25)
-      bar.glow[i]:SetPoint("CENTER", bar.filling[i], "CENTER", 0, 0)
-      bar.glow[i]:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_glow")
-      bar.glow[i]:SetBlendMode("ADD")
-      bar.glow[i]:SetVertexColor(self.cfg.combobar.color.r,self.cfg.combobar.color.g,self.cfg.combobar.color.b,1)
+      orb:SetSize(64,64)
+      orb:SetPoint("LEFT",i*64,0)
 
-      bar.gloss[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-5)
-      bar.gloss[i]:SetSize(64,64)
-      bar.gloss[i]:SetPoint("LEFT",i*64,0)
-      bar.gloss[i]:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_highlight")
-      bar.gloss[i]:SetBlendMode("ADD")
+      local orbSizeMultiplier = 0.85
+      if i == MAX_COMBO_POINTS then
+        --orbSizeMultiplier = 0.9
+      end
 
-      bar.color = self.cfg.combobar.color
+      --bar background
+      orb.barBg = orb:CreateTexture(nil,"BACKGROUND",nil,-8)
+      orb.barBg:SetSize(64,64)
+      orb.barBg:SetPoint("CENTER")
+      orb.barBg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_bar_bg")
 
-      self.CPoints[i] = bar.filling[i]
+      --orb background
+      orb.bg = orb:CreateTexture(nil,"BACKGROUND",nil,-7)
+      orb.bg:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.bg:SetPoint("CENTER")
+      orb.bg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_bg")
+
+      --orb filling
+      orb.fill = orb:CreateTexture(nil,"BACKGROUND",nil,-6)
+      orb.fill:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.fill:SetPoint("CENTER")
+      orb.fill:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_fill1")
+      orb.fill:SetVertexColor(self.cfg.combobar.color.r,self.cfg.combobar.color.g,self.cfg.combobar.color.b)
+      --orb.fill:SetBlendMode("ADD")
+
+      --orb border
+      orb.border = orb:CreateTexture(nil,"BACKGROUND",nil,-5)
+      orb.border:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.border:SetPoint("CENTER")
+      orb.border:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_border")
+
+      --orb glow
+      orb.glow = orb:CreateTexture(nil,"BACKGROUND",nil,-4)
+      orb.glow:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.glow:SetPoint("CENTER")
+      orb.glow:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_glow")
+      orb.glow:SetVertexColor(self.cfg.combobar.color.r,self.cfg.combobar.color.g,self.cfg.combobar.color.b)
+      orb.glow:SetBlendMode("BLEND")
+
+      --orb highlight
+      orb.highlight = orb:CreateTexture(nil,"BACKGROUND",nil,-3)
+      orb.highlight:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.highlight:SetPoint("CENTER")
+      orb.highlight:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_highlight")
+
     end
 
     bar:SetScale(self.cfg.combobar.scale)

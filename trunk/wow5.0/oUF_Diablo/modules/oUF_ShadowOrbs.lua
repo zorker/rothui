@@ -1,37 +1,4 @@
---[[ Element: Shadow Orbs
- Toggles visibility of the players Shadow Orbs.
-
- Widget
-
- ShadowOrbs - An array consisting of three UI widgets.
-
- Notes
-
- The default shadow orbs texture will be applied to textures within the ShadowOrbs
- array that don't have a texture or color defined.
-
- Examples
-
-   local ShadowOrbs = {}
-   for index = 1, PRIEST_BAR_NUM_ORBS do
-      local Orb = self:CreateTexture(nil, 'BACKGROUND')
-
-      -- Position and size of the orb.
-      Orb:SetSize(14, 14)
-      Orb:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', index * Orb:GetWidth(), 0)
-
-      ShadowOrbs[index] = Orb
-   end
-
-   -- Register with oUF
-   self.ShadowOrbs = ShadowOrbs
-
- Hooks
-
- Override(self) - Used to completely override the internal update function.
-                  Removing the table key entry will make the element fall-back
-                  to its internal function again.
-]]
+if select(2, UnitClass("player")) ~= "PRIEST" then return end
 
 local parent, ns = ...
 local oUF = ns.oUF or oUF
@@ -86,14 +53,11 @@ end
 
 local Visibility = function(self, event, unit)
 	local element = self.ShadowOrbs
+  local bar = self.ShadowOrbPowerBar
 	if(GetSpecialization() == SPEC_PRIEST_SHADOW) then
-		for index = 1, PRIEST_BAR_NUM_ORBS do
-			element[index]:Show()
-		end
+    bar:Show()
 	else
-		for index = 1, PRIEST_BAR_NUM_ORBS do
-			element[index]:Hide()
-		end
+		bar:Hide()
 	end
 end
 
@@ -111,17 +75,9 @@ local Enable = function(self, unit)
 		element.__owner = self
 		element.ForceUpdate = ForceUpdate
 
-		self:RegisterEvent('UNIT_POWER', Path)
-		self:RegisterEvent('UNIT_DISPLAYPOWER', Path)
+		self:RegisterEvent('UNIT_POWER', Path, true)
+		self:RegisterEvent('UNIT_DISPLAYPOWER', Path, true)
 		self:RegisterEvent('PLAYER_TALENT_UPDATE', Visibility, true)
-
-		for index = 1, PRIEST_BAR_NUM_ORBS do
-			local orb = element[index]
-			if(orb:IsObjectType'Texture' and not orb:GetTexture()) then
-				orb:SetTexture[[Interface\PlayerFrame\Priest-ShadowUI]]
-				orb:SetTexCoord(0.45703125, 0.60546875, 0.44531250, 0.73437500)
-			end
-		end
 
 		return true
 	end

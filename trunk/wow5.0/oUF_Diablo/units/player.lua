@@ -66,7 +66,9 @@
       t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\bar"..cfg.style)
     else
       local setupBarTexture = function()
-        if UnitHasVehicleUI("player") then
+        if ((HasVehicleActionBar() and UnitVehicleSkin("player") and UnitVehicleSkin("player") ~= "")
+        or (HasOverrideActionBar() and GetOverrideBarSkin() and GetOverrideBarSkin() ~= ""))
+        or UnitHasVehicleUI("player") then
           t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\bar1")
         elseif MultiBarBottomRight:IsShown() then
           t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\bar3")

@@ -235,7 +235,8 @@
     t = g:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetSize(64*num,64)
     t:SetPoint("LEFT",0,0)
-    t:SetBlendMode("ADD")
+    t:SetAlpha(0.7)
+    t:SetBlendMode("BLEND")
     t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_highlight2")
 
     f = func.createFontString(g, cfg.font, 24, "THINOUTLINE")

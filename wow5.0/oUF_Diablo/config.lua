@@ -184,6 +184,12 @@
         color = {r = 200/255, g = 135/255, b = 190/255, },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
       },
+      shadoworbs = { --class bar SHADOW PRIEST
+        show = true,
+        scale = 0.40,
+        color = {r = 80/255, g = 20/255, b = 130/255, },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
+      },
       harmony = { --class bar MONK
         show = true,
         scale = 0.40,

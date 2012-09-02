@@ -644,11 +644,149 @@
     self.SoulShardBar = bar
   end
 
+  local SPELL_POWER_SHADOW_ORBS = SPELL_POWER_SHADOW_ORBS
+
+  --update shadow orb power
+  local updateShadowOrbPower = function(self, event, unit, powerType)
+    if(self.unit ~= unit or (powerType and powerType ~= "SHADOW_ORBS")) then return end
+    local bar = self.ShadowOrbPowerBar
+    local num = UnitPower(unit, SPELL_POWER_SHADOW_ORBS)
+    local max = UnitPowerMax(unit, SPELL_POWER_SHADOW_ORBS)
+    if num < 1 then
+      if bar:IsShown() then bar:Hide() end
+      return
+    else
+      if not bar:IsShown() then bar:Show() end
+    end
+    --adjust the width of the shadow orb power frame
+    local w = 64*(max+2)
+    bar:SetWidth(w)
+    for i = 1, bar.maxOrbs do
+      local orb = self.ShadowOrbs[i]
+      if i > max then
+         if orb:IsShown() then orb:Hide() end
+      else
+        if not orb:IsShown() then orb:Show() end
+      end
+    end
+    for i = 1, max do
+      local orb = self.ShadowOrbs[i]
+      local full = num/max
+      if(i <= num) then
+        if full == 1 then
+          orb.fill:SetVertexColor(1,0,0)
+          orb.glow:SetVertexColor(1,0,0)
+        else
+          orb.fill:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
+          orb.glow:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
+        end
+        orb.fill:Show()
+        orb.glow:Show()
+        orb.highlight:Show()
+      else
+        orb.fill:Hide()
+        orb.glow:Hide()
+        orb.highlight:Hide()
+      end
+    end
+  end
+
+  --create shadow orb power bar
+  local createShadowOrbPowerBar = function(self)
+
+    self.ShadowOrbs = {}
+
+    local t
+    local bar = CreateFrame("Frame","oUF_DiabloShadowOrbPower",self)
+    bar.maxOrbs = 3
+    local w = 64*(bar.maxOrbs+2) --create the bar for
+    local h = 64
+    --bar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    bar:SetPoint(self.cfg.shadoworbs.pos.a1,self.cfg.shadoworbs.pos.af,self.cfg.shadoworbs.pos.a2,self.cfg.shadoworbs.pos.x,self.cfg.shadoworbs.pos.y)
+    bar:SetWidth(w)
+    bar:SetHeight(h)
+
+    --color
+    bar.color = self.cfg.shadoworbs.color
+
+    --left edge
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("LEFT",0,0)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_left")
+    bar.leftEdge = t
+
+    --right edge
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("RIGHT",0,0)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_right")
+    bar.rightEdge = t
+
+    for i = 1, bar.maxOrbs do
+
+      local orb = CreateFrame("Frame",nil,bar)
+      self.ShadowOrbs[i] = orb
+
+      orb:SetSize(64,64)
+      orb:SetPoint("LEFT",i*64,0)
+
+      local orbSizeMultiplier = 0.85
+
+      --bar background
+      orb.barBg = orb:CreateTexture(nil,"BACKGROUND",nil,-8)
+      orb.barBg:SetSize(64,64)
+      orb.barBg:SetPoint("CENTER")
+      orb.barBg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_bar_bg")
+
+      --orb background
+      orb.bg = orb:CreateTexture(nil,"BACKGROUND",nil,-7)
+      orb.bg:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.bg:SetPoint("CENTER")
+      orb.bg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_bg")
+
+      --orb filling
+      orb.fill = orb:CreateTexture(nil,"BACKGROUND",nil,-6)
+      orb.fill:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.fill:SetPoint("CENTER")
+      orb.fill:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_fill1")
+      orb.fill:SetVertexColor(self.cfg.shadoworbs.color.r,self.cfg.shadoworbs.color.g,self.cfg.shadoworbs.color.b)
+      --orb.fill:SetBlendMode("ADD")
+
+      --orb border
+      orb.border = orb:CreateTexture(nil,"BACKGROUND",nil,-5)
+      orb.border:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.border:SetPoint("CENTER")
+      orb.border:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_border")
+
+      --orb glow
+      orb.glow = orb:CreateTexture(nil,"BACKGROUND",nil,-4)
+      orb.glow:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.glow:SetPoint("CENTER")
+      orb.glow:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_glow")
+      orb.glow:SetVertexColor(self.cfg.shadoworbs.color.r,self.cfg.shadoworbs.color.g,self.cfg.shadoworbs.color.b)
+      orb.glow:SetBlendMode("BLEND")
+
+      --orb highlight
+      orb.highlight = orb:CreateTexture(nil,"BACKGROUND",nil,-3)
+      orb.highlight:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.highlight:SetPoint("CENTER")
+      orb.highlight:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_highlight")
+
+    end
+
+    bar:SetScale(self.cfg.shadoworbs.scale)
+    func.applyDragFunctionality(bar)
+
+    self.ShadowOrbPowerBar = bar
+
+  end
+
   local SPELL_POWER_LIGHT_FORCE = SPELL_POWER_LIGHT_FORCE
 
   --update harmony power
-  local updateHarmonyPower = function(self, event, unit)
-    if(unit ~= "player") then return end
+  local updateHarmonyPower = function(self, event, unit, powerType)
+    if(self.unit ~= unit or (powerType and powerType ~= "LIGHT_FORCE")) then return end
     local bar = self.HarmonyPowerBar
     local num = UnitPower(unit, SPELL_POWER_LIGHT_FORCE)
     local max = UnitPowerMax(unit, SPELL_POWER_LIGHT_FORCE)
@@ -938,13 +1076,34 @@
   local createRuneBar = function(self)
     local f = CreateFrame("Frame","oUF_DiabloRuneBar",self)
     f:SetPoint(self.cfg.runes.pos.a1,self.cfg.runes.pos.af,self.cfg.runes.pos.a2,self.cfg.runes.pos.x,self.cfg.runes.pos.y)
-    f:SetSize(180,50)
+    f:SetSize(154,32)
+
+    local t
+    --left edge
+    t = f:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(32,32)
+    t:SetPoint("RIGHT",f,"LEFT",0,-1)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_left")
+    f.leftEdge = t
+
+    t = f:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(154,32)
+    t:SetPoint("CENTER",0,-1)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_bar_bg")
+
+    --right edge
+    t = f:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(32,32)
+    t:SetPoint("LEFT",f,"RIGHT",0,-1)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_right")
+    f.rightEdge = t
+
     func.applyDragFunctionality(f)
     RuneButtonIndividual1:ClearAllPoints()
-    RuneButtonIndividual1:SetPoint("LEFT",f,"LEFT",10,0)
+    RuneButtonIndividual1:SetPoint("LEFT",f,"LEFT",2,0)
     for i=1,6 do
       local r = _G["RuneButtonIndividual"..i.."Cooldown"]
-      r.noOCC = true
+      r.noCooldownCount = true
     end
   end
 
@@ -1048,10 +1207,16 @@
       self.HolyPower.Override = updateHolyPower
     end
 
-    --chipower
+    --harmony
     if cfg.playerclass == "MONK" and self.cfg.harmony.show then
       createHarmonyPowerBar(self)
       self.Harmony.Override = updateHarmonyPower
+    end
+
+    --shadoworbs
+    if cfg.playerclass == "PRIEST" and self.cfg.shadoworbs.show then
+      createShadowOrbPowerBar(self)
+      self.ShadowOrbs.Override = updateShadowOrbPower
     end
 
     --eclipsebar

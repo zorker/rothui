@@ -178,8 +178,10 @@
 
   oUF.Tags.Methods["diablo:altpower"] = function(unit)
     local cur = UnitPower(unit, ALTERNATE_POWER_INDEX)
-    if cur then
-      return math.floor(cur)
+    local max = UnitPowerMax(unit, ALTERNATE_POWER_INDEX)
+    if cur and cur > 0 and max and max > 0 then
+      --return math.floor(cur).."/"..math.floor(max).." - "..math.floor(cur/max*100).."%"
+      return math.floor(cur).." / "..math.floor(max)
     end
   end
   oUF.Tags.Events["diablo:altpower"] = "UNIT_POWER"

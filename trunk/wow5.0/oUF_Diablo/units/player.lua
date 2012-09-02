@@ -539,158 +539,6 @@
 
   end
 
-
-  --update soul shards
-  local updateShards = function(self, event, unit, powerType)
-    if(self.unit ~= unit or (powerType and powerType ~= "SOUL_SHARDS")) then return end
-    local num = UnitPower(unit, SPELL_POWER_SOUL_SHARDS)
-    local bar = self.SoulShardBar
-    for i = 1, SHARD_BAR_NUM_SHARDS do
-      if(i <= num) then
-        bar.filling[i]:Show()
-        bar.glow[i]:Show()
-      else
-        bar.filling[i]:Hide()
-        bar.glow[i]:Hide()
-      end
-    end
-  end
-
-  --create soul shards
-  local createSoulShardBar = function(self)
-
-    self.SoulShards = {}
-
-    local t
-    local bar = CreateFrame("Frame","oUF_DiabloSoulShards",self)
-    local w = 64*(SHARD_BAR_NUM_SHARDS+2)
-    local h = 64
-    bar:SetPoint(self.cfg.soulshards.pos.a1,self.cfg.soulshards.pos.af,self.cfg.soulshards.pos.a2,self.cfg.soulshards.pos.x,self.cfg.soulshards.pos.y)
-    bar:SetWidth(w)
-    bar:SetHeight(h)
-
-    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
-    t:SetSize(64,64)
-    t:SetPoint("LEFT",0,0)
-    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_left")
-    bar.leftedge = t
-
-    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
-    t:SetSize(64,64)
-    t:SetPoint("RIGHT",0,0)
-    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_right")
-    bar.rightedge = t
-
-    bar.back = {}
-    bar.filling = {}
-    bar.glow = {}
-    bar.gloss = {}
-
-    for i = 1, SHARD_BAR_NUM_SHARDS do
-      local back = "back"..i
-      bar.back[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
-      bar.back[i]:SetSize(64,64)
-      bar.back[i]:SetPoint("LEFT",i*64,0)
-      bar.back[i]:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_back")
-
-      bar.filling[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-7)
-      bar.filling[i]:SetSize(64,64)
-      bar.filling[i]:SetPoint("LEFT",i*64,0)
-      bar.filling[i]:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_fill")
-      bar.filling[i]:SetVertexColor(self.cfg.soulshards.color.r,self.cfg.soulshards.color.g,self.cfg.soulshards.color.b,1)
-      bar.filling[i]:SetBlendMode("ADD")
-
-      bar.glow[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-6)
-      bar.glow[i]:SetSize(64*1.25,64*1.25)
-      bar.glow[i]:SetPoint("CENTER", bar.filling[i], "CENTER", 0, 0)
-      bar.glow[i]:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_glow")
-      bar.glow[i]:SetBlendMode("ADD")
-      bar.glow[i]:SetVertexColor(self.cfg.soulshards.color.r,self.cfg.soulshards.color.g,self.cfg.soulshards.color.b,1)
-
-      bar.gloss[i] = bar:CreateTexture(nil,"BACKGROUND",nil,-5)
-      bar.gloss[i]:SetSize(64,64)
-      bar.gloss[i]:SetPoint("LEFT",i*64,0)
-      bar.gloss[i]:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_highlight")
-      bar.gloss[i]:SetBlendMode("ADD")
-
-      bar.color = self.cfg.soulshards.color
-
-      self.SoulShards[i] = bar.filling[i]
-    end
-
-    bar:SetScale(self.cfg.soulshards.scale)
-    func.applyDragFunctionality(bar)
-
-    bar:RegisterEvent("PLAYER_REGEN_ENABLED")
-    bar:RegisterEvent("PLAYER_REGEN_DISABLED")
-    bar:RegisterEvent("PLAYER_TARGET_CHANGED")
-    bar.cfg = self.cfg.soulshards
-    bar:SetScript("OnEvent", function(self,event)
-      if not UnitExists("target") and self.cfg.alpha.hidenotarget then
-        self:Hide()
-        return
-      end
-      self:Show()
-      if event == "PLAYER_REGEN_DISABLED" then
-        self:SetAlpha(self.cfg.alpha.ic)
-      elseif event == "PLAYER_REGEN_ENABLED" then
-        self:SetAlpha(self.cfg.alpha.ooc)
-      end
-    end)
-    if bar.cfg.alpha.hidenotarget then
-      bar:Hide()
-    end
-    bar:SetAlpha(bar.cfg.alpha.ooc)
-    self.SoulShardBar = bar
-  end
-
-  local SPELL_POWER_SHADOW_ORBS = SPELL_POWER_SHADOW_ORBS
-
-  --update shadow orb power
-  local updateShadowOrbPower = function(self, event, unit, powerType)
-    if(self.unit ~= unit or (powerType and powerType ~= "SHADOW_ORBS")) then return end
-    local bar = self.ShadowOrbPowerBar
-    local num = UnitPower(unit, SPELL_POWER_SHADOW_ORBS)
-    local max = UnitPowerMax(unit, SPELL_POWER_SHADOW_ORBS)
-    if num < 1 then
-      if bar:IsShown() then bar:Hide() end
-      return
-    else
-      if not bar:IsShown() then bar:Show() end
-    end
-    --adjust the width of the shadow orb power frame
-    local w = 64*(max+2)
-    bar:SetWidth(w)
-    for i = 1, bar.maxOrbs do
-      local orb = self.ShadowOrbs[i]
-      if i > max then
-         if orb:IsShown() then orb:Hide() end
-      else
-        if not orb:IsShown() then orb:Show() end
-      end
-    end
-    for i = 1, max do
-      local orb = self.ShadowOrbs[i]
-      local full = num/max
-      if(i <= num) then
-        if full == 1 then
-          orb.fill:SetVertexColor(1,0,0)
-          orb.glow:SetVertexColor(1,0,0)
-        else
-          orb.fill:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
-          orb.glow:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
-        end
-        orb.fill:Show()
-        orb.glow:Show()
-        orb.highlight:Show()
-      else
-        orb.fill:Hide()
-        orb.glow:Hide()
-        orb.highlight:Hide()
-      end
-    end
-  end
-
   --create shadow orb power bar
   local createShadowOrbPowerBar = function(self)
 
@@ -782,53 +630,6 @@
 
   end
 
-  local SPELL_POWER_LIGHT_FORCE = SPELL_POWER_LIGHT_FORCE
-
-  --update harmony power
-  local updateHarmonyPower = function(self, event, unit, powerType)
-    if(self.unit ~= unit or (powerType and powerType ~= "LIGHT_FORCE")) then return end
-    local bar = self.HarmonyPowerBar
-    local num = UnitPower(unit, SPELL_POWER_LIGHT_FORCE)
-    local max = UnitPowerMax(unit, SPELL_POWER_LIGHT_FORCE)
-    if num < 1 then
-      if bar:IsShown() then bar:Hide() end
-      return
-    else
-      if not bar:IsShown() then bar:Show() end
-    end
-    --adjust the width of the harmony power frame
-    local w = 64*(max+2)
-    bar:SetWidth(w)
-    for i = 1, bar.maxOrbs do
-      local orb = self.Harmony[i]
-      if i > max then
-         if orb:IsShown() then orb:Hide() end
-      else
-        if not orb:IsShown() then orb:Show() end
-      end
-    end
-    for i = 1, max do
-      local orb = self.Harmony[i]
-      local full = num/max
-      if(i <= num) then
-        if full == 1 then
-          orb.fill:SetVertexColor(1,0,0)
-          orb.glow:SetVertexColor(1,0,0)
-        else
-          orb.fill:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
-          orb.glow:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
-        end
-        orb.fill:Show()
-        orb.glow:Show()
-        orb.highlight:Show()
-      else
-        orb.fill:Hide()
-        orb.glow:Hide()
-        orb.highlight:Hide()
-      end
-    end
-  end
-
   --create harmony power bar
   local createHarmonyPowerBar = function(self)
 
@@ -918,53 +719,6 @@
 
     self.HarmonyPowerBar = bar
 
-  end
-
-  local SPELL_POWER_HOLY_POWER = SPELL_POWER_HOLY_POWER
-
-  --update holy power
-  local updateHolyPower = function(self, event, unit, powerType)
-    if(self.unit ~= unit or (powerType and powerType ~= "HOLY_POWER")) then return end
-    local bar = self.HolyPowerBar
-    local num = UnitPower("player", SPELL_POWER_HOLY_POWER)
-    local maxHolyPower = UnitPowerMax("player", SPELL_POWER_HOLY_POWER)
-    if num < 1 then
-      if bar:IsShown() then bar:Hide() end
-      return
-    else
-      if not bar:IsShown() then bar:Show() end
-    end
-    --adjust the width of the holy power frame
-    local w = 64*(maxHolyPower+2)
-    bar:SetWidth(w)
-    for i = 1, bar.maxOrbs do
-      local orb = self.HolyPower[i]
-      if i > maxHolyPower then
-         if orb:IsShown() then orb:Hide() end
-      else
-        if not orb:IsShown() then orb:Show() end
-      end
-    end
-    for i = 1, maxHolyPower do
-      local orb = self.HolyPower[i]
-      local full = num/maxHolyPower
-      if(i <= num) then
-        if full == 1 then
-          orb.fill:SetVertexColor(1,0,0)
-          orb.glow:SetVertexColor(1,0,0)
-        else
-          orb.fill:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
-          orb.glow:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
-        end
-        orb.fill:Show()
-        orb.glow:Show()
-        orb.highlight:Show()
-      else
-        orb.fill:Hide()
-        orb.glow:Hide()
-        orb.highlight:Hide()
-      end
-    end
   end
 
   --create holy power bar
@@ -1195,28 +949,24 @@
       func.createCastbar(self)
     end
 
-    --soulshards
+    --warlock bars
     if cfg.playerclass == "WARLOCK" and self.cfg.soulshards.show then
-      --createSoulShardBar(self)
-      --self.SoulShards.Override = updateShards
+
     end
 
     --holypower
     if cfg.playerclass == "PALADIN" and self.cfg.holypower.show then
       createHolyPowerBar(self)
-      self.HolyPower.Override = updateHolyPower
     end
 
     --harmony
     if cfg.playerclass == "MONK" and self.cfg.harmony.show then
       createHarmonyPowerBar(self)
-      self.Harmony.Override = updateHarmonyPower
     end
 
     --shadoworbs
     if cfg.playerclass == "PRIEST" and self.cfg.shadoworbs.show then
       createShadowOrbPowerBar(self)
-      self.ShadowOrbs.Override = updateShadowOrbPower
     end
 
     --eclipsebar

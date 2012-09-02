@@ -55,6 +55,7 @@
     ["DRUID"]         = { enable = true, animhealth = 18, animmana = 9,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.4,  manamultiplier = 0.4,  healthdecreasealpha = false, manadecreasealpha = false, },
     ["HUNTER"]        = { enable = true, animhealth = 20,  animmana = 6,  classcolored = false, powertypecolored = false, healthmultiplier = 0.13,    manamultiplier = 0.13,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["MAGE"]          = { enable = true, animhealth = 4,  animmana = 6,   classcolored = true,  powertypecolored = true, healthmultiplier = 0.4,  manamultiplier = 0.4,    healthdecreasealpha = true, manadecreasealpha = true,  },
+    ["MONK"]          = { enable = true, animhealth = 4,  animmana = 6,   classcolored = true,  powertypecolored = true, healthmultiplier = 0.4,  manamultiplier = 0.4,    healthdecreasealpha = true, manadecreasealpha = true,  },
     ["ROGUE"]         = { enable = true, animhealth = 3,  animmana = 22,  classcolored = false, powertypecolored = true,  healthmultiplier = 1,    manamultiplier = 0.3,  healthdecreasealpha = true,  manadecreasealpha = false, },
     ["PRIEST"]        = { enable = true, animhealth = 19, animmana = 11,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["PALADIN"]       = { enable = true, animhealth = 1,  animmana = 17,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
@@ -177,23 +178,24 @@
           hidenotarget = false, --hide if no target is found
         },
       },
-      holypower = {
+      holypower = { --class bar PALADIN
         show = true,
-        scale = 0.45,
+        scale = 0.40,
         color = {r = 200/255, g = 135/255, b = 190/255, },
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 },
-        alpha = {
-          ooc = 0.7, --alpha value out of combat
-          ic = 1, --alpha value in comat
-          hidenotarget = false, --hide if no target is found
-        },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
       },
-      eclipsebar = {
+      harmony = { --class bar MONK
+        show = true,
+        scale = 0.40,
+        color = {r = 41/255, g = 209/255, b = 157/255, },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
+      },
+      eclipsebar = { --class bar DRUID
         show = true,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 },
         scale = 1,
       },
-      runes = {
+      runes = { --class bar DK
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 170 },
       },
       altpower = {
@@ -304,9 +306,9 @@
       },
       combobar = {
         show = true,
-        scale = 0.43,
+        scale = 0.35,
         color = {r = 0.9, g = 0.59, b = 0, },
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 560 },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
       },
       portrait = {
         pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 100, y = 0 },

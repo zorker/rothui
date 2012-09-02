@@ -7,6 +7,7 @@
     "oUF_DiabloRepBar",
     "oUF_DiabloSoulShards",
     "oUF_DiabloHolyPower",
+    "oUF_DiabloHarmonyPower",
     "EclipseBarFrame",
     "oUF_DiabloRuneBar",
     "oUF_DiabloComboPoints",

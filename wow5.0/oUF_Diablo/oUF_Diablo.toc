@@ -7,13 +7,14 @@
 modules\oUF_AuraWatch.lua
 modules\oUF_CPoints.lua
 modules\oUF_DebuffHighlight.lua
+modules\oUF_DemonicFury.lua
 modules\oUF_Experience.lua
 modules\oUF_Harmony.lua
 modules\oUF_HolyPower.lua
 modules\oUF_Reputation.lua
 modules\oUF_ShadowOrbs.lua
 modules\oUF_Smooth.lua
-modules\oUF_WarlockSpecBars.lua
+##modules\oUF_WarlockSpecBars.lua
 
 config.lua
 ##charspecific.lua

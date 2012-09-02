@@ -812,6 +812,47 @@
 
   end
 
+  --create warlock bars
+  local createDemonicFuryPowerBar = function(self)
+    self.DemonicFury = {}
+    local bar = CreateFrame("Frame","oUF_DemonicFuryPower",self)
+    bar:SetPoint(self.cfg.demonicfury.pos.a1,self.cfg.demonicfury.pos.af,self.cfg.demonicfury.pos.a2,self.cfg.demonicfury.pos.x,self.cfg.demonicfury.pos.y)
+    bar:SetSize(256,32)
+    bar:SetScale(self.cfg.demonicfury.scale)
+
+    local sb = CreateFrame("StatusBar",nil,bar)
+    self.DemonicFury[1] = sb
+
+    sb:SetPoint("TOPLEFT",17,-5)
+    sb:SetPoint("BOTTOMRIGHT",-17,5)
+    sb:SetStatusBarTexture("Interface\\AddOns\\oUF_Diablo\\media\\demonic_fury_statusbar")
+    sb:SetStatusBarColor(self.cfg.demonicfury.color.bar.r,self.cfg.demonicfury.color.bar.g,self.cfg.demonicfury.color.bar.b)
+
+    local t = sb:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetAllPoints(sb)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\demonic_fury_statusbar")
+    t:SetVertexColor(self.cfg.demonicfury.color.bg.r,self.cfg.demonicfury.color.bg.g,self.cfg.demonicfury.color.bg.b)
+    sb.bg = t
+
+    local border = CreateFrame("Frame",nil,sb)
+    border:SetAllPoints(bar)
+    local t = border:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetAllPoints(bar)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\demonic_fury_border")
+    sb.border = t
+
+    local t = border:CreateTexture(nil,"BACKGROUND",nil,-7)
+    t:SetSize(512,64)
+    t:SetPoint("CENTER")
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\demonic_fury_glow")
+    t:SetVertexColor(self.cfg.demonicfury.color.bar.r,self.cfg.demonicfury.color.bar.g,self.cfg.demonicfury.color.bar.b)
+    t:SetBlendMode("BLEND")
+    sb.glow = t
+
+    func.applyDragFunctionality(bar)
+    self.DemonicFuryPowerBar = bar
+  end
+
   --create eclipse bar
   local createEclipseBar = function(self)
     local e = _G["EclipseBarFrame"]
@@ -950,8 +991,8 @@
     end
 
     --warlock bars
-    if cfg.playerclass == "WARLOCK" and self.cfg.soulshards.show then
-
+    if cfg.playerclass == "WARLOCK" and self.cfg.demonicfury.show then
+      createDemonicFuryPowerBar(self)
     end
 
     --holypower

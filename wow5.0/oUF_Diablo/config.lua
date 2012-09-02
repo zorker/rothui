@@ -167,16 +167,14 @@
         },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 180.5 },
       },
-      soulshards = {
+      demonicfury = { --class bar WARLOCK / DEMONOLOGY
         show = true,
-        scale = 0.45,
-        color = {r = 150/255, g = 135/255, b = 200/255, },
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 },
-        alpha = {
-          ooc = 0.7, --alpha value out of combat
-          ic = 1, --alpha value in comat
-          hidenotarget = false, --hide if no target is found
+        scale = 0.7,
+        color = {
+          bar = { r = 114/255, g = 192/255, b = 48/255, },
+          bg  = { r = 50/255, g = 40/255, b = 40/255, },
         },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 300 },
       },
       holypower = { --class bar PALADIN
         show = true,

@@ -828,7 +828,7 @@
     bar:SetPoint(self.cfg.burningembers.pos.a1,self.cfg.burningembers.pos.af,self.cfg.burningembers.pos.a2,self.cfg.burningembers.pos.x,self.cfg.burningembers.pos.y)
     bar:SetWidth(w)
     bar:SetHeight(h)
-    --bar:Hide() --hide bar (it will become available if the spec matches)
+    bar:Hide() --hide bar (it will become available if the spec matches)
 
     --color
     bar.color = self.cfg.burningembers.color

@@ -52,44 +52,44 @@ local Update = function(self, event, unit, powerType)
 end
 
 local Visibility = function(self, event, unit)
-	local element = self.ShadowOrbs
+  local element = self.ShadowOrbs
   local bar = self.ShadowOrbPowerBar
-	if(GetSpecialization() == SPEC_PRIEST_SHADOW) then
+  if(GetSpecialization() == SPEC_PRIEST_SHADOW) then
     bar:Show()
-	else
-		bar:Hide()
-	end
+  else
+    bar:Hide()
+  end
 end
 
 local Path = function(self, ...)
-	return (self.ShadowOrbs.Override or Update) (self, ...)
+  return (self.ShadowOrbs.Override or Update) (self, ...)
 end
 
 local ForceUpdate = function(element)
-	return Path(element.__owner, 'ForceUpdate', element.__owner.unit)
+  return Path(element.__owner, 'ForceUpdate', element.__owner.unit)
 end
 
 local Enable = function(self, unit)
-	local element = self.ShadowOrbs
-	if(element and unit == 'player') then
-		element.__owner = self
-		element.ForceUpdate = ForceUpdate
+  local element = self.ShadowOrbs
+  if(element and unit == 'player') then
+    element.__owner = self
+    element.ForceUpdate = ForceUpdate
 
-		self:RegisterEvent('UNIT_POWER', Path, true)
-		self:RegisterEvent('UNIT_DISPLAYPOWER', Path, true)
-		self:RegisterEvent('PLAYER_TALENT_UPDATE', Visibility, true)
+    self:RegisterEvent('UNIT_POWER', Path, true)
+    self:RegisterEvent('UNIT_DISPLAYPOWER', Path, true)
+    self:RegisterEvent('PLAYER_TALENT_UPDATE', Visibility, true)
 
-		return true
-	end
+    return true
+  end
 end
 
 local Disable = function(self)
-	local element = self.ShadowOrbs
-	if(element) then
-		self:UnregisterEvent('UNIT_POWER', Path)
-		self:UnregisterEvent('UNIT_DISPLAYPOWER', Path)
-		self:UnregisterEvent('PLAYER_TALENT_UPDATE', Visibility)
-	end
+  local element = self.ShadowOrbs
+  if(element) then
+    self:UnregisterEvent('UNIT_POWER', Path)
+    self:UnregisterEvent('UNIT_DISPLAYPOWER', Path)
+    self:UnregisterEvent('PLAYER_TALENT_UPDATE', Visibility)
+  end
 end
 
 oUF:AddElement('ShadowOrbs', Path, Enable, Disable)

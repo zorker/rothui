@@ -50,32 +50,32 @@ local Update = function(self, event, unit, powerType)
 end
 
 local Path = function(self, ...)
-	return (self.HolyPower.Override or Update) (self, ...)
+  return (self.HolyPower.Override or Update) (self, ...)
 end
 
 local ForceUpdate = function(element)
-	return Path(element.__owner, 'ForceUpdate', element.__owner.unit, 'HOLY_POWER')
+  return Path(element.__owner, 'ForceUpdate', element.__owner.unit, 'HOLY_POWER')
 end
 
 local function Enable(self)
-	local hp = self.HolyPower
-	if(hp) then
-		hp.__owner = self
-		hp.ForceUpdate = ForceUpdate
+  local hp = self.HolyPower
+  if(hp) then
+    hp.__owner = self
+    hp.ForceUpdate = ForceUpdate
 
-		self:RegisterEvent('UNIT_POWER', Path, true)
+    self:RegisterEvent('UNIT_POWER', Path, true)
     self:RegisterEvent('UNIT_DISPLAYPOWER', Path, true)
 
-		return true
-	end
+    return true
+  end
 end
 
 local function Disable(self)
-	local hp = self.HolyPower
-	if(hp) then
-		self:UnregisterEvent('UNIT_POWER', Path)
+  local hp = self.HolyPower
+  if(hp) then
+    self:UnregisterEvent('UNIT_POWER', Path)
     self:UnregisterEvent('UNIT_DISPLAYPOWER', Path)
-	end
+  end
 end
 
 oUF:AddElement('HolyPower', Path, Enable, Disable)

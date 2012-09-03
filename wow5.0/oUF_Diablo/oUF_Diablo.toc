@@ -5,6 +5,7 @@
 ## RequiredDeps: oUF, rLib
 
 modules\oUF_AuraWatch.lua
+modules\oUF_BurningEmbers.lua
 modules\oUF_CPoints.lua
 modules\oUF_DebuffHighlight.lua
 modules\oUF_DemonicFury.lua

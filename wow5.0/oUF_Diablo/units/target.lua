@@ -214,50 +214,6 @@
     self.Debuffs = f
   end
 
-  local MAX_COMBO_POINTS = MAX_COMBO_POINTS
-
-  --update combo
-  local function updateCombo(self, event, unit)
-    if unit == "pet" then return end
-    local bar = self.ComboBar
-
-    local cp = 0
-    if(UnitExists("vehicle") and GetComboPoints("vehicle") >= 1) then
-      cp = GetComboPoints("vehicle")
-    else
-      cp = GetComboPoints("player")
-    end
-
-    if cp < 1 then
-      bar:Hide()
-      return
-    else
-      bar:Show()
-    end
-
-    for i=1, MAX_COMBO_POINTS do
-      local orb = self.CPoints[i]
-      local full = cp/MAX_COMBO_POINTS
-      if(i <= cp) then
-        if full == 1 then
-          orb.fill:SetVertexColor(1,0,0)
-          orb.glow:SetVertexColor(1,0,0)
-        else
-          orb.fill:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
-          orb.glow:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
-        end
-        orb.fill:Show()
-        orb.glow:Show()
-        orb.highlight:Show()
-      else
-        orb.fill:Hide()
-        orb.glow:Hide()
-        orb.highlight:Hide()
-      end
-    end
-
-  end
-
   --create combo
   local createComboBar = function(self)
 
@@ -466,7 +422,6 @@
     --combobar
     if self.cfg.combobar.show then
       createComboBar(self)
-      self.CPoints.Override = updateCombo
     end
 
     --debuffglow

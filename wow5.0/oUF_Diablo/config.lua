@@ -174,7 +174,13 @@
           bar = { r = 114/255, g = 192/255, b = 48/255, },
           bg  = { r = 50/255, g = 40/255, b = 40/255, },
         },
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 300 },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 400 },
+      },
+      soulshards = { --class bar WARLOCK / AFFLICTION
+        show = true,
+        scale = 0.40,
+        color = {r = 200/255, g = 0/255, b = 255/255, },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
       },
       holypower = { --class bar PALADIN
         show = true,

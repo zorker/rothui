@@ -75,7 +75,7 @@ local Visibility = function(self, event, unit)
     bar:Show()
     element.ForceUpdate(element)
   else
-    --bar:Hide()
+    bar:Hide()
   end
 end
 

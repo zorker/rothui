@@ -12,8 +12,16 @@ local SPEC_WARLOCK_DEMONOLOGY     = SPEC_WARLOCK_DEMONOLOGY
 
 local Update = function(self, event, unit, powerType)
   if(self.unit ~= unit or (powerType and powerType ~= "DEMONIC_FURY")) then return end
+  if(GetSpecialization() ~= SPEC_WARLOCK_DEMONOLOGY) then return end --for real all warlock powers will fire even in another spec, double check for spec
+  local bar = self.DemonicFuryPowerBar
   local cur = UnitPower(unit, SPELL_POWER_DEMONIC_FURY)
   local max = UnitPowerMax(unit, SPELL_POWER_DEMONIC_FURY)
+  if cur < 1 then
+    if bar:IsShown() then bar:Hide() end
+    return
+  else
+    if not bar:IsShown() then bar:Show() end
+  end
   local sb = self.DemonicFury[1]
   sb:SetMinMaxValues(0, max)
   sb:SetValue(cur)
@@ -29,6 +37,7 @@ local Visibility = function(self, event, unit)
   local bar = self.DemonicFuryPowerBar
   if(GetSpecialization() == SPEC_WARLOCK_DEMONOLOGY) then
     bar:Show()
+    element.ForceUpdate(element)
   else
     bar:Hide()
   end
@@ -39,7 +48,7 @@ local Path = function(self, ...)
 end
 
 local ForceUpdate = function(element)
-  return Path(element.__owner, 'ForceUpdate', element.__owner.unit)
+  return Path(element.__owner, 'ForceUpdate', element.__owner.unit, 'DEMONIC_FURY')
 end
 
 local Enable = function(self, unit)

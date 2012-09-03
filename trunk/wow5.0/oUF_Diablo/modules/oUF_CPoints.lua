@@ -1,37 +1,3 @@
---[[ Element: Combo Point Icons
- Toggles visibility of the player and vehicles combo points.
-
- Widget
-
- CPoints - An array consisting of five UI widgets.
-
- Notes
-
- The default combo point texture will be applied to textures within the CPoints
- array that don't have a texture or color defined.
-
- Examples
-
-   local CPoints = {}
-   for index = 1, MAX_COMBO_POINTS do
-      local CPoint = self:CreateTexture(nil, 'BACKGROUND')
-
-      -- Position and size of the combo point.
-      CPoint:SetSize(12, 16)
-      CPoint:SetPoint('TOPLEFT', self, 'BOTTOMLEFT', index * CPoint:GetWidth(), 0)
-
-      CPoints[index] = CPoint
-   end
-
-   -- Register with oUF
-   self.CPoints = CPoints
-
- Hooks
-
- Override(self) - Used to completely override the internal update function.
-                  Removing the table key entry will make the element fall-back
-                  to its internal function again.
-]]
 
 local parent, ns = ...
 local oUF = ns.oUF or oUF
@@ -40,30 +6,42 @@ local GetComboPoints = GetComboPoints
 local MAX_COMBO_POINTS = MAX_COMBO_POINTS
 
 local Update = function(self, event, unit)
-  if(unit == 'pet') then return end
+  if unit == "pet" then return end
+  local bar = self.ComboBar
 
-  local cpoints = self.CPoints
-  if(cpoints.PreUpdate) then
-    cpoints:PreUpdate()
+  local cp = 0
+  if(UnitExists("vehicle") and GetComboPoints("vehicle") >= 1) then
+    cp = GetComboPoints("vehicle")
+  else
+    cp = GetComboPoints("player")
   end
 
-  local cp
-  if(UnitHasVehicleUI'player') then
-    cp = GetComboPoints('vehicle', 'target')
+  if cp < 1 then
+    bar:Hide()
+    return
   else
-    cp = GetComboPoints('player', 'target')
+    bar:Show()
   end
 
   for i=1, MAX_COMBO_POINTS do
+    local orb = self.CPoints[i]
+    local full = cp/MAX_COMBO_POINTS
     if(i <= cp) then
-      cpoints[i]:Show()
+      if full == 1 then
+        orb.fill:SetVertexColor(1,0,0)
+        orb.glow:SetVertexColor(1,0,0)
+      else
+        orb.fill:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
+        orb.glow:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
+      end
+      orb.fill:Show()
+      orb.glow:Show()
+      orb.highlight:Show()
     else
-      cpoints[i]:Hide()
+      orb.fill:Hide()
+      orb.glow:Hide()
+      orb.highlight:Hide()
     end
-  end
-
-  if(cpoints.PostUpdate) then
-    return cpoints:PostUpdate(cp)
   end
 end
 
@@ -83,14 +61,6 @@ local Enable = function(self)
 
     self:RegisterEvent('UNIT_COMBO_POINTS', Path, true)
     self:RegisterEvent('PLAYER_TARGET_CHANGED', Path, true)
-
-    for index = 1, MAX_COMBO_POINTS do
-      local cpoint = cpoints[index]
-      if(cpoint:IsObjectType'Texture' and not cpoint:GetTexture()) then
-        cpoint:SetTexture[[Interface\ComboFrame\ComboPoint]]
-        cpoint:SetTexCoord(0, 0.375, 0, 1)
-      end
-    end
 
     return true
   end

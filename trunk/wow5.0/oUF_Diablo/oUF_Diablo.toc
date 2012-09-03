@@ -14,6 +14,7 @@ modules\oUF_HolyPower.lua
 modules\oUF_Reputation.lua
 modules\oUF_ShadowOrbs.lua
 modules\oUF_Smooth.lua
+modules\oUF_SoulShards.lua
 ##modules\oUF_WarlockSpecBars.lua
 
 config.lua

@@ -814,6 +814,98 @@
 
   end
 
+  --create soulshard power bar
+  local createSoulShardPowerBar = function(self)
+
+    self.SoulShards = {}
+
+    local t
+    local bar = CreateFrame("Frame","oUF_DiabloSoulShardPower",self)
+    bar.maxOrbs = 4
+    local w = 64*(bar.maxOrbs+2) --create the bar for
+    local h = 64
+    --bar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    bar:SetPoint(self.cfg.soulshards.pos.a1,self.cfg.soulshards.pos.af,self.cfg.soulshards.pos.a2,self.cfg.soulshards.pos.x,self.cfg.soulshards.pos.y)
+    bar:SetWidth(w)
+    bar:SetHeight(h)
+    bar:Hide() --hide bar (it will become available if the spec matches)
+
+    --color
+    bar.color = self.cfg.soulshards.color
+
+    --left edge
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("LEFT",0,0)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_left")
+    bar.leftEdge = t
+
+    --right edge
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("RIGHT",0,0)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_right")
+    bar.rightEdge = t
+
+    for i = 1, bar.maxOrbs do
+
+      local orb = CreateFrame("Frame",nil,bar)
+      self.SoulShards[i] = orb
+
+      orb:SetSize(64,64)
+      orb:SetPoint("LEFT",i*64,0)
+
+      local orbSizeMultiplier = 0.95
+
+      --bar background
+      orb.barBg = orb:CreateTexture(nil,"BACKGROUND",nil,-8)
+      orb.barBg:SetSize(64,64)
+      orb.barBg:SetPoint("CENTER")
+      orb.barBg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_bar_bg")
+
+      --orb background
+      orb.bg = orb:CreateTexture(nil,"BACKGROUND",nil,-7)
+      orb.bg:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.bg:SetPoint("CENTER")
+      orb.bg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_gem_bg")
+
+      --orb filling
+      orb.fill = orb:CreateTexture(nil,"BACKGROUND",nil,-6)
+      orb.fill:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.fill:SetPoint("CENTER")
+      orb.fill:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_gem_fill1")
+      orb.fill:SetVertexColor(self.cfg.soulshards.color.r,self.cfg.soulshards.color.g,self.cfg.soulshards.color.b)
+      --orb.fill:SetBlendMode("ADD")
+
+      --orb border
+      orb.border = orb:CreateTexture(nil,"BACKGROUND",nil,-5)
+      orb.border:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.border:SetPoint("CENTER")
+      orb.border:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_gem_border")
+
+      --orb glow
+      orb.glow = orb:CreateTexture(nil,"BACKGROUND",nil,-4)
+      orb.glow:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.glow:SetPoint("CENTER")
+      orb.glow:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_gem_glow")
+      orb.glow:SetVertexColor(self.cfg.soulshards.color.r,self.cfg.soulshards.color.g,self.cfg.soulshards.color.b)
+      orb.glow:SetBlendMode("BLEND")
+
+      --orb highlight
+      orb.highlight = orb:CreateTexture(nil,"BACKGROUND",nil,-3)
+      orb.highlight:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.highlight:SetPoint("CENTER")
+      orb.highlight:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_gem_highlight")
+
+    end
+
+    bar:SetScale(self.cfg.soulshards.scale)
+    func.applyDragFunctionality(bar)
+
+    self.SoulShardPowerBar = bar
+
+  end
+
   --create warlock bars
   local createDemonicFuryPowerBar = function(self)
     self.DemonicFury = {}
@@ -821,6 +913,7 @@
     bar:SetPoint(self.cfg.demonicfury.pos.a1,self.cfg.demonicfury.pos.af,self.cfg.demonicfury.pos.a2,self.cfg.demonicfury.pos.x,self.cfg.demonicfury.pos.y)
     bar:SetSize(256,32)
     bar:SetScale(self.cfg.demonicfury.scale)
+    bar:Hide() --hide bar (it will become available if the spec matches)
 
     local sb = CreateFrame("StatusBar",nil,bar)
     self.DemonicFury[1] = sb
@@ -995,6 +1088,9 @@
     --warlock bars
     if cfg.playerclass == "WARLOCK" and self.cfg.demonicfury.show then
       createDemonicFuryPowerBar(self)
+    end
+    if cfg.playerclass == "WARLOCK" and self.cfg.soulshards.show then
+      createSoulShardPowerBar(self)
     end
 
     --holypower

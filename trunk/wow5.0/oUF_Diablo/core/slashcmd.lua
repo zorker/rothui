@@ -7,6 +7,7 @@
     "oUF_DiabloRepBar",
     "oUF_DemonicFuryPower",
     "oUF_DiabloSoulShardPower",
+    "oUF_DiabloBurningEmberPower",
     "oUF_DiabloHolyPower",
     "oUF_DiabloHarmonyPower",
     "oUF_DiabloShadowOrbPower",

@@ -814,6 +814,107 @@
 
   end
 
+  --create burningember power bar
+  local createBurningEmberPowerBar = function(self)
+
+    self.BurningEmbers = {}
+
+    local t
+    local bar = CreateFrame("Frame","oUF_DiabloBurningEmberPower",self)
+    bar.maxOrbs = 4
+    local w = 64*(bar.maxOrbs+2) --create the bar for
+    local h = 64
+    --bar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    bar:SetPoint(self.cfg.burningembers.pos.a1,self.cfg.burningembers.pos.af,self.cfg.burningembers.pos.a2,self.cfg.burningembers.pos.x,self.cfg.burningembers.pos.y)
+    bar:SetWidth(w)
+    bar:SetHeight(h)
+    --bar:Hide() --hide bar (it will become available if the spec matches)
+
+    --color
+    bar.color = self.cfg.burningembers.color
+
+    --left edge
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("LEFT",0,0)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_left")
+    bar.leftEdge = t
+
+    --right edge
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("RIGHT",0,0)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_right")
+    bar.rightEdge = t
+
+    local MAX_POWER_PER_EMBER = 10
+
+    for i = 1, bar.maxOrbs do
+
+      local orb = CreateFrame("StatusBar",nil,bar)
+      self.BurningEmbers[i] = orb
+      orb:SetSize(64,64)
+      orb:SetPoint("LEFT",i*64,0)
+      orb:SetMinMaxValues(0, MAX_POWER_PER_EMBER)
+      orb:SetValue(0)
+
+      local orbSizeMultiplier = 0.74
+
+      --bar background
+      orb.barBg = orb:CreateTexture(nil,"BACKGROUND",nil,-8)
+      orb.barBg:SetSize(64,64)
+      orb.barBg:SetPoint("CENTER")
+      orb.barBg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_bar_bg")
+
+      --orb background
+      orb.bg = orb:CreateTexture(nil,"BACKGROUND",nil,-7)
+      orb.bg:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.bg:SetPoint("CENTER")
+      orb.bg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_pot_bg")
+      orb.bg:SetAlpha(0.5)
+
+      --orb filling
+      local fill = orb:CreateTexture(nil,"BACKGROUND",nil,-6)
+      fill:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_pot_fill1")
+      --fill:SetVertexColor(self.cfg.burningembers.color.r,self.cfg.burningembers.color.g,self.cfg.burningembers.color.b)
+      orb:SetStatusBarTexture(fill)
+      orb:SetOrientation("VERTICAL")
+
+      --stack another frame to correct the texture stacking
+      local helper = CreateFrame("Frame",nil,orb)
+      helper:SetAllPoints(orb)
+
+      --orb border
+      orb.border = helper:CreateTexture(nil,"BACKGROUND",nil,-5)
+      orb.border:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.border:SetPoint("CENTER")
+      orb.border:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_pot_border")
+
+      --orb glow
+      orb.glow = helper:CreateTexture(nil,"BACKGROUND",nil,-4)
+      orb.glow:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.glow:SetPoint("CENTER")
+      orb.glow:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_pot_glow")
+      orb.glow:SetVertexColor(self.cfg.burningembers.color.r,self.cfg.burningembers.color.g,self.cfg.burningembers.color.b)
+      orb.glow:SetBlendMode("BLEND")
+      orb.glow:SetAlpha(0.7)
+      --orb.glow:Hide()
+
+      --orb highlight
+      orb.highlight = helper:CreateTexture(nil,"BACKGROUND",nil,-3)
+      orb.highlight:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.highlight:SetPoint("CENTER")
+      orb.highlight:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_pot_highlight")
+
+    end
+
+    bar:SetScale(self.cfg.burningembers.scale)
+    func.applyDragFunctionality(bar)
+
+    self.BurningEmberPowerBar = bar
+
+  end
+
   --create soulshard power bar
   local createSoulShardPowerBar = function(self)
 
@@ -1091,6 +1192,9 @@
     end
     if cfg.playerclass == "WARLOCK" and self.cfg.soulshards.show then
       createSoulShardPowerBar(self)
+    end
+    if cfg.playerclass == "WARLOCK" and self.cfg.burningembers.show then
+      createBurningEmberPowerBar(self)
     end
 
     --holypower

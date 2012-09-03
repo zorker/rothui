@@ -182,6 +182,12 @@
         color = {r = 200/255, g = 0/255, b = 255/255, },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
       },
+      burningembers = { --class bar WARLOCK / DESTRUCTION
+        show = true,
+        scale = 0.40,
+        color = {r = 255/255, g = 133/255, b = 0/255, },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
+      },
       holypower = { --class bar PALADIN
         show = true,
         scale = 0.40,

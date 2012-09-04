@@ -910,7 +910,10 @@
 
     bar:SetScale(self.cfg.burningembers.scale)
     func.applyDragFunctionality(bar)
-
+    --combat fading
+    if self.cfg.burningembers.combat.enable then
+      rCombatFrameFader(bar, self.cfg.burningembers.combat.fadeIn, self.cfg.burningembers.combat.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    end
     self.BurningEmberPowerBar = bar
 
   end
@@ -1002,6 +1005,10 @@
 
     bar:SetScale(self.cfg.soulshards.scale)
     func.applyDragFunctionality(bar)
+    --combat fading
+    if self.cfg.soulshards.combat.enable then
+      rCombatFrameFader(bar, self.cfg.soulshards.combat.fadeIn, self.cfg.soulshards.combat.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    end
 
     self.SoulShardPowerBar = bar
 
@@ -1046,6 +1053,12 @@
     sb.glow = t
 
     func.applyDragFunctionality(bar)
+
+    --combat fading
+    if self.cfg.demonicfury.combat.enable then
+      rCombatFrameFader(bar, self.cfg.demonicfury.combat.fadeIn, self.cfg.demonicfury.combat.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    end
+
     self.DemonicFuryPowerBar = bar
   end
 

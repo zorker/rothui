@@ -175,18 +175,33 @@
           bg  = { r = 50/255, g = 40/255, b = 40/255, },
         },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 400 },
+        combat          = { --fade the bar in/out in combat/out of combat
+          enable          = false,
+          fadeIn          = {time = 0.4, alpha = 1},
+          fadeOut         = {time = 0.3, alpha = 0.2},
+        },
       },
       soulshards = { --class bar WARLOCK / AFFLICTION
         show = true,
         scale = 0.40,
         color = {r = 200/255, g = 0/255, b = 255/255, },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
+        combat          = { --fade the bar in/out in combat/out of combat
+          enable          = false,
+          fadeIn          = {time = 0.4, alpha = 1},
+          fadeOut         = {time = 0.3, alpha = 0.2},
+        },
       },
       burningembers = { --class bar WARLOCK / DESTRUCTION
         show = true,
         scale = 0.40,
         color = {r = 255/255, g = 133/255, b = 0/255, },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
+        combat          = { --fade the bar in/out in combat/out of combat
+          enable          = false,
+          fadeIn          = {time = 0.4, alpha = 1},
+          fadeOut         = {time = 0.3, alpha = 0.2},
+        },
       },
       holypower = { --class bar PALADIN
         show = true,

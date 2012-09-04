@@ -13,12 +13,14 @@ local Update = function(self, event, unit, powerType)
   local bar = self.DemonicFuryPowerBar
   local cur = UnitPower(unit, SPELL_POWER_DEMONIC_FURY)
   local max = UnitPowerMax(unit, SPELL_POWER_DEMONIC_FURY)
+  --[[ --do not hide the bar when the value is empty, keep it visible
   if cur < 1 then
     if bar:IsShown() then bar:Hide() end
     return
   else
     if not bar:IsShown() then bar:Show() end
   end
+  ]]
   local sb = self.DemonicFury[1]
   sb:SetMinMaxValues(0, max)
   sb:SetValue(cur)
@@ -32,13 +34,19 @@ end
 local Visibility = function(self, event, unit)
   local element = self.DemonicFury
   local bar = self.DemonicFuryPowerBar
-  if(GetSpecialization() == SPEC_WARLOCK_DEMONOLOGY) then
+  if UnitHasVehicleUI("player")
+    or ((HasVehicleActionBar() and UnitVehicleSkin("player") and UnitVehicleSkin("player") ~= "")
+    or (HasOverrideActionBar() and GetOverrideBarSkin() and GetOverrideBarSkin() ~= ""))
+  then
+    bar:Hide()
+  elseif(GetSpecialization() == SPEC_WARLOCK_DEMONOLOGY) then
     bar:Show()
     element.ForceUpdate(element)
   else
     bar:Hide()
   end
 end
+
 
 local Path = function(self, ...)
   return (self.DemonicFury.Override or Update) (self, ...)
@@ -58,6 +66,11 @@ local Enable = function(self, unit)
     self:RegisterEvent('UNIT_DISPLAYPOWER', Path, true)
     self:RegisterEvent('PLAYER_TALENT_UPDATE', Visibility, true)
     self:RegisterEvent("SPELLS_CHANGED", Visibility, true)
+    self:RegisterEvent("UPDATE_OVERRIDE_ACTIONBAR", Visibility, true)
+
+    local helper = CreateFrame("Frame") --this is needed...adding player_login to the visivility events doesn't do anything
+    helper:RegisterEvent("PLAYER_LOGIN")
+    helper:SetScript("OnEvent", function() Visibility(self) end)
 
     return true
   end
@@ -70,6 +83,7 @@ local Disable = function(self)
     self:UnregisterEvent('UNIT_DISPLAYPOWER', Path)
     self:UnregisterEvent('PLAYER_TALENT_UPDATE', Visibility)
     self:UnregisterEvent('SPELLS_CHANGED', Visibility)
+    self:UnregisterEvent('UPDATE_OVERRIDE_ACTIONBAR', Visibility)
   end
 end
 

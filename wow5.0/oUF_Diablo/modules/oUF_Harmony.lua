@@ -10,12 +10,14 @@ local Update = function(self, event, unit)
   local bar = self.HarmonyPowerBar
   local num = UnitPower(unit, SPELL_POWER_LIGHT_FORCE)
   local max = UnitPowerMax(unit, SPELL_POWER_LIGHT_FORCE)
+  --[[ --do not hide the bar when the value is empty, keep it visible
   if num < 1 then
     if bar:IsShown() then bar:Hide() end
     return
   else
     if not bar:IsShown() then bar:Show() end
   end
+  ]]
   --adjust the width of the harmony power frame
   local w = 64*(max+2)
   bar:SetWidth(w)
@@ -49,12 +51,26 @@ local Update = function(self, event, unit)
   end
 end
 
+local Visibility = function(self, event, unit)
+  local element = self.Harmony
+  local bar = self.HarmonyPowerBar
+  if UnitHasVehicleUI("player")
+    or ((HasVehicleActionBar() and UnitVehicleSkin("player") and UnitVehicleSkin("player") ~= "")
+    or (HasOverrideActionBar() and GetOverrideBarSkin() and GetOverrideBarSkin() ~= ""))
+  then
+    bar:Hide()
+  else
+    bar:Show()
+    element.ForceUpdate(element)
+  end
+end
+
 local Path = function(self, ...)
   return (self.Harmony.Override or Update) (self, ...)
 end
 
 local ForceUpdate = function(element)
-  return Path(element.__owner, 'ForceUpdate', element.__owner.unit)
+  return Path(element.__owner, 'ForceUpdate', element.__owner.unit, 'LIGHT_FORCE')
 end
 
 local Enable = function(self, unit)
@@ -65,6 +81,13 @@ local Enable = function(self, unit)
 
     self:RegisterEvent('UNIT_POWER', Path, true)
     self:RegisterEvent('UNIT_DISPLAYPOWER', Path, true)
+    self:RegisterEvent('PLAYER_TALENT_UPDATE', Visibility, true)
+    self:RegisterEvent("SPELLS_CHANGED", Visibility, true)
+    self:RegisterEvent("UPDATE_OVERRIDE_ACTIONBAR", Visibility, true)
+
+    local helper = CreateFrame("Frame") --this is needed...adding player_login to the visivility events doesn't do anything
+    helper:RegisterEvent("PLAYER_LOGIN")
+    helper:SetScript("OnEvent", function() Visibility(self) end)
 
     return true
   end
@@ -75,6 +98,9 @@ local Disable = function(self)
   if(element) then
     self:UnregisterEvent('UNIT_POWER', Path)
     self:UnregisterEvent('UNIT_DISPLAYPOWER', Path)
+    self:UnregisterEvent('PLAYER_TALENT_UPDATE', Visibility)
+    self:UnregisterEvent('SPELLS_CHANGED', Visibility)
+    self:UnregisterEvent('UPDATE_OVERRIDE_ACTIONBAR', Visibility)
   end
 end
 

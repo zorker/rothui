@@ -4,7 +4,6 @@ local parent, ns = ...
 local oUF = ns.oUF or oUF
 
 local SPELL_POWER_SHADOW_ORBS = SPELL_POWER_SHADOW_ORBS
-local PRIEST_BAR_NUM_ORBS = PRIEST_BAR_NUM_ORBS
 local SPEC_PRIEST_SHADOW = SPEC_PRIEST_SHADOW
 
 local Update = function(self, event, unit, powerType)
@@ -12,12 +11,14 @@ local Update = function(self, event, unit, powerType)
   local bar = self.ShadowOrbPowerBar
   local num = UnitPower(unit, SPELL_POWER_SHADOW_ORBS)
   local max = UnitPowerMax(unit, SPELL_POWER_SHADOW_ORBS)
+  --[[ --do not hide the bar when the value is empty, keep it visible
   if num < 1 then
     if bar:IsShown() then bar:Hide() end
     return
   else
     if not bar:IsShown() then bar:Show() end
   end
+  ]]
   --adjust the width of the shadow orb power frame
   local w = 64*(max+2)
   bar:SetWidth(w)
@@ -54,8 +55,14 @@ end
 local Visibility = function(self, event, unit)
   local element = self.ShadowOrbs
   local bar = self.ShadowOrbPowerBar
-  if(GetSpecialization() == SPEC_PRIEST_SHADOW) then
+  if UnitHasVehicleUI("player")
+    or ((HasVehicleActionBar() and UnitVehicleSkin("player") and UnitVehicleSkin("player") ~= "")
+    or (HasOverrideActionBar() and GetOverrideBarSkin() and GetOverrideBarSkin() ~= ""))
+  then
+    bar:Hide()
+  elseif(GetSpecialization() == SPEC_PRIEST_SHADOW) then
     bar:Show()
+    element.ForceUpdate(element)
   else
     bar:Hide()
   end
@@ -66,7 +73,7 @@ local Path = function(self, ...)
 end
 
 local ForceUpdate = function(element)
-  return Path(element.__owner, 'ForceUpdate', element.__owner.unit)
+  return Path(element.__owner, 'ForceUpdate', element.__owner.unit, 'SHADOW_ORBS')
 end
 
 local Enable = function(self, unit)
@@ -78,6 +85,12 @@ local Enable = function(self, unit)
     self:RegisterEvent('UNIT_POWER', Path, true)
     self:RegisterEvent('UNIT_DISPLAYPOWER', Path, true)
     self:RegisterEvent('PLAYER_TALENT_UPDATE', Visibility, true)
+    self:RegisterEvent("SPELLS_CHANGED", Visibility, true)
+    self:RegisterEvent("UPDATE_OVERRIDE_ACTIONBAR", Visibility, true)
+
+    local helper = CreateFrame("Frame") --this is needed...adding player_login to the visivility events doesn't do anything
+    helper:RegisterEvent("PLAYER_LOGIN")
+    helper:SetScript("OnEvent", function() Visibility(self) end)
 
     return true
   end
@@ -89,6 +102,8 @@ local Disable = function(self)
     self:UnregisterEvent('UNIT_POWER', Path)
     self:UnregisterEvent('UNIT_DISPLAYPOWER', Path)
     self:UnregisterEvent('PLAYER_TALENT_UPDATE', Visibility)
+    self:UnregisterEvent('SPELLS_CHANGED', Visibility)
+    self:UnregisterEvent('UPDATE_OVERRIDE_ACTIONBAR', Visibility)
   end
 end
 

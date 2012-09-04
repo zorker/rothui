@@ -4,15 +4,12 @@ local parent, ns = ...
 local oUF = ns.oUF or oUF
 
 local SPELL_POWER_DEMONIC_FURY    = SPELL_POWER_DEMONIC_FURY
-local SPELL_POWER_BURNING_EMBERS  = SPELL_POWER_BURNING_EMBERS
-local SPELL_POWER_SOUL_SHARDS     = SPELL_POWER_SOUL_SHARDS
-local SPEC_WARLOCK_DESTRUCTION    = SPEC_WARLOCK_DESTRUCTION
-local SPEC_WARLOCK_AFFLICTION     = SPEC_WARLOCK_AFFLICTION
 local SPEC_WARLOCK_DEMONOLOGY     = SPEC_WARLOCK_DEMONOLOGY
 
 local Update = function(self, event, unit, powerType)
   if(self.unit ~= unit or (powerType and powerType ~= "DEMONIC_FURY")) then return end
-  if(GetSpecialization() ~= SPEC_WARLOCK_DEMONOLOGY) then return end --for real all warlock powers will fire even in another spec, double check for spec
+  --other warlock powers will fire even in another spec, double check for spec
+  if(GetSpecialization() ~= SPEC_WARLOCK_DEMONOLOGY) then return end
   local bar = self.DemonicFuryPowerBar
   local cur = UnitPower(unit, SPELL_POWER_DEMONIC_FURY)
   local max = UnitPowerMax(unit, SPELL_POWER_DEMONIC_FURY)

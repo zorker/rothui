@@ -4,20 +4,16 @@ local parent, ns = ...
 local oUF = ns.oUF or oUF
 
 local MAX_POWER_PER_EMBER = 10
-local SPELL_POWER_DEMONIC_FURY    = SPELL_POWER_DEMONIC_FURY
 local SPELL_POWER_BURNING_EMBERS  = SPELL_POWER_BURNING_EMBERS
-local SPELL_POWER_SOUL_SHARDS     = SPELL_POWER_SOUL_SHARDS
 local SPEC_WARLOCK_DESTRUCTION    = SPEC_WARLOCK_DESTRUCTION
-local SPEC_WARLOCK_AFFLICTION     = SPEC_WARLOCK_AFFLICTION
-local SPEC_WARLOCK_DEMONOLOGY     = SPEC_WARLOCK_DEMONOLOGY
 
 local Update = function(self, event, unit, powerType)
   if(self.unit ~= unit or (powerType and powerType ~= 'BURNING_EMBERS')) then return end
+  --other warlock powers will fire even in another spec, double check for spec
   if(GetSpecialization() ~= SPEC_WARLOCK_DESTRUCTION) then return end
   local bar = self.BurningEmberPowerBar
   local cur = UnitPower(unit, SPELL_POWER_BURNING_EMBERS)
   local max = UnitPowerMax(unit, SPELL_POWER_BURNING_EMBERS)
-
   local cur2 = UnitPower(unit, SPELL_POWER_BURNING_EMBERS, true)
   local max2 = UnitPowerMax(unit, SPELL_POWER_BURNING_EMBERS, true)
   local val = cur2-cur*MAX_POWER_PER_EMBER
@@ -29,7 +25,7 @@ local Update = function(self, event, unit, powerType)
     if not bar:IsShown() then bar:Show() end
   end
 
-  --adjust the width of the harmony power frame
+  --adjust the width of the burning ember power frame
   local w = 64*(max+2)
   bar:SetWidth(w)
   for i = 1, bar.maxOrbs do
@@ -108,7 +104,6 @@ local function Disable(self)
     self:UnregisterEvent('UNIT_POWER', Path)
     self:UnregisterEvent('UNIT_DISPLAYPOWER', Path)
     self:UnregisterEvent('PLAYER_TALENT_UPDATE', Visibility)
-    self:UnregisterEvent('PLAYER_LOGIN', Visibility)
     self:UnregisterEvent('SPELLS_CHANGED', Visibility)
   end
 end

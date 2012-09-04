@@ -10,12 +10,14 @@ local Update = function(self, event, unit, powerType)
   local bar = self.HolyPowerBar
   local num = UnitPower(unit, SPELL_POWER_HOLY_POWER)
   local max = UnitPowerMax(unit, SPELL_POWER_HOLY_POWER)
+  --[[ --do not hide the bar when the value is empty, keep it visible
   if num < 1 then
     if bar:IsShown() then bar:Hide() end
     return
   else
     if not bar:IsShown() then bar:Show() end
   end
+  ]]
   --adjust the width of the holy power frame
   local w = 64*(max+2)
   bar:SetWidth(w)
@@ -49,6 +51,20 @@ local Update = function(self, event, unit, powerType)
   end
 end
 
+local Visibility = function(self, event, unit)
+  local element = self.HolyPower
+  local bar = self.HolyPowerBar
+  if UnitHasVehicleUI("player")
+    or ((HasVehicleActionBar() and UnitVehicleSkin("player") and UnitVehicleSkin("player") ~= "")
+    or (HasOverrideActionBar() and GetOverrideBarSkin() and GetOverrideBarSkin() ~= ""))
+  then
+    bar:Hide()
+  else
+    bar:Show()
+    element.ForceUpdate(element)
+  end
+end
+
 local Path = function(self, ...)
   return (self.HolyPower.Override or Update) (self, ...)
 end
@@ -58,23 +74,33 @@ local ForceUpdate = function(element)
 end
 
 local function Enable(self)
-  local hp = self.HolyPower
-  if(hp) then
-    hp.__owner = self
-    hp.ForceUpdate = ForceUpdate
+  local element = self.HolyPower
+  if(element) then
+    element.__owner = self
+    element.ForceUpdate = ForceUpdate
 
     self:RegisterEvent('UNIT_POWER', Path, true)
     self:RegisterEvent('UNIT_DISPLAYPOWER', Path, true)
+    self:RegisterEvent('PLAYER_TALENT_UPDATE', Visibility, true)
+    self:RegisterEvent("SPELLS_CHANGED", Visibility, true)
+    self:RegisterEvent("UPDATE_OVERRIDE_ACTIONBAR", Visibility, true)
+
+    local helper = CreateFrame("Frame") --this is needed...adding player_login to the visivility events doesn't do anything
+    helper:RegisterEvent("PLAYER_LOGIN")
+    helper:SetScript("OnEvent", function() Visibility(self) end)
 
     return true
   end
 end
 
 local function Disable(self)
-  local hp = self.HolyPower
-  if(hp) then
+  local element = self.HolyPower
+  if(element) then
     self:UnregisterEvent('UNIT_POWER', Path)
     self:UnregisterEvent('UNIT_DISPLAYPOWER', Path)
+    self:UnregisterEvent('PLAYER_TALENT_UPDATE', Visibility)
+    self:UnregisterEvent('SPELLS_CHANGED', Visibility)
+    self:UnregisterEvent('UPDATE_OVERRIDE_ACTIONBAR', Visibility)
   end
 end
 

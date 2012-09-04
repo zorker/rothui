@@ -627,6 +627,10 @@
 
     bar:SetScale(self.cfg.shadoworbs.scale)
     func.applyDragFunctionality(bar)
+    --combat fading
+    if self.cfg.shadoworbs.combat.enable then
+      rCombatFrameFader(bar, self.cfg.shadoworbs.combat.fadeIn, self.cfg.shadoworbs.combat.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    end
 
     self.ShadowOrbPowerBar = bar
 
@@ -718,6 +722,10 @@
 
     bar:SetScale(self.cfg.harmony.scale)
     func.applyDragFunctionality(bar)
+    --combat fading
+    if self.cfg.harmony.combat.enable then
+      rCombatFrameFader(bar, self.cfg.harmony.combat.fadeIn, self.cfg.harmony.combat.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    end
 
     self.HarmonyPowerBar = bar
 
@@ -809,6 +817,10 @@
 
     bar:SetScale(self.cfg.holypower.scale)
     func.applyDragFunctionality(bar)
+    --combat fading
+    if self.cfg.holypower.combat.enable then
+      rCombatFrameFader(bar, self.cfg.holypower.combat.fadeIn, self.cfg.holypower.combat.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    end
 
     self.HolyPowerBar = bar
 
@@ -1081,26 +1093,6 @@
     local f = CreateFrame("Frame","oUF_DiabloRuneBar",self)
     f:SetPoint(self.cfg.runes.pos.a1,self.cfg.runes.pos.af,self.cfg.runes.pos.a2,self.cfg.runes.pos.x,self.cfg.runes.pos.y)
     f:SetSize(154,32)
-
-    local t
-    --left edge
-    t = f:CreateTexture(nil,"BACKGROUND",nil,-8)
-    t:SetSize(32,32)
-    t:SetPoint("RIGHT",f,"LEFT",0,-1)
-    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_left")
-    f.leftEdge = t
-
-    t = f:CreateTexture(nil,"BACKGROUND",nil,-8)
-    t:SetSize(154,32)
-    t:SetPoint("CENTER",0,-1)
-    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_bar_bg")
-
-    --right edge
-    t = f:CreateTexture(nil,"BACKGROUND",nil,-8)
-    t:SetSize(32,32)
-    t:SetPoint("LEFT",f,"RIGHT",0,-1)
-    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_right")
-    f.rightEdge = t
 
     func.applyDragFunctionality(f)
     RuneButtonIndividual1:ClearAllPoints()

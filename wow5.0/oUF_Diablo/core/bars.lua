@@ -635,3 +635,98 @@
 
     self.DemonicFuryPowerBar = bar
   end
+
+  --create rune orbs bar
+  bars.createRuneBar = function(self)
+
+    self.RuneOrbs = {}
+
+    local t
+    local bar = CreateFrame("Frame","oUF_DiabloRuneBar",self)
+    bar.maxOrbs = 6
+    local w = 64*(bar.maxOrbs+2) --create the bar for
+    local h = 64
+    bar:SetPoint(self.cfg.runes.pos.a1,self.cfg.runes.pos.af,self.cfg.runes.pos.a2,self.cfg.runes.pos.x,self.cfg.runes.pos.y)
+    bar:SetWidth(w)
+    bar:SetHeight(h)
+    bar:Hide() --hide bar (it will become available if the spec matches)
+
+    --left edge
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("LEFT",0,0)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_left")
+    bar.leftEdge = t
+
+    --right edge
+    t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t:SetSize(64,64)
+    t:SetPoint("RIGHT",0,0)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_right")
+    bar.rightEdge = t
+
+    for i = 1, bar.maxOrbs do
+
+      local orb = CreateFrame("Frame",nil,bar)
+      self.RuneOrbs[i] = orb
+      orb:SetSize(64,64)
+      orb:SetPoint("LEFT",i*64,0)
+
+      local orbSizeMultiplier = 0.85
+
+      --bar background
+      orb.barBg = orb:CreateTexture(nil,"BACKGROUND",nil,-8)
+      orb.barBg:SetSize(64,64)
+      orb.barBg:SetPoint("CENTER")
+      orb.barBg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_bar_bg")
+
+      --orb background
+      orb.bg = orb:CreateTexture(nil,"BACKGROUND",nil,-7)
+      orb.bg:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.bg:SetPoint("CENTER")
+      orb.bg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_bg")
+
+      --orb filling
+      orb.fill = CreateFrame("StatusBar",nil,orb)
+      orb.fill:SetSize(64*orbSizeMultiplier,64*orbSizeMultiplier)
+      orb.fill:SetPoint("CENTER")
+      local fill = orb.fill:CreateTexture(nil,"BACKGROUND",nil,-6)
+      fill:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_fill64_1")
+      orb.fill:SetStatusBarTexture(fill)
+      orb.fill:SetOrientation("VERTICAL")
+
+      --stack another frame to correct the texture stacking
+      local helper = CreateFrame("Frame",nil,orb.fill)
+      helper:SetAllPoints(orb)
+
+      --orb border
+      orb.border = helper:CreateTexture(nil,"BACKGROUND",nil,-5)
+      orb.border:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.border:SetPoint("CENTER")
+      orb.border:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_border")
+
+      --orb glow
+      orb.glow = helper:CreateTexture(nil,"BACKGROUND",nil,-4)
+      orb.glow:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.glow:SetPoint("CENTER")
+      orb.glow:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_glow")
+      orb.glow:SetBlendMode("BLEND")
+      orb.glow:Hide()
+
+      --orb highlight
+      orb.highlight = helper:CreateTexture(nil,"BACKGROUND",nil,-3)
+      orb.highlight:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
+      orb.highlight:SetPoint("CENTER")
+      orb.highlight:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_orb_highlight")
+
+    end
+
+    bar:SetScale(self.cfg.runes.scale)
+    func.applyDragFunctionality(bar)
+    --combat fading
+    if self.cfg.runes.combat.enable then
+      rCombatFrameFader(bar, self.cfg.runes.combat.fadeIn, self.cfg.runes.combat.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    end
+    self.RuneBar = bar
+
+  end

@@ -242,7 +242,14 @@
         scale = 1,
       },
       runes = { --class bar DK
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 170 },
+        show = true,
+        scale = 0.40,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
+        combat          = { --fade the bar in/out in combat/out of combat
+          enable          = false,
+          fadeIn          = {time = 0.4, alpha = 1},
+          fadeOut         = {time = 0.3, alpha = 0.2},
+        },
       },
       altpower = {
         show = true,

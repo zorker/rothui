@@ -5,8 +5,8 @@ local oUF = ns.oUF or oUF
 
 oUF.colors.runes = {
   {1,0,0}, --blood
-  {0,1,0}, --unholy
   {0,1,1}, --frost
+  {0,1,0}, --unholy
   {1,0,1}, --death
 }
 
@@ -85,6 +85,10 @@ local Enable = function(self, unit)
     self:RegisterEvent("RUNE_POWER_UPDATE", UpdateRune, true)
     self:RegisterEvent("RUNE_TYPE_UPDATE", UpdateType, true)
 		self:RegisterEvent("UPDATE_OVERRIDE_ACTIONBAR", Visibility, true)
+
+    local helper = CreateFrame("Frame") --this is needed...adding player_login to the visivility events doesn't do anything
+    helper:RegisterEvent("PLAYER_LOGIN")
+    helper:SetScript("OnEvent", function() Visibility(self) end)
 
     RuneFrame.Show = RuneFrame.Hide
     RuneFrame:Hide()

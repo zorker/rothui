@@ -217,7 +217,7 @@
   --create combo
   local createComboBar = function(self)
 
-    self.CPoints = {}
+    self.ComboPoints = {}
 
     local t
     local bar = CreateFrame("Frame","oUF_DiabloComboPoints",self)
@@ -248,7 +248,7 @@
     for i = 1, MAX_COMBO_POINTS do
 
       local orb = CreateFrame("Frame",nil,bar)
-      self.CPoints[i] = orb
+      self.ComboPoints[i] = orb
 
       orb:SetSize(64,64)
       orb:SetPoint("LEFT",i*64,0)

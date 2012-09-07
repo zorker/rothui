@@ -5,8 +5,8 @@ local oUF = ns.oUF or oUF
 
 oUF.colors.runes = {
   {1,0,0}, --blood
-  {0,1,1}, --frost
   {0,1,0}, --unholy
+  {0,1,1}, --frost
   {1,0,1}, --death
 }
 
@@ -79,7 +79,7 @@ local Enable = function(self, unit)
     element.ForceUpdate = ForceUpdate
 
     for i=1, 6 do
-      UpdateType(self, nil, i, math.floor((runemap[i]+1)/2))
+      UpdateType(self, nil, i, floor((i+1)/2))
     end
 
     self:RegisterEvent("RUNE_POWER_UPDATE", UpdateRune, true)

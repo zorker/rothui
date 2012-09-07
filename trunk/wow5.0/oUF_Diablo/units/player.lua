@@ -602,7 +602,7 @@
     --runes
     if cfg.playerclass == "DEATHKNIGHT" then
       --position deathknight runes
-      createRuneBar(self)
+      bars.createRuneBar(self)
     end
 
     --create portrait

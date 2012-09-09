@@ -451,36 +451,6 @@
 
   end
 
-  --create eclipse bar
-  local createEclipseBar = function(self)
-    local e = _G["EclipseBarFrame"]
-    e:SetParent(self)
-    e:SetScale(self.cfg.eclipsebar.scale)
-    e:ClearAllPoints()
-    e:SetPoint(self.cfg.eclipsebar.pos.a1,self.cfg.eclipsebar.pos.af,self.cfg.eclipsebar.pos.a2,self.cfg.eclipsebar.pos.x,self.cfg.eclipsebar.pos.y)
-    e:SetFrameStrata("HIGH")
-    func.applyDragFunctionality(e)
-    local t = select(1, e:GetRegions())
-    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\eclipsebar")
-    EclipseBar_OnLoad(e)
-  end
-
-  --create rune bar
-  local createRuneBar = function(self)
-    local f = CreateFrame("Frame","oUF_DiabloRuneBar",self)
-    f:SetPoint(self.cfg.runes.pos.a1,self.cfg.runes.pos.af,self.cfg.runes.pos.a2,self.cfg.runes.pos.x,self.cfg.runes.pos.y)
-    f:SetSize(154,32)
-
-    func.applyDragFunctionality(f)
-    RuneButtonIndividual1:ClearAllPoints()
-    RuneButtonIndividual1:SetPoint("LEFT",f,"LEFT",2,0)
-    for i=1,6 do
-      local r = _G["RuneButtonIndividual"..i.."Cooldown"]
-      r.noCooldownCount = true
-    end
-  end
-
-
   ---------------------------------------------
   -- PLAYER STYLE FUNC
   ---------------------------------------------
@@ -595,8 +565,8 @@
     end
 
     --eclipsebar
-    if cfg.playerclass == "DRUID" and self.cfg.eclipsebar.show then
-      createEclipseBar(self)
+    if cfg.playerclass == "DRUID" and self.cfg.eclipse.show then
+      bars.createEclipseBar(self)
     end
 
     --runes

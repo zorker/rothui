@@ -236,10 +236,15 @@
           fadeOut         = {time = 0.3, alpha = 0.2},
         },
       },
-      eclipsebar = { --class bar DRUID
+      eclipse = { --class bar DRUID
         show = true,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 280 },
-        scale = 1,
+        scale = 0.4,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
+        combat          = { --fade the bar in/out in combat/out of combat
+          enable          = false,
+          fadeIn          = {time = 0.4, alpha = 1},
+          fadeOut         = {time = 0.3, alpha = 0.2},
+        },
       },
       runes = { --class bar DK
         show = true,

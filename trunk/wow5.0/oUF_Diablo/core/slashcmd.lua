@@ -11,7 +11,7 @@
     "oUF_DiabloHolyPower",
     "oUF_DiabloHarmonyPower",
     "oUF_DiabloShadowOrbPower",
-    "EclipseBarFrame",
+    "oUF_DiabloEclipsePower",
     "oUF_DiabloRuneBar",
     "oUF_DiabloComboPoints",
     "oUF_DiabloPowerOrb", --special bar :)

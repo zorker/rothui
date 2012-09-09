@@ -730,3 +730,51 @@
     self.RuneBar = bar
 
   end
+
+  --create eclipse power bar
+  bars.createEclipseBar = function(self)
+
+    local t
+    local bar = CreateFrame("Frame","oUF_DiabloEclipsePower",self)
+    bar.maxOrbs = 4
+    local w = 64*(bar.maxOrbs) --create the bar for
+    local h = 64
+    bar:SetPoint(self.cfg.eclipse.pos.a1,self.cfg.eclipse.pos.af,self.cfg.eclipse.pos.a2,self.cfg.eclipse.pos.x,self.cfg.eclipse.pos.y)
+    bar:SetSize(w,h)
+
+    --bar background
+    bar.barBg = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    bar.barBg:SetAllPoints(bar)
+    bar.barBg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_bar_bg")
+
+    --lunar bar
+    local lunar = CreateFrame("StatusBar",nil,bar)
+    lunar:SetSize(w,h)
+    lunar:SetPoint("LEFT")
+    local fill = lunar:CreateTexture(nil,"BACKGROUND",nil,-6)
+    fill:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_fill2")
+    lunar:SetStatusBarTexture(fill)
+    lunar:SetStatusBarColor(200/255,150/255,40/255)
+
+    --solar bar
+    local solar = CreateFrame("StatusBar",nil,bar)
+    solar:SetSize(w,h)
+    solar:SetPoint("LEFT", fill, "RIGHT", 0, 0)
+    --solar:SetPoint("RIGHT")
+    local fill = solar:CreateTexture(nil,"BACKGROUND",nil,-6)
+    fill:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_fill2")
+    solar:SetStatusBarTexture(fill)
+    solar:SetStatusBarColor(32/255,53/255,122/255)
+
+    bar:SetScale(self.cfg.eclipse.scale)
+    func.applyDragFunctionality(bar)
+    --combat fading
+    if self.cfg.eclipse.combat.enable then
+      rCombatFrameFader(bar, self.cfg.eclipse.combat.fadeIn, self.cfg.eclipse.combat.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    end
+
+    bar.SolarBar = solar
+    bar.LunarBar = lunar
+    self.EclipseBar = bar
+
+  end

@@ -1,7 +1,4 @@
 
-  -- // rThreat
-  -- // zork - 2011
-
   --get the addon namespace
   local addon, ns = ...
 

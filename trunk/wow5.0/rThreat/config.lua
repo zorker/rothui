@@ -1,12 +1,13 @@
 
   -- // rThreat
-  -- // zork - 2011
+  -- // zork - 2012
 
   --get the addon namespace
   local addon, ns = ...
 
   --object container
   local cfg = CreateFrame("Frame")
+  ns.cfg = cfg
 
   -----------------------------
   -- CONFIG
@@ -95,11 +96,3 @@
       color         = { r = 0.5, g = 0.5, b = 0.5, a = 0.1 },
     },
   }
-
-
-  -----------------------------
-  -- HANDOVER
-  -----------------------------
-
-  --object container to addon namespace
-  ns.cfg = cfg

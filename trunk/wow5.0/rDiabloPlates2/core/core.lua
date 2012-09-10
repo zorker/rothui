@@ -4,6 +4,10 @@
   --get the config values
   local cfg = ns.cfg
 
+  --make the color tables local
+  local RAID_CLASS_COLORS = RAID_CLASS_COLORS
+  local FACTION_BAR_COLORS = FACTION_BAR_COLORS
+
   -----------------------------
   -- FUNCTIONS
   -----------------------------
@@ -75,7 +79,7 @@
     elseif color.r+color.g > 1.95 then -- neutral
       color.r,color.g,color.b = FACTION_BAR_COLORS[4].r, FACTION_BAR_COLORS[4].g, FACTION_BAR_COLORS[4].b
       return
-    elseif color.r+color.g == 0 then -- friendly player
+    elseif color.r+color.g == 0 then -- friendly player, we don't like 0,0,1 so we change it to a more likable color
       color.r,color.g,color.b = 0/255, 100/255, 230/255
       return
     else -- enemy player

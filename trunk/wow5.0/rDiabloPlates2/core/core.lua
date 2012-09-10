@@ -59,11 +59,42 @@
     return RGBPercToHex(color.r,color.g,color.b)
   end
 
+  --adjust faction color
+  local fixFactionColor = function(color)
+    for class, _ in pairs(RAID_CLASS_COLORS) do
+      if RAID_CLASS_COLORS[class].r == color.r and RAID_CLASS_COLORS[class].g == color.g and RAID_CLASS_COLORS[class].b == color.b then
+        return --no color change needed, bar is in class color
+      end
+    end
+    if color.g+color.b == 0 then -- hostile
+      color.r,color.g,color.b = FACTION_BAR_COLORS[2].r, FACTION_BAR_COLORS[2].g, FACTION_BAR_COLORS[2].b
+      return
+    elseif color.r+color.b == 0 then -- friendly npc
+      color.r,color.g,color.b = FACTION_BAR_COLORS[6].r, FACTION_BAR_COLORS[6].g, FACTION_BAR_COLORS[6].b
+      return
+    elseif color.r+color.g > 1.95 then -- neutral
+      color.r,color.g,color.b = FACTION_BAR_COLORS[4].r, FACTION_BAR_COLORS[4].g, FACTION_BAR_COLORS[4].b
+      return
+    elseif color.r+color.g == 0 then -- friendly player
+      color.r,color.g,color.b = 0/255, 100/255, 230/255
+      return
+    else -- enemy player
+      --whatever is left
+      return
+    end
+  end
+
   --get healthbar color func
   local getHealthbarColor = function(f)
     local color = {}
     color.r,color.g,color.b = f.healthbar:GetStatusBarColor()
     fixColor(color)
+    --now that we have the color make sure we match it to the new faction/class colors
+    fixFactionColor(color)
+    f.healthbar:SetStatusBarColor(color.r,color.g,color.b)
+    f.healthbar.defaultColor = color
+    f.healthbar.lowhealthColor = cfg.healthbar.lowHpWarning.color
+    f.healthbar.colorApplied = "default"
     return color
   end
 
@@ -72,12 +103,7 @@
     if not cfg.name.enable then return end
     local cs = getDifficultyColorString(f)
     local color = getHealthbarColor(f)
-    if color.r==0 and color.g==0 and color.b==1 then
-      --dark blue color of members of the own faction is barely readable
-      f.ns:SetTextColor(0,0.6,1)
-    else
-      f.ns:SetTextColor(color.r,color.g,color.b)
-    end
+    f.ns:SetTextColor(color.r,color.g,color.b)
     local name = f.name:GetText() or "Nobody"
     local level = f.level:GetText() or "-1"
     if f.boss:IsShown() == 1 then
@@ -124,9 +150,15 @@
     local val = v or hb:GetValue()
     local p = floor(val/max*100)
     if cfg.healthbar.lowHpWarning.enable then
-      if p <= cfg.healthbar.lowHpWarning.treshold then
-        local c = cfg.healthbar.lowHpWarning.color
-        hb:SetStatusBarColor(c.r,c.g,c.b)
+      if p <= cfg.healthbar.lowHpWarning.treshold and hb.colorApplied == "default" then
+        local color = hb.lowhealthColor
+        hb:SetStatusBarColor(color.r,color.g,color.b)
+        hb.colorApplied == "lowhealth"
+      elseif p > cfg.healthbar.lowHpWarning.treshold and hb.colorApplied == "lowhealth" then
+        --in case the target got healed reset the color
+        local color = hb.defaultColor
+        hb:SetStatusBarColor(color.r,color.g,color.b)
+        hb.colorApplied == "default"
       end
     end
     if cfg.hpvalue.enable then

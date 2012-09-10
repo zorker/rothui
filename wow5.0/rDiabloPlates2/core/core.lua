@@ -80,7 +80,7 @@
       color.r,color.g,color.b = FACTION_BAR_COLORS[4].r, FACTION_BAR_COLORS[4].g, FACTION_BAR_COLORS[4].b
       return
     elseif color.r+color.g == 0 then -- friendly player, we don't like 0,0,1 so we change it to a more likable color
-      color.r,color.g,color.b = 0/255, 100/255, 230/255
+      color.r,color.g,color.b = 0/255, 100/255, 255/255
       return
     else -- enemy player
       --whatever is left
@@ -157,12 +157,12 @@
       if p <= cfg.healthbar.lowHpWarning.treshold and hb.colorApplied == "default" then
         local color = hb.lowhealthColor
         hb:SetStatusBarColor(color.r,color.g,color.b)
-        hb.colorApplied == "lowhealth"
+        hb.colorApplied = "lowhealth"
       elseif p > cfg.healthbar.lowHpWarning.treshold and hb.colorApplied == "lowhealth" then
         --in case the target got healed reset the color
         local color = hb.defaultColor
         hb:SetStatusBarColor(color.r,color.g,color.b)
-        hb.colorApplied == "default"
+        hb.colorApplied = "default"
       end
     end
     if cfg.hpvalue.enable then

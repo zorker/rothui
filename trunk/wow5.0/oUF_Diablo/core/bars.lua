@@ -734,44 +734,104 @@
   --create eclipse power bar
   bars.createEclipseBar = function(self)
 
-    local t
     local bar = CreateFrame("Frame","oUF_DiabloEclipsePower",self)
-    bar.maxOrbs = 4
-    local w = 64*(bar.maxOrbs) --create the bar for
-    local h = 64
     bar:SetPoint(self.cfg.eclipse.pos.a1,self.cfg.eclipse.pos.af,self.cfg.eclipse.pos.a2,self.cfg.eclipse.pos.x,self.cfg.eclipse.pos.y)
-    bar:SetSize(w,h)
+    bar:SetSize(256,32)
+    bar:SetScale(self.cfg.eclipse.scale)
 
-    --bar background
-    bar.barBg = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
-    bar.barBg:SetAllPoints(bar)
-    bar.barBg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_bar_bg")
+    local statusbarHelper = CreateFrame("Frame",nil,bar)
+    statusbarHelper:SetPoint("TOPLEFT",17,-5)
+    statusbarHelper:SetPoint("BOTTOMRIGHT",-17,5)
+
+    local bg = statusbarHelper:CreateTexture(nil,"BACKGROUND",nil,-8)
+    bg:SetAllPoints(statusbarHelper)
+    bg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\demonic_fury_statusbar")
+    bg:SetVertexColor(self.cfg.eclipse.color.bg.r,self.cfg.eclipse.color.bg.g,self.cfg.eclipse.color.bg.b)
 
     --lunar bar
-    local lunar = CreateFrame("StatusBar",nil,bar)
-    lunar:SetSize(w,h)
-    lunar:SetPoint("LEFT")
+    local lunar = CreateFrame("StatusBar",nil,statusbarHelper)
+    lunar:SetAllPoints(statusbarHelper)
     local fill = lunar:CreateTexture(nil,"BACKGROUND",nil,-6)
-    fill:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_fill2")
+    fill:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\demonic_fury_statusbar")
     lunar:SetStatusBarTexture(fill)
-    lunar:SetStatusBarColor(200/255,150/255,40/255)
+    lunar:SetStatusBarColor(self.cfg.eclipse.color.lunar.r,self.cfg.eclipse.color.lunar.g,self.cfg.eclipse.color.lunar.b)
 
     --solar bar
-    local solar = CreateFrame("StatusBar",nil,bar)
-    solar:SetSize(w,h)
-    solar:SetPoint("LEFT", fill, "RIGHT", 0, 0)
-    --solar:SetPoint("RIGHT")
+    local solar = CreateFrame("StatusBar",nil,statusbarHelper)
+    solar:SetAllPoints(statusbarHelper)
     local fill = solar:CreateTexture(nil,"BACKGROUND",nil,-6)
-    fill:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_fill2")
+    fill:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\demonic_fury_statusbar")
     solar:SetStatusBarTexture(fill)
-    solar:SetStatusBarColor(32/255,53/255,122/255)
+    solar:SetStatusBarColor(self.cfg.eclipse.color.solar.r,self.cfg.eclipse.color.solar.g,self.cfg.eclipse.color.solar.b)
 
-    bar:SetScale(self.cfg.eclipse.scale)
-    func.applyDragFunctionality(bar)
-    --combat fading
-    if self.cfg.eclipse.combat.enable then
-      rCombatFrameFader(bar, self.cfg.eclipse.combat.fadeIn, self.cfg.eclipse.combat.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    --border
+    local border = CreateFrame("Frame",nil,statusbarHelper)
+    border:SetFrameLevel(max(solar:GetFrameLevel()+1,lunar:GetFrameLevel()+1))
+    border:SetAllPoints(bar)
+    local t = border:CreateTexture(nil,"BACKGROUND",nil,-4)
+    t:SetAllPoints(bar)
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\demonic_fury_border")
+    bar.border = t
+
+    --tick
+    local t = border:CreateTexture(nil,"BACKGROUND",nil,-5)
+    t:SetPoint("TOP",0,6)
+    t:SetSize(48,48)
+    t:SetAlpha(0.6)
+    t:SetTexture("Interface\\MainMenuBar\\UI-ExhaustionTickNormal")
+    bar.tickTexture = t
+
+    --glow
+    local t = border:CreateTexture(nil,"BACKGROUND",nil,-2)
+    t:SetSize(512,64)
+    t:SetPoint("CENTER")
+    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\demonic_fury_glow")
+    t:SetVertexColor(0,0.5,1)
+    t:SetBlendMode("BLEND")
+    bar.glow = t
+    bar.glow:Hide()
+
+    bar.PostUnitAura = function()
+      if bar.hasSolarEclipse then
+        bar.glow:SetVertexColor(self.cfg.eclipse.color.solar.r,self.cfg.eclipse.color.solar.g,self.cfg.eclipse.color.solar.b)
+        bar.glow:Show()
+        return
+      end
+      if bar.hasLunarEclipse then
+        bar.glow:SetVertexColor(self.cfg.eclipse.color.lunar.r,self.cfg.eclipse.color.lunar.g,self.cfg.eclipse.color.lunar.b)
+        bar.glow:Show()
+        return
+      end
+      bar.glow:Hide()
     end
+
+    bar.PostDirectionChange = function()
+      if GetEclipseDirection() == "sun" then
+        bar.LunarBar:SetStatusBarColor(self.cfg.eclipse.color.lunar.r,self.cfg.eclipse.color.lunar.g,self.cfg.eclipse.color.lunar.b)
+        bar.LunarBar:Show()
+        bar.SolarBar:Hide()
+      elseif GetEclipseDirection() == "moon" then
+        bar.LunarBar:Hide()
+        bar.SolarBar:SetStatusBarColor(self.cfg.eclipse.color.solar.r,self.cfg.eclipse.color.solar.g,self.cfg.eclipse.color.solar.b)
+        bar.SolarBar:Show()
+      else
+        bar.LunarBar:SetStatusBarColor(0.8,0.8,0.8)
+        bar.SolarBar:SetStatusBarColor(0.8,0.8,0.8)
+        bar.LunarBar:Show()
+        bar.SolarBar:Show()
+      end
+    end
+
+    bar.PostUpdatePower = function()
+      local lmin, lmax = bar.LunarBar:GetMinMaxValues()
+      local lval = bar.LunarBar:GetValue()
+      local smin, smax = bar.SolarBar:GetMinMaxValues()
+      local sval = bar.SolarBar:GetValue()
+      bar.SolarBar:SetValue(bar.SolarBar:GetValue()*(-1))
+      bar.LunarBar:SetValue(bar.LunarBar:GetValue()*(-1))
+    end
+
+    bar.PostUpdateVisibility = bar.PostDirectionChange
 
     bar.SolarBar = solar
     bar.LunarBar = lunar

@@ -238,8 +238,13 @@
       },
       eclipse = { --class bar DRUID
         show = true,
-        scale = 0.4,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
+        scale = 0.7,
+        color = {
+          solar = { r = 255/255, g = 200/255, b = 0/255, },
+          lunar = { r = 0/255, g = 255/255, b = 255/255, },
+          bg  = { r = 50/255, g = 40/255, b = 40/255, },
+        },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 400 },
         combat          = { --fade the bar in/out in combat/out of combat
           enable          = false,
           fadeIn          = {time = 0.4, alpha = 1},

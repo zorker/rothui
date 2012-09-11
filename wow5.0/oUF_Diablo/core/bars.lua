@@ -833,6 +833,12 @@
 
     bar.PostUpdateVisibility = bar.PostDirectionChange
 
+    func.applyDragFunctionality(bar)
+    --combat fading
+    if self.cfg.eclipse.combat.enable then
+      rCombatFrameFader(bar, self.cfg.eclipse.combat.fadeIn, self.cfg.eclipse.combat.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    end
+
     bar.SolarBar = solar
     bar.LunarBar = lunar
     self.EclipseBar = bar

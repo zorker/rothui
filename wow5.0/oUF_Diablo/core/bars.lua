@@ -447,6 +447,7 @@
       orb.bg:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
       orb.bg:SetPoint("CENTER")
       orb.bg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_pot_bg")
+      orb.bg:SetAlpha(0.7)
 
       --orb filling
       local fill = orb:CreateTexture(nil,"BACKGROUND",nil,-6)
@@ -464,6 +465,7 @@
       orb.border:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
       orb.border:SetPoint("CENTER")
       orb.border:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\combo_pot_border")
+      orb.border:SetVertexColor(0.75,0.7,0.7)
 
       --orb glow
       orb.glow = helper:CreateTexture(nil,"BACKGROUND",nil,-4)

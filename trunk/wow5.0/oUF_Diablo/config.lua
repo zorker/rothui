@@ -28,17 +28,13 @@
   cfg.useAnimationSystem = true --true/false
 
   -- defines the animation used in the orbs, following animations are available
-  -- 0 = red fog,         1 = purple fog,       2 = green fog,          3 = yellow fog,     4 = turquoise fog
-  -- 5 = red portal,      6 = blue rune portal, 7 = red ghost,          8 = purple ghost,   9 = water planet,
-  -- 10 = swirling cloud, 11 = white fog,       12 = red glowing eye,   13 = sandy swirl,   14 = green fire
-  -- 15 = purple swirl,   16 = white tornado,   17 = blue swirly,       18 = orange fog,    19 = pearl
-  -- 20 = red magnet,     21 = blue portal,     22 = purple portal
-  -- 23 dwarf floarting artifact (red glow)
-  -- 24 burning blob from hell
-  -- 25 fire
-  -- 26 top down rotation purple (warlock color)
-  -- 27 magic swirl
-  -- 28  poison bubbles
+  -- 0  red fog           1  purple fog           2  green fog            3  yellow fog         4  turquoise fog
+  -- 5  red portal        6  blue rune portal     7  red ghost            8  purple ghost       9  water planet
+  -- 10 swirling cloud    11 white fog            12 red glowing eye      13 sandy swirl        14 green fire
+  -- 15 purple swirl      16 white tornado        17 blue swirly          18 orange fog         19 pearl
+  -- 20 red magnet        21 blue portal          22 purple portal        23 dwarf artifact     24 burning blob
+  -- 25 fire              26 rolling purple       27 magic swirl          28 poison bubbles     29 cthun eye
+  -- 30 soulshard purple  31 the planet
 
   --health animation
   cfg.animhealth = 20 --default 7
@@ -741,8 +737,10 @@
     [25] = {displayid = 38327, r = 253/255, g = 58/255, b = 12/255, camdistancescale = 3.35, portraitzoom = 0, x = -0.3, y = -7, rotation = -9.4, },  -- fire
     [26] = {displayid = 39108, r = 106/255, g = 48/255, b = 158/255, camdistancescale = 0.8, portraitzoom = 0, x = 0, y = 0, rotation = 0, },         -- top down rotation purple (warlock color)
     [27] = {displayid = 39581, r = 76/255, g = 141/255, b = 195/255, camdistancescale = 3.5, portraitzoom = 0, x = 0, y = 2, rotation = 0, },         -- magic swirl
-    [28] = {displayid = 37939, r = 86/255, g = 129/255, b = 49/255, camdistancescale = 1, portraitzoom = 0, x = 0, y = 2, rotation = 0, },         -- poison bubbles
-    [29] = {displayid = 37867, r = 93/255, g = 52/255,  b = 92/255, camdistancescale = 0.75, portraitzoom = 0, x = 0, y = 0.8, rotation = 0, },         -- cthun eye
+    [28] = {displayid = 37939, r = 86/255, g = 129/255, b = 49/255, camdistancescale = 1, portraitzoom = 0, x = 0, y = 2, rotation = 0, },            -- poison bubbles
+    [29] = {displayid = 37867, r = 93/255, g = 52/255,  b = 92/255, camdistancescale = 0.75, portraitzoom = 0, x = 0, y = 0.8, rotation = 0, },       -- cthun eye
+    [30] = {displayid = 45414, r = 0.85, g = 0.28,  b = 1, camdistancescale = 0.25, portraitzoom = 0, x = 0, y = -0.22, rotation = 0, },       -- soulshard purple portal
+    [31] = {displayid = 44652, r = 0.7, g = 1,  b = 0.85, camdistancescale = 0.65, portraitzoom = 0, x = 0.05, y = 0.01, rotation = 0, },       -- the planet
   }
 
   cfg.powercolors = PowerBarColor

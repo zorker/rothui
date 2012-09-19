@@ -5,7 +5,6 @@
 
 config.lua
 core\core.lua
-core\fading.lua
 core\scroll.lua
 core\channelreplacements.lua
 core\altinvite.lua

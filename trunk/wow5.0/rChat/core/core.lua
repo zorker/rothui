@@ -7,93 +7,139 @@
   local addon, ns = ...
   local cfg = ns.cfg
 
+  --new fadein func
+  FCF_FadeInChatFrame = function(self)
+    self.hasBeenFaded = true
+  end
+
+  --new fadeout func
+  FCF_FadeOutChatFrame = function(self)
+    self.hasBeenFaded = false
+  end
+
+  FCFTab_UpdateColors = function(self, selected)
+    if (selected) then
+      self:SetAlpha(cfg.selectedTabAlpha)
+      self:GetFontString():SetTextColor(unpack(cfg.selectedTabColor))
+      self.leftSelectedTexture:Show()
+      self.middleSelectedTexture:Show()
+      self.rightSelectedTexture:Show()
+    else
+      self:GetFontString():SetTextColor(unpack(cfg.notSelectedTabColor))
+      self:SetAlpha(cfg.notSelectedTabAlpha)
+      self.leftSelectedTexture:Hide()
+      self.middleSelectedTexture:Hide()
+      self.rightSelectedTexture:Hide()
+    end
+  end
+
+
+  --add more chat font sizes
+  for i = 1, 23 do
+    CHAT_FONT_HEIGHTS[i] = i+7
+  end
+
+  --hide the menu button
+  ChatFrameMenuButton:HookScript("OnShow", ChatFrameMenuButton.Hide)
+  ChatFrameMenuButton:Hide()
+
+  --hide the friend micro button
+  FriendsMicroButton:HookScript("OnShow", FriendsMicroButton.Hide)
+  FriendsMicroButton:Hide()
+
+  --don"t cut the toastframe
+  BNToastFrame:SetClampedToScreen(true)
+  BNToastFrame:SetClampRectInsets(-15,15,15,-15)
+
+  ChatFontNormal:SetFont(STANDARD_TEXT_FONT, 12, "THINOUTLINE")
+  ChatFontNormal:SetShadowOffset(1,-1)
+  ChatFontNormal:SetShadowColor(0,0,0,0.6)
+
   -----------------------------
   -- FUNCTIONS
   -----------------------------
 
-	for i = 1, 23 do
-		CHAT_FONT_HEIGHTS[i] = i+7
-	end
+  local function skinChat(self)
+    if not self or (self and self.skinApplied) then return end
 
-  for i = 1, NUM_CHAT_WINDOWS do
-    local bf = _G['ChatFrame'..i..'ButtonFrame']
-    if bf then
-      bf:Hide()
-      bf:HookScript("OnShow", function(s) s:Hide(); end)
+    local name = self:GetName()
+
+    --chat frame resizing
+    self:SetClampRectInsets(0, 0, 0, 0)
+    self:SetMaxResize(UIParent:GetWidth(), UIParent:GetHeight())
+    self:SetMinResize(100, 50)
+
+    --chat fading
+    --self:SetFading(false)
+
+    --set font, outline and shadow for chat text
+    self:SetFont(STANDARD_TEXT_FONT, 12, "THINOUTLINE")
+    self:SetShadowOffset(1,-1)
+    self:SetShadowColor(0,0,0,0.6)
+
+    --fix the buttonframe
+    local frame = _G[name.."ButtonFrame"]
+    frame:Hide()
+    frame:HookScript("OnShow", frame.Hide)
+
+    --editbox skinning
+    _G[name.."EditBoxLeft"]:Hide()
+    _G[name.."EditBoxMid"]:Hide()
+    _G[name.."EditBoxRight"]:Hide()
+    local eb = _G[name.."EditBox"]
+    eb:SetAltArrowKeyMode(false)
+    eb:ClearAllPoints()
+    eb:SetPoint("BOTTOM",self,"TOP",0,22)
+    eb:SetPoint("LEFT",self,-5,0)
+    eb:SetPoint("RIGHT",self,10,0)
+
+    --chat tab skinning
+    local tab = _G[name.."Tab"]
+    local tabFs = tab:GetFontString()
+    tabFs:SetFont(NAMEPLATE_FONT, 11, "THINOUTLINE")
+    tabFs:SetShadowOffset(1,-1)
+    tabFs:SetShadowColor(0,0,0,0.6)
+    tabFs:SetTextColor(unpack(cfg.selectedTabColor))
+    if cfg.hideChatTabBackgrounds then
+      _G[name.."TabLeft"]:SetTexture(nil)
+      _G[name.."TabMiddle"]:SetTexture(nil)
+      _G[name.."TabRight"]:SetTexture(nil)
+      _G[name.."TabSelectedLeft"]:SetTexture(nil)
+      _G[name.."TabSelectedMiddle"]:SetTexture(nil)
+      _G[name.."TabSelectedRight"]:SetTexture(nil)
+      _G[name.."TabGlow"]:SetTexture(nil)
+      _G[name.."TabHighlightLeft"]:SetTexture(nil)
+      _G[name.."TabHighlightMiddle"]:SetTexture(nil)
+      _G[name.."TabHighlightRight"]:SetTexture(nil)
     end
-    local ebtl = _G['ChatFrame'..i..'EditBoxLeft']
-    if ebtl then ebtl:Hide() end
-    local ebtm = _G['ChatFrame'..i..'EditBoxMid']
-    if ebtm then ebtm:Hide() end
-    local ebtr = _G['ChatFrame'..i..'EditBoxRight']
-    if ebtr then ebtr:Hide() end
-    local cf = _G['ChatFrame'..i]
-    if cf then
-      cf:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE")
-      cf:SetShadowOffset(1,-1)
-      cf:SetShadowColor(0,0,0,0.6)
-      cf:SetFrameStrata("LOW")
-      cf:SetFrameLevel(2)
-    end
-    local eb = _G['ChatFrame'..i..'EditBox']
-    if eb and cf then
-      cf:SetClampRectInsets(0,0,0,0)
-      --cf:SetFading(false)
-      eb:SetAltArrowKeyMode(false)
-      eb:ClearAllPoints()
-      eb:SetPoint("BOTTOM",cf,"TOP",0,22)
-      eb:SetPoint("LEFT",cf,-5,0)
-      eb:SetPoint("RIGHT",cf,10,0)
-    end
-    local tab = _G['ChatFrame'..i..'Tab']
-    if tab then
-      tab:GetFontString():SetFont(NAMEPLATE_FONT, 11, "THINOUTLINE")
-      --fix for color and alpha of undocked frames
-      tab:GetFontString():SetTextColor(1,0.7,0)
-      tab:GetFontString():SetShadowOffset(1,-1)
-      tab:GetFontString():SetShadowColor(0,0,0,0.6)
-      tab:SetAlpha(1)
-    end
+    tab:SetAlpha(cfg.selectedTabAlpha)
+
+    self.skinApplied = true
   end
 
-  local function init()
+  -----------------------------
+  -- CALL
+  -----------------------------
 
-    local mb = _G['ChatFrameMenuButton']
-    if mb then
-      mb:Hide()
-      mb:HookScript("OnShow", function(s) s:Hide(); end)
+  --chat skinning
+  for i = 1, NUM_CHAT_WINDOWS do
+    skinChat(_G["ChatFrame"..i])
+  end
+  --skin temporary chats
+  hooksecurefunc("FCF_OpenTemporaryWindow", skinChat)
+
+  --combat log custom hider
+  local function fixCombatLogQuickButtonFrame()
+    for i = 1, NUM_CHAT_WINDOWS do
+      local name = "ChatFrame"..i
+      local tab = _G[name.."Tab"]
+      tab:SetAlpha(cfg.selectedTabAlpha)
     end
-
-    local fmb = _G['FriendsMicroButton']
-    if fmb then
-      fmb:Hide()
-      fmb:HookScript("OnShow", function(s) s:Hide(); end)
-    end
-
-    ChatFontNormal:SetFont(NAMEPLATE_FONT, 12, "THINOUTLINE")
-    ChatFontNormal:SetShadowOffset(1,-1)
-    ChatFontNormal:SetShadowColor(0,0,0,0.6)
-
-    --don't cut the toastframe
-    BNToastFrame:SetClampedToScreen(true)
-    BNToastFrame:SetClampRectInsets(-15,15,15,-15)
-
-    local bcq = _G["CombatLogQuickButtonFrame_Custom"];
-    if bcq then
-      bcq:Hide()
-      bcq:HookScript("OnShow", function(s) s:Hide(); end)
-      bcq:SetHeight(0)
-    end
-
+    CombatLogQuickButtonFrame_Custom:HookScript("OnShow", CombatLogQuickButtonFrame_Custom.Hide)
+    CombatLogQuickButtonFrame_Custom:Hide()
+    CombatLogQuickButtonFrame_Custom:SetHeight(0)
   end
 
   local a = CreateFrame("Frame")
-
-  a:SetScript("OnEvent", function(self, event)
-    if(event=="PLAYER_LOGIN") then
-      init()
-    end
-  end)
-
   a:RegisterEvent("PLAYER_LOGIN")
-
+  a:SetScript("OnEvent", fixCombatLogQuickButtonFrame)

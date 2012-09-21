@@ -456,7 +456,7 @@
         size            = 20,
       },
       auras = {
-        show = false,
+        show = true,
         size = 22,
         onlyShowPlayerDebuffs = false,
         showDebuffType = false,
@@ -553,7 +553,7 @@
       scale = 0.82,
       pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 5, y = -77 },
       aurawatch = {
-        show            = true,
+        show            = false,
         size            = 20.1,
       },
       auras = {
@@ -608,7 +608,7 @@
         tag = "[diablo:misshp]",   --tag for the second line
       },
       aurawatch = {
-        show            = true,
+        show            = false,
       },
       auras = {
         --put every single spellid here that you want to be tracked, be it buff or debuff doesn't matter

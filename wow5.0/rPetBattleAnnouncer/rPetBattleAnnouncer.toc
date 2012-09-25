@@ -1,0 +1,6 @@
+## Interface: 50001
+## Author: zork
+## Title: rPetBattleAnnouncer
+## Notes: Street Fighter alike pet battle announcement
+
+core\core.lua

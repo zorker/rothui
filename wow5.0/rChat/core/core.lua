@@ -60,6 +60,7 @@
   -----------------------------
 
   local function skinChat(self)
+    if self == "PET_BATTLE_COMBAT_LOG" then self = ChatFrame11 end
     if not self or (self and self.skinApplied) then return end
 
     local name = self:GetName()

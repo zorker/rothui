@@ -8,7 +8,7 @@
   ---------------------------------------
   -- FUNCTIONS
   ---------------------------------------
-  
+
   local memformat = function(number)
     if number > 1024 then
       return string.format("%.2fmb", (number / 1024))
@@ -36,7 +36,21 @@
     end
   end
 
-  local frame = CreateFrame("Frame", "rIS_DragFrame", UIParent)
+  --petbattle handler
+  local petbattleHandler = CreateFrame("Frame",nil,UIParent)
+  petbattleHandler:RegisterEvent("PET_BATTLE_OPENING_START")
+  petbattleHandler:RegisterEvent("PET_BATTLE_CLOSE")
+  --event
+  petbattleHandler:SetScript("OnEvent", function(...)
+    local self, event, arg1 = ...
+    if event == "PET_BATTLE_OPENING_START" then
+      self:Hide()
+    elseif event == "PET_BATTLE_CLOSE" then
+      self:Show()
+    end
+  end)
+
+  local frame = CreateFrame("Frame", "rIS_DragFrame", petbattleHandler)
   frame:SetSize(50,50)
   frame:SetScale(cfg.frame.scale)
   frame:SetPoint(cfg.frame.pos.a1,cfg.frame.pos.af,cfg.frame.pos.a2,cfg.frame.pos.x,cfg.frame.pos.y)
@@ -51,7 +65,7 @@
   f1:SetPoint("TOP", frame, 0, 0)
   f2:SetPoint("TOP", f1, "BOTTOM", 0, -3)
   f3:SetPoint("TOP", f2, "BOTTOM", 0, -6)
-  
+
   local function rsiCreateFontString(f,size)
     local t = f:CreateFontString(nil, "BACKGROUND")
     t:SetFont("Fonts\\FRIZQT__.ttf", size, "THINOUTLINE")
@@ -77,7 +91,7 @@
   f2:SetScript("OnMouseDown", function()
     rsiClearGarbage()
   end)
-  
+
   local addoncompare = function(a, b)
   	return a.memory > b.memory
   end
@@ -116,17 +130,17 @@
     GameTooltip:AddDoubleLine("Total incl. Blizzard", memformat(blizz), color.r, color.g, color.b, color.r, color.g, color.b)
     GameTooltip:Show()
   end
-  
-  
+
+
   f2:SetScript("OnEnter", function() rsiShowMemTooltip(f2) end)
   f2:SetScript("OnLeave", function() GameTooltip:Hide() end)
-  
-  
+
+
   local function rsiExpRep()
     local xp = ""
 
     if not IsXPUserDisabled() and (UnitLevel("player")<MAX_PLAYER_LEVEL) then
-      xp = "|c00FA58F4"..numformat(UnitXP("player")).."/"..numformat(UnitXPMax("player")).." |r|c00ffb400("..numformat(GetXPExhaustion())..")|r|c00FA58F4 | "..string.format("%.0f", (UnitXP("player")/UnitXPMax("player")*100)).."%|r"
+      xp = "|c00FA58F4"..numformat(UnitXP("player")).."/"..numformat(UnitXPMax("player")).." |r|c00ffb400("..numformat(GetXPExhaustion() or 0)..")|r|c00FA58F4 | "..string.format("%.0f", (UnitXP("player")/UnitXPMax("player")*100)).."%|r"
     else
       local _, _, minimum, maximum, value = GetWatchedFactionInfo()
       if ((value-minimum)==999) and ((maximum-minimum)==1000) then
@@ -137,15 +151,15 @@
     end
     return xp
   end
-  
+
   local function rsiFPS()
     return floor(GetFramerate()).."fps"
   end
-  
+
   local function rsiLatency()
     return select(3, GetNetStats()).."ms"
   end
-  
+
   local function rsiMemory()
     local t = 0
     UpdateAddOnMemoryUsage()
@@ -154,7 +168,7 @@
     end
     return memformat(t)
   end
-  
+
   local function rsiZoneCoords()
     local zone = ""
     local x, y = GetPlayerMapPosition("player")
@@ -168,8 +182,8 @@
       zone = "|c00E8B444"..GetMinimapZoneText().."|r"
     end
     return zone
-  end  
-  
+  end
+
   local function rsiMail()
     local mail = (HasNewMail() or 0)
     local mailtext = ""
@@ -178,17 +192,17 @@
     end
     return mailtext
   end
-  
+
   local function rsiUpdateStrings()
 
     f1.text:SetText(rsiZoneCoords())
     f1:SetHeight(f1.text:GetStringHeight())
     f1:SetWidth(f1.text:GetStringWidth())
-    
+
     f2.text:SetText("|c009C907D"..rsiLatency().." "..rsiFPS().."|r")
     f2:SetHeight(f2.text:GetStringHeight())
     f2:SetWidth(f2.text:GetStringWidth())
-    
+
     local f3Text = ""
     if cfg.showMail and cfg.showXpRep then
       f3Text = rsiMail().." "..rsiExpRep()
@@ -201,12 +215,12 @@
     f3:SetHeight(f3.text:GetStringHeight())
     f3:SetWidth(f3.text:GetStringWidth())
 
-  end   
+  end
 
-  
+
 
   local startSearch = function(self)
-    --timer  
+    --timer
     local ag = self:CreateAnimationGroup()
     ag.anim = ag:CreateAnimation()
     ag.anim:SetDuration(1)
@@ -220,7 +234,7 @@
   --init
   local a = CreateFrame("Frame")
   a:RegisterEvent("PLAYER_LOGIN")
-  a:SetScript("OnEvent", function(self,event,...) 
+  a:SetScript("OnEvent", function(self,event,...)
     if event == "PLAYER_LOGIN" then
       startSearch(self)
     end

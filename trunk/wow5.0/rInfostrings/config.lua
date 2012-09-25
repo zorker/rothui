@@ -21,5 +21,5 @@
     userplaced      = true, --want to place the bar somewhere else?
   }
 
-  cfg.showXpRep     = false --show xp or reputation as string
-  cfg.showMail      = false --show mail as text
+  cfg.showXpRep     = true --show xp or reputation as string
+  cfg.showMail      = true --show mail as text

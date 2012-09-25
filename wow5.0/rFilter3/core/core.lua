@@ -15,6 +15,21 @@
   -- FUNCTIONS
   -----------------------------
 
+  --petbattle handler
+  local petbattleHandler = CreateFrame("Frame",nil,UIParent)
+  petbattleHandler:RegisterEvent("PET_BATTLE_OPENING_START")
+  petbattleHandler:RegisterEvent("PET_BATTLE_CLOSE")
+  --event
+  petbattleHandler:SetScript("OnEvent", function(...)
+    local self, event, arg1 = ...
+    if event == "PET_BATTLE_OPENING_START" then
+      self:Hide()
+    elseif event == "PET_BATTLE_CLOSE" then
+      self:Show()
+    end
+  end)
+
+
   --format time func
   local GetFormattedTime = function(time)
     local hr, m, s, text
@@ -77,7 +92,7 @@
       end
     end
 
-    local i = CreateFrame("FRAME",makeFrameName(f,type),UIParent, "SecureHandlerStateTemplate")
+    local i = CreateFrame("FRAME",makeFrameName(f,type),petbattleHandler, "SecureHandlerStateTemplate")
     i:SetSize(f.size,f.size)
     i:SetPoint(f.pos.a1,f.pos.af,f.pos.a2,f.pos.x,f.pos.y)
     i.minsize = f.size

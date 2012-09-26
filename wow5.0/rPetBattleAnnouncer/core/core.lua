@@ -69,6 +69,7 @@ local t = canvas:CreateTexture(nil, "BACKGROUND",nil,-8)
 t:SetAllPoints(canvas)
 t:SetTexture("Interface\\AddOns\\rPetBattleAnnouncer\\media\\canvasBg")
 canvas.bg = t
+canvas:EnableMouse(true)
 
 local ag1, ag2, a1, a2
 

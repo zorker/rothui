@@ -570,7 +570,7 @@
     end
 
     --runes
-    if cfg.playerclass == "DEATHKNIGHT" then
+    if cfg.playerclass == "DEATHKNIGHT" and self.cfg.eclipse.runes then
       --position deathknight runes
       bars.createRuneBar(self)
     end

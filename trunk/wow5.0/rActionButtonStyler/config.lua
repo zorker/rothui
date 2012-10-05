@@ -68,7 +68,7 @@
     spacing         = 0,
   }
 
-  cfg.font = "Fonts\\FRIZQT__.TTF"
+  cfg.font = STANDARD_TEXT_FONT
 
   -----------------------------
   -- HANDOVER

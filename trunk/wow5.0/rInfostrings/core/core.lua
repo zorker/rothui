@@ -68,7 +68,7 @@
 
   local function rsiCreateFontString(f,size)
     local t = f:CreateFontString(nil, "BACKGROUND")
-    t:SetFont("Fonts\\FRIZQT__.ttf", size, "THINOUTLINE")
+    t:SetFont(STANDARD_TEXT_FONT, size, "THINOUTLINE")
     t:SetPoint("CENTER", f)
     return t
   end

@@ -58,4 +58,4 @@
     pos             = { a1 = "TOPRIGHT", x = 0, y = 0 },
   }
 
-  cfg.font = "Fonts\\FRIZQT__.TTF"
+  cfg.font = STANDARD_TEXT_FONT

@@ -59,7 +59,7 @@
     height          = 14,
     gap             = 10,     -- gap between title and statusbar container
     font = {
-      font          = "Fonts\\FRIZQT__.ttf",
+      font          = STANDARD_TEXT_FONT,
       size          = 12,
       color         = { r = 1, g = 0.8, b = 0, a = 1 },
       outline       = "THINOUTLINE",
@@ -78,7 +78,7 @@
     gap             = 1,      -- gap between bars
     marker          = true,   -- true/false this will mark your statusbar in red color if active
     font = {
-      font          = "Fonts\\FRIZQT__.ttf",
+      font          = STANDARD_TEXT_FONT,
       size          = 11,
       color         = { r = 1, g = 1, b = 1, a = 1 },
       outline       = "THINOUTLINE",

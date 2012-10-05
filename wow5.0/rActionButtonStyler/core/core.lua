@@ -1,4 +1,8 @@
 ﻿
+  ---------------------------------------
+  -- VARIABLES
+  ---------------------------------------
+
   --get the addon namespace
   local addon, ns = ...
 
@@ -6,6 +10,8 @@
   local cfg = ns.cfg
 
   local classcolor = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
+  local dominos = IsAddOnLoaded("Dominos")
+  local bartender4 = IsAddOnLoaded("Bartender4")
 
   if cfg.color.classcolored then
     cfg.color.normal = classcolor
@@ -30,6 +36,10 @@
       bottom = cfg.background.inset,
     },
   }
+
+  ---------------------------------------
+  -- FUNCTIONS
+  ---------------------------------------
 
   local function applyBackground(bu)
     if not bu or (bu and bu.bg) then return end
@@ -284,6 +294,14 @@
     bu.rabs_styled = true
   end
 
+  --update hotkey func
+  local function updateHotkey(self, actionButtonType)
+    local ho = _G[self:GetName().."HotKey"]
+    if ho and not cfg.hotkeys.show and ho:IsShown() then
+      ho:Hide()
+    end
+  end
+
   ---------------------------------------
   -- INIT
   ---------------------------------------
@@ -328,7 +346,12 @@
       end
     end
     SpellFlyout:HookScript("OnShow",checkForFlyoutButtons)
-  
+
+    --hide the hotkeys if needed
+    if not dominos and not bartender4 and not cfg.hotkeys.show then
+      hooksecurefunc("ActionButton_UpdateHotkeys",  updateHotkey)
+    end
+
   end
 
   ---------------------------------------

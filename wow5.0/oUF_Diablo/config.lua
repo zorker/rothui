@@ -747,7 +747,7 @@
   cfg.powercolors["MANA"] = { r = 0, g = 0.4, b = 1 }
 
   --font
-  cfg.font = "FONTS\\FRIZQT__.ttf"
+  cfg.font = STANDARD_TEXT_FONT
 
   --backdrop
   cfg.backdrop = {

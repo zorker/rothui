@@ -235,7 +235,7 @@
     if fs < 8 then
       fs = 8
     end
-    self.p:SetFont("Fonts\\FRIZQT__.ttf", fs, "THINOUTLINE")
+    self.p:SetFont(STANDARD_TEXT_FONT, fs, "THINOUTLINE")
     self:Show()
   end
 
@@ -368,7 +368,7 @@
     local l1,l2,l3,l4,l5,t,p,e,d,e2
 
     p = b:CreateFontString(nil, "BACKGROUND")
-    p:SetFont("Fonts\\FRIZQT__.ttf", 20, "THINOUTLINE")
+    p:SetFont(STANDARD_TEXT_FONT, 20, "THINOUTLINE")
     p:SetPoint("BOTTOMLEFT", 10, 15)
     p:SetText(version)
     p:SetTextColor(0,1,0.5)
@@ -387,12 +387,12 @@
     t:SetPoint("TOPLEFT", e, "TOPLEFT", 2, -2)
     t:SetPoint("BOTTOMRIGHT", e, "BOTTOMRIGHT", -2, 2)
 
-    e:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    e:SetFont(STANDARD_TEXT_FONT, 14, "THINOUTLINE")
     e:SetText(cfg.page)
     e:SetJustifyH("CENTER")
 
     p = e:CreateFontString(nil, "BACKGROUND")
-    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    p:SetFont(STANDARD_TEXT_FONT, 14, "THINOUTLINE")
     p:SetPoint("BOTTOM", e, "TOP", 0, 10)
     p:SetText("PAGE")
 
@@ -424,12 +424,12 @@
     t:SetPoint("TOPLEFT", e2, "TOPLEFT", 2, -2)
     t:SetPoint("BOTTOMRIGHT", e2, "BOTTOMRIGHT", -2, 2)
 
-    e2:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    e2:SetFont(STANDARD_TEXT_FONT, 14, "THINOUTLINE")
     e2:SetText(cfg.page)
     e2:SetJustifyH("CENTER")
 
     p = e2:CreateFontString(nil, "BACKGROUND")
-    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    p:SetFont(STANDARD_TEXT_FONT, 14, "THINOUTLINE")
     p:SetPoint("BOTTOM", e2, "TOP", 0, 10)
     p:SetText("DISPLAYID")
 
@@ -459,7 +459,7 @@
     l1.t = t
 
     p = l1:CreateFontString(nil, "BACKGROUND")
-    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    p:SetFont(STANDARD_TEXT_FONT, 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
     p:SetText("< PAGE")
 
@@ -484,7 +484,7 @@
     l2.t = t
 
     p = l2:CreateFontString(nil, "BACKGROUND")
-    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    p:SetFont(STANDARD_TEXT_FONT, 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
     p:SetText("PAGE >")
 
@@ -507,7 +507,7 @@
     l3.t = t
 
     p = l3:CreateFontString(nil, "BACKGROUND")
-    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    p:SetFont(STANDARD_TEXT_FONT, 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
     p:SetText("</CLOSE>")
 
@@ -529,7 +529,7 @@
     l4.t = t
 
     p = l4:CreateFontString(nil, "BACKGROUND")
-    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    p:SetFont(STANDARD_TEXT_FONT, 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
     p:SetText("SIZE ++")
 
@@ -556,7 +556,7 @@
     l5.t = t
 
     p = l5:CreateFontString(nil, "BACKGROUND")
-    p:SetFont("Fonts\\FRIZQT__.ttf", 14, "THINOUTLINE")
+    p:SetFont(STANDARD_TEXT_FONT, 14, "THINOUTLINE")
     p:SetPoint("CENTER", 0, 0)
     p:SetText("SIZE --")
 
@@ -836,7 +836,7 @@
     local size = floor(b:GetHeight())-40
     m:SetSize(size,size)
     m:SetPoint("CENTER",0,0)
-    m.p:SetFont("Fonts\\FRIZQT__.ttf", 30, "THINOUTLINE")
+    m.p:SetFont(STANDARD_TEXT_FONT, 30, "THINOUTLINE")
     m:Show()
 
     b.m = m

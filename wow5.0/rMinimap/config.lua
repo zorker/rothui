@@ -27,13 +27,13 @@
 
   cfg.clock = { --the clock
     pos             = { a1 = "BOTTOM", af = Minimap, a2 = "BOTTOM", x = 0, y = 0 },
-    font            = { size = 12, family = "Fonts\\FRIZQT__.TTF", outline = "THINOUTLINE", }
+    font            = { size = 12, family = STANDARD_TEXT_FONT, outline = "THINOUTLINE", }
   }
 
   cfg.calendar = { --calendar button
     size            = 16,
     pos             = { a1 = "CENTER", af = Minimap, a2 = "CENTER", x = 52, y = 52 },
-    font            = { size = 12, family = "Fonts\\FRIZQT__.TTF", outline = "THINOUTLINE", }
+    font            = { size = 12, family = STANDARD_TEXT_FONT, outline = "THINOUTLINE", }
   }
 
   cfg.mail = {

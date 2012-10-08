@@ -47,7 +47,7 @@
   FriendsMicroButton:HookScript("OnShow", FriendsMicroButton.Hide)
   FriendsMicroButton:Hide()
 
-  --don"t cut the toastframe
+  --don't cut the toastframe
   BNToastFrame:SetClampedToScreen(true)
   BNToastFrame:SetClampRectInsets(-15,15,15,-15)
 
@@ -60,7 +60,6 @@
   -----------------------------
 
   local function skinChat(self)
-    if self == "PET_BATTLE_COMBAT_LOG" then self = ChatFrame11 end
     if not self or (self and self.skinApplied) then return end
 
     local name = self:GetName()
@@ -126,11 +125,19 @@
   for i = 1, NUM_CHAT_WINDOWS do
     skinChat(_G["ChatFrame"..i])
   end
+
   --skin temporary chats
-  hooksecurefunc("FCF_OpenTemporaryWindow", skinChat)
+  hooksecurefunc("FCF_OpenTemporaryWindow", function()
+    for _, chatFrameName in pairs(CHAT_FRAMES) do
+      local frame = _G[chatFrameName]
+      if (frame.isTemporary) then
+        skinChat(frame)
+      end
+    end
+  end)
 
   --combat log custom hider
-  local function fixCombatLogQuickButtonFrame()
+  local function fixStuffOnLogin()
     for i = 1, NUM_CHAT_WINDOWS do
       local name = "ChatFrame"..i
       local tab = _G[name.."Tab"]
@@ -143,4 +150,4 @@
 
   local a = CreateFrame("Frame")
   a:RegisterEvent("PLAYER_LOGIN")
-  a:SetScript("OnEvent", fixCombatLogQuickButtonFrame)
+  a:SetScript("OnEvent", fixStuffOnLogin)

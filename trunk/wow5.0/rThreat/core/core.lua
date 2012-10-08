@@ -50,11 +50,22 @@
     end
   end
 
+  local values = {
+    UnitID        = nil,
+    UnitName      = nil,
+    UnitClass     = nil,
+    isTanking     = nil,
+    status        = nil,
+    scaledPercent = nil,
+    rawPercent    = nil,
+    threatValue   = nil,
+  }
+
   --get threat data
   local function getThreatData(unit)
     local isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, "target")
     local _, class = UnitClass(unit)
-    local values = {
+    values = {
       UnitID        = unit,
       UnitName      = UnitName(unit) or "Not found",
       UnitClass     = class or "Not found",

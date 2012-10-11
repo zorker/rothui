@@ -854,9 +854,9 @@
     i:SetPortraitZoom(0)
     i:SetCamDistanceScale(1)
     i:SetPosition(0,0,0)
-    i:SetRotation(0)
+    i:SetRotation(-0.4)
     i:ClearModel()
-    i:SetDisplayInfo(31)
+    i:SetDisplayInfo(21723)
 
     --[[
     local t = i:CreateTexture(nil, "BACKGROUND",nil,-8)

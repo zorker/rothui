@@ -122,7 +122,7 @@
   --update threatbar func
   local function updateThreatBars(self)
 
-    threatTable = {}  --clear table
+    table.wipe(threatTable) --clear the table
     local typ = 0     --0 = player only, 1 = raid, 2 = party, 3 = pet
     local unit
 

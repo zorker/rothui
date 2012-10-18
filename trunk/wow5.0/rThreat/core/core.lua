@@ -50,22 +50,11 @@
     end
   end
 
-  local values = {
-    UnitID        = nil,
-    UnitName      = nil,
-    UnitClass     = nil,
-    isTanking     = nil,
-    status        = nil,
-    scaledPercent = nil,
-    rawPercent    = nil,
-    threatValue   = nil,
-  }
-
   --get threat data
   local function getThreatData(unit)
     local isTanking, status, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation(unit, "target")
     local _, class = UnitClass(unit)
-    values = {
+    local values = {
       UnitID        = unit,
       UnitName      = UnitName(unit) or "Not found",
       UnitClass     = class or "Not found",
@@ -122,7 +111,8 @@
   --update threatbar func
   local function updateThreatBars(self)
 
-    table.wipe(threatTable) --clear the table
+    --threatTable = {}  --clear table
+    table.wipe(threatTable)
     local typ = 0     --0 = player only, 1 = raid, 2 = party, 3 = pet
     local unit
 

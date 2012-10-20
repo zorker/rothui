@@ -34,6 +34,7 @@
   ismine              = false,                    --true/false (optional), track if the spell casted is actually MY spell (hide same buffs/debuffs from other players)
   desaturate          = true,                     --true/false (optional), desaturate the icon if not found
   match_spellid       = false,                    --true/false (optional), in case you not only match the name but the spell id of the buff/debuff
+  show_value          = 1,                        --nil,1,2,3 (optional), show the optional value of an aura (like for Vengeance or Absorb Shield), there are 3 possible values
   move_ingame         = true,                     --true/false (optional), in case you want to move the frame ingame,
                                                   --The size will be the MINIMUM frame size you can resize to, so adjust the size in case you need lower minimum size ingame
   pos                 = {                         --TABLE, the position of the icon (http://www.wowwiki.com/API_Region_SetPoint)

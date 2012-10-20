@@ -49,6 +49,26 @@
     return text
   end
 
+  --number format func
+  local numFormat = function(v)
+    if v > 1E10 then
+      return (floor(v/1E9)).."b"
+    elseif v > 1E9 then
+      return (floor((v/1E9)*10)/10).."b"
+    elseif v > 1E7 then
+      return (floor(v/1E6)).."m"
+    elseif v > 1E6 then
+      return (floor((v/1E6)*10)/10).."m"
+    elseif v > 1E4 then
+      return (floor(v/1E3)).."k"
+    elseif v > 1E3 then
+      return (floor((v/1E3)*10)/10).."k"
+    else
+      return v
+    end
+  end
+
+  --apply icon size change func
   local applySizeChange = function(i)
     local w = i:GetWidth()
     local h = i:GetHeight()
@@ -61,6 +81,7 @@
     i.border:SetSize(w*1.18,w*1.18)
     i.time:SetFont(STANDARD_TEXT_FONT, w*cfg.timeFontSize/36, "THINOUTLINE")
     i.count:SetFont(STANDARD_TEXT_FONT, w*cfg.countFontSize/32, "OUTLINE")
+    i.value:SetFont(STANDARD_TEXT_FONT, w*cfg.timeFontSize/36, "THINOUTLINE")
   end
 
   --generate the frame name if a global one is needed
@@ -120,19 +141,25 @@
     bo:SetVertexColor(0.37,0.3,0.3,1)
 
     local time = i:CreateFontString(nil, "BORDER")
-    time:SetPoint("BOTTOM", 0, 0)
+    time:SetPoint("BOTTOM", 0, -2)
     time:SetTextColor(1, 0.8, 0)
 
     local count = i:CreateFontString(nil, "BORDER")
-    count:SetPoint("TOPRIGHT", 2,2)
+    count:SetPoint("TOPRIGHT", 2, 2)
     count:SetTextColor(1, 1, 1)
     count:SetJustifyH("RIGHT")
+
+    local value = i:CreateFontString(nil, "BORDER")
+    value:SetPoint("TOP", 0, 2)
+    value:SetTextColor(1, 1, 1)
+    value:SetJustifyH("CENTER")
 
     i.shadow = sh
     i.border = bo
     i.back = ba
     i.time = time
     i.count = count
+    i.value = value
     i.icon = t
     i.spec = f.spec --save the spec to the icon
 
@@ -169,6 +196,7 @@
       f.iconframe.icon:SetDesaturated(nil)
       f.iconframe.time:SetText("30m")
       f.iconframe.count:SetText("3")
+      f.iconframe.value:SetText("")
       return
     end
     if not UnitExists(f.unit) and f.validate_unit then
@@ -192,7 +220,7 @@
       end
     end
     if f.name and f.rank then
-      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID = UnitAura(f.unit, f.name, f.rank, "HARMFUL")
+      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID, canApplyAura, isBossDebuff, value1, value2, value3 = UnitAura(f.unit, f.name, f.rank, "HARMFUL")
       --if name and (not f.ismine or (f.ismine and caster == "player")) then
       if name and (not f.ismine or (f.ismine and caster == "player")) and (not f.match_spellid or (f.match_spellid and spID == tmp_spellid)) then
         if caster == "player" and cfg.highlightPlayerSpells then
@@ -209,19 +237,30 @@
         if f.desaturate then
           f.iconframe.icon:SetDesaturated(nil)
         end
-        --local value = floor((expires-GetTime())*10+0.5)/10
         if count and count > 1 then
           f.iconframe.count:SetText(count)
         else
           f.iconframe.count:SetText("")
         end
-        local value = expires-GetTime()
-        if value < 10 then
+        local time = expires-GetTime()
+        if time < 10 then
           f.iconframe.time:SetTextColor(1, 0.4, 0)
         else
           f.iconframe.time:SetTextColor(1, 0.8, 0)
         end
-        f.iconframe.time:SetText(GetFormattedTime(value))
+        f.iconframe.time:SetText(GetFormattedTime(time))
+        --value check
+        if f.show_value then
+          local value
+          if f.show_value == 1 then
+            value = value1
+          elseif f.show_value == 2 then
+            value = value2
+          elseif f.show_value == 3 then
+            value = value3
+          end
+          f.iconframe.value:SetText(numFormat(value) or "")
+        end
       else
         f.iconframe:SetAlpha(f.alpha.not_found.frame)
         f.iconframe.icon:SetAlpha(f.alpha.not_found.icon)
@@ -230,6 +269,7 @@
         end
         f.iconframe.time:SetText("")
         f.iconframe.count:SetText("")
+        f.iconframe.value:SetText("")
         f.iconframe.time:SetTextColor(1, 0.8, 0)
         if cfg.highlightPlayerSpells then
           f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
@@ -257,6 +297,7 @@
       f.iconframe.icon:SetDesaturated(nil)
       f.iconframe.time:SetText("30m")
       f.iconframe.count:SetText("3")
+      f.iconframe.value:SetText("")
       return
     end
     if not UnitExists(f.unit) and f.validate_unit then
@@ -280,7 +321,7 @@
       end
     end
     if f.name and f.rank then
-      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID = UnitAura(f.unit, f.name, f.rank, "HELPFUL")
+      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID, canApplyAura, isBossDebuff, value1, value2, value3 = UnitAura(f.unit, f.name, f.rank, "HELPFUL")
       --if name and (not f.ismine or (f.ismine and caster == "player")) then
       if name and (not f.ismine or (f.ismine and caster == "player")) and (not f.match_spellid or (f.match_spellid and spID == tmp_spellid)) then
         if caster == "player" and cfg.highlightPlayerSpells then
@@ -303,13 +344,25 @@
         else
           f.iconframe.count:SetText("")
         end
-        local value = expires-GetTime()
-        if value < 10 then
+        local time = expires-GetTime()
+        if time < 10 then
           f.iconframe.time:SetTextColor(1, 0.4, 0)
         else
           f.iconframe.time:SetTextColor(1, 0.8, 0)
         end
-        f.iconframe.time:SetText(GetFormattedTime(value))
+        f.iconframe.time:SetText(GetFormattedTime(time))
+        --value check
+        if f.show_value then
+          local value
+          if f.show_value == 1 then
+            value = value1
+          elseif f.show_value == 2 then
+            value = value2
+          elseif f.show_value == 3 then
+            value = value3
+          end
+          f.iconframe.value:SetText(numFormat(value) or "")
+        end
       else
         f.iconframe:SetAlpha(f.alpha.not_found.frame)
         f.iconframe.icon:SetAlpha(f.alpha.not_found.icon)
@@ -318,6 +371,7 @@
         end
         f.iconframe.time:SetText("")
         f.iconframe.count:SetText("")
+        f.iconframe.value:SetText("")
         f.iconframe.time:SetTextColor(1, 0.8, 0)
         if cfg.highlightPlayerSpells then
           f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)

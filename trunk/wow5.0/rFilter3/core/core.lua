@@ -79,9 +79,9 @@
     end
     i.shadow:SetSize(w*1.45,w*1.45)
     i.border:SetSize(w*1.18,w*1.18)
-    i.time:SetFont(STANDARD_TEXT_FONT, w*cfg.timeFontSize/36, "THINOUTLINE")
+    i.time:SetFont(STANDARD_TEXT_FONT, w*cfg.timeFontSize/32, "THINOUTLINE")
     i.count:SetFont(STANDARD_TEXT_FONT, w*cfg.countFontSize/32, "OUTLINE")
-    i.value:SetFont(STANDARD_TEXT_FONT, w*cfg.timeFontSize/36, "THINOUTLINE")
+    i.value:SetFont(STANDARD_TEXT_FONT, w*cfg.timeFontSize/32, "THINOUTLINE")
   end
 
   --generate the frame name if a global one is needed
@@ -116,6 +116,9 @@
     local i = CreateFrame("FRAME",makeFrameName(f,type),petbattleHandler, "SecureHandlerStateTemplate")
     i:SetSize(f.size,f.size)
     i:SetPoint(f.pos.a1,f.pos.af,f.pos.a2,f.pos.x,f.pos.y)
+    if f.framestrata then
+      i:SetFrameStrata(f.framestrata)
+    end
     i.minsize = f.size
 
     local sh = i:CreateTexture(nil, "BACKGROUND",nil,-8)

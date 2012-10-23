@@ -20,7 +20,7 @@
 
   cfg.highlightPlayerSpells = true  --player spells will have a blue border
   cfg.updatetime            = 0.3   --how fast should the timer update itself
-  cfg.timeFontSize          = 16
+  cfg.timeFontSize          = 15
   cfg.countFontSize         = 18
 
   --warrior defaults

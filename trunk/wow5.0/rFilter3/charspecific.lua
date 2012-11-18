@@ -17,7 +17,7 @@
   -- this file allows you to override default class settings with special settings for your own character
   -- ATTENTION: if you character name contains UTF-8 characters like âôû and such. Make sure this files is saved in UTF-8 file format
 
-  if player_name == "Rothar" and player_class == "WARRIOR" then
+  if player_name == "Zork" and player_class == "WARRIOR" then
     --Rothars Buff List
     cfg.rf3_BuffList = {
       [1] = {
@@ -225,6 +225,52 @@
           },
         },
       },
+      [10] = {
+        spellid = 131116, --raging blow stack
+        spec = 2,
+        size = 40,
+        framestrata = "BACKGROUND",
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -60, y = 150 },
+        unit = "player",
+        validate_unit   = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
+        hide_ooc        = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0.6,
+          },
+        },
+      },
+      [11] = {
+        spellid = 85739, --raging blow stack
+        spec = 2,
+        size = 40,
+        framestrata = "BACKGROUND",
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 60, y = 150 },
+        unit = "player",
+        validate_unit   = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
+        hide_ooc        = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0.6,
+          },
+        },
+      },
     }
 
     --Rothars Debuff List
@@ -346,10 +392,10 @@
     cfg.rf3_CooldownList = {
       [1] = {
         spellid = 118000, --dragon roar
-        spec = 2,
+        --spec = 2,
         size = 50,
         framestrata = "LOW",
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 35, y = 150 },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
         desaturate      = true,
         move_ingame     = true,
         hide_ooc        = true,
@@ -364,7 +410,7 @@
           },
         },
       },
-      [2] = {
+      --[[[2] = {
         spellid = 6544, --leap
         spec = 2,
         size = 50,
@@ -382,7 +428,7 @@
             icon = 1,
           },
         },
-      },
+      },]]--
     }
 
   end

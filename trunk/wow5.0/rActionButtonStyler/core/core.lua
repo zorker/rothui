@@ -125,27 +125,26 @@
     if fobs then fobs:SetTexture(nil) end
     bo:SetTexture(nil) --hide the border (plain ugly, sry blizz)
     --hotkey
-    if cfg.hotkeys.show then
-      ho:SetFont(cfg.font, cfg.hotkeys.fontsize, "OUTLINE")
-      ho:ClearAllPoints()
-      ho:SetPoint(cfg.hotkeys.pos1.a1,bu,cfg.hotkeys.pos1.x,cfg.hotkeys.pos1.y)
-      ho:SetPoint(cfg.hotkeys.pos2.a1,bu,cfg.hotkeys.pos2.x,cfg.hotkeys.pos2.y)
-    else
+    ho:SetFont(cfg.font, cfg.hotkeys.fontsize, "OUTLINE")
+    ho:ClearAllPoints()
+    ho:SetPoint(cfg.hotkeys.pos1.a1,bu,cfg.hotkeys.pos1.x,cfg.hotkeys.pos1.y)
+    ho:SetPoint(cfg.hotkeys.pos2.a1,bu,cfg.hotkeys.pos2.x,cfg.hotkeys.pos2.y)
+    if not dominos and not bartender4 and not cfg.hotkeys.show then
       ho:Hide()
     end
-    if cfg.macroname.show then
-      na:SetFont(cfg.font, cfg.macroname.fontsize, "OUTLINE")
-      na:ClearAllPoints()
-      na:SetPoint(cfg.macroname.pos1.a1,bu,cfg.macroname.pos1.x,cfg.macroname.pos1.y)
-      na:SetPoint(cfg.macroname.pos2.a1,bu,cfg.macroname.pos2.x,cfg.macroname.pos2.y)
-    else
+    --macro name
+    na:SetFont(cfg.font, cfg.macroname.fontsize, "OUTLINE")
+    na:ClearAllPoints()
+    na:SetPoint(cfg.macroname.pos1.a1,bu,cfg.macroname.pos1.x,cfg.macroname.pos1.y)
+    na:SetPoint(cfg.macroname.pos2.a1,bu,cfg.macroname.pos2.x,cfg.macroname.pos2.y)
+    if not dominos and not bartender4 and not cfg.macroname.show then
       na:Hide()
     end
-    if cfg.itemcount.show then
-      co:SetFont(cfg.font, cfg.itemcount.fontsize, "OUTLINE")
-      co:ClearAllPoints()
-      co:SetPoint(cfg.itemcount.pos1.a1,bu,cfg.itemcount.pos1.x,cfg.itemcount.pos1.y)
-    else
+    --item stack count
+    co:SetFont(cfg.font, cfg.itemcount.fontsize, "OUTLINE")
+    co:ClearAllPoints()
+    co:SetPoint(cfg.itemcount.pos1.a1,bu,cfg.itemcount.pos1.x,cfg.itemcount.pos1.y)
+    if not dominos and not bartender4 and not cfg.itemcount.show then
       co:Hide()
     end
     --applying the textures
@@ -204,6 +203,11 @@
     --shadows+background
     if not bu.bg then applyBackground(bu) end
     bu.rabs_styled = true
+    if bartender4 then --fix the normaltexture
+      nt:SetTexCoord(0,1,0,1)
+      nt.SetTexCoord = function() return end
+      bu.SetNormalTexture = function() return end
+    end
   end
 
   local function styleLeaveButton(bu)
@@ -346,6 +350,21 @@
       end
     end
     SpellFlyout:HookScript("OnShow",checkForFlyoutButtons)
+
+    --dominos styling
+    if dominos then
+      --print("Dominos found")
+      for i = 1, 60 do
+        styleActionButton(_G["DominosActionButton"..i])
+      end
+    end
+    --bartender4 styling
+    if bartender4 then
+      --print("Bartender4 found")
+      for i = 1, 120 do
+        styleActionButton(_G["BT4Button"..i])
+      end
+    end
 
     --hide the hotkeys if needed
     if not dominos and not bartender4 and not cfg.hotkeys.show then

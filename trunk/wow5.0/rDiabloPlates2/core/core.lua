@@ -37,9 +37,6 @@
     f.threat:ClearAllPoints()
     f.threat:SetAllPoints(f.threat_holder)
     f.threat:SetParent(f.threat_holder)
-    f.healthbar:ClearAllPoints()
-    f.healthbar:SetAllPoints(f.back_holder)
-    f.healthbar:SetParent(f.back_holder)
   end
 
   --fix the damn castbar hopping
@@ -95,7 +92,8 @@
     fixColor(color)
     --now that we have the color make sure we match it to the new faction/class colors
     fixFactionColor(color)
-    f.healthbar:SetStatusBarColor(color.r,color.g,color.b)
+    --f.healthbar:SetStatusBarColor(color.r,color.g,color.b, 1)
+    f.new_healthbar:SetStatusBarColor(color.r,color.g,color.b, 1)
     f.healthbar.defaultColor = color
     f.healthbar.lowhealthColor = cfg.healthbar.lowHpWarning.color
     f.healthbar.colorApplied = "default"
@@ -148,20 +146,23 @@
   end
 
   --update health
-  local updateHealth = function(hb,v)
+  local updateHealth = function(hb)
     if not hb then return end
+    local nhb = hb:GetParent().new_healthbar
     local min, max = hb:GetMinMaxValues()
-    local val = v or hb:GetValue()
+    nhb:SetMinMaxValues(min,max)
+    local val = hb:GetValue()
+    nhb:SetValue(val)
     local p = floor(val/max*100)
     if cfg.healthbar.lowHpWarning.enable then
       if p <= cfg.healthbar.lowHpWarning.treshold and hb.colorApplied == "default" then
         local color = hb.lowhealthColor
-        hb:SetStatusBarColor(color.r,color.g,color.b)
+        nhb:SetStatusBarColor(color.r,color.g,color.b)
         hb.colorApplied = "lowhealth"
       elseif p > cfg.healthbar.lowHpWarning.treshold and hb.colorApplied == "lowhealth" then
         --in case the target got healed reset the color
         local color = hb.defaultColor
-        hb:SetStatusBarColor(color.r,color.g,color.b)
+        nhb:SetStatusBarColor(color.r,color.g,color.b)
         hb.colorApplied = "default"
       end
     end
@@ -175,7 +176,7 @@
     if not cfg.hpvalue.enable then return end
     local n = f.gloss_holder:CreateFontString(nil, "BORDER")
     n:SetFont(cfg.hpvalue.font, cfg.hpvalue.size, cfg.hpvalue.outline)
-    n:SetPoint(cfg.hpvalue.pos_1.a1, f.healthbar, cfg.hpvalue.pos_1.x, cfg.hpvalue.pos_1.y)
+    n:SetPoint(cfg.hpvalue.pos_1.a1, f.new_healthbar, cfg.hpvalue.pos_1.x, cfg.hpvalue.pos_1.y)
     f.healthbar.hpvalue = n
   end
 
@@ -184,9 +185,9 @@
     if not cfg.name.enable then return end
     local n = f:CreateFontString(nil, "BORDER")
     n:SetFont(cfg.name.font, cfg.name.size, cfg.name.outline)
-    n:SetPoint(cfg.name.pos_1.a1, f.back_holder, cfg.name.pos_1.x, cfg.name.pos_1.y)
-    n:SetPoint(cfg.name.pos_2.a1, f.back_holder, cfg.name.pos_2.x, cfg.name.pos_2.y)
-    n:SetPoint(cfg.name.pos_3.a1, f.back_holder, cfg.name.pos_3.x, cfg.name.pos_3.y)
+    n:SetPoint(cfg.name.pos_1.a1, f.new_healthbar, cfg.name.pos_1.x, cfg.name.pos_1.y)
+    n:SetPoint(cfg.name.pos_2.a1, f.new_healthbar, cfg.name.pos_2.x, cfg.name.pos_2.y)
+    n:SetPoint(cfg.name.pos_3.a1, f.new_healthbar, cfg.name.pos_3.x, cfg.name.pos_3.y)
     n:SetJustifyH("CENTER")
     f.ns = n
   end
@@ -207,32 +208,30 @@
     f.threat:ClearAllPoints()
     f.threat:SetAllPoints(th)
     f.threat:SetParent(th)
+    --the default healthbar is bugged, the alpha can bug out...so we create our own healthbar
+    f.healthbar:SetStatusBarTexture("")
     --background frame
-    local bf = CreateFrame("Frame",nil,th)
-    bf:SetSize(w,h)
-    bf:SetPoint("CENTER",0,0)
+    local nhb = CreateFrame("Statusbar",nil,th)
+    nhb:SetStatusBarTexture(cfg.textures.bar)
+    nhb:SetSize(w,h)
+    nhb:SetPoint("CENTER",0,0)
     --bg texture
-    local bg = bf:CreateTexture(nil,"BACKGROUND",nil,1)
-    bg:SetAllPoints(bf)
+    local bg = nhb:CreateTexture(nil,"BACKGROUND",nil,1)
+    bg:SetAllPoints(nhb)
     bg:SetTexture(cfg.textures.bg)
     --left texture
-    local left = bf:CreateTexture(nil,"BACKGROUND",nil,2)
-    left:SetPoint("RIGHT",bf,"LEFT",0,0)
+    local left = nhb:CreateTexture(nil,"BACKGROUND",nil,2)
+    left:SetPoint("RIGHT",nhb,"LEFT",0,0)
     left:SetSize(h,h)
     left:SetTexture(cfg.textures.left)
     --right texture
-    local right = bf:CreateTexture(nil,"BACKGROUND",nil,2)
-    right:SetPoint("LEFT",bf,"RIGHT",0,0)
+    local right = nhb:CreateTexture(nil,"BACKGROUND",nil,2)
+    right:SetPoint("LEFT",nhb,"RIGHT",0,0)
     right:SetSize(h,h)
     right:SetTexture(cfg.textures.right)
-    --position healthbar
-    f.healthbar:SetStatusBarTexture(cfg.textures.bar)
-    f.healthbar:ClearAllPoints()
-    f.healthbar:SetAllPoints(bf)
-    f.healthbar:SetParent(bf)
     --highlight frame
-    local hl = CreateFrame("Frame",nil,f.healthbar)
-    hl:SetAllPoints(bf)
+    local hl = CreateFrame("Frame",nil,nhb)
+    hl:SetAllPoints(nhb)
     --highlight texture
     local gl = hl:CreateTexture(nil,"BACKGROUND",nil,3)
     gl:SetAllPoints(hl)
@@ -244,7 +243,7 @@
     f.raid:SetParent(hl)
     --parent frames
     f.threat_holder = th
-    f.back_holder = bf
+    f.new_healthbar = nhb
     f.gloss_holder = hl
   end
 

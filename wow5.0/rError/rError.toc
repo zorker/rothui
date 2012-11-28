@@ -1,4 +1,4 @@
-## Interface: 50001
+## Interface: 50100
 ## Author: zork
 ## Title: rError
 ## Notes: Prints the error messages in the combat text

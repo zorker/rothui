@@ -1,4 +1,4 @@
-## Interface: 50001
+## Interface: 50100
 ## Author: zork
 ## Title: rPetBattleAnnouncer
 ## Notes: Street Fighter alike pet battle announcement

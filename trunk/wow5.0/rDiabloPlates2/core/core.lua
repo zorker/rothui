@@ -148,7 +148,7 @@
   --update health
   local updateHealth = function(hb)
     if not hb then return end
-    local nhb = hb:GetParent().new_healthbar
+    local nhb = hb:GetParent():GetParent().new_healthbar
     local min, max = hb:GetMinMaxValues()
     nhb:SetMinMaxValues(min,max)
     local val = hb:GetValue()
@@ -194,8 +194,8 @@
 
   --create art
   local createArt = function(f)
-    f.w, f.h, f.hw, f.hh = f:GetWidth(), f:GetHeight(), f.healthbar:GetWidth(), f.healthbar:GetHeight()
-    local w,h = f.w*cfg.frame.scale, f.w*cfg.frame.scale/4 --width/height ratio is 4:1
+    f.width = cfg.frame.width
+    local w,h = f.width*cfg.frame.scale, f.width*cfg.frame.scale/4 --width/height ratio is 4:1
     local threat_adjust = 1.18 --threat size needs to be increased, texture is shrinked a bit to fit in
     --threat holder
     local th = CreateFrame("Frame",nil,f)
@@ -249,8 +249,7 @@
 
   --create castbar art
   local createCastbarArt = function(f)
-    f.w, f.h = f:GetWidth(), f:GetHeight()
-    local w,h = f.w*cfg.castbar.scale, f.w*cfg.castbar.scale/4 --width/height ratio is 4:1
+    local w,h = f.width*cfg.castbar.scale, f.width*cfg.castbar.scale/4 --width/height ratio is 4:1
     --background frame
     local bf = CreateFrame("Frame",nil,f)
     bf:SetSize(w,h)
@@ -317,8 +316,11 @@
     if f and f.rDB_styled then return end
     --print(f:GetName())
     --make objects available for later
-    f.healthbar, f.castbar = f:GetChildren()
-    f.threat, f.border, f.highlight, f.name, f.level, f.boss, f.raid, f.dragon = f:GetRegions()
+    f.barFrame, f.nameFrame = f:GetChildren()
+    f.healthbar, f.castbar = f.barFrame:GetChildren()
+    f.threat, f.border, f.highlight, f.level, f.boss, f.raid, f.dragon = f.barFrame:GetRegions()
+    f.name = f.nameFrame:GetRegions()
+    f.healthbar.texture = f.healthbar:GetRegions()
     f.castbar.texture, f.castbar.border, f.castbar.shield, f.castbar.icon = f.castbar:GetRegions()
     f.unit = {}
     --create stuff

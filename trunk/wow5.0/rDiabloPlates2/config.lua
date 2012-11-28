@@ -17,6 +17,7 @@
 
   --nameplate frame
   cfg.frame = {
+    width       = 130,
     scale       = 0.7,
     adjust_pos  = { x = 0, y = 0, },
   }

@@ -3,13 +3,13 @@ if select(2, UnitClass("player")) ~= "MONK" then return end
 local parent, ns = ...
 local oUF = ns.oUF or oUF
 
-local SPELL_POWER_LIGHT_FORCE = SPELL_POWER_LIGHT_FORCE
+local SPELL_POWER_CHI = SPELL_POWER_CHI
 
 local Update = function(self, event, unit)
-  if(self.unit ~= unit or (powerType and powerType ~= "LIGHT_FORCE")) then return end
+  if(self.unit ~= unit) then return end
   local bar = self.HarmonyPowerBar
-  local num = UnitPower(unit, SPELL_POWER_LIGHT_FORCE)
-  local max = UnitPowerMax(unit, SPELL_POWER_LIGHT_FORCE)
+  local num = UnitPower(unit, SPELL_POWER_CHI)
+  local max = UnitPowerMax(unit, SPELL_POWER_CHI)
   --[[ --do not hide the bar when the value is empty, keep it visible
   if num < 1 then
     if bar:IsShown() then bar:Hide() end
@@ -70,7 +70,7 @@ local Path = function(self, ...)
 end
 
 local ForceUpdate = function(element)
-  return Path(element.__owner, 'ForceUpdate', element.__owner.unit, 'LIGHT_FORCE')
+  return Path(element.__owner, 'ForceUpdate', element.__owner.unit)
 end
 
 local Enable = function(self, unit)

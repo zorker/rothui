@@ -223,7 +223,7 @@
       end
     end
     if f.name and f.rank then
-      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID, canApplyAura, isBossDebuff, value1, value2, value3 = UnitAura(f.unit, f.name, f.rank, "HARMFUL")
+      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID, canApplyAura, isBossDebuff, casterIsPlayer, value1, value2, value3 = UnitAura(f.unit, f.name, f.rank, "HARMFUL")
       --if name and (not f.ismine or (f.ismine and caster == "player")) then
       if name and (not f.ismine or (f.ismine and caster == "player")) and (not f.match_spellid or (f.match_spellid and spID == tmp_spellid)) then
         if caster == "player" and cfg.highlightPlayerSpells then
@@ -324,7 +324,7 @@
       end
     end
     if f.name and f.rank then
-      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID, canApplyAura, isBossDebuff, value1, value2, value3 = UnitAura(f.unit, f.name, f.rank, "HELPFUL")
+      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID, canApplyAura, isBossDebuff, casterIsPlayer, value1, value2, value3 = UnitAura(f.unit, f.name, f.rank, "HELPFUL")
       --if name and (not f.ismine or (f.ismine and caster == "player")) then
       if name and (not f.ismine or (f.ismine and caster == "player")) and (not f.match_spellid or (f.match_spellid and spID == tmp_spellid)) then
         if caster == "player" and cfg.highlightPlayerSpells then

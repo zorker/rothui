@@ -146,6 +146,28 @@
     b.styled = true
   end
 
+  --update debuff anchors
+  local function updateDebuffAnchors(buttonName,index)
+    local button = _G[buttonName..index]
+    if not button then return end
+    --apply skin
+    if not button.styled then applySkin(button) end
+    --position button
+    button:ClearAllPoints()
+    if index == 1 then
+      if cfg.combineBuffsAndDebuffs then
+        button:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, -buffFrameHeight)
+      else
+        --debuffs and buffs are not combined anchor the debuffs to its own frame
+        button:SetPoint("TOPRIGHT", rBFS_DebuffDragFrame, "TOPRIGHT", 0, 0)      
+      end
+    elseif index > 1 and mod(index, cfg.debuffFrame.buttonsPerRow) == 1 then
+      button:SetPoint("TOPRIGHT", _G[buttonName..(index-cfg.debuffFrame.buttonsPerRow)], "BOTTOMRIGHT", 0, -cfg.debuffFrame.rowSpacing)
+    else
+      button:SetPoint("TOPRIGHT", _G[buttonName..(index-1)], "TOPLEFT", -cfg.debuffFrame.colSpacing, 0)
+    end
+  end
+  
   --update buff anchors
   local function updateAllBuffAnchors()
     --variables
@@ -207,29 +229,7 @@
     buffFrameHeight = height
     --make sure the debuff frames update the position asap
     if DebuffButton1 and cfg.combineBuffsAndDebuffs then    
-      DebuffButton1:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, -buffFrameHeight)
-    end
-  end
-
-  --update debuff anchors
-  local function updateDebuffAnchors(buttonName,index)
-    local button = _G[buttonName..index]
-    if not button then return end
-    --apply skin
-    if not button.styled then applySkin(button) end
-    --position button
-    button:ClearAllPoints()
-    if index == 1 then
-      if cfg.combineBuffsAndDebuffs then
-        button:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, -buffFrameHeight)
-      else
-        --debuffs and buffs are not combined anchor the debuffs to its own frame
-        button:SetPoint("TOPRIGHT", rBFS_DebuffDragFrame, "TOPRIGHT", 0, 0)      
-      end
-    elseif index > 1 and mod(index, cfg.debuffFrame.buttonsPerRow) == 1 then
-      button:SetPoint("TOPRIGHT", _G[buttonName..(index-cfg.debuffFrame.buttonsPerRow)], "BOTTOMRIGHT", 0, -cfg.debuffFrame.rowSpacing)
-    else
-      button:SetPoint("TOPRIGHT", _G[buttonName..(index-1)], "TOPLEFT", -cfg.debuffFrame.colSpacing, 0)
+      updateDebuffAnchors("DebuffButton", 1)
     end
   end
 

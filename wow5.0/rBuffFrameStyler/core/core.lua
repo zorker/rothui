@@ -9,116 +9,116 @@
   -- CONSTANTS
   ---------------------------------------
 
-  --disable consolidated buffs
-  SetCVar("consolidateBuffs", 0)
-
   --rewrite the oneletter shortcuts
-  HOUR_ONELETTER_ABBR = "%dh";
-  DAY_ONELETTER_ABBR = "%dd";
-  MINUTE_ONELETTER_ABBR = "%dm";
-  SECOND_ONELETTER_ABBR = "%ds";
+  if cfg.adjustOneletterAbbrev then
+    HOUR_ONELETTER_ABBR = "%dh"
+    DAY_ONELETTER_ABBR = "%dd"
+    MINUTE_ONELETTER_ABBR = "%dm"
+    SECOND_ONELETTER_ABBR = "%ds"
+  end
 
   --classcolor
-  local classcolor = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
+  local classColor = RAID_CLASS_COLORS[select(2, UnitClass("player"))]
 
-  if cfg.color.classcolored then
-    cfg.color.normal = classcolor
-  end
-
-  if cfg.background.classcolored then
-    cfg.background.shadowcolor = classcolor
-  end
-
-  --backdrop
-  local backdrop = {
-    bgFile = "",
-    edgeFile = cfg.textures.outer_shadow,
+  --backdrop debuff
+  local backdropDebuff = {
+    bgFile = nil,
+    edgeFile = cfg.debuffFrame.background.edgeFile,
     tile = false,
     tileSize = 32,
-    edgeSize = cfg.background.inset,
+    edgeSize = cfg.debuffFrame.background.inset,
     insets = {
-      left = cfg.background.inset,
-      right = cfg.background.inset,
-      top = cfg.background.inset,
-      bottom = cfg.background.inset,
+      left = cfg.debuffFrame.background.inset,
+      right = cfg.debuffFrame.background.inset,
+      top = cfg.debuffFrame.background.inset,
+      bottom = cfg.debuffFrame.background.inset,
     },
   }
+
+  --backdrop buff
+  local backdropBuff = {
+    bgFile = nil,
+    edgeFile = cfg.buffFrame.background.edgeFile,
+    tile = false,
+    tileSize = 32,
+    edgeSize = cfg.buffFrame.background.inset,
+    insets = {
+      left = cfg.buffFrame.background.inset,
+      right = cfg.buffFrame.background.inset,
+      top = cfg.buffFrame.background.inset,
+      bottom = cfg.buffFrame.background.inset,
+    },
+  }
+
+  local ceil, min, max = ceil, min, max
+  local ShouldShowConsolidatedBuffFrame = ShouldShowConsolidatedBuffFrame
 
   ---------------------------------------
   -- FUNCTIONS
   ---------------------------------------
 
-  --create drag frame for temp enchant icons
-  local function createTempEnchantHolder()
-    local frame = CreateFrame("Frame", "rBFS_TempEnchantHolder", UIParent)
-    frame:SetSize(50,50)
-    frame:SetPoint(cfg.tempenchant.pos.a1,cfg.tempenchant.pos.af,cfg.tempenchant.pos.a2,cfg.tempenchant.pos.x,cfg.tempenchant.pos.y)
-    if cfg.tempenchant.userplaced then
-      rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
-    end
-  end
-
-  --create drag frame for buff icons
-  local function createBuffFrameHolder()
-    local frame = CreateFrame("Frame", "rBFS_BuffFrameHolder", UIParent)
-    frame:SetSize(50,50)
-    frame:SetPoint(cfg.buffframe.pos.a1,cfg.buffframe.pos.af,cfg.buffframe.pos.a2,cfg.buffframe.pos.x,cfg.buffframe.pos.y)
-    if cfg.buffframe.userplaced then
-      rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
-    end
-  end
-
-  --create the drag frames
-  createTempEnchantHolder()
-  createBuffFrameHolder()
-
-  --move tempenchant frame
-  local function moveTempEnchantFrame()
-    TemporaryEnchantFrame:SetParent(rBFS_TempEnchantHolder)
-    TemporaryEnchantFrame:ClearAllPoints()
-    TemporaryEnchantFrame:SetPoint("TOPRIGHT",0,0)
-  end
-
-  --move buff frame
-  local function moveBuffFrame()
-    BuffFrame:SetParent(rBFS_BuffFrameHolder)
-    BuffFrame:ClearAllPoints()
-    BuffFrame:SetPoint("TOPRIGHT",0,0)
-  end
-
   --apply aura frame texture func
-  local function applySkin(b,type)
+  local function applySkin(b)
     if not b or (b and b.styled) then return end
-
+    --button name
     local name = b:GetName()
-    --print("applying skin for "..name)
-    local border = _G[name.."Border"]
-    local icon = _G[name.."Icon"]
-
-    if border then
-      border:SetTexture(cfg.textures.normal)
-      border:SetTexCoord(0,1,0,1)
-      border:SetDrawLayer("BACKGROUND",-7)
-      if type == "wpn" then
-        border:SetVertexColor(0.7,0,1)
-      end
-      border:ClearAllPoints()
-      border:SetAllPoints(b)
-      b.Border = border
+    print("applying skin to "..name)
+    --check the button type
+    local tempenchant, consolidated, debuff, buff = false, false, false, false
+    if (name:match("TempEnchant")) then
+      tempenchant = true
+    elseif (name:match("Consolidated")) then
+      consolidated = true
+    elseif (name:match("Debuff")) then
+      debuff = true
     else
-      --create border (for buff icons)
-      local new = b:CreateTexture(nil,"BACKGROUND",nil,-7)
-      new:SetAllPoints(b)
-      new:SetTexture(cfg.textures.normal)
-      new:SetVertexColor(cfg.color.normal.r,cfg.color.normal.g,cfg.color.normal.b)
-      b.Border = border
+      buff = true
     end
+    --get cfg and backdrop
+    local cfg, backdrop
+    if debuff then
+      cfg = ns.cfg.debuffFrame
+      backdrop = backdropDebuff
+    else
+      cfg = ns.cfg.buffFrame
+      backdrop = backdropBuff
+    end
+    --check class coloring options
+    if cfg.border.classcolored then
+      cfg.border.color = classColor
+    end
+    if cfg.background.classcolored then
+      cfg.background.color = classColor
+    end
+
+    --button
+    b:SetSize(cfg.button.size, cfg.button.size)
 
     --icon
+    local icon = _G[name.."Icon"]
+    if consolidated then
+     icon:SetTexture(select(3,GetSpellInfo(109077))) --cogwheel
+    end
     icon:SetTexCoord(0.1,0.9,0.1,0.9)
-    icon:SetPoint("TOPLEFT", b, "TOPLEFT", 2, -2)
-    icon:SetPoint("BOTTOMRIGHT", b, "BOTTOMRIGHT", -2, 2)
+    icon:ClearAllPoints()
+    icon:SetPoint("TOPLEFT", b, "TOPLEFT", -cfg.icon.padding, cfg.icon.padding)
+    icon:SetPoint("BOTTOMRIGHT", b, "BOTTOMRIGHT", cfg.icon.padding, -cfg.icon.padding)
     icon:SetDrawLayer("BACKGROUND",-8)
+    b.icon = icon
+
+    --border
+    local border = _G[name.."Border"] or b:CreateTexture(name.."Border", "BACKGROUND", nil, -7)
+    border:SetTexture(cfg.border.texture)
+    border:SetTexCoord(0,1,0,1)
+    border:SetDrawLayer("BACKGROUND",-7)
+    if tempenchant then
+      border:SetVertexColor(0.7,0,1)
+    elseif buff or consolidated then
+      border:SetVertexColor(cfg.border.color.r,cfg.border.color.g,cfg.border.color.b)
+    end
+    border:ClearAllPoints()
+    border:SetAllPoints(b)
+    b.border = border
 
     --duration
     b.duration:SetFont(cfg.font, cfg.duration.fontsize, "THINOUTLINE")
@@ -131,13 +131,14 @@
     b.count:SetPoint(cfg.count.pos.a1,cfg.count.pos.x,cfg.count.pos.y)
 
     --shadow
-    if cfg.background.showshadow then
+    if cfg.background.show then
       local back = CreateFrame("Frame", nil, b)
-      back:SetPoint("TOPLEFT", b, "TOPLEFT", -4, 4)
-      back:SetPoint("BOTTOMRIGHT", b, "BOTTOMRIGHT", 4, -4)
+      back:SetPoint("TOPLEFT", b, "TOPLEFT", -cfg.background.padding, cfg.background.padding)
+      back:SetPoint("BOTTOMRIGHT", b, "BOTTOMRIGHT", cfg.background.padding, -cfg.background.padding)
       back:SetFrameLevel(b:GetFrameLevel()-1)
       back:SetBackdrop(backdrop)
-      back:SetBackdropBorderColor(cfg.background.shadowcolor.r,cfg.background.shadowcolor.g,cfg.background.shadowcolor.b,cfg.background.shadowcolor.a)
+      back:SetBackdropBorderColor(cfg.background.color.r,cfg.background.color.g,cfg.background.color.b,cfg.background.color.a)
+      b.bg = back
     end
 
     --set button styled variable
@@ -145,107 +146,117 @@
   end
 
   --update buff anchors
-  local function updateBuffAnchors()
-    --print(BUFF_ACTUAL_DISPLAY)
-    local numBuffs = 0
-    local buff, previousBuff, aboveBuff
-    for i = 1, BUFF_ACTUAL_DISPLAY do
-      buff = _G["BuffButton"..i]
-      if not buff.styled then applySkin(buff,"buff") end
-      buff:SetParent(BuffFrame)
-      buff.consolidated = nil
-      buff.parent = BuffFrame
-      buff:ClearAllPoints()
-      numBuffs = numBuffs + 1
-      index = numBuffs
-      if ((index > 1) and (mod(index, cfg.buffframe.buffsPerRow) == 1)) then
-        buff:SetPoint("TOP", aboveBuff, "BOTTOM", 0, -cfg.buffframe.rowSpacing)
-        aboveBuff = buff
-      elseif (index == 1) then
-        buff:SetPoint("TOPRIGHT", BuffFrame, "TOPRIGHT", 0, 0)
-        aboveBuff = buff
-      else
-        buff:SetPoint("RIGHT", previousBuff, "LEFT", -cfg.buffframe.colSpacing, 0)
-      end
-      previousBuff = buff
+  local function updateAllBuffAnchors()
+    --variables
+    local buttonName  = "BuffButton"
+    local numEnchants = BuffFrame.numEnchants
+    local numBuffs    = BUFF_ACTUAL_DISPLAY
+    local offset      = numEnchants
+  	local realIndex, previousButton, aboveButton
+    --position the tempenchant button depending on the consolidated button status
+  	if ShouldShowConsolidatedBuffFrame() then
+      TempEnchant1:ClearAllPoints()
+      TempEnchant1:SetPoint("TOPRIGHT", ConsolidatedBuffs, "TOPLEFT", -cfg.buffFrame.colSpacing, 0)
+      offset = offset + 1
+    else
+      TempEnchant1:ClearAllPoints()
+      TempEnchant1:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, 0)
+  	end
+    --calculate the previous button in case tempenchant or consolidated buff are loaded
+  	if BuffFrame.numEnchants > 0 then
+  	  previousButton = _G["TempEnchant"..numEnchants]
+    elseif ShouldShowConsolidatedBuffFrame() then
+  	  previousButton = ConsolidatedBuffs
+  	end
+  	--calculate the above button in case tempenchant or consolidated buff are loaded
+  	if ShouldShowConsolidatedBuffFrame() then
+      aboveButton = ConsolidatedBuffs
+    elseif numEnchants > 0 then
+    	aboveButton = TempEnchant1
     end
+	  --loop on all active buff buttons
+	  for index = 1, numBuffs do
+      local button = _G[buttonName..index]
+      if not button then return end
+      --apply skin
+      if not button.styled then applySkin(button) end
+      --position button
+      button:ClearAllPoints()
+      realIndex = index+offset
+      if realIndex == 1 then
+        button:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, 0)
+        aboveButton = button
+      elseif realIndex > 1 and mod(realIndex, cfg.buffFrame.buttonsPerRow) == 1 then
+        button:SetPoint("TOPRIGHT", aboveButton, "BOTTOMRIGHT", 0, -cfg.buffFrame.rowSpacing)
+        aboveButton = button
+      else
+        button:SetPoint("TOPRIGHT", previousButton, "TOPLEFT", -cfg.buffFrame.colSpacing, 0)
+      end
+      previousButton = button
+  	end
+  	--need to adept the height of the rBFS_BuffDragFrame (in case rBFS_DebuffDragFrame is anchored to the bufframe)
+  	local rows = ceil((numBuffs+offset)/cfg.buffFrame.buttonsPerRow)
+  	local height = cfg.buffFrame.button.size*rows + cfg.buffFrame.rowSpacing*rows + cfg.buffFrame.gap*min(1,rows)
+  	rBFS_BuffDragFrame:SetHeight(min(height,1)) --minimum height of 1 to make sure the anchored frame setpoint works
   end
 
   --update debuff anchors
   local function updateDebuffAnchors(buttonName,index)
-    local numBuffs = BUFF_ACTUAL_DISPLAY
-    local rows = ceil(numBuffs/cfg.buffframe.buffsPerRow)
-    local gap = cfg.buffframe.gap
-    if rows == 0 then gap = 0 end
-    local buff = _G[buttonName..index]
-    if not buff.styled then applySkin(buff,"debuff") end
-    -- Position debuffs
-    if ((index > 1) and (mod(index, cfg.buffframe.buffsPerRow) == 1)) then
-      buff:SetPoint("TOP", _G[buttonName..(index-cfg.buffframe.buffsPerRow)], "BOTTOM", 0, -cfg.buffframe.rowSpacing)
-    elseif (index == 1) then
-      buff:SetPoint("TOPRIGHT", BuffFrame, "TOPRIGHT", 0, -(rows*(cfg.buffframe.rowSpacing+buff:GetHeight())+gap))
+    local button = _G[buttonName..index]
+    if not button then return end
+    --apply skin
+    if not button.styled then applySkin(button) end
+    --position button
+    button:ClearAllPoints()
+    if index == 1 then
+      button:SetPoint("TOPRIGHT", rBFS_DebuffDragFrame, "TOPRIGHT", 0, 0)
+    elseif index > 1 and mod(index, cfg.debuffFrame.buttonsPerRow) == 1 then
+      button:SetPoint("TOPRIGHT", _G[buttonName..(index-cfg.debuffFrame.buttonsPerRow)], "BOTTOMRIGHT", 0, -cfg.debuffFrame.rowSpacing)
     else
-      buff:SetPoint("RIGHT", _G[buttonName..(index-1)], "LEFT", -cfg.buffframe.colSpacing, 0)
-    end
-  end
-
-  --update wpn enchant icon positions
-  local function updateTempEnchantAnchors()
-    local previousBuff
-    for i=1, NUM_TEMP_ENCHANT_FRAMES do
-      local b = _G["TempEnchant"..i]
-      if b then
-        if (i == 1) then
-          b:SetPoint("TOPRIGHT", TemporaryEnchantFrame, "TOPRIGHT", 0, 0)
-        else
-          b:SetPoint("RIGHT", previousBuff, "LEFT", -cfg.tempenchant.colSpacing, 0)
-        end
-        previousBuff = b
-      end
-    end
-  end
-
-  --init func
-  local function init()
-    --BuffFrame scale
-    BuffFrame:SetScale(cfg.buffframe.scale)
-    --temp enchantframe scale
-    TemporaryEnchantFrame:SetScale(cfg.tempenchant.scale)
-    --position buff frame
-    moveBuffFrame()
-    --position temp enchant icons
-    moveTempEnchantFrame()
-    --skin temp enchant
-    for i=1, NUM_TEMP_ENCHANT_FRAMES do
-      local b = _G["TempEnchant"..i]
-      if b and not b.styled then
-        applySkin(b, "wpn")
-      end
-    end
-    --move temp enchant icons in position
-    updateTempEnchantAnchors()
-    --hook the consolidatedbuffs
-    if ConsolidatedBuffs then
-      ConsolidatedBuffs:UnregisterAllEvents()
-      ConsolidatedBuffs:HookScript("OnShow", function(s)
-        s:Hide()
-        moveTempEnchantFrame()
-      end)
-      ConsolidatedBuffs:HookScript("OnHide", function(s)
-        moveTempEnchantFrame()
-      end)
-      ConsolidatedBuffs:Hide()
+      button:SetPoint("TOPRIGHT", _G[buttonName..(index-1)], "TOPLEFT", -cfg.debuffFrame.colSpacing, 0)
     end
   end
 
   ---------------------------------------
-  -- CALLS // HOOKS
+  -- INIT
   ---------------------------------------
 
-  --hook Blizzard functions to move the buffframe
-  hooksecurefunc("BuffFrame_UpdateAllBuffAnchors",    updateBuffAnchors)
-  hooksecurefunc("DebuffButton_UpdateAnchors",        updateDebuffAnchors)
+  --buff drag frame
+  local bf = CreateFrame("Frame", "rBFS_BuffDragFrame", UIParent)
+  bf:SetSize(cfg.buffFrame.button.size,cfg.buffFrame.button.size)
+  bf:SetPoint(cfg.buffFrame.pos.a1,cfg.buffFrame.pos.af,cfg.buffFrame.pos.a2,cfg.buffFrame.pos.x,cfg.buffFrame.pos.y)
+  if cfg.buffFrame.userplaced then
+    rCreateDragFrame(bf, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+  end
 
-  local a = CreateFrame("Frame")
-  a:RegisterEvent("PLAYER_LOGIN")
-  a:SetScript("OnEvent", init)
+  --debuff drag frame
+  local df = CreateFrame("Frame", "rBFS_DebuffDragFrame", UIParent)
+  df:SetSize(cfg.debuffFrame.button.size,cfg.debuffFrame.button.size)
+  df:SetPoint(cfg.debuffFrame.pos.a1,cfg.debuffFrame.pos.af,cfg.debuffFrame.pos.a2,cfg.debuffFrame.pos.x,cfg.debuffFrame.pos.y)
+  if cfg.debuffFrame.userplaced then
+    rCreateDragFrame(df, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+  end
+
+  --temp enchant stuff
+  applySkin(TempEnchant1)
+  applySkin(TempEnchant2)
+  applySkin(TempEnchant3)
+
+  --position the temp enchant buttons
+  TempEnchant1:ClearAllPoints()
+  TempEnchant1:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, 0) --button will be repositioned later in case temp enchant and consolidated buffs are both available
+  TempEnchant2:ClearAllPoints()
+  TempEnchant2:SetPoint("TOPRIGHT", TempEnchant1, "TOPLEFT", -cfg.buffFrame.colSpacing, 0)
+  TempEnchant3:ClearAllPoints()
+  TempEnchant3:SetPoint("TOPRIGHT", TempEnchant2, "TOPLEFT", -cfg.buffFrame.colSpacing, 0)
+
+  --consolidated buff stuff
+  ConsolidatedBuffs:SetScript("OnLoad", nil) --do not fuck up the icon anymore
+  applySkin(ConsolidatedBuffs)
+  --position the consolidate buff button
+  ConsolidatedBuffs:ClearAllPoints()
+  ConsolidatedBuffs:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, 0)
+
+  --hook Blizzard functions
+  hooksecurefunc("BuffFrame_UpdateAllBuffAnchors", updateAllBuffAnchors)
+  hooksecurefunc("DebuffButton_UpdateAnchors", updateDebuffAnchors)

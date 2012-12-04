@@ -15,47 +15,83 @@
   -- CONFIG
   -----------------------------
 
-  cfg.buffframe = {
-    scale           = 0.82,
+  --adjust the oneletter abbrev?
+  cfg.adjustOneletterAbbrev = true
+
+  --buff frame settings
+  cfg.buffFrame = {
     pos             = { a1 = "TOPRIGHT", af = "Minimap", a2 = "TOPLEFT", x = -35, y = 0 },
+    gap             = 10, --gap between buff and debuff frame (in case they both reference each other)
     userplaced      = true, --want to place the bar somewhere else?
     rowSpacing      = 10,
     colSpacing      = 7,
-    buffsPerRow     = 10,
-    gap             = 10, --gap in pixel between buff and debuff
+    buttonsPerRow   = 10,
+    button = {
+      size              = 32,
+    },
+    icon = {
+      padding           = -2,
+    },
+    border = {
+      texture           = "Interface\\AddOns\\rBuffFrameStyler\\media\\gloss",
+      color             = { r = 0.4, g = 0.35, b = 0.35, },
+      classcolored      = false,
+    },
+    background = {
+      show              = true,   --show backdrop
+      edgeFile          = "Interface\\AddOns\\rBuffFrameStyler\\media\\outer_shadow",
+      color             = { r = 0, g = 0, b = 0, a = 0.9},
+      classcolored      = false,
+      inset             = 6,
+      padding           = 4,
+    },
+    duration = {
+      font              = STANDARD_TEXT_FONT,
+      size              = 13,
+      pos               = { a1 = "BOTTOM", x = 0, y = 0 },
+    },
+    count = {
+      font              = STANDARD_TEXT_FONT,
+      size              = 12,
+      pos               = { a1 = "TOPRIGHT", x = 0, y = 0 },
+    },
   }
 
-  cfg.tempenchant = {
-    scale           = 0.82,
-    pos             = { a1 = "TOP", af = "Minimap", a2 = "BOTTOM", x = 40, y = -70 },
+  --debuff frame settings
+  cfg.debuffFrame = {
+    pos             = { a1 = "TOPRIGHT", af = "rBFS_BuffDragFrame", a2 = "BOTTOMRIGHT", x = 0, y = -0 },
     userplaced      = true, --want to place the bar somewhere else?
+    rowSpacing      = 10,
     colSpacing      = 7,
+    buttonsPerRow   = 10,
+    button = {
+      size              = 32,
+    },
+    icon = {
+      padding           = -2,
+    },
+    border = {
+      texture           = "Interface\\AddOns\\rBuffFrameStyler\\media\\gloss",
+      color             = { r = 0.4, g = 0.35, b = 0.35, },
+      classcolored      = false,
+    },
+    background = {
+      show              = true,   --show backdrop
+      edgeFile          = "Interface\\AddOns\\rBuffFrameStyler\\media\\outer_shadow",
+      color             = { r = 0, g = 0, b = 0, a = 0.9},
+      classcolored      = false,
+      inset             = 6,
+      padding           = 4,
+    },
+    duration = {
+      font              = STANDARD_TEXT_FONT,
+      size              = 13,
+      pos               = { a1 = "BOTTOM", x = 0, y = 0 },
+    },
+    count = {
+      font              = STANDARD_TEXT_FONT,
+      size              = 12,
+      pos               = { a1 = "TOPRIGHT", x = 0, y = 0 },
+    },
   }
 
-  cfg.textures = {
-    normal            = "Interface\\AddOns\\rBuffFrameStyler\\media\\gloss",
-    outer_shadow      = "Interface\\AddOns\\rBuffFrameStyler\\media\\outer_shadow",
-  }
-
-  cfg.background = {
-    showshadow        = true,   --show an outer shadow?
-    shadowcolor       = { r = 0, g = 0, b = 0, a = 0.9},
-    inset             = 6,
-  }
-
-  cfg.color = {
-    normal            = { r = 0.4, g = 0.35, b = 0.35, },
-    classcolored      = false,
-  }
-
-  cfg.duration = {
-    fontsize        = 13,
-    pos             = { a1 = "BOTTOM", x = 0, y = 0 },
-  }
-
-  cfg.count = {
-    fontsize        = 12,
-    pos             = { a1 = "TOPRIGHT", x = 0, y = 0 },
-  }
-
-  cfg.font = STANDARD_TEXT_FONT

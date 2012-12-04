@@ -153,30 +153,30 @@
     local numEnchants = BuffFrame.numEnchants
     local numBuffs    = BUFF_ACTUAL_DISPLAY
     local offset      = numEnchants
-  	local realIndex, previousButton, aboveButton
+    local realIndex, previousButton, aboveButton
     --position the tempenchant button depending on the consolidated button status
-  	if ShouldShowConsolidatedBuffFrame() then
+    if ShouldShowConsolidatedBuffFrame() then
       TempEnchant1:ClearAllPoints()
       TempEnchant1:SetPoint("TOPRIGHT", ConsolidatedBuffs, "TOPLEFT", -cfg.buffFrame.colSpacing, 0)
       offset = offset + 1
     else
       TempEnchant1:ClearAllPoints()
       TempEnchant1:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, 0)
-  	end
+    end
     --calculate the previous button in case tempenchant or consolidated buff are loaded
-  	if BuffFrame.numEnchants > 0 then
-  	  previousButton = _G["TempEnchant"..numEnchants]
+    if BuffFrame.numEnchants > 0 then
+      previousButton = _G["TempEnchant"..numEnchants]
     elseif ShouldShowConsolidatedBuffFrame() then
-  	  previousButton = ConsolidatedBuffs
-  	end
-  	--calculate the above button in case tempenchant or consolidated buff are loaded
-  	if ShouldShowConsolidatedBuffFrame() then
+      previousButton = ConsolidatedBuffs
+    end
+    --calculate the above button in case tempenchant or consolidated buff are loaded
+    if ShouldShowConsolidatedBuffFrame() then
       aboveButton = ConsolidatedBuffs
     elseif numEnchants > 0 then
-    	aboveButton = TempEnchant1
+      aboveButton = TempEnchant1
     end
-	  --loop on all active buff buttons
-	  for index = 1, numBuffs do
+    --loop on all active buff buttons
+    for index = 1, numBuffs do
       local button = _G[buttonName..index]
       if not button then return end
       print("updating buff "..buttonName)
@@ -195,11 +195,11 @@
         button:SetPoint("TOPRIGHT", previousButton, "TOPLEFT", -cfg.buffFrame.colSpacing, 0)
       end
       previousButton = button
-  	end
-  	--need to adept the height of the rBFS_BuffDragFrame (in case rBFS_DebuffDragFrame is anchored to the bufframe)
-  	local rows = ceil((numBuffs+offset)/cfg.buffFrame.buttonsPerRow)
-  	local height = cfg.buffFrame.button.size*rows + cfg.buffFrame.rowSpacing*rows + cfg.buffFrame.gap*min(1,rows)
-  	rBFS_BuffDragFrame:SetHeight(min(height,1)) --minimum height of 1 to make sure the anchored frame setpoint works
+    end
+    --need to adept the height of the rBFS_BuffDragFrame (in case rBFS_DebuffDragFrame is anchored to the bufframe)
+    local rows = ceil((numBuffs+offset)/cfg.buffFrame.buttonsPerRow)
+    local height = cfg.buffFrame.button.size*rows + cfg.buffFrame.rowSpacing*rows + cfg.buffFrame.gap*min(1,rows)
+    rBFS_BuffDragFrame:SetHeight(min(height,1)) --minimum height of 1 to make sure the anchored frame setpoint works
   end
 
   --update debuff anchors

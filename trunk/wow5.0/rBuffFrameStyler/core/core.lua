@@ -205,6 +205,10 @@
     local rows = ceil((buffCounter+offset)/cfg.buffFrame.buttonsPerRow)
     local height = cfg.buffFrame.button.size*rows + cfg.buffFrame.rowSpacing*rows + cfg.buffFrame.gap*min(1,rows)
     buffFrameHeight = height
+    --make sure the debuff frames update the position asap
+    if DebuffButton1 and cfg.combineBuffsAndDebuffs then    
+      DebuffButton1:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, -buffFrameHeight)
+    end
   end
 
   --update debuff anchors

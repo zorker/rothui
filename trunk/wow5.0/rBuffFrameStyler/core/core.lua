@@ -6,7 +6,7 @@
   local dragFrameList = ns.dragFrameList
 
   ---------------------------------------
-  -- CONSTANTS
+  -- LOCALS
   ---------------------------------------
 
   --rewrite the oneletter shortcuts
@@ -113,7 +113,7 @@
     border:SetDrawLayer("BACKGROUND",-7)
     if tempenchant then
       border:SetVertexColor(0.7,0,1)
-    elseif buff or consolidated then
+    elseif not debuff then
       border:SetVertexColor(cfg.border.color.r,cfg.border.color.g,cfg.border.color.b)
     end
     border:ClearAllPoints()
@@ -147,6 +147,7 @@
 
   --update buff anchors
   local function updateAllBuffAnchors()
+    print("calling updateAllBuffAnchors")
     --variables
     local buttonName  = "BuffButton"
     local numEnchants = BuffFrame.numEnchants
@@ -178,6 +179,7 @@
 	  for index = 1, numBuffs do
       local button = _G[buttonName..index]
       if not button then return end
+      print("updating buff "..buttonName)
       --apply skin
       if not button.styled then applySkin(button) end
       --position button
@@ -204,6 +206,7 @@
   local function updateDebuffAnchors(buttonName,index)
     local button = _G[buttonName..index]
     if not button then return end
+    print("updating debuff "..buttonName)
     --apply skin
     if not button.styled then applySkin(button) end
     --position button

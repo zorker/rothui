@@ -54,7 +54,7 @@
     },
     duration = {
       font              = STANDARD_TEXT_FONT,
-      size              = 12,
+      size              = 11,
       pos               = { a1 = "BOTTOM", x = 0, y = 0 },
     },
     count = {

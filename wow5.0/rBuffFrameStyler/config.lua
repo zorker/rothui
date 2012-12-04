@@ -17,17 +17,24 @@
 
   --adjust the oneletter abbrev?
   cfg.adjustOneletterAbbrev = true
+  
+  --scale of the consolidated tooltip
+  cfg.consolidatedTooltipScale = 1.2
+  
+  --combine buff and debuff frame - should buffs and debuffs be displayed in one single frame?
+  --if you disable this it is intended that you unlock the buff and debuffs and move them apart!
+  cfg.combineBuffsAndDebuffs = true
 
   --buff frame settings
   cfg.buffFrame = {
     pos             = { a1 = "TOPRIGHT", af = "Minimap", a2 = "TOPLEFT", x = -35, y = 0 },
-    gap             = 10, --gap between buff and debuff frame (in case they both reference each other)
+    gap             = 10, --gap between buff and debuff rows
     userplaced      = true, --want to place the bar somewhere else?
     rowSpacing      = 10,
     colSpacing      = 7,
     buttonsPerRow   = 10,
     button = {
-      size              = 32,
+      size              = 28,
     },
     icon = {
       padding           = -2,
@@ -47,25 +54,25 @@
     },
     duration = {
       font              = STANDARD_TEXT_FONT,
-      size              = 13,
+      size              = 12,
       pos               = { a1 = "BOTTOM", x = 0, y = 0 },
     },
     count = {
       font              = STANDARD_TEXT_FONT,
-      size              = 12,
+      size              = 11,
       pos               = { a1 = "TOPRIGHT", x = 0, y = 0 },
     },
   }
 
   --debuff frame settings
   cfg.debuffFrame = {
-    pos             = { a1 = "TOPRIGHT", af = "rBFS_BuffDragFrame", a2 = "BOTTOMRIGHT", x = 0, y = 1 },
+    pos             = { a1 = "TOPRIGHT", af = "rBFS_BuffDragFrame", a2 = "BOTTOMRIGHT", x = 0, y = -10 },
     userplaced      = true, --want to place the bar somewhere else?
     rowSpacing      = 10,
     colSpacing      = 7,
-    buttonsPerRow   = 10,
+    buttonsPerRow   = 6,
     button = {
-      size              = 32,
+      size              = 40,
     },
     icon = {
       padding           = -2,

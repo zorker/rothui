@@ -52,6 +52,8 @@
 
   local ceil, min, max = ceil, min, max
   local ShouldShowConsolidatedBuffFrame = ShouldShowConsolidatedBuffFrame
+  
+  local buffFrameHeight = 0
 
   ---------------------------------------
   -- FUNCTIONS
@@ -62,7 +64,6 @@
     if not b or (b and b.styled) then return end
     --button name
     local name = b:GetName()
-    print("applying skin to "..name)
     --check the button type
     local tempenchant, consolidated, debuff, buff = false, false, false, false
     if (name:match("TempEnchant")) then
@@ -121,12 +122,12 @@
     b.border = border
 
     --duration
-    b.duration:SetFont(cfg.font, cfg.duration.fontsize, "THINOUTLINE")
+    b.duration:SetFont(cfg.duration.font, cfg.duration.size, "THINOUTLINE")
     b.duration:ClearAllPoints()
     b.duration:SetPoint(cfg.duration.pos.a1,cfg.duration.pos.x,cfg.duration.pos.y)
 
     --count
-    b.count:SetFont(cfg.font, cfg.count.fontsize, "THINOUTLINE")
+    b.count:SetFont(cfg.count.font, cfg.count.size, "THINOUTLINE")
     b.count:ClearAllPoints()
     b.count:SetPoint(cfg.count.pos.a1,cfg.count.pos.x,cfg.count.pos.y)
 
@@ -147,7 +148,6 @@
 
   --update buff anchors
   local function updateAllBuffAnchors()
-    print("calling updateAllBuffAnchors")
     --variables
     local buttonName  = "BuffButton"
     local numEnchants = BuffFrame.numEnchants
@@ -163,6 +163,7 @@
       TempEnchant1:ClearAllPoints()
       TempEnchant1:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, 0)
     end
+    
     --calculate the previous button in case tempenchant or consolidated buff are loaded
     if BuffFrame.numEnchants > 0 then
       previousButton = _G["TempEnchant"..numEnchants]
@@ -176,43 +177,51 @@
       aboveButton = TempEnchant1
     end
     --loop on all active buff buttons
+    local buffCounter = 0
     for index = 1, numBuffs do
       local button = _G[buttonName..index]
       if not button then return end
-      print("updating buff "..buttonName)
-      --apply skin
-      if not button.styled then applySkin(button) end
-      --position button
-      button:ClearAllPoints()
-      realIndex = index+offset
-      if realIndex == 1 then
-        button:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, 0)
-        aboveButton = button
-      elseif realIndex > 1 and mod(realIndex, cfg.buffFrame.buttonsPerRow) == 1 then
-        button:SetPoint("TOPRIGHT", aboveButton, "BOTTOMRIGHT", 0, -cfg.buffFrame.rowSpacing)
-        aboveButton = button
-      else
-        button:SetPoint("TOPRIGHT", previousButton, "TOPLEFT", -cfg.buffFrame.colSpacing, 0)
+      if not button.consolidated then
+        buffCounter = buffCounter + 1
+        --apply skin
+        if not button.styled then applySkin(button) end
+        --position button
+        button:ClearAllPoints()
+        realIndex = buffCounter+offset
+        if realIndex == 1 then
+          button:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, 0)
+          aboveButton = button
+        elseif realIndex > 1 and mod(realIndex, cfg.buffFrame.buttonsPerRow) == 1 then
+          button:SetPoint("TOPRIGHT", aboveButton, "BOTTOMRIGHT", 0, -cfg.buffFrame.rowSpacing)
+          aboveButton = button
+        else
+          button:SetPoint("TOPRIGHT", previousButton, "TOPLEFT", -cfg.buffFrame.colSpacing, 0)
+        end
+        previousButton = button
+        
       end
-      previousButton = button
     end
-    --need to adept the height of the rBFS_BuffDragFrame (in case rBFS_DebuffDragFrame is anchored to the bufframe)
-    local rows = ceil((numBuffs+offset)/cfg.buffFrame.buttonsPerRow)
+    --calculate the height of the buff rows for the debuff frame calculation later
+    local rows = ceil((buffCounter+offset)/cfg.buffFrame.buttonsPerRow)
     local height = cfg.buffFrame.button.size*rows + cfg.buffFrame.rowSpacing*rows + cfg.buffFrame.gap*min(1,rows)
-    rBFS_BuffDragFrame:SetHeight(min(height,1)) --minimum height of 1 to make sure the anchored frame setpoint works
+    buffFrameHeight = height
   end
 
   --update debuff anchors
   local function updateDebuffAnchors(buttonName,index)
     local button = _G[buttonName..index]
     if not button then return end
-    print("updating debuff "..buttonName)
     --apply skin
     if not button.styled then applySkin(button) end
     --position button
     button:ClearAllPoints()
     if index == 1 then
-      button:SetPoint("TOPRIGHT", rBFS_DebuffDragFrame, "TOPRIGHT", 0, 0)
+      if cfg.combineBuffsAndDebuffs then
+        button:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, -buffFrameHeight)
+      else
+        --debuffs and buffs are not combined anchor the debuffs to its own frame
+        button:SetPoint("TOPRIGHT", rBFS_DebuffDragFrame, "TOPRIGHT", 0, 0)      
+      end
     elseif index > 1 and mod(index, cfg.debuffFrame.buttonsPerRow) == 1 then
       button:SetPoint("TOPRIGHT", _G[buttonName..(index-cfg.debuffFrame.buttonsPerRow)], "BOTTOMRIGHT", 0, -cfg.debuffFrame.rowSpacing)
     else
@@ -232,12 +241,14 @@
     rCreateDragFrame(bf, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
   end
 
-  --debuff drag frame
-  local df = CreateFrame("Frame", "rBFS_DebuffDragFrame", UIParent)
-  df:SetSize(cfg.debuffFrame.button.size,cfg.debuffFrame.button.size)
-  df:SetPoint(cfg.debuffFrame.pos.a1,cfg.debuffFrame.pos.af,cfg.debuffFrame.pos.a2,cfg.debuffFrame.pos.x,cfg.debuffFrame.pos.y)
-  if cfg.debuffFrame.userplaced then
-    rCreateDragFrame(df, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+  if not cfg.combineBuffsAndDebuffs then
+    --debuff drag frame
+    local df = CreateFrame("Frame", "rBFS_DebuffDragFrame", UIParent)
+    df:SetSize(cfg.debuffFrame.button.size,cfg.debuffFrame.button.size)
+    df:SetPoint(cfg.debuffFrame.pos.a1,cfg.debuffFrame.pos.af,cfg.debuffFrame.pos.a2,cfg.debuffFrame.pos.x,cfg.debuffFrame.pos.y)
+    if cfg.debuffFrame.userplaced then
+      rCreateDragFrame(df, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+    end
   end
 
   --temp enchant stuff
@@ -259,6 +270,8 @@
   --position the consolidate buff button
   ConsolidatedBuffs:ClearAllPoints()
   ConsolidatedBuffs:SetPoint("TOPRIGHT", rBFS_BuffDragFrame, "TOPRIGHT", 0, 0)
+  
+  ConsolidatedBuffsTooltip:SetScale(cfg.consolidatedTooltipScale)
 
   --hook Blizzard functions
   hooksecurefunc("BuffFrame_UpdateAllBuffAnchors", updateAllBuffAnchors)

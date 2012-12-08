@@ -208,6 +208,7 @@
     bar:SetSize(w,h)
 	  bar:SetStatusBarTexture(self.cfg.altpower.texture)
     bar:SetStatusBarColor(self.cfg.altpower.color.r, self.cfg.altpower.color.g, self.cfg.altpower.color.b)
+    bar.colorTexture = true --color the altpower bar
     --bar:SetMinMaxValues(0,100)
     --bar:SetValue(70)
 

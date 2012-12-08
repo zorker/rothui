@@ -13,9 +13,9 @@
   CHAT_PARTY_LEADER_GET =  "|Hchannel:PARTY|hPL|h %s "
   CHAT_PARTY_GUIDE_GET =  "|Hchannel:PARTY|hPG|h %s "
 
-  --bg
-  CHAT_BATTLEGROUND_GET = "|Hchannel:BATTLEGROUND|hB|h %s "
-  CHAT_BATTLEGROUND_LEADER_GET = "|Hchannel:BATTLEGROUND|hBL|h %s "
+  --instance
+  CHAT_INSTANCE_CHAT_GET = "|Hchannel:Battleground|hI.|h %s: "
+  CHAT_INSTANCE_CHAT_LEADER_GET = "|Hchannel:Battleground|hIL.|h %s: "
   
   --whisper  
   CHAT_WHISPER_INFORM_GET = "to %s "

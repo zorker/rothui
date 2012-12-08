@@ -88,10 +88,18 @@
   --get healthbar color func
   local getHealthbarColor = function(f)
     local color = {}
-    color.r,color.g,color.b = f.healthbar:GetStatusBarColor()
-    fixColor(color)
-    --now that we have the color make sure we match it to the new faction/class colors
-    fixFactionColor(color)
+    local tappedColor = cfg.healthbar.tapped.color
+    if not f.tapped then
+      color.r,color.g,color.b = f.healthbar:GetStatusBarColor()
+      fixColor(color)      
+    else
+      color = tappedColor
+    end
+    if color.r == 0.53 and color.g == 0.53 and color.b == 1 then
+      f.tapped = true
+      color = tappedColor
+    end
+    fixFactionColor(color)    
     --f.healthbar:SetStatusBarColor(color.r,color.g,color.b, 1)
     f.new_healthbar:SetStatusBarColor(color.r,color.g,color.b, 1)
     f.healthbar.defaultColor = color
@@ -148,18 +156,21 @@
   --update health
   local updateHealth = function(hb)
     if not hb then return end
-    local nhb = hb:GetParent():GetParent().new_healthbar
+    local f = hb:GetParent():GetParent()
+    if not f then return end
+    local nhb = f.new_healthbar
+    updateText(f)
     local min, max = hb:GetMinMaxValues()
     nhb:SetMinMaxValues(min,max)
     local val = hb:GetValue()
     nhb:SetValue(val)
     local p = floor(val/max*100)
     if cfg.healthbar.lowHpWarning.enable then
-      if p <= cfg.healthbar.lowHpWarning.treshold and hb.colorApplied == "default" then
+      if not f.tapped and p <= cfg.healthbar.lowHpWarning.treshold and hb.colorApplied == "default" then
         local color = hb.lowhealthColor
         nhb:SetStatusBarColor(color.r,color.g,color.b)
         hb.colorApplied = "lowhealth"
-      elseif p > cfg.healthbar.lowHpWarning.treshold and hb.colorApplied == "lowhealth" then
+      elseif not f.tapped and p > cfg.healthbar.lowHpWarning.treshold and hb.colorApplied == "lowhealth" then
         --in case the target got healed reset the color
         local color = hb.defaultColor
         nhb:SetStatusBarColor(color.r,color.g,color.b)
@@ -304,6 +315,7 @@
 
   --update style func
   local updateStyle = function(f)
+    f.tapped = false
     hideStuff(f)
     fixStuff(f)
     updateText(f)
@@ -323,6 +335,7 @@
     f.healthbar.texture = f.healthbar:GetRegions()
     f.castbar.texture, f.castbar.border, f.castbar.shield, f.castbar.icon = f.castbar:GetRegions()
     f.unit = {}
+    f.tapped = false
     --create stuff
     createArt(f)
     createCastbarArt(f)

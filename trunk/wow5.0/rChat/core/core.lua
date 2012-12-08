@@ -107,7 +107,7 @@
       _G[name.."TabSelectedLeft"]:SetTexture(nil)
       _G[name.."TabSelectedMiddle"]:SetTexture(nil)
       _G[name.."TabSelectedRight"]:SetTexture(nil)
-      _G[name.."TabGlow"]:SetTexture(nil)
+      --_G[name.."TabGlow"]:SetTexture(nil) --do not hide this texture, it will glow when a whisper hits a hidden chat
       _G[name.."TabHighlightLeft"]:SetTexture(nil)
       _G[name.."TabHighlightMiddle"]:SetTexture(nil)
       _G[name.."TabHighlightRight"]:SetTexture(nil)

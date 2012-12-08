@@ -1,4 +1,4 @@
-## Interface: 50001
+## Interface: 50100
 ## Author: zork
 ## Title: rBBS
 ## Notes: zork's art framework. Does nothing by itself. Make sure to load an rBBS layout aswell.

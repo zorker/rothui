@@ -271,6 +271,52 @@
           },
         },
       },
+      [12] = {
+        spellid = 125831, --taste for blood
+        spec = 1,
+        size = 50,
+        framestrata = "BACKGROUND",
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -80, y = 150 },
+        unit = "player",
+        validate_unit   = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
+        hide_ooc        = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0.6,
+          },
+        },
+      },
+      [13] = {
+        spellid = 85730, --deadly calm
+        spec = nil,
+        size = 40,
+        framestrata = "BACKGROUND",
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -90, y = 145 },
+        unit = "player",
+        validate_unit   = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
+        hide_ooc        = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0.6,
+          },
+        },
+      },
     }
 
     --Rothars Debuff List
@@ -365,7 +411,7 @@
       },
       [5] = {
         spellid = 86346, --colossus
-        spec = 2,
+        spec = 1,
         size = 50,
         framestrata = "BACKGROUND",
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },

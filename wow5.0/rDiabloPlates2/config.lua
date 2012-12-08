@@ -28,6 +28,9 @@
       treshold = 25,
       color   = { r = 1, g = 0, b = 0 },
     },
+    tapped = {
+      color   = { r = 0.65, g = 0.65, b = 0.65 },
+    },
   }
   --castbar
   cfg.castbar = {

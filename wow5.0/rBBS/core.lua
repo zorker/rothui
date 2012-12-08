@@ -58,17 +58,21 @@
 
   --num format func
   local numFormat = function(v)
-    local string = ""
-    if v > 1E9 then
-      string = (floor((v/1E9)*10)/10).."b"
+    if v > 1E10 then
+      return (floor(v/1E9)).."b"
+    elseif v > 1E9 then
+      return (floor((v/1E9)*10)/10).."b"
+    elseif v > 1E7 then
+      return (floor(v/1E6)).."m"
     elseif v > 1E6 then
-      string = (floor((v/1E6)*10)/10).."m"
+      return (floor((v/1E6)*10)/10).."m"
+    elseif v > 1E4 then
+      return (floor(v/1E3)).."k"
     elseif v > 1E3 then
-      string = (floor((v/1E3)*10)/10).."k"
+      return (floor((v/1E3)*10)/10).."k"
     else
-      string = v
+      return v
     end
-    return string
   end
 
   --so we want to move a frame that is actually hooked to the dragframe

@@ -290,7 +290,10 @@
     local d = floor(min/max*100)
     local color
     local dead
-    if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) then
+    
+    if unit and UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) then
+      color = {r = 0.65, g = 0.65, b = 0.65}
+    elseif UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) then
       color = {r = 0.4, g = 0.4, b = 0.4}
       dead = 1
     elseif not cfg.colorswitcher.classcolored then

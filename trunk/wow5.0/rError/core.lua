@@ -9,6 +9,7 @@ local blacklist = {
   [ERR_OUT_OF_ENERGY] = true,              -- Not enough energy. (Err)
   [ERR_OUT_OF_RANGE] = true,
   [ERR_OUT_OF_RAGE] = true,                -- Not enough rage.
+  [ERR_OUT_OF_FOCUS] = true,                -- Not enough focus
   [ERR_NO_ATTACK_TARGET] = true,           -- There is nothing to attack.
   [SPELL_FAILED_MOVING] = true,
   [SPELL_FAILED_AFFECTING_COMBAT] = true,

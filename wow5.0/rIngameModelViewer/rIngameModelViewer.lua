@@ -12,12 +12,13 @@
     num = 0,
     rows = 0,
     cols = 0,
+    modelBackground = {0.2,0.2,0.2,1},
     backdrop = {
       bgFile = "",
       edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
       tile = false,
       tileSize = 0,
-      edgeSize = 16,
+      edgeSize = 8,
       insets = {
         left = 0,
         right = 0,
@@ -27,7 +28,7 @@
     },
   }
 
-  local version = "rIngameModelViewer 1.6"
+  local version = "rIngameModelViewer 1.7"
 
   --sounds
   local snd_swap    = "INTERFACESOUND_LOSTTARGETUNIT"
@@ -217,9 +218,12 @@
     local model = self:GetModel()
     if model == defaultmodel then
       self.model = ""
+      self:ClearModel()
+      self:SetAlpha(0.2)
       self:EnableMouse(false)
     else
       self.model = model
+      self:SetAlpha(1)
       self:EnableMouse(true)
     end
     self.id = id
@@ -286,7 +290,7 @@
     m.d = d
 
     local t = m:CreateTexture(nil, "BACKGROUND",nil,-7)
-    t:SetTexture(1,1,1,0.5)
+    t:SetTexture(unpack(cfg.modelBackground))
     t:SetPoint("TOPLEFT", m, "TOPLEFT", 2, -2)
     t:SetPoint("BOTTOMRIGHT", m, "BOTTOMRIGHT", -2, 2)
     m.t = t
@@ -300,6 +304,22 @@
 
   end
 
+  --updateAllModelBackgrounds
+  local function updateAllModelBackgrounds(color)
+    local id = 1
+    cfg.modelBackground = color or cfg.modelBackground
+    local r,g,b,a = unpack(cfg.modelBackground)
+    rIMV_HolderFrame.t:SetTexture(r*0.5,g*0.5,b*0.5,a)
+    --hide all models first until we are sure which models need to be shown at all
+    for i=1, cfg.num do
+      if models[id] and models[id]:IsShown() then
+        local m = models[id]
+        m.t:SetTexture(unpack(cfg.modelBackground))
+      end
+      id=id+1
+    end
+  end
+  
   --change models on page swap
   local function rIMV_changeModelViewerPage(pageid)
     cfg.page = pageid
@@ -313,8 +333,9 @@
       displayid = displayid+1
       id=id+1
     end
+    updateAllModelBackgrounds()
   end
-
+  
   --hide all the models
   local function rIMV_hideAllModels()
     local id = 1
@@ -359,6 +380,8 @@
         id=id+1
       end
     end
+    
+    updateAllModelBackgrounds()
 
   end
 
@@ -367,6 +390,56 @@
 
     local l1,l2,l3,l4,l5,t,p,e,d,e2
 
+    local colorselect1 = CreateFrame("Frame","rIMV_ColorSelectWhiteMini",b)
+    local colorselect2 = CreateFrame("Frame","rIMV_ColorSelectGreyMini",b)
+    local colorselect3 = CreateFrame("Frame","rIMV_ColorSelectMagentaMini",b)
+    --colorselect1:SetBackdrop(cfg.backdrop)
+    --colorselect1:SetBackdropColor(0,0,0,0.2)
+    colorselect1:SetSize(50,30)
+    colorselect1:SetPoint("BOTTOMLEFT", 10, 40)
+    colorselect1:EnableMouse(true)
+    colorselect1.color = "White"
+    colorselect1:SetScript("OnEnter", function(s) rIMV_showColorTooltip(s) end)
+    colorselect1:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+    colorselect1.t = colorselect1:CreateTexture(nil, "BACKGROUND",nil,-6)
+    colorselect1.t:SetTexture(1,1,1,1)
+    colorselect1.t:SetAllPoints(colorselect1)
+    colorselect1:SetScript("OnMouseDown", function()
+      PlaySound(snd_swap)
+      updateAllModelBackgrounds({1,1,1,1})
+    end)
+    colorselect1:SetHitRectInsets(-5, -5, -5, -5);
+
+    colorselect2:SetSize(50,30)
+    colorselect2:SetPoint("LEFT", colorselect1, "RIGHT", 5, 0)
+    colorselect2:EnableMouse(true)
+    colorselect2.color = "Grey"
+    colorselect2:SetScript("OnEnter", function(s) rIMV_showColorTooltip(s) end)
+    colorselect2:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+    colorselect2.t = colorselect2:CreateTexture(nil, "BACKGROUND",nil,-6)
+    colorselect2.t:SetTexture(0.2,0.2,0.2,1)
+    colorselect2.t:SetAllPoints(colorselect2)
+    colorselect2:SetScript("OnMouseDown", function()
+      PlaySound(snd_swap)
+      updateAllModelBackgrounds({0.2,0.2,0.2,1})
+    end)
+    colorselect2:SetHitRectInsets(-5, -5, -5, -5);
+
+    colorselect3:SetSize(50,30)
+    colorselect3:SetPoint("LEFT", colorselect2, "RIGHT", 5, 0)
+    colorselect3:EnableMouse(true)
+    colorselect3.color = "Magenta"
+    colorselect3:SetScript("OnEnter", function(s) rIMV_showColorTooltip(s) end)
+    colorselect3:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+    colorselect3.t = colorselect3:CreateTexture(nil, "BACKGROUND",nil,-6)
+    colorselect3.t:SetTexture(1,0,1,1)
+    colorselect3.t:SetAllPoints(colorselect3)
+    colorselect3:SetScript("OnMouseDown", function()
+      PlaySound(snd_swap)
+      updateAllModelBackgrounds({1,0,1,1})
+    end)
+    colorselect3:SetHitRectInsets(-5, -5, -5, -5);
+    
     p = b:CreateFontString(nil, "BACKGROUND")
     p:SetFont(STANDARD_TEXT_FONT, 20, "THINOUTLINE")
     p:SetPoint("BOTTOMLEFT", 10, 15)
@@ -620,10 +693,13 @@
     --b:SetBackdrop(cfg.backdrop)
     --b:SetBackdropBorderColor(0.4,0.3,0.3,1)
 
+    local color_r,color_g,color_b,color_a = unpack(cfg.modelBackground)
+    
     local t = b:CreateTexture(nil, "BACKGROUND",nil,-8)
     --t:SetTexture(1,0.95,0.65,1)
     t:SetAllPoints(b)
-    t:SetTexture(244/255,242/255,229/255)
+    --t:SetTexture(244/255,242/255,229/255)    
+    t:SetTexture(color_r*0.5,color_g*0.5,color_b*0.5,color_a)
     --t:SetVertTile(true)
     --t:SetHorizTile(true)
     b.t = t
@@ -765,7 +841,7 @@
     m.d = d
 
     local t = m:CreateTexture(nil, "BACKGROUND",nil,-7)
-    t:SetTexture(1,1,1,0.9)
+    t:SetTexture(unpack(cfg.modelBackground))
     t:SetAllPoints(m)
     m.t = t
 
@@ -788,7 +864,7 @@
     colorselect1.t:SetAllPoints(colorselect1)
     colorselect1:SetScript("OnMouseDown", function()
       PlaySound(snd_swap)
-      m.t:SetTexture(1,1,1,0.9)
+      m.t:SetTexture(1,1,1,1)
     end)
     colorselect1:SetHitRectInsets(-10, -10, -10, -5);
 
@@ -803,7 +879,7 @@
     colorselect2.t:SetAllPoints(colorselect2)
     colorselect2:SetScript("OnMouseDown", function()
       PlaySound(snd_swap)
-      m.t:SetTexture(0.2,0.2,0.2,0.9)
+      m.t:SetTexture(0.2,0.2,0.2,1)
     end)
     colorselect2:SetHitRectInsets(-10, -10, -5, -5);
 
@@ -818,7 +894,7 @@
     colorselect3.t:SetAllPoints(colorselect3)
     colorselect3:SetScript("OnMouseDown", function()
       PlaySound(snd_swap)
-      m.t:SetTexture(1,0,1,0.9)
+      m.t:SetTexture(1,0,1,1)
     end)
     colorselect3:SetHitRectInsets(-10, -10, -5, -10);
 

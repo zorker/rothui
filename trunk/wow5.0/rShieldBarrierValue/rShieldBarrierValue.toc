@@ -1,0 +1,6 @@
+## Interface: 50100
+## Author: zork
+## Title: rShieldBarrierValue
+## Notes: Displays the obtainable absorb value by Shield Barrier before using it
+
+core.lua

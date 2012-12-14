@@ -207,7 +207,6 @@
         f.name = gsi_name
         f.rank = gsi_rank
         f.texture_list = gsi_icon
-        f.iconframe.icon:SetTexture(f.texture_list)
         --print(spellid..gsi_name)
       end
     end
@@ -224,6 +223,7 @@
         f.iconframe:SetAlpha(f.alpha.found.frame)
         if spellid then
           f.debufffound = true
+          f.iconframe.icon:SetTexture(f.texture_list)
           --break out of the debuff search loop
         end
         if f.desaturate then
@@ -308,7 +308,6 @@
         f.name = gsi_name
         f.rank = gsi_rank
         f.texture_list = gsi_icon
-        f.iconframe.icon:SetTexture(f.texture_list)
         --print(spellid..gsi_name)
       end
     end
@@ -323,6 +322,7 @@
         end
         if spellid then
           f.bufffound = true
+          f.iconframe.icon:SetTexture(f.texture_list)
           --break out of the buff search loop
         end
         f.iconframe.icon:SetAlpha(f.alpha.found.icon)
@@ -469,6 +469,19 @@
   local searchCooldowns = function()
     for i,_ in ipairs(rf3_CooldownList) do
       local f = rf3_CooldownList[i]
+      --cooldowns get a new optional spelllist this we have to check the spellbook for matching spellids
+      --that spellid will become the latest active cooldown icon
+      if  f.spelllist and f.spelllist[1] then
+        for k, spellid in ipairs(f.spelllist) do
+          local gsi_name, gsi_rank, gsi_icon = GetSpellInfo(spellid)
+          if GetSpellBookItemName(gsi_name) then
+            --reset spellid and icon of the iconframe
+            f.spellid = spellid
+            f.iconframe.icon:SetTexture(gsi_icon)
+            break
+          end
+        end
+      end
       checkCooldown(f)
     end
   end

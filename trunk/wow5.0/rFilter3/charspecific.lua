@@ -106,7 +106,7 @@
             icon = 1,
           },
           not_found = {
-            frame = 0,
+            frame = 0.2,
             icon = 0.6,
           },
         },
@@ -129,7 +129,7 @@
             icon = 1,
           },
           not_found = {
-            frame = 0,
+            frame = 0.2,
             icon = 0.6,
           },
         },
@@ -151,7 +151,7 @@
             icon = 1,
           },
           not_found = {
-            frame = 0,
+            frame = 0.2,
             icon = 0.6,
           },
         },
@@ -443,16 +443,17 @@
     cfg.rf3_CooldownList = {
       [1] = {
         spellid = 118000, --dragon roar
+        spelllist = { 118000, 46968, 46924, },
         --spec = 1,
         size = 50,
         framestrata = "LOW",
         pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
         desaturate      = true,
         move_ingame     = true,
-        hide_ooc        = true,
+        hide_ooc        = false,
         alpha = {
           cooldown = {
-            frame = 0,
+            frame = 0.5,
             icon = 0.6,
           },
           no_cooldown = {

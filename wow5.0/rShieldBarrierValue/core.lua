@@ -8,18 +8,18 @@
 
   local cfg = {
     frame = {
-      width = 36,
+      width = 30,
       height = 18,
-      pos = { a1 = "CENTER", af = "UIParent", a2 = "CENTER", x = 0, y = 0, },
+      pos = { a1 = "BOTTOM", af = "UIParent", a2 = "BOTTOM", x = 44, y = 190, },
     },
     bg = {
-      color = {0,0,0,0.2},
+      color = {0,0,0,0},
     },
     value = {
       font = STANDARD_TEXT_FONT,
-      size = 18,
+      size = 15,
       outline = "THINOUTLINE",
-      color = {1,1,1},
+      color = {1,0.9,0.5,0.9},
       pos = { a1 = "CENTER", x = 0, y = 0, },
     },
   }
@@ -75,14 +75,14 @@
     end
     f:Show()
     local rage = UnitPower("player", SPELL_POWER_RAGE)
-    if not InCombatLockDown() or rage < 20 then
+    if not InCombatLockdown() or rage < 20 then
       f.bg:Hide()
       f.val:Hide()
       return
     end
     f.bg:Show()
     f.val:Show()
-    f.val:SetText(numFormat(CalculateEstimatedAbsorbValue(rage))
+    f.val:SetText(numFormat(CalculateEstimatedAbsorbValue(rage)))
 
   end
 

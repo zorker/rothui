@@ -70,19 +70,19 @@
     if unit and unit ~= "player" then return end
     local spec = GetSpecialization() or -1
     if spec ~= 3 then
-      f:Hide()
+      self:SetAlpha(0)
       return
     end
-    f:Show()
+    self:SetAlpha(1)
     local rage = UnitPower("player", SPELL_POWER_RAGE)
     if not InCombatLockdown() or rage < 20 then
-      f.bg:Hide()
-      f.val:Hide()
+      self.bg:Hide()
+      self.val:Hide()
       return
     end
-    f.bg:Show()
-    f.val:Show()
-    f.val:SetText(numFormat(CalculateEstimatedAbsorbValue(rage)))
+    self.bg:Show()
+    self.val:Show()
+    self.val:SetText(numFormat(CalculateEstimatedAbsorbValue(rage)))
 
   end
 

@@ -16,7 +16,7 @@
   ---------------------------------------------
 
   --format time func
-  local GetFormattedTime = function(time)
+  local function GetFormattedTime(time)
     local hr, m, s, text
     if time <= 0 then text = ""
     elseif(time < 3600 and time > 60) then
@@ -34,8 +34,13 @@
     return text
   end
 
+  --round func
+  local function RoundValue(v)
+    return floor(v*10)/10
+  end
+  
   --number format func
-  local numFormat = function(v)
+  local function NumFormat(v)
     if v > 1E10 then
       return (floor(v/1E9)).."b"
     elseif v > 1E9 then
@@ -69,10 +74,11 @@
     return bar.data[guid]
   end
 
-  function function printValues()
+  local function printValues(entry)
     bar:SetMinMaxValues(entry.min,entry.max)
     bar:SetValue(entry.ttd)
-    bar.value:SetText(GetFormattedTime(entry.ttd)." (total: ".GetFormattedTime(entry.max)." / dps: ".numFormat(entry.dps).")")
+    bar.name:SetText(entry.name)
+    bar.value:SetText(RoundValue(entry.ttd).."s (total: "..RoundValue(entry.max).."s / dps: "..NumFormat(entry.dps)..")")
   end
 
   --onloop
@@ -80,18 +86,17 @@
     if not UnitExists("target") or UnitIsFriend("player", "target") or UnitIsPlayer("target") then return end
     local guid = UnitGUID("target")
     if not guid then return end
-    if not bar.guid or bar.guid ~= guid then
-      bar.name:SetText(entry.name)
+    local entry = bar.data[guid] or CreateEntry(guid)
+    if not entry then return end
+    if not bar.guid or bar.guid ~= guid then      
       bar.guid = guid
     end
-    local entry = bar.data[bar.guid] or CreateEntry(bar.guid)
-    if not entry then return end
     local currentTime = GetTime()
     local currentHealth = UnitHealth("target")
     local healthDiff = entry.unitHealth-currentHealth
     local timeDiff
-
-    printValues() --print values
+    
+    printValues(entry) --print values
 
     if currentHealth == 0 then
       return --target is dead we cannot update any values on that
@@ -115,15 +120,13 @@
     if healthDiff == 0 or timeDiff == 0 then
       return
     end
-
+    
     --calculate the full time that would be needed to bring the unit from 100%-0% based on the watched segment
-    local time100p = entry.UnitHealthMax*timeDiff/healthDiff
-
+    local time100p = entry.unitHealthMax*timeDiff/healthDiff
     --the unit may have not been at 100% at the first time seen, thus we need to calculate that time aswell
-    local timeMissing = (entry.UnitHealthMax-entry.unitHealth)*timeDiff/healthDiff
-
+    local timeMissing = (entry.unitHealthMax-entry.unitHealth)*timeDiff/healthDiff
     --now we have 3/4 time segments making it possible to calculate the last time segment
-    local timeToDeath = max(entry.time-timeMissing+time100p-timeDiff,0)
+    local timeToDeath = max((time100p-timeMissing-timeDiff),0)
     local dps = healthDiff/timeDiff
 
     entry.min = 0
@@ -131,20 +134,35 @@
     entry.ttd = timeToDeath
     entry.dps = dps
 
-    printValues()
+    printValues(entry)
 
   end
 
+  local InCombat = false
+  
   --onevent
   local function OnEvent(self,event,...)
     if event == "PLAYER_REGEN_ENABLED" then
+      InCombat = false
       table.wipe(bar.data)
     end
-    if not InCombatLockdown() or not UnitExists("target") or UnitIsFriend("player", "target") or UnitIsPlayer("target") then
-      bar.timer:Stop()
-      return
+    if event == "PLAYER_REGEN_DISABLED" or InCombatLockdown() then
+      InCombat = true
     end
-    bar.timer:Play()
+    local ValidTarget = false
+    if UnitExists("target") and not UnitIsPlayer("target") then
+      ValidTarget = true
+    end
+    if ValidTarget and InCombat then
+      --print("play")
+      bar.timer:Play()
+    else
+      bar:SetMinMaxValues(0,1)
+      bar:SetValue(0)
+      bar.name:SetText("")
+      bar.value:SetText("")
+      bar.timer:Stop()
+    end
   end
 
   --create timer
@@ -162,7 +180,7 @@
   do
 
     bar:SetPoint("CENTER",0,0)
-    bar:SetSize(200,30)
+    bar:SetSize(200,10)
     bar:SetMinMaxValues(0,1)
     bar:SetValue(0)
 
@@ -178,27 +196,31 @@
 
     --bar tex
     local fill = bar:CreateTexture(nil, "BACKGROUND",nil,-7)
-    bg:SetTexture(0,1,0,1)
-    bar:SetStatusbarTexture(fill)
+    --fill:SetTexture(0,1,0,1)
+    bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
+    bar:SetStatusBarColor(0,1,0,0.5)
 
     --bar bg
     local bg = bar:CreateTexture(nil, "BACKGROUND",nil,-8)
     bg:SetAllPoints(bar)
     bg:SetTexture(0,0.2,0,0.6)
     bar.bg = bg
+    
+    local helper = CreateFrame("Frame",nil,bar)
+    helper:SetAllPoints(bar)
 
     --bar name
-    local name = bar:CreateFontString(nil, "BORDER")
-    name:SetPoint("TOPLEFT", 0, 0)
-    name:SetPoint("TOPRIGHT", 0, 0)
-    name:SetFont(STANDARD_TEXT_FONT, 16, "THINOUTLINE")
+    local name = helper:CreateFontString(nil, "BORDER")
+    name:SetPoint("TOPLEFT", 0, 15)
+    name:SetPoint("TOPRIGHT", 0, 15)
+    name:SetFont(STANDARD_TEXT_FONT, 12, "THINOUTLINE")
     bar.name = name
 
     --bar value
-    local value = bar:CreateFontString(nil, "BORDER")
-    value:SetPoint("BOTTOMLEFT", 0, 0)
-    value:SetPoint("BOTTOMRIGHT", 0, 0)
-    value:SetFont(STANDARD_TEXT_FONT, 16, "THINOUTLINE")
+    local value = helper:CreateFontString(nil, "BORDER")
+    value:SetPoint("BOTTOMLEFT", 0, -9)
+    value:SetPoint("BOTTOMRIGHT", 0, -9)
+    value:SetFont(STANDARD_TEXT_FONT, 12, "THINOUTLINE")
     bar.value = value
 
     bar:SetScript("OnEvent", OnEvent)

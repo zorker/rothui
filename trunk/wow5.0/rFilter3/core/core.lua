@@ -169,10 +169,16 @@
     f.name = gsi_name
     f.rank = gsi_rank
     f.texture = gsi_icon
-
+    
+    --migrate to new caster attribute
+    if f.ismine and not f.caster then
+      f.caster = "player"
+      f.ismine = nil
+    end
   end
-
-  local checkDebuff = function(f,spellid)
+  
+  --check aura func
+  local checkAura = function(f,filter,spellid)
     if not f.iconframe then return end
     if not f.iconframe:IsShown() then return end
     if f.spec and f.spec ~= GetSpecialization() then
@@ -207,13 +213,11 @@
         f.name = gsi_name
         f.rank = gsi_rank
         f.texture_list = gsi_icon
-        --print(spellid..gsi_name)
       end
     end
     if f.name and f.rank then
-      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID, canApplyAura, isBossDebuff, casterIsPlayer, value1, value2, value3 = UnitAura(f.unit, f.name, f.rank, "HARMFUL")
-      --if name and (not f.ismine or (f.ismine and caster == "player")) then
-      if name and (not f.ismine or (f.ismine and caster == "player")) and (not f.match_spellid or (f.match_spellid and spID == tmp_spellid)) then
+      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID, canApplyAura, isBossDebuff, casterIsPlayer, value1, value2, value3 = UnitAura(f.unit, f.name, f.rank, filter)
+      if name and (not f.caster or (f.caster and caster == f.caster)) and (not f.match_spellid or (f.match_spellid and spID == tmp_spellid)) then
         if caster == "player" and cfg.highlightPlayerSpells then
           f.iconframe.border:SetVertexColor(0.2,0.6,0.8,1)
         elseif cfg.highlightPlayerSpells then
@@ -222,9 +226,8 @@
         f.iconframe.icon:SetAlpha(f.alpha.found.icon)
         f.iconframe:SetAlpha(f.alpha.found.frame)
         if spellid then
-          f.debufffound = true
+          f.aurafound = true
           f.iconframe.icon:SetTexture(f.texture_list)
-          --break out of the debuff search loop
         end
         if f.desaturate then
           f.iconframe.icon:SetDesaturated(nil)
@@ -251,109 +254,9 @@
           elseif f.show_value == 3 then
             value = value3
           end
-          f.iconframe.value:SetText(numFormat(value) or "")
-        end
-      else
-        f.iconframe:SetAlpha(f.alpha.not_found.frame)
-        f.iconframe.icon:SetAlpha(f.alpha.not_found.icon)
-        if spellid then
-          f.iconframe.icon:SetTexture(f.texture)
-        end
-        f.iconframe.time:SetText("")
-        f.iconframe.count:SetText("")
-        f.iconframe.value:SetText("")
-        f.iconframe.time:SetTextColor(1, 0.8, 0)
-        if cfg.highlightPlayerSpells then
-          f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
-        end
-        if f.desaturate then
-          f.iconframe.icon:SetDesaturated(1)
-        end
-      end
-    end
-  end
-
-  local checkBuff = function(f,spellid)
-    if not f.iconframe then return end
-    if not f.iconframe:IsShown() then return end
-    if f.spec and f.spec ~= GetSpecialization() then
-      if f.move_ingame and f.iconframe.dragFrame:IsShown() then
-        f.iconframe.dragFrame:Hide() --do not show icons that do not match the spec set by the player
-      end
-      f.iconframe:SetAlpha(0)
-      return
-    end
-    if f.move_ingame and f.iconframe.dragFrame:IsShown() then --make the icon visible in case we want to move it
-      f.iconframe.icon:SetAlpha(1)
-      f.iconframe:SetAlpha(1)
-      f.iconframe.icon:SetDesaturated(nil)
-      f.iconframe.time:SetText("30m")
-      f.iconframe.count:SetText("3")
-      f.iconframe.value:SetText("")
-      return
-    end
-    if not UnitExists(f.unit) and f.validate_unit then
-      f.iconframe:SetAlpha(0)
-      return
-    end
-    if not InCombatLockdown() and f.hide_ooc then
-      f.iconframe:SetAlpha(0)
-      return
-    end
-    local tmp_spellid = f.spellid
-    if spellid then
-      tmp_spellid = spellid --spellid gets overwritten for spelllists
-      local gsi_name, gsi_rank, gsi_icon = GetSpellInfo(spellid)
-      if gsi_name then
-        f.name = gsi_name
-        f.rank = gsi_rank
-        f.texture_list = gsi_icon
-        --print(spellid..gsi_name)
-      end
-    end
-    if f.name and f.rank then
-      local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, shouldConsolidate, spID, canApplyAura, isBossDebuff, casterIsPlayer, value1, value2, value3 = UnitAura(f.unit, f.name, f.rank, "HELPFUL")
-      --if name and (not f.ismine or (f.ismine and caster == "player")) then
-      if name and (not f.ismine or (f.ismine and caster == "player")) and (not f.match_spellid or (f.match_spellid and spID == tmp_spellid)) then
-        if caster == "player" and cfg.highlightPlayerSpells then
-          f.iconframe.border:SetVertexColor(0.2,0.6,0.8,1)
-        elseif cfg.highlightPlayerSpells then
-          f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
-        end
-        if spellid then
-          f.bufffound = true
-          f.iconframe.icon:SetTexture(f.texture_list)
-          --break out of the buff search loop
-        end
-        f.iconframe.icon:SetAlpha(f.alpha.found.icon)
-        f.iconframe:SetAlpha(f.alpha.found.frame)
-        if f.desaturate then
-          f.iconframe.icon:SetDesaturated(nil)
-        end
-        --local value = floor((expires-GetTime())*10+0.5)/10
-        if count and count > 1 then
-          f.iconframe.count:SetText(count)
-        else
-          f.iconframe.count:SetText("")
-        end
-        local time = expires-GetTime()
-        if time < 10 then
-          f.iconframe.time:SetTextColor(1, 0.4, 0)
-        else
-          f.iconframe.time:SetTextColor(1, 0.8, 0)
-        end
-        f.iconframe.time:SetText(GetFormattedTime(time))
-        --value check
-        if f.show_value then
-          local value
-          if f.show_value == 1 then
-            value = value1
-          elseif f.show_value == 2 then
-            value = value2
-          elseif f.show_value == 3 then
-            value = value3
+          if value then
+            f.iconframe.value:SetText(numFormat(value))
           end
-          f.iconframe.value:SetText(numFormat(value) or "")
         end
       else
         f.iconframe:SetAlpha(f.alpha.not_found.frame)
@@ -375,6 +278,7 @@
     end
   end
 
+  --check cooldown func
   local checkCooldown = function(f)
     if not f.iconframe then return end
     if not f.iconframe:IsShown() then return end
@@ -432,40 +336,41 @@
     end
   end
 
-  local searchBuffs = function()
+  --search aura func
+  local searchAuras = function()
+    --check buffs
     for i,_ in ipairs(rf3_BuffList) do
       local f = rf3_BuffList[i]
       if f.spelllist and f.spelllist[1] then
         --print('buff spelllist exists')
-        f.bufffound = false
+        f.aurafound = false
         for k,spellid in ipairs(f.spelllist) do
-          if not f.bufffound then
-            checkBuff(f,spellid)
+          if not f.aurafound then
+            checkAura(f,"HELPFUL",spellid)
           end
         end
       else
-        checkBuff(f)
+        checkAura(f,"HELPFUL")
       end
     end
-  end
-
-  local searchDebuffs = function()
+    --check debuffs
     for i,_ in ipairs(rf3_DebuffList) do
       local f = rf3_DebuffList[i]
       if  f.spelllist and f.spelllist[1] then
         --print('debuff spelllist exists')
-        f.debufffound = false
+        f.aurafound = false
         for k,spellid in ipairs(f.spelllist) do
-          if not f.debufffound then
-            checkDebuff(f,spellid)
+          if not f.aurafound then
+            checkAura(f,"HARMFUL",spellid)
           end
         end
       else
-        checkDebuff(f)
+        checkAura(f,"HARMFUL")
       end
     end
   end
-
+  
+  --search cooldown func
   local searchCooldowns = function()
     for i,_ in ipairs(rf3_CooldownList) do
       local f = rf3_CooldownList[i]
@@ -490,14 +395,15 @@
   -- CALL
   -----------------------------
 
-  local count = 0
+  local aura_count = 0
+  local cooldown_count = 0
 
   for i,_ in ipairs(rf3_BuffList) do
     local f = rf3_BuffList[i]
     if not f.icon then
       createIcon(f,i,"Buff")
     end
-    count=count+1
+    aura_count=aura_count+1
   end
 
   for i,_ in ipairs(rf3_DebuffList) do
@@ -505,7 +411,7 @@
     if not f.icon then
       createIcon(f,i,"Debuff")
     end
-    count=count+1
+    aura_count=aura_count+1
   end
 
   for i,_ in ipairs(rf3_CooldownList) do
@@ -513,19 +419,22 @@
     if not f.icon then
       createIcon(f,i,"Cooldown")
     end
-    count=count+1
+    cooldown_count=cooldown_count+1
   end
 
-  if count > 0 then
+  if (aura_count+cooldown_count) > 0 then
     local a = CreateFrame("Frame")
     local ag = a:CreateAnimationGroup()
     local anim = ag:CreateAnimation()
     anim:SetDuration(cfg.updatetime)
     ag:SetLooping("REPEAT")
     ag:SetScript("OnLoop", function(self, event, ...)
-      searchBuffs()
-      searchDebuffs()
-      searchCooldowns()
+      if aura_count > 0 then
+        searchAuras()
+      end
+      if cooldown_count > 0 then
+        searchCooldowns()
+      end
     end)
     ag:Play()
   end

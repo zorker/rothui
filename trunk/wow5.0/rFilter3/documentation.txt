@@ -17,21 +17,16 @@
   -- BUFFS / DEBUFFS
   -------------------------------------
 
-  spellid             = 469,                      --NUMBER, the spellid to track this will represent the icon if none is found
-  spelllist           = {                         --TABLE (optional), you can check spell lists in case the same effect is given by more that one buff/debuff.
-                                                  --your spell needs to be in the list aswell! list is sorted by index.
-                          [1] = 469,
-                          [2] = 79105,
-                          [3] = 6307,
-                          [4] = 90364,
-                        },
+  spellid             = 469,                      --NUMBER, the spellid to track. This id will represent the icon texture if no aura is found.
+  spelllist           = { 469, 123, 456, 789, },  --TABLE (optional), you can check spell lists in case the same effect is given by more that one buff/debuff.
+                                                  --IMPORTANT: Make sure this list contains _ALL_ the spellids you want to track!
   spec                = nil,                      --nil, 1, 2 or 3 (optional), will only display the icon if your current specilization matches the setting
   visibility_state    = "[stance:2] show; hide",  --(optional) attribute that lets you show/hide the frame on a given macro condition. example: "[stance:2] show; hide"
   size                = 26,                       --NUMBER, the size of the icon
   unit                = "player",                 --STRING, UnitID (http://www.wowwiki.com/UnitId), the unit that should be tracked
   validate_unit       = true,                     --true/false (optional), only show the icon if unit is found
   hide_ooc            = true,                     --true/false (optional), hide icon out of combat
-  ismine              = false,                    --true/false (optional), track if the spell casted is actually MY spell (hide same buffs/debuffs from other players)
+  caster              = nil,                      --STRING, UnitID (http://www.wowwiki.com/UnitId) or nil (optional), Allows tracking of auras that are cast by a specific unit like "pet" or "player"
   desaturate          = true,                     --true/false (optional), desaturate the icon if not found
   match_spellid       = false,                    --true/false (optional), in case you not only match the name but the spell id of the buff/debuff
   show_value          = 1,                        --nil,1,2,3 (optional), show the optional value of an aura (like for Vengeance or Absorb Shield), there are 3 possible values

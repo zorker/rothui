@@ -17,3 +17,7 @@
     --cfg.units.raid.attributes.showParty = true
     cfg.units.focus.auras.showBuffs = false
   end
+  
+  if cfg.playername == "Chok" and cfg.playerclass == "HUNTER" then
+    cfg.animClassOverride["HUNTER"]   = { enable = true, animhealth = 13, animmana = 4,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.3,  manamultiplier = 0.3,  healthdecreasealpha = false, manadecreasealpha = false, }
+  end

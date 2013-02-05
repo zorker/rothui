@@ -5,7 +5,7 @@ local _G = _G
 local unpack = unpack
 
 local addon = CF("Frame", "rTestFullscreenFrame", UIP)
-addon:SetFrameStrata("FULLSCREEN_DIALOG")
+addon:SetFrameStrata("FULLSCREEN")
 addon:SetAllPoints()
 addon:EnableMouse(1)
 
@@ -192,4 +192,46 @@ editbox:SetScript("OnEnterPressed", function(self)
   slider:SetValue(floor(self:GetText()))
 end)
 
-print("hello button")
+--color picker
+
+local function showColorPicker(r,g,b,a,callback)
+  ColorPickerFrame:SetParent(addon)
+  ColorPickerFrame:SetColorRGB(r,g,b)
+  ColorPickerFrame.hasOpacity, ColorPickerFrame.opacity = (a ~= nil), a
+  ColorPickerFrame.previousValues = {r,g,b,a}
+  ColorPickerFrame.func, ColorPickerFrame.opacityFunc, ColorPickerFrame.cancelFunc = callback, callback, callback
+  ColorPickerFrame:Hide() -- Need to run the OnShow handler.
+  ColorPickerFrame:Show()
+end
+     
+--frame
+local f = CF("FRAME",nil,addon)
+f:SetSize(50,50)
+f:SetPoint("RIGHT",-20,0)
+--texture
+local t = f:CreateTexture(nil,"BACKGROUND",nil,-7)
+t:SetAllPoints(f)
+t:SetTexture(1,1,1)
+t:SetVertexColor(1,0,1) --bugfix. setting color directly on settexture will result in a bug
+f.tex = t      
+--recolor callback function
+f.callback = function(color)
+  local r,g,b,a
+  if color then
+    r,g,b,a = unpack(color)
+  else
+    r,g,b = ColorPickerFrame:GetColorRGB()
+    
+    a = OpacitySliderFrame:GetValue()
+  end
+  f.tex:SetVertexColor(r,g,b,a)
+end
+f:EnableMouse(true)
+f:SetScript("OnMouseDown", function(self,button,...)
+  if button == "LeftButton" then
+    local r,g,b,a = self.tex:GetVertexColor()
+    showColorPicker(r,g,b,a,self.callback)
+  end
+end)
+
+print("hello world")

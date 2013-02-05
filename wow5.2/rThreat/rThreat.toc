@@ -1,0 +1,9 @@
+## Interface: 50200
+## Author: zork
+## Title: rThreat
+## Notes: Simple threat table.
+## RequiredDeps: rLib
+
+config.lua
+core\slashcmd.lua
+core\core.lua

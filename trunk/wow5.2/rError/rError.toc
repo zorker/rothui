@@ -1,0 +1,6 @@
+## Interface: 50200
+## Author: zork
+## Title: rError
+## Notes: Prints the error messages in the combat text
+
+core.lua

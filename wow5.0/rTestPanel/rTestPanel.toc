@@ -1,0 +1,6 @@
+## Interface: 50100
+## Author: zork
+## Title: rTestPanel
+## Notes: Testing config panels
+
+core.lua

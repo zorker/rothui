@@ -3,6 +3,7 @@ local UIP = UIParent
 local CF = CreateFrame
 local _G = _G
 local unpack = unpack
+local wipe = wipe
 
 local addon = CF("Frame", "rTestFullscreenFrame", UIP)
 addon:SetFrameStrata("FULLSCREEN")
@@ -31,10 +32,6 @@ button:SetWidth(text:GetStringWidth()+30)
 button:SetHeight(text:GetStringHeight()+20)
 button:HookScript("OnClick", function() addon:Hide() end)
 
-local text = addon:CreateFontString(nil, nil, "GameFontBlackMedium")
-text:SetText("rTest 0.1")
-text:SetPoint("LEFT", rTestHideButton, "RIGHT", 5, 0)
-
 --console
 local sf = CF("ScrollFrame", "rTestConsole", addon, "InputScrollFrameTemplate")
 sf:SetPoint("BOTTOMRIGHT", -5, 5)
@@ -49,6 +46,19 @@ console.log = function(text)
   console:SetText(console:GetText().."\n"..GetTime()..": "..text)
 end
 
+--rTestClearButton // UIPanelButtonTemplate
+local button = CF("Button", "rTestClearButton", addon, "UIPanelButtonTemplate")
+button:SetPoint("LEFT", rTestHideButton, "RIGHT", 0, 0)
+local text = _G[button:GetName().."Text"]
+text:SetText("Clear")
+button:SetWidth(text:GetStringWidth()+30)
+button:SetHeight(text:GetStringHeight()+20)
+button:HookScript("OnClick", function() console:SetText("") end)
+
+local text = addon:CreateFontString(nil, nil, "GameFontBlackMedium")
+text:SetText("rTest 0.1")
+text:SetPoint("LEFT", rTestClearButton, "RIGHT", 5, 0)
+
 --button helper
 local buttonHelper = function(name, parent, template, pointparent, point) 
   local button = CF("Button", name, parent, template)
@@ -61,12 +71,23 @@ local buttonHelper = function(name, parent, template, pointparent, point)
   if text then
     text:SetText(template)
     button:SetWidth(text:GetStringWidth()+30)
-    button:SetHeight(text:GetStringHeight()+20)
+    --button:SetHeight(text:GetStringHeight()+20)
+  end
+  if not text then
+    local text = addon:CreateFontString(nil, nil, "GameFontBlackSmall")
+    text:SetText(template)
+    text:SetPoint("LEFT", button, "RIGHT", 5, 0)
+  end
+  if template == "TabButtonTemplate" then
+    PanelTemplates_TabResize(button, 0)
   end
   if button:GetWidth() == 0 then
+    console.log(template.." button width is 0!!!")
     button:SetSize(30,30)
   end
-  button:HookScript("OnClick", function() PlaySound("INTERFACESOUND_LOSTTARGETUNIT") end)
+  button:HookScript("OnClick", function(self) 
+    PlaySound("INTERFACESOUND_LOSTTARGETUNIT") 
+  end)
   return button
 end
 
@@ -85,7 +106,7 @@ local templateList = {
   { template = "UIPanelInfoButton" },
   { template = "UIPanelSquareButton" },
   { template = "UIPanelLargeSilverButton" },
-  --{ template = "TruncatedButtonTemplate" },
+  { template = "UIPanelButtonTemplate,TruncatedButtonTemplate" },
   { template = "MagicButtonTemplate" },
   --{ template = "MainHelpPlateButton" },
   --{ template = "HelpPlateButton" },
@@ -127,6 +148,11 @@ local frameHelper = function(type, name, parent, template, pointparent, point)
   if frame:GetWidth() == 0 then
     frame:SetWidth(200)
     console.log("width of type "..name.." is 0")
+  end
+  if not text then
+    local text = addon:CreateFontString(nil, nil, "GameFontBlackSmall")
+    text:SetText(template)
+    text:SetPoint("LEFT", frame, "RIGHT", 5, 0)
   end
   if not frame:IsVisible() then
     console.log(name.." is not visible")
@@ -233,5 +259,68 @@ f:SetScript("OnMouseDown", function(self,button,...)
     showColorPicker(r,g,b,a,self.callback)
   end
 end)
+
+--dropdown list test (list, not menu)
+
+console.log("rTestDropDownList")
+
+local list = CreateFrame("Frame", "rTestDropDownList", addon, "UIDropDownMenuTemplate")
+list:SetPoint("BOTTOM",0,20)
+
+local infos = {
+  { text = "Animals", isTitle = true, notCheckable = true, notClickable = true },
+  { text = "Ant", value = 1, notCheckable = false },
+  { text = "Mouse", value = 2, notCheckable = false, },
+  { text = "Elephant", value = 3, notCheckable = false },
+  { text = "Whale", value = "string", notCheckable = false },  
+  { text = "Test1", value = "string1", notCheckable = false },
+  { text = "Test2", value = "string2", notCheckable = false },
+  { text = "Test3", value = "string3", notCheckable = false },
+  { text = "Test4", value = "string4", notCheckable = false },
+  { text = "Test5", value = "string5", notCheckable = false },
+  { text = "Test6", value = "string6", notCheckable = false },
+
+}
+
+local function rTestDropDownList_OnClick(self)
+  UIDropDownMenu_SetSelectedValue(list, self.value)
+  local text = UIDropDownMenu_GetText(list)
+  console.log("picked "..text.." width value "..self.value)  
+end
+
+local function rTestDropDownList_Initialize(self)
+  
+  UIDropDownMenu_SetText(list, "Pick an animal")
+  
+  --in case the db already has an values
+  --UIDropDownMenu_SetSelectedValue(list, 1)
+  
+	local text = UIDropDownMenu_GetText(self)
+  local value = UIDropDownMenu_GetSelectedValue(self)
+  
+  UIDropDownMenu_SetWidth(list, 125)
+	
+  local info = UIDropDownMenu_CreateInfo()
+	for i=1, #infos do
+    wipe(info)
+		info.text = infos[i].text
+    info.value = infos[i].value
+    if text == infos[i].text and value == infos[i].value then
+      info.checked = true
+    else
+      info.checked = false
+    end
+    info.isTitle = infos[i].isTitle or false
+    info.notClickable = infos[i].notClickable or false
+    info.notCheckable = infos[i].notCheckable or false
+		info.func = rTestDropDownList_OnClick		
+		UIDropDownMenu_AddButton(info)
+	end
+end
+
+UIDropDownMenu_Initialize(list, rTestDropDownList_Initialize)
+
+
+
 
 print("hello world")

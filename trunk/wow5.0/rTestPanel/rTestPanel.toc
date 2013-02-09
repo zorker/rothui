@@ -1,6 +1,16 @@
 ## Interface: 50100
 ## Author: zork
 ## Title: rTestPanel
-## Notes: Testing config panels
+## Notes: Zork's Self-teaching tutorial addon for working with Blizzard UI Panels
+## SavedVariables: RTESTPANEL_DB_GLOB
+## SavedVariablesPerCharacter: RTESTPANEL_DB_CHAR
 
-core.lua
+config.lua
+
+core\mainFrame.lua
+core\mainFrameTabs.lua
+core\subFrames.lua
+
+core\resize.lua
+core\drag.lua
+core\slashcmd.lua

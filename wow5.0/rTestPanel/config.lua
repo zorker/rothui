@@ -23,7 +23,7 @@
   cfg.slashCommand = "rtp"
 
   --enable debugging functions
-  cfg.debug = true
+  cfg.debug = false
 
   --mainframe config data
   cfg.mainFrame = {
@@ -40,7 +40,7 @@
     frameStrata   = "HIGH",         --frame strata
     --util
     draggable     = true, --should the frame be dragable (title region)
-    resizable     = false, --should the frame be resizable (top right corner)
+    resizable     = true, --should the frame be resizable (top right corner)
     showOnLoad    = true, --show the frame on loadup
 
     --bottom tabs
@@ -67,6 +67,16 @@
           {
             frameTitle  = "ModelsB",
             tabTitle    = "ModFavorites",
+          },
+          --tab1 subframe3
+          {
+            frameTitle  = "ModelsC",
+            tabTitle    = "ModTags",
+          },
+          --tab1 subframe4
+          {
+            frameTitle  = "ModelsD",
+            tabTitle    = "ModMonster",
           },
         }, --subframes
       },

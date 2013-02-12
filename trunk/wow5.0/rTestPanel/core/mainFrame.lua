@@ -43,6 +43,10 @@
     panel.numTabs = # cfg.mainFrame.tabs
     panel.selectedTab = 1
     panel.name = panel:GetName()
+    --list for all the subframe headers
+    panel.subFrameHeader = {}
+    --list for all the subframes
+    panel.subFrames = {}
 
     if cfg.debug then
       print("Found "..panel.numTabs.." tabs to spawn for "..panel:GetName())

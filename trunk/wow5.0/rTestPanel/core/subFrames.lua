@@ -20,11 +20,6 @@
   --get the config
   local cfg = ns.cfg
 
-  --list for all the subframe headers
-  ns.mainFrame.subFrameHeader = {}
-  --list for all the subframes
-  ns.mainFrame.subFrames = {}
-
   -----------------------------
   -- FUNCTIONS
   -----------------------------
@@ -124,6 +119,31 @@
 
   end
 
+  --scroll frame temp hack
+
+  local function genData(scrollChild,maxx)
+    if not maxx then maxx = 99 end
+    scrollChild.data = scrollChild.data or {}
+    local padding = 10
+    local height = 0
+    local width = 0
+    for i=1, maxx  do
+       scrollChild.data[i] = scrollChild.data[i] or scrollChild:CreateFontString(nil, nil, "GameFontNormal")
+       local fs = scrollChild.data[i]
+       fs:SetText("String"..i)
+       local fheight = fs:GetStringHeight()
+       if i == 1 then
+          fs:SetPoint("TOPLEFT", 0, 0)
+       else
+          fs:SetPoint("TOPLEFT", scrollChild.data[i - 1], "BOTTOMLEFT", 0, -padding)
+       end
+       height = height + fheight + padding
+    end
+    scrollChild:SetHeight(height)
+  end
+
+
+
 
   local createSubFrames = function(tabIndex, subFrameIndex,data)
 
@@ -147,6 +167,37 @@
       texture:SetTexture(1,1,1)
       texture:SetVertexColor(1,1,0,0.4) --bugfix
     end
+
+    --create a scrollframe inside
+    local scrollFrame = CreateFrame("ScrollFrame", "$parentScrollFrame", frame, "UIPanelScrollFrameTemplate")
+    scrollFrame:SetPoint("TOPLEFT")
+    scrollFrame:SetPoint("BOTTOMRIGHT",-22,0)
+
+    local tex = scrollFrame:CreateTexture(nil,"BACKGROUND",nil,-6)
+    tex:SetPoint("TOP",scrollFrame)
+    tex:SetPoint("RIGHT",scrollFrame,25.5,0)
+    tex:SetPoint("BOTTOM",scrollFrame)
+    tex:SetWidth(26)
+    tex:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-ScrollBar")
+    tex:SetTexCoord(0,0.45,0.1640625,1)
+    tex:SetAlpha(0.5)
+    --debug texture
+    local tex2 = scrollFrame:CreateTexture(nil,"BACKGROUND",nil,-8)
+    tex2:SetTexture(1,1,1)
+    tex2:SetVertexColor(0,0,0,0.3)
+    tex2:SetAllPoints(tex)
+
+    local scrollChild = CreateFrame("Frame",nil,ScrollFrame)
+    scrollChild:SetWidth(scrollFrame:GetWidth())
+    genData(scrollChild,100)
+
+    scrollFrame:SetScrollChild(scrollChild)
+
+    scrollFrame:SetScript("OnSizeChanged", function(self,event)
+      print("event")
+      scrollChild:SetWidth(self:GetWidth())
+    end)
+
 
     frame:Hide()
 

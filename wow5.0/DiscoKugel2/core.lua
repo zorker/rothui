@@ -9,6 +9,9 @@
   local _G = _G
   local CF = CreateFrame
   local UIP = UIParent
+  local abs = math.abs
+  local sin = math.sin
+  local pi = math.pi
   
   local backdrop = {
     bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
@@ -31,10 +34,23 @@
   
   local updateHealth = function(orb,value)
     --print(value)
-    orb.health:SetValue(value)
+    orb.health:SetValue(value)    
+    if orb.split then    
+      local v = sin(value/100*pi)
+      print(v)
+      --local v = abs((abs(50-value)/50)-1)
+      if v <= 0.2 then
+        orb.split:Hide()
+      else
+        orb.split:Show()
+      end
+      orb.split:SetWidth(256*orb.split_adjust*v)
+      orb.split:SetHeight(32*orb.split_adjust*v)
+      orb.split:SetPoint("TOP", orb.scrollFrameHealth, 0, 16*orb.split_adjust*v)      
+    end
     
     local offset = calculateOffsetFromPercent(orb,value)
-    print(offset)
+    --print(offset)
     orb.scrollFrameHealth:SetPoint(orb.scrollFrameHealth:GetPoint(),0,-offset)
     orb.scrollFrameHealth:SetVerticalScroll(offset)
   end
@@ -67,7 +83,7 @@
     health:SetAllPoints()
     health:SetMinMaxValues(0, 100)
     health:SetStatusBarTexture("Interface\\AddOns\\DiscoKugel2\\media\\orb_filling1")
-    health:SetStatusBarColor(1,0,0)
+    health:SetStatusBarColor(1,0.3,0)
     health:SetOrientation("VERTICAL")
     orb.health = health
     
@@ -96,7 +112,20 @@
     local overlay = CF("Frame",nil,scrollFrame)
     overlay:SetAllPoints(orb)
     
-    local gloss = overlay:CreateTexture(nil,"BACKGROUND",nil,-8)
+    local split = overlay:CreateTexture(nil,"BACKGROUND",nil,-8)
+    split:SetTexture("Interface\\AddOns\\DiscoKugel2\\media\\orb_split")
+    split:SetVertexColor(1,0.3,0)
+    local adjust = orb.size/256
+    split:SetWidth(256*adjust)
+    split:SetHeight(32*adjust)
+    split:SetPoint("TOP", scrollFrame, 0, -16*adjust)
+    split:SetBlendMode("ADD")
+    
+    orb.split_adjust = adjust
+    orb.split = split
+    orb.split:Hide()
+    
+    local gloss = overlay:CreateTexture(nil,"BACKGROUND",nil,-6)
     gloss:SetAllPoints()
     gloss:SetTexture("Interface\\AddOns\\DiscoKugel2\\media\\orb_gloss")
     
@@ -170,7 +199,22 @@
     local overlay = CF("Frame",nil,scrollFrame)
     overlay:SetAllPoints(orb)
     
-    local gloss = overlay:CreateTexture(nil,"BACKGROUND",nil,-8)
+    local split = overlay:CreateTexture(nil,"BACKGROUND",nil,-8)
+    split:SetTexture("Interface\\AddOns\\DiscoKugel2\\media\\orb_split")
+    split:SetVertexColor(1,0.6,0)
+    local adjust = orb.size/256
+    split:SetWidth(256*adjust)
+    split:SetHeight(32*adjust)
+    split:SetPoint("TOP", scrollFrame, 0, -16*adjust)
+    split:SetBlendMode("ADD")
+    --split:SetAlpha(0.5)
+    
+    orb.split_adjust = adjust
+    orb.split = split
+    orb.split:Hide()
+    
+    
+    local gloss = overlay:CreateTexture(nil,"BACKGROUND",nil,-6)
     gloss:SetAllPoints()
     gloss:SetTexture("Interface\\AddOns\\DiscoKugel2\\media\\orb_gloss")
     
@@ -262,7 +306,7 @@
     local overlay = CF("Frame",nil,anchor)
     overlay:SetAllPoints(orb)
     
-    local gloss = overlay:CreateTexture(nil,"BACKGROUND",nil,-8)
+    local gloss = overlay:CreateTexture(nil,"BACKGROUND",nil,-6)
     gloss:SetAllPoints()
     gloss:SetTexture("Interface\\AddOns\\DiscoKugel2\\media\\orb_gloss2")
     gloss:SetAlpha(1)

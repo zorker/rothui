@@ -16,8 +16,8 @@
     --cfg.units.raid.attributes.showPlayer = true
     --cfg.units.raid.attributes.showParty = true
     cfg.units.focus.auras.showBuffs = false
-    cfg.units.player.health.text.mouseover.enable = false
-    cfg.units.player.power.text.mouseover.enable = false
+    --cfg.units.player.health.text.mouseover.enable = false
+    --cfg.units.player.power.text.mouseover.enable = false
   end
 
   if cfg.playername == "Chok" and cfg.playerclass == "HUNTER" then

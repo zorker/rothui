@@ -233,7 +233,7 @@
     end
     return val or ""
   end
-  oUF.Tags.Events["diablo:powerorbtop"] = "UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"
+  oUF.Tags.Events["diablo:powerorbtop"] = "UNIT_DISPLAYPOWER UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"
 
   ---------------------------------------------
 
@@ -253,7 +253,7 @@
     end
     return val or ""
   end
-  oUF.Tags.Events["diablo:powerorbbottom"] = "UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"
+  oUF.Tags.Events["diablo:powerorbbottom"] = "UNIT_DISPLAYPOWER UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"
 
   ---------------------------------------------
 

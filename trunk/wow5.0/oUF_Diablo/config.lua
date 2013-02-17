@@ -34,7 +34,7 @@
   -- 15 purple swirl      16 white tornado        17 blue swirly          18 orange fog         19 pearl
   -- 20 red magnet        21 blue portal          22 purple portal        23 dwarf artifact     24 burning blob
   -- 25 fire              26 rolling purple       27 magic swirl          28 poison bubbles     29 cthun eye
-  -- 30 soulshard purple  31 the planet
+  -- 30 soulshard purple  31 the planet           32 red chocolate
 
   --health animation
   cfg.animhealth = 20 --default 7
@@ -58,7 +58,7 @@
     ["SHAMAN"]        = { enable = true, animhealth = 16, animmana = 15,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
     --["WARRIOR"]       = { enable = true, animhealth = 2,  animmana = 0,  classcolored = true, powertypecolored = true, healthmultiplier = 0.4,    manamultiplier = 0.4,  healthdecreasealpha = true,  manadecreasealpha = true,  },
     ["WARRIOR"]       = { enable = true, animhealth = 23,  animmana = 20,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,  healthdecreasealpha = true,  manadecreasealpha = true,  },
-    ["WARLOCK"]       = { enable = true, animhealth = 26, animmana = 9,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
+    ["WARLOCK"]       = { enable = true, animhealth = 31, animmana = 32,  classcolored = false, powertypecolored = false, healthmultiplier = 1,    manamultiplier = 1,    healthdecreasealpha = true,  manadecreasealpha = true,  },
   }
 
   ----------------------------------------
@@ -134,7 +134,31 @@
       width = 150,
       height = 150,
       scale = 0.82,
+      health = {
+        text = {
+          tags = {
+            top = "[diablo:healthorbtop]",
+            bottom = "[diablo:healthorbbottom]"
+          },
+          mouseover       = {
+            enable          = true,
+            fadeIn          = {time = 0.4, alpha = 1},
+            fadeOut         = {time = 0.3, alpha = 0},
+          },
+        },
+      },
       power = {
+        text = {
+          tags = {
+            top = "[diablo:powerorbtop]",
+            bottom = "[diablo:powerorbbottom]"
+          },
+          mouseover       = {
+            enable          = true,
+            fadeIn          = {time = 0.4, alpha = 1},
+            fadeOut         = {time = 0.3, alpha = 0},
+          },
+        },
         frequentUpdates = false,
       },
       pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -260, y = -9 },
@@ -739,8 +763,9 @@
     [27] = {displayid = 39581, r = 76/255, g = 141/255, b = 195/255, camdistancescale = 3.5, portraitzoom = 0, x = 0, y = 2, rotation = 0, },         -- magic swirl
     [28] = {displayid = 37939, r = 86/255, g = 129/255, b = 49/255, camdistancescale = 1, portraitzoom = 0, x = 0, y = 2, rotation = 0, },            -- poison bubbles
     [29] = {displayid = 37867, r = 93/255, g = 52/255,  b = 92/255, camdistancescale = 0.75, portraitzoom = 0, x = 0, y = 0.8, rotation = 0, },       -- cthun eye
-    [30] = {displayid = 45414, r = 0.85, g = 0.28,  b = 1, camdistancescale = 0.25, portraitzoom = 0, x = 0, y = -0.22, rotation = 0, },       -- soulshard purple portal
-    [31] = {displayid = 44652, r = 0.7, g = 1,  b = 0.85, camdistancescale = 0.65, portraitzoom = 0, x = 0.05, y = 0.01, rotation = 0, },       -- the planet
+    [30] = {displayid = 45414, r = 0.85, g = 0.28,  b = 1, camdistancescale = 0.25, portraitzoom = 0, x = 0, y = -0.22, rotation = 0, },              -- soulshard purple portal
+    [31] = {displayid = 44652, r = 0.7, g = 1,  b = 0.85, camdistancescale = 0.65, portraitzoom = 0, x = 0.05, y = 0.01, rotation = 0, },             -- the planet
+    [32] = {displayid = 47882, r = 136/255, g = 47/255,  b = 11/255, camdistancescale = 0.65, portraitzoom = 0, x = -0.02, y = -0.96, rotation = 0, },             -- red chocolate
   }
 
   cfg.powercolors = PowerBarColor

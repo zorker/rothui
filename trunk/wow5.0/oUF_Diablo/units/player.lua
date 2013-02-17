@@ -407,14 +407,6 @@
       end
     end
 
-    if powertype ~= "MANA" then
-      bar.ppval1:SetText(func.numFormat(min))
-      bar.ppval2:SetText(d2)
-    else
-      bar.ppval1:SetText(d2)
-      bar.ppval2:SetText(func.numFormat(min))
-    end
-
   end
 
   --create strings for health and power orb
@@ -430,8 +422,8 @@
     hpval2:SetPoint("CENTER", 0, -10)
     hpval2:SetTextColor(0.8,0.8,0.8)
 
-    self:Tag(hpval1, "[perhp]")
-    self:Tag(hpval2, "[diablo:shorthpval]")
+    self:Tag(hpval1, self.cfg.health.text.tags.top or "[perhp]")
+    self:Tag(hpval2, self.cfg.health.text.tags.bottom or "[curhp]")
 
     self.Health.hpval1 = hpval1
     self.Health.hpval2 = hpval2
@@ -446,8 +438,19 @@
     ppval2:SetPoint("CENTER", 0, -10)
     ppval2:SetTextColor(0.8,0.8,0.8)
 
+    self:Tag(ppval1, self.cfg.power.text.tags.top or "[perpp]")
+    self:Tag(ppval2, self.cfg.power.text.tags.bottom or "[curpp]")
+
     self.Power.ppval1 = ppval1
     self.Power.ppval2 = ppval2
+
+    --mouseover stuff
+    if self.cfg.health.text.mouseover.enable then
+      rFrameFaderHook(self,hpvalf,self.cfg.health.text.mouseover.fadeIn,self.cfg.health.text.mouseover.fadeOut)
+    end
+    if self.cfg.power.text.mouseover.enable then
+      rFrameFaderHook(self,ppvalf,self.cfg.power.text.mouseover.fadeIn,self.cfg.power.text.mouseover.fadeOut)
+    end
 
   end
 

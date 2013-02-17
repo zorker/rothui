@@ -99,7 +99,7 @@
     if not fadeIn then fadeIn = defaultFadeIn end
     if not fadeOut then fadeOut = defaultFadeOut end
     SpellFlyout:SetScript("OnEnter", function() UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) end)
-    SpellFlyout:SetScript("OnLeave", function() UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha) end)    
+    SpellFlyout:SetScript("OnLeave", function() UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha) end)
     for _, button in pairs(buttonList) do
       if button then
         button:HookScript("OnEnter", function() UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) end)
@@ -127,11 +127,24 @@
     frame:RegisterEvent("PLAYER_REGEN_ENABLED")
     frame:RegisterEvent("PLAYER_REGEN_DISABLED")
     frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-    frame:SetScript("OnEvent", function(self,event,...) 
+    frame:SetScript("OnEvent", function(self,event,...)
       if event == "PLAYER_REGEN_DISABLED" then
-        UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) 
+        UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha)
       else
         UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha)
       end
     end)
+  end
+
+  --rFrameFaderHook func
+  --special function where an OnEnter script on that frame already exists that we do not want to destroy, so we hook instead
+  --the hookFrame is the frame that we hook the event onto
+  --the frame is the frame that we actually want to fade (it can match the hookFrame but it does not have to)
+  function rFrameFaderHook(hookFrame,frame,fadeIn,fadeOut)
+    if not frame then return end
+    if not fadeIn then fadeIn = defaultFadeIn end
+    if not fadeOut then fadeOut = defaultFadeOut end
+    hookFrame:HookScript("OnEnter", function(self) UIFrameFadeIn( frame, fadeIn.time, frame:GetAlpha(), fadeIn.alpha) end)
+    hookFrame:HookScript("OnLeave", function(self) UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha) end)
+    UIFrameFadeOut(frame, fadeOut.time, frame:GetAlpha(), fadeOut.alpha)
   end

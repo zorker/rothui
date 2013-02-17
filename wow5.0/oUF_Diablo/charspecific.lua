@@ -16,8 +16,10 @@
     --cfg.units.raid.attributes.showPlayer = true
     --cfg.units.raid.attributes.showParty = true
     cfg.units.focus.auras.showBuffs = false
+    cfg.units.player.health.text.mouseover.enable = false
+    cfg.units.player.power.text.mouseover.enable = false
   end
-  
+
   if cfg.playername == "Chok" and cfg.playerclass == "HUNTER" then
     cfg.animClassOverride["HUNTER"]   = { enable = true, animhealth = 13, animmana = 4,   classcolored = true,  powertypecolored = true,  healthmultiplier = 0.3,  manamultiplier = 0.3,  healthdecreasealpha = false, manadecreasealpha = false, }
   end

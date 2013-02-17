@@ -89,7 +89,7 @@
   end
   oUF.Tags.Events["diablo:hpval"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
 
-    ---------------------------------------------
+  ---------------------------------------------
 
   --short hp value
   oUF.Tags.Methods["diablo:shorthpval"] = function(unit)
@@ -214,3 +214,70 @@
     return str or ""
   end
   oUF.Tags.Events["diablo:bosspp"] = "UNIT_POWER UNIT_MAXPOWER"
+
+  ---------------------------------------------
+
+  --the top powerorb value
+  oUF.Tags.Methods["diablo:powerorbtop"] = function(unit)
+    --we change power display based on power type
+    --for mana users the top display is power percentage for all others it is current power value
+    local powertype = select(2, UnitPowerType(unit))
+    local val
+    if powertype ~= "MANA" then
+      val = oUF.Tags.Methods["curpp"](unit)
+      val = func.numFormat(val)
+    else
+      val = oUF.Tags.Methods["perpp"](unit)
+      --want a percentage char?
+      --val = val.."%"
+    end
+    return val or ""
+  end
+  oUF.Tags.Events["diablo:powerorbtop"] = "UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"
+
+  ---------------------------------------------
+
+  --the bottom powerorb value
+  oUF.Tags.Methods["diablo:powerorbbottom"] = function(unit)
+    --we change power display based on power type
+    --for non-mana users the bottom display is power percentage for mana users it is current power value
+    local powertype = select(2, UnitPowerType(unit))
+    local val
+    if powertype ~= "MANA" then
+      val = oUF.Tags.Methods["perpp"](unit)
+      --want a percentage char?
+      --val = val.."%"
+    else
+      val = oUF.Tags.Methods["curpp"](unit)
+      val = func.numFormat(val)
+    end
+    return val or ""
+  end
+  oUF.Tags.Events["diablo:powerorbbottom"] = "UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"
+
+  ---------------------------------------------
+
+  --the top healthorb value
+  oUF.Tags.Methods["diablo:healthorbtop"] = function(unit)
+    local val = oUF.Tags.Methods["perhp"](unit)
+    --want a percentage char?
+    --val = val.."%"
+    return val or ""
+  end
+  oUF.Tags.Events["diablo:healthorbtop"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
+
+
+  ---------------------------------------------
+
+  --the bottom healthorb value
+  oUF.Tags.Methods["diablo:healthorbbottom"] = function(unit)
+    if UnitIsDeadOrGhost(unit) then
+      return  "Dead"
+    elseif not UnitIsConnected(unit) then
+      return "Offline"
+    end
+    local val = oUF.Tags.Methods["curhp"](unit)
+    val = func.numFormat(val)
+    return val or ""
+  end
+  oUF.Tags.Events["diablo:healthorbbottom"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"

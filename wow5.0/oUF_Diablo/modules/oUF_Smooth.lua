@@ -46,7 +46,7 @@ f:SetScript("OnUpdate", function()
         bar.Filling:SetTexCoord(0,1,  math.abs(new / barmax - 1),1)
       end
     end
-    if cur == value or abs(cur - value) < 2 then
+    if cur == value or abs(cur - value) < 1 then
       bar:SetValue_(value)
       smoothing[bar] = nil
     end

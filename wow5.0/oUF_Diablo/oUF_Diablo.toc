@@ -19,6 +19,7 @@ modules\oUF_Smooth.lua
 modules\oUF_SoulShards.lua
 
 config.lua
+orbconfig.lua
 charspecific.lua
 
 core\slashcmd.lua

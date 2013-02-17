@@ -8,6 +8,10 @@
   --get the config
   local cfg = ns.cfg
 
+  --get the orb config
+  local orbcfg = ns.orbcfg[cfg.playerclass] or ns.orbcfg["DEFAULT"]
+  local orbcfgVehicle = ns.orbcfg["VEHICLE"]
+
   --get the functions
   local func = ns.func
 
@@ -17,32 +21,18 @@
   --get the bars container
   local bars = ns.bars
 
+  local abs = math.abs
+  local sin = math.sin
+  local pi = math.pi
+
   ---------------------------------------------
   -- UNIT SPECIFIC FUNCTIONS
   ---------------------------------------------
 
-  --adjust some values depending on animation settings
-  if cfg.animClassOverride[cfg.playerclass].enable then
-    if cfg.animClassOverride[cfg.playerclass].classcolored then
-      cfg.animhealth = 19
-      cfg.animtab[19].r = cfg.playercolor.r
-      cfg.animtab[19].g = cfg.playercolor.g
-      cfg.animtab[19].b = cfg.playercolor.b
-    else
-      cfg.animhealth = cfg.animClassOverride[cfg.playerclass].animhealth
-    end
-    if cfg.animClassOverride[cfg.playerclass].powertypecolored then
-      cfg.animmana = 19
-    else
-      cfg.animmana = cfg.animClassOverride[cfg.playerclass].animmana
-    end
-  end
-
   --init parameters
   local initUnitParameters = function(self)
     self:SetFrameStrata("BACKGROUND")
-    self:SetFrameLevel(1)
-    self:SetSize(self.cfg.width, self.cfg.height)
+    self:SetSize(self.cfg.size, self.cfg.size)
     self:SetScale(self.cfg.scale)
     self:SetPoint(self.cfg.pos.a1,self.cfg.pos.af,self.cfg.pos.a2,self.cfg.pos.x,self.cfg.pos.y)
     self.menu = func.menu
@@ -62,9 +52,8 @@
     f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
     f:SetScale(cfg.scale)
     func.applyDragFunctionality(f)
-    local t = f:CreateTexture(nil,"BACKGROUND",nil,-7)
+    local t = f:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetAllPoints(f)
-
     if cfg.style >= 1 and cfg.style <= 3 then
       t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\bar"..cfg.style)
     else
@@ -101,12 +90,11 @@
     if not self.cfg.art.angel.show then return end
     local f = CreateFrame("Frame","oUF_DiabloAngelFrame",self)
     f:SetFrameStrata("LOW")
-    f:SetFrameLevel(6)
     f:SetSize(320,160)
     f:SetPoint(self.cfg.art.angel.pos.a1, self.cfg.art.angel.pos.af, self.cfg.art.angel.pos.a2, self.cfg.art.angel.pos.x, self.cfg.art.angel.pos.y)
     f:SetScale(self.cfg.art.angel.scale)
     func.applyDragFunctionality(f)
-    local t = f:CreateTexture(nil,"LOW",nil,5)
+    local t = f:CreateTexture(nil,"BACKGROUND",nil,2)
     t:SetAllPoints(f)
     t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\d3_angel2")
   end
@@ -116,12 +104,11 @@
     if not self.cfg.art.demon.show then return end
     local f = CreateFrame("Frame","oUF_DiabloDemonFrame",self)
     f:SetFrameStrata("LOW")
-    f:SetFrameLevel(6)
     f:SetSize(320,160)
     f:SetPoint(self.cfg.art.demon.pos.a1, self.cfg.art.demon.pos.af, self.cfg.art.demon.pos.a2, self.cfg.art.demon.pos.x, self.cfg.art.demon.pos.y)
     f:SetScale(self.cfg.art.demon.scale)
     func.applyDragFunctionality(f)
-    local t = f:CreateTexture(nil,"LOW",nil,5)
+    local t = f:CreateTexture(nil,"BACKGROUND",nil,2)
     t:SetAllPoints(f)
     t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\d3_demon2")
   end
@@ -132,279 +119,196 @@
     if not cfg.show then return end
     local f = CreateFrame("Frame","oUF_DiabloBottomLine",self)
     f:SetFrameStrata("LOW")
-    f:SetFrameLevel(7)
     f:SetSize(500,112)
     f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
     f:SetScale(cfg.scale)
     func.applyDragFunctionality(f,"bottomline")
-    local t = f:CreateTexture(nil,"LOW",nil,5)
+    local t = f:CreateTexture(nil,"BACKGROUND",nil,3)
     t:SetAllPoints(f)
     t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\d3_bottom")
   end
 
-  --create galaxy func
-  local createGalaxy = function(f,x,y,size,duration,texture,sublevel)
-
-    local t = f:CreateTexture(nil, "BACKGROUND", nil, sublevel)
-    t:SetSize(size,size)
-    t:SetPoint("CENTER",x,y)
-    t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\"..texture)
-    if f.type == "power" then
-      t:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
-    else
-      t:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
-    end
-    t:SetBlendMode("ADD")
-
-    local ag = t:CreateAnimationGroup()
-    local anim = ag:CreateAnimation("Rotation")
-    anim:SetDegrees(360)
-    anim:SetDuration(duration)
-    ag:Play()
-    ag:SetLooping("REPEAT")
-
-    return t
-
+  --initModel func
+  local initModel = function(model)
+    local cfg = cfg.animations[model.id]
+    model:SetCamDistanceScale(cfg.camDistanceScale)
+    model:SetPosition(0,cfg.x,cfg.y)
+    model:SetRotation(cfg.rotation)
+    model:SetPortraitZoom(1)
+    model:ClearModel()
+    --model:SetModel("interface\\buttons\\talktomequestionmark.m2") --in case setdisplayinfo fails
+    model:SetDisplayInfo(cfg.displayInfo)
   end
 
-  local function setModelValues(self)
-    self:ClearFog()
-    self:ClearModel()
-    --self:SetModel("interface\\buttons\\talktomequestionmark.m2") --in case setdisplayinfo fails
-    self:SetDisplayInfo(self.cfg.displayid)
-    self:SetPortraitZoom(self.cfg.portraitzoom)
-    self:SetCamDistanceScale(self.cfg.camdistancescale)
-    self:SetPosition(0,self.cfg.x,self.cfg.y)
-    self:SetRotation(self.cfg.rotation)
+  --post update orb func (used to display lowHp on percentage)
+  local updatePlayerHealth = function(bar, unit, min, max)
+    local per = floor(min/max*100)
+    local orb = bar:GetParent()
+    if per <= 25 and not UnitIsDeadOrGhost(unit) then
+      orb.lowHP:Show()
+    else
+      orb.lowHP:Hide()
+    end
+  end
+
+  --update spark func
+  local updateSpark = function(bar, r, g, b)
+    local orb = bar:GetParent()
+    --print("updatespark "..orb.type)
+    orb.spark:SetVertexColor(r,g,b)
+  end
+
+  --update orb func
+  local updateOrb = function(self,value)
+    local orb = self:GetParent()
+    local min, max = self:GetMinMaxValues()
+    local per = value/max*100
+    local offset = orb.size-per*orb.size/100
+    orb.scrollFrame:SetPoint("TOP",0,-offset)
+    orb.scrollFrame:SetVerticalScroll(offset)
+    --print("update orb "..orb.type.." val: "..value.." off: "..offset.." per: "..per.."%")
+    --adjust the orb spark in width/height matching the current scrollframe state
+    if not orb.spark then return end
+    local multiplier = floor(sin(per/100*pi)*1000)/1000*1.02 --use 1.02 to fix the offset a bit
+    --print(multiplier)
+    if multiplier <= 0.25 then
+      orb.spark:Hide()
+    else
+      orb.spark:SetWidth(256*orb.size/256*multiplier)
+      orb.spark:SetHeight(32*orb.size/256*multiplier)
+      orb.spark:SetPoint("TOP", orb.scrollFrame, 0, 16*orb.size/256*multiplier)
+      orb.spark:Show()
+    end
   end
 
   --create orb func
   local createOrb = function(self,type)
-    local orb
-    if type == "power" then
-      orb = CreateFrame("StatusBar", "oUF_DiabloPowerOrb", self)
-    else
-      orb = CreateFrame("StatusBar", "oUF_DiabloHealthOrb", self)
-    end
+    --get the orb config
+    local orbcfg = orbcfg[type]
+    --create the orb baseframe
+    local orb = CreateFrame("Frame", "oUF_Diablo"..type.."Orb", self)
+    --orb data
     orb.type = type
-    --need to be transparent just need it for the math
-    orb:SetStatusBarTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_transparent")
-    orb:SetSize(self.cfg.width,self.cfg.height)
-
-    --actionbarbackground is at -7, make it be above that
-    orb.back = orb:CreateTexture(nil, "BACKGROUND", nil, -6)
-    orb.back:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_back2")
-    orb.back:SetAllPoints(orb)
-    --orb.back:SetBlendMode("BLEND")
-
-    --orb filling
-    orb.Filling = orb:CreateTexture(nil, "BACKGROUND", nil, -4)
-    local MAX_ORBTEX_NUM = 16
-    if type == "power" then
-      if cfg.manatexture >= 1 and cfg.manatexture <= MAX_ORBTEX_NUM then
-        orb.Filling:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_filling"..cfg.manatexture)
-      else
-        orb.Filling:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_filling"..math.random(1,MAX_ORBTEX_NUM))
-      end
-    else
-      if cfg.healthtexture >= 1 and cfg.healthtexture <= MAX_ORBTEX_NUM then
-        orb.Filling:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_filling"..cfg.healthtexture)
-      else
-        orb.Filling:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_filling"..math.random(1,MAX_ORBTEX_NUM))
-      end
-    end
-    --IMPORTANT, settexcoord will not work with other settings
-    orb.Filling:SetPoint("BOTTOMLEFT",0,0)
-    orb.Filling:SetHeight(self.cfg.height)
-    orb.Filling:SetWidth(self.cfg.width)
-    --orb.Filling:SetBlendMode("ADD")
-    --orb.Filling:SetAlpha(0.8)
-
-    if cfg.useAnimationSystem then
-      local m = CreateFrame("PlayerModel", nil,orb)
-      m:SetAllPoints(orb)
-      if type == "power" then
-        m.cfg = cfg.animtab[cfg.animmana]
-        m.type = type
-        m:SetAlpha(1*cfg.animClassOverride[cfg.playerclass].manamultiplier)
-      else
-        m.cfg = cfg.animtab[cfg.animhealth]
-        m.type = type
-        m:SetAlpha(1*cfg.animClassOverride[cfg.playerclass].healthmultiplier)
-      end
-      orb.Filling:SetVertexColor(m.cfg.r, m.cfg.g, m.cfg.b)
-      setModelValues(m)
-      m:SetScript("OnShow", setModelValues)
-      m:SetScript("OnSizeChanged", setModelValues)
-
-      local helper = CreateFrame("Frame",nil,orb)
-      helper:SetFrameLevel(m:GetFrameLevel()+2)
-      helper:SetAllPoints(orb)
-
-      orb.Anim = m
-      orb.Helper = helper
-
-    else
-      --textures can be animated by animationgroups...awesome!
-      orb.galaxy = {}
-      if type == "power" then
-        orb.Filling:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
-        orb.galaxy[1] = createGalaxy(orb,0,-10,self.cfg.width-0,90,"galaxy2",-3)
-        orb.galaxy[2] = createGalaxy(orb,-2,-10,self.cfg.width-20,60,"galaxy",-3)
-        orb.galaxy[3] = createGalaxy(orb,-4,-10,self.cfg.width-5,45,"galaxy4",-3)
-      else
-        orb.Filling:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
-        orb.galaxy[1] = createGalaxy(orb,0,-10,self.cfg.width-0,90,"galaxy2",-3)
-        orb.galaxy[2] = createGalaxy(orb,2,-10,self.cfg.width-20,60,"galaxy",-3)
-        orb.galaxy[3] = createGalaxy(orb,4,-10,self.cfg.width-5,45,"galaxy4",-3)
-      end
-    end
-
-    --orb gloss
-    if cfg.useAnimationSystem then
-      orb.Gloss = orb.Helper:CreateTexture(nil, "BACKGROUND", nil, -2)
-    else
-      orb.Gloss = orb:CreateTexture(nil, "BACKGROUND", nil, -2)
-    end
-    orb.Gloss:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_gloss")
-    orb.Gloss:SetAllPoints(orb)
-    --orb.Gloss:SetBlendMode("ADD")
-
-    if type == "power" then
+    orb.size = self.cfg.size
+    orb:SetSize(orb.size,orb.size)
+    --position the orb
+    if orb.type == "POWER" then
       --reset the power to be on the opposite side of the health orb
       orb:SetPoint(self.cfg.pos.a1,self.cfg.pos.af,self.cfg.pos.a2,self.cfg.pos.x*(-1),self.cfg.pos.y)
       --make the power orb dragable
       func.applyDragFunctionality(orb,"orb")
     else
       --position the health orb ontop of the self object
-      orb:SetPoint("CENTER",self,"CENTER",0,0)
+      orb:SetPoint("CENTER")
+    end
 
+    if orb.type == "HEALTH" then
       --debuff glow
-      orb.DebuffGlow = orb:CreateTexture(nil, "BACKGROUND", nil, -8)
-      orb.DebuffGlow:SetPoint("CENTER",0,0)
-      orb.DebuffGlow:SetSize(self.cfg.width+5,self.cfg.width+5)
-      orb.DebuffGlow:SetBlendMode("BLEND")
-      orb.DebuffGlow:SetVertexColor(0, 1, 1, 0) -- set alpha to 0 to hide the texture
-      orb.DebuffGlow:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_debuff_glow")
-      self.DebuffHighlight = orb.DebuffGlow
+      local glow = orb:CreateTexture("$parentGlow", "BACKGROUND", nil, -7)
+      glow:SetPoint("CENTER",0,0)
+      glow:SetSize(self.cfg.size+5,self.cfg.size+5)
+      glow:SetBlendMode("BLEND")
+      glow:SetVertexColor(0, 1, 1, 0) -- set alpha to 0 to hide the texture
+      glow:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_debuff_glow")
+      orb.glow = glow
+      self.DebuffHighlight = orb.glow
       self.DebuffHighlightAlpha = 1
       self.DebuffHighlightFilter = false
-
-      --low hp glow
-      if cfg.useAnimationSystem then
-        orb.LowHP = orb.Helper:CreateTexture(nil, "BACKGROUND", nil, -5)
-      else
-        orb.LowHP = orb:CreateTexture(nil, "BACKGROUND", nil, -5)
-      end
-      orb.LowHP:SetPoint("CENTER",0,0)
-      orb.LowHP:SetSize(self.cfg.width-15,self.cfg.width-15)
-      orb.LowHP:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_lowhp_glow")
-      orb.LowHP:SetBlendMode("ADD")
-      orb.LowHP:SetVertexColor(1, 0, 0, 1)
-      orb.LowHP:Hide()
-
     end
 
-    return orb
+    --background
+    local bg = orb:CreateTexture("$parentBG","BACKGROUND",nil,-6)
+    bg:SetAllPoints()
+    bg:SetTexture("Interface\\AddOns\\DiscoKugel2\\media\\orb_back")
+    orb.bg = bg
 
-  end
+    --filling statusbar
+    local fill = CreateFrame("StatusBar","$parentFill",orb)
+    fill:SetAllPoints()
+    fill:SetMinMaxValues(0, 100)
+    fill:SetStatusBarTexture(orbcfg.filling.texture)
+    fill:SetStatusBarColor(orbcfg.filling.color.r,orbcfg.filling.color.g,orbcfg.filling.color.b)
+    fill:SetOrientation("VERTICAL")
+    fill:SetScript("OnValueChanged", updateOrb)
+    orb.fill = fill
 
-  --updatePlayerHealth func
-  local swapper = "x"
-  local updatePlayerHealth = function(bar, unit, min, max)
-    local d = floor(min/max*100)
-    bar.Filling:SetHeight((min / max) * bar:GetWidth())
-    bar.Filling:SetTexCoord(0,1,  math.abs(min / max - 1),1)
+    --scrollframe
+    local scrollFrame = CreateFrame("ScrollFrame","$parentScrollFrame",orb)
+    scrollFrame:SetSize(orb:GetSize())
+    scrollFrame:SetPoint("TOP")
+    --scrollchild
+    local scrollChild = CreateFrame("Frame","$parentScrollChild",scrollFrame)
+    scrollChild:SetSize(orb:GetSize())
+    scrollFrame:SetScrollChild(scrollChild)
+    orb.scrollFrame = scrollFrame
 
-    if cfg.useAnimationSystem then
-      if cfg.animClassOverride[cfg.playerclass].healthdecreasealpha then
-        bar.Anim:SetAlpha((min/max)*cfg.animClassOverride[cfg.playerclass].healthmultiplier or 1)
-      end
-      if cfg.animClassOverride[cfg.playerclass].classcolored then
-        local status = UnitInVehicle("player")
-        if status and swapper ~= "v" then
-          local color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
-          if color then bar.Filling:SetVertexColor(color.r,color.g,color.b) end
-          swapper = "v"
-        elseif not status and swapper ~= "n" then
-          bar.Filling:SetVertexColor(cfg.playercolor.r,cfg.playercolor.g,cfg.playercolor.b)
-          swapper = "n"
-        end
-      end
-    else
-      bar.galaxy[1]:SetAlpha(min/max)
-      bar.galaxy[2]:SetAlpha(min/max)
-      bar.galaxy[3]:SetAlpha(min/max)
-      local status = UnitInVehicle("player")
-      if status and swapper ~= "v" then
-        local color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
-        if color then
-          bar.Filling:SetVertexColor(color.r,color.g,color.b)
-          bar.galaxy[1]:SetVertexColor(color.r,color.g,color.b)
-          bar.galaxy[2]:SetVertexColor(color.r,color.g,color.b)
-          bar.galaxy[3]:SetVertexColor(color.r,color.g,color.b)
-        end
-        swapper = "v"
-      elseif not status and swapper ~= "n" then
-        bar.Filling:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
-        bar.galaxy[1]:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
-        bar.galaxy[2]:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
-        bar.galaxy[3]:SetVertexColor(cfg.galaxytab[cfg.healthcolor].r, cfg.galaxytab[cfg.healthcolor].g, cfg.galaxytab[cfg.healthcolor].b)
-        swapper = "n"
-      end
+    --orb animation
+    if orbcfg.animation.enable then
+      local model = CreateFrame("PlayerModel","$parentModel",scrollChild)
+      model:SetSize(orb:GetSize())
+      model:SetPoint("TOP")
+      --model:SetBackdrop(cfg.backdrop)
+      model:SetAlpha(orbcfg.animation.alpha or 1)
+      model.id = orbcfg.animation.id or 19
+      orb.model = model
+      orb.model:SetScript("OnEvent", initModel)
+      orb.model:RegisterEvent("PLAYER_LOGIN")
+      orb.model:SetScript("OnShow", initModel)
+      --orb.model:SetScript("OnSizeChanged", initModel)
     end
 
-    if d <= 25 and min > 1 then
-      bar.LowHP:Show()
-    else
-      bar.LowHP:Hide()
+    --overlay frame
+    local overlay = CreateFrame("Frame","$parentOverlay",scrollFrame)
+    overlay:SetAllPoints(orb)
+
+    --spark frame
+    local spark = overlay:CreateTexture(nil,"BACKGROUND",nil,-3)
+    spark:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_spark")
+    --the spark should fit the filling color otherwise it will stand out too much
+    spark:SetVertexColor(orbcfg.filling.color.r,orbcfg.filling.color.g,orbcfg.filling.color.b)
+    spark:SetWidth(256*orb.size/256)
+    spark:SetHeight(32*orb.size/256)
+    spark:SetPoint("TOP", scrollFrame, 0, -16*orb.size/256)
+    --texture will be blended by blendmode, http://wowprogramming.com/docs/widgets/Texture/SetBlendMode
+    spark:SetAlpha(orbcfg.spark.alpha or 1)
+    spark:SetBlendMode(orbcfg.spark.blendMode or "ADD")
+    spark:Hide()
+    orb.spark = spark
+
+    --lowhp
+    if orb.type == "HEALTH" then
+      local lowHP = overlay:CreateTexture(nil, "BACKGROUND", nil, -2)
+      lowHP:SetPoint("CENTER",0,0)
+      lowHP:SetSize(self.cfg.size-15,self.cfg.size-15)
+      lowHP:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_lowhp_glow")
+      lowHP:SetBlendMode("ADD")
+      lowHP:SetVertexColor(1, 0, 0, 1)
+      lowHP:Hide()
+      orb.lowHP = lowHP
     end
-  end
 
-  --update player power func
-  local updatePlayerPower = function(bar, unit, min, max)
-    local d, d2
-    if max == 0 then
-      d = 0
-      d2 = 0
+    --highlight
+    local highlight = overlay:CreateTexture("$parentHighlight","BACKGROUND",nil,-1)
+    highlight:SetAllPoints()
+    highlight:SetTexture("Interface\\AddOns\\DiscoKugel2\\media\\orb_gloss")
+    highlight:SetAlpha(orbcfg.highlight.alpha or 1)
+    orb.highlight = highlight
+
+    if orb.type == "POWER" then
+      self.Power = orb.fill
+      hooksecurefunc(self.Power, "SetStatusBarColor", updateSpark)
+      self.Power.frequentUpdates = self.cfg.power.frequentUpdates or false
+      self.Power.Smooth = self.cfg.power.smooth or false
+      self.Power.colorPower = orbcfg.filling.colorPower or false
     else
-     d = min/max
-     d2 = floor(min/max*100)
-    end
-    bar.Filling:SetHeight((d) * bar:GetWidth())
-    bar.Filling:SetTexCoord(0,1,  math.abs(d - 1),1)
-
-    local powertype = select(2, UnitPowerType(unit))
-    if cfg.useAnimationSystem then
-      if cfg.animClassOverride[cfg.playerclass].powertypecolored then
-        local color = cfg.powercolors[powertype]
-        if color then
-          bar.Filling:SetVertexColor(color.r, color.g, color.b)
-        else
-          bar.Filling:SetVertexColor(1,1,1)
-        end
-      end
-      if cfg.animClassOverride[cfg.playerclass].manadecreasealpha then
-        bar.Anim:SetAlpha(d*cfg.animClassOverride[cfg.playerclass].manamultiplier or 1)
-      end
-    else
-      bar.galaxy[1]:SetAlpha(d)
-      bar.galaxy[2]:SetAlpha(d)
-      bar.galaxy[3]:SetAlpha(d)
-
-      local color = cfg.powercolors[powertype]
-
-      if color and cfg.automana then
-        bar.Filling:SetVertexColor(color.r, color.g, color.b)
-        bar.galaxy[1]:SetVertexColor(color.r, color.g, color.b)
-        bar.galaxy[2]:SetVertexColor(color.r, color.g, color.b)
-        bar.galaxy[3]:SetVertexColor(color.r, color.g, color.b)
-      else
-        bar.Filling:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
-        bar.galaxy[1]:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
-        bar.galaxy[2]:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
-        bar.galaxy[3]:SetVertexColor(cfg.galaxytab[cfg.manacolor].r, cfg.galaxytab[cfg.manacolor].g, cfg.galaxytab[cfg.manacolor].b)
-      end
+      self.Health = orb.fill
+      hooksecurefunc(self.Health, "SetStatusBarColor", updateSpark)
+      self.Health.frequentUpdates = self.cfg.health.frequentUpdates or false
+      self.Health.Smooth = self.cfg.health.smooth or false
+      self.Health.colorClass = orbcfg.filling.colorClass or false
+      self.Health.colorHealth = orbcfg.filling.colorClass or false --when player switches into a vehicle it will recolor the orb
+      --we need to display the lowhp on a certain threshold without smoothing, so we use the postUpdate for that
+      self.Health.PostUpdate = updatePlayerHealth
     end
 
   end
@@ -471,38 +375,12 @@
     createActionBarBackground(self)
 
     --create the health orb
-    self.Health = createOrb(self,"health")
+    createOrb(self,"HEALTH")
     --create the power orb
-    self.Power = createOrb(self,"power")
+    createOrb(self,"POWER")
 
-    --smoothing
-    self.Health.Smooth = true
-    self.Power.Smooth = true
-
-    --activate frequent updates for power orb
-    if self.cfg.power.frequentUpdates then
-      self.Power.frequentUpdates = true
-    end
-
+    --create the text strings
     createHealthPowerStrings(self)
-
-    self.Health.PostUpdate = updatePlayerHealth
-    self.Power.PostUpdate = updatePlayerPower
-
-    --fix to update druid power correctly when cat has 100 power
-    --update health and power when the player enters a vehicle (sometimes health/pover values do not change und call an automatic update)
-    self.Health:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
-    self.Health:RegisterEvent("UNIT_ENTERED_VEHICLE")
-    self.Health:RegisterEvent("UNIT_EXITED_VEHICLE")
-    self.Health:SetScript("OnEvent", function(s,e)
-      updatePlayerHealth(s,"player",UnitHealth("player"),UnitHealthMax("player"))
-    end)
-    self.Power:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
-    self.Power:RegisterEvent("UNIT_ENTERED_VEHICLE")
-    self.Power:RegisterEvent("UNIT_EXITED_VEHICLE")
-    self.Power:SetScript("OnEvent", function(s,e)
-      updatePlayerPower(s,"player",UnitPower("player"),UnitPowerMax("player"))
-    end)
 
     --create art textures do this now for correct frame stacking
     createAngelFrame(self)

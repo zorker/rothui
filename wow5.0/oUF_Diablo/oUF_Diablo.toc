@@ -24,6 +24,7 @@ config.lua
 charspecific.lua
 
 core\db.lua
+core\panel.lua
 core\slashcmd.lua
 core\lib.lua
 core\tags.lua

@@ -16,26 +16,6 @@
   db.default = {}
   db.list = {}
 
-  --load the character settings
-  db:SetScript("OnEvent", function(self, event)
-    return self[event](self)
-  end)
-  db:RegisterEvent("VARIABLES_LOADED")
-  function db:VARIABLES_LOADED()
-    self.char = OUF_DIABLO_DB_CHAR
-    if not self.char then self.loadDefaults() end
-    --self.loadDefaults()
-    print(addon..": database loaded")
-    self:UnregisterEvent("VARIABLES_LOADED")
-  end
-
-  db.loadDefaults = function()
-    print(addon..": database defaults loaded")
-    OUF_DIABLO_DB_CHAR = db.default.orb
-    db.char = OUF_DIABLO_DB_CHAR
-    --print(self.char)
-  end
-
   ---------------------------------------------
   --DEFAULT
   ---------------------------------------------
@@ -51,7 +31,7 @@
       },
       --animation
       animation = {
-        enable            = true,
+        enable            = false,
         displayInfo       = 32368,
         camDistanceScale  = 1.15,
         pos_x             = 0,
@@ -82,7 +62,7 @@
       },
       --animation
       animation = {
-        enable            = true,
+        enable            = false,
         displayInfo       = 32368,
         camDistanceScale  = 1.15,
         pos_x             = 0,
@@ -104,6 +84,33 @@
       },
     },--power end
   } --default end
+
+
+  --load the default config on loadup so the rest can initialize, the view will get updated later once the saved variables are fetched
+  db.char = db.default.orb
+
+  --load the character settings
+  db:SetScript("OnEvent", function(self, event)
+    return self[event](self)
+  end)
+  db:RegisterEvent("VARIABLES_LOADED")
+  function db:VARIABLES_LOADED()
+    if not OUF_DIABLO_DB_CHAR then
+      self.loadDefaults()
+    else
+      self.char = OUF_DIABLO_DB_CHAR --load the savedvariable into the database
+    end
+    print(addon..": database loaded")
+    --update the orb view
+    ns.panel.updateOrbView()
+    self:UnregisterEvent("VARIABLES_LOADED")
+  end
+
+  db.loadDefaults = function()
+    print(addon..": database defaults loaded")
+    OUF_DIABLO_DB_CHAR = db.default.orb
+    db.char = OUF_DIABLO_DB_CHAR
+  end
 
 
   ---------------------------------------------

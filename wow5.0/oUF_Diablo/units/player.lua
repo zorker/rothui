@@ -304,14 +304,14 @@
 
     if orb.type == "POWER" then
       self.Power = orb.fill
-      self.PowerOrb = orb
+      ns.PowerOrb = orb --save the orb in the namespace
       hooksecurefunc(self.Power, "SetStatusBarColor", updateSpark)
       self.Power.frequentUpdates = self.cfg.power.frequentUpdates or false
       self.Power.Smooth = self.cfg.power.smooth or false
       self.Power.colorPower = orbcfg.filling.colorPower or false
     else
       self.Health = orb.fill
-      self.HealthOrb = orb
+      ns.HealthOrb = orb --save the orb in the namespace
       hooksecurefunc(self.Health, "SetStatusBarColor", updateSpark)
       self.Health.frequentUpdates = self.cfg.health.frequentUpdates or false
       self.Health.Smooth = self.cfg.health.smooth or false
@@ -488,14 +488,8 @@
   ---------------------------------------------
   -- SPAWN PLAYER UNIT
   ---------------------------------------------
-
-  --orbs need to make use of the new database, thus we delay the spawn until the database is loaded
-  local spawn = CreateFrame("Frame")
-  spawn:RegisterEvent("PLAYER_LOGIN")
-  spawn:SetScript("OnEvent", function()
-    if cfg.units.player.show then
-      oUF:RegisterStyle("diablo:player", createStyle)
-      oUF:SetActiveStyle("diablo:player")
-      oUF:Spawn("player", "oUF_DiabloPlayerFrame")
-    end
-  end)
+  if cfg.units.player.show then
+    oUF:RegisterStyle("diablo:player", createStyle)
+    oUF:SetActiveStyle("diablo:player")
+    oUF:Spawn("player", "oUF_DiabloPlayerFrame")
+  end

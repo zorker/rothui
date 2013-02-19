@@ -1,4 +1,17 @@
 
+  ---------------------------------------------
+  --  oUF_Diablo - slashcmd
+  ---------------------------------------------
+
+  -- The slashcmd stuff
+
+  --get the addon namespace
+  local addon, ns = ...
+
+  ---------------------------------------------
+  --FUNCTIONS
+  ---------------------------------------------
+
   oUF_Diablo_Bars = {
     "oUF_DiabloPlayerCastbar",
     "oUF_DiabloTargetCastbar",
@@ -117,7 +130,16 @@
   end
 
   local function SlashCmd(cmd)
-    if (cmd:match"unlockart") then
+    if (cmd:match"config") then
+      if InCombatLockdown() then return end
+      if ns.panel:IsShown() then
+        ns.panel:Hide()
+        print("Hiding "..addon.." config panel")
+      else
+        ns.panel:Show()
+        print("Showing "..addon.." config panel")
+      end
+    elseif (cmd:match"unlockart") then
       oUF_DiabloUnlock("art")
     elseif (cmd:match"lockart") then
       oUF_DiabloLock("art")
@@ -137,6 +159,7 @@
       oUF_DiabloReset("units")
     else
       print("|c00FF3300oUF_Diablo command list:|r")
+      print("|c00FF3300\/diablo config|r, to open the orb config panel")
       print("|c00FF3300\/diablo lockart|r, to lock the art")
       print("|c00FF3300\/diablo unlockart|r, to unlock the art")
       print("|c00FF3300\/diablo lockbars|r, to lock the bars")

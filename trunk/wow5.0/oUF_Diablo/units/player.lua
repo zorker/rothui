@@ -7,10 +7,8 @@
 
   --get the config
   local cfg = ns.cfg
-
-  --get the orb config
-  local orbcfg = ns.orbcfg[cfg.playerclass] or ns.orbcfg["DEFAULT"]
-  local orbcfgVehicle = ns.orbcfg["VEHICLE"]
+  --get the database
+  local db = ns.db
 
   --get the functions
   local func = ns.func
@@ -32,6 +30,7 @@
   --init parameters
   local initUnitParameters = function(self)
     self:SetFrameStrata("BACKGROUND")
+    self:SetFrameLevel(1)
     self:SetSize(self.cfg.size, self.cfg.size)
     self:SetScale(self.cfg.scale)
     self:SetPoint(self.cfg.pos.a1,self.cfg.pos.af,self.cfg.pos.a2,self.cfg.pos.x,self.cfg.pos.y)
@@ -48,6 +47,8 @@
     local cfg = self.cfg.art.actionbarbackground
     if not cfg.show then return end
     local f = CreateFrame("Frame","oUF_DiabloActionBarBackground",self)
+    f:SetFrameStrata("BACKGROUND")
+    f:SetFrameLevel(0)
     f:SetSize(512,256)
     f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
     f:SetScale(cfg.scale)
@@ -89,8 +90,9 @@
   local createAngelFrame = function(self)
     if not self.cfg.art.angel.show then return end
     local f = CreateFrame("Frame","oUF_DiabloAngelFrame",self)
-    f:SetFrameStrata("LOW")
     f:SetSize(320,160)
+    f:SetFrameStrata("LOW")
+    f:SetFrameLevel(0)
     f:SetPoint(self.cfg.art.angel.pos.a1, self.cfg.art.angel.pos.af, self.cfg.art.angel.pos.a2, self.cfg.art.angel.pos.x, self.cfg.art.angel.pos.y)
     f:SetScale(self.cfg.art.angel.scale)
     func.applyDragFunctionality(f)
@@ -103,8 +105,9 @@
   local createDemonFrame = function(self)
     if not self.cfg.art.demon.show then return end
     local f = CreateFrame("Frame","oUF_DiabloDemonFrame",self)
-    f:SetFrameStrata("LOW")
     f:SetSize(320,160)
+    f:SetFrameStrata("LOW")
+    f:SetFrameLevel(0)
     f:SetPoint(self.cfg.art.demon.pos.a1, self.cfg.art.demon.pos.af, self.cfg.art.demon.pos.a2, self.cfg.art.demon.pos.x, self.cfg.art.demon.pos.y)
     f:SetScale(self.cfg.art.demon.scale)
     func.applyDragFunctionality(f)
@@ -118,7 +121,8 @@
     local cfg = self.cfg.art.bottomline
     if not cfg.show then return end
     local f = CreateFrame("Frame","oUF_DiabloBottomLine",self)
-    f:SetFrameStrata("LOW")
+    f:SetFrameStrata("MEDIUM")
+    f:SetFrameLevel(0)
     f:SetSize(500,112)
     f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
     f:SetScale(cfg.scale)
@@ -130,11 +134,12 @@
 
   --initModel func
   local initModel = function(model)
-    local cfg = cfg.animations[model.id]
+    local orb = model:GetParent():GetParent():GetParent()
+    local cfg = db.char[orb.type].animation
     model:SetCamDistanceScale(cfg.camDistanceScale)
-    model:SetPosition(0,cfg.x,cfg.y)
+    model:SetPosition(0,cfg.pos_x,cfg.pos_y)
     model:SetRotation(cfg.rotation)
-    model:SetPortraitZoom(1)
+    model:SetPortraitZoom(cfg.portraitZoom)
     model:ClearModel()
     --model:SetModel("interface\\buttons\\talktomequestionmark.m2") --in case setdisplayinfo fails
     model:SetDisplayInfo(cfg.displayInfo)
@@ -169,7 +174,7 @@
     --print("update orb "..orb.type.." val: "..value.." off: "..offset.." per: "..per.."%")
     --adjust the orb spark in width/height matching the current scrollframe state
     if not orb.spark then return end
-    local multiplier = floor(sin(per/100*pi)*1000)/1000*1.02 --use 1.02 to fix the offset a bit
+    local multiplier = floor(sin(per/100*pi)*1000)/1000
     --print(multiplier)
     if multiplier <= 0.25 then
       orb.spark:Hide()
@@ -184,7 +189,7 @@
   --create orb func
   local createOrb = function(self,type)
     --get the orb config
-    local orbcfg = orbcfg[type]
+    local orbcfg = db.char[type]
     --create the orb baseframe
     local orb = CreateFrame("Frame", "oUF_Diablo"..type.."Orb", self)
     --orb data
@@ -243,23 +248,26 @@
     orb.scrollFrame = scrollFrame
 
     --orb animation
-    if orbcfg.animation.enable then
-      local model = CreateFrame("PlayerModel","$parentModel",scrollChild)
-      model:SetSize(orb:GetSize())
-      model:SetPoint("TOP")
-      --model:SetBackdrop(cfg.backdrop)
-      model:SetAlpha(orbcfg.animation.alpha or 1)
-      model.id = orbcfg.animation.id or 19
-      orb.model = model
-      orb.model:SetScript("OnEvent", initModel)
-      orb.model:RegisterEvent("PLAYER_LOGIN")
-      orb.model:SetScript("OnShow", initModel)
-      --orb.model:SetScript("OnSizeChanged", initModel)
+    local model = CreateFrame("PlayerModel","$parentModel",scrollChild)
+    model:SetSize(orb:GetSize())
+    model:SetPoint("TOP")
+    --model:SetBackdrop(cfg.backdrop)
+    model:SetAlpha(orbcfg.animation.alpha or 1)
+    orb.model = model
+    orb.model:SetScript("OnEvent", initModel)
+    orb.model:RegisterEvent("PLAYER_ENTERING_WORLD")
+    orb.model:SetScript("OnShow", initModel)
+    initModel(orb.model)
+    if not orbcfg.animation.enable then
+      orb.model:Hide()
     end
+    --orb.model:SetScript("OnSizeChanged", initModel)
 
     --overlay frame
     local overlay = CreateFrame("Frame","$parentOverlay",scrollFrame)
+    --overlay:SetFrameLevel(model:GetFrameLevel()+1)
     overlay:SetAllPoints(orb)
+    orb.overlay = orb
 
     --spark frame
     local spark = overlay:CreateTexture(nil,"BACKGROUND",nil,-3)
@@ -296,12 +304,14 @@
 
     if orb.type == "POWER" then
       self.Power = orb.fill
+      self.PowerOrb = orb
       hooksecurefunc(self.Power, "SetStatusBarColor", updateSpark)
       self.Power.frequentUpdates = self.cfg.power.frequentUpdates or false
       self.Power.Smooth = self.cfg.power.smooth or false
       self.Power.colorPower = orbcfg.filling.colorPower or false
     else
       self.Health = orb.fill
+      self.HealthOrb = orb
       hooksecurefunc(self.Health, "SetStatusBarColor", updateSpark)
       self.Health.frequentUpdates = self.cfg.health.frequentUpdates or false
       self.Health.Smooth = self.cfg.health.smooth or false
@@ -310,7 +320,7 @@
       --we need to display the lowhp on a certain threshold without smoothing, so we use the postUpdate for that
       self.Health.PostUpdate = updatePlayerHealth
     end
-
+    --print(addon..": orb created "..orb.type)
   end
 
   --create strings for health and power orb
@@ -318,6 +328,8 @@
     --hp strings
     local hpval1, hpval2, ppval1, ppval2, hpvalf, ppvalf
     hpvalf = CreateFrame("FRAME", nil, self.Health)
+    hpvalf:SetFrameStrata("LOW")
+    hpvalf:SetFrameLevel(1)
     hpvalf:SetAllPoints(self.Health)
 
     hpval1 = func.createFontString(hpvalf, cfg.font, 28, "THINOUTLINE")
@@ -334,6 +346,8 @@
 
     --pp strings
     ppvalf = CreateFrame("FRAME", nil, self.Power)
+    ppvalf:SetFrameStrata("LOW")
+    ppvalf:SetFrameLevel(1)
     ppvalf:SetAllPoints(self.Power)
 
     ppval1 = func.createFontString(ppvalf, cfg.font, 28, "THINOUTLINE")
@@ -475,8 +489,13 @@
   -- SPAWN PLAYER UNIT
   ---------------------------------------------
 
-  if cfg.units.player.show then
-    oUF:RegisterStyle("diablo:player", createStyle)
-    oUF:SetActiveStyle("diablo:player")
-    oUF:Spawn("player", "oUF_DiabloPlayerFrame")
-  end
+  --orbs need to make use of the new database, thus we delay the spawn until the database is loaded
+  local spawn = CreateFrame("Frame")
+  spawn:RegisterEvent("PLAYER_LOGIN")
+  spawn:SetScript("OnEvent", function()
+    if cfg.units.player.show then
+      oUF:RegisterStyle("diablo:player", createStyle)
+      oUF:SetActiveStyle("diablo:player")
+      oUF:Spawn("player", "oUF_DiabloPlayerFrame")
+    end
+  end)

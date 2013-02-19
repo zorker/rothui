@@ -3,6 +3,8 @@
 ## Title: oUF_Diablo
 ## Notes: zork's oUF layout with Diablo flavour!
 ## RequiredDeps: oUF, rLib
+## SavedVariables: OUF_DIABLO_DB_GLOB
+## SavedVariablesPerCharacter: OUF_DIABLO_DB_CHAR
 
 modules\oUF_AuraWatch.lua
 modules\oUF_BurningEmbers.lua
@@ -19,9 +21,9 @@ modules\oUF_Smooth.lua
 modules\oUF_SoulShards.lua
 
 config.lua
-orbconfig.lua
 charspecific.lua
 
+core\db.lua
 core\slashcmd.lua
 core\lib.lua
 core\tags.lua

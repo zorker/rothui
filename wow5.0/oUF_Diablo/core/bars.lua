@@ -22,6 +22,7 @@
 
     local f = CreateFrame("StatusBar","oUF_DiabloExpBar",self)
     f:SetFrameStrata("LOW")
+    f:SetFrameLevel(2)
     f:SetSize(w,h)
     f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
     f:SetScale(cfg.scale)
@@ -71,6 +72,7 @@
 
     local f = CreateFrame("StatusBar","oUF_DiabloRepBar",self)
     f:SetFrameStrata("LOW")
+    f:SetFrameLevel(1)
     f:SetSize(w,h)
     f:SetPoint(cfg.pos.a1, cfg.pos.af, cfg.pos.a2, cfg.pos.x, cfg.pos.y)
     f:SetScale(cfg.scale)

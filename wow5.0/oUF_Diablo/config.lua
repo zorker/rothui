@@ -646,6 +646,8 @@
 
   cfg.powercolors = PowerBarColor
   cfg.powercolors["MANA"] = { r = 0, g = 0.4, b = 1 }
+  --fix the oUF mana color
+  oUF.colors.power["MANA"] = {0, 0.4, 1}
 
   --font
   cfg.font = STANDARD_TEXT_FONT

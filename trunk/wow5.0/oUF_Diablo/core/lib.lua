@@ -35,6 +35,11 @@
     end
   end
 
+  --round number
+  func.round = function(val)
+    return floor(val*1000)/1000
+  end
+
   --format time func
   func.GetFormattedTime = function(time)
     local hr, m, s, text
@@ -290,7 +295,7 @@
     local d = floor(min/max*100)
     local color
     local dead
-    
+
     if unit and UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) then
       color = {r = 0.65, g = 0.65, b = 0.65}
     elseif UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) then

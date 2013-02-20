@@ -134,10 +134,10 @@
       if InCombatLockdown() then return end
       if ns.panel:IsShown() then
         ns.panel:Hide()
-        print("Hiding "..addon.." config panel")
+        --print("Hiding "..addon.." config panel")
       else
         ns.panel:Show()
-        print("Showing "..addon.." config panel")
+        --print("Showing "..addon.." config panel")
       end
     elseif (cmd:match"unlockart") then
       oUF_DiabloUnlock("art")

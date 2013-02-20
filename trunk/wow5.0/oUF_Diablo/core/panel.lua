@@ -48,8 +48,8 @@
   --TEMPLATE ELEMENT FUNCTIONS
   ---------------------------------------------
 
-  --basic slider function
-  local createBasicSlider = function(name, parent, title)
+  --basic slider func
+  local createBasicSlider = function(parent, name, title)
     local slider = CreateFrame("Slider", name, parent, "OptionsSliderTemplate")
     local editbox = CreateFrame("EditBox", "$parentEditBox", slider, "InputBoxTemplate")
     slider:SetMinMaxValues(0, 1)
@@ -76,32 +76,70 @@
     return slider
   end
 
+  --basic checkbutton func
+  local createBasicCheckButton = function(parent, name, title)
+    local button = CreateFrame("CheckButton", name, parent, "OptionsCheckButtonTemplate")
+    button.text = _G[name.."Text"]
+    button.text:SetText(title)
+    return button
+  end
+
+  local createBasicFontString = function(parent, name, layer, template, text)
+    local fs = parent:CreateFontString(name,layer,template)
+    fs:SetText(text)
+    return fs
+  end
+
   ---------------------------------------------
   --PANEL ELEMENT FUNCTIONS
   ---------------------------------------------
 
-  --create element health orb animation alpha
-  local createSliderHealthOrbAnimationAlpha = function(parent)
-    local slider = createBasicSlider(addon.."PanelHealthOrbAnimationAlpha", parent, "Animation Alpha")
+  --create element health orb model alpha
+  local createSliderHealthOrbModelAlpha = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelAlpha", "Alpha")
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      panel.saveHealthOrbAnimationAlpha(value)
+      panel.saveHealthOrbModelAlpha(value)
       --update orb view
-      panel.updateHealthOrbAnimationAlpha()
+      panel.updateHealthOrbModelAlpha()
     end)
     return slider
   end
 
-  --create element power orb animation alpha
-  local createSliderPowerOrbAnimationAlpha = function(parent)
-    local slider = createBasicSlider(addon.."PanelPowerOrbAnimationAlpha", parent, "Animation Alpha")
+  --create element power orb model alpha
+  local createSliderPowerOrbModelAlpha = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelAlpha", "Alpha")
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      panel.savePowerOrbAnimationAlpha(value)
+      panel.savePowerOrbModelAlpha(value)
       --update orb view
-      panel.updatePowerOrbAnimationAlpha()
+      panel.updatePowerOrbModelAlpha()
     end)
     return slider
+  end
+
+  --create element health orb model enable
+  local createCheckButtonHealthOrbModelEnable = function(parent)
+    local button = createBasicCheckButton(parent, addon.."PanelHealthOrbModelEnable", "Enable")
+    button:HookScript("OnClick", function(self,value)
+      --save value
+      panel.saveHealthOrbModelEnable(self:GetChecked())
+      --update orb view
+      panel.updateHealthOrbModelEnable()
+    end)
+    return button
+  end
+
+  --create element power orb model enable
+  local createCheckButtonPowerOrbModelEnable = function(parent)
+    local button = createBasicCheckButton(parent, addon.."PanelPowerOrbModelEnable", "Enable")
+    button:HookScript("OnClick", function(self,value)
+      --save value
+      panel.savePowerOrbModelEnable(self:GetChecked())
+      --update orb view
+      panel.updatePowerOrbModelEnable()
+    end)
+    return button
   end
 
   --create panel drag frame
@@ -166,39 +204,46 @@
   panel.scrollFrame = createPanelScrollFrame()
 
   --create all panel elements
-  panel.elementHealthOrbAnimationAlpha = createSliderHealthOrbAnimationAlpha(panel.scrollFrame.scrollChild)
-  panel.elementPowerOrbAnimationAlpha = createSliderPowerOrbAnimationAlpha(panel.scrollFrame.scrollChild)
+  panel.elementHealthOrbModelAlpha = createSliderHealthOrbModelAlpha(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbModelAlpha = createSliderPowerOrbModelAlpha(panel.scrollFrame.scrollChild)
+  panel.elementHealthOrbModelEnable = createCheckButtonHealthOrbModelEnable(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbModelEnable = createCheckButtonPowerOrbModelEnable(panel.scrollFrame.scrollChild)
+  panel.elementHealthModelHeader = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model Settings")
+  panel.elementPowerModelHeader = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model Settings")
 
   --positioon all panel elements
-  panel.elementHealthOrbAnimationAlpha:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -25)
-  panel.elementPowerOrbAnimationAlpha:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 300, -25)
+  panel.elementHealthOrbModelAlpha:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -25)
+  panel.elementPowerOrbModelAlpha:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 300, -25)
+  panel.elementHealthOrbModelEnable:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -80)
+  panel.elementPowerOrbModelEnable:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 300, -80)
+  panel.elementHealthModelHeader:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -160)
 
   ---------------------------------------------
   --UPDATE ORB ELEMENT VALUES
   ---------------------------------------------
 
-  --update health orb animation alpha
-  panel.updateHealthOrbAnimationAlpha = function()
-    ns.HealthOrb.model:SetAlpha(panel.loadHealthOrbAnimationAlpha())
+  --update health orb model alpha
+  panel.updateHealthOrbModelAlpha = function()
+    ns.HealthOrb.model:SetAlpha(panel.loadHealthOrbModelAlpha())
   end
 
-  --update power orb animation alpha
-  panel.updatePowerOrbAnimationAlpha = function()
-    ns.PowerOrb.model:SetAlpha(panel.loadPowerOrbAnimationAlpha())
+  --update power orb model alpha
+  panel.updatePowerOrbModelAlpha = function()
+    ns.PowerOrb.model:SetAlpha(panel.loadPowerOrbModelAlpha())
   end
 
-  --update health orb animation enable
-  panel.updateHealthOrbAnimationEnable = function()
-    if panel.loadHealthOrbAnimationEnable() then
+  --update health orb model enable
+  panel.updateHealthOrbModelEnable = function()
+    if panel.loadHealthOrbModelEnable() then
       ns.HealthOrb.model:Show()
     else
       ns.HealthOrb.model:Hide()
     end
   end
 
-  --update power orb animation enable
-  panel.updatePowerOrbAnimationEnable = function()
-    if panel.loadPowerOrbAnimationEnable() then
+  --update power orb model enable
+  panel.updatePowerOrbModelEnable = function()
+    if panel.loadPowerOrbModelEnable() then
       ns.PowerOrb.model:Show()
     else
       ns.PowerOrb.model:Hide()
@@ -209,52 +254,72 @@
   --UPDATE PANEL ELEMENT VALUES
   ---------------------------------------------
 
-  --update element health orb animation alpha
-  panel.updateElementHealthOrbAnimationAlpha = function()
-    panel.elementHealthOrbAnimationAlpha:SetValue(panel.loadHealthOrbAnimationAlpha())
+  --update element health orb model alpha
+  panel.updateElementHealthOrbModelAlpha = function()
+    panel.elementHealthOrbModelAlpha:SetValue(panel.loadHealthOrbModelAlpha())
   end
 
-  --update element power orb animation alpha
-  panel.updateElementPowerOrbAnimationAlpha = function()
-    panel.elementPowerOrbAnimationAlpha:SetValue(panel.loadPowerOrbAnimationAlpha())
+  --update element power orb model alpha
+  panel.updateElementPowerOrbModelAlpha = function()
+    panel.elementPowerOrbModelAlpha:SetValue(panel.loadPowerOrbModelAlpha())
+  end
+
+  --update element health orb model enable
+  panel.updateElementHealthOrbModelEnable = function()
+    panel.elementHealthOrbModelEnable:SetChecked(panel.loadHealthOrbModelEnable())
+  end
+
+  --update element power orb model enable
+  panel.updateElementPowerOrbModelEnable = function()
+    panel.elementPowerOrbModelEnable:SetChecked(panel.loadPowerOrbModelEnable())
   end
 
   ---------------------------------------------
   --SAVE DATA TO DATABASE
   ---------------------------------------------
 
-  --save health orb animation alpha
-  panel.saveHealthOrbAnimationAlpha = function(value)
-    db.char["HEALTH"].animation.alpha = value
+  --save health orb model alpha
+  panel.saveHealthOrbModelAlpha = function(value)
+    db.char["HEALTH"].model.alpha = value
   end
 
-  --save power orb animation alpha
-  panel.savePowerOrbAnimationAlpha = function(value)
-    db.char["POWER"].animation.alpha = value
+  --save power orb model alpha
+  panel.savePowerOrbModelAlpha = function(value)
+    db.char["POWER"].model.alpha = value
+  end
+
+  --save health orb model enable
+  panel.saveHealthOrbModelEnable = function(value)
+    db.char["HEALTH"].model.enable = value
+  end
+
+  --save power orb model enable
+  panel.savePowerOrbModelEnable = function(value)
+    db.char["POWER"].model.enable = value
   end
 
   ---------------------------------------------
   --LOAD DATA FROM DATABASE
   ---------------------------------------------
 
-  --load health orb animation alpha
-  panel.loadHealthOrbAnimationAlpha = function()
-    return db.char["HEALTH"].animation.alpha
+  --load health orb model alpha
+  panel.loadHealthOrbModelAlpha = function()
+    return db.char["HEALTH"].model.alpha
   end
 
-  --load power orb animation alpha
-  panel.loadPowerOrbAnimationAlpha = function()
-    return db.char["POWER"].animation.alpha
+  --load power orb model alpha
+  panel.loadPowerOrbModelAlpha = function()
+    return db.char["POWER"].model.alpha
   end
 
-  --load health orb animation enable
-  panel.loadHealthOrbAnimationEnable = function()
-    return db.char["HEALTH"].animation.enable
+  --load health orb model enable
+  panel.loadHealthOrbModelEnable = function()
+    return db.char["HEALTH"].model.enable
   end
 
-  --load power orb animation enable
-  panel.loadPowerOrbAnimationEnable = function()
-    return db.char["POWER"].animation.enable
+  --load power orb model enable
+  panel.loadPowerOrbModelEnable = function()
+    return db.char["POWER"].model.enable
   end
 
   ---------------------------------------------
@@ -267,10 +332,14 @@
 
     --update all panel elements
 
-    --update element health orb animation alpha
-    panel.updateElementHealthOrbAnimationAlpha()
-    --update element power orb animation alpha
-    panel.updateElementPowerOrbAnimationAlpha()
+    --update element health orb model alpha
+    panel.updateElementHealthOrbModelAlpha()
+    --update element power orb model alpha
+    panel.updateElementPowerOrbModelAlpha()
+    --update element health orb model enable
+    panel.updateElementHealthOrbModelEnable()
+    --update element power orb model enable
+    panel.updateElementPowerOrbModelEnable()
 
   end
 
@@ -284,15 +353,15 @@
 
     --update all orb elements
 
-    --update health orb animation alpha
-    panel.updateHealthOrbAnimationAlpha()
-    --update power orb animation alpha
-    panel.updatePowerOrbAnimationAlpha()
+    --update health orb model alpha
+    panel.updateHealthOrbModelAlpha()
+    --update power orb model alpha
+    panel.updatePowerOrbModelAlpha()
 
-    --update health orb animation enable
-    panel.updateHealthOrbAnimationEnable()
-    --update power orb animation enable
-    panel.updatePowerOrbAnimationEnable()
+    --update health orb model enable
+    panel.updateHealthOrbModelEnable()
+    --update power orb model enable
+    panel.updatePowerOrbModelEnable()
 
     --update panel view
     panel.updatePanelView()

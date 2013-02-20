@@ -16,10 +16,15 @@
   db.default = {}
   db.list = {}
 
+  local wipe    = wipe
+  local tinsert = tinsert
+  local tremove = tremove
+
   ---------------------------------------------
   --DEFAULT
   ---------------------------------------------
 
+  --default orb setup
   db.default.orb = {
     --health
     ["HEALTH"] = {
@@ -27,7 +32,7 @@
       filling = {
         texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15",
         color       = { r = 1, g = 0, b = 0, },
-        colorClass  = false,  --important will override the color (obviously)
+        colorAuto   = false, --automatic coloring based on class/powertype
       },
       --animation
       animation = {
@@ -45,7 +50,6 @@
       --spark
       spark = {
         alpha = 0.9,
-        blendMode = "ADD",
       },
       --highlight
       highlight = {
@@ -58,7 +62,7 @@
       filling = {
         texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15",
         color       = { r = 0, g = 0, b = 1, },
-        colorPower  = false,  --important will override the color (obviously)
+        colorAuto   = false, --automatic coloring based on class/powertype
       },
       --animation
       animation = {
@@ -76,7 +80,6 @@
       --spark
       spark = {
         alpha = 0.9,
-        blendMode = "ADD",
       },
       --highlight
       highlight = {
@@ -86,32 +89,85 @@
   } --default end
 
 
+  --default template
+  db.default.template = {}
+  db.default.template["PEARL"] = db.default.orb["HEALTH"]
+  db.default.template["PEARL"].animation.enable = true
+
   --load the default config on loadup so the rest can initialize, the view will get updated later once the saved variables are fetched
   db.char = db.default.orb
 
-  --load the character settings
+  --db script on variables loaded
   db:SetScript("OnEvent", function(self, event)
-    return self[event](self)
-  end)
-  db:RegisterEvent("VARIABLES_LOADED")
-  function db:VARIABLES_LOADED()
+    --load the template database
+    OUF_DIABLO_DB_GLOB = OUF_DIABLO_DB_GLOB or db.default.template
+    db.glob = OUF_DIABLO_DB_GLOB
+    --load the character database
     if not OUF_DIABLO_DB_CHAR then
       self.loadDefaults()
     else
-      self.char = OUF_DIABLO_DB_CHAR --load the savedvariable into the database
+      self.loadChar()
     end
-    print(addon..": database loaded")
+    self:UnregisterEvent("VARIABLES_LOADED")
+  end)
+  db:RegisterEvent("VARIABLES_LOADED")
+
+  --load the data from character database
+  db.loadChar = function()
+    print(addon..": character config loaded")
+    db.char = OUF_DIABLO_DB_CHAR
     --update the orb view
     ns.panel.updateOrbView()
-    self:UnregisterEvent("VARIABLES_LOADED")
   end
 
+  --reset the the character defaults
   db.loadDefaults = function()
-    print(addon..": database defaults loaded")
+    print(addon..": default database loaded")
     OUF_DIABLO_DB_CHAR = db.default.orb
     db.char = OUF_DIABLO_DB_CHAR
+    --update the orb view
+    ns.panel.updateOrbView()
   end
 
+  --load a template from global database into char data for health/power orb
+  --type stands for "HEALTH" or "POWER"
+  db.loadTemplate = function(name,type)
+    if not OUF_DIABLO_DB_GLOB or not name then return end
+    if not OUF_DIABLO_DB_GLOB[name] then
+      print(addon..": template *"..name.."* not found")
+      return
+    end
+    print(addon..": template *"..name.."* data loaded into "..type.." orb")
+    OUF_DIABLO_DB_CHAR[type] = OUF_DIABLO_DB_GLOB[name]
+    db.char = OUF_DIABLO_DB_CHAR
+    --update the orb view
+    ns.panel.updateOrbView()
+  end
+
+  --save orb data (health or power) as a template
+  --type stands for "HEALTH" or "POWER"
+  db.saveTemplate = function(name,type)
+    if not OUF_DIABLO_DB_GLOB or not name then return end
+    print(addon..": "..type.." orb data saved as template *"..name.."*")
+    OUF_DIABLO_DB_GLOB[name] = db.char[type]
+    db.glob = OUF_DIABLO_DB_GLOB
+    --update the panel view
+    panel.updatePanelView()
+  end
+
+  --delete a template by name
+  db.deleteTemplate = function(name)
+    if not OUF_DIABLO_DB_GLOB or not name then return end
+    if not OUF_DIABLO_DB_GLOB[name] then
+      print(addon..": template *"..name.."* not found")
+      return
+    end
+    print(addon..": template *"..name.."* deleted")
+    tremove(OUF_DIABLO_DB_GLOB, name)
+    db.glob = OUF_DIABLO_DB_GLOB
+    --update the panel view
+    panel.updatePanelView()
+  end
 
   ---------------------------------------------
   --ANIMATIONS

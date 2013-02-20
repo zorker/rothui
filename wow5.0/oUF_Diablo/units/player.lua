@@ -279,7 +279,7 @@
     spark:SetPoint("TOP", scrollFrame, 0, -16*orb.size/256)
     --texture will be blended by blendmode, http://wowprogramming.com/docs/widgets/Texture/SetBlendMode
     spark:SetAlpha(orbcfg.spark.alpha or 1)
-    spark:SetBlendMode(orbcfg.spark.blendMode or "ADD")
+    spark:SetBlendMode("ADD")
     spark:Hide()
     orb.spark = spark
 
@@ -308,15 +308,15 @@
       hooksecurefunc(self.Power, "SetStatusBarColor", updateSpark)
       self.Power.frequentUpdates = self.cfg.power.frequentUpdates or false
       self.Power.Smooth = self.cfg.power.smooth or false
-      self.Power.colorPower = orbcfg.filling.colorPower or false
+      self.Power.colorPower = orbcfg.filling.colorAuto or false
     else
       self.Health = orb.fill
       ns.HealthOrb = orb --save the orb in the namespace
       hooksecurefunc(self.Health, "SetStatusBarColor", updateSpark)
       self.Health.frequentUpdates = self.cfg.health.frequentUpdates or false
       self.Health.Smooth = self.cfg.health.smooth or false
-      self.Health.colorClass = orbcfg.filling.colorClass or false
-      self.Health.colorHealth = orbcfg.filling.colorClass or false --when player switches into a vehicle it will recolor the orb
+      self.Health.colorClass = orbcfg.filling.colorAuto or false
+      self.Health.colorHealth = orbcfg.filling.colorAuto or false --when player switches into a vehicle it will recolor the orb
       --we need to display the lowhp on a certain threshold without smoothing, so we use the postUpdate for that
       self.Health.PostUpdate = updatePlayerHealth
     end

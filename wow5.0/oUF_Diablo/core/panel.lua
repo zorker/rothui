@@ -214,7 +214,7 @@
     dropdownMenu.button:HookScript("OnClick", function()
       local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
       if not value then return end
-      print(UIDropDownMenu_GetSelectedValue(dropdownMenu))
+      --print(UIDropDownMenu_GetSelectedValue(dropdownMenu))
     end)
     dropdownMenu.init = function(self)
       local info = UIDropDownMenu_CreateInfo()
@@ -246,7 +246,7 @@
     dropdownMenu.button:HookScript("OnClick", function()
       local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
       if not value then return end
-      print(UIDropDownMenu_GetSelectedValue(dropdownMenu))
+      --print(UIDropDownMenu_GetSelectedValue(dropdownMenu))
     end)
     dropdownMenu.init = function(self)
       local info = UIDropDownMenu_CreateInfo()
@@ -381,6 +381,18 @@
     return picker
   end
 
+  --create element health orb color auto
+  local createCheckButtonHealthOrbFillingColorAuto = function(parent)
+    local button = createBasicCheckButton(parent, addon.."PanelHealthOrbFillingColorAuto", "Automatic coloring? (class/health)")
+    button:HookScript("OnClick", function(self,value)
+      --save value
+      panel.saveHealthOrbFillingColorAuto(self:GetChecked())
+      --update orb view
+      panel.updateHealthOrbFillingColorAuto()
+    end)
+    return button
+  end
+
   --create panel drag frame
   local createPanelDragFrame = function()
     local frame = CreateFrame("Frame", "$parentDragFrame", panel)
@@ -485,13 +497,16 @@
   panel.elementHealthFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling")
   panel.elementPowerFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling")
 
-  --filling texture dropdowns
+  --create filling texture dropdowns
   panel.elementHealthOrbFillingTexture = createDropdownHealthOrbFillingTexture(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbFillingTexture = createDropdownPowerOrbFillingTexture(panel.scrollFrame.scrollChild)
 
-  --filling color
+  --create filling color picker
   panel.elementHealthOrbFillingColor = createDropdownHealthOrbFillingColor(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbFillingColor = createDropdownPowerOrbFillingColor(panel.scrollFrame.scrollChild)
+
+  --create filling color auto checkbutton
+  panel.elementHealthOrbFillingColorAuto = createCheckButtonHealthOrbFillingColorAuto(panel.scrollFrame.scrollChild)
 
 
 
@@ -518,6 +533,7 @@
   panel.elementPowerOrbFillingTexture:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", -20, -10)
   panel.elementHealthOrbFillingColor:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -3, -45)
   panel.elementPowerOrbFillingColor:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", -3, -45)
+  panel.elementHealthOrbFillingColorAuto:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -4, -75)
 
 
   --panel.elementHealthOrbModelAlpha:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -25)
@@ -547,12 +563,28 @@
   panel.updateHealthOrbFillingColor = function()
     local color = panel.loadHealthOrbFillingColor()
     ns.HealthOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+    ns.HealthOrb.fill:ForceUpdate()
   end
 
   --update power orb filling color
   panel.updatePowerOrbFillingColor = function()
     local color = panel.loadPowerOrbFillingColor()
     ns.PowerOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+    ns.PowerOrb.fill:ForceUpdate()
+  end
+
+  --update health orb filling color auto
+  panel.updateHealthOrbFillingColorAuto = function()
+    if panel.loadHealthOrbFillingColorAuto() then
+      ns.HealthOrb.fill.colorClass = true
+      ns.HealthOrb.fill.colorHealth = true
+    else
+      ns.HealthOrb.fill.colorClass = false
+      ns.HealthOrb.fill.colorHealth = false
+      local color = panel.loadHealthOrbFillingColor()
+      ns.HealthOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+    end
+    ns.HealthOrb.fill:ForceUpdate()
   end
 
   --update health orb model alpha
@@ -609,6 +641,11 @@
     panel.elementPowerOrbFillingColor.color:SetVertexColor(color.r,color.g,color.b)
   end
 
+  --update element health orb filling color auto
+  panel.updateElementHealthOrbFillingColorAuto = function()
+    panel.elementHealthOrbFillingColorAuto:SetChecked(panel.loadHealthOrbFillingColorAuto())
+  end
+
   --update element health orb model alpha
   panel.updateElementHealthOrbModelAlpha = function()
     panel.elementHealthOrbModelAlpha:SetValue(panel.loadHealthOrbModelAlpha())
@@ -657,6 +694,11 @@
     db.char["POWER"].filling.color.b = b
   end
 
+  --save health orb filling color auto
+  panel.saveHealthOrbFillingColorAuto = function(value)
+    db.char["HEALTH"].filling.colorAuto = value
+  end
+
   --save health orb model alpha
   panel.saveHealthOrbModelAlpha = function(value)
     db.char["HEALTH"].model.alpha = value
@@ -701,6 +743,11 @@
     return db.char["POWER"].filling.color
   end
 
+  --load health orb filling color auto
+  panel.loadHealthOrbFillingColorAuto = function()
+    return db.char["HEALTH"].filling.colorAuto
+  end
+
   --load health orb model alpha
   panel.loadHealthOrbModelAlpha = function()
     return db.char["HEALTH"].model.alpha
@@ -739,6 +786,8 @@
     panel.updateElementHealthOrbTextureColor()
     --update element power orb texture color
     panel.updateElementPowerOrbTextureColor()
+    --update element health orb filling color auto
+    panel.updateElementHealthOrbFillingColorAuto()
 
     --update element health orb model alpha
     panel.updateElementHealthOrbModelAlpha()
@@ -769,6 +818,8 @@
     panel.updateHealthOrbFillingColor()
     --update power orb filling color
     panel.updatePowerOrbFillingColor()
+    --update health orb filling color auto
+    panel.updateHealthOrbFillingColorAuto()
 
     --update health orb model alpha
     panel.updateHealthOrbModelAlpha()

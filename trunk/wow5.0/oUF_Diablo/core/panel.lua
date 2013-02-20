@@ -17,6 +17,8 @@
 
   local db = ns.db
 
+  local unpack = unpack
+
   ---------------------------------------------
   --PANEL SETUP
   ---------------------------------------------
@@ -33,8 +35,8 @@
     local icon = panel:CreateTexture("$parentIcon", "OVERLAY", nil, -8)
     icon:SetSize(60,60)
     icon:SetPoint("TOPLEFT",-5,7)
-    --icon:SetTexture("Interface\\FriendsFrame\\Battlenet-Portrait")
-    SetPortraitTexture(icon, "player")
+    icon:SetTexture("Interface\\FriendsFrame\\Battlenet-Portrait")
+    --SetPortraitTexture(icon, "player")
     icon:SetTexCoord(0,1,0,1)
     panel.icon = icon
     --mouse/drag stuff
@@ -47,6 +49,13 @@
   ---------------------------------------------
   --TEMPLATE ELEMENT FUNCTIONS
   ---------------------------------------------
+
+  --basic fontstring func
+  local createBasicFontString = function(parent, name, layer, template, text)
+    local fs = parent:CreateFontString(name,layer,template)
+    fs:SetText(text)
+    return fs
+  end
 
   --basic slider func
   local createBasicSlider = function(parent, name, title)
@@ -84,10 +93,64 @@
     return button
   end
 
-  local createBasicFontString = function(parent, name, layer, template, text)
-    local fs = parent:CreateFontString(name,layer,template)
-    fs:SetText(text)
-    return fs
+  --basic color picker
+  local createBasicColorPicker = function(parent, name, width, height)
+    local picker = CreateFrame("FRAME", name, parent)
+    picker:SetSize(width, height)
+    local backdropConfig = {
+      bgFile = "",
+      edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+      tile = false,
+      tileSize = 16,
+      edgeSize = 16,
+      insets = { left = 4, right = 4, top = 4, bottom = 4 },
+    }
+    picker:SetBackdrop(backdropConfig)
+    picker:SetBackdropBorderColor(0.5,0.5,0.5)
+    --texture
+    local color = picker:CreateTexture(nil,"BACKGROUND",nil,-7)
+    --color:SetAllPoints(picker)
+    color:SetPoint("TOPLEFT",4,-4)
+    color:SetPoint("BOTTOMRIGHT",-4,4)
+    color:SetTexture(1,1,1)
+    picker.color = color
+    picker.text = createBasicFontString(picker,nil,nil,"GameFontNormal","Pick a Color")
+    picker.text:SetPoint("LEFT", picker, "RIGHT", 5, 0)
+    --picker.show
+    picker.show = function(r,g,b,a,callback)
+      ColorPickerFrame:SetParent(panel)
+      ColorPickerFrame:SetColorRGB(r,g,b)
+      ColorPickerFrame.hasOpacity, ColorPickerFrame.opacity = (a ~= nil), a
+      ColorPickerFrame.previousValues = {r,g,b,a}
+      ColorPickerFrame.func, ColorPickerFrame.opacityFunc, ColorPickerFrame.cancelFunc = callback, callback, callback
+      ColorPickerFrame:Hide() -- Need to run the OnShow handler.
+      ColorPickerFrame:Show()
+    end
+    picker:EnableMouse(true)
+    return picker
+  end
+
+  --basic dropdown menu func
+  local createBasicDropDownMenu = function(parent, name, text, width)
+    local dropdownMenu = CreateFrame("Frame", name, parent, "UIDropDownMenuTemplate")
+    UIDropDownMenu_SetText(dropdownMenu, text)
+    UIDropDownMenu_SetWidth(dropdownMenu, width)
+    return dropdownMenu
+  end
+
+  --basic dropdown menu with a button
+  local createBasicDropDownMenuWithButton = function(parent, name, text, width, buttonText)
+    local dropdownMenu = CreateFrame("Frame", name, parent, "UIDropDownMenuTemplate")
+    UIDropDownMenu_SetText(dropdownMenu, text)
+    UIDropDownMenu_SetWidth(dropdownMenu, width)
+    local button = CreateFrame("Button", name.."Submit", parent, "UIPanelButtonTemplate")
+    button:SetPoint("LEFT", dropdownMenu, "RIGHT", -13, 2.5)
+    button.text = _G[button:GetName().."Text"]
+    button.text:SetText(buttonText)
+    button:SetWidth(button.text:GetStringWidth()+30)
+    button:SetHeight(27)
+    dropdownMenu.button = button
+    return dropdownMenu
   end
 
   ---------------------------------------------
@@ -142,6 +205,182 @@
     return button
   end
 
+  --create element health orb load preset
+  local createDropdownHealthOrbLoadPreset = function(parent)
+    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelHealthOrbLoadPreset", "Pick a template", 160, "Load")
+    dropdownMenu.click = function(self)
+      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
+    end
+    dropdownMenu.button:HookScript("OnClick", function()
+      local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
+      if not value then return end
+      print(UIDropDownMenu_GetSelectedValue(dropdownMenu))
+    end)
+    dropdownMenu.init = function(self)
+      local info = UIDropDownMenu_CreateInfo()
+      local infos = db.list.templates or {}
+      --print(UIDropDownMenu_GetSelectedValue(self))
+      infos[0] = { key = "Pick a template", isTitle = true, notCheckable = true, notClickable = true }
+      for i=0, #infos do
+      --for i=1, #infos do
+        wipe(info)
+        info.text = infos[i].key
+        info.value = infos[i].value or ""
+        info.isTitle = infos[i].isTitle or false
+        info.notClickable = infos[i].notClickable or false
+        info.notCheckable = infos[i].notCheckable or false
+        info.func = self.click
+        UIDropDownMenu_AddButton(info)
+      end
+    end
+    UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
+    return dropdownMenu
+  end
+
+  --create element power orb load preset
+  local createDropdownPowerOrbLoadPreset = function(parent)
+    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelPowerOrbLoadPreset", "Pick a template", 160, "Load")
+    dropdownMenu.click = function(self)
+      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
+    end
+    dropdownMenu.button:HookScript("OnClick", function()
+      local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
+      if not value then return end
+      print(UIDropDownMenu_GetSelectedValue(dropdownMenu))
+    end)
+    dropdownMenu.init = function(self)
+      local info = UIDropDownMenu_CreateInfo()
+      local infos = db.list.templates or {}
+      --print(UIDropDownMenu_GetSelectedValue(self))
+      infos[0] = { key = "Pick a template", isTitle = true, notCheckable = true, notClickable = true }
+      for i=0, #infos do
+      --for i=1, #infos do
+        wipe(info)
+        info.text = infos[i].key
+        info.value = infos[i].value or ""
+        info.isTitle = infos[i].isTitle or false
+        info.notClickable = infos[i].notClickable or false
+        info.notCheckable = infos[i].notCheckable or false
+        info.func = self.click
+        UIDropDownMenu_AddButton(info)
+      end
+    end
+    UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
+    return dropdownMenu
+  end
+
+  --create element health orb filling texture
+  local createDropdownHealthOrbFillingTexture = function(parent)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbFillingTexture", "Pick a texture", 160)
+    dropdownMenu.click = function(self)
+      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
+      --print(self.value)
+      --save value
+      panel.saveHealthOrbFillingTexture(self.value)
+      --update orb view
+      panel.updateHealthOrbFillingTexture()
+    end
+    dropdownMenu.init = function(self)
+      local info = UIDropDownMenu_CreateInfo()
+      local infos = db.list.filling_texture or {}
+      --print(UIDropDownMenu_GetSelectedValue(self))
+      infos[0] = { key = "Pick a texture", isTitle = true, notCheckable = true, notClickable = true }
+      for i=0, #infos do
+      --for i=1, #infos do
+        wipe(info)
+        info.text = infos[i].key
+        info.value = infos[i].value or ""
+        info.isTitle = infos[i].isTitle or false
+        info.notClickable = infos[i].notClickable or false
+        info.notCheckable = infos[i].notCheckable or false
+        info.func = self.click
+        UIDropDownMenu_AddButton(info)
+      end
+    end
+    UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
+    return dropdownMenu
+  end
+
+  --create element power orb filling texture
+  local createDropdownPowerOrbFillingTexture = function(parent)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbFillingTexture", "Pick a texture", 160)
+    dropdownMenu.click = function(self)
+      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
+      --print(self.value)
+      --save value
+      panel.savePowerOrbFillingTexture(self.value)
+      --update orb view
+      panel.updatePowerOrbFillingTexture()
+    end
+    dropdownMenu.init = function(self)
+      local info = UIDropDownMenu_CreateInfo()
+      local infos = db.list.filling_texture or {}
+      --print(UIDropDownMenu_GetSelectedValue(self))
+      infos[0] = { key = "Pick a texture", isTitle = true, notCheckable = true, notClickable = true }
+      for i=0, #infos do
+      --for i=1, #infos do
+        wipe(info)
+        info.text = infos[i].key
+        info.value = infos[i].value or ""
+        info.isTitle = infos[i].isTitle or false
+        info.notClickable = infos[i].notClickable or false
+        info.notCheckable = infos[i].notCheckable or false
+        info.func = self.click
+        UIDropDownMenu_AddButton(info)
+      end
+    end
+    UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
+    return dropdownMenu
+  end
+
+  --create element health orb filling color
+  local createDropdownHealthOrbFillingColor = function(parent)
+    local picker = createBasicColorPicker(parent, addon.."PanelHealthOrbFillingColor", 100, 25)
+    picker.callback = function(color)
+      local r,g,b
+      if color then
+        r,g,b = unpack(color)
+      else
+        r,g,b = ColorPickerFrame:GetColorRGB()
+      end
+      picker.color:SetVertexColor(r,g,b)
+      --print(r.." "..g.." "..b)
+      --save value
+      panel.saveHealthOrbFillingColor(r,g,b)
+      --update orb view
+      panel.updateHealthOrbFillingColor()
+    end
+    picker:SetScript("OnMouseDown", function(self)
+      local r,g,b = self.color:GetVertexColor()
+      self.show(r,g,b,nil,self.callback)
+    end)
+    return picker
+  end
+
+  --create element power orb filling color
+  local createDropdownPowerOrbFillingColor = function(parent)
+    local picker = createBasicColorPicker(parent, addon.."PanelPowerOrbFillingColor", 100, 25)
+    picker.callback = function(color)
+      local r,g,b
+      if color then
+        r,g,b = unpack(color)
+      else
+        r,g,b = ColorPickerFrame:GetColorRGB()
+      end
+      picker.color:SetVertexColor(r,g,b)
+      --print(r.." "..g.." "..b)
+      --save value
+      panel.savePowerOrbFillingColor(r,g,b)
+      --update orb view
+      panel.updatePowerOrbFillingColor()
+    end
+    picker:SetScript("OnMouseDown", function(self)
+      local r,g,b = self.color:GetVertexColor()
+      self.show(r,g,b,nil,self.callback)
+    end)
+    return picker
+  end
+
   --create panel drag frame
   local createPanelDragFrame = function()
     local frame = CreateFrame("Frame", "$parentDragFrame", panel)
@@ -189,6 +428,31 @@
     local scrollChild = CreateFrame("Frame",nil,ScrollFrame)
     scrollChild:SetWidth(scrollFrame:GetWidth())
     scrollChild:SetHeight(1000)
+
+    local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
+    t:SetTexture(1,1,1)
+    t:SetVertexColor(1,0,0,0.1)
+    t:SetPoint("TOPLEFT")
+    t:SetPoint("BOTTOMLEFT")
+    t:SetWidth(scrollFrame:GetWidth()/2-2)
+    scrollChild.leftTexture = t
+
+    local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
+    t:SetTexture(1,1,1)
+    t:SetVertexColor(0,0.4,1,0.1)
+    t:SetPoint("TOPRIGHT")
+    t:SetPoint("BOTTOMRIGHT")
+    t:SetWidth(scrollFrame:GetWidth()/2-2)
+    scrollChild.rightTexture = t
+
+    local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-2)
+    t:SetTexture(1,1,1)
+    t:SetVertexColor(0,0,0,0.3)
+    t:SetPoint("TOPRIGHT")
+    t:SetPoint("TOPLEFT")
+    t:SetHeight(40)
+
+
     scrollFrame:SetScrollChild(scrollChild)
     scrollFrame.scrollChild = scrollChild
     return scrollFrame
@@ -203,24 +467,93 @@
   --the scroll frame
   panel.scrollFrame = createPanelScrollFrame()
 
+  --create master headline
+  panel.elementHealthMasterHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalHuge","Health Orb Settings")
+  panel.elementHealthMasterHeadline:SetTextColor(1,0,0)
+  panel.elementPowerMasterHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalHuge","Power Orb Settings")
+  panel.elementPowerMasterHeadline:SetTextColor(0,0.4,1)
+
+  --create load preset headline
+  panel.elementHealthPresetHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Load preset")
+  panel.elementPowerPresetHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Load preset")
+
+  --create load preset dropdowns
+  panel.elementHealthOrbLoadPreset = createDropdownHealthOrbLoadPreset(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbLoadPreset = createDropdownPowerOrbLoadPreset(panel.scrollFrame.scrollChild)
+
+  --create filling headline
+  panel.elementHealthFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling")
+  panel.elementPowerFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling")
+
+  --filling texture dropdowns
+  panel.elementHealthOrbFillingTexture = createDropdownHealthOrbFillingTexture(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbFillingTexture = createDropdownPowerOrbFillingTexture(panel.scrollFrame.scrollChild)
+
+  --filling color
+  panel.elementHealthOrbFillingColor = createDropdownHealthOrbFillingColor(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbFillingColor = createDropdownPowerOrbFillingColor(panel.scrollFrame.scrollChild)
+
+
+
+
   --create all panel elements
+  panel.elementHealthModelHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model")
+  panel.elementPowerModelHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model")
   panel.elementHealthOrbModelAlpha = createSliderHealthOrbModelAlpha(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelAlpha = createSliderPowerOrbModelAlpha(panel.scrollFrame.scrollChild)
   panel.elementHealthOrbModelEnable = createCheckButtonHealthOrbModelEnable(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelEnable = createCheckButtonPowerOrbModelEnable(panel.scrollFrame.scrollChild)
-  panel.elementHealthModelHeader = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model Settings")
-  panel.elementPowerModelHeader = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model Settings")
 
-  --positioon all panel elements
-  panel.elementHealthOrbModelAlpha:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -25)
-  panel.elementPowerOrbModelAlpha:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 300, -25)
-  panel.elementHealthOrbModelEnable:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -80)
-  panel.elementPowerOrbModelEnable:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 300, -80)
-  panel.elementHealthModelHeader:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -160)
+
+  --position all panel elements
+  panel.elementHealthMasterHeadline:SetPoint("TOP", panel.scrollFrame.scrollChild.leftTexture, 0, -10)
+  panel.elementPowerMasterHeadline:SetPoint("TOP", panel.scrollFrame.scrollChild.rightTexture, 0, -10)
+  panel.elementHealthPresetHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild.leftTexture, 20, -55)
+  panel.elementPowerPresetHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild.rightTexture, 20, -55)
+  panel.elementHealthOrbLoadPreset:SetPoint("TOPLEFT", panel.elementHealthPresetHeadline, "BOTTOMLEFT", -20, -10)
+  panel.elementPowerOrbLoadPreset:SetPoint("TOPLEFT", panel.elementPowerPresetHeadline, "BOTTOMLEFT", -20, -10)
+  panel.elementHealthFillingHeadline:SetPoint("TOPLEFT", panel.elementHealthPresetHeadline, "BOTTOMLEFT", 0, -50)
+  panel.elementPowerFillingHeadline:SetPoint("TOPLEFT", panel.elementPowerPresetHeadline, "BOTTOMLEFT", 0, -50)
+  panel.elementHealthOrbFillingTexture:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -20, -10)
+  panel.elementPowerOrbFillingTexture:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", -20, -10)
+  panel.elementHealthOrbFillingColor:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -3, -45)
+  panel.elementPowerOrbFillingColor:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", -3, -45)
+
+
+  --panel.elementHealthOrbModelAlpha:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -25)
+  --panel.elementPowerOrbModelAlpha:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 300, -25)
+  --panel.elementHealthOrbModelEnable:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -80)
+  --panel.elementPowerOrbModelEnable:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 300, -80)
+  --panel.elementHealthModelHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -160)
+  --panel.elementPowerModelHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 300, -160)
+
+
 
   ---------------------------------------------
   --UPDATE ORB ELEMENT VALUES
   ---------------------------------------------
+
+  --update health orb filling texture
+  panel.updateHealthOrbFillingTexture = function()
+    ns.HealthOrb.fill:SetStatusBarTexture(panel.loadHealthOrbFillingTexture())
+  end
+
+  --update power orb filling texture
+  panel.updatePowerOrbFillingTexture = function()
+    ns.PowerOrb.fill:SetStatusBarTexture(panel.loadPowerOrbFillingTexture())
+  end
+
+  --update health orb filling color
+  panel.updateHealthOrbFillingColor = function()
+    local color = panel.loadHealthOrbFillingColor()
+    ns.HealthOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+  end
+
+  --update power orb filling color
+  panel.updatePowerOrbFillingColor = function()
+    local color = panel.loadPowerOrbFillingColor()
+    ns.PowerOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+  end
 
   --update health orb model alpha
   panel.updateHealthOrbModelAlpha = function()
@@ -254,6 +587,28 @@
   --UPDATE PANEL ELEMENT VALUES
   ---------------------------------------------
 
+  --update element health orb texture filling
+  panel.updateElementHealthOrbTextureFilling = function()
+    UIDropDownMenu_SetSelectedValue(panel.elementHealthOrbFillingTexture, panel.loadHealthOrbFillingTexture())
+  end
+
+  --update element power orb texture filling
+  panel.updateElementPowerOrbTextureFilling = function()
+    UIDropDownMenu_SetSelectedValue(panel.elementPowerOrbFillingTexture, panel.loadPowerOrbFillingTexture())
+  end
+
+  --update element health orb texture color
+  panel.updateElementHealthOrbTextureColor = function()
+    local color = panel.loadHealthOrbFillingColor()
+    panel.elementHealthOrbFillingColor.color:SetVertexColor(color.r,color.g,color.b)
+  end
+
+  --update element power orb texture color
+  panel.updateElementPowerOrbTextureColor = function()
+    local color = panel.loadPowerOrbFillingColor()
+    panel.elementPowerOrbFillingColor.color:SetVertexColor(color.r,color.g,color.b)
+  end
+
   --update element health orb model alpha
   panel.updateElementHealthOrbModelAlpha = function()
     panel.elementHealthOrbModelAlpha:SetValue(panel.loadHealthOrbModelAlpha())
@@ -278,6 +633,30 @@
   --SAVE DATA TO DATABASE
   ---------------------------------------------
 
+  --save health orb filling texture
+  panel.saveHealthOrbFillingTexture = function(value)
+    db.char["HEALTH"].filling.texture = value
+  end
+
+  --save power orb filling texture
+  panel.savePowerOrbFillingTexture = function(value)
+    db.char["POWER"].filling.texture = value
+  end
+
+  --save health orb filling color
+  panel.saveHealthOrbFillingColor = function(r,g,b)
+    db.char["HEALTH"].filling.color.r = r
+    db.char["HEALTH"].filling.color.g = g
+    db.char["HEALTH"].filling.color.b = b
+  end
+
+  --save power orb filling color
+  panel.savePowerOrbFillingColor = function(r,g,b)
+    db.char["POWER"].filling.color.r = r
+    db.char["POWER"].filling.color.g = g
+    db.char["POWER"].filling.color.b = b
+  end
+
   --save health orb model alpha
   panel.saveHealthOrbModelAlpha = function(value)
     db.char["HEALTH"].model.alpha = value
@@ -301,6 +680,26 @@
   ---------------------------------------------
   --LOAD DATA FROM DATABASE
   ---------------------------------------------
+
+  --load health orb filling texture
+  panel.loadHealthOrbFillingTexture = function()
+    return db.char["HEALTH"].filling.texture
+  end
+
+  --load power orb filling texture
+  panel.loadPowerOrbFillingTexture = function()
+    return db.char["POWER"].filling.texture
+  end
+
+  --load health orb filling color
+  panel.loadHealthOrbFillingColor = function()
+    return db.char["HEALTH"].filling.color
+  end
+
+  --load power orb filling color
+  panel.loadPowerOrbFillingColor = function()
+    return db.char["POWER"].filling.color
+  end
 
   --load health orb model alpha
   panel.loadHealthOrbModelAlpha = function()
@@ -332,6 +731,15 @@
 
     --update all panel elements
 
+    --update element health orb texture filling
+    panel.updateElementHealthOrbTextureFilling()
+    --update element power orb texture filling
+    panel.updateElementPowerOrbTextureFilling()
+    --update element health orb texture color
+    panel.updateElementHealthOrbTextureColor()
+    --update element power orb texture color
+    panel.updateElementPowerOrbTextureColor()
+
     --update element health orb model alpha
     panel.updateElementHealthOrbModelAlpha()
     --update element power orb model alpha
@@ -352,6 +760,15 @@
     if InCombatLockdown() then return end
 
     --update all orb elements
+
+    --update health orb filling texture
+    panel.updateHealthOrbFillingTexture()
+    --update power orb filling texture
+    panel.updatePowerOrbFillingTexture()
+    --update health orb filling color
+    panel.updateHealthOrbFillingColor()
+    --update power orb filling color
+    panel.updatePowerOrbFillingColor()
 
     --update health orb model alpha
     panel.updateHealthOrbModelAlpha()

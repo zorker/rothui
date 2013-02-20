@@ -121,7 +121,11 @@
       highlight = {
         alpha = 0.3,
       },
-    },--health end
+    },
+  }
+
+  db.default.templateList = {
+    { value = "pearl", key = "pearl" },
   }
 
   ---------------------------------------------
@@ -135,7 +139,11 @@
     --OUF_DIABLO_DB_GLOB = self.default.template
     --load the template database
     OUF_DIABLO_DB_GLOB = OUF_DIABLO_DB_GLOB or self.default.template
+    OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST or db.default.templateList
     self.glob = OUF_DIABLO_DB_GLOB
+    --this is very disappointing...the glob table has assoziative values...you cannot count that
+    --thus I need to keep track in a secondary table...grmpf
+    db.list.templates = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
     --load the character database
     if not OUF_DIABLO_DB_CHAR then
       self.loadDefaults()
@@ -189,6 +197,9 @@
     print(addon..": "..type.." orb data saved as template *"..name.."*")
     OUF_DIABLO_DB_GLOB[name] = db.char[type]
     db.glob = OUF_DIABLO_DB_GLOB
+    --add new entry to the template list
+    tinsert(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, { key = name, value = name })
+    db.list.templates = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
     --update the panel view
     panel.updatePanelView()
   end
@@ -205,22 +216,6 @@
     db.glob = OUF_DIABLO_DB_GLOB
     --update the panel view
     panel.updatePanelView()
-  end
-
-  --generate a template list for dropdown
-  db.list.templates = {}
-  db.getTemplateList = function()
-    if not OUF_DIABLO_DB_GLOB then return end
-    wipe(db.list.templates)
-    for key, value in ipairs(OUF_DIABLO_DB_GLOB) do
-      print(key)
-      local tab = { value = key, key = key }
-      print(tab.key)
-      print(tab.value)
-      print('------------')
-      tinsert(db.list.templates, tab)
-      --tinsert(db.list.templates, { value = key, key = key })
-    end
   end
 
   ---------------------------------------------

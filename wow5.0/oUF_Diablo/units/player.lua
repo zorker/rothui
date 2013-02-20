@@ -135,7 +135,7 @@
   --initModel func
   local initModel = function(model)
     local orb = model:GetParent():GetParent():GetParent()
-    local cfg = db.char[orb.type].animation
+    local cfg = db.char[orb.type].model
     model:SetCamDistanceScale(cfg.camDistanceScale)
     model:SetPosition(0,cfg.pos_x,cfg.pos_y)
     model:SetRotation(cfg.rotation)
@@ -247,18 +247,18 @@
     scrollFrame:SetScrollChild(scrollChild)
     orb.scrollFrame = scrollFrame
 
-    --orb animation
+    --orb model
     local model = CreateFrame("PlayerModel","$parentModel",scrollChild)
     model:SetSize(orb:GetSize())
     model:SetPoint("TOP")
     --model:SetBackdrop(cfg.backdrop)
-    model:SetAlpha(orbcfg.animation.alpha or 1)
+    model:SetAlpha(orbcfg.model.alpha or 1)
     orb.model = model
     orb.model:SetScript("OnEvent", initModel)
     orb.model:RegisterEvent("PLAYER_ENTERING_WORLD")
     orb.model:SetScript("OnShow", initModel)
     initModel(orb.model)
-    if not orbcfg.animation.enable then
+    if not orbcfg.model.enable then
       orb.model:Hide()
     end
     --orb.model:SetScript("OnSizeChanged", initModel)

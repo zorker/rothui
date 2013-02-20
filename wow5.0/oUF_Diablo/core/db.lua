@@ -34,8 +34,8 @@
         color       = { r = 1, g = 0, b = 0, },
         colorAuto   = false, --automatic coloring based on class/powertype
       },
-      --animation
-      animation = {
+      --model
+      model = {
         enable            = false,
         displayInfo       = 32368,
         camDistanceScale  = 1.15,
@@ -64,8 +64,8 @@
         color       = { r = 0, g = 0, b = 1, },
         colorAuto   = false, --automatic coloring based on class/powertype
       },
-      --animation
-      animation = {
+      --model
+      model = {
         enable            = false,
         displayInfo       = 32368,
         camDistanceScale  = 1.15,
@@ -92,9 +92,37 @@
   db.char = db.default.orb
 
   --default template
-  db.default.template = {}
-  db.default.template["pearl"] = db.default.orb["HEALTH"]
-  db.default.template["pearl"].animation.enable = true
+  db.default.template = {
+    ["pearl"] = {
+      --filling
+      filling = {
+        texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15",
+        color       = { r = 1, g = 0, b = 0, },
+        colorAuto   = false, --automatic coloring based on class/powertype
+      },
+      --model
+      model = {
+        enable            = true,
+        displayInfo       = 32368,
+        camDistanceScale  = 1.15,
+        pos_x             = 0,
+        pos_y             = 0.4,
+        rotation          = 0,
+        portraitZoom      = 1,
+        alpha             = 1,
+      },
+      --galaxies
+      galaxies = {},
+      --spark
+      spark = {
+        alpha = 0.9,
+      },
+      --highlight
+      highlight = {
+        alpha = 0.3,
+      },
+    },--health end
+  }
 
   ---------------------------------------------
   --LOAD SAVED VARIABLES
@@ -196,7 +224,7 @@
   end
 
   ---------------------------------------------
-  --ANIMATIONS
+  --MODELS
   ---------------------------------------------
 
   --mode list for dropdown

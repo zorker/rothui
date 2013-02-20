@@ -88,20 +88,26 @@
     },--power end
   } --default end
 
-
-  --default template
-  db.default.template = {}
-  db.default.template["PEARL"] = db.default.orb["HEALTH"]
-  db.default.template["PEARL"].animation.enable = true
-
   --load the default config on loadup so the rest can initialize, the view will get updated later once the saved variables are fetched
   db.char = db.default.orb
 
+  --default template
+  db.default.template = {}
+  db.default.template["pearl"] = db.default.orb["HEALTH"]
+  db.default.template["pearl"].animation.enable = true
+
+  ---------------------------------------------
+  --LOAD SAVED VARIABLES
+  ---------------------------------------------
+
   --db script on variables loaded
   db:SetScript("OnEvent", function(self, event)
+    --debug resets
+    --OUF_DIABLO_DB_CHAR = self.default.orb
+    --OUF_DIABLO_DB_GLOB = self.default.template
     --load the template database
-    OUF_DIABLO_DB_GLOB = OUF_DIABLO_DB_GLOB or db.default.template
-    db.glob = OUF_DIABLO_DB_GLOB
+    OUF_DIABLO_DB_GLOB = OUF_DIABLO_DB_GLOB or self.default.template
+    self.glob = OUF_DIABLO_DB_GLOB
     --load the character database
     if not OUF_DIABLO_DB_CHAR then
       self.loadDefaults()
@@ -128,6 +134,10 @@
     --update the orb view
     ns.panel.updateOrbView()
   end
+
+  ---------------------------------------------
+  --TEMPLATES
+  ---------------------------------------------
 
   --load a template from global database into char data for health/power orb
   --type stands for "HEALTH" or "POWER"
@@ -169,20 +179,27 @@
     panel.updatePanelView()
   end
 
+  --generate a template list for dropdown
+  db.list.templates = {}
+  db.getTemplateList = function()
+    if not OUF_DIABLO_DB_GLOB then return end
+    wipe(db.list.templates)
+    for key, value in ipairs(OUF_DIABLO_DB_GLOB) do
+      print(key)
+      local tab = { value = key, key = key }
+      print(tab.key)
+      print(tab.value)
+      print('------------')
+      tinsert(db.list.templates, tab)
+      --tinsert(db.list.templates, { value = key, key = key })
+    end
+  end
+
   ---------------------------------------------
   --ANIMATIONS
   ---------------------------------------------
 
-  -- animation ID list
-  -- 0  red fog           1  purple fog           2  green fog            3  yellow fog         4  turquoise fog
-  -- 5  red portal        6  blue rune portal     7  red ghost            8  purple ghost       9  water planet
-  -- 10 swirling cloud    11 white fog            12 red glowing eye      13 sandy swirl        14 green fire
-  -- 15 purple swirl      16 white tornado        17 blue swirly          18 orange fog         19 pearl
-  -- 20 red magnet        21 blue portal          22 purple portal        23 dwarf artifact     24 burning blob
-  -- 25 fire              26 rolling purple       27 magic swirl          28 poison bubbles     29 cthun eye
-  -- 30 soulshard purple  31 the planet           32 red chocolate
-
-  --orb animation table
+  --mode list for dropdown
   db.list.model = {
     { value = 17010, key = "red fog", },
     { value = 17054, key = "purple fog", },
@@ -223,6 +240,7 @@
   --FILLING TEXTURES
   ---------------------------------------------
 
+  --filling texture list for dropdown
   db.list.filling_texture = {
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling1",  key = "moon", },
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling2",  key = "earth", },
@@ -237,7 +255,7 @@
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling11", key = "bubbles", },
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling12", key = "woodpepples", },
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling13", key = "golf", },
-    { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling14", key = "diablo mars", },
+    { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling14", key = "darkstar", },
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15", key = "diablo3", },
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling16", key = "fubble", },
   }

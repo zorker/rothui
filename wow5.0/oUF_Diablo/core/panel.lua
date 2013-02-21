@@ -11,16 +11,17 @@
   local addon, ns = ...
 
   --object container
-  local panel = CreateFrame("Frame",addon.."ConfigPanel",UIParent,"ButtonFrameTemplate")
+  local panel = CF("Frame",addon.."ConfigPanel",UIParent,"ButtonFrameTemplate")
   panel:Hide()
   ns.panel = panel
 
   local db = ns.db
 
   local unpack = unpack
+  local CF = CreateFrame
 
   ---------------------------------------------
-  --PANEL SETUP
+  --PANEL SETUP FUNCTIONS
   ---------------------------------------------
 
   --setup panel
@@ -46,8 +47,85 @@
     panel:SetUserPlaced(true)
   end
 
+  --create panel drag frame
+  local createPanelDragFrame = function()
+    local frame = CF("Frame", "$parentDragFrame", panel)
+    frame:SetHeight(22)
+    frame:SetPoint("TOPLEFT",60,0)
+    frame:SetPoint("TOPRIGHT",-30,0)
+    frame:EnableMouse(true)
+    frame:RegisterForDrag("LeftButton")
+    frame:SetScript("OnDragStart", function(self)
+      if InCombatLockdown() then return end
+      self:GetParent():StartMoving()
+    end)
+    frame:SetScript("OnDragStop", function(self)
+      if InCombatLockdown() then return end
+      self:GetParent():StopMovingOrSizing()
+    end)
+    frame:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine("Drag me!", 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    frame:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+    return frame
+  end
+
+  --create panel scroll frame
+  local createPanelScrollFrame = function()
+    local scrollFrame = CF("ScrollFrame", "$parentScrollFrame", panel, "UIPanelScrollFrameTemplate")
+    scrollFrame:SetPoint("TOPLEFT",10,-65)
+    scrollFrame:SetPoint("BOTTOMRIGHT",-37,30)
+    --add scrollbar background textures
+    local t = scrollFrame:CreateTexture(nil,"BACKGROUND",nil,-6)
+    t:SetPoint("TOP",scrollFrame)
+    t:SetPoint("RIGHT",scrollFrame,25.5,0)
+    t:SetPoint("BOTTOM",scrollFrame)
+    t:SetWidth(26)
+    t:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-ScrollBar")
+    t:SetTexCoord(0,0.45,0.1640625,1)
+    t:SetAlpha(0.5)
+    local t2 = scrollFrame:CreateTexture(nil,"BACKGROUND",nil,-8)
+    t2:SetTexture(1,1,1)
+    t2:SetVertexColor(0,0,0,0.3)
+    t2:SetAllPoints(t)
+    --create panel scroll child
+    local scrollChild = CF("Frame",nil,ScrollFrame)
+    scrollChild:SetWidth(scrollFrame:GetWidth())
+    scrollChild:SetHeight(1000)
+
+    local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
+    t:SetTexture(1,1,1)
+    t:SetVertexColor(1,0,0,0.1)
+    t:SetPoint("TOPLEFT")
+    t:SetPoint("BOTTOMLEFT")
+    t:SetWidth(scrollFrame:GetWidth()/2-2)
+    scrollChild.leftTexture = t
+
+    local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
+    t:SetTexture(1,1,1)
+    t:SetVertexColor(0,0.4,1,0.1)
+    t:SetPoint("TOPRIGHT")
+    t:SetPoint("BOTTOMRIGHT")
+    t:SetWidth(scrollFrame:GetWidth()/2-2)
+    scrollChild.rightTexture = t
+
+    local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-2)
+    t:SetTexture(1,1,1)
+    t:SetVertexColor(0,0,0,0.3)
+    t:SetPoint("TOPRIGHT")
+    t:SetPoint("TOPLEFT")
+    t:SetHeight(40)
+
+
+    scrollFrame:SetScrollChild(scrollChild)
+    scrollFrame.scrollChild = scrollChild
+    return scrollFrame
+  end
+
   ---------------------------------------------
-  --TEMPLATE ELEMENT FUNCTIONS
+  --BASIC PANEL ELEMENT FUNCTIONS
   ---------------------------------------------
 
   --basic fontstring func
@@ -59,8 +137,8 @@
 
   --basic slider func
   local createBasicSlider = function(parent, name, title)
-    local slider = CreateFrame("Slider", name, parent, "OptionsSliderTemplate")
-    local editbox = CreateFrame("EditBox", "$parentEditBox", slider, "InputBoxTemplate")
+    local slider = CF("Slider", name, parent, "OptionsSliderTemplate")
+    local editbox = CF("EditBox", "$parentEditBox", slider, "InputBoxTemplate")
     slider:SetMinMaxValues(0, 1)
     slider:SetValue(0)
     slider:SetValueStep(0.001)
@@ -87,7 +165,7 @@
 
   --basic checkbutton func
   local createBasicCheckButton = function(parent, name, title)
-    local button = CreateFrame("CheckButton", name, parent, "OptionsCheckButtonTemplate")
+    local button = CF("CheckButton", name, parent, "OptionsCheckButtonTemplate")
     button.text = _G[name.."Text"]
     button.text:SetText(title)
     return button
@@ -95,7 +173,7 @@
 
   --basic color picker
   local createBasicColorPicker = function(parent, name, width, height)
-    local picker = CreateFrame("FRAME", name, parent)
+    local picker = CF("Button", name, parent)
     picker:SetSize(width, height)
     local backdropConfig = {
       bgFile = "",
@@ -126,24 +204,52 @@
       ColorPickerFrame:Hide() -- Need to run the OnShow handler.
       ColorPickerFrame:Show()
     end
-    picker:EnableMouse(true)
+    picker.click = function(r,g,b) end --we be rewritten later
+    picker.callback = function(color)
+      local r,g,b
+      if color then r,g,b = unpack(color) else r,g,b = ColorPickerFrame:GetColorRGB() end
+      picker.color:SetVertexColor(r,g,b)
+      picker.click(r,g,b)
+    end
+    picker:SetScript("OnClick", function(self)
+      local r,g,b = self.color:GetVertexColor()
+      self.show(r,g,b,nil,self.callback)
+    end)
+    --picker:EnableMouse(true)
     return picker
   end
 
   --basic dropdown menu func
-  local createBasicDropDownMenu = function(parent, name, text, width)
-    local dropdownMenu = CreateFrame("Frame", name, parent, "UIDropDownMenuTemplate")
+  local createBasicDropDownMenu = function(parent, name, text, table, width)
+    local dropdownMenu = CF("Frame", name, parent, "UIDropDownMenuTemplate")
     UIDropDownMenu_SetText(dropdownMenu, text)
     UIDropDownMenu_SetWidth(dropdownMenu, width)
+    dropdownMenu.click = function(self) end --will be rewritten later
+    dropdownMenu.init = function(self)
+      local info = UIDropDownMenu_CreateInfo()
+      local infos = table or {}
+      --print(UIDropDownMenu_GetSelectedValue(self))
+      infos[0] = { key = text, isTitle = true, notCheckable = true, notClickable = true }
+      for i=0, #infos do
+      --for i=1, #infos do
+        wipe(info)
+        info.text = infos[i].key
+        info.value = infos[i].value or ""
+        info.isTitle = infos[i].isTitle or false
+        info.notClickable = infos[i].notClickable or false
+        info.notCheckable = infos[i].notCheckable or false
+        info.func = self.click
+        UIDropDownMenu_AddButton(info)
+      end
+    end
+    UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
     return dropdownMenu
   end
 
   --basic dropdown menu with a button
-  local createBasicDropDownMenuWithButton = function(parent, name, text, width, buttonText)
-    local dropdownMenu = CreateFrame("Frame", name, parent, "UIDropDownMenuTemplate")
-    UIDropDownMenu_SetText(dropdownMenu, text)
-    UIDropDownMenu_SetWidth(dropdownMenu, width)
-    local button = CreateFrame("Button", name.."Submit", parent, "UIPanelButtonTemplate")
+  local createBasicDropDownMenuWithButton = function(parent, name, text, table, width, buttonText)
+    local dropdownMenu = createBasicDropDownMenu(parent, name, text, table, width)
+    local button = CF("Button", name.."Submit", parent, "UIPanelButtonTemplate")
     button:SetPoint("LEFT", dropdownMenu, "RIGHT", -13, 2.5)
     button.text = _G[button:GetName().."Text"]
     button.text:SetText(buttonText)
@@ -154,8 +260,112 @@
   end
 
   ---------------------------------------------
-  --PANEL ELEMENT FUNCTIONS
+  --CREATE PANEL ELEMENTS
   ---------------------------------------------
+
+  --create element health orb load preset
+  local createDropdownHealthOrbLoadPreset = function(parent)
+    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelHealthOrbLoadPreset", "Pick a template", db.list.templates, 160, "Load")
+    dropdownMenu.click = function(self)
+      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
+    end
+    dropdownMenu.button:HookScript("OnClick", function()
+      local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
+      if not value then return end
+      print(UIDropDownMenu_GetSelectedValue(dropdownMenu))
+    end)
+    return dropdownMenu
+  end
+
+  --create element power orb load preset
+  local createDropdownPowerOrbLoadPreset = function(parent)
+    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelPowerOrbLoadPreset", "Pick a template", db.list.templates, 160, "Load")
+    dropdownMenu.click = function(self)
+      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
+    end
+    dropdownMenu.button:HookScript("OnClick", function()
+      local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
+      if not value then return end
+      print(UIDropDownMenu_GetSelectedValue(dropdownMenu))
+    end)
+    return dropdownMenu
+  end
+
+  --create element health orb filling texture
+  local createDropdownHealthOrbFillingTexture = function(parent)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbFillingTexture", "Pick a texture", db.list.filling_texture, 160)
+    dropdownMenu.click = function(self)
+      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
+      --save value
+      panel.saveHealthOrbFillingTexture(self.value)
+      --update orb view
+      panel.updateHealthOrbFillingTexture()
+    end
+    return dropdownMenu
+  end
+
+  --create element power orb filling texture
+  local createDropdownPowerOrbFillingTexture = function(parent)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbFillingTexture", "Pick a texture", db.list.filling_texture, 160)
+    dropdownMenu.click = function(self)
+      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
+      --save value
+      panel.savePowerOrbFillingTexture(self.value)
+      --update orb view
+      panel.updatePowerOrbFillingTexture()
+    end
+    return dropdownMenu
+  end
+
+  --create element health orb filling color
+  local createPickerHealthOrbFillingColor = function(parent)
+    local picker = createBasicColorPicker(parent, addon.."PanelHealthOrbFillingColor", 100, 25)
+    picker.click = function(r,g,b)
+      --save value
+      panel.saveHealthOrbFillingColor(r,g,b)
+      --update orb view
+      panel.updateHealthOrbFillingColor()
+    end
+    return picker
+  end
+
+  --create element power orb filling color
+  local createPickerPowerOrbFillingColor = function(parent)
+    local picker = createBasicColorPicker(parent, addon.."PanelPowerOrbFillingColor", 100, 25)
+    picker.click = function(r,g,b)
+      --save value
+      panel.savePowerOrbFillingColor(r,g,b)
+      --update orb view
+      panel.updatePowerOrbFillingColor()
+    end
+    return picker
+  end
+
+  --create element health orb color auto
+  local createCheckButtonHealthOrbFillingColorAuto = function(parent)
+    local button = createBasicCheckButton(parent, addon.."PanelHealthOrbFillingColorAuto", "Automatic coloring? (class/health)")
+    button:HookScript("OnClick", function(self,value)
+      --save value
+      panel.saveHealthOrbFillingColorAuto(self:GetChecked())
+      --update orb view
+      panel.updateHealthOrbFillingColorAuto()
+    end)
+    return button
+  end
+
+  --create element power orb color auto
+  local createCheckButtonPowerOrbFillingColorAuto = function(parent)
+    local button = createBasicCheckButton(parent, addon.."PanelPowerOrbFillingColorAuto", "Automatic coloring? (powertype)")
+    button:HookScript("OnClick", function(self,value)
+      --save value
+      panel.savePowerOrbFillingColorAuto(self:GetChecked())
+      --update orb view
+      panel.updatePowerOrbFillingColorAuto()
+    end)
+    return button
+  end
+
+  -- OLD --------------------------------
 
   --create element health orb model alpha
   local createSliderHealthOrbModelAlpha = function(parent)
@@ -205,271 +415,6 @@
     return button
   end
 
-  --create element health orb load preset
-  local createDropdownHealthOrbLoadPreset = function(parent)
-    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelHealthOrbLoadPreset", "Pick a template", 160, "Load")
-    dropdownMenu.click = function(self)
-      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
-    end
-    dropdownMenu.button:HookScript("OnClick", function()
-      local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
-      if not value then return end
-      --print(UIDropDownMenu_GetSelectedValue(dropdownMenu))
-    end)
-    dropdownMenu.init = function(self)
-      local info = UIDropDownMenu_CreateInfo()
-      local infos = db.list.templates or {}
-      --print(UIDropDownMenu_GetSelectedValue(self))
-      infos[0] = { key = "Pick a template", isTitle = true, notCheckable = true, notClickable = true }
-      for i=0, #infos do
-      --for i=1, #infos do
-        wipe(info)
-        info.text = infos[i].key
-        info.value = infos[i].value or ""
-        info.isTitle = infos[i].isTitle or false
-        info.notClickable = infos[i].notClickable or false
-        info.notCheckable = infos[i].notCheckable or false
-        info.func = self.click
-        UIDropDownMenu_AddButton(info)
-      end
-    end
-    UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
-    return dropdownMenu
-  end
-
-  --create element power orb load preset
-  local createDropdownPowerOrbLoadPreset = function(parent)
-    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelPowerOrbLoadPreset", "Pick a template", 160, "Load")
-    dropdownMenu.click = function(self)
-      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
-    end
-    dropdownMenu.button:HookScript("OnClick", function()
-      local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
-      if not value then return end
-      --print(UIDropDownMenu_GetSelectedValue(dropdownMenu))
-    end)
-    dropdownMenu.init = function(self)
-      local info = UIDropDownMenu_CreateInfo()
-      local infos = db.list.templates or {}
-      --print(UIDropDownMenu_GetSelectedValue(self))
-      infos[0] = { key = "Pick a template", isTitle = true, notCheckable = true, notClickable = true }
-      for i=0, #infos do
-      --for i=1, #infos do
-        wipe(info)
-        info.text = infos[i].key
-        info.value = infos[i].value or ""
-        info.isTitle = infos[i].isTitle or false
-        info.notClickable = infos[i].notClickable or false
-        info.notCheckable = infos[i].notCheckable or false
-        info.func = self.click
-        UIDropDownMenu_AddButton(info)
-      end
-    end
-    UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
-    return dropdownMenu
-  end
-
-  --create element health orb filling texture
-  local createDropdownHealthOrbFillingTexture = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbFillingTexture", "Pick a texture", 160)
-    dropdownMenu.click = function(self)
-      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
-      --print(self.value)
-      --save value
-      panel.saveHealthOrbFillingTexture(self.value)
-      --update orb view
-      panel.updateHealthOrbFillingTexture()
-    end
-    dropdownMenu.init = function(self)
-      local info = UIDropDownMenu_CreateInfo()
-      local infos = db.list.filling_texture or {}
-      --print(UIDropDownMenu_GetSelectedValue(self))
-      infos[0] = { key = "Pick a texture", isTitle = true, notCheckable = true, notClickable = true }
-      for i=0, #infos do
-      --for i=1, #infos do
-        wipe(info)
-        info.text = infos[i].key
-        info.value = infos[i].value or ""
-        info.isTitle = infos[i].isTitle or false
-        info.notClickable = infos[i].notClickable or false
-        info.notCheckable = infos[i].notCheckable or false
-        info.func = self.click
-        UIDropDownMenu_AddButton(info)
-      end
-    end
-    UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
-    return dropdownMenu
-  end
-
-  --create element power orb filling texture
-  local createDropdownPowerOrbFillingTexture = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbFillingTexture", "Pick a texture", 160)
-    dropdownMenu.click = function(self)
-      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
-      --print(self.value)
-      --save value
-      panel.savePowerOrbFillingTexture(self.value)
-      --update orb view
-      panel.updatePowerOrbFillingTexture()
-    end
-    dropdownMenu.init = function(self)
-      local info = UIDropDownMenu_CreateInfo()
-      local infos = db.list.filling_texture or {}
-      --print(UIDropDownMenu_GetSelectedValue(self))
-      infos[0] = { key = "Pick a texture", isTitle = true, notCheckable = true, notClickable = true }
-      for i=0, #infos do
-      --for i=1, #infos do
-        wipe(info)
-        info.text = infos[i].key
-        info.value = infos[i].value or ""
-        info.isTitle = infos[i].isTitle or false
-        info.notClickable = infos[i].notClickable or false
-        info.notCheckable = infos[i].notCheckable or false
-        info.func = self.click
-        UIDropDownMenu_AddButton(info)
-      end
-    end
-    UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
-    return dropdownMenu
-  end
-
-  --create element health orb filling color
-  local createDropdownHealthOrbFillingColor = function(parent)
-    local picker = createBasicColorPicker(parent, addon.."PanelHealthOrbFillingColor", 100, 25)
-    picker.callback = function(color)
-      local r,g,b
-      if color then
-        r,g,b = unpack(color)
-      else
-        r,g,b = ColorPickerFrame:GetColorRGB()
-      end
-      picker.color:SetVertexColor(r,g,b)
-      --print(r.." "..g.." "..b)
-      --save value
-      panel.saveHealthOrbFillingColor(r,g,b)
-      --update orb view
-      panel.updateHealthOrbFillingColor()
-    end
-    picker:SetScript("OnMouseDown", function(self)
-      local r,g,b = self.color:GetVertexColor()
-      self.show(r,g,b,nil,self.callback)
-    end)
-    return picker
-  end
-
-  --create element power orb filling color
-  local createDropdownPowerOrbFillingColor = function(parent)
-    local picker = createBasicColorPicker(parent, addon.."PanelPowerOrbFillingColor", 100, 25)
-    picker.callback = function(color)
-      local r,g,b
-      if color then
-        r,g,b = unpack(color)
-      else
-        r,g,b = ColorPickerFrame:GetColorRGB()
-      end
-      picker.color:SetVertexColor(r,g,b)
-      --print(r.." "..g.." "..b)
-      --save value
-      panel.savePowerOrbFillingColor(r,g,b)
-      --update orb view
-      panel.updatePowerOrbFillingColor()
-    end
-    picker:SetScript("OnMouseDown", function(self)
-      local r,g,b = self.color:GetVertexColor()
-      self.show(r,g,b,nil,self.callback)
-    end)
-    return picker
-  end
-
-  --create element health orb color auto
-  local createCheckButtonHealthOrbFillingColorAuto = function(parent)
-    local button = createBasicCheckButton(parent, addon.."PanelHealthOrbFillingColorAuto", "Automatic coloring? (class/health)")
-    button:HookScript("OnClick", function(self,value)
-      --save value
-      panel.saveHealthOrbFillingColorAuto(self:GetChecked())
-      --update orb view
-      panel.updateHealthOrbFillingColorAuto()
-    end)
-    return button
-  end
-
-  --create panel drag frame
-  local createPanelDragFrame = function()
-    local frame = CreateFrame("Frame", "$parentDragFrame", panel)
-    frame:SetHeight(22)
-    frame:SetPoint("TOPLEFT",60,0)
-    frame:SetPoint("TOPRIGHT",-30,0)
-    frame:EnableMouse(true)
-    frame:RegisterForDrag("LeftButton")
-    frame:SetScript("OnDragStart", function(self)
-      if InCombatLockdown() then return end
-      self:GetParent():StartMoving()
-    end)
-    frame:SetScript("OnDragStop", function(self)
-      if InCombatLockdown() then return end
-      self:GetParent():StopMovingOrSizing()
-    end)
-    frame:SetScript("OnEnter", function(self)
-      GameTooltip:SetOwner(self, "ANCHOR_TOP")
-      GameTooltip:AddLine("Drag me!", 0, 1, 0.5, 1, 1, 1)
-      GameTooltip:Show()
-    end)
-    frame:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
-    return frame
-  end
-
-  --create panel scroll frame
-  local createPanelScrollFrame = function()
-    local scrollFrame = CreateFrame("ScrollFrame", "$parentScrollFrame", panel, "UIPanelScrollFrameTemplate")
-    scrollFrame:SetPoint("TOPLEFT",10,-65)
-    scrollFrame:SetPoint("BOTTOMRIGHT",-37,30)
-    --add scrollbar background textures
-    local t = scrollFrame:CreateTexture(nil,"BACKGROUND",nil,-6)
-    t:SetPoint("TOP",scrollFrame)
-    t:SetPoint("RIGHT",scrollFrame,25.5,0)
-    t:SetPoint("BOTTOM",scrollFrame)
-    t:SetWidth(26)
-    t:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-ScrollBar")
-    t:SetTexCoord(0,0.45,0.1640625,1)
-    t:SetAlpha(0.5)
-    local t2 = scrollFrame:CreateTexture(nil,"BACKGROUND",nil,-8)
-    t2:SetTexture(1,1,1)
-    t2:SetVertexColor(0,0,0,0.3)
-    t2:SetAllPoints(t)
-    --create panel scroll child
-    local scrollChild = CreateFrame("Frame",nil,ScrollFrame)
-    scrollChild:SetWidth(scrollFrame:GetWidth())
-    scrollChild:SetHeight(1000)
-
-    local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
-    t:SetTexture(1,1,1)
-    t:SetVertexColor(1,0,0,0.1)
-    t:SetPoint("TOPLEFT")
-    t:SetPoint("BOTTOMLEFT")
-    t:SetWidth(scrollFrame:GetWidth()/2-2)
-    scrollChild.leftTexture = t
-
-    local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
-    t:SetTexture(1,1,1)
-    t:SetVertexColor(0,0.4,1,0.1)
-    t:SetPoint("TOPRIGHT")
-    t:SetPoint("BOTTOMRIGHT")
-    t:SetWidth(scrollFrame:GetWidth()/2-2)
-    scrollChild.rightTexture = t
-
-    local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-2)
-    t:SetTexture(1,1,1)
-    t:SetVertexColor(0,0,0,0.3)
-    t:SetPoint("TOPRIGHT")
-    t:SetPoint("TOPLEFT")
-    t:SetHeight(40)
-
-
-    scrollFrame:SetScrollChild(scrollChild)
-    scrollFrame.scrollChild = scrollChild
-    return scrollFrame
-  end
-
   ---------------------------------------------
   --SPAWN PANEL ELEMENTS
   ---------------------------------------------
@@ -502,16 +447,15 @@
   panel.elementPowerOrbFillingTexture = createDropdownPowerOrbFillingTexture(panel.scrollFrame.scrollChild)
 
   --create filling color picker
-  panel.elementHealthOrbFillingColor = createDropdownHealthOrbFillingColor(panel.scrollFrame.scrollChild)
-  panel.elementPowerOrbFillingColor = createDropdownPowerOrbFillingColor(panel.scrollFrame.scrollChild)
+  panel.elementHealthOrbFillingColor = createPickerHealthOrbFillingColor(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbFillingColor = createPickerPowerOrbFillingColor(panel.scrollFrame.scrollChild)
 
   --create filling color auto checkbutton
   panel.elementHealthOrbFillingColorAuto = createCheckButtonHealthOrbFillingColorAuto(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbFillingColorAuto = createCheckButtonPowerOrbFillingColorAuto(panel.scrollFrame.scrollChild)
 
+  -- OLD --------------------------------
 
-
-
-  --create all panel elements
   panel.elementHealthModelHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model")
   panel.elementPowerModelHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model")
   panel.elementHealthOrbModelAlpha = createSliderHealthOrbModelAlpha(panel.scrollFrame.scrollChild)
@@ -519,8 +463,10 @@
   panel.elementHealthOrbModelEnable = createCheckButtonHealthOrbModelEnable(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelEnable = createCheckButtonPowerOrbModelEnable(panel.scrollFrame.scrollChild)
 
+  ---------------------------------------------
+  --POSITION PANEL ELEMENTS
+  ---------------------------------------------
 
-  --position all panel elements
   panel.elementHealthMasterHeadline:SetPoint("TOP", panel.scrollFrame.scrollChild.leftTexture, 0, -10)
   panel.elementPowerMasterHeadline:SetPoint("TOP", panel.scrollFrame.scrollChild.rightTexture, 0, -10)
   panel.elementHealthPresetHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild.leftTexture, 20, -55)
@@ -534,6 +480,7 @@
   panel.elementHealthOrbFillingColor:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -3, -45)
   panel.elementPowerOrbFillingColor:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", -3, -45)
   panel.elementHealthOrbFillingColorAuto:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -4, -75)
+  panel.elementPowerOrbFillingColorAuto:SetPoint("TOPLEFT", panel.elementPowerOrbFillingColor, "BOTTOMLEFT", -4, -75)
 
 
   --panel.elementHealthOrbModelAlpha:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -25)
@@ -585,6 +532,18 @@
       ns.HealthOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
     end
     ns.HealthOrb.fill:ForceUpdate()
+  end
+
+  --update power orb filling color auto
+  panel.updatePowerOrbFillingColorAuto = function()
+    if panel.loadPowerOrbFillingColorAuto() then
+      ns.PowerOrb.fill.colorPower = true
+    else
+      ns.PowerOrb.fill.colorPower = false
+      local color = panel.loadPowerOrbFillingColor()
+      ns.PowerOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+    end
+    ns.PowerOrb.fill:ForceUpdate()
   end
 
   --update health orb model alpha
@@ -646,6 +605,11 @@
     panel.elementHealthOrbFillingColorAuto:SetChecked(panel.loadHealthOrbFillingColorAuto())
   end
 
+  --update element power orb filling color auto
+  panel.updateElementPowerOrbFillingColorAuto = function()
+    panel.elementPowerOrbFillingColorAuto:SetChecked(panel.loadPowerOrbFillingColorAuto())
+  end
+
   --update element health orb model alpha
   panel.updateElementHealthOrbModelAlpha = function()
     panel.elementHealthOrbModelAlpha:SetValue(panel.loadHealthOrbModelAlpha())
@@ -699,6 +663,11 @@
     db.char["HEALTH"].filling.colorAuto = value
   end
 
+  --save power orb filling color auto
+  panel.savePowerOrbFillingColorAuto = function(value)
+    db.char["POWER"].filling.colorAuto = value
+  end
+
   --save health orb model alpha
   panel.saveHealthOrbModelAlpha = function(value)
     db.char["HEALTH"].model.alpha = value
@@ -748,6 +717,11 @@
     return db.char["HEALTH"].filling.colorAuto
   end
 
+  --load power orb filling color auto
+  panel.loadPowerOrbFillingColorAuto = function()
+    return db.char["POWER"].filling.colorAuto
+  end
+
   --load health orb model alpha
   panel.loadHealthOrbModelAlpha = function()
     return db.char["HEALTH"].model.alpha
@@ -788,6 +762,8 @@
     panel.updateElementPowerOrbTextureColor()
     --update element health orb filling color auto
     panel.updateElementHealthOrbFillingColorAuto()
+    --update element power orb filling color auto
+    panel.updateElementPowerOrbFillingColorAuto()
 
     --update element health orb model alpha
     panel.updateElementHealthOrbModelAlpha()
@@ -820,6 +796,8 @@
     panel.updatePowerOrbFillingColor()
     --update health orb filling color auto
     panel.updateHealthOrbFillingColorAuto()
+    --update power orb filling color auto
+    panel.updatePowerOrbFillingColorAuto()
 
     --update health orb model alpha
     panel.updateHealthOrbModelAlpha()

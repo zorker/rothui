@@ -94,7 +94,7 @@
     local scrollChild = CF("Frame",nil,ScrollFrame)
     scrollChild:SetWidth(scrollFrame:GetWidth())
     scrollChild:SetHeight(1000)
-
+    --left background behind health orb settings
     local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
     t:SetTexture(1,1,1)
     t:SetVertexColor(1,0,0,0.1)
@@ -102,7 +102,7 @@
     t:SetPoint("BOTTOMLEFT")
     t:SetWidth(scrollFrame:GetWidth()/2-2)
     scrollChild.leftTexture = t
-
+    --right background behind power settings
     local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
     t:SetTexture(1,1,1)
     t:SetVertexColor(0,0.4,1,0.1)
@@ -110,22 +110,25 @@
     t:SetPoint("BOTTOMRIGHT")
     t:SetWidth(scrollFrame:GetWidth()/2-2)
     scrollChild.rightTexture = t
-
+    --top background behind master headlines
     local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-2)
     t:SetTexture(1,1,1)
     t:SetVertexColor(0,0,0,0.3)
     t:SetPoint("TOPRIGHT")
     t:SetPoint("TOPLEFT")
     t:SetHeight(40)
-
-
+    --set scrollchild
     scrollFrame:SetScrollChild(scrollChild)
     scrollFrame.scrollChild = scrollChild
     return scrollFrame
   end
+  --panel drag frame
+  panel.dragFrame = createPanelDragFrame()
+  --the scroll frame
+  panel.scrollFrame = createPanelScrollFrame()
 
   ---------------------------------------------
-  --BASIC PANEL ELEMENT FUNCTIONS
+  --CREATE UI PANEL ELEMENT FUNCTIONS
   ---------------------------------------------
 
   --basic fontstring func
@@ -260,7 +263,7 @@
   end
 
   ---------------------------------------------
-  --CREATE PANEL ELEMENTS
+  --CREATE PANEL ELEMENT FUNCTIONS
   ---------------------------------------------
 
   --create element health orb load preset
@@ -419,78 +422,73 @@
   --SPAWN PANEL ELEMENTS
   ---------------------------------------------
 
-  --panel drag frame
-  panel.dragFrame = createPanelDragFrame()
-  --the scroll frame
-  panel.scrollFrame = createPanelScrollFrame()
-
   --create master headline
   panel.elementHealthMasterHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalHuge","Health Orb Settings")
   panel.elementHealthMasterHeadline:SetTextColor(1,0,0)
   panel.elementPowerMasterHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalHuge","Power Orb Settings")
   panel.elementPowerMasterHeadline:SetTextColor(0,0.4,1)
-
   --create load preset headline
-  panel.elementHealthPresetHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Load preset")
-  panel.elementPowerPresetHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Load preset")
-
-  --create load preset dropdowns
+  panel.elementHealthLoadPresetHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Load preset")
+  panel.elementPowerLoadPresetHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Load preset")
+  --create load preset dropdown
   panel.elementHealthOrbLoadPreset = createDropdownHealthOrbLoadPreset(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbLoadPreset = createDropdownPowerOrbLoadPreset(panel.scrollFrame.scrollChild)
-
   --create filling headline
   panel.elementHealthFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling")
   panel.elementPowerFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling")
-
   --create filling texture dropdowns
   panel.elementHealthOrbFillingTexture = createDropdownHealthOrbFillingTexture(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbFillingTexture = createDropdownPowerOrbFillingTexture(panel.scrollFrame.scrollChild)
-
   --create filling color picker
   panel.elementHealthOrbFillingColor = createPickerHealthOrbFillingColor(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbFillingColor = createPickerPowerOrbFillingColor(panel.scrollFrame.scrollChild)
-
   --create filling color auto checkbutton
   panel.elementHealthOrbFillingColorAuto = createCheckButtonHealthOrbFillingColorAuto(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbFillingColorAuto = createCheckButtonPowerOrbFillingColorAuto(panel.scrollFrame.scrollChild)
-
-  -- OLD --------------------------------
-
+  --create model headline
   panel.elementHealthModelHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model")
   panel.elementPowerModelHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model")
-  panel.elementHealthOrbModelAlpha = createSliderHealthOrbModelAlpha(panel.scrollFrame.scrollChild)
-  panel.elementPowerOrbModelAlpha = createSliderPowerOrbModelAlpha(panel.scrollFrame.scrollChild)
+  --create model enable checkbutton
   panel.elementHealthOrbModelEnable = createCheckButtonHealthOrbModelEnable(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelEnable = createCheckButtonPowerOrbModelEnable(panel.scrollFrame.scrollChild)
+  --create model alpha slider
+  panel.elementHealthOrbModelAlpha = createSliderHealthOrbModelAlpha(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbModelAlpha = createSliderPowerOrbModelAlpha(panel.scrollFrame.scrollChild)
 
   ---------------------------------------------
   --POSITION PANEL ELEMENTS
   ---------------------------------------------
 
+  --position master headline
   panel.elementHealthMasterHeadline:SetPoint("TOP", panel.scrollFrame.scrollChild.leftTexture, 0, -10)
   panel.elementPowerMasterHeadline:SetPoint("TOP", panel.scrollFrame.scrollChild.rightTexture, 0, -10)
-  panel.elementHealthPresetHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild.leftTexture, 20, -55)
-  panel.elementPowerPresetHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild.rightTexture, 20, -55)
+  --position load preset headline
+  panel.elementHealthLoadPresetHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild.leftTexture, 20, -55)
+  panel.elementPowerLoadPresetHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild.rightTexture, 20, -55)
+  --position load preset dropdown
   panel.elementHealthOrbLoadPreset:SetPoint("TOPLEFT", panel.elementHealthPresetHeadline, "BOTTOMLEFT", -20, -10)
   panel.elementPowerOrbLoadPreset:SetPoint("TOPLEFT", panel.elementPowerPresetHeadline, "BOTTOMLEFT", -20, -10)
+  --position filling headline
   panel.elementHealthFillingHeadline:SetPoint("TOPLEFT", panel.elementHealthPresetHeadline, "BOTTOMLEFT", 0, -50)
   panel.elementPowerFillingHeadline:SetPoint("TOPLEFT", panel.elementPowerPresetHeadline, "BOTTOMLEFT", 0, -50)
+  --position filling texture dropdown
   panel.elementHealthOrbFillingTexture:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -20, -10)
   panel.elementPowerOrbFillingTexture:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", -20, -10)
+  --position filling color picker
   panel.elementHealthOrbFillingColor:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -3, -45)
   panel.elementPowerOrbFillingColor:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", -3, -45)
+  --position filling color auto checkbutton
   panel.elementHealthOrbFillingColorAuto:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -4, -75)
   panel.elementPowerOrbFillingColorAuto:SetPoint("TOPLEFT", panel.elementPowerOrbFillingColor, "BOTTOMLEFT", -4, -75)
-
-
-  --panel.elementHealthOrbModelAlpha:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -25)
-  --panel.elementPowerOrbModelAlpha:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 300, -25)
-  --panel.elementHealthOrbModelEnable:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -80)
-  --panel.elementPowerOrbModelEnable:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 300, -80)
-  --panel.elementHealthModelHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 20, -160)
-  --panel.elementPowerModelHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild, "TOPLEFT", 300, -160)
-
-
+  --position model headline
+  panel.elementHealthModelHeadline:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "TOPLEFT", 0, -100)
+  panel.elementPowerModelHeadline:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "TOPLEFT", 0, -100)
+  --position model enable checkbutton
+  panel.elementHealthOrbModelEnable:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "TOPLEFT", -4, -10)
+  panel.elementPowerOrbModelEnable:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "TOPLEFT", -4, -10)
+  --position model alpha slider
+  panel.elementHealthOrbModelAlpha:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "TOPLEFT", 0, -65)
+  panel.elementPowerOrbModelAlpha:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "TOPLEFT", 0, -65)
 
   ---------------------------------------------
   --UPDATE ORB ELEMENT VALUES
@@ -546,16 +544,6 @@
     ns.PowerOrb.fill:ForceUpdate()
   end
 
-  --update health orb model alpha
-  panel.updateHealthOrbModelAlpha = function()
-    ns.HealthOrb.model:SetAlpha(panel.loadHealthOrbModelAlpha())
-  end
-
-  --update power orb model alpha
-  panel.updatePowerOrbModelAlpha = function()
-    ns.PowerOrb.model:SetAlpha(panel.loadPowerOrbModelAlpha())
-  end
-
   --update health orb model enable
   panel.updateHealthOrbModelEnable = function()
     if panel.loadHealthOrbModelEnable() then
@@ -572,6 +560,16 @@
     else
       ns.PowerOrb.model:Hide()
     end
+  end
+
+  --update health orb model alpha
+  panel.updateHealthOrbModelAlpha = function()
+    ns.HealthOrb.model:SetAlpha(panel.loadHealthOrbModelAlpha())
+  end
+
+  --update power orb model alpha
+  panel.updatePowerOrbModelAlpha = function()
+    ns.PowerOrb.model:SetAlpha(panel.loadPowerOrbModelAlpha())
   end
 
   ---------------------------------------------
@@ -610,16 +608,6 @@
     panel.elementPowerOrbFillingColorAuto:SetChecked(panel.loadPowerOrbFillingColorAuto())
   end
 
-  --update element health orb model alpha
-  panel.updateElementHealthOrbModelAlpha = function()
-    panel.elementHealthOrbModelAlpha:SetValue(panel.loadHealthOrbModelAlpha())
-  end
-
-  --update element power orb model alpha
-  panel.updateElementPowerOrbModelAlpha = function()
-    panel.elementPowerOrbModelAlpha:SetValue(panel.loadPowerOrbModelAlpha())
-  end
-
   --update element health orb model enable
   panel.updateElementHealthOrbModelEnable = function()
     panel.elementHealthOrbModelEnable:SetChecked(panel.loadHealthOrbModelEnable())
@@ -628,6 +616,16 @@
   --update element power orb model enable
   panel.updateElementPowerOrbModelEnable = function()
     panel.elementPowerOrbModelEnable:SetChecked(panel.loadPowerOrbModelEnable())
+  end
+
+  --update element health orb model alpha
+  panel.updateElementHealthOrbModelAlpha = function()
+    panel.elementHealthOrbModelAlpha:SetValue(panel.loadHealthOrbModelAlpha())
+  end
+
+  --update element power orb model alpha
+  panel.updateElementPowerOrbModelAlpha = function()
+    panel.elementPowerOrbModelAlpha:SetValue(panel.loadPowerOrbModelAlpha())
   end
 
   ---------------------------------------------
@@ -668,16 +666,6 @@
     db.char["POWER"].filling.colorAuto = value
   end
 
-  --save health orb model alpha
-  panel.saveHealthOrbModelAlpha = function(value)
-    db.char["HEALTH"].model.alpha = value
-  end
-
-  --save power orb model alpha
-  panel.savePowerOrbModelAlpha = function(value)
-    db.char["POWER"].model.alpha = value
-  end
-
   --save health orb model enable
   panel.saveHealthOrbModelEnable = function(value)
     db.char["HEALTH"].model.enable = value
@@ -686,6 +674,16 @@
   --save power orb model enable
   panel.savePowerOrbModelEnable = function(value)
     db.char["POWER"].model.enable = value
+  end
+
+  --save health orb model alpha
+  panel.saveHealthOrbModelAlpha = function(value)
+    db.char["HEALTH"].model.alpha = value
+  end
+
+  --save power orb model alpha
+  panel.savePowerOrbModelAlpha = function(value)
+    db.char["POWER"].model.alpha = value
   end
 
   ---------------------------------------------
@@ -722,16 +720,6 @@
     return db.char["POWER"].filling.colorAuto
   end
 
-  --load health orb model alpha
-  panel.loadHealthOrbModelAlpha = function()
-    return db.char["HEALTH"].model.alpha
-  end
-
-  --load power orb model alpha
-  panel.loadPowerOrbModelAlpha = function()
-    return db.char["POWER"].model.alpha
-  end
-
   --load health orb model enable
   panel.loadHealthOrbModelEnable = function()
     return db.char["HEALTH"].model.enable
@@ -742,6 +730,16 @@
     return db.char["POWER"].model.enable
   end
 
+  --load health orb model alpha
+  panel.loadHealthOrbModelAlpha = function()
+    return db.char["HEALTH"].model.alpha
+  end
+
+  --load power orb model alpha
+  panel.loadPowerOrbModelAlpha = function()
+    return db.char["POWER"].model.alpha
+  end
+
   ---------------------------------------------
   --UPDATE PANEL VIEW
   ---------------------------------------------
@@ -749,8 +747,6 @@
   panel.updatePanelView = function()
 
     if InCombatLockdown() then return end
-
-    --update all panel elements
 
     --update element health orb texture filling
     panel.updateElementHealthOrbTextureFilling()
@@ -764,15 +760,14 @@
     panel.updateElementHealthOrbFillingColorAuto()
     --update element power orb filling color auto
     panel.updateElementPowerOrbFillingColorAuto()
-
-    --update element health orb model alpha
-    panel.updateElementHealthOrbModelAlpha()
-    --update element power orb model alpha
-    panel.updateElementPowerOrbModelAlpha()
     --update element health orb model enable
     panel.updateElementHealthOrbModelEnable()
     --update element power orb model enable
     panel.updateElementPowerOrbModelEnable()
+    --update element health orb model alpha
+    panel.updateElementHealthOrbModelAlpha()
+    --update element power orb model alpha
+    panel.updateElementPowerOrbModelAlpha()
 
   end
 
@@ -783,8 +778,6 @@
   panel.updateOrbView = function()
 
     if InCombatLockdown() then return end
-
-    --update all orb elements
 
     --update health orb filling texture
     panel.updateHealthOrbFillingTexture()
@@ -798,16 +791,14 @@
     panel.updateHealthOrbFillingColorAuto()
     --update power orb filling color auto
     panel.updatePowerOrbFillingColorAuto()
-
-    --update health orb model alpha
-    panel.updateHealthOrbModelAlpha()
-    --update power orb model alpha
-    panel.updatePowerOrbModelAlpha()
-
     --update health orb model enable
     panel.updateHealthOrbModelEnable()
     --update power orb model enable
     panel.updatePowerOrbModelEnable()
+    --update health orb model alpha
+    panel.updateHealthOrbModelAlpha()
+    --update power orb model alpha
+    panel.updatePowerOrbModelAlpha()
 
     --update panel view
     panel.updatePanelView()

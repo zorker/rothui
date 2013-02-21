@@ -174,11 +174,7 @@
     return button
   end
 
-  --basic color
-
-  --damn there is a panel element I missed:
-  --http://wowprogramming.com/docs/widgets/ColorSelect
-
+  --basic color picker func
   local createBasicColorPicker = function(parent, name, width, height)
     local picker = CF("Button", name, parent)
     picker:SetSize(width, height)

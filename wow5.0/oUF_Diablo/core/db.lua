@@ -21,7 +21,7 @@
   local tremove = tremove
 
   ---------------------------------------------
-  --DEFAULT
+  --DEFAULTS
   ---------------------------------------------
 
   --default orb setup
@@ -134,92 +134,145 @@
 
   --db script on variables loaded
   db:SetScript("OnEvent", function(self, event)
-    --debug resets
+    --debug - reset data to defaults
     --OUF_DIABLO_DB_CHAR = self.default.orb
     --OUF_DIABLO_DB_GLOB = self.default.template
-    --load the template database
-    OUF_DIABLO_DB_GLOB = OUF_DIABLO_DB_GLOB or self.default.template
-    OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST or db.default.templateList
-    self.glob = OUF_DIABLO_DB_GLOB
-    --this is very disappointing...the glob table has assoziative values...you cannot count that
-    --thus I need to keep track in a secondary table...grmpf
-    db.list.templates = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
-    --load the character database
+    --load global data
+    self.loadGlobalData()
+    --load character data
     if not OUF_DIABLO_DB_CHAR then
-      self.loadDefaults()
+      self.loadCharacterDataDefaults()
     else
-      self.loadChar()
+      self.loadCharacterData()
     end
     self:UnregisterEvent("VARIABLES_LOADED")
   end)
   db:RegisterEvent("VARIABLES_LOADED")
 
-  --load the data from character database
-  db.loadChar = function()
-    print(addon..": character config loaded")
-    db.char = OUF_DIABLO_DB_CHAR
-    --update the orb view
-    ns.panel.updateOrbView()
-  end
+  ---------------------------------------------
+  --CHARACTER DATA
+  ---------------------------------------------
 
-  --reset the the character defaults
-  db.loadDefaults = function()
-    print(addon..": default database loaded")
+  --load character data defaults
+  db.loadCharacterDataDefaults = function()
+    print(addon..": character data - defaults loaded")
     OUF_DIABLO_DB_CHAR = db.default.orb
     db.char = OUF_DIABLO_DB_CHAR
     --update the orb view
     ns.panel.updateOrbView()
   end
 
+  --load character data
+  db.loadCharacterData = function()
+    print(addon..": character data - loaded")
+    db.char = OUF_DIABLO_DB_CHAR
+    --update the orb view
+    ns.panel.updateOrbView()
+  end
+
+  ---------------------------------------------
+  --GLOBAL DATA
+  ---------------------------------------------
+
+  --load global data defaults
+  db.loadGlobalDataDefaults = function()
+    print(addon..": global data - defaults loaded")
+    OUF_DIABLO_DB_GLOB = db.default.template
+    OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = db.default.templateList
+    db.glob = OUF_DIABLO_DB_GLOB
+    db.list.templates = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
+  end
+
+  --load global data
+  db.loadGlobalData = function()
+    print(addon..": global data - loaded")
+    print(# OUF_DIABLO_DB_GLOB.TEMPLATE_LIST)
+    print(# db.default.templateList)
+    OUF_DIABLO_DB_GLOB = OUF_DIABLO_DB_GLOB or db.default.template
+    OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST or db.default.templateList
+    db.glob = OUF_DIABLO_DB_GLOB
+    db.list.templates = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
+  end
+
   ---------------------------------------------
   --TEMPLATES
   ---------------------------------------------
 
-  --load a template from global database into char data for health/power orb
-  --type stands for "HEALTH" or "POWER"
+  --load template func
+  --name: template name
+  --type: orb type
   db.loadTemplate = function(name,type)
     if not OUF_DIABLO_DB_GLOB or not name then return end
     if not OUF_DIABLO_DB_GLOB[name] then
       print(addon..": template *"..name.."* not found")
       return
     end
-    print(addon..": template *"..name.."* data loaded into "..type.." orb")
     OUF_DIABLO_DB_CHAR[type] = OUF_DIABLO_DB_GLOB[name]
+    print(addon..": template *"..name.."* loaded")
     db.char = OUF_DIABLO_DB_CHAR
     --update the orb view
     ns.panel.updateOrbView()
   end
 
-  --save orb data (health or power) as a template
-  --type stands for "HEALTH" or "POWER"
+  --save template func
+  --name: template name
+  --type: orb type
   db.saveTemplate = function(name,type)
     if not OUF_DIABLO_DB_GLOB or not name then return end
-    print(addon..": "..type.." orb data saved as template *"..name.."*")
+    --adding template
     OUF_DIABLO_DB_GLOB[name] = db.char[type]
+    print(addon..": template *"..name.."* saved")
+    --adding the template name to the key-value pair list
+    local nameFound = false
+    for i,v in ipairs(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST) do
+      if v.key == name then
+        nameFound = true
+        break
+      end
+    end
+    if not nameFound then
+      tinsert(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, { key = name, value = name })
+      print(addon..": template list entry *"..name.."* added")
+    end
+    --not sure if this is acutally needed since the reference should still be intact...
     db.glob = OUF_DIABLO_DB_GLOB
-    --add new entry to the template list
-    tinsert(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, { key = name, value = name })
     db.list.templates = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
     --update the panel view
     panel.updatePanelView()
   end
 
-  --delete a template by name
+  --delete template func
+  --name: template name
   db.deleteTemplate = function(name)
     if not OUF_DIABLO_DB_GLOB or not name then return end
     if not OUF_DIABLO_DB_GLOB[name] then
       print(addon..": template *"..name.."* not found")
       return
     end
+    --setting the template to nil
+    OUF_DIABLO_DB_GLOB[name] = nil
     print(addon..": template *"..name.."* deleted")
-    tremove(OUF_DIABLO_DB_GLOB, name)
+    --removing the template name from the key-value pair list
+    local indexFound
+    for i,v in ipairs(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST) do
+      if v.key == name then
+        indexFound = i
+        break
+      end
+    end
+    if indexFound then
+      tremove(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, indexFound)
+      print(addon..": template list entry *"..name.."* deleted")
+    end
+    --not sure if this is acutally needed since the reference should still be intact...
     db.glob = OUF_DIABLO_DB_GLOB
+    db.list.templates = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
     --update the panel view
     panel.updatePanelView()
   end
 
   ---------------------------------------------
-  --MODELS
+  --LIST / MODELS
   ---------------------------------------------
 
   --mode list for dropdown
@@ -260,7 +313,7 @@
   }
 
   ---------------------------------------------
-  --FILLING TEXTURES
+  --LIST / FILLING TEXTURES
   ---------------------------------------------
 
   --filling texture list for dropdown

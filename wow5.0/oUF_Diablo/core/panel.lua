@@ -10,15 +10,15 @@
   --get the addon namespace
   local addon, ns = ...
 
-  --object container
-  local panel = CF("Frame",addon.."ConfigPanel",UIParent,"ButtonFrameTemplate")
-  panel:Hide()
-  ns.panel = panel
-
   local db = ns.db
 
   local unpack = unpack
   local CF = CreateFrame
+
+  --object container
+  local panel = CF("Frame",addon.."ConfigPanel",UIParent,"ButtonFrameTemplate")
+  panel:Hide()
+  ns.panel = panel
 
   ---------------------------------------------
   --PANEL SETUP FUNCTIONS

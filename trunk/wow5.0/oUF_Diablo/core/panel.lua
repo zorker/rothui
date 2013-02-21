@@ -368,7 +368,29 @@
     return button
   end
 
-  -- OLD --------------------------------
+  --create element health orb model enable
+  local createCheckButtonHealthOrbModelEnable = function(parent)
+    local button = createBasicCheckButton(parent, addon.."PanelHealthOrbModelEnable", "Enable")
+    button:HookScript("OnClick", function(self,value)
+      --save value
+      panel.saveHealthOrbModelEnable(self:GetChecked())
+      --update orb view
+      panel.updateHealthOrbModelEnable()
+    end)
+    return button
+  end
+
+  --create element power orb model enable
+  local createCheckButtonPowerOrbModelEnable = function(parent)
+    local button = createBasicCheckButton(parent, addon.."PanelPowerOrbModelEnable", "Enable")
+    button:HookScript("OnClick", function(self,value)
+      --save value
+      panel.savePowerOrbModelEnable(self:GetChecked())
+      --update orb view
+      panel.updatePowerOrbModelEnable()
+    end)
+    return button
+  end
 
   --create element health orb model alpha
   local createSliderHealthOrbModelAlpha = function(parent)
@@ -392,30 +414,6 @@
       panel.updatePowerOrbModelAlpha()
     end)
     return slider
-  end
-
-  --create element health orb model enable
-  local createCheckButtonHealthOrbModelEnable = function(parent)
-    local button = createBasicCheckButton(parent, addon.."PanelHealthOrbModelEnable", "Enable")
-    button:HookScript("OnClick", function(self,value)
-      --save value
-      panel.saveHealthOrbModelEnable(self:GetChecked())
-      --update orb view
-      panel.updateHealthOrbModelEnable()
-    end)
-    return button
-  end
-
-  --create element power orb model enable
-  local createCheckButtonPowerOrbModelEnable = function(parent)
-    local button = createBasicCheckButton(parent, addon.."PanelPowerOrbModelEnable", "Enable")
-    button:HookScript("OnClick", function(self,value)
-      --save value
-      panel.savePowerOrbModelEnable(self:GetChecked())
-      --update orb view
-      panel.updatePowerOrbModelEnable()
-    end)
-    return button
   end
 
   ---------------------------------------------

@@ -155,7 +155,7 @@
 
   --load character data defaults
   db.loadCharacterDataDefaults = function()
-    print(addon..": character data - defaults loaded")
+    print(addon..": character data defaults loaded")
     OUF_DIABLO_DB_CHAR = db.default.orb
     db.char = OUF_DIABLO_DB_CHAR
     --update the orb view
@@ -164,7 +164,6 @@
 
   --load character data
   db.loadCharacterData = function()
-    print(addon..": character data - loaded")
     db.char = OUF_DIABLO_DB_CHAR
     --update the orb view
     ns.panel.updateOrbView()
@@ -176,22 +175,19 @@
 
   --load global data defaults
   db.loadGlobalDataDefaults = function()
-    print(addon..": global data - defaults loaded")
+    print(addon..": global data defaults loaded")
     OUF_DIABLO_DB_GLOB = db.default.template
     OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = db.default.templateList
     db.glob = OUF_DIABLO_DB_GLOB
-    db.list.templates = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
+    db.list.template = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
   end
 
   --load global data
   db.loadGlobalData = function()
-    print(addon..": global data - loaded")
-    print(# OUF_DIABLO_DB_GLOB.TEMPLATE_LIST)
-    print(# db.default.templateList)
     OUF_DIABLO_DB_GLOB = OUF_DIABLO_DB_GLOB or db.default.template
     OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST or db.default.templateList
     db.glob = OUF_DIABLO_DB_GLOB
-    db.list.templates = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
+    db.list.template = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
   end
 
   ---------------------------------------------
@@ -236,7 +232,7 @@
     end
     --not sure if this is acutally needed since the reference should still be intact...
     db.glob = OUF_DIABLO_DB_GLOB
-    db.list.templates = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
+    db.list.template = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
     --update the panel view
     panel.updatePanelView()
   end
@@ -266,7 +262,7 @@
     end
     --not sure if this is acutally needed since the reference should still be intact...
     db.glob = OUF_DIABLO_DB_GLOB
-    db.list.templates = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
+    db.list.template = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
     --update the panel view
     panel.updatePanelView()
   end
@@ -311,6 +307,7 @@
     { value = 44652, key = "the planet", },
     { value = 47882, key = "red chocolate", },
   }
+  db.getListModel = function() return db.list.model end
 
   ---------------------------------------------
   --LIST / FILLING TEXTURES
@@ -335,3 +332,11 @@
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15", key = "diablo3", },
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling16", key = "fubble", },
   }
+  db.getListFillingTexture = function() return db.list.filling_texture end
+
+  ---------------------------------------------
+  --LIST / TEMPLATEs
+  ---------------------------------------------
+
+  db.list.template = {} --reference for later
+  db.getListTemplate = function() return db.list.template end

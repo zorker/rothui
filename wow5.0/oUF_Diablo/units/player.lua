@@ -243,7 +243,6 @@
 
     --update model func
     function model:Update()
-      print("updating model "..self.type)
       local cfg = db.char[self.type].model
       self:SetCamDistanceScale(cfg.camDistanceScale)
       self:SetPosition(0,cfg.pos_x,cfg.pos_y)

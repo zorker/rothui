@@ -209,13 +209,13 @@
     --add a Disable() function to the colorpicker element
     function picker:Disable()
       self.disabled = true
-      self:SetAlpha(0.4)
+      self.color:SetAlpha(0.5)
       self.text:SetTextColor(0.5,0.5,0.5)
     end
     --add a Enable() function to the colorpicker element
     function picker:Enable()
       self.disabled = false
-      self:SetAlpha(1)
+      self.color:SetAlpha(1)
       self.text:SetTextColor(1,1,1)
     end
     --picker.show

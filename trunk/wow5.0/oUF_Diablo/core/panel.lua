@@ -185,6 +185,7 @@
     local button = CF("CheckButton", name, parent, "OptionsCheckButtonTemplate")
     button.text = _G[name.."Text"]
     button.text:SetText(title)
+    button.text:SetTextColor(1,1,1)
     return button
   end
 
@@ -202,17 +203,20 @@
     color:SetTexture(1,1,1)
     picker.color = color
     picker.text = createBasicFontString(picker,nil,nil,"GameFontNormal","Pick a Color")
+    picker.text:SetTextColor(1,1,1)
     picker.text:SetPoint("LEFT", picker, "RIGHT", 5, 0)
     picker.disabled = false
     --add a Disable() function to the colorpicker element
     function picker:Disable()
       self.disabled = true
       self:SetAlpha(0.4)
+      self.text:SetTextColor(0.5,0.5,0.5)
     end
     --add a Enable() function to the colorpicker element
     function picker:Enable()
       self.disabled = false
       self:SetAlpha(1)
+      self.text:SetTextColor(1,1,1)
     end
     --picker.show
     picker.show = function(r,g,b,a,callback)

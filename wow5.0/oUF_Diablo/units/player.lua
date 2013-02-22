@@ -132,19 +132,6 @@
     t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\d3_bottom")
   end
 
-  --initModel func
-  local initModel = function(model)
-    local orb = model:GetParent():GetParent():GetParent()
-    local cfg = db.char[orb.type].model
-    model:SetCamDistanceScale(cfg.camDistanceScale)
-    model:SetPosition(0,cfg.pos_x,cfg.pos_y)
-    model:SetRotation(cfg.rotation)
-    model:SetPortraitZoom(cfg.portraitZoom)
-    model:ClearModel()
-    --model:SetModel("interface\\buttons\\talktomequestionmark.m2") --in case setdisplayinfo fails
-    model:SetDisplayInfo(cfg.displayInfo)
-  end
-
   --post update orb func (used to display lowHp on percentage)
   local updatePlayerHealth = function(bar, unit, min, max)
     local per = floor(min/max*100)
@@ -253,15 +240,25 @@
     model:SetPoint("TOP")
     --model:SetBackdrop(cfg.backdrop)
     model:SetAlpha(orbcfg.model.alpha or 1)
-    orb.model = model
-    orb.model:SetScript("OnEvent", initModel)
-    orb.model:RegisterEvent("PLAYER_ENTERING_WORLD")
-    orb.model:SetScript("OnShow", initModel)
-    initModel(orb.model)
-    if not orbcfg.model.enable then
-      orb.model:Hide()
+
+    --update model func
+    function model:Update()
+      print("updating model "..self.type)
+      local cfg = db.char[self.type].model
+      self:SetCamDistanceScale(cfg.camDistanceScale)
+      self:SetPosition(0,cfg.pos_x,cfg.pos_y)
+      self:SetRotation(cfg.rotation)
+      self:SetPortraitZoom(cfg.portraitZoom)
+      self:ClearModel()
+      --self:SetModel("interface\\buttons\\talktomequestionmark.m2") --in case setdisplayinfo fails
+      self:SetDisplayInfo(cfg.displayInfo)
     end
-    --orb.model:SetScript("OnSizeChanged", initModel)
+    model.type = orb.type
+    model:SetScript("OnEvent", function(self) self:Update() end)
+    model:RegisterEvent("PLAYER_ENTERING_WORLD")
+    model:SetScript("OnShow", function(self) self:Update() end)
+    model:Update()
+    orb.model = model
 
     --overlay frame
     local overlay = CreateFrame("Frame","$parentOverlay",scrollFrame)

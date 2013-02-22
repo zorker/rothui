@@ -27,7 +27,7 @@
   --setup panel
   do
     --size/point
-    panel:SetSize(600,500)
+    panel:SetSize(600,600)
     panel:SetPoint("CENTER")
     --title
     panel.title = _G[addon.."ConfigPanelTitleText"]
@@ -97,7 +97,7 @@
     --left background behind health orb settings
     local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
     t:SetTexture(1,1,1)
-    t:SetVertexColor(1,0,0,0.2)
+    t:SetVertexColor(1,0,0,0.1)
     t:SetPoint("TOPLEFT")
     t:SetPoint("BOTTOMLEFT")
     t:SetWidth(scrollFrame:GetWidth()/2-2)
@@ -105,7 +105,7 @@
     --right background behind power settings
     local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
     t:SetTexture(1,1,1)
-    t:SetVertexColor(0,0.4,0.9,0.2)
+    t:SetVertexColor(0,0.4,0.9,0.1)
     t:SetPoint("TOPRIGHT")
     t:SetPoint("BOTTOMRIGHT")
     t:SetWidth(scrollFrame:GetWidth()/2-2)
@@ -153,12 +153,12 @@
   }
 
   --basic slider func
-  local createBasicSlider = function(parent, name, title)
+  local createBasicSlider = function(parent, name, title, minVal, maxVal, valStep)
     local slider = CF("Slider", name, parent, "OptionsSliderTemplate")
     local editbox = CF("EditBox", "$parentEditBox", slider, "InputBoxTemplate")
-    slider:SetMinMaxValues(0, 1)
-    slider:SetValue(0)
-    slider:SetValueStep(0.001)
+    slider:SetMinMaxValues(minVal, maxVal)
+    --slider:SetValue(0)
+    slider:SetValueStep(valStep)
     slider.text = _G[name.."Text"]
     slider.text:SetText(title)
     editbox:SetSize(50,30)
@@ -209,7 +209,7 @@
     --add a Disable() function to the colorpicker element
     function picker:Disable()
       self.disabled = true
-      self.color:SetAlpha(0.5)
+      self.color:SetAlpha(0)
       self.text:SetTextColor(0.5,0.5,0.5)
     end
     --add a Enable() function to the colorpicker element
@@ -415,7 +415,7 @@
 
   --create element health orb model animation
   local createDropdownHealthOrbModelAnimation = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbFillingTexture", "Pick an animation", db.getListModel, 160)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbModelAnimation", "Pick an animation", db.getListModel, 160)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -428,7 +428,7 @@
 
   --create element power orb model animation
   local createDropdownPowerOrbModelAnimation = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbFillingTexture", "Pick an animation", db.getListModel, 160)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbModelAnimation", "Pick an animation", db.getListModel, 160)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -439,9 +439,33 @@
     return dropdownMenu
   end
 
+  --create element health orb model scale
+  local createSliderHealthOrbModelScale = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelScale", "Scale", 0.001, 6, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      panel.saveHealthOrbModelScale(value)
+      --update orb view
+      panel.updateHealthOrbModelScale()
+    end)
+    return slider
+  end
+
+  --create element power orb model scale
+  local createSliderPowerOrbModelScale = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelScale", "Scale", 0.001, 6, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      panel.savePowerOrbModelScale(value)
+      --update orb view
+      panel.updatePowerOrbModelScale()
+    end)
+    return slider
+  end
+
   --create element health orb model alpha
   local createSliderHealthOrbModelAlpha = function(parent)
-    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelAlpha", "Alpha")
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelAlpha", "Alpha", 0, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
       panel.saveHealthOrbModelAlpha(value)
@@ -453,7 +477,7 @@
 
   --create element power orb model alpha
   local createSliderPowerOrbModelAlpha = function(parent)
-    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelAlpha", "Alpha")
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelAlpha", "Alpha", 0, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
       panel.savePowerOrbModelAlpha(value)
@@ -499,6 +523,9 @@
   --create model animation dropdown
   panel.elementHealthOrbModelAnimation = createDropdownHealthOrbModelAnimation(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelAnimation = createDropdownPowerOrbModelAnimation(panel.scrollFrame.scrollChild)
+  --create model scale slider
+  panel.elementHealthOrbModelScale = createSliderHealthOrbModelScale(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbModelScale = createSliderPowerOrbModelScale(panel.scrollFrame.scrollChild)
   --create model alpha slider
   panel.elementHealthOrbModelAlpha = createSliderHealthOrbModelAlpha(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelAlpha = createSliderPowerOrbModelAlpha(panel.scrollFrame.scrollChild)
@@ -531,15 +558,18 @@
   --position model headline
   panel.elementHealthModelHeadline:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", 0, -115)
   panel.elementPowerModelHeadline:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", 0, -115)
-  --position model enable checkbutton
-  panel.elementHealthOrbModelEnable:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -4, -10)
-  panel.elementPowerOrbModelEnable:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -4, -10)
   --position model animation dropdown
-  panel.elementHealthOrbModelAnimation:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -20, -45)
-  panel.elementPowerOrbModelAnimation:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -20, -45)
+  panel.elementHealthOrbModelAnimation:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -20, -10)
+  panel.elementPowerOrbModelAnimation:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -20, -10)
+  --position model enable checkbutton
+  panel.elementHealthOrbModelEnable:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -4, -45)
+  panel.elementPowerOrbModelEnable:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -4, -45)
   --position model alpha slider
-  panel.elementHealthOrbModelAlpha:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -100)
-  panel.elementPowerOrbModelAlpha:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -100)
+  panel.elementHealthOrbModelAlpha:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -80)
+  panel.elementPowerOrbModelAlpha:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -80)
+  --position model scale slider
+  panel.elementHealthOrbModelScale:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -110)
+  panel.elementPowerOrbModelScale:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -110)
 
   ---------------------------------------------
   --CREATE HEADLINE BACKGROUNDS
@@ -632,6 +662,16 @@
     ns.PowerOrb.model:Update() --update the full model with all values, displayId is not enough
   end
 
+  --update health orb model scale
+  panel.updateHealthOrbModelScale = function()
+    ns.HealthOrb.model:SetCamDistanceScale(panel.loadHealthOrbModelScale())
+  end
+
+  --update power orb model scale
+  panel.updatePowerOrbModelScale = function()
+    ns.PowerOrb.model:SetCamDistanceScale(panel.loadPowerOrbModelScale())
+  end
+
   --update health orb model alpha
   panel.updateHealthOrbModelAlpha = function()
     ns.HealthOrb.model:SetAlpha(panel.loadHealthOrbModelAlpha())
@@ -712,6 +752,16 @@
     UIDropDownMenu_SetSelectedValue(panel.elementPowerOrbModelAnimation, panel.loadPowerOrbModelAnimation())
   end
 
+  --update element health orb model scale
+  panel.updateElementHealthOrbModelScale = function()
+    panel.elementHealthOrbModelScale:SetValue(panel.loadHealthOrbModelScale())
+  end
+
+  --update element power orb model scale
+  panel.updateElementPowerOrbModelScale = function()
+    panel.elementPowerOrbModelScale:SetValue(panel.loadPowerOrbModelScale())
+  end
+
   --update element health orb model alpha
   panel.updateElementHealthOrbModelAlpha = function()
     panel.elementHealthOrbModelAlpha:SetValue(panel.loadHealthOrbModelAlpha())
@@ -780,6 +830,16 @@
     db.char["POWER"].model.displayInfo = value
   end
 
+  --save health orb model scale
+  panel.saveHealthOrbModelScale = function(value)
+    db.char["HEALTH"].model.camDistanceScale = value
+  end
+
+  --save power orb model scale
+  panel.savePowerOrbModelScale = function(value)
+    db.char["POWER"].model.camDistanceScale = value
+  end
+
   --save health orb model alpha
   panel.saveHealthOrbModelAlpha = function(value)
     db.char["HEALTH"].model.alpha = value
@@ -844,6 +904,16 @@
     return db.char["POWER"].model.displayInfo
   end
 
+  --load health orb model scale
+  panel.loadHealthOrbModelScale = function()
+    return db.char["HEALTH"].model.camDistanceScale
+  end
+
+  --load power orb model scale
+  panel.loadPowerOrbModelScale = function()
+    return db.char["POWER"].model.camDistanceScale
+  end
+
   --load health orb model alpha
   panel.loadHealthOrbModelAlpha = function()
     return db.char["HEALTH"].model.alpha
@@ -882,6 +952,10 @@
     panel.updateElementHealthOrbModelAnimation()
     --update element power orb model animation
     panel.updateElementPowerOrbModelAnimation()
+    --update element health orb model scale
+    panel.updateElementHealthOrbModelScale()
+    --update element power orb model scale
+    panel.updateElementPowerOrbModelScale()
     --update element health orb model alpha
     panel.updateElementHealthOrbModelAlpha()
     --update element power orb model alpha
@@ -917,6 +991,10 @@
     panel.updateHealthOrbModelAnimation()
     --update power orb model animation
     panel.updatePowerOrbModelAnimation()
+    --update health orb model scale
+    panel.updateHealthOrbModelScale()
+    --update power orb model scale
+    panel.updatePowerOrbModelScale()
     --update health orb model alpha
     panel.updateHealthOrbModelAlpha()
     --update power orb model alpha

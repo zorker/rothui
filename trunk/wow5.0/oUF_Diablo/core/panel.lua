@@ -97,7 +97,7 @@
     --left background behind health orb settings
     local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
     t:SetTexture(1,1,1)
-    t:SetVertexColor(1,0,0,0.1)
+    t:SetVertexColor(0.5,0,0,0.1)
     t:SetPoint("TOPLEFT")
     t:SetPoint("BOTTOMLEFT")
     t:SetWidth(scrollFrame:GetWidth()/2-2)
@@ -105,18 +105,11 @@
     --right background behind power settings
     local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
     t:SetTexture(1,1,1)
-    t:SetVertexColor(0,0.4,1,0.1)
+    t:SetVertexColor(0,0.2,0.5,0.1)
     t:SetPoint("TOPRIGHT")
     t:SetPoint("BOTTOMRIGHT")
     t:SetWidth(scrollFrame:GetWidth()/2-2)
     scrollChild.rightTexture = t
-    --top background behind master headlines
-    local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-2)
-    t:SetTexture(1,1,1)
-    t:SetVertexColor(0,0,0,0.3)
-    t:SetPoint("TOPRIGHT")
-    t:SetPoint("TOPLEFT")
-    t:SetHeight(40)
     --set scrollchild
     scrollFrame:SetScrollChild(scrollChild)
     scrollFrame.scrollChild = scrollChild
@@ -137,6 +130,27 @@
     fs:SetText(text)
     return fs
   end
+
+  local createHeadlineBackground = function(parent,headline)
+    local t = parent:CreateTexture(nil,"BACKGROUND",nil,-2)
+    t:SetTexture(1,1,1)
+    --t:SetVertexColor(0,0,0,0.4)
+    t:SetVertexColor(255,255,255,0.02)
+    t:SetPoint("TOP",headline,0,5)
+    t:SetPoint("LEFT")
+    t:SetPoint("RIGHT")
+    t:SetPoint("BOTTOM",headline,0,-5)
+    t:SetBlendMode("ADD")
+  end
+
+  local backdrop = {
+    bgFile = "",
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = false,
+    tileSize = 16,
+    edgeSize = 16,
+    insets = { left = 4, right = 4, top = 4, bottom = 4 },
+  }
 
   --basic slider func
   local createBasicSlider = function(parent, name, title)
@@ -178,15 +192,7 @@
   local createBasicColorPicker = function(parent, name, width, height)
     local picker = CF("Button", name, parent)
     picker:SetSize(width, height)
-    local backdropConfig = {
-      bgFile = "",
-      edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-      tile = false,
-      tileSize = 16,
-      edgeSize = 16,
-      insets = { left = 4, right = 4, top = 4, bottom = 4 },
-    }
-    picker:SetBackdrop(backdropConfig)
+    picker:SetBackdrop(backdrop)
     picker:SetBackdropBorderColor(0.5,0.5,0.5)
     --texture
     local color = picker:CreateTexture(nil,"BACKGROUND",nil,-7)
@@ -207,7 +213,6 @@
       ColorPickerFrame:Hide() -- Need to run the OnShow handler.
       ColorPickerFrame:Show()
     end
-    picker.click = function(r,g,b) end --we be rewritten later
     picker.callback = function(color)
       local r,g,b
       if color then r,g,b = unpack(color) else r,g,b = ColorPickerFrame:GetColorRGB() end
@@ -223,14 +228,13 @@
   end
 
   --basic dropdown menu func
-  local createBasicDropDownMenu = function(parent, name, text, table, width)
+  local createBasicDropDownMenu = function(parent, name, text, dataFunc, width)
     local dropdownMenu = CF("Frame", name, parent, "UIDropDownMenuTemplate")
     UIDropDownMenu_SetText(dropdownMenu, text)
     UIDropDownMenu_SetWidth(dropdownMenu, width)
-    dropdownMenu.click = function(self) end --will be rewritten later
     dropdownMenu.init = function(self)
       local info = UIDropDownMenu_CreateInfo()
-      local infos = table or {}
+      local infos = dataFunc() or {}
       --print(UIDropDownMenu_GetSelectedValue(self))
       infos[0] = { key = text, isTitle = true, notCheckable = true, notClickable = true }
       for i=0, #infos do
@@ -250,8 +254,11 @@
   end
 
   --basic dropdown menu with a button
-  local createBasicDropDownMenuWithButton = function(parent, name, text, table, width, buttonText)
-    local dropdownMenu = createBasicDropDownMenu(parent, name, text, table, width)
+  local createBasicDropDownMenuWithButton = function(parent, name, text, dataFunc, width, buttonText)
+    local dropdownMenu = createBasicDropDownMenu(parent, name, text, dataFunc, width)
+    dropdownMenu.click = function(self)
+      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
+    end
     local button = CF("Button", name.."Submit", parent, "UIPanelButtonTemplate")
     button:SetPoint("LEFT", dropdownMenu, "RIGHT", -13, 2.5)
     button.text = _G[button:GetName().."Text"]
@@ -268,10 +275,7 @@
 
   --create element health orb load preset
   local createDropdownHealthOrbLoadPreset = function(parent)
-    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelHealthOrbLoadPreset", "Pick a template", db.list.templates, 160, "Load")
-    dropdownMenu.click = function(self)
-      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
-    end
+    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelHealthOrbLoadPreset", "Pick a template", db.getListTemplate, 160, "Load")
     dropdownMenu.button:HookScript("OnClick", function()
       local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
       if not value then return end
@@ -282,10 +286,7 @@
 
   --create element power orb load preset
   local createDropdownPowerOrbLoadPreset = function(parent)
-    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelPowerOrbLoadPreset", "Pick a template", db.list.templates, 160, "Load")
-    dropdownMenu.click = function(self)
-      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
-    end
+    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelPowerOrbLoadPreset", "Pick a template", db.getListTemplate, 160, "Load")
     dropdownMenu.button:HookScript("OnClick", function()
       local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
       if not value then return end
@@ -296,7 +297,7 @@
 
   --create element health orb filling texture
   local createDropdownHealthOrbFillingTexture = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbFillingTexture", "Pick a texture", db.list.filling_texture, 160)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbFillingTexture", "Pick a texture", db.getListFillingTexture, 160)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -309,7 +310,7 @@
 
   --create element power orb filling texture
   local createDropdownPowerOrbFillingTexture = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbFillingTexture", "Pick a texture", db.list.filling_texture, 160)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbFillingTexture", "Pick a texture", db.getListFillingTexture, 160)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -464,29 +465,36 @@
   panel.elementHealthLoadPresetHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild.leftTexture, 20, -55)
   panel.elementPowerLoadPresetHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild.rightTexture, 20, -55)
   --position load preset dropdown
-  panel.elementHealthOrbLoadPreset:SetPoint("TOPLEFT", panel.elementHealthPresetHeadline, "BOTTOMLEFT", -20, -10)
-  panel.elementPowerOrbLoadPreset:SetPoint("TOPLEFT", panel.elementPowerPresetHeadline, "BOTTOMLEFT", -20, -10)
+  panel.elementHealthOrbLoadPreset:SetPoint("TOPLEFT", panel.elementHealthLoadPresetHeadline, "BOTTOMLEFT", -20, -10)
+  panel.elementPowerOrbLoadPreset:SetPoint("TOPLEFT", panel.elementPowerLoadPresetHeadline, "BOTTOMLEFT", -20, -10)
   --position filling headline
-  panel.elementHealthFillingHeadline:SetPoint("TOPLEFT", panel.elementHealthPresetHeadline, "BOTTOMLEFT", 0, -50)
-  panel.elementPowerFillingHeadline:SetPoint("TOPLEFT", panel.elementPowerPresetHeadline, "BOTTOMLEFT", 0, -50)
+  panel.elementHealthFillingHeadline:SetPoint("TOPLEFT", panel.elementHealthLoadPresetHeadline, "BOTTOMLEFT", 0, -50)
+  panel.elementPowerFillingHeadline:SetPoint("TOPLEFT", panel.elementPowerLoadPresetHeadline, "BOTTOMLEFT", 0, -50)
   --position filling texture dropdown
   panel.elementHealthOrbFillingTexture:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -20, -10)
   panel.elementPowerOrbFillingTexture:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", -20, -10)
-  --position filling color picker
-  panel.elementHealthOrbFillingColor:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -3, -45)
-  panel.elementPowerOrbFillingColor:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", -3, -45)
   --position filling color auto checkbutton
-  panel.elementHealthOrbFillingColorAuto:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -4, -75)
-  panel.elementPowerOrbFillingColorAuto:SetPoint("TOPLEFT", panel.elementPowerOrbFillingColor, "BOTTOMLEFT", -4, -75)
+  panel.elementHealthOrbFillingColorAuto:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -4, -45)
+  panel.elementPowerOrbFillingColorAuto:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", -4, -45)
+  --position filling color picker
+  panel.elementHealthOrbFillingColor:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -3, -75)
+  panel.elementPowerOrbFillingColor:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", -3, -75)
   --position model headline
-  panel.elementHealthModelHeadline:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "TOPLEFT", 0, -100)
-  panel.elementPowerModelHeadline:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "TOPLEFT", 0, -100)
+  panel.elementHealthModelHeadline:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", 0, -115)
+  panel.elementPowerModelHeadline:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", 0, -115)
   --position model enable checkbutton
-  panel.elementHealthOrbModelEnable:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "TOPLEFT", -4, -10)
-  panel.elementPowerOrbModelEnable:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "TOPLEFT", -4, -10)
+  panel.elementHealthOrbModelEnable:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -4, -10)
+  panel.elementPowerOrbModelEnable:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -4, -10)
   --position model alpha slider
-  panel.elementHealthOrbModelAlpha:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "TOPLEFT", 0, -65)
-  panel.elementPowerOrbModelAlpha:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "TOPLEFT", 0, -65)
+  panel.elementHealthOrbModelAlpha:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -50)
+  panel.elementPowerOrbModelAlpha:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -50)
+
+  --lines
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthMasterHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthLoadPresetHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthFillingHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthModelHeadline)
+
 
   ---------------------------------------------
   --UPDATE ORB ELEMENT VALUES

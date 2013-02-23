@@ -13,6 +13,9 @@
   local db = ns.db
 
   local unpack = unpack
+  local gsub = gsub
+  local strmatch = strmatch
+  local strlen = strlen
   local CF = CreateFrame
 
   --object container
@@ -93,7 +96,8 @@
     --create panel scroll child
     local scrollChild = CF("Frame",nil,ScrollFrame)
     scrollChild:SetWidth(scrollFrame:GetWidth())
-    scrollChild:SetHeight(1000)
+    --set scrollchild height
+    scrollChild:SetHeight(610)
     --left background behind health orb settings
     local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
     t:SetTexture(1,1,1)
@@ -105,7 +109,7 @@
     --right background behind power settings
     local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
     t:SetTexture(1,1,1)
-    t:SetVertexColor(0,0.4,0.9,0.1)
+    t:SetVertexColor(0,0.4,1,0.1)
     t:SetPoint("TOPRIGHT")
     t:SetPoint("BOTTOMRIGHT")
     t:SetWidth(scrollFrame:GetWidth()/2-2)
@@ -152,6 +156,16 @@
     insets = { left = 4, right = 4, top = 4, bottom = 4 },
   }
 
+  --basic button func
+  local createBasicButton = function(parent, name, text)
+    local button = CF("Button", name.."Button", parent, "UIPanelButtonTemplate")
+    button.text = _G[button:GetName().."Text"]
+    button.text:SetText(text)
+    button:SetWidth(button.text:GetStringWidth()+20)
+    button:SetHeight(button.text:GetStringHeight()+12)
+    return button
+  end
+
   --basic slider func
   local createBasicSlider = function(parent, name, title, minVal, maxVal, valStep)
     local slider = CF("Slider", name, parent, "OptionsSliderTemplate")
@@ -168,6 +182,12 @@
     editbox:SetAutoFocus(false)
     slider:SetScript("OnValueChanged", function(self,value)
       self.editbox:SetText(ns.func.round(value))
+    end)
+    editbox:SetScript("OnTextChanged", function(self)
+      local val = self:GetText()
+      if tonumber(val) then
+         self:GetParent():SetValue(val)
+      end
     end)
     editbox:SetScript("OnEnterPressed", function(self)
       local val = self:GetText()
@@ -244,10 +264,10 @@
   end
 
   --basic dropdown menu func
-  local createBasicDropDownMenu = function(parent, name, text, dataFunc, width)
+  local createBasicDropDownMenu = function(parent, name, text, dataFunc, width, menu)
     local dropdownMenu = CF("Frame", name, parent, "UIDropDownMenuTemplate")
     UIDropDownMenu_SetText(dropdownMenu, text)
-    UIDropDownMenu_SetWidth(dropdownMenu, width)
+    if width then UIDropDownMenu_SetWidth(dropdownMenu, width) end
     dropdownMenu.init = function(self)
       local info = UIDropDownMenu_CreateInfo()
       local infos = dataFunc() or {}
@@ -260,12 +280,16 @@
         info.value = infos[i].value or ""
         info.isTitle = infos[i].isTitle or false
         info.notClickable = infos[i].notClickable or false
-        info.notCheckable = infos[i].notCheckable or false
+        info.notCheckable = infos[i].notCheckable or true
         info.func = self.click
         UIDropDownMenu_AddButton(info)
       end
     end
-    UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
+    if menu then
+      UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init, "MENU")
+    else
+      UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
+    end
     return dropdownMenu
   end
 
@@ -275,12 +299,8 @@
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
     end
-    local button = CF("Button", name.."Submit", parent, "UIPanelButtonTemplate")
-    button:SetPoint("LEFT", dropdownMenu, "RIGHT", -13, 2.5)
-    button.text = _G[button:GetName().."Text"]
-    button.text:SetText(buttonText)
-    button:SetWidth(button.text:GetStringWidth()+30)
-    button:SetHeight(27)
+    local button = createBasicButton(parent, name.."Submit", buttonText)
+    button:SetPoint("LEFT", dropdownMenu, "RIGHT", -17, 0)
     dropdownMenu.button = button
     return dropdownMenu
   end
@@ -288,28 +308,6 @@
   ---------------------------------------------
   --CREATE PANEL ELEMENT FUNCTIONS
   ---------------------------------------------
-
-  --create element health orb load preset
-  local createDropdownHealthOrbLoadPreset = function(parent)
-    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelHealthOrbLoadPreset", "Pick a template", db.getListTemplate, 160, "Load")
-    dropdownMenu.button:HookScript("OnClick", function()
-      local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
-      if not value then return end
-      print(UIDropDownMenu_GetSelectedValue(dropdownMenu))
-    end)
-    return dropdownMenu
-  end
-
-  --create element power orb load preset
-  local createDropdownPowerOrbLoadPreset = function(parent)
-    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelPowerOrbLoadPreset", "Pick a template", db.getListTemplate, 160, "Load")
-    dropdownMenu.button:HookScript("OnClick", function()
-      local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
-      if not value then return end
-      print(UIDropDownMenu_GetSelectedValue(dropdownMenu))
-    end)
-    return dropdownMenu
-  end
 
   --create element health orb filling texture
   local createDropdownHealthOrbFillingTexture = function(parent)
@@ -439,6 +437,30 @@
     return dropdownMenu
   end
 
+  --create element health orb model alpha
+  local createSliderHealthOrbModelAlpha = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelAlpha", "Alpha", 0, 1, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      panel.saveHealthOrbModelAlpha(value)
+      --update orb view
+      panel.updateHealthOrbModelAlpha()
+    end)
+    return slider
+  end
+
+  --create element power orb model alpha
+  local createSliderPowerOrbModelAlpha = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelAlpha", "Alpha", 0, 1, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      panel.savePowerOrbModelAlpha(value)
+      --update orb view
+      panel.updatePowerOrbModelAlpha()
+    end)
+    return slider
+  end
+
   --create element health orb model scale
   local createSliderHealthOrbModelScale = function(parent)
     local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelScale", "Scale", 0.001, 6, 0.001)
@@ -463,45 +485,342 @@
     return slider
   end
 
-  --create element health orb model alpha
-  local createSliderHealthOrbModelAlpha = function(parent)
-    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelAlpha", "Visibility", 0, 1, 0.001)
+  --create element health orb model pos x
+  local createSliderHealthOrbModelPosX = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelPosX", "X-Axis", -5, 5, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      panel.saveHealthOrbModelAlpha(value)
+      --panel.saveHealthOrbModelPosX(value)
       --update orb view
-      panel.updateHealthOrbModelAlpha()
+      --panel.updateHealthOrbModelPosX()
     end)
     return slider
   end
 
-  --create element power orb model alpha
-  local createSliderPowerOrbModelAlpha = function(parent)
-    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelAlpha", "Visibility", 0, 1, 0.001)
+  --create element power orb model pos x
+  local createSliderPowerOrbModelPosX = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelPosX", "X-Axis", -5, 5, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      panel.savePowerOrbModelAlpha(value)
+      --panel.savePowerOrbModelPosX(value)
       --update orb view
-      panel.updatePowerOrbModelAlpha()
+      --panel.updatePowerOrbModelPosX()
     end)
     return slider
   end
+
+  --create element health orb model pos y
+  local createSliderHealthOrbModelPosY = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelPosY", "Y-Axis", -5, 5, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      --panel.saveHealthOrbModelPosY(value)
+      --update orb view
+      --panel.updateHealthOrbModelPosY()
+    end)
+    return slider
+  end
+
+  --create element power orb model pos y
+  local createSliderPowerOrbModelPosY = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelPosY", "Y-Axis", -5, 5, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      --panel.savePowerOrbModelPosY(value)
+      --update orb view
+      --panel.updatePowerOrbModelPosY()
+    end)
+    return slider
+  end
+
+  --create element health orb model rotation
+  local createSliderHealthOrbModelRotation = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelRotation", "Rotation", -4, 4, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      --panel.saveHealthOrbModelRotation(value)
+      --update orb view
+      --panel.updateHealthOrbModelRotation()
+    end)
+    return slider
+  end
+
+  --create element power orb model rotation
+  local createSliderPowerOrbModelRotation = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelRotation", "Rotation", -4, 4, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      --panel.savePowerOrbModelRotation(value)
+      --update orb view
+      --panel.updatePowerOrbModelRotation()
+    end)
+    return slider
+  end
+
+  ---------------------------------------------
+  --CREATE BOTTOM PANEL ELEMENT FUNCTIONS
+  ---------------------------------------------
+
+  --createBottomButtonHealthOrbSave
+  local createBottomButtonHealthOrbSave = function(parent)
+    --the save button needs a popup with an editbox
+    StaticPopupDialogs["OUF_DIABLO_HEALTHORB_SAVE"] = {
+      text = "Enter a name for your template:",
+      button1 = ACCEPT,
+      button2 = CANCEL,
+      hasEditBox = 1,
+      maxLetters = 24,
+      OnAccept = function(self)
+        local text = self.editBox:GetText()
+        text = text:gsub(" ", "")
+        if strmatch(text,"%W") then
+          print("|c00FF0000ERROR: Template could not be saved. Non-alphanumerical values found!")
+        elseif strlen(text) == 0 then
+          print("|c00FF0000ERROR: Template name is empty!")
+        else
+          db.saveTemplate(text,"HEALTH")
+        end
+      end,
+      EditBoxOnEnterPressed = function(self)
+        local text = self:GetParent().editBox:GetText()
+        text = text:gsub(" ", "")
+        if strmatch(text,"%W") then
+          print("|c00FF0000ERROR: Template could not be saved. Non-alphanumerical values found!")
+        elseif strlen(text) == 0 then
+          print("|c00FF0000ERROR: Template name is empty!")
+        else
+          db.saveTemplate(text,"HEALTH")
+          self:GetParent():Hide()
+        end
+      end,
+      OnShow = function(self)
+        self.editBox:SetFocus()
+        panel:SetAlpha(0.2)
+      end,
+      OnHide = function(self)
+        ChatEdit_FocusActiveWindow()
+        self.editBox:SetText("")
+        panel:SetAlpha(1)
+      end,
+      timeout = 0,
+      exclusive = 1,
+      whileDead = 1,
+      hideOnEscape = 1,
+      preferredIndex = 3,
+    }
+    local button = createBasicButton(parent, addon.."PanelBottomHealthOrbSave", "Save")
+    button:HookScript("OnClick", function()
+      StaticPopup_Show("OUF_DIABLO_HEALTHORB_SAVE")
+    end)
+    button:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine("Click here to save the current health orb settings as a template.", 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+    return button
+  end
+
+  --createBottomButtonHealthOrbLoad
+  local createBottomButtonHealthOrbLoad = function(parent)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbLoadTemplate", "Pick a template", db.getListTemplate, nil, "MENU")
+    dropdownMenu.click = function(self)
+      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
+      db.loadTemplate(self.value,"HEALTH")
+    end
+    local button = createBasicButton(parent, addon.."PanelBottomHealthOrbLoad", "Load")
+    button:HookScript("OnClick", function()
+      print("click load health")
+      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 0, 0)
+    end)
+    button:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine("Click here to load a template into your health orb.", 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+    return button
+  end
+
+  --createBottomButtonHealthOrbReset
+  local createBottomButtonHealthOrbReset = function(parent)
+    local button = createBasicButton(parent, addon.."PanelBottomHealthOrbReset", "Reset")
+    button:HookScript("OnClick", function()
+      db.loadCharacterDataDefaults("HEALTH")
+    end)
+    button:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine("Click here to reset the healthorb to default.", 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+    return button
+  end
+
+  --createBottomButtonPowerOrbSave
+  local createBottomButtonPowerOrbSave = function(parent)
+    --the save button needs a popup with an editbox
+    StaticPopupDialogs["OUF_DIABLO_POWERORB_SAVE"] = {
+      text = "Enter a name for your template:",
+      button1 = ACCEPT,
+      button2 = CANCEL,
+      hasEditBox = 1,
+      maxLetters = 24,
+      OnAccept = function(self)
+        local text = self.editBox:GetText()
+        text = text:gsub(" ", "")
+        if strmatch(text,"%W") then
+          print("|c00FF0000ERROR: Template could not be saved. Non-alphanumerical values found!")
+        elseif strlen(text) == 0 then
+          print("|c00FF0000ERROR: Template name is empty!")
+        else
+          db.saveTemplate(text,"POWER")
+        end
+      end,
+      EditBoxOnEnterPressed = function(self)
+        local text = self:GetParent().editBox:GetText()
+        text = text:gsub(" ", "")
+        if strmatch(text,"%W") then
+          print("|c00FF0000ERROR: Template could not be saved. Non-alphanumerical values found!")
+        elseif strlen(text) == 0 then
+          print("|c00FF0000ERROR: Template name is empty!")
+        else
+          db.saveTemplate(text,"POWER")
+          self:GetParent():Hide()
+        end
+      end,
+      OnShow = function(self)
+        self.editBox:SetFocus()
+        panel:SetAlpha(0.2)
+      end,
+      OnHide = function(self)
+        ChatEdit_FocusActiveWindow()
+        self.editBox:SetText("")
+        panel:SetAlpha(1)
+      end,
+      timeout = 0,
+      exclusive = 1,
+      whileDead = 1,
+      hideOnEscape = 1,
+      preferredIndex = 3,
+    }
+    local button = createBasicButton(parent, addon.."PanelBottomPowerOrbSave", "Save")
+    button:HookScript("OnClick", function()
+      StaticPopup_Show("OUF_DIABLO_POWERORB_SAVE")
+    end)
+    button:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine("Click here to save the current power orb settings as a template.", 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+    return button
+  end
+
+  --createBottomButtonPowerOrbLoad
+  local createBottomButtonPowerOrbLoad = function(parent)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbLoadTemplate", "Pick a template", db.getListTemplate, nil, "MENU")
+    dropdownMenu.click = function(self)
+      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
+      db.loadTemplate(self.value,"POWER")
+    end
+    local button = createBasicButton(parent, addon.."PanelBottomPowerOrbLoad", "Load")
+    button:HookScript("OnClick", function()
+      print("click load power")
+      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 0, 0)
+    end)
+    button:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine("Click here to load a template into your power orb.", 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+    return button
+  end
+
+  --createBottomButtonPowerOrbReset
+  local createBottomButtonPowerOrbReset = function(parent)
+    local button = createBasicButton(parent, addon.."PanelBottomPowerOrbReset", "Reset")
+    button:HookScript("OnClick", function()
+      db.loadCharacterDataDefaults("POWER")
+    end)
+    button:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine("Click here to reset the powerorb to default.", 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+    return button
+  end
+
+  --createBottomButtonTemplateDelete
+  local createBottomButtonTemplateDelete = function(parent)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelBottomDeleteTemplate", "Pick a template", db.getListTemplate, nil, "MENU")
+    dropdownMenu.click = function(self)
+      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
+      db.deleteTemplate(self.value)
+    end
+    local button = createBasicButton(parent, addon.."PanelBottomTemplateDelete", "Delete")
+    button:HookScript("OnClick", function()
+      print("click delete template")
+      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 0, 0)
+    end)
+    button:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine("Click here to delete a template from the database.", 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+    return button
+  end
+
+  --[[
+  --create element health orb load preset
+  local createDropdownHealthOrbLoadPreset = function(parent)
+    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelHealthOrbLoadPreset", "Choose", db.getListTemplate, 70, "Load")
+    dropdownMenu.button:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine("Click here to load a template into your health orb.", 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    dropdownMenu.button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+    dropdownMenu.button:HookScript("OnClick", function()
+      local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
+      if not value then return end
+      db.loadTemplate(value,"HEALTH")
+      print(value)
+    end)
+    return dropdownMenu
+  end
+
+  --create element power orb load preset
+  local createDropdownPowerOrbLoadPreset = function(parent)
+    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelPowerOrbLoadPreset", "Choose", db.getListTemplate, 70, "Load")
+    dropdownMenu.button:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine("Click here to load a template into your power orb.", 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    dropdownMenu.button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+    dropdownMenu.button:HookScript("OnClick", function()
+      local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
+      if not value then return end
+      db.loadTemplate(value,"POWER")
+      print(value)
+    end)
+    return dropdownMenu
+  end
+  ]]--
 
   ---------------------------------------------
   --SPAWN PANEL ELEMENTS
   ---------------------------------------------
 
   --create master headline
-  panel.elementHealthMasterHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalHuge","Health Orb Settings")
+  panel.elementHealthMasterHeadline = createBasicFontString(panel,nil,nil,"GameFontNormalLarge","Health Orb Settings")
   panel.elementHealthMasterHeadline:SetTextColor(1,0,0)
-  panel.elementPowerMasterHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalHuge","Power Orb Settings")
-  panel.elementPowerMasterHeadline:SetTextColor(0,0.4,1)
-  --create load preset headline
-  panel.elementHealthLoadPresetHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Load preset")
-  panel.elementPowerLoadPresetHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Load preset")
-  --create load preset dropdown
-  panel.elementHealthOrbLoadPreset = createDropdownHealthOrbLoadPreset(panel.scrollFrame.scrollChild)
-  panel.elementPowerOrbLoadPreset = createDropdownPowerOrbLoadPreset(panel.scrollFrame.scrollChild)
+  panel.elementPowerMasterHeadline = createBasicFontString(panel,nil,nil,"GameFontNormalLarge","Power Orb Settings")
+  panel.elementPowerMasterHeadline:SetTextColor(0,0.5,1)
   --create filling headline
   panel.elementHealthFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling")
   panel.elementPowerFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling")
@@ -523,29 +842,51 @@
   --create model animation dropdown
   panel.elementHealthOrbModelAnimation = createDropdownHealthOrbModelAnimation(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelAnimation = createDropdownPowerOrbModelAnimation(panel.scrollFrame.scrollChild)
-  --create model scale slider
-  panel.elementHealthOrbModelScale = createSliderHealthOrbModelScale(panel.scrollFrame.scrollChild)
-  panel.elementPowerOrbModelScale = createSliderPowerOrbModelScale(panel.scrollFrame.scrollChild)
   --create model alpha slider
   panel.elementHealthOrbModelAlpha = createSliderHealthOrbModelAlpha(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelAlpha = createSliderPowerOrbModelAlpha(panel.scrollFrame.scrollChild)
+  --create model scale slider
+  panel.elementHealthOrbModelScale = createSliderHealthOrbModelScale(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbModelScale = createSliderPowerOrbModelScale(panel.scrollFrame.scrollChild)
+  --create model pos x slider
+  panel.elementHealthOrbModelPosX = createSliderHealthOrbModelPosX(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbModelPosX = createSliderPowerOrbModelPosX(panel.scrollFrame.scrollChild)
+  --create model pos y slider
+  panel.elementHealthOrbModelPosY = createSliderHealthOrbModelPosY(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbModelPosY = createSliderPowerOrbModelPosY(panel.scrollFrame.scrollChild)
+  --create model rotation slider
+  panel.elementHealthOrbModelRotation = createSliderHealthOrbModelRotation(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbModelRotation = createSliderPowerOrbModelRotation(panel.scrollFrame.scrollChild)
+
+  ---------------------------------------------
+  --CREATE BOTTOM PANEL BUTTONS
+  ---------------------------------------------
+
+  --createBottomButtonHealthOrbSave
+  panel.bottomElementHealthOrbSave = createBottomButtonHealthOrbSave(panel)
+  --createBottomButtonHealthOrbLoad
+  panel.bottomElementHealthOrbLoad = createBottomButtonHealthOrbLoad(panel)
+  --createBottomButtonHealthOrbReset
+  panel.bottomElementHealthOrbReset = createBottomButtonHealthOrbReset(panel)
+  --createBottomButtonPowerOrbSave
+  panel.bottomElementPowerOrbSave = createBottomButtonPowerOrbSave(panel)
+  --createBottomButtonPowerOrbLoad
+  panel.bottomElementPowerOrbLoad = createBottomButtonPowerOrbLoad(panel)
+  --createBottomButtonPowerOrbReset
+  panel.bottomElementPowerOrbReset = createBottomButtonPowerOrbReset(panel)
+  --createBottomButtonTemplateDelete
+  panel.bottomElementTemplateDelete = createBottomButtonTemplateDelete(panel)
 
   ---------------------------------------------
   --POSITION PANEL ELEMENTS
   ---------------------------------------------
 
   --position master headline
-  panel.elementHealthMasterHeadline:SetPoint("TOP", panel.scrollFrame.scrollChild.leftTexture, 0, -10)
-  panel.elementPowerMasterHeadline:SetPoint("TOP", panel.scrollFrame.scrollChild.rightTexture, 0, -10)
-  --position load preset headline
-  panel.elementHealthLoadPresetHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild.leftTexture, 20, -55)
-  panel.elementPowerLoadPresetHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild.rightTexture, 20, -55)
-  --position load preset dropdown
-  panel.elementHealthOrbLoadPreset:SetPoint("TOPLEFT", panel.elementHealthLoadPresetHeadline, "BOTTOMLEFT", -20, -10)
-  panel.elementPowerOrbLoadPreset:SetPoint("TOPLEFT", panel.elementPowerLoadPresetHeadline, "BOTTOMLEFT", -20, -10)
+  panel.elementHealthMasterHeadline:SetPoint("BOTTOM", panel.scrollFrame, "TOP", (-panel.scrollFrame:GetWidth()/2-2)/2, 14)
+  panel.elementPowerMasterHeadline:SetPoint("BOTTOM", panel.scrollFrame, "TOP", (panel.scrollFrame:GetWidth()/2-2)/2, 14)
   --position filling headline
-  panel.elementHealthFillingHeadline:SetPoint("TOPLEFT", panel.elementHealthLoadPresetHeadline, "BOTTOMLEFT", 0, -50)
-  panel.elementPowerFillingHeadline:SetPoint("TOPLEFT", panel.elementPowerLoadPresetHeadline, "BOTTOMLEFT", 0, -50)
+  panel.elementHealthFillingHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild.leftTexture, 20, -10)
+  panel.elementPowerFillingHeadline:SetPoint("TOPLEFT", panel.scrollFrame.scrollChild.rightTexture, 20, -10)
   --position filling texture dropdown
   panel.elementHealthOrbFillingTexture:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", -20, -10)
   panel.elementPowerOrbFillingTexture:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", -20, -10)
@@ -570,13 +911,41 @@
   --position model scale slider
   panel.elementHealthOrbModelScale:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -110)
   panel.elementPowerOrbModelScale:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -110)
+  --position model pos x slider
+  panel.elementHealthOrbModelPosX:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -140)
+  panel.elementPowerOrbModelPosX:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -140)
+  --position model pos y slider
+  panel.elementHealthOrbModelPosY:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -170)
+  panel.elementPowerOrbModelPosY:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -170)
+  --position model rotation slider
+  panel.elementHealthOrbModelRotation:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -200)
+  panel.elementPowerOrbModelRotation:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -200)
+
+  ---------------------------------------------
+  --POSITION BOTTOM PANEL BUTTONS
+  ---------------------------------------------
+
+  --health orb save/load
+  panel.bottomElementHealthOrbSave:SetPoint("BOTTOMLEFT",2,4)
+  panel.bottomElementHealthOrbLoad:SetPoint("LEFT", panel.bottomElementHealthOrbSave, "RIGHT", -2, 0)
+  --panel.elementHealthOrbLoadPreset:SetPoint("LEFT", panel.bottomElementHealthOrbSave, "RIGHT", -17, 0)
+
+  --power orb save/load
+  panel.bottomElementPowerOrbSave:SetPoint("BOTTOMLEFT",285,4)
+  panel.bottomElementPowerOrbLoad:SetPoint("LEFT", panel.bottomElementPowerOrbSave, "RIGHT", -2, 0)
+  --panel.elementPowerOrbLoadPreset:SetPoint("LEFT", panel.bottomElementPowerOrbSave, "RIGHT", -17, 0)
+
+  --position the reset buttons
+  panel.bottomElementHealthOrbReset:SetPoint("LEFT", panel.elementHealthMasterHeadline, "RIGHT", 10, 0)
+  panel.bottomElementPowerOrbReset:SetPoint("LEFT", panel.elementPowerMasterHeadline, "RIGHT", 10, 0)
+
+  --position the delete button
+  panel.bottomElementTemplateDelete:SetPoint("BOTTOMRIGHT",-5,4)
 
   ---------------------------------------------
   --CREATE HEADLINE BACKGROUNDS
   ---------------------------------------------
 
-  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthMasterHeadline)
-  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthLoadPresetHeadline)
   createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthFillingHeadline)
   createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthModelHeadline)
 
@@ -975,14 +1344,17 @@
     panel.updateHealthOrbFillingTexture()
     --update power orb filling texture
     panel.updatePowerOrbFillingTexture()
+    --important -- since auto coloring rewrites the color it has to be called after filling color
     --update health orb filling color auto
     panel.updateHealthOrbFillingColorAuto()
     --update power orb filling color auto
     panel.updatePowerOrbFillingColorAuto()
+
     --update health orb filling color
     panel.updateHealthOrbFillingColor()
     --update power orb filling color
     panel.updatePowerOrbFillingColor()
+
     --update health orb model enable
     panel.updateHealthOrbModelEnable()
     --update power orb model enable
@@ -1009,10 +1381,10 @@
   --FIX THE ORB DISPLAY ON NON-FULLY-FILLED ORBS
   ---------------------------------------------
 
-  --so I need to do sth wierd here...since I use the actual orbs for preview the changes and there are some powertype orbs
-  --that start out empty this would result in an empty preview...which is bad since you don't see your changes
-  --the current problem is that I'm using forceUpdate atm to automatically set the class/powertype colors if that checkbox is enabled
-  --so that forceupdate will destroy what I'm trying to do here...so I hack some stuff
+  --I want to use the orbs as a preview medium while in the config
+  --some orbs are empty (rage)
+  --empty orbs display nothing so we make sure all orbs are filled on config loadup
+  --forceUpdate on close makes sure they reset properly
 
   function panel:Enable()
     --register some stuff
@@ -1033,6 +1405,8 @@
     self.eventHelper:UnregisterEvent("UNIT_DISPLAYPOWER")
     self.eventHelper:SetScript("OnEvent", nil)
     self.eventHelper:SetOrbsToDefault()
+    --reset the focus to the last active chatwindow
+    ChatEdit_FocusActiveWindow() --nice function ;)
   end
 
   do

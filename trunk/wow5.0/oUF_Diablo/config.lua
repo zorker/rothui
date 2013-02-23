@@ -638,7 +638,7 @@
   --player stuff
   cfg.playername  = UnitName("player")
   cfg.playerclass = select(2,UnitClass("player"))
-  cfg.playercolor = RAID_CLASS_COLORS[playerclass]
+  cfg.playercolor = RAID_CLASS_COLORS[cfg.playerclass]
 
   ----------------------------------------
   -- other

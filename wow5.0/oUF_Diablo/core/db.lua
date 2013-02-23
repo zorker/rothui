@@ -25,108 +25,114 @@
   ---------------------------------------------
 
   --default orb setup
-  db.default.orb = {
-    --health
-    ["HEALTH"] = {
-      --filling
-      filling = {
-        texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15",
-        color       = { r = 1, g = 0, b = 0, },
-        colorAuto   = false, --automatic coloring based on class/powertype
-      },
-      --model
-      model = {
-        enable            = false,
-        displayInfo       = 32368,
-        camDistanceScale  = 1.15,
-        pos_x             = 0,
-        pos_y             = 0.4,
-        rotation          = 0,
-        portraitZoom      = 1,
-        alpha             = 1,
-      },
-      --galaxies
-      galaxies = {},
-      --spark
-      spark = {
-        alpha = 0.9,
-      },
-      --highlight
-      highlight = {
-        alpha = 0.3,
-      },
-    },--health end
-    --power
-    ["POWER"] = {
-      --filling
-      filling = {
-        texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15",
-        color       = { r = 0, g = 0, b = 1, },
-        colorAuto   = false, --automatic coloring based on class/powertype
-      },
-      --model
-      model = {
-        enable            = false,
-        displayInfo       = 32368,
-        camDistanceScale  = 1.15,
-        pos_x             = 0,
-        pos_y             = 0.4,
-        rotation          = 0,
-        portraitZoom      = 1,
-        alpha             = 1,
-      },
-      --galaxies
-      galaxies  = {},
-      --spark
-      spark = {
-        alpha = 0.9,
-      },
-      --highlight
-      highlight = {
-        alpha = 0.3,
-      },
-    },--power end
-  } --default end
+  function db:GetOrbDefaults()
+    return {
+      --health
+      ["HEALTH"] = {
+        --filling
+        filling = {
+          texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15",
+          color       = { r = 1, g = 0, b = 0, },
+          colorAuto   = false, --automatic coloring based on class/powertype
+        },
+        --model
+        model = {
+          enable            = false,
+          displayInfo       = 32368,
+          camDistanceScale  = 1.15,
+          pos_x             = 0,
+          pos_y             = 0.4,
+          rotation          = 0,
+          portraitZoom      = 1,
+          alpha             = 1,
+        },
+        --galaxies
+        galaxies = {},
+        --spark
+        spark = {
+          alpha = 0.9,
+        },
+        --highlight
+        highlight = {
+          alpha = 0.3,
+        },
+      },--health end
+      --power
+      ["POWER"] = {
+        --filling
+        filling = {
+          texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15",
+          color       = { r = 0, g = 0, b = 1, },
+          colorAuto   = false, --automatic coloring based on class/powertype
+        },
+        --model
+        model = {
+          enable            = false,
+          displayInfo       = 32368,
+          camDistanceScale  = 1.15,
+          pos_x             = 0,
+          pos_y             = 0.4,
+          rotation          = 0,
+          portraitZoom      = 1,
+          alpha             = 1,
+        },
+        --galaxies
+        galaxies  = {},
+        --spark
+        spark = {
+          alpha = 0.9,
+        },
+        --highlight
+        highlight = {
+          alpha = 0.3,
+        },
+      },--power end
+    } --default end
+  end
 
   --load the default config on loadup so the rest can initialize, the view will get updated later once the saved variables are fetched
-  db.char = db.default.orb
+  db.char = db:GetOrbDefaults()
 
   --default template
-  db.default.template = {
-    ["pearl"] = {
-      --filling
-      filling = {
-        texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15",
-        color       = { r = 1, g = 0, b = 0, },
-        colorAuto   = false, --automatic coloring based on class/powertype
+  function db:GetTemplateDefaults()
+    return {
+      ["pearl"] = {
+        --filling
+        filling = {
+          texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15",
+          color       = { r = 1, g = 0, b = 0, },
+          colorAuto   = false, --automatic coloring based on class/powertype
+        },
+        --model
+        model = {
+          enable            = true,
+          displayInfo       = 32368,
+          camDistanceScale  = 1.15,
+          pos_x             = 0,
+          pos_y             = 0.4,
+          rotation          = 0,
+          portraitZoom      = 1,
+          alpha             = 1,
+        },
+        --galaxies
+        galaxies = {},
+        --spark
+        spark = {
+          alpha = 0.9,
+        },
+        --highlight
+        highlight = {
+          alpha = 0.3,
+        },
       },
-      --model
-      model = {
-        enable            = true,
-        displayInfo       = 32368,
-        camDistanceScale  = 1.15,
-        pos_x             = 0,
-        pos_y             = 0.4,
-        rotation          = 0,
-        portraitZoom      = 1,
-        alpha             = 1,
-      },
-      --galaxies
-      galaxies = {},
-      --spark
-      spark = {
-        alpha = 0.9,
-      },
-      --highlight
-      highlight = {
-        alpha = 0.3,
-      },
-    },
-  }
+    }
+  end
 
-  db.default.templateList = {
-    { value = "pearl", key = "pearl" },
-  }
+  function db:GetTemplateListDefaults()
+    return {
+      { value = "pearl", key = "pearl" },
+    }
+  end
 
   ---------------------------------------------
   --LOAD SAVED VARIABLES
@@ -135,8 +141,9 @@
   --db script on variables loaded
   db:SetScript("OnEvent", function(self, event)
     --debug - reset data to defaults
-    --OUF_DIABLO_DB_CHAR = self.default.orb
-    --OUF_DIABLO_DB_GLOB = self.default.template
+    --OUF_DIABLO_DB_CHAR = db:GetOrbDefaults()
+    --OUF_DIABLO_DB_GLOB = db:GetTemplateDefaults()
+    --OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = db:GetTemplateListDefaults()
     --load global data
     self.loadGlobalData()
     --load character data
@@ -154,9 +161,20 @@
   ---------------------------------------------
 
   --load character data defaults
-  db.loadCharacterDataDefaults = function()
-    print(addon..": character data defaults loaded")
-    OUF_DIABLO_DB_CHAR = db.default.orb
+  db.loadCharacterDataDefaults = function(type)
+    local data = db:GetOrbDefaults()
+    if type then
+      if type == "HEALTH" then
+        OUF_DIABLO_DB_CHAR[type] = data[type]
+        print(addon..": health orb reseted to default")
+      elseif type == "POWER" then
+        OUF_DIABLO_DB_CHAR[type] = data[type]
+        print(addon..": power orb reseted to default")
+      end
+    else
+      OUF_DIABLO_DB_CHAR = data
+      print(addon..": character data reset to default")
+    end
     db.char = OUF_DIABLO_DB_CHAR
     --update the orb view
     ns.panel.updateOrbView()
@@ -176,16 +194,16 @@
   --load global data defaults
   db.loadGlobalDataDefaults = function()
     print(addon..": global data defaults loaded")
-    OUF_DIABLO_DB_GLOB = db.default.template
-    OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = db.default.templateList
+    OUF_DIABLO_DB_GLOB = db:GetTemplateDefaults()
+    OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = db:GetTemplateListDefaults()
     db.glob = OUF_DIABLO_DB_GLOB
     db.list.template = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
   end
 
   --load global data
   db.loadGlobalData = function()
-    OUF_DIABLO_DB_GLOB = OUF_DIABLO_DB_GLOB or db.default.template
-    OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST or db.default.templateList
+    OUF_DIABLO_DB_GLOB = OUF_DIABLO_DB_GLOB or db:GetTemplateDefaults()
+    OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST or db:GetTemplateListDefaults()
     db.glob = OUF_DIABLO_DB_GLOB
     db.list.template = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
   end
@@ -200,11 +218,11 @@
   db.loadTemplate = function(name,type)
     if not OUF_DIABLO_DB_GLOB or not name then return end
     if not OUF_DIABLO_DB_GLOB[name] then
-      print(addon..": template *"..name.."* not found")
+      print(addon..": template |c003399FF"..name.."|r not found")
       return
     end
     OUF_DIABLO_DB_CHAR[type] = OUF_DIABLO_DB_GLOB[name]
-    print(addon..": template *"..name.."* loaded")
+    print(addon..": template |c003399FF"..name.."|r loaded")
     db.char = OUF_DIABLO_DB_CHAR
     --update the orb view
     ns.panel.updateOrbView()
@@ -217,7 +235,6 @@
     if not OUF_DIABLO_DB_GLOB or not name then return end
     --adding template
     OUF_DIABLO_DB_GLOB[name] = db.char[type]
-    print(addon..": template *"..name.."* saved")
     --adding the template name to the key-value pair list
     local nameFound = false
     for i,v in ipairs(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST) do
@@ -228,26 +245,27 @@
     end
     if not nameFound then
       tinsert(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, { key = name, value = name })
-      print(addon..": template list entry *"..name.."* added")
     end
+    print(addon.." template |c003399FF"..name.."|r saved")
     --not sure if this is acutally needed since the reference should still be intact...
     db.glob = OUF_DIABLO_DB_GLOB
     db.list.template = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
     --update the panel view
-    panel.updatePanelView()
+    ns.panel.updatePanelView()
   end
 
   --delete template func
   --name: template name
   db.deleteTemplate = function(name)
     if not OUF_DIABLO_DB_GLOB or not name then return end
+    if name == "pearl" then return end
     if not OUF_DIABLO_DB_GLOB[name] then
-      print(addon..": template *"..name.."* not found")
+      print(addon..": template |c003399FF"..name.."|r not found")
       return
     end
     --setting the template to nil
     OUF_DIABLO_DB_GLOB[name] = nil
-    print(addon..": template *"..name.."* deleted")
+    print(addon..": template |c003399FF"..name.."|r deleted")
     --removing the template name from the key-value pair list
     local indexFound
     for i,v in ipairs(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST) do
@@ -258,13 +276,13 @@
     end
     if indexFound then
       tremove(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, indexFound)
-      print(addon..": template list entry *"..name.."* deleted")
+      print(addon..": template list entry |c003399FF"..name.."|r deleted")
     end
     --not sure if this is acutally needed since the reference should still be intact...
     db.glob = OUF_DIABLO_DB_GLOB
     db.list.template = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
     --update the panel view
-    panel.updatePanelView()
+    ns.panel.updatePanelView()
   end
 
   ---------------------------------------------

@@ -465,7 +465,7 @@
 
   --create element health orb model alpha
   local createSliderHealthOrbModelAlpha = function(parent)
-    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelAlpha", "Alpha", 0, 1, 0.001)
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelAlpha", "Visibility", 0, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
       panel.saveHealthOrbModelAlpha(value)
@@ -477,7 +477,7 @@
 
   --create element power orb model alpha
   local createSliderPowerOrbModelAlpha = function(parent)
-    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelAlpha", "Alpha", 0, 1, 0.001)
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelAlpha", "Visibility", 0, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
       panel.savePowerOrbModelAlpha(value)
@@ -599,39 +599,39 @@
     if panel.loadHealthOrbFillingColorAuto() then
       ns.HealthOrb.fill.colorClass = true
       ns.HealthOrb.fill.colorHealth = true
+      local color = ns.cfg.playercolor or { r = 1, g = 0, b = 1, }
+      ns.HealthOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
     else
       ns.HealthOrb.fill.colorClass = false
       ns.HealthOrb.fill.colorHealth = false
       local color = panel.loadHealthOrbFillingColor()
       ns.HealthOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
     end
-    ns.HealthOrb.fill:ForceUpdate()
   end
 
   --update power orb filling color auto
   panel.updatePowerOrbFillingColorAuto = function()
     if panel.loadPowerOrbFillingColorAuto() then
       ns.PowerOrb.fill.colorPower = true
+      local color = ns.cfg.powercolors[select(2, UnitPowerType("player"))] or { r = 1, g = 0, b = 1, }
+      ns.PowerOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
     else
       ns.PowerOrb.fill.colorPower = false
       local color = panel.loadPowerOrbFillingColor()
       ns.PowerOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
     end
-    ns.PowerOrb.fill:ForceUpdate()
   end
 
   --update health orb filling color
   panel.updateHealthOrbFillingColor = function()
     local color = panel.loadHealthOrbFillingColor()
     ns.HealthOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
-    ns.HealthOrb.fill:ForceUpdate()
   end
 
   --update power orb filling color
   panel.updatePowerOrbFillingColor = function()
     local color = panel.loadPowerOrbFillingColor()
     ns.PowerOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
-    ns.PowerOrb.fill:ForceUpdate()
   end
 
   --update health orb model enable
@@ -1003,4 +1003,53 @@
     --update panel view
     panel.updatePanelView()
 
+  end
+
+  ---------------------------------------------
+  --FIX THE ORB DISPLAY ON NON-FULLY-FILLED ORBS
+  ---------------------------------------------
+
+  --so I need to do sth wierd here...since I use the actual orbs for preview the changes and there are some powertype orbs
+  --that start out empty this would result in an empty preview...which is bad since you don't see your changes
+  --the current problem is that I'm using forceUpdate atm to automatically set the class/powertype colors if that checkbox is enabled
+  --so that forceupdate will destroy what I'm trying to do here...so I hack some stuff
+
+  function panel:Enable()
+    --register some stuff
+    self.eventHelper:RegisterUnitEvent("UNIT_HEALTH", "player")
+    self.eventHelper:RegisterUnitEvent("UNIT_HEALTH_FREQUENT", "player")
+    self.eventHelper:RegisterUnitEvent("UNIT_POWER", "player")
+    self.eventHelper:RegisterUnitEvent("UNIT_POWER_FREQUENT", "player")
+    self.eventHelper:RegisterUnitEvent("UNIT_DISPLAYPOWER", "player")
+    self.eventHelper:SetScript("OnEvent", function(self) self:SetOrbsToMax() end)
+    self.eventHelper:SetOrbsToMax()
+  end
+
+  function panel:Disable()
+    self.eventHelper:UnregisterEvent("UNIT_HEALTH")
+    self.eventHelper:UnregisterEvent("UNIT_HEALTH_FREQUENT")
+    self.eventHelper:UnregisterEvent("UNIT_POWER")
+    self.eventHelper:UnregisterEvent("UNIT_POWER_FREQUENT")
+    self.eventHelper:UnregisterEvent("UNIT_DISPLAYPOWER")
+    self.eventHelper:SetScript("OnEvent", nil)
+    self.eventHelper:SetOrbsToDefault()
+  end
+
+  do
+    local eventHelper = CreateFrame("Frame")
+    function eventHelper:SetOrbsToMax()
+      local hbar, pbar = ns.HealthOrb.fill, ns.PowerOrb.fill
+      local hmin, hmax = hbar:GetMinMaxValues()
+      local pmin, pmax = pbar:GetMinMaxValues()
+      hbar:SetValue(hmax)
+      pbar:SetValue(pmax)
+    end
+    function eventHelper:SetOrbsToDefault()
+      local hbar, pbar = ns.HealthOrb.fill, ns.PowerOrb.fill
+      hbar:ForceUpdate()
+      pbar:ForceUpdate()
+    end
+    panel.eventHelper = eventHelper
+    panel:HookScript("OnShow", function(self) self:Enable() end)
+    panel:HookScript("OnHide", function(self) self:Disable() end)
   end

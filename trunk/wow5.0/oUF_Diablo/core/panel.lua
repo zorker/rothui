@@ -22,6 +22,7 @@
 
   --object container
   local panel = CF("Frame",addon.."ConfigPanel",UIParent,"ButtonFrameTemplate")
+  panel:SetFrameStrata("HIGH")
   panel:Hide()
   ns.panel = panel
 
@@ -1409,7 +1410,7 @@
   end
 
   do
-    local eventHelper = CreateFrame("Frame")
+    local eventHelper = CF("Frame")
     function eventHelper:SetOrbsToMax()
       local hbar, pbar = ns.HealthOrb.fill, ns.PowerOrb.fill
       local hmin, hmax = hbar:GetMinMaxValues()

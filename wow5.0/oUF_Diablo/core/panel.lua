@@ -17,6 +17,8 @@
   local strmatch = strmatch
   local strlen = strlen
   local CF = CreateFrame
+  local CPF = ColorPickerFrame
+  local theEnd  = function() end
 
   --object container
   local panel = CF("Frame",addon.."ConfigPanel",UIParent,"ButtonFrameTemplate")
@@ -240,13 +242,13 @@
     end
     --picker.show
     picker.show = function(r,g,b,a,callback)
-      ColorPickerFrame:SetParent(panel)
-      ColorPickerFrame:SetColorRGB(r,g,b)
-      ColorPickerFrame.hasOpacity, ColorPickerFrame.opacity = (a ~= nil), a
-      ColorPickerFrame.previousValues = {r,g,b,a}
-      ColorPickerFrame.func, ColorPickerFrame.opacityFunc, ColorPickerFrame.cancelFunc = callback, callback, callback
-      ColorPickerFrame:Hide() -- Need to run the OnShow handler.
-      ColorPickerFrame:Show()
+      CPF:SetParent(panel)
+      CPF:SetColorRGB(r,g,b)
+      CPF.hasOpacity, ColorPickerFrame.opacity = (a ~= nil), a
+      CPF.previousValues = {r,g,b,a}
+      CPF.func, ColorPickerFrame.opacityFunc, ColorPickerFrame.cancelFunc = callback, callback, callback
+      CPF:Hide() -- Need to run the OnShow handler.
+      CPF:Show()
     end
     picker.callback = function(color)
       if picker.disabled then return end
@@ -257,6 +259,8 @@
     end
     picker:SetScript("OnClick", function(self)
       if self.disabled then return end
+      --the colorpicker does not reset the callback function properly, so let's do it for him
+      CPF.func, CPF.opacityFunc, CPF.cancelFunc = theEnd, theEnd, theEnd
       local r,g,b = self.color:GetVertexColor()
       self.show(r,g,b,nil,self.callback)
     end)
@@ -630,7 +634,6 @@
     end
     local button = createBasicButton(parent, addon.."PanelBottomHealthOrbLoad", "Load")
     button:HookScript("OnClick", function()
-      print("click load health")
       ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 0, 0)
     end)
     button:SetScript("OnEnter", function(self)
@@ -726,7 +729,6 @@
     end
     local button = createBasicButton(parent, addon.."PanelBottomPowerOrbLoad", "Load")
     button:HookScript("OnClick", function()
-      print("click load power")
       ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 0, 0)
     end)
     button:SetScript("OnEnter", function(self)
@@ -762,7 +764,6 @@
     end
     local button = createBasicButton(parent, addon.."PanelBottomTemplateDelete", "Delete")
     button:HookScript("OnClick", function()
-      print("click delete template")
       ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 0, 0)
     end)
     button:SetScript("OnEnter", function(self)
@@ -1344,17 +1345,15 @@
     panel.updateHealthOrbFillingTexture()
     --update power orb filling texture
     panel.updatePowerOrbFillingTexture()
+    --update health orb filling color
+    panel.updateHealthOrbFillingColor()
+    --update power orb filling color
+    panel.updatePowerOrbFillingColor()
     --important -- since auto coloring rewrites the color it has to be called after filling color
     --update health orb filling color auto
     panel.updateHealthOrbFillingColorAuto()
     --update power orb filling color auto
     panel.updatePowerOrbFillingColorAuto()
-
-    --update health orb filling color
-    panel.updateHealthOrbFillingColor()
-    --update power orb filling color
-    panel.updatePowerOrbFillingColor()
-
     --update health orb model enable
     panel.updateHealthOrbModelEnable()
     --update power orb model enable

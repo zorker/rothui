@@ -19,6 +19,7 @@
   local wipe    = wipe
   local tinsert = tinsert
   local tremove = tremove
+  local strlower = strlower
 
   ---------------------------------------------
   --DEFAULTS
@@ -100,7 +101,7 @@
         --filling
         filling = {
           texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15",
-          color       = { r = 1, g = 0, b = 0, },
+          color       = { r = 0.8, g = 0.8, b = 1, },
           colorAuto   = false, --automatic coloring based on class/powertype
         },
         --model
@@ -233,6 +234,7 @@
       return
     end
     db:CopyTable(OUF_DIABLO_DB_GLOB[name],OUF_DIABLO_DB_CHAR[type])
+    print(addon..": template |c003399FF"..name.."|r loaded into "..strlower(type).." orb")
     --update the orb view
     ns.panel.updateOrbView()
   end
@@ -243,7 +245,12 @@
   db.saveTemplate = function(name,type)
     if not OUF_DIABLO_DB_GLOB or not name then return end
     --adding template
-    OUF_DIABLO_DB_GLOB[name] = db.char[type]
+    if not OUF_DIABLO_DB_GLOB[name] then
+      --create default entry first
+      local data = db:GetOrbDefaults()
+      OUF_DIABLO_DB_GLOB[name] = data["HEALTH"]
+    end
+    db:CopyTable(db.char[type],OUF_DIABLO_DB_GLOB[name])
     --adding the template name to the key-value pair list
     local nameFound = false
     for i,v in ipairs(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST) do
@@ -255,7 +262,7 @@
     if not nameFound then
       tinsert(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, { key = name, value = name })
     end
-    print(addon.." template |c003399FF"..name.."|r saved")
+    print(addon..": "..strlower(type).." orb data saved as template |c003399FF"..name.."|r")
     --update the panel view
     ns.panel.updatePanelView()
   end
@@ -264,7 +271,6 @@
   --name: template name
   db.deleteTemplate = function(name)
     if not OUF_DIABLO_DB_GLOB or not name then return end
-    if name == "pearl" then return end
     if not OUF_DIABLO_DB_GLOB[name] then
       print(addon..": template |c003399FF"..name.."|r not found")
       return
@@ -282,7 +288,6 @@
     end
     if indexFound then
       tremove(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, indexFound)
-      print(addon..": template list entry |c003399FF"..name.."|r deleted")
     end
     --update the panel view
     ns.panel.updatePanelView()

@@ -268,7 +268,7 @@
   end
 
   --basic dropdown menu func
-  local createBasicDropDownMenu = function(parent, name, text, dataFunc, width, menu)
+  local createBasicDropDownMenu = function(parent, name, text, dataFunc, width, menu, notCheckable)
     local dropdownMenu = CF("Frame", name, parent, "UIDropDownMenuTemplate")
     UIDropDownMenu_SetText(dropdownMenu, text)
     if width then UIDropDownMenu_SetWidth(dropdownMenu, width) end
@@ -284,7 +284,7 @@
         info.value = infos[i].value or ""
         info.isTitle = infos[i].isTitle or false
         info.notClickable = infos[i].notClickable or false
-        info.notCheckable = infos[i].notCheckable or true
+        info.notCheckable = infos[i].notCheckable or notCheckable or false
         info.func = self.click
         UIDropDownMenu_AddButton(info)
       end
@@ -627,7 +627,7 @@
 
   --createBottomButtonHealthOrbLoad
   local createBottomButtonHealthOrbLoad = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbLoadTemplate", "Pick a template", db.getListTemplate, nil, "MENU")
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbLoadTemplate", "Pick a template", db.getListTemplate, nil, "MENU", true)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       db.loadTemplate(self.value,"HEALTH")
@@ -722,7 +722,7 @@
 
   --createBottomButtonPowerOrbLoad
   local createBottomButtonPowerOrbLoad = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbLoadTemplate", "Pick a template", db.getListTemplate, nil, "MENU")
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbLoadTemplate", "Pick a template", db.getListTemplate, nil, "MENU", true)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       db.loadTemplate(self.value,"POWER")
@@ -757,7 +757,7 @@
 
   --createBottomButtonTemplateDelete
   local createBottomButtonTemplateDelete = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelBottomDeleteTemplate", "Pick a template", db.getListTemplate, nil, "MENU")
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelBottomDeleteTemplate", "Pick a template", db.getListTemplate, nil, "MENU", true)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       db.deleteTemplate(self.value)

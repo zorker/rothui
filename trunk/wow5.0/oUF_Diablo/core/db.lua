@@ -212,6 +212,17 @@
   --TEMPLATES
   ---------------------------------------------
 
+  function db:CopyTable(source, target)
+    for key, value in pairs(source) do
+      if type(value) == "table" then
+        target[key] = {}
+        self:CopyTable(value, target[key])
+      else
+        target[key] = value
+      end
+    end
+  end
+
   --load template func
   --name: template name
   --type: orb type
@@ -221,9 +232,7 @@
       print(addon..": template |c003399FF"..name.."|r not found")
       return
     end
-    OUF_DIABLO_DB_CHAR[type] = OUF_DIABLO_DB_GLOB[name]
-    print(addon..": template |c003399FF"..name.."|r loaded")
-    db.char = OUF_DIABLO_DB_CHAR
+    db:CopyTable(OUF_DIABLO_DB_GLOB[name],OUF_DIABLO_DB_CHAR[type])
     --update the orb view
     ns.panel.updateOrbView()
   end
@@ -247,9 +256,6 @@
       tinsert(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, { key = name, value = name })
     end
     print(addon.." template |c003399FF"..name.."|r saved")
-    --not sure if this is acutally needed since the reference should still be intact...
-    db.glob = OUF_DIABLO_DB_GLOB
-    db.list.template = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
     --update the panel view
     ns.panel.updatePanelView()
   end
@@ -278,9 +284,6 @@
       tremove(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, indexFound)
       print(addon..": template list entry |c003399FF"..name.."|r deleted")
     end
-    --not sure if this is acutally needed since the reference should still be intact...
-    db.glob = OUF_DIABLO_DB_GLOB
-    db.list.template = OUF_DIABLO_DB_GLOB.TEMPLATE_LIST
     --update the panel view
     ns.panel.updatePanelView()
   end

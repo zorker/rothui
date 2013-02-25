@@ -291,12 +291,61 @@
         info.func = self.click
         UIDropDownMenu_AddButton(info)
       end
+      wipe(infos)
     end
     if menu then
       UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init, "MENU")
     else
       UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
     end
+    return dropdownMenu
+  end
+
+  --multi level dropdown menu func -- src: http://forums.wowace.com/showthread.php?t=15763
+  local createMultiLevelDropDownMenu = function(parent, name, text, dataFunc, width, menu)
+    local dropdownMenu = CF("Frame", name, parent, "UIDropDownMenuTemplate")
+    UIDropDownMenu_SetText(dropdownMenu, text)
+    --if width then UIDropDownMenu_SetWidth(dropdownMenu, width) end
+    dropdownMenu.init = function(self, level)
+      if not level then level = 1 end
+      local info = UIDropDownMenu_CreateInfo()
+      local infos = {}
+      local data = dataFunc()
+      if level == 1 then
+        tinsert(infos, { key = text, isTitle = true, notCheckable = true, notClickable = true })
+        for key, list in pairs(data) do
+          tinsert(infos, { text = key, value = key, notCheckable = true, hasArrow = true, keepShownOnClick = true, })
+        end
+      end
+      if level == 2 then
+        for key, list in pairs(data) do
+          if UIDROPDOWNMENU_MENU_VALUE == key then
+            for index, entry in pairs(list) do
+              tinsert(infos, { text = entry.key, value = entry.value, func = self.click, notCheckable = false, keepShownOnClick = true, })
+            end
+            break
+          end
+        end
+      end
+      wipe(data)
+      for i=0, #infos do
+        wipe(info)
+        info.text = infos[i].key
+        info.value = infos[i].value or ""
+        info.isTitle = infos[i].isTitle or false
+        info.hasArrow = infos[i].hasArrow or false
+        info.notClickable = infos[i].notClickable or false
+        info.notCheckable = infos[i].notCheckable or false
+        info.func = infos[i].func or nil
+        UIDropDownMenu_AddButton(info, level)
+      end
+      wipe(infos)
+    end
+    --if menu then
+      --UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init, "MENU")
+    --else
+      UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
+    --end
     return dropdownMenu
   end
 
@@ -434,6 +483,7 @@
     return button
   end
 
+  --[[
   --create element health orb model animation
   local createButtonHealthOrbModelAnimation = function(parent)
     local data = db:GetModelList()
@@ -469,11 +519,13 @@
     end)
     return button
   end
+  ]]
 
-  --[[
+
   --create element health orb model animation
   local createDropdownHealthOrbModelAnimation = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbModelAnimation", "Pick an animation", db.getListModel, 160)
+    --local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbModelAnimation", "Pick an animation", db.getListModel, 160)
+    local dropdownMenu = createMultiLevelDropDownMenu(parent, addon.."PanelHealthOrbModelAnimation", "Pick an animation", db:GetModelList)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -486,7 +538,8 @@
 
   --create element power orb model animation
   local createDropdownPowerOrbModelAnimation = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbModelAnimation", "Pick an animation", db.getListModel, 160)
+    --local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbModelAnimation", "Pick an animation", db.getListModel, 160)
+    local dropdownMenu = createMultiLevelDropDownMenu(parent, addon.."PanelPowerOrbModelAnimation", "Pick an animation", db:GetModelList)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -496,7 +549,6 @@
     end
     return dropdownMenu
   end
-  ]]
 
   --create element health orb model alpha
   local createSliderHealthOrbModelAlpha = function(parent)
@@ -898,12 +950,11 @@
   panel.elementHealthOrbModelEnable = createCheckButtonHealthOrbModelEnable(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelEnable = createCheckButtonPowerOrbModelEnable(panel.scrollFrame.scrollChild)
   --create model animation button with EasyMenu dropdown
-  panel.elementHealthOrbModelAnimation = createButtonHealthOrbModelAnimation(panel.scrollFrame.scrollChild)
-  panel.elementPowerOrbModelAnimation = createButtonPowerOrbModelAnimation(panel.scrollFrame.scrollChild)
-  --thanks to the sheer number of models a dropdown is not enough any more. we use EasyMenu instead
-  --create model animation dropdown
-  --panel.elementHealthOrbModelAnimation = createDropdownHealthOrbModelAnimation(panel.scrollFrame.scrollChild)
-  --panel.elementPowerOrbModelAnimation = createDropdownPowerOrbModelAnimation(panel.scrollFrame.scrollChild)
+  --panel.elementHealthOrbModelAnimation = createButtonHealthOrbModelAnimation(panel.scrollFrame.scrollChild)
+  --panel.elementPowerOrbModelAnimation = createButtonPowerOrbModelAnimation(panel.scrollFrame.scrollChild)
+  --create model animation dropdown (trying to create a multilevel dropdown menu)
+  panel.elementHealthOrbModelAnimation = createDropdownHealthOrbModelAnimation(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbModelAnimation = createDropdownPowerOrbModelAnimation(panel.scrollFrame.scrollChild)
   --create model alpha slider
   panel.elementHealthOrbModelAlpha = createSliderHealthOrbModelAlpha(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelAlpha = createSliderPowerOrbModelAlpha(panel.scrollFrame.scrollChild)
@@ -962,10 +1013,8 @@
   panel.elementHealthModelHeadline:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", 0, -115)
   panel.elementPowerModelHeadline:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", 0, -115)
   --position model animation dropdown
-  panel.elementHealthOrbModelAnimation:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -10)
-  panel.elementPowerOrbModelAnimation:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -10)
-  --panel.elementHealthOrbModelAnimation:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -20, -10)
-  --panel.elementPowerOrbModelAnimation:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -20, -10)
+  panel.elementHealthOrbModelAnimation:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -20, -10)
+  panel.elementPowerOrbModelAnimation:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -20, -10)
   --position model enable checkbutton
   panel.elementHealthOrbModelEnable:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -4, -45)
   panel.elementPowerOrbModelEnable:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -4, -45)

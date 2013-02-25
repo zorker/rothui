@@ -14,6 +14,8 @@
 
   local unpack = unpack
   local gsub = gsub
+  local tinsert = tinsert
+  local wipe = wipe
   local strmatch = strmatch
   local strlen = strlen
   local CF = CreateFrame
@@ -310,6 +312,22 @@
     return dropdownMenu
   end
 
+  --create the easy menu table
+  local createEasyMenuTable = function(data, buttonText)
+    local menuTable = {}
+    local submenu = {}
+    tinsert(menuTable, { text = buttonText, isTitle = true, notCheckable = true, notClickable = true })
+    for title, list in pairs(data) do
+      wipe(submenu)
+      for index, entry in pairs(list) do
+        tinsert(submenu, { text = entry.key, value = entry.value, func = function(self) self.click end, notCheckable = false, keepShownOnClick = true, })
+      end
+      tinsert(menuTable, { text = title, notCheckable = true, hasArrow = true, menuList = submenu })
+    end
+    tinsert(menuTable, { text = "Close menu", func = CloseDropDownMenus, notCheckable = true })
+    return menuTable
+  end
+
   ---------------------------------------------
   --CREATE PANEL ELEMENT FUNCTIONS
   ---------------------------------------------
@@ -417,6 +435,43 @@
   end
 
   --create element health orb model animation
+  local createButtonHealthOrbModelAnimation = function(parent)
+    local data = db:GetModelList()
+    local buttonText = "Choose animation"
+    local menuTable = createEasyMenuTable(data, buttonText)
+    data = nil
+    local dropdownMenu = CreateFrame("Frame", addon.."PanelHealthOrbModelAnimationDropdown", nil, "UIDropDownMenuTemplate")
+    dropdownMenu.click = function(self)
+      print("click health or model animation")
+      print(self.value)
+    end
+    local button = createBasicButton(parent, addon.."PanelHealthOrbModelAnimation", buttonText)
+    button:HookScript("OnClick", function()
+      EasyMenu(menuTable, dropdownMenu, "cursor", 10 , -15, "MENU")
+    end)
+    return button
+  end
+
+  --create element power orb model animation
+  local createButtonPowerOrbModelAnimation = function(parent)
+    local data = db:GetModelList()
+    local buttonText = "Choose animation"
+    local menuTable = createEasyMenuTable(data, buttonText)
+    data = nil
+    local dropdownMenu = CreateFrame("Frame", addon.."PanelPowerOrbModelAnimationDropdown", nil, "UIDropDownMenuTemplate")
+    dropdownMenu.click = function(self)
+      print("click power or model animation")
+      print(self.value)
+    end
+    local button = createBasicButton(parent, addon.."PanelPowerOrbModelAnimation", buttonText)
+    button:HookScript("OnClick", function()
+      EasyMenu(menuTable, dropdownMenu, "cursor", 10 , -15, "MENU")
+    end)
+    return button
+  end
+
+  --[[
+  --create element health orb model animation
   local createDropdownHealthOrbModelAnimation = function(parent)
     local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbModelAnimation", "Pick an animation", db.getListModel, 160)
     dropdownMenu.click = function(self)
@@ -441,6 +496,7 @@
     end
     return dropdownMenu
   end
+  ]]
 
   --create element health orb model alpha
   local createSliderHealthOrbModelAlpha = function(parent)
@@ -635,7 +691,7 @@
     end
     local button = createBasicButton(parent, addon.."PanelBottomHealthOrbLoad", "Load")
     button:HookScript("OnClick", function()
-      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 0, 0)
+      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 10, -15)
     end)
     button:SetScript("OnEnter", function(self)
       GameTooltip:SetOwner(self, "ANCHOR_TOP")
@@ -730,7 +786,7 @@
     end
     local button = createBasicButton(parent, addon.."PanelBottomPowerOrbLoad", "Load")
     button:HookScript("OnClick", function()
-      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 0, 0)
+      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 10, -15)
     end)
     button:SetScript("OnEnter", function(self)
       GameTooltip:SetOwner(self, "ANCHOR_TOP")
@@ -765,7 +821,7 @@
     end
     local button = createBasicButton(parent, addon.."PanelBottomTemplateDelete", "Delete")
     button:HookScript("OnClick", function()
-      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 0, 0)
+      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 10, -15)
     end)
     button:SetScript("OnEnter", function(self)
       GameTooltip:SetOwner(self, "ANCHOR_TOP")
@@ -841,9 +897,13 @@
   --create model enable checkbutton
   panel.elementHealthOrbModelEnable = createCheckButtonHealthOrbModelEnable(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelEnable = createCheckButtonPowerOrbModelEnable(panel.scrollFrame.scrollChild)
+  --create model animation button with EasyMenu dropdown
+  panel.elementHealthOrbModelAnimation = createButtonHealthOrbModelAnimation(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbModelAnimation = createButtonPowerOrbModelAnimation(panel.scrollFrame.scrollChild)
+  --thanks to the sheer number of models a dropdown is not enough any more. we use EasyMenu instead
   --create model animation dropdown
-  panel.elementHealthOrbModelAnimation = createDropdownHealthOrbModelAnimation(panel.scrollFrame.scrollChild)
-  panel.elementPowerOrbModelAnimation = createDropdownPowerOrbModelAnimation(panel.scrollFrame.scrollChild)
+  --panel.elementHealthOrbModelAnimation = createDropdownHealthOrbModelAnimation(panel.scrollFrame.scrollChild)
+  --panel.elementPowerOrbModelAnimation = createDropdownPowerOrbModelAnimation(panel.scrollFrame.scrollChild)
   --create model alpha slider
   panel.elementHealthOrbModelAlpha = createSliderHealthOrbModelAlpha(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelAlpha = createSliderPowerOrbModelAlpha(panel.scrollFrame.scrollChild)
@@ -902,8 +962,10 @@
   panel.elementHealthModelHeadline:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", 0, -115)
   panel.elementPowerModelHeadline:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", 0, -115)
   --position model animation dropdown
-  panel.elementHealthOrbModelAnimation:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -20, -10)
-  panel.elementPowerOrbModelAnimation:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -20, -10)
+  panel.elementHealthOrbModelAnimation:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -10)
+  panel.elementPowerOrbModelAnimation:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -10)
+  --panel.elementHealthOrbModelAnimation:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -20, -10)
+  --panel.elementPowerOrbModelAnimation:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -20, -10)
   --position model enable checkbutton
   panel.elementHealthOrbModelEnable:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -4, -45)
   panel.elementPowerOrbModelEnable:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -4, -45)

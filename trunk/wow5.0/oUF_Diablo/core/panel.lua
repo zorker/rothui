@@ -275,23 +275,35 @@
     local dropdownMenu = CF("Frame", name, parent, "UIDropDownMenuTemplate")
     UIDropDownMenu_SetText(dropdownMenu, text)
     if width then UIDropDownMenu_SetWidth(dropdownMenu, width) end
-    dropdownMenu.init = function(self)
-      local info = UIDropDownMenu_CreateInfo()
-      local infos = dataFunc() or {}
-      --print(UIDropDownMenu_GetSelectedValue(self))
-      infos[0] = { key = text, isTitle = true, notCheckable = true, notClickable = true }
-      for i=0, #infos do
-      --for i=1, #infos do
-        wipe(info)
-        info.text = infos[i].key
-        info.value = infos[i].value or ""
-        info.isTitle = infos[i].isTitle or false
-        info.notClickable = infos[i].notClickable or false
-        info.notCheckable = infos[i].notCheckable or notCheckable or false
-        info.func = self.click
-        UIDropDownMenu_AddButton(info)
+    dropdownMenu.init = function(self, level)
+      self.info = self.info or {}
+      self.infos = self.infos or {}
+      wipe(self.infos)
+      self.data = dataFunc()
+      tinsert(self.infos, { key = text, isTitle = true, notCheckable = true, notClickable = true, })
+      tinsert(self.infos, { key = "|cFF666666~~~~~~~~~~~~~~~|r", notCheckable = true, notClickable = true, })
+      if #self.data == 0 then
+        tinsert(self.infos, { key = "|cFFFF0000No data found|r", notCheckable = true, notClickable = true, })
       end
-      wipe(infos)
+      for key, list in pairs(self.data) do
+        tinsert(self.infos, { key = list.key, value = list.value, func = self.click, keepShownOnClick = false, })
+      end
+      tinsert(self.infos, { key = "|cFF666666~~~~~~~~~~~~~~~|r", notCheckable = true, notClickable = true, })
+      tinsert(self.infos, { key = "|cFF3399FFClose menu|r", notCheckable = true, func = function() CloseDropDownMenus() end, })
+      for i=1, #self.infos do
+        wipe(self.info)
+        self.info.text = self.infos[i].key
+        self.info.value = self.infos[i].value or ""
+        self.info.isTitle = self.infos[i].isTitle or false
+        self.info.keepShownOnClick = self.infos[i].keepShownOnClick or false
+        self.info.notClickable = self.infos[i].notClickable or false
+        self.info.notCheckable = self.infos[i].notCheckable or notCheckable or false
+        self.info.func = self.infos[i].func or nil
+        UIDropDownMenu_AddButton(self.info)
+        if #self.infos < 5 then
+          break --do not build the menu if no entries are found
+        end
+      end
     end
     if menu then
       UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init, "MENU")
@@ -305,51 +317,54 @@
   local createMultiLevelDropDownMenu = function(parent, name, text, dataFunc, width, menu)
     local dropdownMenu = CF("Frame", name, parent, "UIDropDownMenuTemplate")
     UIDropDownMenu_SetText(dropdownMenu, text)
-    --if width then UIDropDownMenu_SetWidth(dropdownMenu, width) end
+    if width then UIDropDownMenu_SetWidth(dropdownMenu, width) end
     dropdownMenu.init = function(self, level)
-      if not level then level = 1 end
-      local info = UIDropDownMenu_CreateInfo()
-      local infos = {}
-      local data = dataFunc()
+      self.info = self.info or {}
+      self.infos = self.infos or {}
+      wipe(self.infos)
+      self.data = self.data or dataFunc()
       if level == 1 then
-        tinsert(infos, { key = text, isTitle = true, notCheckable = true, notClickable = true })
-        for key, list in pairs(data) do
-          tinsert(infos, { text = key, value = key, notCheckable = true, hasArrow = true, keepShownOnClick = true, })
+        tinsert(self.infos, { key = text, isTitle = true, notCheckable = true, notClickable = true })
+        tinsert(self.infos, { key = "|cFF666666~~~~~~~~~~~~~~~|r", notCheckable = true, notClickable = true, })
+        for key, list in pairs(self.data) do
+          tinsert(self.infos, { key = key, value = key, notCheckable = true, hasArrow = true, keepShownOnClick = true, })
         end
+        tinsert(self.infos, { key = "|cFF666666~~~~~~~~~~~~~~~|r", notCheckable = true, notClickable = true, })
+        tinsert(self.infos, { key = "|cFF3399FFClose menu|r", notCheckable = true, func = function() CloseDropDownMenus() end, })
       end
       if level == 2 then
-        for key, list in pairs(data) do
+        for key, list in pairs(self.data) do
           if UIDROPDOWNMENU_MENU_VALUE == key then
             for index, entry in pairs(list) do
-              tinsert(infos, { text = entry.key, value = entry.value, func = self.click, notCheckable = false, keepShownOnClick = true, })
+              tinsert(self.infos, { key = entry.key, value = entry.value, func = self.click, notCheckable = false, keepShownOnClick = true, })
             end
             break
           end
         end
       end
-      wipe(data)
-      for i=0, #infos do
-        wipe(info)
-        info.text = infos[i].key
-        info.value = infos[i].value or ""
-        info.isTitle = infos[i].isTitle or false
-        info.hasArrow = infos[i].hasArrow or false
-        info.notClickable = infos[i].notClickable or false
-        info.notCheckable = infos[i].notCheckable or false
-        info.func = infos[i].func or nil
-        UIDropDownMenu_AddButton(info, level)
+      for i=1, #self.infos do
+        wipe(self.info)
+        self.info.text = self.infos[i].key
+        self.info.value = self.infos[i].value or ""
+        self.info.isTitle = self.infos[i].isTitle or false
+        self.info.hasArrow = self.infos[i].hasArrow or false
+        self.info.keepShownOnClick = self.infos[i].keepShownOnClick or false
+        self.info.notClickable = self.infos[i].notClickable or false
+        self.info.notCheckable = self.infos[i].notCheckable or false
+        self.info.func = self.infos[i].func or nil
+        UIDropDownMenu_AddButton(self.info, level)
       end
-      wipe(infos)
     end
-    --if menu then
-      --UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init, "MENU")
-    --else
+    if menu then
+      UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init, "MENU")
+    else
       UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
-    --end
+    end
     return dropdownMenu
   end
 
   --basic dropdown menu with a button
+  --[[
   local createBasicDropDownMenuWithButton = function(parent, name, text, dataFunc, width, buttonText)
     local dropdownMenu = createBasicDropDownMenu(parent, name, text, dataFunc, width)
     dropdownMenu.click = function(self)
@@ -360,22 +375,7 @@
     dropdownMenu.button = button
     return dropdownMenu
   end
-
-  --create the easy menu table
-  local createEasyMenuTable = function(data, buttonText)
-    local menuTable = {}
-    local submenu = {}
-    tinsert(menuTable, { text = buttonText, isTitle = true, notCheckable = true, notClickable = true })
-    for title, list in pairs(data) do
-      wipe(submenu)
-      for index, entry in pairs(list) do
-        tinsert(submenu, { text = entry.key, value = entry.value, func = function(self) self.click end, notCheckable = false, keepShownOnClick = true, })
-      end
-      tinsert(menuTable, { text = title, notCheckable = true, hasArrow = true, menuList = submenu })
-    end
-    tinsert(menuTable, { text = "Close menu", func = CloseDropDownMenus, notCheckable = true })
-    return menuTable
-  end
+  ]]
 
   ---------------------------------------------
   --CREATE PANEL ELEMENT FUNCTIONS
@@ -383,7 +383,7 @@
 
   --create element health orb filling texture
   local createDropdownHealthOrbFillingTexture = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbFillingTexture", "Pick a texture", db.getListFillingTexture, 160)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbFillingTexture", "Choose texture", db.getListFillingTexture, 196)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -396,7 +396,7 @@
 
   --create element power orb filling texture
   local createDropdownPowerOrbFillingTexture = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbFillingTexture", "Pick a texture", db.getListFillingTexture, 160)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbFillingTexture", "Choose texture", db.getListFillingTexture, 196)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -409,7 +409,7 @@
 
   --create element health orb color auto
   local createCheckButtonHealthOrbFillingColorAuto = function(parent)
-    local button = createBasicCheckButton(parent, addon.."PanelHealthOrbFillingColorAuto", "Force class color?")
+    local button = createBasicCheckButton(parent, addon.."PanelHealthOrbFillingColorAuto", "Automatic coloring (class/power)?")
     button:HookScript("OnClick", function(self,value)
       --save value
       panel.saveHealthOrbFillingColorAuto(self:GetChecked())
@@ -423,7 +423,7 @@
 
   --create element power orb color auto
   local createCheckButtonPowerOrbFillingColorAuto = function(parent)
-    local button = createBasicCheckButton(parent, addon.."PanelPowerOrbFillingColorAuto", "Force powertype color?")
+    local button = createBasicCheckButton(parent, addon.."PanelPowerOrbFillingColorAuto", "Automatic coloring (class/power)?")
     button:HookScript("OnClick", function(self,value)
       --save value
       panel.savePowerOrbFillingColorAuto(self:GetChecked())
@@ -483,49 +483,9 @@
     return button
   end
 
-  --[[
-  --create element health orb model animation
-  local createButtonHealthOrbModelAnimation = function(parent)
-    local data = db:GetModelList()
-    local buttonText = "Choose animation"
-    local menuTable = createEasyMenuTable(data, buttonText)
-    data = nil
-    local dropdownMenu = CreateFrame("Frame", addon.."PanelHealthOrbModelAnimationDropdown", nil, "UIDropDownMenuTemplate")
-    dropdownMenu.click = function(self)
-      print("click health or model animation")
-      print(self.value)
-    end
-    local button = createBasicButton(parent, addon.."PanelHealthOrbModelAnimation", buttonText)
-    button:HookScript("OnClick", function()
-      EasyMenu(menuTable, dropdownMenu, "cursor", 10 , -15, "MENU")
-    end)
-    return button
-  end
-
-  --create element power orb model animation
-  local createButtonPowerOrbModelAnimation = function(parent)
-    local data = db:GetModelList()
-    local buttonText = "Choose animation"
-    local menuTable = createEasyMenuTable(data, buttonText)
-    data = nil
-    local dropdownMenu = CreateFrame("Frame", addon.."PanelPowerOrbModelAnimationDropdown", nil, "UIDropDownMenuTemplate")
-    dropdownMenu.click = function(self)
-      print("click power or model animation")
-      print(self.value)
-    end
-    local button = createBasicButton(parent, addon.."PanelPowerOrbModelAnimation", buttonText)
-    button:HookScript("OnClick", function()
-      EasyMenu(menuTable, dropdownMenu, "cursor", 10 , -15, "MENU")
-    end)
-    return button
-  end
-  ]]
-
-
   --create element health orb model animation
   local createDropdownHealthOrbModelAnimation = function(parent)
-    --local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbModelAnimation", "Pick an animation", db.getListModel, 160)
-    local dropdownMenu = createMultiLevelDropDownMenu(parent, addon.."PanelHealthOrbModelAnimation", "Pick an animation", db:GetModelList)
+    local dropdownMenu = createMultiLevelDropDownMenu(parent, addon.."PanelHealthOrbModelAnimation", "Choose animation", db.getListModel, 196)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -538,8 +498,7 @@
 
   --create element power orb model animation
   local createDropdownPowerOrbModelAnimation = function(parent)
-    --local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbModelAnimation", "Pick an animation", db.getListModel, 160)
-    local dropdownMenu = createMultiLevelDropDownMenu(parent, addon.."PanelPowerOrbModelAnimation", "Pick an animation", db:GetModelList)
+    local dropdownMenu = createMultiLevelDropDownMenu(parent, addon.."PanelPowerOrbModelAnimation", "Choose animation", db.getListModel, 196)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -736,14 +695,14 @@
 
   --createBottomButtonHealthOrbLoad
   local createBottomButtonHealthOrbLoad = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbLoadTemplate", "Pick a template", db.getListTemplate, nil, "MENU", true)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbLoadTemplate", "Choose template", db.getListTemplate, nil, nil, true)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       db.loadTemplate(self.value,"HEALTH")
     end
     local button = createBasicButton(parent, addon.."PanelBottomHealthOrbLoad", "Load")
     button:HookScript("OnClick", function()
-      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 10, -15)
+      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 5, -5)
     end)
     button:SetScript("OnEnter", function(self)
       GameTooltip:SetOwner(self, "ANCHOR_TOP")
@@ -831,14 +790,14 @@
 
   --createBottomButtonPowerOrbLoad
   local createBottomButtonPowerOrbLoad = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbLoadTemplate", "Pick a template", db.getListTemplate, nil, "MENU", true)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbLoadTemplate", "Choose template", db.getListTemplate, nil, nil, true)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       db.loadTemplate(self.value,"POWER")
     end
     local button = createBasicButton(parent, addon.."PanelBottomPowerOrbLoad", "Load")
     button:HookScript("OnClick", function()
-      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 10, -15)
+      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 5, -5)
     end)
     button:SetScript("OnEnter", function(self)
       GameTooltip:SetOwner(self, "ANCHOR_TOP")
@@ -866,14 +825,14 @@
 
   --createBottomButtonTemplateDelete
   local createBottomButtonTemplateDelete = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelBottomDeleteTemplate", "Pick a template", db.getListTemplate, nil, "MENU", true)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelBottomDeleteTemplate", "Choose template", db.getListTemplate, nil, nil, true)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       db.deleteTemplate(self.value)
     end
     local button = createBasicButton(parent, addon.."PanelBottomTemplateDelete", "Delete")
     button:HookScript("OnClick", function()
-      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 10, -15)
+      ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 5, -5)
     end)
     button:SetScript("OnEnter", function(self)
       GameTooltip:SetOwner(self, "ANCHOR_TOP")
@@ -883,44 +842,6 @@
     button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
     return button
   end
-
-  --[[
-  --create element health orb load preset
-  local createDropdownHealthOrbLoadPreset = function(parent)
-    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelHealthOrbLoadPreset", "Choose", db.getListTemplate, 70, "Load")
-    dropdownMenu.button:SetScript("OnEnter", function(self)
-      GameTooltip:SetOwner(self, "ANCHOR_TOP")
-      GameTooltip:AddLine("Click here to load a template into your health orb.", 0, 1, 0.5, 1, 1, 1)
-      GameTooltip:Show()
-    end)
-    dropdownMenu.button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
-    dropdownMenu.button:HookScript("OnClick", function()
-      local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
-      if not value then return end
-      db.loadTemplate(value,"HEALTH")
-      print(value)
-    end)
-    return dropdownMenu
-  end
-
-  --create element power orb load preset
-  local createDropdownPowerOrbLoadPreset = function(parent)
-    local dropdownMenu = createBasicDropDownMenuWithButton(parent, addon.."PanelPowerOrbLoadPreset", "Choose", db.getListTemplate, 70, "Load")
-    dropdownMenu.button:SetScript("OnEnter", function(self)
-      GameTooltip:SetOwner(self, "ANCHOR_TOP")
-      GameTooltip:AddLine("Click here to load a template into your power orb.", 0, 1, 0.5, 1, 1, 1)
-      GameTooltip:Show()
-    end)
-    dropdownMenu.button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
-    dropdownMenu.button:HookScript("OnClick", function()
-      local value = UIDropDownMenu_GetSelectedValue(dropdownMenu)
-      if not value then return end
-      db.loadTemplate(value,"POWER")
-      print(value)
-    end)
-    return dropdownMenu
-  end
-  ]]--
 
   ---------------------------------------------
   --SPAWN PANEL ELEMENTS
@@ -949,10 +870,7 @@
   --create model enable checkbutton
   panel.elementHealthOrbModelEnable = createCheckButtonHealthOrbModelEnable(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelEnable = createCheckButtonPowerOrbModelEnable(panel.scrollFrame.scrollChild)
-  --create model animation button with EasyMenu dropdown
-  --panel.elementHealthOrbModelAnimation = createButtonHealthOrbModelAnimation(panel.scrollFrame.scrollChild)
-  --panel.elementPowerOrbModelAnimation = createButtonPowerOrbModelAnimation(panel.scrollFrame.scrollChild)
-  --create model animation dropdown (trying to create a multilevel dropdown menu)
+  --create model animation dropdown
   panel.elementHealthOrbModelAnimation = createDropdownHealthOrbModelAnimation(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelAnimation = createDropdownPowerOrbModelAnimation(panel.scrollFrame.scrollChild)
   --create model alpha slider
@@ -1012,12 +930,12 @@
   --position model headline
   panel.elementHealthModelHeadline:SetPoint("TOPLEFT", panel.elementHealthFillingHeadline, "BOTTOMLEFT", 0, -115)
   panel.elementPowerModelHeadline:SetPoint("TOPLEFT", panel.elementPowerFillingHeadline, "BOTTOMLEFT", 0, -115)
-  --position model animation dropdown
-  panel.elementHealthOrbModelAnimation:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -20, -10)
-  panel.elementPowerOrbModelAnimation:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -20, -10)
   --position model enable checkbutton
-  panel.elementHealthOrbModelEnable:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -4, -45)
-  panel.elementPowerOrbModelEnable:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -4, -45)
+  panel.elementHealthOrbModelEnable:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -4, -10)
+  panel.elementPowerOrbModelEnable:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -4, -10)
+  --position model animation dropdown
+  panel.elementHealthOrbModelAnimation:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", -20, -36)
+  panel.elementPowerOrbModelAnimation:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", -20, -36)
   --position model alpha slider
   panel.elementHealthOrbModelAlpha:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -80)
   panel.elementPowerOrbModelAlpha:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -80)

@@ -107,7 +107,8 @@
     --left background behind health orb settings
     local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
     t:SetTexture(1,1,1)
-    t:SetVertexColor(1,0,0,0.1)
+    t:SetVertexColor(1,0,0)
+    t:SetAlpha(0.1)
     t:SetPoint("TOPLEFT")
     t:SetPoint("BOTTOMLEFT")
     t:SetWidth(scrollFrame:GetWidth()/2-2)
@@ -115,7 +116,8 @@
     --right background behind power settings
     local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
     t:SetTexture(1,1,1)
-    t:SetVertexColor(0,0.4,1,0.1)
+    t:SetVertexColor(0,0,1)
+    t:SetAlpha(0.1)
     t:SetPoint("TOPRIGHT")
     t:SetPoint("BOTTOMRIGHT")
     t:SetWidth(scrollFrame:GetWidth()/2-2)
@@ -174,12 +176,12 @@
   }
 
   --basic button func
-  local createBasicButton = function(parent, name, text)
+  local createBasicButton = function(parent, name, text,adjustWidth, adjustHeight)
     local button = CF("Button", name.."Button", parent, "UIPanelButtonTemplate")
     button.text = _G[button:GetName().."Text"]
     button.text:SetText(text)
-    button:SetWidth(button.text:GetStringWidth()+20)
-    button:SetHeight(button.text:GetStringHeight()+12)
+    button:SetWidth(button.text:GetStringWidth()+(adjustWidth or 20))
+    button:SetHeight(button.text:GetStringHeight()+(adjustHeight or 12))
     return button
   end
 
@@ -774,7 +776,7 @@
       hideOnEscape = 1,
       preferredIndex = 3,
     }
-    local button = createBasicButton(parent, addon.."PanelBottomHealthOrbSave", "Save")
+    local button = createBasicButton(parent, addon.."PanelBottomHealthOrbSave", "Save as template", 30, 20)
     button:HookScript("OnClick", function()
       StaticPopup_Show("OUF_DIABLO_HEALTHORB_SAVE")
     end)
@@ -794,7 +796,7 @@
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       db.loadTemplate(self.value,"HEALTH")
     end
-    local button = createBasicButton(parent, addon.."PanelBottomHealthOrbLoad", "Load")
+    local button = createBasicButton(parent, addon.."PanelBottomHealthOrbLoad", "Load template", 30, 20)
     button:HookScript("OnClick", function()
       ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 5, -5)
     end)
@@ -869,7 +871,7 @@
       hideOnEscape = 1,
       preferredIndex = 3,
     }
-    local button = createBasicButton(parent, addon.."PanelBottomPowerOrbSave", "Save")
+    local button = createBasicButton(parent, addon.."PanelBottomPowerOrbSave", "Save as template", 30, 20)
     button:HookScript("OnClick", function()
       StaticPopup_Show("OUF_DIABLO_POWERORB_SAVE")
     end)
@@ -889,7 +891,7 @@
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       db.loadTemplate(self.value,"POWER")
     end
-    local button = createBasicButton(parent, addon.."PanelBottomPowerOrbLoad", "Load")
+    local button = createBasicButton(parent, addon.."PanelBottomPowerOrbLoad", "Load template", 30, 20)
     button:HookScript("OnClick", function()
       ToggleDropDownMenu(1, nil, dropdownMenu, "cursor", 5, -5)
     end)
@@ -1090,21 +1092,23 @@
   ---------------------------------------------
 
   --health orb save/load
-  panel.bottomElementHealthOrbSave:SetPoint("BOTTOMLEFT",2,4)
-  panel.bottomElementHealthOrbLoad:SetPoint("LEFT", panel.bottomElementHealthOrbSave, "RIGHT", -2, 0)
-  --panel.elementHealthOrbLoadPreset:SetPoint("LEFT", panel.bottomElementHealthOrbSave, "RIGHT", -17, 0)
+  panel.bottomElementHealthOrbSave:SetPoint("BOTTOMLEFT",35,10)
+  panel.bottomElementHealthOrbLoad:SetPoint("LEFT", panel.bottomElementHealthOrbSave, "RIGHT", 0, 0)
+  panel.bottomElementHealthOrbSave:SetFrameLevel(panel.scrollFrame.scrollChild:GetFrameLevel()+2)
+  panel.bottomElementHealthOrbLoad:SetFrameLevel(panel.scrollFrame.scrollChild:GetFrameLevel()+2)
 
   --power orb save/load
-  panel.bottomElementPowerOrbSave:SetPoint("BOTTOMLEFT",285,4)
-  panel.bottomElementPowerOrbLoad:SetPoint("LEFT", panel.bottomElementPowerOrbSave, "RIGHT", -2, 0)
-  --panel.elementPowerOrbLoadPreset:SetPoint("LEFT", panel.bottomElementPowerOrbSave, "RIGHT", -17, 0)
+  panel.bottomElementPowerOrbSave:SetPoint("BOTTOMLEFT",315,10)
+  panel.bottomElementPowerOrbLoad:SetPoint("LEFT", panel.bottomElementPowerOrbSave, "RIGHT", 0, 0)
+  panel.bottomElementPowerOrbSave:SetFrameLevel(panel.scrollFrame.scrollChild:GetFrameLevel()+2)
+  panel.bottomElementPowerOrbLoad:SetFrameLevel(panel.scrollFrame.scrollChild:GetFrameLevel()+2)
 
   --position the reset buttons
   panel.bottomElementHealthOrbReset:SetPoint("LEFT", panel.elementHealthMasterHeadline, "RIGHT", 10, 0)
   panel.bottomElementPowerOrbReset:SetPoint("LEFT", panel.elementPowerMasterHeadline, "RIGHT", 10, 0)
 
   --position the delete button
-  panel.bottomElementTemplateDelete:SetPoint("BOTTOMRIGHT",-5,4)
+  panel.bottomElementTemplateDelete:SetPoint("BOTTOM",-12,-18)
 
   ---------------------------------------------
   --CREATE HEADLINE BACKGROUNDS
@@ -1140,11 +1144,15 @@
       ns.HealthOrb.fill.colorHealth = true
       local color = ns.cfg.playercolor or { r = 1, g = 0, b = 1, }
       ns.HealthOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+      panel.scrollFrame.scrollChild.leftTexture:SetVertexColor(color.r,color.g,color.b)
+      panel.elementHealthMasterHeadline:SetTextColor(color.r,color.g,color.b)
     else
       ns.HealthOrb.fill.colorClass = false
       ns.HealthOrb.fill.colorHealth = false
       local color = panel.loadHealthOrbFillingColor()
       ns.HealthOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+      panel.scrollFrame.scrollChild.leftTexture:SetVertexColor(color.r,color.g,color.b)
+      panel.elementHealthMasterHeadline:SetTextColor(color.r,color.g,color.b)
     end
   end
 
@@ -1154,10 +1162,14 @@
       ns.PowerOrb.fill.colorPower = true
       local color = ns.cfg.powercolors[select(2, UnitPowerType("player"))] or { r = 1, g = 0, b = 1, }
       ns.PowerOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+      panel.scrollFrame.scrollChild.rightTexture:SetVertexColor(color.r,color.g,color.b)
+      panel.elementPowerMasterHeadline:SetTextColor(color.r,color.g,color.b)
     else
       ns.PowerOrb.fill.colorPower = false
       local color = panel.loadPowerOrbFillingColor()
       ns.PowerOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+      panel.scrollFrame.scrollChild.rightTexture:SetVertexColor(color.r,color.g,color.b)
+      panel.elementPowerMasterHeadline:SetTextColor(color.r,color.g,color.b)
     end
   end
 
@@ -1165,12 +1177,16 @@
   panel.updateHealthOrbFillingColor = function()
     local color = panel.loadHealthOrbFillingColor()
     ns.HealthOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+    panel.scrollFrame.scrollChild.leftTexture:SetVertexColor(color.r,color.g,color.b)
+    panel.elementHealthMasterHeadline:SetTextColor(color.r,color.g,color.b)
   end
 
   --update power orb filling color
   panel.updatePowerOrbFillingColor = function()
     local color = panel.loadPowerOrbFillingColor()
     ns.PowerOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+    panel.scrollFrame.scrollChild.rightTexture:SetVertexColor(color.r,color.g,color.b)
+    panel.elementPowerMasterHeadline:SetTextColor(color.r,color.g,color.b)
   end
 
   --update health orb model enable

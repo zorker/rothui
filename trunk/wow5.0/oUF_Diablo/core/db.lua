@@ -396,7 +396,7 @@
       { value = 38548, key = "burning blob", },
       { value = 1824,  key = "blue wisp", },
     },
-    spark = {
+    sparkling = {
       { value = 26753, key = "spark", },
       { value = 27617, key = "yellow spark", },
       { value = 46920, key = "purple splash", },

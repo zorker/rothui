@@ -16,6 +16,7 @@
   local gsub = gsub
   local tinsert = tinsert
   local wipe = wipe
+  local floor = floor
   local strmatch = strmatch
   local strlen = strlen
   local CF = CreateFrame
@@ -144,12 +145,23 @@
     local t = parent:CreateTexture(nil,"BACKGROUND",nil,-2)
     t:SetTexture(1,1,1)
     --t:SetVertexColor(0,0,0,0.4)
-    t:SetVertexColor(255,255,255,0.02)
-    t:SetPoint("TOP",headline,0,5)
-    t:SetPoint("LEFT")
-    t:SetPoint("RIGHT")
-    t:SetPoint("BOTTOM",headline,0,-5)
+    t:SetVertexColor(255,255,255,0.05)
+    t:SetPoint("TOP",headline,0,4)
+    t:SetPoint("LEFT",headline,-20,0)
+    t:SetWidth(275)
+    t:SetPoint("BOTTOM",headline,0,-4)
     t:SetBlendMode("ADD")
+  end
+
+  local createTooltipButton = function(parent,pointParent,text)
+    local button = CF("Button", nil, parent)
+    button:SetAllPoints(pointParent)
+    button:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine(text, 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
   end
 
   local backdrop = {
@@ -180,6 +192,12 @@
     slider:SetValueStep(valStep)
     slider.text = _G[name.."Text"]
     slider.text:SetText(title)
+    slider.textLow = _G[name.."Low"]
+    slider.textHigh = _G[name.."High"]
+    slider.textLow:SetText(floor(minVal))
+    slider.textHigh:SetText(floor(maxVal))
+    slider.textLow:SetTextColor(0.4,0.4,0.4)
+    slider.textHigh:SetTextColor(0.4,0.4,0.4)
     editbox:SetSize(50,30)
     editbox:ClearAllPoints()
     editbox:SetPoint("LEFT", slider, "RIGHT", 15, 0)
@@ -467,6 +485,8 @@
       panel.saveHealthOrbModelEnable(self:GetChecked())
       --update orb view
       panel.updateHealthOrbModelEnable()
+      --update the panel view, other panels need to be shown / hidden
+      panel.updateElementHealthOrbModelEnable()
     end)
     return button
   end
@@ -479,6 +499,8 @@
       panel.savePowerOrbModelEnable(self:GetChecked())
       --update orb view
       panel.updatePowerOrbModelEnable()
+      --update the panel view, other panels need to be shown / hidden
+      panel.updateElementPowerOrbModelEnable()
     end)
     return button
   end
@@ -625,6 +647,78 @@
       --panel.savePowerOrbModelRotation(value)
       --update orb view
       --panel.updatePowerOrbModelRotation()
+    end)
+    return slider
+  end
+
+  --create element health orb model zoom
+  local createSliderHealthOrbModelZoom = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelZoom", "Portrait-Zoom", 0.001, 1, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      --panel.saveHealthOrbModelZoom(value)
+      --update orb view
+      --panel.updateHealthOrbModelZoom()
+    end)
+    return slider
+  end
+
+  --create element power orb model zoom
+  local createSliderPowerOrbModelZoom = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelZoom", "Portrait-Zoom", 0.001, 1, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      --panel.savePowerOrbModelZoom(value)
+      --update orb view
+      --panel.updatePowerOrbModelZoom()
+    end)
+    return slider
+  end
+
+  --create element health orb highlight alpha
+  local createSliderHealthOrbHighlightAlpha = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbHighlightAlpha", "Alpha", 0, 1, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      --panel.saveHealthOrbHighlightAlpha(value)
+      --update orb view
+      --panel.updateHealthOrbHighlightAlpha()
+    end)
+    return slider
+  end
+
+  --create element power orb highlight alpha
+  local createSliderPowerOrbHighlightAlpha = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbHighlightAlpha", "Alpha", 0, 1, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      --panel.savePowerOrbHighlightAlpha(value)
+      --update orb view
+      --panel.updatePowerOrbHighlightAlpha()
+    end)
+    return slider
+  end
+
+  --create element health orb spark alpha
+  local createSliderHealthOrbSparkAlpha = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbSparkAlpha", "Alpha", 0, 1, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      --panel.saveHealthOrbSparkAlpha(value)
+      --update orb view
+      --panel.updateHealthOrbSparkAlpha()
+    end)
+    return slider
+  end
+
+  --create element power orb spark alpha
+  local createSliderPowerOrbSparkAlpha = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbSparkAlpha", "Alpha", 0, 1, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      --panel.savePowerOrbSparkAlpha(value)
+      --update orb view
+      --panel.updatePowerOrbSparkAlpha()
     end)
     return slider
   end
@@ -854,7 +948,9 @@
   panel.elementPowerMasterHeadline:SetTextColor(0,0.5,1)
   --create filling headline
   panel.elementHealthFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthFillingHeadline,"The following settings allow you to edit the filling orb texture and color.")
   panel.elementPowerFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerFillingHeadline,"The following settings allow you to edit the filling orb texture and color.")
   --create filling texture dropdowns
   panel.elementHealthOrbFillingTexture = createDropdownHealthOrbFillingTexture(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbFillingTexture = createDropdownPowerOrbFillingTexture(panel.scrollFrame.scrollChild)
@@ -866,7 +962,9 @@
   panel.elementPowerOrbFillingColor = createPickerPowerOrbFillingColor(panel.scrollFrame.scrollChild)
   --create model headline
   panel.elementHealthModelHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthModelHeadline,"The following settings allow you to edit the animation model settings.")
   panel.elementPowerModelHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerModelHeadline,"The following settings allow you to edit the animation model settings.")
   --create model enable checkbutton
   panel.elementHealthOrbModelEnable = createCheckButtonHealthOrbModelEnable(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelEnable = createCheckButtonPowerOrbModelEnable(panel.scrollFrame.scrollChild)
@@ -888,6 +986,25 @@
   --create model rotation slider
   panel.elementHealthOrbModelRotation = createSliderHealthOrbModelRotation(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelRotation = createSliderPowerOrbModelRotation(panel.scrollFrame.scrollChild)
+  --create model zoom slider
+  panel.elementHealthOrbModelZoom = createSliderHealthOrbModelZoom(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbModelZoom = createSliderPowerOrbModelZoom(panel.scrollFrame.scrollChild)
+  --create highlight headline
+  panel.elementHealthHighlightHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Highlight")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthHighlightHeadline,"The following settings allow you adjust the opacity of the highlight.")
+  panel.elementPowerHighlightHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Highlight")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerHighlightHeadline,"The following settings allow you adjust the opacity of the highlight.")
+  --create highlight alpha slider
+  panel.elementHealthOrbHighlightAlpha = createSliderHealthOrbHighlightAlpha(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbHighlightAlpha = createSliderPowerOrbHighlightAlpha(panel.scrollFrame.scrollChild)
+  --create spark headline
+  panel.elementHealthSparkHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Spark")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthSparkHeadline,"The following settings allow you adjust the opacity of the spark. That is the texture on top of the orb when it looses in value.")
+  panel.elementPowerSparkHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Spark")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerSparkHeadline,"The following settings allow you adjust the opacity of the spark. That is the texture on top of the orb when it looses in value.")
+  --create spark alpha slider
+  panel.elementHealthOrbSparkAlpha = createSliderHealthOrbSparkAlpha(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbSparkAlpha = createSliderPowerOrbSparkAlpha(panel.scrollFrame.scrollChild)
 
   ---------------------------------------------
   --CREATE BOTTOM PANEL BUTTONS
@@ -951,6 +1068,22 @@
   --position model rotation slider
   panel.elementHealthOrbModelRotation:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -200)
   panel.elementPowerOrbModelRotation:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -200)
+  --position model zoom slider
+  panel.elementHealthOrbModelZoom:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -230)
+  panel.elementPowerOrbModelZoom:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -230)
+  --position highlight headline
+  panel.elementHealthHighlightHeadline:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -270)
+  panel.elementPowerHighlightHeadline:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -270)
+  --position highlight alpha slider
+  panel.elementHealthOrbHighlightAlpha:SetPoint("TOPLEFT", panel.elementHealthHighlightHeadline, "BOTTOMLEFT", 0, -20)
+  panel.elementPowerOrbHighlightAlpha:SetPoint("TOPLEFT", panel.elementPowerHighlightHeadline, "BOTTOMLEFT", 0, -20)
+
+  --position spark headline
+  panel.elementHealthSparkHeadline:SetPoint("TOPLEFT", panel.elementHealthHighlightHeadline, "BOTTOMLEFT", 0, -60)
+  panel.elementPowerSparkHeadline:SetPoint("TOPLEFT", panel.elementPowerHighlightHeadline, "BOTTOMLEFT", 0, -60)
+  --position spark alpha slider
+  panel.elementHealthOrbSparkAlpha:SetPoint("TOPLEFT", panel.elementHealthSparkHeadline, "BOTTOMLEFT", 0, -20)
+  panel.elementPowerOrbSparkAlpha:SetPoint("TOPLEFT", panel.elementPowerSparkHeadline, "BOTTOMLEFT", 0, -20)
 
   ---------------------------------------------
   --POSITION BOTTOM PANEL BUTTONS
@@ -979,6 +1112,12 @@
 
   createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthFillingHeadline)
   createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthModelHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementPowerFillingHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementPowerModelHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthHighlightHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementPowerHighlightHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthSparkHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementPowerSparkHeadline)
 
   ---------------------------------------------
   --UPDATE ORB ELEMENT VALUES
@@ -1134,12 +1273,52 @@
 
   --update element health orb model enable
   panel.updateElementHealthOrbModelEnable = function()
-    panel.elementHealthOrbModelEnable:SetChecked(panel.loadHealthOrbModelEnable())
+    local value = panel.loadHealthOrbModelEnable()
+    panel.elementHealthOrbModelEnable:SetChecked(value)
+    if value then
+      panel.elementHealthOrbModelAnimation:Show()
+      panel.elementHealthOrbModelAlpha:Show()
+      panel.elementHealthOrbModelScale:Show()
+      panel.elementHealthOrbModelPosX:Show()
+      panel.elementHealthOrbModelPosY:Show()
+      panel.elementHealthOrbModelRotation:Show()
+      panel.elementHealthOrbModelZoom:Show()
+      panel.elementHealthHighlightHeadline:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -270)
+    else
+      panel.elementHealthOrbModelAnimation:Hide()
+      panel.elementHealthOrbModelAlpha:Hide()
+      panel.elementHealthOrbModelScale:Hide()
+      panel.elementHealthOrbModelPosX:Hide()
+      panel.elementHealthOrbModelPosY:Hide()
+      panel.elementHealthOrbModelRotation:Hide()
+      panel.elementHealthOrbModelZoom:Hide()
+      panel.elementHealthHighlightHeadline:SetPoint("TOPLEFT", panel.elementHealthModelHeadline, "BOTTOMLEFT", 0, -50)
+    end
   end
 
   --update element power orb model enable
   panel.updateElementPowerOrbModelEnable = function()
-    panel.elementPowerOrbModelEnable:SetChecked(panel.loadPowerOrbModelEnable())
+    local value = panel.loadPowerOrbModelEnable()
+    panel.elementPowerOrbModelEnable:SetChecked(value)
+    if value then
+      panel.elementPowerOrbModelAnimation:Show()
+      panel.elementPowerOrbModelAlpha:Show()
+      panel.elementPowerOrbModelScale:Show()
+      panel.elementPowerOrbModelPosX:Show()
+      panel.elementPowerOrbModelPosY:Show()
+      panel.elementPowerOrbModelRotation:Show()
+      panel.elementPowerOrbModelZoom:Show()
+      panel.elementPowerHighlightHeadline:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -270)
+    else
+      panel.elementPowerOrbModelAnimation:Hide()
+      panel.elementPowerOrbModelAlpha:Hide()
+      panel.elementPowerOrbModelScale:Hide()
+      panel.elementPowerOrbModelPosX:Hide()
+      panel.elementPowerOrbModelPosY:Hide()
+      panel.elementPowerOrbModelRotation:Hide()
+      panel.elementPowerOrbModelZoom:Hide()
+      panel.elementPowerHighlightHeadline:SetPoint("TOPLEFT", panel.elementPowerModelHeadline, "BOTTOMLEFT", 0, -50)
+    end
   end
 
   --update element health orb model animation

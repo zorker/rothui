@@ -291,78 +291,69 @@
   end
 
   --basic dropdown menu func
-  local createBasicDropDownMenu = function(parent, name, text, dataFunc, width, menu, notCheckable)
+  local createBasicDropDownMenu = function(parent, name, title, dataFunc, width, displayMode, dynamicList)
     local dropdownMenu = CF("Frame", name, parent, "UIDropDownMenuTemplate")
-    UIDropDownMenu_SetText(dropdownMenu, text)
+    UIDropDownMenu_SetText(dropdownMenu, title)
     if width then UIDropDownMenu_SetWidth(dropdownMenu, width) end
     dropdownMenu.init = function(self, level)
       self.info = self.info or {}
       self.infos = self.infos or {}
       wipe(self.infos)
-      self.data = dataFunc()
-      tinsert(self.infos, { key = text, isTitle = true, notCheckable = true, notClickable = true, })
-      tinsert(self.infos, { key = "|cFF666666~~~~~~~~~~~~~~~|r", notCheckable = true, notClickable = true, })
-      if #self.data == 0 then
-        tinsert(self.infos, { key = "|cFFFF0000No data found|r", notCheckable = true, notClickable = true, })
+      if dynamicList then
+        self.data = dataFunc() --load data on init
+      else
+        self.data = self.data or dataFunc() --static list
       end
-      for key, list in pairs(self.data) do
-        tinsert(self.infos, { key = list.key, value = list.value, func = self.click, keepShownOnClick = false, })
-      end
-      tinsert(self.infos, { key = "|cFF666666~~~~~~~~~~~~~~~|r", notCheckable = true, notClickable = true, })
-      tinsert(self.infos, { key = "|cFF3399FFClose menu|r", notCheckable = true, func = function() CloseDropDownMenus() end, })
-      for i=1, #self.infos do
-        wipe(self.info)
-        self.info.text = self.infos[i].key
-        self.info.value = self.infos[i].value or ""
-        self.info.isTitle = self.infos[i].isTitle or false
-        self.info.keepShownOnClick = self.infos[i].keepShownOnClick or false
-        self.info.notClickable = self.infos[i].notClickable or false
-        self.info.notCheckable = self.infos[i].notCheckable or notCheckable or false
-        self.info.func = self.infos[i].func or nil
-        UIDropDownMenu_AddButton(self.info)
-      end
-    end
-    if menu then
-      UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init, "MENU")
-    else
-      UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
-    end
-    return dropdownMenu
-  end
-
-  --multi level dropdown menu func -- src: http://forums.wowace.com/showthread.php?t=15763
-  local createMultiLevelDropDownMenu = function(parent, name, text, dataFunc, width, menu)
-    local dropdownMenu = CF("Frame", name, parent, "UIDropDownMenuTemplate")
-    UIDropDownMenu_SetText(dropdownMenu, text)
-    if width then UIDropDownMenu_SetWidth(dropdownMenu, width) end
-    dropdownMenu.init = function(self, level)
-      self.info = self.info or {}
-      self.infos = self.infos or {}
-      wipe(self.infos)
-      self.data = self.data or dataFunc()
+      --level 1
       if level == 1 then
-        tinsert(self.infos, { key = text, isTitle = true, notCheckable = true, notClickable = true })
-        tinsert(self.infos, { key = "|cFF666666~~~~~~~~~~~~~~~|r", notCheckable = true, notClickable = true, })
-        for key, list in pairs(self.data) do
-          tinsert(self.infos, { key = key, value = key, notCheckable = true, hasArrow = true, keepShownOnClick = true, })
+        tinsert(self.infos, { text = title, isTitle = true, notCheckable = true, notClickable = true, })
+        tinsert(self.infos, { text = "|cFF666666~~~~~~~~~~~~~~~|r", notCheckable = true, notClickable = true, })
+        if #self.data == 0 then
+          tinsert(self.infos, { text = "|cFFFF0000No data found|r", notCheckable = true, notClickable = true, })
         end
-        tinsert(self.infos, { key = "|cFF666666~~~~~~~~~~~~~~~|r", notCheckable = true, notClickable = true, })
-        tinsert(self.infos, { key = "|cFF3399FFClose menu|r", notCheckable = true, func = function() CloseDropDownMenus() end, })
+        for index, data in pairs(self.data) do
+          tinsert(self.infos, {
+            text              = data.key,
+            value             = data.value,
+            func              = self.click,
+            isTitle           = data.isTitle or false,
+            hasArrow          = data.hasArrow or false,
+            notClickable      = data.notClickable or false,
+            notCheckable      = data.notCheckable or false,
+            keepShownOnClick  = data.keepShownOnClick or false,
+          })
+          if data.hasArrow then
+            self.infos[#self.infos].func = nil --remove the function call on multilevel menu
+          end
+        end
+        tinsert(self.infos, { text = "|cFF666666~~~~~~~~~~~~~~~|r", notCheckable = true, notClickable = true, })
+        tinsert(self.infos, { text = "|cFF3399FFClose menu|r", notCheckable = true, func = function() CloseDropDownMenus() end, })
       end
+      --level 2
       if level == 2 then
-        for key, list in pairs(self.data) do
-          if UIDROPDOWNMENU_MENU_VALUE == key then
-            for index, entry in pairs(list) do
-              tinsert(self.infos, { key = entry.key, value = entry.value, func = self.click, notCheckable = false, keepShownOnClick = true, })
+        for index, data in pairs(self.data) do
+          if UIDROPDOWNMENU_MENU_VALUE == data.key then
+            for index2, data2 in pairs(data.menuList) do
+              tinsert(self.infos, {
+                text              = data2.key,
+                value             = data2.value,
+                func              = self.click,
+                isTitle           = data2.isTitle or false,
+                hasArrow          = data2.hasArrow or false,
+                notClickable      = data2.notClickable or false,
+                notCheckable      = data2.notCheckable or false,
+                keepShownOnClick  = data2.keepShownOnClick or false,
+              })
             end
             break
           end
         end
       end
+      --create buttons
       for i=1, #self.infos do
         wipe(self.info)
-        self.info.text = self.infos[i].key
-        self.info.value = self.infos[i].value or ""
+        self.info.text = self.infos[i].text
+        self.info.value = self.infos[i].value or nil
         self.info.isTitle = self.infos[i].isTitle or false
         self.info.hasArrow = self.infos[i].hasArrow or false
         self.info.keepShownOnClick = self.infos[i].keepShownOnClick or false
@@ -372,27 +363,9 @@
         UIDropDownMenu_AddButton(self.info, level)
       end
     end
-    if menu then
-      UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init, "MENU")
-    else
-      UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init)
-    end
+    UIDropDownMenu_Initialize(dropdownMenu, dropdownMenu.init, displayMode)
     return dropdownMenu
   end
-
-  --basic dropdown menu with a button
-  --[[
-  local createBasicDropDownMenuWithButton = function(parent, name, text, dataFunc, width, buttonText)
-    local dropdownMenu = createBasicDropDownMenu(parent, name, text, dataFunc, width)
-    dropdownMenu.click = function(self)
-      UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
-    end
-    local button = createBasicButton(parent, name.."Submit", buttonText)
-    button:SetPoint("LEFT", dropdownMenu, "RIGHT", -17, 0)
-    dropdownMenu.button = button
-    return dropdownMenu
-  end
-  ]]
 
   ---------------------------------------------
   --CREATE PANEL ELEMENT FUNCTIONS
@@ -506,7 +479,7 @@
 
   --create element health orb model animation
   local createDropdownHealthOrbModelAnimation = function(parent)
-    local dropdownMenu = createMultiLevelDropDownMenu(parent, addon.."PanelHealthOrbModelAnimation", "Choose animation", db.getListModel, 196)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbModelAnimation", "Choose animation", db.getListModel, 196)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -519,7 +492,7 @@
 
   --create element power orb model animation
   local createDropdownPowerOrbModelAnimation = function(parent)
-    local dropdownMenu = createMultiLevelDropDownMenu(parent, addon.."PanelPowerOrbModelAnimation", "Choose animation", db.getListModel, 196)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbModelAnimation", "Choose animation", db.getListModel, 196)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value

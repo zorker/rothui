@@ -131,7 +131,7 @@
 
   function db:GetTemplateListDefaults()
     return {
-      { value = "pearl", key = "pearl" },
+      { value = "pearl", key = "pearl", notCheckable = true },
     }
   end
 
@@ -141,10 +141,8 @@
 
   --db script on variables loaded
   db:SetScript("OnEvent", function(self, event)
-    --debug - reset data to defaults
-    --OUF_DIABLO_DB_CHAR = db:GetOrbDefaults()
-    --OUF_DIABLO_DB_GLOB = db:GetTemplateDefaults()
-    --OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = db:GetTemplateListDefaults()
+    --debug
+    db.dropDatabase(true)
     --load global data
     self.loadGlobalData()
     --load character data
@@ -156,6 +154,19 @@
     self:UnregisterEvent("VARIABLES_LOADED")
   end)
   db:RegisterEvent("VARIABLES_LOADED")
+
+  ---------------------------------------------
+  --DB RESET
+  ---------------------------------------------
+
+  --full database reset
+  db.dropDatabase = function(noReload)
+    OUF_DIABLO_DB_CHAR = db:GetOrbDefaults()
+    OUF_DIABLO_DB_GLOB = db:GetTemplateDefaults()
+    OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = db:GetTemplateListDefaults()
+    if noReload then return end
+    ReloadUI()
+  end
 
   ---------------------------------------------
   --CHARACTER DATA
@@ -260,7 +271,7 @@
       end
     end
     if not nameFound then
-      tinsert(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, { key = name, value = name })
+      tinsert(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, { key = name, value = name, notCheckable = true })
     end
     print(addon..": "..strlower(type).." orb data saved as template |c003399FF"..name.."|r")
     --update the panel view
@@ -299,133 +310,205 @@
 
   --mode list for dropdown
   db.list.model = {
-    orbtacular = {
-      { value = 48109, key = "purble flash orb", },
-      { value = 48106, key = "blue flash orb", },
-      { value = 32368, key = "pearl", },
-      { value = 44652, key = "the planet", },
-      { value = 47882, key = "red chocolate", },
-      { value = 33853, key = "red magnet", },
-      { value = 34404, key = "white magnet", },
-      { value = 38699, key = "dwarf artifact", },
-      { value = 20782, key = "water planet", },
-      { value = 25392, key = "sahara", },
-      { value = 37867, key = "cthun", },
-      { value = 39108, key = "purple circus", },
-      { value = 16111, key = "spore", },
-      { value = 22707, key = "snow ball", },
-      { value = 29308, key = "death ball", },
-      { value = 25889, key = "sphere", },
-      { value = 28741, key = "titan orb", },
-      { value = 42486, key = "force sphere", },
-      { value = 45414, key = "soulshard", },
+    {
+      key = "orbtacular",
+      value = "orbtacular",
+      hasArrow = true,
+      notCheckable = true,
+      menuList = {
+        { value = 48109, key = "purble flash orb", },
+        { value = 48106, key = "blue flash orb", },
+        { value = 32368, key = "pearl", },
+        { value = 44652, key = "the planet", },
+        { value = 47882, key = "red chocolate", },
+        { value = 33853, key = "red magnet", },
+        { value = 34404, key = "white magnet", },
+        { value = 38699, key = "dwarf artifact", },
+        { value = 20782, key = "water planet", },
+        { value = 25392, key = "sahara", },
+        { value = 37867, key = "cthun", },
+        { value = 39108, key = "purple circus", },
+        { value = 16111, key = "spore", },
+        { value = 22707, key = "snow ball", },
+        { value = 29308, key = "death ball", },
+        { value = 25889, key = "sphere", },
+        { value = 28741, key = "titan orb", },
+        { value = 42486, key = "force sphere", },
+        { value = 45414, key = "soulshard", },
+      },
     },
-    fog = {
-      { value = 17010, key = "red fog", },
-      { value = 17054, key = "purple fog", },
-      { value = 17055, key = "green fog", },
-      { value = 17286, key = "yellow fog", },
-      { value = 18075, key = "turquoise fog", },
-      { value = 23343, key = "white fog", },
+    {
+      key = "fog",
+      value = "fog",
+      hasArrow = true,
+      notCheckable = true,
+      menuList = {
+        { value = 17010, key = "red fog", },
+        { value = 17054, key = "purple fog", },
+        { value = 17055, key = "green fog", },
+        { value = 17286, key = "yellow fog", },
+        { value = 18075, key = "turquoise fog", },
+        { value = 23343, key = "white fog", },
+      },
     },
-    portal = {
-      { value = 23422, key = "red portal", },
-      { value = 34319, key = "blue portal", },
-      { value = 34645, key = "purple portal", },
-      { value = 29074, key = "warlock portal", },
-      { value = 40645, key = "soul harvest", },
+    {
+      key = "portal",
+      value = "portal",
+      hasArrow = true,
+      notCheckable = true,
+      menuList = {
+        { value = 23422, key = "red portal", },
+        { value = 34319, key = "blue portal", },
+        { value = 34645, key = "purple portal", },
+        { value = 29074, key = "warlock portal", },
+        { value = 40645, key = "soul harvest", },
+      },
     },
-    swirly = {
-      { value = 27393, key = "blue rune swirly", },
-      { value = 28460, key = "purple swirly", },
-      { value = 29561, key = "blue swirly", },
-      { value = 29286, key = "white swirly", },
-      { value = 39581, key = "magic swirly", },
-      { value = 23310, key = "swirly cloud", },
+    {
+      key = "swirly",
+      value = "swirly",
+      hasArrow = true,
+      notCheckable = true,
+      menuList = {
+        { value = 27393, key = "blue rune swirly", },
+        { value = 28460, key = "purple swirly", },
+        { value = 29561, key = "blue swirly", },
+        { value = 29286, key = "white swirly", },
+        { value = 39581, key = "magic swirly", },
+        { value = 23310, key = "swirly cloud", },
+      },
     },
-    fire = {
-      { value = 27625, key = "green fire", },
-      { value = 38327, key = "fire", },
-      { value = 28639, key = "green vapor", },
+    {
+      key = "fire",
+      value = "fire",
+      hasArrow = true,
+      notCheckable = true,
+      menuList = {
+        { value = 27625, key = "green fire", },
+        { value = 38327, key = "fire", },
+        { value = 28639, key = "green vapor", },
+      },
     },
-    elemental = {
-      { value = 17065, key = "purple naaru", },
-      { value = 17871, key = "white naaru", },
-      { value = 1070,  key = "fire elemental", },
-      { value = 14252, key = "purple elemental", },
-      { value = 19003, key = "white elemental", },
-      { value = 15406, key = "light-green elemental", },
-      { value = 17045, key = "red elemental", },
-      { value = 9449,  key = "green elemental", },
-      { value = 4629,  key = "shadow elemental", },
-      { value = 22731, key = "glow elemental", },
-      { value = 16635, key = "void walker", },
-      { value = 16170, key = "green ghost", },
-      { value = 24905, key = "fire guard", },
-      { value = 31450, key = "flaming bone guard", },
-      { value = 34942, key = "bound fire elemental", },
-      { value = 36345, key = "bound water elemental", },
+    {
+      key = "elemental",
+      value = "elemental",
+      hasArrow = true,
+      notCheckable = true,
+      menuList = {
+        { value = 17065, key = "purple naaru", },
+        { value = 17871, key = "white naaru", },
+        { value = 1070,  key = "fire elemental", },
+        { value = 14252, key = "purple elemental", },
+        { value = 19003, key = "white elemental", },
+        { value = 15406, key = "light-green elemental", },
+        { value = 17045, key = "red elemental", },
+        { value = 9449,  key = "green elemental", },
+        { value = 4629,  key = "shadow elemental", },
+        { value = 22731, key = "glow elemental", },
+        { value = 16635, key = "void walker", },
+        { value = 16170, key = "green ghost", },
+        { value = 24905, key = "fire guard", },
+        { value = 31450, key = "flaming bone guard", },
+        { value = 34942, key = "bound fire elemental", },
+        { value = 36345, key = "bound water elemental", },
+      },
     },
-    crystal = {
-      { value = 17856, key = "blue crystal", },
-      { value = 20900, key = "green crystal", },
-      { value = 22506, key = "purple crystal", },
-      { value = 26419, key = "health crystal", },
-      { value = 26418, key = "power crystal", },
+    {
+      key = "crystal",
+      value = "crystal",
+      hasArrow = true,
+      notCheckable = true,
+      menuList = {
+        { value = 17856, key = "blue crystal", },
+        { value = 20900, key = "green crystal", },
+        { value = 22506, key = "purple crystal", },
+        { value = 26419, key = "health crystal", },
+        { value = 26418, key = "power crystal", },
+      },
     },
-    aquarium = {
-      { value = 4878,  key = "fish", },
-      { value = 7449,  key = "deviat", },
+    {
+      key = "aquarium",
+      value = "aquarium",
+      hasArrow = true,
+      notCheckable = true,
+      menuList = {
+        { value = 4878,  key = "fish", },
+        { value = 7449,  key = "deviat", },
+      },
     },
-    unique = {
-      { value = 10992, key = "diablo", },
-      { value = 38803, key = "murcablo", },
-      { value = 5233,  key = "blue angel", },
-      { value = 6888,  key = "alarm-o-bot", },
-      { value = 11986, key = "molten giant", },
-      { value = 38594, key = "magma giant", },
-      { value = 28641, key = "algalon", },
-      { value = 31094, key = "spectral bear", },
-      { value = 28890, key = "mimiron head", },
-      { value = 32913, key = "therazane", },
-      { value = 38150, key = "fire kitten", },
-      { value = 38187, key = "orange fire helldog", },
-      { value = 38189, key = "blue fire helldog", },
-      { value = 39354, key = "deathwing lava claw", },
-      { value = 40924, key = "cranegod", },
-      { value = 38548, key = "burning blob", },
-      { value = 1824,  key = "blue wisp", },
+    {
+      key = "unique",
+      value = "unique",
+      hasArrow = true,
+      notCheckable = true,
+      menuList = {
+        { value = 10992, key = "diablo", },
+        { value = 38803, key = "murcablo", },
+        { value = 5233,  key = "blue angel", },
+        { value = 6888,  key = "alarm-o-bot", },
+        { value = 11986, key = "molten giant", },
+        { value = 38594, key = "magma giant", },
+        { value = 28641, key = "algalon", },
+        { value = 31094, key = "spectral bear", },
+        { value = 28890, key = "mimiron head", },
+        { value = 32913, key = "therazane", },
+        { value = 38150, key = "fire kitten", },
+        { value = 38187, key = "orange fire helldog", },
+        { value = 38189, key = "blue fire helldog", },
+        { value = 39354, key = "deathwing lava claw", },
+        { value = 40924, key = "cranegod", },
+        { value = 38548, key = "burning blob", },
+        { value = 1824,  key = "blue wisp", },
+      },
     },
-    sparkling = {
-      { value = 26753, key = "spark", },
-      { value = 27617, key = "yellow spark", },
-      { value = 46920, key = "purple splash", },
-      { value = 48210, key = "yellow plasma", },
-      { value = 29612, key = "strobo", },
-      { value = 41110, key = "strobo2", },
-      { value = 44465, key = "strobo3", },
-      { value = 30792, key = "hammer of wrath", },
+    {
+      key = "sparkling",
+      value = "sparkling",
+      hasArrow = true,
+      notCheckable = true,
+      menuList = {
+        { value = 26753, key = "spark", },
+        { value = 27617, key = "yellow spark", },
+        { value = 46920, key = "purple splash", },
+        { value = 48210, key = "yellow plasma", },
+        { value = 29612, key = "strobo", },
+        { value = 41110, key = "strobo2", },
+        { value = 44465, key = "strobo3", },
+        { value = 30792, key = "hammer of wrath", },
+      },
     },
-    spirit = {
-      { value = 2421,  key = "killrock eye", },
-      { value = 46174, key = "darkmoon eye", },
-      { value = 21485, key = "blue soul", },
-      { value = 30150, key = "red soul", },
-      { value = 39740, key = "red spirit", },
-      { value = 39738, key = "blue spirit", },
-      { value = 28089, key = "ghost skull", },
+    {
+      key = "spirit",
+      value = "spirit",
+      hasArrow = true,
+      notCheckable = true,
+      menuList = {
+        { value = 2421,  key = "killrock eye", },
+        { value = 46174, key = "darkmoon eye", },
+        { value = 21485, key = "blue soul", },
+        { value = 30150, key = "red soul", },
+        { value = 39740, key = "red spirit", },
+        { value = 39738, key = "blue spirit", },
+        { value = 28089, key = "ghost skull", },
+      },
     },
-    environment = {
-      { value = 35741, key = "fire flower", },
-      { value = 36405, key = "oasis flower", },
-      { value = 42785, key = "icethorn flower", },
-      { value = 39014, key = "purple mushroom", },
-      { value = 36901, key = "purple lantern", },
-      { value = 36902, key = "turquoise lantern", },
-      { value = 31905, key = "purple egg", },
-      { value = 34010, key = "orange egg", },
-      { value = 26506, key = "bubble torch", },
-      { value = 41853, key = "onyx statue", },
+    {
+      key = "environment",
+      value = "environment",
+      hasArrow = true,
+      notCheckable = true,
+      menuList = {
+        { value = 35741, key = "fire flower", },
+        { value = 36405, key = "oasis flower", },
+        { value = 42785, key = "icethorn flower", },
+        { value = 39014, key = "purple mushroom", },
+        { value = 36901, key = "purple lantern", },
+        { value = 36902, key = "turquoise lantern", },
+        { value = 31905, key = "purple egg", },
+        { value = 34010, key = "orange egg", },
+        { value = 26506, key = "bubble torch", },
+        { value = 41853, key = "onyx statue", },
+      },
     },
   }
   db.getListModel = function() return db.list.model end

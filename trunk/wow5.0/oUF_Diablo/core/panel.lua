@@ -320,9 +320,6 @@
         self.info.notCheckable = self.infos[i].notCheckable or notCheckable or false
         self.info.func = self.infos[i].func or nil
         UIDropDownMenu_AddButton(self.info)
-        if #self.infos < 5 then
-          break --do not build the menu if no entries are found
-        end
       end
     end
     if menu then
@@ -586,9 +583,9 @@
     local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelPosX", "X-Axis", -5, 5, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      --panel.saveHealthOrbModelPosX(value)
+      panel.saveHealthOrbModelPosX(value)
       --update orb view
-      --panel.updateHealthOrbModelPosX()
+      panel.updateHealthOrbModelPosX()
     end)
     return slider
   end
@@ -598,9 +595,9 @@
     local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelPosX", "X-Axis", -5, 5, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      --panel.savePowerOrbModelPosX(value)
+      panel.savePowerOrbModelPosX(value)
       --update orb view
-      --panel.updatePowerOrbModelPosX()
+      panel.updatePowerOrbModelPosX()
     end)
     return slider
   end
@@ -610,9 +607,9 @@
     local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelPosY", "Y-Axis", -5, 5, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      --panel.saveHealthOrbModelPosY(value)
+      panel.saveHealthOrbModelPosY(value)
       --update orb view
-      --panel.updateHealthOrbModelPosY()
+      panel.updateHealthOrbModelPosY()
     end)
     return slider
   end
@@ -622,9 +619,9 @@
     local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelPosY", "Y-Axis", -5, 5, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      --panel.savePowerOrbModelPosY(value)
+      panel.savePowerOrbModelPosY(value)
       --update orb view
-      --panel.updatePowerOrbModelPosY()
+      panel.updatePowerOrbModelPosY()
     end)
     return slider
   end
@@ -634,9 +631,9 @@
     local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelRotation", "Rotation", -4, 4, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      --panel.saveHealthOrbModelRotation(value)
+      panel.saveHealthOrbModelRotation(value)
       --update orb view
-      --panel.updateHealthOrbModelRotation()
+      panel.updateHealthOrbModelRotation()
     end)
     return slider
   end
@@ -646,9 +643,9 @@
     local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelRotation", "Rotation", -4, 4, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      --panel.savePowerOrbModelRotation(value)
+      panel.savePowerOrbModelRotation(value)
       --update orb view
-      --panel.updatePowerOrbModelRotation()
+      panel.updatePowerOrbModelRotation()
     end)
     return slider
   end
@@ -658,9 +655,9 @@
     local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelZoom", "Portrait-Zoom", 0.001, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      --panel.saveHealthOrbModelZoom(value)
+      panel.saveHealthOrbModelZoom(value)
       --update orb view
-      --panel.updateHealthOrbModelZoom()
+      panel.updateHealthOrbModelZoom()
     end)
     return slider
   end
@@ -670,9 +667,9 @@
     local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelZoom", "Portrait-Zoom", 0.001, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      --panel.savePowerOrbModelZoom(value)
+      panel.savePowerOrbModelZoom(value)
       --update orb view
-      --panel.updatePowerOrbModelZoom()
+      panel.updatePowerOrbModelZoom()
     end)
     return slider
   end
@@ -682,9 +679,9 @@
     local slider = createBasicSlider(parent, addon.."PanelHealthOrbHighlightAlpha", "Alpha", 0, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      --panel.saveHealthOrbHighlightAlpha(value)
+      panel.saveHealthOrbHighlightAlpha(value)
       --update orb view
-      --panel.updateHealthOrbHighlightAlpha()
+      panel.updateHealthOrbHighlightAlpha()
     end)
     return slider
   end
@@ -694,9 +691,9 @@
     local slider = createBasicSlider(parent, addon.."PanelPowerOrbHighlightAlpha", "Alpha", 0, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      --panel.savePowerOrbHighlightAlpha(value)
+      panel.savePowerOrbHighlightAlpha(value)
       --update orb view
-      --panel.updatePowerOrbHighlightAlpha()
+      panel.updatePowerOrbHighlightAlpha()
     end)
     return slider
   end
@@ -706,9 +703,9 @@
     local slider = createBasicSlider(parent, addon.."PanelHealthOrbSparkAlpha", "Alpha", 0, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      --panel.saveHealthOrbSparkAlpha(value)
+      panel.saveHealthOrbSparkAlpha(value)
       --update orb view
-      --panel.updateHealthOrbSparkAlpha()
+      panel.updateHealthOrbSparkAlpha()
     end)
     return slider
   end
@@ -718,9 +715,9 @@
     local slider = createBasicSlider(parent, addon.."PanelPowerOrbSparkAlpha", "Alpha", 0, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      --panel.savePowerOrbSparkAlpha(value)
+      panel.savePowerOrbSparkAlpha(value)
       --update orb view
-      --panel.updatePowerOrbSparkAlpha()
+      panel.updatePowerOrbSparkAlpha()
     end)
     return slider
   end
@@ -1217,6 +1214,16 @@
     ns.PowerOrb.model:Update() --update the full model with all values, displayId is not enough
   end
 
+  --update health orb model alpha
+  panel.updateHealthOrbModelAlpha = function()
+    ns.HealthOrb.model:SetAlpha(panel.loadHealthOrbModelAlpha())
+  end
+
+  --update power orb model alpha
+  panel.updatePowerOrbModelAlpha = function()
+    ns.PowerOrb.model:SetAlpha(panel.loadPowerOrbModelAlpha())
+  end
+
   --update health orb model scale
   panel.updateHealthOrbModelScale = function()
     ns.HealthOrb.model:SetCamDistanceScale(panel.loadHealthOrbModelScale())
@@ -1227,14 +1234,68 @@
     ns.PowerOrb.model:SetCamDistanceScale(panel.loadPowerOrbModelScale())
   end
 
-  --update health orb model alpha
-  panel.updateHealthOrbModelAlpha = function()
-    ns.HealthOrb.model:SetAlpha(panel.loadHealthOrbModelAlpha())
+  --update health orb model pos x
+  panel.updateHealthOrbModelPosX = function()
+    local x, y = panel.loadHealthOrbModelPosX(), panel.loadHealthOrbModelPosY()
+    ns.HealthOrb.model:SetPosition(0,x,y)
   end
 
-  --update power orb model alpha
-  panel.updatePowerOrbModelAlpha = function()
-    ns.PowerOrb.model:SetAlpha(panel.loadPowerOrbModelAlpha())
+  --update power orb model pos x
+  panel.updatePowerOrbModelPosX = function()
+    local x, y = panel.loadPowerOrbModelPosX(), panel.loadPowerOrbModelPosY()
+    ns.PowerOrb.model:SetPosition(0,x,y)
+  end
+
+  --update health orb model pos y
+  panel.updateHealthOrbModelPosY = function()
+    local x, y = panel.loadHealthOrbModelPosX(), panel.loadHealthOrbModelPosY()
+    ns.HealthOrb.model:SetPosition(0,x,y)
+  end
+
+  --update power orb model pos y
+  panel.updatePowerOrbModelPosY = function()
+    local x, y = panel.loadPowerOrbModelPosX(), panel.loadPowerOrbModelPosY()
+    ns.PowerOrb.model:SetPosition(0,x,y)
+  end
+
+  --update health orb model rotation
+  panel.updateHealthOrbModelRotation = function()
+    ns.HealthOrb.model:SetRotation(panel.loadHealthOrbModelRotation())
+  end
+
+  --update power orb model rotation
+  panel.updatePowerOrbModelRotation = function()
+    ns.PowerOrb.model:SetRotation(panel.loadPowerOrbModelRotation())
+  end
+
+  --update health orb model zoom
+  panel.updateHealthOrbModelZoom = function()
+    ns.HealthOrb.model:SetPortraitZoom(panel.loadHealthOrbModelZoom())
+  end
+
+  --update power orb model zoom
+  panel.updatePowerOrbModelZoom = function()
+    ns.PowerOrb.model:SetPortraitZoom(panel.loadPowerOrbModelZoom())
+  end
+
+  --update health orb highlight alpha
+  panel.updateHealthOrbHighlightAlpha = function()
+    ns.HealthOrb.highlight:SetAlpha(panel.loadHealthOrbHighlightAlpha())
+  end
+
+  --update power orb highlight alpha
+  panel.updatePowerOrbHighlightAlpha = function()
+    ns.PowerOrb.highlight:SetAlpha(panel.loadPowerOrbHighlightAlpha())
+  end
+
+  --update health orb spark alpha
+  panel.updateHealthOrbSparkAlpha = function()
+    ns.HealthOrb.spark:SetAlpha(panel.loadHealthOrbSparkAlpha())
+  end
+
+  --update power orb spark alpha
+  panel.updatePowerOrbSparkAlpha = function()
+    ns.PowerOrb.spark:SetAlpha(panel.loadPowerOrbSparkAlpha())
   end
 
   ---------------------------------------------
@@ -1347,6 +1408,16 @@
     UIDropDownMenu_SetSelectedValue(panel.elementPowerOrbModelAnimation, panel.loadPowerOrbModelAnimation())
   end
 
+  --update element health orb model alpha
+  panel.updateElementHealthOrbModelAlpha = function()
+    panel.elementHealthOrbModelAlpha:SetValue(panel.loadHealthOrbModelAlpha())
+  end
+
+  --update element power orb model alpha
+  panel.updateElementPowerOrbModelAlpha = function()
+    panel.elementPowerOrbModelAlpha:SetValue(panel.loadPowerOrbModelAlpha())
+  end
+
   --update element health orb model scale
   panel.updateElementHealthOrbModelScale = function()
     panel.elementHealthOrbModelScale:SetValue(panel.loadHealthOrbModelScale())
@@ -1357,15 +1428,66 @@
     panel.elementPowerOrbModelScale:SetValue(panel.loadPowerOrbModelScale())
   end
 
-  --update element health orb model alpha
-  panel.updateElementHealthOrbModelAlpha = function()
-    panel.elementHealthOrbModelAlpha:SetValue(panel.loadHealthOrbModelAlpha())
+  --update element health orb model pos x
+  panel.updateElementHealthOrbModelPosX = function()
+    panel.elementHealthOrbModelPosX:SetValue(panel.loadHealthOrbModelPosX())
   end
 
-  --update element power orb model alpha
-  panel.updateElementPowerOrbModelAlpha = function()
-    panel.elementPowerOrbModelAlpha:SetValue(panel.loadPowerOrbModelAlpha())
+  --update element power orb model pos x
+  panel.updateElementPowerOrbModelPosX = function()
+    panel.elementPowerOrbModelPosX:SetValue(panel.loadPowerOrbModelPosX())
   end
+
+  --update element health orb model pos y
+  panel.updateElementHealthOrbModelPosY = function()
+    panel.elementHealthOrbModelPosY:SetValue(panel.loadHealthOrbModelPosY())
+  end
+
+  --update element power orb model pos y
+  panel.updateElementPowerOrbModelPosY = function()
+    panel.elementPowerOrbModelPosY:SetValue(panel.loadPowerOrbModelPosY())
+  end
+
+  --update element health orb model rotation
+  panel.updateElementHealthOrbModelRotation = function()
+    panel.elementHealthOrbModelRotation:SetValue(panel.loadHealthOrbModelRotation())
+  end
+
+  --update element power orb model rotation
+  panel.updateElementPowerOrbModelRotation = function()
+    panel.elementPowerOrbModelRotation:SetValue(panel.loadPowerOrbModelRotation())
+  end
+
+  --update element health orb model zoom
+  panel.updateElementHealthOrbModelZoom = function()
+    panel.elementHealthOrbModelZoom:SetValue(panel.loadHealthOrbModelZoom())
+  end
+
+  --update element power orb model zoom
+  panel.updateElementPowerOrbModelZoom = function()
+    panel.elementPowerOrbModelZoom:SetValue(panel.loadPowerOrbModelZoom())
+  end
+
+  --update element health orb highlight alpha
+  panel.updateElementHealthOrbHighlightAlpha = function()
+    panel.elementHealthOrbHighlightAlpha:SetValue(panel.loadHealthOrbHighlightAlpha())
+  end
+
+  --update element power orb highlight alpha
+  panel.updateElementPowerOrbHighlightAlpha = function()
+    panel.elementPowerOrbHighlightAlpha:SetValue(panel.loadPowerOrbHighlightAlpha())
+  end
+
+  --update element health orb spark alpha
+  panel.updateElementHealthOrbSparkAlpha = function()
+    panel.elementHealthOrbSparkAlpha:SetValue(panel.loadHealthOrbSparkAlpha())
+  end
+
+  --update element power orb spark alpha
+  panel.updateElementPowerOrbSparkAlpha = function()
+    panel.elementPowerOrbSparkAlpha:SetValue(panel.loadPowerOrbSparkAlpha())
+  end
+
 
   ---------------------------------------------
   --SAVE DATA TO DATABASE
@@ -1425,6 +1547,16 @@
     db.char["POWER"].model.displayInfo = value
   end
 
+  --save health orb model alpha
+  panel.saveHealthOrbModelAlpha = function(value)
+    db.char["HEALTH"].model.alpha = value
+  end
+
+  --save power orb model alpha
+  panel.savePowerOrbModelAlpha = function(value)
+    db.char["POWER"].model.alpha = value
+  end
+
   --save health orb model scale
   panel.saveHealthOrbModelScale = function(value)
     db.char["HEALTH"].model.camDistanceScale = value
@@ -1435,14 +1567,64 @@
     db.char["POWER"].model.camDistanceScale = value
   end
 
-  --save health orb model alpha
-  panel.saveHealthOrbModelAlpha = function(value)
-    db.char["HEALTH"].model.alpha = value
+  --save health orb model pos x
+  panel.saveHealthOrbModelPosX = function(value)
+    db.char["HEALTH"].model.pos_x = value
   end
 
-  --save power orb model alpha
-  panel.savePowerOrbModelAlpha = function(value)
-    db.char["POWER"].model.alpha = value
+  --save power orb model pos x
+  panel.savePowerOrbModelPosX = function(value)
+    db.char["POWER"].model.pos_x = value
+  end
+
+  --save health orb model pos y
+  panel.saveHealthOrbModelPosY = function(value)
+    db.char["HEALTH"].model.pos_y = value
+  end
+
+  --save power orb model pos y
+  panel.savePowerOrbModelPosY = function(value)
+    db.char["POWER"].model.pos_y = value
+  end
+
+  --save health orb model rotation
+  panel.saveHealthOrbModelRotation = function(value)
+    db.char["HEALTH"].model.rotation = value
+  end
+
+  --save power orb model rotation
+  panel.savePowerOrbModelRotation = function(value)
+    db.char["POWER"].model.rotation = value
+  end
+
+  --save health orb model zoom
+  panel.saveHealthOrbModelZoom = function(value)
+    db.char["HEALTH"].model.portraitZoom = value
+  end
+
+  --save power orb model zoom
+  panel.savePowerOrbModelZoom = function(value)
+    db.char["POWER"].model.portraitZoom = value
+  end
+
+  --save health orb highlight alpha
+  panel.saveHealthOrbHighlightAlpha = function(value)
+    db.char["HEALTH"].highlight.alpha = value
+  end
+
+  --save power orb highlight alpha
+  panel.savePowerOrbHighlightAlpha = function(value)
+    db.char["POWER"].highlight.alpha = value
+  end
+
+  --save health orb spark alpha
+  panel.saveHealthOrbSparkAlpha = function(value)
+    db.char["HEALTH"].spark.alpha = value
+  end
+
+  --save power orb spark alpha
+  panel.savePowerOrbSparkAlpha = function(value)
+    db.char["POWER"].spark.alpha = value
   end
 
   ---------------------------------------------
@@ -1499,6 +1681,16 @@
     return db.char["POWER"].model.displayInfo
   end
 
+  --load health orb model alpha
+  panel.loadHealthOrbModelAlpha = function()
+    return db.char["HEALTH"].model.alpha
+  end
+
+  --load power orb model alpha
+  panel.loadPowerOrbModelAlpha = function()
+    return db.char["POWER"].model.alpha
+  end
+
   --load health orb model scale
   panel.loadHealthOrbModelScale = function()
     return db.char["HEALTH"].model.camDistanceScale
@@ -1509,14 +1701,64 @@
     return db.char["POWER"].model.camDistanceScale
   end
 
-  --load health orb model alpha
-  panel.loadHealthOrbModelAlpha = function()
-    return db.char["HEALTH"].model.alpha
+  --load health orb model pos x
+  panel.loadHealthOrbModelPosX = function()
+    return db.char["HEALTH"].model.pos_x
   end
 
-  --load power orb model alpha
-  panel.loadPowerOrbModelAlpha = function()
-    return db.char["POWER"].model.alpha
+  --load power orb model pos x
+  panel.loadPowerOrbModelPosX = function()
+    return db.char["POWER"].model.pos_x
+  end
+
+  --load health orb model pos y
+  panel.loadHealthOrbModelPosY = function()
+    return db.char["HEALTH"].model.pos_y
+  end
+
+  --load power orb model pos y
+  panel.loadPowerOrbModelPosY = function()
+    return db.char["POWER"].model.pos_y
+  end
+
+  --load health orb model rotation
+  panel.loadHealthOrbModelRotation = function()
+    return db.char["HEALTH"].model.rotation
+  end
+
+  --load power orb model rotation
+  panel.loadPowerOrbModelRotation = function()
+    return db.char["POWER"].model.rotation
+  end
+
+  --load health orb model zoom
+  panel.loadHealthOrbModelZoom = function()
+    return db.char["HEALTH"].model.portraitZoom
+  end
+
+  --load power orb model zoom
+  panel.loadPowerOrbModelZoom = function()
+    return db.char["POWER"].model.portraitZoom
+  end
+
+  --load health orb highlight alpha
+  panel.loadHealthOrbHighlightAlpha = function()
+    return db.char["HEALTH"].highlight.alpha
+  end
+
+  --load power orb highlight alpha
+  panel.loadPowerOrbHighlightAlpha = function()
+    return db.char["POWER"].highlight.alpha
+  end
+
+  --load health orb spark alpha
+  panel.loadHealthOrbSparkAlpha = function()
+    return db.char["HEALTH"].spark.alpha
+  end
+
+  --load power orb spark alpha
+  panel.loadPowerOrbSparkAlpha = function()
+    return db.char["POWER"].spark.alpha
   end
 
   ---------------------------------------------
@@ -1547,14 +1789,39 @@
     panel.updateElementHealthOrbModelAnimation()
     --update element power orb model animation
     panel.updateElementPowerOrbModelAnimation()
-    --update element health orb model scale
-    panel.updateElementHealthOrbModelScale()
-    --update element power orb model scale
-    panel.updateElementPowerOrbModelScale()
     --update element health orb model alpha
     panel.updateElementHealthOrbModelAlpha()
     --update element power orb model alpha
     panel.updateElementPowerOrbModelAlpha()
+    --update element health orb model scale
+    panel.updateElementHealthOrbModelScale()
+    --update element power orb model scale
+    panel.updateElementPowerOrbModelScale()
+    --update element health orb model pos x
+    panel.updateElementHealthOrbModelPosX()
+    --update element power orb model pos x
+    panel.updateElementPowerOrbModelPosX()
+    --update element health orb model pos y
+    panel.updateElementHealthOrbModelPosY()
+    --update element power orb model pos y
+    panel.updateElementPowerOrbModelPosY()
+    --update element health orb model rotation
+    panel.updateElementHealthOrbModelRotation()
+    --update element power orb model rotation
+    panel.updateElementPowerOrbModelRotation()
+    --update element health orb model zoom
+    panel.updateElementHealthOrbModelZoom()
+    --update element power orb model zoom
+    panel.updateElementPowerOrbModelZoom()
+    --update element health orb highlight alpha
+    panel.updateElementHealthOrbHighlightAlpha()
+    --update element power orb highlight alpha
+    panel.updateElementPowerOrbHighlightAlpha()
+    --update element health orb spark alpha
+    panel.updateElementHealthOrbSparkAlpha()
+    --update element power orb spark alpha
+    panel.updateElementPowerOrbSparkAlpha()
+
 
   end
 
@@ -1574,7 +1841,7 @@
     panel.updateHealthOrbFillingColor()
     --update power orb filling color
     panel.updatePowerOrbFillingColor()
-    --important -- since auto coloring rewrites the color it has to be called after filling color
+    --important! since auto coloring rewrites the color it has to be called after filling color
     --update health orb filling color auto
     panel.updateHealthOrbFillingColorAuto()
     --update power orb filling color auto
@@ -1587,14 +1854,38 @@
     panel.updateHealthOrbModelAnimation()
     --update power orb model animation
     panel.updatePowerOrbModelAnimation()
-    --update health orb model scale
-    panel.updateHealthOrbModelScale()
-    --update power orb model scale
-    panel.updatePowerOrbModelScale()
     --update health orb model alpha
     panel.updateHealthOrbModelAlpha()
     --update power orb model alpha
     panel.updatePowerOrbModelAlpha()
+    --update health orb model scale
+    panel.updateHealthOrbModelScale()
+    --update power orb model scale
+    panel.updatePowerOrbModelScale()
+    --update health orb model pos x
+    panel.updateHealthOrbModelPosX()
+    --update power orb model pos x
+    panel.updatePowerOrbModelPosX()
+    --update health orb model pos y
+    panel.updateHealthOrbModelPosY()
+    --update power orb model pos y
+    panel.updatePowerOrbModelPosY()
+    --update health orb model rotation
+    panel.updateHealthOrbModelRotation()
+    --update power orb model rotation
+    panel.updatePowerOrbModelRotation()
+    --update health orb model zoom
+    panel.updateHealthOrbModelZoom()
+    --update power orb model zoom
+    panel.updatePowerOrbModelZoom()
+    --update health orb highlight alpha
+    panel.updateHealthOrbHighlightAlpha()
+    --update power orb highlight alpha
+    panel.updatePowerOrbHighlightAlpha()
+    --update health orb spark alpha
+    panel.updateHealthOrbSparkAlpha()
+    --update power orb spark alpha
+    panel.updatePowerOrbSparkAlpha()
 
     --update panel view
     panel.updatePanelView()

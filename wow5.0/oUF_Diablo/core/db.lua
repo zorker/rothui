@@ -57,6 +57,21 @@
         highlight = {
           alpha = 0.3,
         },
+        --value
+        value = {
+          alphaOnMouseOver = 1,
+          alphaOnMouseOut = 1,
+          hideOnEmpty = true,
+          hideOnFull = false,
+          top = {
+            color = { r = 1, g = 1, b = 1, },
+            tag = "[diablo:healthorbtop]",
+          },
+          bottom = {
+            color = { r = 0.8, g = 0.8, b = 0.8, },
+            tag = "[diablo:healthorbbottom]",
+          },
+        },
       },--health end
       --power
       ["POWER"] = {
@@ -86,6 +101,21 @@
         --highlight
         highlight = {
           alpha = 0.3,
+        },
+        --value
+        value = {
+          alphaOnMouseOver = 1,
+          alphaOnMouseOut = 1,
+          hideOnEmpty = true,
+          hideOnFull = false,
+          top = {
+            color = { r = 1, g = 1, b = 1, },
+            tag = "[diablo:powerorbtop]",
+          },
+          bottom = {
+            color = { r = 0.8, g = 0.8, b = 0.8, },
+            tag = "[diablo:powerorbbottom]",
+          },
         },
       },--power end
     } --default end
@@ -131,7 +161,7 @@
 
   function db:GetTemplateListDefaults()
     return {
-      { value = "pearl", key = "pearl", notCheckable = true },
+      { value = "pearl", key = "pearl", notCheckable = true, keepShownOnClick = false, },
     }
   end
 
@@ -141,8 +171,6 @@
 
   --db script on variables loaded
   db:SetScript("OnEvent", function(self, event)
-    --debug
-    db.dropDatabase(true)
     --load global data
     self.loadGlobalData()
     --load character data
@@ -271,7 +299,7 @@
       end
     end
     if not nameFound then
-      tinsert(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, { key = name, value = name, notCheckable = true })
+      tinsert(OUF_DIABLO_DB_GLOB.TEMPLATE_LIST, { key = name, value = name, notCheckable = true, keepShownOnClick = false, })
     end
     print(addon..": "..strlower(type).." orb data saved as template |c003399FF"..name.."|r")
     --update the panel view

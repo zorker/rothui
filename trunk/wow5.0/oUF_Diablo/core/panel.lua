@@ -265,7 +265,6 @@
     end
     --picker.show
     picker.show = function(r,g,b,a,callback)
-      CPF:SetParent(panel)
       CPF:SetColorRGB(r,g,b)
       CPF.hasOpacity, ColorPickerFrame.opacity = (a ~= nil), a
       CPF.previousValues = {r,g,b,a}
@@ -625,7 +624,7 @@
 
   --create element health orb model zoom
   local createSliderHealthOrbModelZoom = function(parent)
-    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelZoom", "Portrait-Zoom", 0.001, 1, 0.001)
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbModelZoom", "Portrait-Zoom", 0, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
       panel.saveHealthOrbModelZoom(value)
@@ -637,7 +636,7 @@
 
   --create element power orb model zoom
   local createSliderPowerOrbModelZoom = function(parent)
-    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelZoom", "Portrait-Zoom", 0.001, 1, 0.001)
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbModelZoom", "Portrait-Zoom", 0, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
       panel.savePowerOrbModelZoom(value)
@@ -909,6 +908,22 @@
     return button
   end
 
+  --createBottomButtonTemplateReload
+  local createBottomButtonTemplateReload = function(parent)
+    local button = createBasicButton(parent, addon.."PanelBottomTemplateReload", "Reload UI")
+    button:HookScript("OnClick", function()
+      db.char.reload = true
+      ReloadUI()
+    end)
+    button:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_TOP")
+      GameTooltip:AddLine("Click here to reload the user interface.", 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+    return button
+  end
+
   ---------------------------------------------
   --SPAWN PANEL ELEMENTS
   ---------------------------------------------
@@ -996,6 +1011,8 @@
   panel.bottomElementPowerOrbReset = createBottomButtonPowerOrbReset(panel)
   --createBottomButtonTemplateDelete
   panel.bottomElementTemplateDelete = createBottomButtonTemplateDelete(panel)
+  --createBottomButtonTemplateReload
+  panel.bottomElementTemplateReload = createBottomButtonTemplateReload(panel)
 
   ---------------------------------------------
   --POSITION PANEL ELEMENTS
@@ -1079,6 +1096,8 @@
 
   --position the delete button
   panel.bottomElementTemplateDelete:SetPoint("BOTTOM",-12,-18)
+  --position the reload button
+  panel.bottomElementTemplateReload:SetPoint("BOTTOMRIGHT",-12,-18)
 
   ---------------------------------------------
   --CREATE HEADLINE BACKGROUNDS
@@ -1894,22 +1913,30 @@
     self.eventHelper:SetScript("OnEvent", nil)
     self.eventHelper:SetOrbsToDefault()
     --reset the focus to the last active chatwindow
-    ChatEdit_FocusActiveWindow() --nice function ;)
+    ChatEdit_FocusActiveWindow() --nice function
   end
 
   do
     local eventHelper = CF("Frame")
     function eventHelper:SetOrbsToMax()
       local hbar, pbar = ns.HealthOrb.fill, ns.PowerOrb.fill
+      local hval, pval = ns.HealthOrb.values, ns.PowerOrb.values
       local hmin, hmax = hbar:GetMinMaxValues()
       local pmin, pmax = pbar:GetMinMaxValues()
       hbar:SetValue(hmax)
       pbar:SetValue(pmax)
+      hval:Show()
+      pval:Show()
+      hval:SetAlpha(1)
+      pval:SetAlpha(1)
     end
     function eventHelper:SetOrbsToDefault()
       local hbar, pbar = ns.HealthOrb.fill, ns.PowerOrb.fill
+      local hval, pval = ns.HealthOrb.values, ns.PowerOrb.values
       hbar:ForceUpdate()
       pbar:ForceUpdate()
+      hval:SetAlpha(db.char["HEALTH"].value.alphaOnMouseOut)
+      pval:SetAlpha(db.char["POWER"].value.alphaOnMouseOut)
     end
     panel.eventHelper = eventHelper
     panel:HookScript("OnShow", function(self) self:Enable() end)

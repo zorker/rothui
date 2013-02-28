@@ -25,27 +25,15 @@ local function hook(frame)
   end
 end
 
-
 for i, frame in ipairs(oUF.objects) do hook(frame) end
 oUF:RegisterInitCallback(hook)
 
-
-local f, min, max = CreateFrame("Frame"), math.min, math.max
+local f, min, max, abs = CreateFrame("Frame"), math.min, math.max, math.abs
 f:SetScript("OnUpdate", function()
   for bar, value in pairs(smoothing) do
     local cur = bar:GetValue()
-    local barmin, barmax = bar:GetMinMaxValues()
     local new = cur + (value-cur)/15
     bar:SetValue_(new)
-    if bar.Filling then
-      if barmax == 0 then
-        bar.Filling:SetHeight(0)
-        bar.Filling:SetTexCoord(0,1,1,1)
-      else
-        bar.Filling:SetHeight((new / barmax) * bar:GetWidth())
-        bar.Filling:SetTexCoord(0,1,  math.abs(new / barmax - 1),1)
-      end
-    end
     if cur == value or abs(cur - value) < 1 then
       bar:SetValue_(value)
       smoothing[bar] = nil

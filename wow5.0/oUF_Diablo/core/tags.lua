@@ -91,24 +91,6 @@
 
   ---------------------------------------------
 
-  --short hp value
-  oUF.Tags.Methods["diablo:shorthpval"] = function(unit)
-    --local color = oUF.Tags.Methods["diablo:colorsimple"](unit)
-    local hpval
-    if UnitIsDeadOrGhost(unit) then
-      hpval = "Dead"
-    elseif not UnitIsConnected(unit) then
-      hpval = "Offline"
-    else
-      hpval = func.numFormat(UnitHealth(unit) or 0)
-    end
-    --return "|cff"..color..(hpval or "").."|r"
-    return hpval or ""
-  end
-  oUF.Tags.Events["diablo:shorthpval"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
-
-  ---------------------------------------------
-
   --power value
   oUF.Tags.Methods["diablo:ppval"] = function(unit)
     local ppval = func.numFormat(UnitPower(unit) or 0).." / "..oUF.Tags.Methods["perpp"](unit).."%"
@@ -281,3 +263,49 @@
     return val or ""
   end
   oUF.Tags.Events["diablo:healthorbbottom"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
+
+  ---------------------------------------------
+
+  --curhp short
+  oUF.Tags.Methods["diablo:curhpshort"] = function(unit)
+    local val = oUF.Tags.Methods["curhp"](unit)
+    val = func.numFormat(val)
+    return val or ""
+  end
+  oUF.Tags.Events["diablo:curhpshort"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
+
+  ---------------------------------------------
+
+  --maxhp short
+  oUF.Tags.Methods["diablo:maxhpshort"] = function(unit)
+    local val = oUF.Tags.Methods["maxhp"](unit)
+    val = func.numFormat(val)
+    return val or ""
+  end
+  oUF.Tags.Events["diablo:maxhpshort"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
+
+  ---------------------------------------------
+
+  --curpp short
+  oUF.Tags.Methods["diablo:curppshort"] = function(unit)
+    local val = oUF.Tags.Methods["curpp"](unit)
+    val = func.numFormat(val)
+    return val or ""
+  end
+  oUF.Tags.Events["diablo:curppshort"] = "UNIT_DISPLAYPOWER UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"
+
+  ---------------------------------------------
+
+  --maxpp short
+  oUF.Tags.Methods["diablo:maxppshort"] = function(unit)
+    local val = oUF.Tags.Methods["maxpp"](unit)
+    val = func.numFormat(val)
+    return val or ""
+  end
+  oUF.Tags.Events["diablo:maxppshort"] = "UNIT_DISPLAYPOWER UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"
+
+  --empty
+  oUF.Tags.Methods["diablo:empty"] = function(unit)
+    return ""
+  end
+  --oUF.Tags.Events["diablo:empty"] = "UNIT_CONNECTION"

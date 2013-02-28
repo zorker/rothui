@@ -13,9 +13,6 @@
   ---------------------------------------------
 
   oUF_Diablo_Bars = {
-    "oUF_DiabloPlayerCastbar",
-    "oUF_DiabloTargetCastbar",
-    "oUF_DiabloFocusCastbar",
     "oUF_DiabloExpBar",
     "oUF_DiabloRepBar",
     "oUF_DemonicFuryPower",

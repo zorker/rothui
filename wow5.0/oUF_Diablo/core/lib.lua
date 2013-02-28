@@ -13,6 +13,12 @@
   ns.func = func
 
   ---------------------------------------------
+  -- VARIABLES
+  ---------------------------------------------
+
+  local tinsert, tremove, floor, mod, format = tinsert, tremove, floor, mod, format
+
+  ---------------------------------------------
   -- FUNCTIONS
   ---------------------------------------------
 
@@ -108,9 +114,9 @@
     for k,v in pairs(UnitPopupMenus) do
       for x,y in pairs(UnitPopupMenus[k]) do
         if y == "SET_FOCUS" then
-          table.remove(UnitPopupMenus[k],x)
+          tremove(UnitPopupMenus[k],x)
         elseif y == "CLEAR_FOCUS" then
-          table.remove(UnitPopupMenus[k],x)
+          tremove(UnitPopupMenus[k],x)
         end
       end
     end
@@ -512,16 +518,9 @@
   --create castbar func
   func.createCastbar = function(f)
 
-    local cname
-    if f.cfg.style == "player" then
-      cname = "oUF_DiabloPlayerCastbar"
-    elseif f.cfg.style == "target" then
-      cname = "oUF_DiabloTargetCastbar"
-    elseif f.cfg.style == "focus" then
-      cname = "oUF_DiabloFocusCastbar"
-    end
-
-    local c = CreateFrame("StatusBar", cname, f)
+    local c = CreateFrame("StatusBar", "$parentCastbar", f)
+    --wow is this outdated...man I really need to rewrite how the drag stuff is handled
+    tinsert(oUF_Diablo_Bars,c:GetName())
     c:SetSize(186.8,20.2)
     c:SetStatusBarTexture(f.cfg.castbar.texture)
     c:SetScale(f.cfg.castbar.scale)

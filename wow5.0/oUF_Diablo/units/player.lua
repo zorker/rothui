@@ -312,18 +312,18 @@
 
     --orb values
     local values = CreateFrame("Frame","$parentValues",overlay)
-    orb.values = values
     values:SetAllPoints(orb)
     --top value
     values.top = func.createFontString(values, cfg.font, 28, "THINOUTLINE")
     values.top:SetPoint("CENTER", 0, 10)
     values.top:SetTextColor(orbcfg.value.top.color.r,orbcfg.value.top.color.g,orbcfg.value.top.color.b)
-    self:Tag(values.top, orbcfg.value.top.tag)
     --bottom value
     values.bottom = func.createFontString(values, cfg.font, 16, "THINOUTLINE")
     values.bottom:SetPoint("CENTER", 0, -10)
     values.bottom:SetTextColor(orbcfg.value.top.color.r,orbcfg.value.top.color.g,orbcfg.value.top.color.b)
-    self:Tag(values.bottom, orbcfg.value.bottom.tag)
+    orb.values = values
+    self:Tag(orb.values.top, orbcfg.value.top.tag)
+    self:Tag(orb.values.bottom, orbcfg.value.bottom.tag)
 
     --frame fader hook
     rFrameFaderHook(self,values,{time = 0.4, alpha = orbcfg.value.alphaOnMouseOver}, {time = 0.3, alpha = orbcfg.value.alphaOnMouseOut})

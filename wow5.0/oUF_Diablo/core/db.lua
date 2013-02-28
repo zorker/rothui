@@ -595,3 +595,43 @@
 
   db.list.template = {} --reference for later
   db.getListTemplate = function() return db.list.template end
+
+  ---------------------------------------------
+  --LIST / HEALTH TAGs
+  ---------------------------------------------
+
+  --health tag list for dropdown
+  db.list.health_tag = {
+    { value = "[diablo:healthorbtop]",  key = "oUF_Diablo top default", },
+    { value = "[diablo:healthorbbottom]",  key = "oUF_Diablo bottom default", },
+    { value = "[perhp]",  key = "Health Percent", },
+    { value = "[perhp]%",  key = "Health percent + %", },
+    { value = "[curhp]",  key = "Current health", },
+    { value = "[diablo:curhpshort]",  key = "Current health short", },
+    { value = "[maxhp]",  key = "Max health", },
+    { value = "[diablo:maxhpshort]",  key = "Max health short", },
+    { value = "[curhp]/[maxhp]",  key = "Current/Max health", },
+    { value = "[diablo:curhpshort]/[diablo:maxhpshort]",  key = "Current/Max health short", },
+    { value = "[diablo:empty]",  key = "Empty", },
+  }
+  db.getListHealthTag = function() return db.list.health_tag end
+
+  ---------------------------------------------
+  --LIST / POWER TAGs
+  ---------------------------------------------
+
+  --power tag list for dropdown
+  db.list.power_tag = {
+    { value = "[diablo:powerorbtop]",  key = "oUF_Diablo top default", },
+    { value = "[diablo:powerorbbottom]",  key = "oUF_Diablo bottom default", },
+    { value = "[perpp]",  key = "Power Percent", },
+    { value = "[perpp]%",  key = "Power percent + %", },
+    { value = "[curpp]",  key = "Current power", },
+    { value = "[diablo:curppshort]",  key = "Current power short", },
+    { value = "[maxpp]",  key = "Max power", },
+    { value = "[diablo:maxppshort]",  key = "Max power short", },
+    { value = "[curpp]/[maxpp]",  key = "Current/Max power", },
+    { value = "[diablo:curppshort]/[diablo:maxppshort]",  key = "Current/Max power short", },
+    { value = "[diablo:empty]",  key = "Empty", },
+  }
+  db.getListPowerTag = function() return db.list.power_tag end

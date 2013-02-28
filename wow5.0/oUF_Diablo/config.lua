@@ -46,37 +46,15 @@
       show = true,
       size = 150,
       scale = 0.82,
+      pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -260, y = -9 },
       health = {
-        text = {
-          tags = {
-            top = "[diablo:healthorbtop]", --more tags see oUF/elements/tags.lua | example: "[curhp]" or "[perhp]"
-            bottom = "[diablo:healthorbbottom]"
-          },
-          mouseover = { --optional mouseover fading for the orb value frame
-            enable    = false,
-            fadeIn    = {time = 0.4, alpha = 1},
-            fadeOut   = {time = 0.3, alpha = 0},
-          },
-        },
         frequentUpdates = false,
         smooth = true,
       },
       power = {
-        text = {
-          tags = {
-            top = "[diablo:powerorbtop]",  --more tags see oUF/elements/tags.lua | example: "[curpp]" or "[perpp]"
-            bottom = "[diablo:powerorbbottom]"
-          },
-          mouseover = { --optional mouseover fading for the orb value frame
-            enable    = false,
-            fadeIn    = {time = 0.4, alpha = 1},
-            fadeOut   = {time = 0.3, alpha = 0},
-          },
-        },
         frequentUpdates = false,
         smooth = true,
       },
-      pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -260, y = -9 },
       icons = {
         pvp = {
           show = false,

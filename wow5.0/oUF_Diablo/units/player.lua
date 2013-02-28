@@ -133,18 +133,32 @@
   end
 
   --post update orb func (used to display lowHp on percentage)
-  local updatePlayerHealth = function(bar, unit, min, max)
-    local per = floor(min/max*100)
+  local updateValue = function(bar, unit, cur, max)
+    local per = 0
+    if max > 0 then per = floor(cur/max*100) end
     local orb = bar:GetParent()
-    if per <= 25 and not UnitIsDeadOrGhost(unit) then
+    if orb.lowHP and  (per <= 25 and not UnitIsDeadOrGhost(unit)) then
       orb.lowHP:Show()
-    else
+    elseif orb.lowHP and orb.lowHP:IsShown() then
       orb.lowHP:Hide()
+    end
+    if db.char[orb.type].value.hideOnEmpty and (UnitIsDeadOrGhost(unit) or cur < 3) then
+      orb.values:Hide()
+    elseif db.char[orb.type].value.hideOnFull and (cur == max) then
+      orb.values:Hide()
+    elseif not orb.values:IsShown() then
+      orb.values:Show()
+    end
+    if UnitIsDeadOrGhost(unit) then
+      bar:SetValue(0)
+    end
+    if ns.panel:IsShown() then
+      ns.panel.eventHelper:SetOrbsToMax()
     end
   end
 
   --update spark func
-  local updateSpark = function(bar, r, g, b)
+  local updateStatusBarColor = function(bar, r, g, b)
     local orb = bar:GetParent()
     --print("updatespark "..orb.type)
     orb.spark:SetVertexColor(r,g,b)
@@ -298,74 +312,44 @@
     highlight:SetAlpha(orbcfg.highlight.alpha or 1)
     orb.highlight = highlight
 
+    --orb values
+    local values = CreateFrame("Frame","$parentValues",overlay)
+    orb.values = values
+    values:SetAllPoints(orb)
+    --top value
+    values.top = func.createFontString(values, cfg.font, 28, "THINOUTLINE")
+    values.top:SetPoint("CENTER", 0, 10)
+    values.top:SetTextColor(orbcfg.value.top.color.r,orbcfg.value.top.color.g,orbcfg.value.top.color.b)
+    self:Tag(values.top, orbcfg.value.top.tag)
+    --bottom value
+    values.bottom = func.createFontString(values, cfg.font, 16, "THINOUTLINE")
+    values.bottom:SetPoint("CENTER", 0, -10)
+    values.bottom:SetTextColor(orbcfg.value.top.color.r,orbcfg.value.top.color.g,orbcfg.value.top.color.b)
+    self:Tag(values.bottom, orbcfg.value.bottom.tag)
+
+    --frame fader hook
+    rFrameFaderHook(self,values,{time = 0.4, alpha = orbcfg.value.alphaOnMouseOver}, {time = 0.3, alpha = orbcfg.value.alphaOnMouseOut})
+
     if orb.type == "POWER" then
       self.Power = orb.fill
       ns.PowerOrb = orb --save the orb in the namespace
-      hooksecurefunc(self.Power, "SetStatusBarColor", updateSpark)
+      hooksecurefunc(self.Power, "SetStatusBarColor", updateStatusBarColor)
       self.Power.frequentUpdates = self.cfg.power.frequentUpdates or false
       self.Power.Smooth = self.cfg.power.smooth or false
       self.Power.colorPower = orbcfg.filling.colorAuto or false
+      self.Power.PostUpdate = updateValue
     else
       self.Health = orb.fill
       ns.HealthOrb = orb --save the orb in the namespace
-      hooksecurefunc(self.Health, "SetStatusBarColor", updateSpark)
+      hooksecurefunc(self.Health, "SetStatusBarColor", updateStatusBarColor)
       self.Health.frequentUpdates = self.cfg.health.frequentUpdates or false
       self.Health.Smooth = self.cfg.health.smooth or false
       self.Health.colorClass = orbcfg.filling.colorAuto or false
       self.Health.colorHealth = orbcfg.filling.colorAuto or false --when player switches into a vehicle it will recolor the orb
       --we need to display the lowhp on a certain threshold without smoothing, so we use the postUpdate for that
-      self.Health.PostUpdate = updatePlayerHealth
+      self.Health.PostUpdate = updateValue
     end
     --print(addon..": orb created "..orb.type)
-  end
-
-  --create strings for health and power orb
-  local createHealthPowerStrings = function(self)
-    --hp strings
-    local hpval1, hpval2, ppval1, ppval2, hpvalf, ppvalf
-    hpvalf = CreateFrame("FRAME", nil, self.Health)
-    hpvalf:SetFrameStrata("LOW")
-    hpvalf:SetFrameLevel(1)
-    hpvalf:SetAllPoints(self.Health)
-
-    hpval1 = func.createFontString(hpvalf, cfg.font, 28, "THINOUTLINE")
-    hpval1:SetPoint("CENTER", 0, 10)
-    hpval2 = func.createFontString(hpvalf, cfg.font, 16, "THINOUTLINE")
-    hpval2:SetPoint("CENTER", 0, -10)
-    hpval2:SetTextColor(0.8,0.8,0.8)
-
-    self:Tag(hpval1, self.cfg.health.text.tags.top or "[perhp]")
-    self:Tag(hpval2, self.cfg.health.text.tags.bottom or "[curhp]")
-
-    self.Health.hpval1 = hpval1
-    self.Health.hpval2 = hpval2
-
-    --pp strings
-    ppvalf = CreateFrame("FRAME", nil, self.Power)
-    ppvalf:SetFrameStrata("LOW")
-    ppvalf:SetFrameLevel(1)
-    ppvalf:SetAllPoints(self.Power)
-
-    ppval1 = func.createFontString(ppvalf, cfg.font, 28, "THINOUTLINE")
-    ppval1:SetPoint("CENTER", 0, 10)
-    ppval2 = func.createFontString(ppvalf, cfg.font, 16, "THINOUTLINE")
-    ppval2:SetPoint("CENTER", 0, -10)
-    ppval2:SetTextColor(0.8,0.8,0.8)
-
-    self:Tag(ppval1, self.cfg.power.text.tags.top or "[perpp]")
-    self:Tag(ppval2, self.cfg.power.text.tags.bottom or "[curpp]")
-
-    self.Power.ppval1 = ppval1
-    self.Power.ppval2 = ppval2
-
-    --mouseover stuff
-    if self.cfg.health.text.mouseover.enable then
-      rFrameFaderHook(self,hpvalf,self.cfg.health.text.mouseover.fadeIn,self.cfg.health.text.mouseover.fadeOut)
-    end
-    if self.cfg.power.text.mouseover.enable then
-      rFrameFaderHook(self,ppvalf,self.cfg.power.text.mouseover.fadeIn,self.cfg.power.text.mouseover.fadeOut)
-    end
-
   end
 
   ---------------------------------------------
@@ -388,9 +372,6 @@
     createOrb(self,"HEALTH")
     --create the power orb
     createOrb(self,"POWER")
-
-    --create the text strings
-    createHealthPowerStrings(self)
 
     --create art textures do this now for correct frame stacking
     createAngelFrame(self)

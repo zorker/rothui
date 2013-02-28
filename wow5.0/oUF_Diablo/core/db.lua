@@ -40,11 +40,11 @@
         model = {
           enable            = false,
           displayInfo       = 32368,
-          camDistanceScale  = 1.15,
+          camDistanceScale  = 0.95,
           pos_x             = 0,
-          pos_y             = 0.4,
+          pos_y             = 0.1,
           rotation          = 0,
-          portraitZoom      = 1,
+          portraitZoom      = 0,
           alpha             = 1,
         },
         --galaxies
@@ -85,11 +85,11 @@
         model = {
           enable            = false,
           displayInfo       = 32368,
-          camDistanceScale  = 1.15,
+          camDistanceScale  = 0.95,
           pos_x             = 0,
-          pos_y             = 0.4,
+          pos_y             = 0.1,
           rotation          = 0,
-          portraitZoom      = 1,
+          portraitZoom      = 0,
           alpha             = 1,
         },
         --galaxies
@@ -138,11 +138,11 @@
         model = {
           enable            = true,
           displayInfo       = 32368,
-          camDistanceScale  = 1.15,
+          camDistanceScale  = 0.95,
           pos_x             = 0,
-          pos_y             = 0.4,
+          pos_y             = 0.1,
           rotation          = 0,
-          portraitZoom      = 1,
+          portraitZoom      = 0,
           alpha             = 1,
         },
         --galaxies
@@ -154,6 +154,21 @@
         --highlight
         highlight = {
           alpha = 0.3,
+        },
+        --value
+        value = {
+          alphaOnMouseOver = 1,
+          alphaOnMouseOut = 1,
+          hideOnEmpty = true,
+          hideOnFull = false,
+          top = {
+            color = { r = 1, g = 1, b = 1, },
+            tag = "[diablo:powerorbtop]",
+          },
+          bottom = {
+            color = { r = 0.8, g = 0.8, b = 0.8, },
+            tag = "[diablo:powerorbbottom]",
+          },
         },
       },
     }
@@ -171,6 +186,11 @@
 
   --db script on variables loaded
   db:SetScript("OnEvent", function(self, event)
+    if OUF_DIABLO_DB_GLOB and OUF_DIABLO_DB_GLOB.reset then
+      OUF_DIABLO_DB_GLOB.reset = nil
+      OUF_DIABLO_DB_GLOB = db:GetTemplateDefaults()
+      OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = db:GetTemplateListDefaults()
+    end
     --load global data
     self.loadGlobalData()
     --load character data
@@ -188,11 +208,8 @@
   ---------------------------------------------
 
   --full database reset
-  db.dropDatabase = function(noReload)
-    OUF_DIABLO_DB_CHAR = db:GetOrbDefaults()
-    OUF_DIABLO_DB_GLOB = db:GetTemplateDefaults()
-    OUF_DIABLO_DB_GLOB.TEMPLATE_LIST = db:GetTemplateListDefaults()
-    if noReload then return end
+  db.dropDatabase = function()
+    OUF_DIABLO_DB_GLOB.reset = true
     ReloadUI()
   end
 
@@ -223,6 +240,10 @@
   --load character data
   db.loadCharacterData = function()
     db.char = OUF_DIABLO_DB_CHAR
+    if db.char.reload then
+      ns.panel:Show()
+      db.char.reload = false
+    end
     --update the orb view
     ns.panel.updateOrbView()
   end

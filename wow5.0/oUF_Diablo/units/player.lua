@@ -322,8 +322,15 @@
     values.bottom:SetPoint("CENTER", 0, -10)
     values.bottom:SetTextColor(orbcfg.value.top.color.r,orbcfg.value.top.color.g,orbcfg.value.top.color.b)
     orb.values = values
-    self:Tag(orb.values.top, orbcfg.value.top.tag)
-    self:Tag(orb.values.bottom, orbcfg.value.bottom.tag)
+
+    --register the tags
+    if orb.type == "HEALTH" then
+      self:Tag(orb.values.top, "[diablo:HealthOrbTop]")
+      self:Tag(orb.values.bottom, "[diablo:HealthOrbBottom]")
+    else
+      self:Tag(orb.values.top, "[diablo:PowerOrbTop]")
+      self:Tag(orb.values.bottom, "[diablo:PowerOrbBottom]")
+    end
 
     --frame fader hook
     rFrameFaderHook(self,values,{time = 0.4, alpha = orbcfg.value.alphaOnMouseOver}, {time = 0.3, alpha = orbcfg.value.alphaOnMouseOut})

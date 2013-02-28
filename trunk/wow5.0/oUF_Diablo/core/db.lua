@@ -65,11 +65,11 @@
           hideOnFull = false,
           top = {
             color = { r = 1, g = 1, b = 1, },
-            tag = "[diablo:healthorbtop]",
+            tag = "diablo:HealthOrbTopDefault",
           },
           bottom = {
             color = { r = 0.8, g = 0.8, b = 0.8, },
-            tag = "[diablo:healthorbbottom]",
+            tag = "diablo:HealthOrbBottomDefault",
           },
         },
       },--health end
@@ -110,11 +110,11 @@
           hideOnFull = false,
           top = {
             color = { r = 1, g = 1, b = 1, },
-            tag = "[diablo:powerorbtop]",
+            tag = "diablo:PowerOrbTopDefault",
           },
           bottom = {
             color = { r = 0.8, g = 0.8, b = 0.8, },
-            tag = "[diablo:powerorbbottom]",
+            tag = "diablo:PowerOrbBottomDefault",
           },
         },
       },--power end
@@ -163,11 +163,11 @@
           hideOnFull = false,
           top = {
             color = { r = 1, g = 1, b = 1, },
-            tag = "[diablo:powerorbtop]",
+            tag = "diablo:HealthOrbTopDefault",
           },
           bottom = {
             color = { r = 0.8, g = 0.8, b = 0.8, },
-            tag = "[diablo:powerorbbottom]",
+            tag = "diablo:HealthOrbBottomDefault",
           },
         },
       },
@@ -602,17 +602,17 @@
 
   --health tag list for dropdown
   db.list.health_tag = {
-    { value = "[diablo:healthorbtop]",  key = "oUF_Diablo top default", },
-    { value = "[diablo:healthorbbottom]",  key = "oUF_Diablo bottom default", },
-    { value = "[perhp]",  key = "Health Percent", },
-    { value = "[perhp]%",  key = "Health percent + %", },
-    { value = "[curhp]",  key = "Current health", },
-    { value = "[diablo:curhpshort]",  key = "Current health short", },
-    { value = "[maxhp]",  key = "Max health", },
-    { value = "[diablo:maxhpshort]",  key = "Max health short", },
-    { value = "[curhp]/[maxhp]",  key = "Current/Max health", },
-    { value = "[diablo:curhpshort]/[diablo:maxhpshort]",  key = "Current/Max health short", },
-    { value = "[diablo:empty]",  key = "Empty", },
+    { value = "diablo:HealthOrbTopDefault",  key = "oUF_Diablo top default", },
+    { value = "diablo:HealthOrbBottomDefault",  key = "oUF_Diablo bottom default", },
+    { value = "perhp",  key = "Health Percent", },
+    { value = "diablo:perhpp",  key = "Health percent + %", },
+    { value = "curhp",  key = "Current health", },
+    { value = "diablo:curhpshort",  key = "Current health short", },
+    { value = "maxhp",  key = "Max health", },
+    { value = "diablo:maxhpshort",  key = "Max health short", },
+    { value = "diablo:curmaxhp",  key = "Current/Max health", },
+    { value = "diablo:curmaxhpshort",  key = "Current/Max health short", },
+    { value = "empty",  key = "Empty", },
   }
   db.getListHealthTag = function() return db.list.health_tag end
 
@@ -622,16 +622,16 @@
 
   --power tag list for dropdown
   db.list.power_tag = {
-    { value = "[diablo:powerorbtop]",  key = "oUF_Diablo top default", },
-    { value = "[diablo:powerorbbottom]",  key = "oUF_Diablo bottom default", },
-    { value = "[perpp]",  key = "Power Percent", },
-    { value = "[perpp]%",  key = "Power percent + %", },
-    { value = "[curpp]",  key = "Current power", },
-    { value = "[diablo:curppshort]",  key = "Current power short", },
-    { value = "[maxpp]",  key = "Max power", },
-    { value = "[diablo:maxppshort]",  key = "Max power short", },
-    { value = "[curpp]/[maxpp]",  key = "Current/Max power", },
-    { value = "[diablo:curppshort]/[diablo:maxppshort]",  key = "Current/Max power short", },
-    { value = "[diablo:empty]",  key = "Empty", },
+    { value = "diablo:PowerOrbTopDefault",  key = "oUF_Diablo top default", },
+    { value = "diablo:PowerOrbBottomDefault",  key = "oUF_Diablo bottom default", },
+    { value = "perpp",  key = "Power Percent", },
+    { value = "diablo:perppp",  key = "Power percent + %", },
+    { value = "curpp",  key = "Current power", },
+    { value = "diablo:curppshort",  key = "Current power short", },
+    { value = "maxpp",  key = "Max power", },
+    { value = "diablo:maxppshort",  key = "Max power short", },
+    { value = "diablo:curmaxpp",  key = "Current/Max power", },
+    { value = "diablo:curmaxppshort",  key = "Current/Max power short", },
+    { value = "empty",  key = "Empty", },
   }
   db.getListPowerTag = function() return db.list.power_tag end

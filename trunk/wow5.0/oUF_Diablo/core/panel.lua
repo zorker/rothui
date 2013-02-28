@@ -331,7 +331,7 @@
       --level 2
       if level == 2 then
         for index, data in pairs(self.data) do
-          if UIDROPDOWNMENU_MENU_VALUE == data.key then
+          if UIDROPDOWNMENU_MENU_VALUE == data.value then
             for index2, data2 in pairs(data.menuList) do
               tinsert(self.infos, {
                 text              = data2.key,

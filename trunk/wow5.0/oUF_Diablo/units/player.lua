@@ -19,9 +19,7 @@
   --get the bars container
   local bars = ns.bars
 
-  local abs = math.abs
-  local sin = math.sin
-  local pi = math.pi
+  local floor, abs, sin, pi = floor, math.abs, math.sin, math.pi
 
   ---------------------------------------------
   -- UNIT SPECIFIC FUNCTIONS
@@ -402,12 +400,12 @@
 
     --castbar
     if self.cfg.castbar.show then
-      --disable the pet castbar (for vehicles!)
-      PetCastingBarFrame:UnregisterAllEvents()
-      PetCastingBarFrame:HookScript("OnShow", function(s) s:Hide() end)
-      PetCastingBarFrame:Hide()
       --load castingbar
       func.createCastbar(self)
+    elseif self.cfg.castbar.hideDefault then
+      CastingBarFrame:UnregisterAllEvents()
+      CastingBarFrame.Show = CastingBarFrame.Hide
+      CastingBarFrame:Hide()
     end
 
     --warlock bars

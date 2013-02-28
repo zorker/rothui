@@ -150,6 +150,16 @@
       self:SetHitRectInsets(0, 0, -100, 0);
     end
 
+    --castbar
+    if self.cfg.castbar.show then
+      func.createCastbar(self)
+    elseif self.cfg.castbar.hideDefault then
+      --do not show the default castbar
+      PetCastingBarFrame:UnregisterAllEvents()
+      PetCastingBarFrame.Show = PetCastingBarFrame.Hide
+      PetCastingBarFrame:Hide()
+    end
+
     --auras
     if self.cfg.auras.show then
       func.createDebuffs(self)

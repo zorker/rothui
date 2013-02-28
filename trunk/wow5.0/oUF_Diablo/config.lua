@@ -71,6 +71,7 @@
       },
       castbar = {
         show = true,
+        hideDefault = true, --if you hide the oUF_Diablo castbar, should the Blizzard castbar be shown?
         latency = true,
         texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar256_2",
         scale = 1/0.82, --divide 1 by current unit scale if you want to prevent scaling of the castbar based on unit scale
@@ -360,6 +361,17 @@
       portrait = {
         show = true,
         use3D = true,
+      },
+      castbar = {
+        show = false,
+        hideDefault = true, --if you hide the oUF_Diablo castbar, should the Blizzard castbar be shown?
+        texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar256_2",
+        scale = 1/0.85, --divide 1 by current unit scale if you want to prevent scaling of the castbar based on unit scale
+        color = {
+          bar = { r = 1, g = 0.7, b = 0, a = 1, },
+          bg = { r = 0.1, g = 0.1, b = 0.1, a = 0.7, },
+        },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 490 },
       },
     },
 

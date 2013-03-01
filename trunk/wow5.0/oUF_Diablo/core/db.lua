@@ -601,37 +601,17 @@
   ---------------------------------------------
 
   --health tag list for dropdown
-  db.list.health_tag = {
-    { value = "diablo:HealthOrbTopDefault",  key = "oUF_Diablo top default", },
-    { value = "diablo:HealthOrbBottomDefault",  key = "oUF_Diablo bottom default", },
-    { value = "perhp",  key = "Health Percent", },
-    { value = "diablo:perhpp",  key = "Health percent + %", },
-    { value = "curhp",  key = "Current health", },
-    { value = "diablo:curhpshort",  key = "Current health short", },
-    { value = "maxhp",  key = "Max health", },
-    { value = "diablo:maxhpshort",  key = "Max health short", },
-    { value = "diablo:curmaxhp",  key = "Current/Max health", },
-    { value = "diablo:curmaxhpshort",  key = "Current/Max health short", },
-    { value = "empty",  key = "Empty", },
+  db.list.tag = {
+    { value = "topdef", key = "Top default", },
+    { value = "botdef", key = "Bottom default", },
+    { value = "per",    key = "Percentage", },
+    { value = "perp",   key = "Percentage + %", },
+    { value = "cur",    key = "Current value", },
+    { value = "curs",   key = "Current value short", },
+    { value = "max",    key = "Maximum value", },
+    { value = "maxs",   key = "Maximum value short", },
+    { value = "cmax",   key = "Current/Maximum value", },
+    { value = "cmaxs",  key = "Current/Maximum value short", },
+    { value = "null",   key = "Nothing", },
   }
-  db.getListHealthTag = function() return db.list.health_tag end
-
-  ---------------------------------------------
-  --LIST / POWER TAGs
-  ---------------------------------------------
-
-  --power tag list for dropdown
-  db.list.power_tag = {
-    { value = "diablo:PowerOrbTopDefault",  key = "oUF_Diablo top default", },
-    { value = "diablo:PowerOrbBottomDefault",  key = "oUF_Diablo bottom default", },
-    { value = "perpp",  key = "Power Percent", },
-    { value = "diablo:perppp",  key = "Power percent + %", },
-    { value = "curpp",  key = "Current power", },
-    { value = "diablo:curppshort",  key = "Current power short", },
-    { value = "maxpp",  key = "Max power", },
-    { value = "diablo:maxppshort",  key = "Max power short", },
-    { value = "diablo:curmaxpp",  key = "Current/Max power", },
-    { value = "diablo:curmaxppshort",  key = "Current/Max power short", },
-    { value = "empty",  key = "Empty", },
-  }
-  db.getListPowerTag = function() return db.list.power_tag end
+  db.getListTag = function() return db.list.tag end

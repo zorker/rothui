@@ -65,11 +65,11 @@
           hideOnFull = false,
           top = {
             color = { r = 1, g = 1, b = 1, },
-            tag = "diablo:HealthOrbTopDefault",
+            tag = "topdef",
           },
           bottom = {
             color = { r = 0.8, g = 0.8, b = 0.8, },
-            tag = "diablo:HealthOrbBottomDefault",
+            tag = "botdef",
           },
         },
       },--health end
@@ -110,11 +110,11 @@
           hideOnFull = false,
           top = {
             color = { r = 1, g = 1, b = 1, },
-            tag = "diablo:PowerOrbTopDefault",
+            tag = "topdef",
           },
           bottom = {
             color = { r = 0.8, g = 0.8, b = 0.8, },
-            tag = "diablo:PowerOrbBottomDefault",
+            tag = "botdef",
           },
         },
       },--power end
@@ -163,11 +163,11 @@
           hideOnFull = false,
           top = {
             color = { r = 1, g = 1, b = 1, },
-            tag = "diablo:HealthOrbTopDefault",
+            tag = "topdef",
           },
           bottom = {
             color = { r = 0.8, g = 0.8, b = 0.8, },
-            tag = "diablo:HealthOrbBottomDefault",
+            tag = "botdef",
           },
         },
       },

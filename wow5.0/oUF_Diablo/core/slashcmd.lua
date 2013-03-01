@@ -136,8 +136,8 @@
         ns.panel:Show()
         --print("Showing "..addon.." config panel")
       end
-    elseif (cmd:match"dropdatabase") then
-      ns.db.dropDatabase()
+    elseif (cmd:match"resettemplates") then
+      ns.db.resetTemplates()
     elseif (cmd:match"unlockart") then
       oUF_DiabloUnlock("art")
     elseif (cmd:match"lockart") then

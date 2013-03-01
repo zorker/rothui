@@ -158,7 +158,6 @@
   --update spark func
   local updateStatusBarColor = function(bar, r, g, b)
     local orb = bar:GetParent()
-    --print("updatespark "..orb.type)
     orb.spark:SetVertexColor(r,g,b)
   end
 
@@ -170,11 +169,9 @@
     local offset = orb.size-per*orb.size/100
     orb.scrollFrame:SetPoint("TOP",0,-offset)
     orb.scrollFrame:SetVerticalScroll(offset)
-    --print("update orb "..orb.type.." val: "..value.." off: "..offset.." per: "..per.."%")
     --adjust the orb spark in width/height matching the current scrollframe state
     if not orb.spark then return end
     local multiplier = floor(sin(per/100*pi)*1000)/1000
-    --print(multiplier)
     if multiplier <= 0.25 then
       orb.spark:Hide()
     else
@@ -192,6 +189,7 @@
     --create the orb baseframe
     local orb = CreateFrame("Frame", "oUF_Diablo"..type.."Orb", self)
     --orb data
+    orb.self = self
     orb.type = type
     orb.size = self.cfg.size
     orb:SetSize(orb.size,orb.size)
@@ -331,9 +329,6 @@
       self:Tag(orb.values.top, "[diablo:PowerOrbTop]")
       self:Tag(orb.values.bottom, "[diablo:PowerOrbBottom]")
     end
-
-    --frame fader hook
-    rFrameFaderHook(self,values,{time = 0.4, alpha = orbcfg.value.alphaOnMouseOver}, {time = 0.3, alpha = orbcfg.value.alphaOnMouseOut})
 
     if orb.type == "POWER" then
       self.Power = orb.fill

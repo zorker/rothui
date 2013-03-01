@@ -103,7 +103,7 @@
     local scrollChild = CF("Frame",nil,ScrollFrame)
     scrollChild:SetWidth(scrollFrame:GetWidth())
     --set scrollchild height
-    scrollChild:SetHeight(1610)
+    scrollChild:SetHeight(930)
     --left background behind health orb settings
     local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
     t:SetTexture(1,1,1)
@@ -290,8 +290,15 @@
   end
 
   --basic dropdown menu func
-  local createBasicDropDownMenu = function(parent, name, title, dataFunc, width, displayMode, dynamicList)
+  local createBasicDropDownMenu = function(parent, name, title, dataFunc, width, displayMode, dynamicList, headline)
     local dropdownMenu = CF("Frame", name, parent, "UIDropDownMenuTemplate")
+
+    if headline then
+      dropdownMenu.headline = createBasicFontString(dropdownMenu,nil,nil,"GameFontNormal",headline)
+      --dropdownMenu.headline:SetTextColor(1,1,1)
+      dropdownMenu.headline:SetPoint("BOTTOMLEFT", dropdownMenu, "TOPLEFT", 20, 5)
+    end
+
     UIDropDownMenu_SetText(dropdownMenu, title)
     if width then UIDropDownMenu_SetWidth(dropdownMenu, width) end
     dropdownMenu.init = function(self, level)
@@ -426,7 +433,7 @@
 
   --create element health orb filling color
   local createPickerHealthOrbFillingColor = function(parent)
-    local picker = createBasicColorPicker(parent, addon.."PanelHealthOrbFillingColor", "Filling color", 100, 25)
+    local picker = createBasicColorPicker(parent, addon.."PanelHealthOrbFillingColor", "Filling texture color", 75, 25)
     picker.click = function(r,g,b)
       --save value
       panel.saveHealthOrbFillingColor(r,g,b)
@@ -438,7 +445,7 @@
 
   --create element power orb filling color
   local createPickerPowerOrbFillingColor = function(parent)
-    local picker = createBasicColorPicker(parent, addon.."PanelPowerOrbFillingColor", "Filling color", 100, 25)
+    local picker = createBasicColorPicker(parent, addon.."PanelPowerOrbFillingColor", "Filling texture color", 75, 25)
     picker.click = function(r,g,b)
       --save value
       panel.savePowerOrbFillingColor(r,g,b)
@@ -696,7 +703,7 @@
 
   --create element health orb value hide empty
   local createCheckButtonHealthOrbValueHideEmpty = function(parent)
-    local button = createBasicCheckButton(parent, addon.."PanelHealthOrbValueHideEmpty", "Hide on empty**")
+    local button = createBasicCheckButton(parent, addon.."PanelHealthOrbValueHideEmpty", "Hide on empty*")
     button:HookScript("OnClick", function(self,value)
       --save value
       panel.saveHealthOrbValueHideEmpty(self:GetChecked())
@@ -706,7 +713,7 @@
 
   --create element power orb value hide empty
   local createCheckButtonPowerOrbValueHideEmpty = function(parent)
-    local button = createBasicCheckButton(parent, addon.."PanelPowerOrbValueHideEmpty", "Hide on empty**")
+    local button = createBasicCheckButton(parent, addon.."PanelPowerOrbValueHideEmpty", "Hide on empty*")
     button:HookScript("OnClick", function(self,value)
       --save value
       panel.savePowerOrbValueHideEmpty(self:GetChecked())
@@ -717,7 +724,7 @@
 
   --create element health orb value hide full
   local createCheckButtonHealthOrbValueHideFull = function(parent)
-    local button = createBasicCheckButton(parent, addon.."PanelHealthOrbValueHideFull", "Hide on full**")
+    local button = createBasicCheckButton(parent, addon.."PanelHealthOrbValueHideFull", "Hide on full*")
     button:HookScript("OnClick", function(self,value)
       --save value
       panel.saveHealthOrbValueHideFull(self:GetChecked())
@@ -727,7 +734,7 @@
 
   --create element power orb value hide full
   local createCheckButtonPowerOrbValueHideFull = function(parent)
-    local button = createBasicCheckButton(parent, addon.."PanelPowerOrbValueHideFull", "Hide on full**")
+    local button = createBasicCheckButton(parent, addon.."PanelPowerOrbValueHideFull", "Hide on full*")
     button:HookScript("OnClick", function(self,value)
       --save value
       panel.savePowerOrbValueHideFull(self:GetChecked())
@@ -735,49 +742,33 @@
     return button
   end
 
-  --create element health orb value mouse over alpha
-  local createSliderHealthOrbValueMouseOverAlpha = function(parent)
-    local slider = createBasicSlider(parent, addon.."PanelHealthOrbValueMouseOverAlpha", "Mouse over alpha", 0, 1, 0.001)
+  --create element health orb value alpha
+  local createSliderHealthOrbValueAlpha = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbValueAlpha", "Alpha", 0, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      panel.saveHealthOrbValueMouseOverAlpha(value)
+      panel.saveHealthOrbValueAlpha(value)
+      --update orb view
+      panel.updateHealthOrbValueAlpha()
     end)
     return slider
   end
 
-  --create element power orb value mouse over alpha
-  local createSliderPowerOrbValueMouseOverAlpha = function(parent)
-    local slider = createBasicSlider(parent, addon.."PanelPowerOrbValueMouseOverAlpha", "Mouse over alpha", 0, 1, 0.001)
+  --create element power orb value alpha
+  local createSliderPowerOrbValueAlpha = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbValueAlpha", "Alpha", 0, 1, 0.001)
     slider:HookScript("OnValueChanged", function(self,value)
       --save value
-      panel.savePowerOrbValueMouseOverAlpha(value)
-    end)
-    return slider
-  end
-
-  --create element health orb value mouse out alpha
-  local createSliderHealthOrbValueMouseOutAlpha = function(parent)
-    local slider = createBasicSlider(parent, addon.."PanelHealthOrbValueMouseOutAlpha", "Mouse out alpha", 0, 1, 0.001)
-    slider:HookScript("OnValueChanged", function(self,value)
-      --save value
-      panel.saveHealthOrbValueMouseOutAlpha(value)
-    end)
-    return slider
-  end
-
-  --create element power orb value mouse out alpha
-  local createSliderPowerOrbValueMouseOutAlpha = function(parent)
-    local slider = createBasicSlider(parent, addon.."PanelPowerOrbValueMouseOutAlpha", "Mouse out alpha", 0, 1, 0.001)
-    slider:HookScript("OnValueChanged", function(self,value)
-      --save value
-      panel.savePowerOrbValueMouseOutAlpha(value)
+      panel.savePowerOrbValueAlpha(value)
+      --update orb view
+      panel.updatePowerOrbValueAlpha()
     end)
     return slider
   end
 
   --create element health orb value top color
   local createPickerHealthOrbValueTopColor = function(parent)
-    local picker = createBasicColorPicker(parent, addon.."PanelHealthOrbValueTopColor", "Value top color", 100, 25)
+    local picker = createBasicColorPicker(parent, addon.."PanelHealthOrbValueTopColor", "Text color", 75, 25)
     picker.click = function(r,g,b)
       --save value
       panel.saveHealthOrbValueTopColor(r,g,b)
@@ -789,7 +780,7 @@
 
   --create element power orb value top color
   local createPickerPowerOrbValueTopColor = function(parent)
-    local picker = createBasicColorPicker(parent, addon.."PanelPowerOrbValueTopColor", "Value top color", 100, 25)
+    local picker = createBasicColorPicker(parent, addon.."PanelPowerOrbValueTopColor", "Text color", 75, 25)
     picker.click = function(r,g,b)
       --save value
       panel.savePowerOrbValueTopColor(r,g,b)
@@ -801,7 +792,7 @@
 
   --create element health orb value bottom color
   local createPickerHealthOrbValueBottomColor = function(parent)
-    local picker = createBasicColorPicker(parent, addon.."PanelHealthOrbValueBottomColor", "Value bottom color", 100, 25)
+    local picker = createBasicColorPicker(parent, addon.."PanelHealthOrbValueBottomColor", "Text color", 75, 25)
     picker.click = function(r,g,b)
       --save value
       panel.saveHealthOrbValueBottomColor(r,g,b)
@@ -813,7 +804,7 @@
 
   --create element power orb value bottom color
   local createPickerPowerOrbValueBottomColor = function(parent)
-    local picker = createBasicColorPicker(parent, addon.."PanelPowerOrbValueBottomColor", "Value bottom color", 100, 25)
+    local picker = createBasicColorPicker(parent, addon.."PanelPowerOrbValueBottomColor", "Text color", 75, 25)
     picker.click = function(r,g,b)
       --save value
       panel.savePowerOrbValueBottomColor(r,g,b)
@@ -830,6 +821,8 @@
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
       panel.saveHealthOrbValueTopTag(self.value)
+      --update orb view
+      panel.updateHealthOrbValueTopTag()
     end
     return dropdownMenu
   end
@@ -841,6 +834,8 @@
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
       panel.savePowerOrbValueTopTag(self.value)
+      --update orb view
+      panel.updatePowerOrbValueTopTag()
     end
     return dropdownMenu
   end
@@ -852,6 +847,8 @@
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
       panel.saveHealthOrbValueBottomTag(self.value)
+      --update orb view
+      panel.updateHealthOrbValueBottomTag()
     end
     return dropdownMenu
   end
@@ -863,6 +860,8 @@
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
       panel.savePowerOrbValueBottomTag(self.value)
+      --update orb view
+      panel.updatePowerOrbValueBottomTag()
     end
     return dropdownMenu
   end
@@ -1102,12 +1101,12 @@
   ---------------------------------------------
 
   --create master headline
-  panel.elementHealthMasterHeadline = createBasicFontString(panel,nil,nil,"GameFontNormalLarge","Health Orb")
-  panel.elementPowerMasterHeadline = createBasicFontString(panel,nil,nil,"GameFontNormalLarge","Power Orb")
+  panel.elementHealthMasterHeadline = createBasicFontString(panel,nil,nil,"GameFontNormalLarge","Health Orb Settings")
+  panel.elementPowerMasterHeadline = createBasicFontString(panel,nil,nil,"GameFontNormalLarge","Power Orb Settings")
   --create filling headline
-  panel.elementHealthFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling")
+  panel.elementHealthFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling Texture")
   createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthFillingHeadline,"The following options allow you to edit the filling orb texture and color.")
-  panel.elementPowerFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling")
+  panel.elementPowerFillingHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Filling Texture")
   createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerFillingHeadline,"The following options allow you to edit the filling orb texture and color.")
   --create filling texture dropdowns
   panel.elementHealthOrbFillingTexture = createDropdownHealthOrbFillingTexture(panel.scrollFrame.scrollChild)
@@ -1119,9 +1118,9 @@
   panel.elementHealthOrbFillingColor = createPickerHealthOrbFillingColor(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbFillingColor = createPickerPowerOrbFillingColor(panel.scrollFrame.scrollChild)
   --create model headline
-  panel.elementHealthModelHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model")
+  panel.elementHealthModelHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model Animation")
   createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthModelHeadline,"The following options allow you to edit the animation model settings.")
-  panel.elementPowerModelHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model")
+  panel.elementPowerModelHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Model Animation")
   createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerModelHeadline,"The following options allow you to edit the animation model settings.")
   --create model enable checkbutton
   panel.elementHealthOrbModelEnable = createCheckButtonHealthOrbModelEnable(panel.scrollFrame.scrollChild)
@@ -1148,50 +1147,57 @@
   panel.elementHealthOrbModelZoom = createSliderHealthOrbModelZoom(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbModelZoom = createSliderPowerOrbModelZoom(panel.scrollFrame.scrollChild)
   --create highlight headline
-  panel.elementHealthHighlightHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Highlight")
-  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthHighlightHeadline,"The following option allows you adjust the opacity of the highlight.")
-  panel.elementPowerHighlightHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Highlight")
-  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerHighlightHeadline,"The following option allows you adjust the opacity of the highlight.")
+  panel.elementHealthHighlightHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Highlight Texture")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthHighlightHeadline,"The following option allows you to adjust the opacity of the highlight texture.")
+  panel.elementPowerHighlightHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Highlight Texture")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerHighlightHeadline,"The following option allows you to adjust the opacity of the highlight texture.")
   --create highlight alpha slider
   panel.elementHealthOrbHighlightAlpha = createSliderHealthOrbHighlightAlpha(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbHighlightAlpha = createSliderPowerOrbHighlightAlpha(panel.scrollFrame.scrollChild)
   --create spark headline
-  panel.elementHealthSparkHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Spark")
-  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthSparkHeadline,"The following option allows you adjust the opacity of the spark. That is the texture on top of the orb when it looses in value.")
-  panel.elementPowerSparkHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Spark")
-  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerSparkHeadline,"The following option allows you adjust the opacity of the spark. That is the texture on top of the orb when it looses in value.")
+  panel.elementHealthSparkHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Spark Texture")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthSparkHeadline,"The following option allows you to adjust the opacity of the spark texture.\n|cFFFFFFFFThe texture helps blending the filling texture.")
+  panel.elementPowerSparkHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Spark Texture")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerSparkHeadline,"The following option allows you to adjust the opacity of the spark texture.\n|cFFFFFFFFThe texture helps blending the filling texture.")
   --create spark alpha slider
   panel.elementHealthOrbSparkAlpha = createSliderHealthOrbSparkAlpha(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbSparkAlpha = createSliderPowerOrbSparkAlpha(panel.scrollFrame.scrollChild)
   --create value headline
-  panel.elementHealthOrbValueHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Orb values")
-  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthOrbValueHeadline, "The following options allow you change the settings of the orb values. IMPORANT. Some of those values (tag, mouseover) need a UI reload to work properly!")
-  panel.elementPowerOrbValueHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Orb values")
-  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerOrbValueHeadline, "The following options allow you change the settings of the orb values. IMPORANT. Some of those values (tag, mouseover) need a UI reload to work properly!")
+  panel.elementHealthOrbValueHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Orb Value Visibility")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthOrbValueHeadline, "The following options allow you adjust the orb values.\n|cFFFFFFFF*Some changes will only become visible on config panel close otherwise it would be impossible to set up the orb values.")
+  panel.elementPowerOrbValueHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Orb Value Visibility")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerOrbValueHeadline, "The following options allow you adjust the orb values.\n|cFFFFFFFF*Some changes will only become visible on config panel close otherwise it would be impossible to set up the orb values.")
   --create element value hide empty checkbutton
   panel.elementHealthOrbValueHideEmpty = createCheckButtonHealthOrbValueHideEmpty(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbValueHideEmpty = createCheckButtonPowerOrbValueHideEmpty(panel.scrollFrame.scrollChild)
   --create element value hide full checkbutton
   panel.elementHealthOrbValueHideFull = createCheckButtonHealthOrbValueHideFull(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbValueHideFull = createCheckButtonPowerOrbValueHideFull(panel.scrollFrame.scrollChild)
-  --create element value mouse over alpha slider
-  panel.elementHealthOrbValueMouseOverAlpha = createSliderHealthOrbValueMouseOverAlpha(panel.scrollFrame.scrollChild)
-  panel.elementPowerOrbValueMouseOverAlpha = createSliderPowerOrbValueMouseOverAlpha(panel.scrollFrame.scrollChild)
-  --create element value mouse out alpha slider
-  panel.elementHealthOrbValueMouseOutAlpha = createSliderHealthOrbValueMouseOutAlpha(panel.scrollFrame.scrollChild)
-  panel.elementPowerOrbValueMouseOutAlpha = createSliderPowerOrbValueMouseOutAlpha(panel.scrollFrame.scrollChild)
-  --create element value top color picker
-  panel.elementHealthOrbValueTopColor = createPickerHealthOrbValueTopColor(panel.scrollFrame.scrollChild)
-  panel.elementPowerOrbValueTopColor = createPickerPowerOrbValueTopColor(panel.scrollFrame.scrollChild)
-  --create element value bottom color picker
-  panel.elementHealthOrbValueBottomColor = createPickerHealthOrbValueBottomColor(panel.scrollFrame.scrollChild)
-  panel.elementPowerOrbValueBottomColor = createPickerPowerOrbValueBottomColor(panel.scrollFrame.scrollChild)
+  --create element value alpha slider
+  panel.elementHealthOrbValueAlpha = createSliderHealthOrbValueAlpha(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbValueAlpha = createSliderPowerOrbValueAlpha(panel.scrollFrame.scrollChild)
+  --create value top headline
+  panel.elementHealthOrbValueTopHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Top Orb Value Tag/Color")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthOrbValueTopHeadline, "The following options allow you adjust color and tag of the top orb value.")
+  panel.elementPowerOrbValueTopHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Top Orb Value Tag/Color")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerOrbValueTopHeadline, "The following options allow you adjust color and tag of the top orb value.")
   --create element value top tag dropdown
   panel.elementHealthOrbValueTopTag = createDropdownHealthOrbValueTopTag(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbValueTopTag = createDropdownPowerOrbValueTopTag(panel.scrollFrame.scrollChild)
+  --create element value top color picker
+  panel.elementHealthOrbValueTopColor = createPickerHealthOrbValueTopColor(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbValueTopColor = createPickerPowerOrbValueTopColor(panel.scrollFrame.scrollChild)
+  --create value top headline
+  panel.elementHealthOrbValueBottomHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Bottom Orb Value Tag/Color")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthOrbValueBottomHeadline, "The following options allow you adjust color and tag of the bottom orb value.")
+  panel.elementPowerOrbValueBottomHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Bottom Orb Value Tag/Color")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerOrbValueBottomHeadline, "The following options allow you adjust color and tag of the bottom orb value.")
   --create element value bottom tag dropdown
   panel.elementHealthOrbValueBottomTag = createDropdownHealthOrbValueBottomTag(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbValueBottomTag = createDropdownPowerOrbValueBottomTag(panel.scrollFrame.scrollChild)
+  --create element value bottom color picker
+  panel.elementHealthOrbValueBottomColor = createPickerHealthOrbValueBottomColor(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbValueBottomColor = createPickerPowerOrbValueBottomColor(panel.scrollFrame.scrollChild)
 
   ---------------------------------------------
   --SPAWN HEADLINE BACKGROUNDS
@@ -1207,6 +1213,10 @@
   createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementPowerSparkHeadline)
   createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthOrbValueHeadline)
   createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementPowerOrbValueHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthOrbValueTopHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementPowerOrbValueTopHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthOrbValueBottomHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementPowerOrbValueBottomHeadline)
 
   ---------------------------------------------
   --SPAWN BOTTOM PANEL BUTTONS
@@ -1294,26 +1304,29 @@
   panel.elementHealthOrbValueHideEmpty:SetPoint("TOPLEFT", panel.elementHealthOrbValueHeadline, "BOTTOMLEFT", -4, -10)
   panel.elementPowerOrbValueHideEmpty:SetPoint("TOPLEFT", panel.elementPowerOrbValueHeadline, "BOTTOMLEFT", -4, -10)
   --position element value hide full checkbutton
-  panel.elementHealthOrbValueHideFull:SetPoint("TOPLEFT", panel.elementHealthOrbValueHeadline, "BOTTOMLEFT", -4, -40)
-  panel.elementPowerOrbValueHideFull:SetPoint("TOPLEFT", panel.elementPowerOrbValueHeadline, "BOTTOMLEFT", -4, -40)
-  --position element value mouse over alpha slider
-  panel.elementHealthOrbValueMouseOverAlpha:SetPoint("TOPLEFT", panel.elementHealthOrbValueHeadline, "BOTTOMLEFT", 0, -70)
-  panel.elementPowerOrbValueMouseOverAlpha:SetPoint("TOPLEFT", panel.elementPowerOrbValueHeadline, "BOTTOMLEFT", 0, -70)
-  --position element value mouse out alpha slider
-  panel.elementHealthOrbValueMouseOutAlpha:SetPoint("TOPLEFT", panel.elementHealthOrbValueHeadline, "BOTTOMLEFT", 0, -100)
-  panel.elementPowerOrbValueMouseOutAlpha:SetPoint("TOPLEFT", panel.elementPowerOrbValueHeadline, "BOTTOMLEFT", 0, -100)
-  --position element value top color picker
-  panel.elementHealthOrbValueTopColor:SetPoint("TOPLEFT", panel.elementHealthOrbValueHeadline, "BOTTOMLEFT", 0, -130)
-  panel.elementPowerOrbValueTopColor:SetPoint("TOPLEFT", panel.elementPowerOrbValueHeadline, "BOTTOMLEFT", 0, -130)
+  panel.elementHealthOrbValueHideFull:SetPoint("TOPLEFT", panel.elementHealthOrbValueHeadline, "BOTTOMLEFT", -4, -35)
+  panel.elementPowerOrbValueHideFull:SetPoint("TOPLEFT", panel.elementPowerOrbValueHeadline, "BOTTOMLEFT", -4, -35)
+  --position element value alpha slider
+  panel.elementHealthOrbValueAlpha:SetPoint("TOPLEFT", panel.elementHealthOrbValueHeadline, "BOTTOMLEFT", 0, -73)
+  panel.elementPowerOrbValueAlpha:SetPoint("TOPLEFT", panel.elementPowerOrbValueHeadline, "BOTTOMLEFT", 0, -73)
+  --position element value top headline
+  panel.elementHealthOrbValueTopHeadline:SetPoint("TOPLEFT", panel.elementHealthOrbValueHeadline, "BOTTOMLEFT", 0, -110)
+  panel.elementPowerOrbValueTopHeadline:SetPoint("TOPLEFT", panel.elementPowerOrbValueHeadline, "BOTTOMLEFT", 0, -110)
   --position element value top tag dropdown
-  panel.elementHealthOrbValueTopTag:SetPoint("TOPLEFT", panel.elementHealthOrbValueHeadline, "BOTTOMLEFT", 0, -160)
-  panel.elementPowerOrbValueTopTag:SetPoint("TOPLEFT", panel.elementPowerOrbValueHeadline, "BOTTOMLEFT", 0, -160)
-  --position element value bottom color picker
-  panel.elementHealthOrbValueBottomColor:SetPoint("TOPLEFT", panel.elementHealthOrbValueHeadline, "BOTTOMLEFT", 0, -160)
-  panel.elementPowerOrbValueBottomColor:SetPoint("TOPLEFT", panel.elementPowerOrbValueHeadline, "BOTTOMLEFT", 0, -160)
+  panel.elementHealthOrbValueTopTag:SetPoint("TOPLEFT", panel.elementHealthOrbValueTopHeadline, "BOTTOMLEFT", -20, -10)
+  panel.elementPowerOrbValueTopTag:SetPoint("TOPLEFT", panel.elementPowerOrbValueTopHeadline, "BOTTOMLEFT", -20, -10)
+  --position element value top color picker
+  panel.elementHealthOrbValueTopColor:SetPoint("TOPLEFT", panel.elementHealthOrbValueTopHeadline, "BOTTOMLEFT", -4, -45)
+  panel.elementPowerOrbValueTopColor:SetPoint("TOPLEFT", panel.elementPowerOrbValueTopHeadline, "BOTTOMLEFT", -4, -45)
+  --position element value bottom headline
+  panel.elementHealthOrbValueBottomHeadline:SetPoint("TOPLEFT", panel.elementHealthOrbValueTopHeadline, "BOTTOMLEFT", 0, -85)
+  panel.elementPowerOrbValueBottomHeadline:SetPoint("TOPLEFT", panel.elementPowerOrbValueTopHeadline, "BOTTOMLEFT", 0, -85)
   --position element value bottom tag dropdown
-  panel.elementHealthOrbValueBottomTag:SetPoint("TOPLEFT", panel.elementHealthOrbValueHeadline, "BOTTOMLEFT", 0, -190)
-  panel.elementPowerOrbValueBottomTag:SetPoint("TOPLEFT", panel.elementPowerOrbValueHeadline, "BOTTOMLEFT", 0, -190)
+  panel.elementHealthOrbValueBottomTag:SetPoint("TOPLEFT", panel.elementHealthOrbValueBottomHeadline, "BOTTOMLEFT", -20, -10)
+  panel.elementPowerOrbValueBottomTag:SetPoint("TOPLEFT", panel.elementPowerOrbValueBottomHeadline, "BOTTOMLEFT", -20, -10)
+  --position element value bottom color picker
+  panel.elementHealthOrbValueBottomColor:SetPoint("TOPLEFT", panel.elementHealthOrbValueBottomHeadline, "BOTTOMLEFT", -4, -45)
+  panel.elementPowerOrbValueBottomColor:SetPoint("TOPLEFT", panel.elementPowerOrbValueBottomHeadline, "BOTTOMLEFT", -4, -45)
 
   ---------------------------------------------
   --POSITION BOTTOM PANEL BUTTONS
@@ -1358,6 +1371,7 @@
       ns.HealthOrb.fill.colorHealth = true
       local color = ns.cfg.playercolor or { r = 1, g = 0, b = 1, }
       ns.HealthOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+      --ns.HealthOrb.fill:ForceUpdate()
       panel.scrollFrame.scrollChild.leftTexture:SetVertexColor(color.r,color.g,color.b)
       panel.elementHealthMasterHeadline:SetTextColor(color.r,color.g,color.b)
     else
@@ -1376,6 +1390,7 @@
       ns.PowerOrb.fill.colorPower = true
       local color = ns.cfg.powercolors[select(2, UnitPowerType("player"))] or { r = 1, g = 0, b = 1, }
       ns.PowerOrb.fill:SetStatusBarColor(color.r,color.g,color.b)
+      --ns.PowerOrb.fill:ForceUpdate()
       panel.scrollFrame.scrollChild.rightTexture:SetVertexColor(color.r,color.g,color.b)
       panel.elementPowerMasterHeadline:SetTextColor(color.r,color.g,color.b)
     else
@@ -1515,6 +1530,16 @@
     ns.PowerOrb.spark:SetAlpha(panel.loadPowerOrbSparkAlpha())
   end
 
+  --update health orb value alpha
+  panel.updateHealthOrbValueAlpha = function()
+    ns.HealthOrb.values:SetAlpha(panel.loadHealthOrbValueAlpha())
+  end
+
+  --update power orb value alpha
+  panel.updatePowerOrbValueAlpha = function()
+    ns.PowerOrb.values:SetAlpha(panel.loadPowerOrbValueAlpha())
+  end
+
   --update health orb value top color
   panel.updateHealthOrbValueTopColor = function()
     local color = panel.loadHealthOrbValueTopColor()
@@ -1537,6 +1562,26 @@
   panel.updatePowerOrbValueBottomColor = function()
     local color = panel.loadPowerOrbValueBottomColor()
     ns.PowerOrb.values.bottom:SetTextColor(color.r,color.g,color.b)
+  end
+
+  --update health orb value top tag
+  panel.updateHealthOrbValueTopTag = function()
+    ns.HealthOrb.values.top:SetText(oUF.Tags.Methods["diablo:HealthOrbTop"]("player"))
+  end
+
+  --update power orb value top tag
+  panel.updatePowerOrbValueTopTag = function()
+    ns.PowerOrb.values.top:SetText(oUF.Tags.Methods["diablo:PowerOrbTop"]("player"))
+  end
+
+  --update health orb value bottom Tag
+  panel.updateHealthOrbValueBottomTag = function()
+    ns.HealthOrb.values.bottom:SetText(oUF.Tags.Methods["diablo:HealthOrbBottom"]("player"))
+  end
+
+  --update power orb value bottom tag
+  panel.updatePowerOrbValueBottomTag = function()
+    ns.PowerOrb.values.bottom:SetText(oUF.Tags.Methods["diablo:PowerOrbBottom"]("player"))
   end
 
   ---------------------------------------------
@@ -1749,24 +1794,14 @@
     panel.elementPowerOrbValueHideFull:SetChecked(panel.loadPowerOrbValueHideFull())
   end
 
-  --update element health orb value alphaOnMouseOver
-  panel.updateElementHealthOrbValueMouseOverAlpha = function()
-    panel.elementHealthOrbValueMouseOverAlpha:SetValue(panel.loadHealthOrbValueMouseOverAlpha())
+  --update element health orb value alpha
+  panel.updateElementHealthOrbValueAlpha = function()
+    panel.elementHealthOrbValueAlpha:SetValue(panel.loadHealthOrbValueAlpha())
   end
 
-  --update element power orb value alphaOnMouseOver
-  panel.updateElementPowerOrbValueMouseOverAlpha = function()
-    panel.elementPowerOrbValueMouseOverAlpha:SetValue(panel.loadPowerOrbValueMouseOverAlpha())
-  end
-
-  --update element health orb value alphaOnMouseOut
-  panel.updateElementHealthOrbValueMouseOutAlpha = function()
-    panel.elementHealthOrbValueMouseOutAlpha:SetValue(panel.loadHealthOrbValueMouseOutAlpha())
-  end
-
-  --update element power orb value alphaOnMouseOut
-  panel.updateElementPowerOrbValueMouseOutAlpha = function()
-    panel.elementPowerOrbValueMouseOutAlpha:SetValue(panel.loadPowerOrbValueMouseOutAlpha())
+  --update element power orb value alpha
+  panel.updateElementPowerOrbValueAlpha = function()
+    panel.elementPowerOrbValueAlpha:SetValue(panel.loadPowerOrbValueAlpha())
   end
 
   --update element health orb value top color
@@ -1971,24 +2006,14 @@
     db.char["POWER"].value.hideOnFull = value
   end
 
-  --save health orb value alphaOnMouseOver
-  panel.saveHealthOrbValueMouseOverAlpha = function(value)
-    db.char["HEALTH"].value.alphaOnMouseOver = value
+  --save health orb value alpha
+  panel.saveHealthOrbValueAlpha = function(value)
+    db.char["HEALTH"].value.alpha = value
   end
 
-  --save power orb value alphaOnMouseOver
-  panel.savePowerOrbValueMouseOverAlpha = function(value)
-    db.char["POWER"].value.alphaOnMouseOver = value
-  end
-
-  --save health orb value alphaOnMouseOut
-  panel.saveHealthOrbValueMouseOutAlpha = function(value)
-    db.char["HEALTH"].value.alphaOnMouseOut = value
-  end
-
-  --save power orb value alphaOnMouseOut
-  panel.savePowerOrbValueMouseOutAlpha = function(value)
-    db.char["POWER"].value.alphaOnMouseOut = value
+  --save power orb value alpha
+  panel.savePowerOrbValueAlpha = function(value)
+    db.char["POWER"].value.alpha = value
   end
 
   --save health orb value top color
@@ -2193,24 +2218,14 @@
     return db.char["POWER"].value.hideOnFull
   end
 
-  --load health orb value alphaOnMouseOver
-  panel.loadHealthOrbValueMouseOverAlpha = function()
-    return db.char["HEALTH"].value.alphaOnMouseOver
+  --load health orb value alpha
+  panel.loadHealthOrbValueAlpha = function()
+    return db.char["HEALTH"].value.alpha
   end
 
-  --load power orb value alphaOnMouseOver
-  panel.loadPowerOrbValueMouseOverAlpha = function()
-    return db.char["POWER"].value.alphaOnMouseOver
-  end
-
-  --load health orb value alphaOnMouseOut
-  panel.loadHealthOrbValueMouseOutAlpha = function()
-    return db.char["HEALTH"].value.alphaOnMouseOut
-  end
-
-  --load power orb value alphaOnMouseOut
-  panel.loadPowerOrbValueMouseOutAlpha = function()
-    return db.char["POWER"].value.alphaOnMouseOut
+  --load power orb value alpha
+  panel.loadPowerOrbValueAlpha = function()
+    return db.char["POWER"].value.alpha
   end
 
   --load health orb value top color
@@ -2321,14 +2336,10 @@
     panel.updateElementHealthOrbValueHideFull()
     --update element power orb value hideOnFull
     panel.updateElementPowerOrbValueHideFull()
-    --update element health orb value alphaOnMouseOver
-    panel.updateElementHealthOrbValueMouseOverAlpha()
-    --update element power orb value alphaOnMouseOver
-    panel.updateElementPowerOrbValueMouseOverAlpha()
-    --update element health orb value alphaOnMouseOut
-    panel.updateElementHealthOrbValueMouseOutAlpha()
-    --update element power orb value alphaOnMouseOut
-    panel.updateElementPowerOrbValueMouseOutAlpha()
+    --update element health orb value alpha
+    panel.updateElementHealthOrbValueAlpha()
+    --update element power orb value alpha
+    panel.updateElementPowerOrbValueAlpha()
     --update element health orb value top color
     panel.updateElementHealthOrbValueTopColor()
     --update element power orb value top color
@@ -2409,6 +2420,10 @@
     panel.updateHealthOrbSparkAlpha()
     --update power orb spark alpha
     panel.updatePowerOrbSparkAlpha()
+    --update health orb value alpha
+    panel.updateHealthOrbValueAlpha()
+    --update power orb value alpha
+    panel.updatePowerOrbValueAlpha()
     --update health orb value top color
     panel.updateHealthOrbValueTopColor()
     --update power orb value top color
@@ -2417,6 +2432,14 @@
     panel.updateHealthOrbValueBottomColor()
     --update power orb value bottom color
     panel.updatePowerOrbValueBottomColor()
+    --update health orb value top tag
+    panel.updateHealthOrbValueTopTag()
+    --update power orb value top tag
+    panel.updatePowerOrbValueTopTag()
+    --update health orb value bottom Tag
+    panel.updateHealthOrbValueBottomTag()
+    --update power orb value bottom tag
+    panel.updatePowerOrbValueBottomTag()
 
     --update panel view
     panel.updatePanelView()
@@ -2466,16 +2489,16 @@
       pbar:SetValue(pmax)
       hval:Show()
       pval:Show()
-      hval:SetAlpha(1)
-      pval:SetAlpha(1)
     end
     function eventHelper:SetOrbsToDefault()
       local hbar, pbar = ns.HealthOrb.fill, ns.PowerOrb.fill
       local hval, pval = ns.HealthOrb.values, ns.PowerOrb.values
       hbar:ForceUpdate()
       pbar:ForceUpdate()
-      hval:SetAlpha(db.char["HEALTH"].value.alphaOnMouseOut)
-      pval:SetAlpha(db.char["POWER"].value.alphaOnMouseOut)
+      hval.top:SetText(oUF.Tags.Methods["diablo:HealthOrbTop"]("player"))
+      hval.bottom:SetText(oUF.Tags.Methods["diablo:HealthOrbBottom"]("player"))
+      pval.top:SetText(oUF.Tags.Methods["diablo:PowerOrbTop"]("player"))
+      pval.bottom:SetText(oUF.Tags.Methods["diablo:PowerOrbBottom"]("player"))
     end
     panel.eventHelper = eventHelper
     panel:HookScript("OnShow", function(self) self:Enable() end)

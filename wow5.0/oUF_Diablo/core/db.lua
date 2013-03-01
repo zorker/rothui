@@ -38,7 +38,7 @@
         },
         --model
         model = {
-          enable            = false,
+          enable            = true,
           displayInfo       = 32368,
           camDistanceScale  = 0.95,
           pos_x             = 0,
@@ -59,10 +59,9 @@
         },
         --value
         value = {
-          alphaOnMouseOver = 1,
-          alphaOnMouseOut = 1,
           hideOnEmpty = true,
           hideOnFull = false,
+          alpha = 1,
           top = {
             color = { r = 1, g = 1, b = 1, },
             tag = "topdef",
@@ -83,7 +82,7 @@
         },
         --model
         model = {
-          enable            = false,
+          enable            = true,
           displayInfo       = 32368,
           camDistanceScale  = 0.95,
           pos_x             = 0,
@@ -104,10 +103,9 @@
         },
         --value
         value = {
-          alphaOnMouseOver = 1,
-          alphaOnMouseOut = 1,
           hideOnEmpty = true,
           hideOnFull = false,
+          alpha = 1,
           top = {
             color = { r = 1, g = 1, b = 1, },
             tag = "topdef",
@@ -157,10 +155,9 @@
         },
         --value
         value = {
-          alphaOnMouseOver = 1,
-          alphaOnMouseOut = 1,
           hideOnEmpty = true,
           hideOnFull = false,
+          alpha = 1,
           top = {
             color = { r = 1, g = 1, b = 1, },
             tag = "topdef",
@@ -207,8 +204,8 @@
   --DB RESET
   ---------------------------------------------
 
-  --full database reset
-  db.dropDatabase = function()
+  --full template reset
+  db.resetTemplates = function()
     OUF_DIABLO_DB_GLOB.reset = true
     ReloadUI()
   end

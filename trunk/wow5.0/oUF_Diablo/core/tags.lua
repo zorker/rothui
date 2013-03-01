@@ -369,6 +369,7 @@
   oUF.Tags.Methods["diablo:HealthOrbTop"] = function(unit)
     if db.char["HEALTH"].value.top.tag == "null" then return "" end
     local methodName = db.char["HEALTH"].value.top.tag.."hp"
+    print(methodName)
     return oUF.Tags.Methods[methodName](unit) or ""
   end
   oUF.Tags.Events["diablo:HealthOrbTop"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
@@ -379,6 +380,7 @@
   oUF.Tags.Methods["diablo:HealthOrbBottom"] = function(unit)
     if db.char["HEALTH"].value.bottom.tag == "null" then return "" end
     local methodName = db.char["HEALTH"].value.bottom.tag.."hp"
+    print(methodName)
     return oUF.Tags.Methods[methodName](unit) or ""
   end
   oUF.Tags.Events["diablo:HealthOrbBottom"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
@@ -389,6 +391,7 @@
   oUF.Tags.Methods["diablo:PowerOrbTop"] = function(unit)
     if db.char["HEALTH"].value.top.tag == "null" then return "" end
     local methodName = db.char["HEALTH"].value.top.tag.."pp"
+    print(methodName)
     return oUF.Tags.Methods[methodName](unit) or ""
   end
   oUF.Tags.Events["diablo:PowerOrbTop"] = "UNIT_DISPLAYPOWER UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"
@@ -400,6 +403,7 @@
   oUF.Tags.Methods["diablo:PowerOrbBottom"] = function(unit)
     if db.char["POWER"].value.bottom.tag == "null" then return "" end
     local methodName = db.char["POWER"].value.bottom.tag.."pp"
+    print(methodName)
     return oUF.Tags.Methods[methodName](unit) or ""
   end
   oUF.Tags.Events["diablo:PowerOrbBottom"] = "UNIT_DISPLAYPOWER UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"

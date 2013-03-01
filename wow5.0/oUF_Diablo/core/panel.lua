@@ -825,7 +825,7 @@
 
   --create element health orb value top tag
   local createDropdownHealthOrbValueTopTag = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbValueTopTag", "Choose top health tag", db.getListHealthTag, 196)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbValueTopTag", "Choose top health tag", db.getListTag, 196)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -836,7 +836,7 @@
 
   --create element power orb value top tag
   local createDropdownPowerOrbValueTopTag = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbValueTopTag", "Choose top power tag", db.getListPowerTag, 196)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbValueTopTag", "Choose top power tag", db.getListTag, 196)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -847,7 +847,7 @@
 
   --create element health orb value bottom tag
   local createDropdownHealthOrbValueBottomTag = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbValueBottomTag", "Choose bottom health tag", db.getListHealthTag, 196)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelHealthOrbValueBottomTag", "Choose bottom health tag", db.getListTag, 196)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value
@@ -858,7 +858,7 @@
 
   --create element power orb value bottom tag
   local createDropdownPowerOrbValueBottomTag = function(parent)
-    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbValueBottomTag", "Choose bottom power tag", db.getListPowerTag, 196)
+    local dropdownMenu = createBasicDropDownMenu(parent, addon.."PanelPowerOrbValueBottomTag", "Choose bottom power tag", db.getListTag, 196)
     dropdownMenu.click = function(self)
       UIDropDownMenu_SetSelectedValue(dropdownMenu, self.value)
       --save value

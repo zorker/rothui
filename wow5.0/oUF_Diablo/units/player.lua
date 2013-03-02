@@ -153,6 +153,13 @@
     elseif not orb.values:IsShown() then
       orb.values:Show()
     end
+    if orb.type == "HEALTH" then
+      orb.values.top:SetText(oUF.Tags.Methods["diablo:HealthOrbTop"]("player"))
+      orb.values.bottom:SetText(oUF.Tags.Methods["diablo:HealthOrbBottom"]("player"))
+    elseif orb.type == "POWER" then
+      orb.values.top:SetText(oUF.Tags.Methods["diablo:PowerOrbTop"]("player"))
+      orb.values.bottom:SetText(oUF.Tags.Methods["diablo:PowerOrbBottom"]("player"))
+    end
     if UnitIsDeadOrGhost(unit) then
       bar:SetValue(0)
     end

@@ -2495,10 +2495,6 @@
       local hval, pval = ns.HealthOrb.values, ns.PowerOrb.values
       hbar:ForceUpdate()
       pbar:ForceUpdate()
-      hval.top:SetText(oUF.Tags.Methods["diablo:HealthOrbTop"]("player"))
-      hval.bottom:SetText(oUF.Tags.Methods["diablo:HealthOrbBottom"]("player"))
-      pval.top:SetText(oUF.Tags.Methods["diablo:PowerOrbTop"]("player"))
-      pval.bottom:SetText(oUF.Tags.Methods["diablo:PowerOrbBottom"]("player"))
     end
     panel.eventHelper = eventHelper
     panel:HookScript("OnShow", function(self) self:Enable() end)

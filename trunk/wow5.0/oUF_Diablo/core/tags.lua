@@ -371,7 +371,7 @@
     local methodName = db.char["HEALTH"].value.top.tag.."hp"
     return oUF.Tags.Methods[methodName](unit) or ""
   end
-  oUF.Tags.Events["diablo:HealthOrbTop"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
+  --oUF.Tags.Events["diablo:HealthOrbTop"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
 
   ---------------------------------------------
 
@@ -381,7 +381,7 @@
     local methodName = db.char["HEALTH"].value.bottom.tag.."hp"
     return oUF.Tags.Methods[methodName](unit) or ""
   end
-  oUF.Tags.Events["diablo:HealthOrbBottom"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
+  --oUF.Tags.Events["diablo:HealthOrbBottom"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
 
   ---------------------------------------------
 
@@ -391,7 +391,7 @@
     local methodName = db.char["POWER"].value.top.tag.."pp"
     return oUF.Tags.Methods[methodName](unit) or ""
   end
-  oUF.Tags.Events["diablo:PowerOrbTop"] = "UNIT_DISPLAYPOWER UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"
+  --oUF.Tags.Events["diablo:PowerOrbTop"] = "UNIT_DISPLAYPOWER UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"
 
 
   ---------------------------------------------
@@ -402,6 +402,6 @@
     local methodName = db.char["POWER"].value.bottom.tag.."pp"
     return oUF.Tags.Methods[methodName](unit) or ""
   end
-  oUF.Tags.Events["diablo:PowerOrbBottom"] = "UNIT_DISPLAYPOWER UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"
+  --oUF.Tags.Events["diablo:PowerOrbBottom"] = "UNIT_DISPLAYPOWER UNIT_POWER UNIT_MAXPOWER UNIT_CONNECTION"
 
   ---------------------------------------------

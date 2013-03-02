@@ -171,7 +171,7 @@
     --create a scrollframe inside
     local scrollFrame = CreateFrame("ScrollFrame", "$parentScrollFrame", frame, "UIPanelScrollFrameTemplate")
     scrollFrame:SetPoint("TOPLEFT")
-    scrollFrame:SetPoint("BOTTOMRIGHT",-22,0)
+    scrollFrame:SetPoint("BOTTOMRIGHT",-27,0)
 
     local tex = scrollFrame:CreateTexture(nil,"BACKGROUND",nil,-6)
     tex:SetPoint("TOP",scrollFrame)

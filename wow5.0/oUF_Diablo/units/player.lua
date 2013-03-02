@@ -227,7 +227,7 @@
     --background
     local bg = orb:CreateTexture("$parentBG","BACKGROUND",nil,-6)
     bg:SetAllPoints()
-    bg:SetTexture("Interface\\AddOns\\DiscoKugel2\\media\\orb_back")
+    bg:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_back2")
     orb.bg = bg
 
     --filling statusbar
@@ -320,7 +320,7 @@
     --highlight
     local highlight = overlay:CreateTexture("$parentHighlight","BACKGROUND",nil,3)
     highlight:SetAllPoints()
-    highlight:SetTexture("Interface\\AddOns\\DiscoKugel2\\media\\orb_gloss")
+    highlight:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_gloss")
     highlight:SetAlpha(orbcfg.highlight.alpha or 1)
     orb.highlight = highlight
 

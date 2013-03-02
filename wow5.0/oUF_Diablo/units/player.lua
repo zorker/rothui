@@ -135,10 +135,16 @@
     local per = 0
     if max > 0 then per = floor(cur/max*100) end
     local orb = bar:GetParent()
-    if orb.lowHP and  (per <= 25 and not UnitIsDeadOrGhost(unit)) then
+    --if orb.type == "HEALTH" and  (per <= 25 and not UnitIsDeadOrGhost(unit)) then
+    if orb.type == "HEALTH" and  (per <= 25 or UnitIsDeadOrGhost(unit)) then
       orb.lowHP:Show()
-    elseif orb.lowHP and orb.lowHP:IsShown() then
+    elseif orb.type == "HEALTH" then
       orb.lowHP:Hide()
+    end
+    if orb.type == "HEALTH" and UnitIsDeadOrGhost(unit) then
+      orb.skull:Show()
+    elseif orb.type == "HEALTH" then
+      orb.skull:Hide()
     end
     if db.char[orb.type].value.hideOnEmpty and (UnitIsDeadOrGhost(unit) or cur < 3) then
       orb.values:Hide()
@@ -289,9 +295,19 @@
     spark:Hide()
     orb.spark = spark
 
-    --lowhp
+    --skull+lowhp
     if orb.type == "HEALTH" then
-      local lowHP = overlay:CreateTexture(nil, "BACKGROUND", nil, -2)
+
+      local skull = overlay:CreateTexture(nil, "BACKGROUND", nil, 1)
+      skull:SetPoint("CENTER",0,0)
+      skull:SetSize(self.cfg.size-40,self.cfg.size-40)
+      skull:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\d2_skull")
+      --skull:SetBlendMode("ADD")
+      skull:SetAlpha(0.6)
+      skull:Hide()
+      orb.skull = skull
+
+      local lowHP = overlay:CreateTexture(nil, "BACKGROUND", nil, 2)
       lowHP:SetPoint("CENTER",0,0)
       lowHP:SetSize(self.cfg.size-15,self.cfg.size-15)
       lowHP:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_lowhp_glow")
@@ -302,7 +318,7 @@
     end
 
     --highlight
-    local highlight = overlay:CreateTexture("$parentHighlight","BACKGROUND",nil,-1)
+    local highlight = overlay:CreateTexture("$parentHighlight","BACKGROUND",nil,3)
     highlight:SetAllPoints()
     highlight:SetTexture("Interface\\AddOns\\DiscoKugel2\\media\\orb_gloss")
     highlight:SetAlpha(orbcfg.highlight.alpha or 1)

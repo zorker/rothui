@@ -32,7 +32,7 @@
       ["HEALTH"] = {
         --filling
         filling = {
-          texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15",
+          texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling16",
           color       = { r = 1, g = 0, b = 0, },
           colorAuto   = false, --automatic coloring based on class/powertype
         },
@@ -76,7 +76,7 @@
       ["POWER"] = {
         --filling
         filling = {
-          texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling15",
+          texture     = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling16",
           color       = { r = 0, g = 0, b = 1, },
           colorAuto   = false, --automatic coloring based on class/powertype
         },

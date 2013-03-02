@@ -93,6 +93,9 @@
     eb:SetPoint("LEFT",self,-5,0)
     eb:SetPoint("RIGHT",self,10,0)
 
+    --found this nice function, may need it sometime
+    --ChatEdit_FocusActiveWindow --set focus on current active chatwindow editbox (nice lol)
+
     --chat tab skinning
     local tab = _G[name.."Tab"]
     local tabFs = tab:GetFontString()

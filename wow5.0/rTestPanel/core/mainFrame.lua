@@ -70,6 +70,13 @@
     icon:SetTexture("Interface\\FriendsFrame\\Battlenet-Portrait")
     --SetPortraitTexture(icon, "player")
     icon:SetTexCoord(0,1,0,1)
+    --local ag = icon:CreateAnimationGroup()
+    --local anim = ag:CreateAnimation("Rotation")
+    --anim:SetDegrees(360)
+    --anim:SetDuration(60)
+    --ag:Play()
+    --ag:SetLooping("REPEAT")
+
     panel.icon = icon
 
     local updateView = function()

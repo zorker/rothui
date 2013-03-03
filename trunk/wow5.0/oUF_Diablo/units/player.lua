@@ -146,7 +146,7 @@
     elseif orb.type == "HEALTH" then
       orb.skull:Hide()
     end
-    if db.char[orb.type].value.hideOnEmpty and (UnitIsDeadOrGhost(unit) or cur < 3) then
+    if db.char[orb.type].value.hideOnEmpty and (UnitIsDeadOrGhost(unit) or cur < 1) then
       orb.values:Hide()
     elseif db.char[orb.type].value.hideOnFull and (cur == max) then
       orb.values:Hide()
@@ -178,7 +178,8 @@
   local updateOrb = function(self,value)
     local orb = self:GetParent()
     local min, max = self:GetMinMaxValues()
-    local per = value/max*100
+    local per = 0
+    if max > 0 then per = value/max*100 end
     local offset = orb.size-per*orb.size/100
     orb.scrollFrame:SetPoint("TOP",0,-offset)
     orb.scrollFrame:SetVerticalScroll(offset)

@@ -135,6 +135,7 @@
     local per = 0
     if max > 0 then per = floor(cur/max*100) end
     local orb = bar:GetParent()
+    local self = orb:GetParent()
     --if orb.type == "HEALTH" and  (per <= 25 and not UnitIsDeadOrGhost(unit)) then
     if orb.type == "HEALTH" and  (per <= 25 or UnitIsDeadOrGhost(unit)) then
       orb.lowHP:Show()
@@ -154,11 +155,11 @@
       orb.values:Show()
     end
     if orb.type == "HEALTH" then
-      orb.values.top:SetText(oUF.Tags.Methods["diablo:HealthOrbTop"]("player"))
-      orb.values.bottom:SetText(oUF.Tags.Methods["diablo:HealthOrbBottom"]("player"))
+      orb.values.top:SetText(oUF.Tags.Methods["diablo:HealthOrbTop"](self.unit or "player"))
+      orb.values.bottom:SetText(oUF.Tags.Methods["diablo:HealthOrbBottom"](self.unit or "player"))
     elseif orb.type == "POWER" then
-      orb.values.top:SetText(oUF.Tags.Methods["diablo:PowerOrbTop"]("player"))
-      orb.values.bottom:SetText(oUF.Tags.Methods["diablo:PowerOrbBottom"]("player"))
+      orb.values.top:SetText(oUF.Tags.Methods["diablo:PowerOrbTop"](self.unit or "player"))
+      orb.values.bottom:SetText(oUF.Tags.Methods["diablo:PowerOrbBottom"](self.unit or "player"))
     end
     if UnitIsDeadOrGhost(unit) then
       bar:SetValue(0)
@@ -175,9 +176,9 @@
   end
 
   --update orb func
-  local updateOrb = function(self,value)
-    local orb = self:GetParent()
-    local min, max = self:GetMinMaxValues()
+  local updateOrb = function(bar,value)
+    local orb = bar:GetParent()
+    local min, max = bar:GetMinMaxValues()
     local per = 0
     if max > 0 then per = value/max*100 end
     local offset = orb.size-per*orb.size/100

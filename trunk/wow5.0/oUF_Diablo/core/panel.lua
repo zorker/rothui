@@ -1566,22 +1566,22 @@
 
   --update health orb value top tag
   panel.updateHealthOrbValueTopTag = function()
-    ns.HealthOrb.values.top:SetText(oUF.Tags.Methods["diablo:HealthOrbTop"]("player"))
+    ns.HealthOrb.values.top:SetText(oUF.Tags.Methods["diablo:HealthOrbTop"](ns.unit.player.unit))
   end
 
   --update power orb value top tag
   panel.updatePowerOrbValueTopTag = function()
-    ns.PowerOrb.values.top:SetText(oUF.Tags.Methods["diablo:PowerOrbTop"]("player"))
+    ns.PowerOrb.values.top:SetText(oUF.Tags.Methods["diablo:PowerOrbTop"](ns.unit.player.unit))
   end
 
   --update health orb value bottom Tag
   panel.updateHealthOrbValueBottomTag = function()
-    ns.HealthOrb.values.bottom:SetText(oUF.Tags.Methods["diablo:HealthOrbBottom"]("player"))
+    ns.HealthOrb.values.bottom:SetText(oUF.Tags.Methods["diablo:HealthOrbBottom"](ns.unit.player.unit))
   end
 
   --update power orb value bottom tag
   panel.updatePowerOrbValueBottomTag = function()
-    ns.PowerOrb.values.bottom:SetText(oUF.Tags.Methods["diablo:PowerOrbBottom"]("player"))
+    ns.PowerOrb.values.bottom:SetText(oUF.Tags.Methods["diablo:PowerOrbBottom"](ns.unit.player.unit))
   end
 
   ---------------------------------------------

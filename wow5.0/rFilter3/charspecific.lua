@@ -93,7 +93,7 @@
       },
       [3] = {
         spellid = 6673, -- +10% AP / RAP
-        spelllist = { 6673, 57330, 19506, },
+        spelllist = { 6673, 57330, 19506, 133540, },
         spec = nil,
         size = 22,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 110, y = 110 },

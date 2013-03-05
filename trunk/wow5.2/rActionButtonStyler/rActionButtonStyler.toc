@@ -1,9 +1,0 @@
-## Interface: 50200
-## Author: zork
-## Title: rActionButtonStyler
-## Notes: The default ActionButtonTemplate with style!
-## OptionalDeps: rActionBarStyler
-
-config.lua
-charspecific.lua
-core\core.lua

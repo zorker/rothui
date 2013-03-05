@@ -1,9 +1,0 @@
-## Interface: 50200
-## Author: zork
-## Title: rInfostrings
-## Notes: Some data strings
-## RequiredDeps: rLib
-
-config.lua
-core\slashcmd.lua
-core\core.lua

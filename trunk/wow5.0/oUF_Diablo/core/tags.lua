@@ -387,7 +387,7 @@
 
   --PowerOrbTop
   oUF.Tags.Methods["diablo:PowerOrbTop"] = function(unit)
-    if db.char["HEALTH"].value.top.tag == "null" then return "" end
+    if db.char["POWER"].value.top.tag == "null" then return "" end
     local methodName = db.char["POWER"].value.top.tag.."pp"
     return oUF.Tags.Methods[methodName](unit) or ""
   end

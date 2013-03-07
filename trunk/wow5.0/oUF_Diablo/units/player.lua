@@ -201,8 +201,14 @@
   local createOrb = function(self,type)
     --get the orb config
     local orbcfg = db.char[type]
+    local name
+    if orb.type == "HEALTH" then
+      name = "oUF_DiabloHealthOrb"
+    else
+      name = "oUF_DiabloPowerOrb"
+    end
     --create the orb baseframe
-    local orb = CreateFrame("Frame", "oUF_Diablo"..type.."Orb", self)
+    local orb = CreateFrame("Frame", name, self)
     --orb data
     orb.self = self
     orb.type = type

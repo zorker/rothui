@@ -202,7 +202,7 @@
     --get the orb config
     local orbcfg = db.char[type]
     local name
-    if orb.type == "HEALTH" then
+    if type == "HEALTH" then
       name = "oUF_DiabloHealthOrb"
     else
       name = "oUF_DiabloPowerOrb"

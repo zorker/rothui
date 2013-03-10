@@ -186,7 +186,12 @@
     button.cd:SetPoint("TOPLEFT", 1, -1)
     button.cd:SetPoint("BOTTOMRIGHT", -1, 1)
     button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-    button.count:SetParent(button.cd)
+    --count helper frame, this push the count fontstring over the cooldown spiral
+    button.countFrame = CreateFrame("Frame",nil,button)
+    button.countFrame:SetAllPoints()
+    button.countFrame:SetFrameLevel(button.cd:GetFrameLevel()+2)
+    --button count
+    button.count:SetParent(button.countFrame)
     button.count:ClearAllPoints()
     button.count:SetPoint("TOPRIGHT", 4, 4)
     button.count:SetTextColor(0.9,0.9,0.9)

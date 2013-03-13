@@ -1,0 +1,6 @@
+## Interface: 50200
+## Author: zork
+## Title: rTestRing2
+## Notes: ring test environment.
+
+core.lua

@@ -20,17 +20,9 @@
 
   --init parameters
   local initUnitParameters = function(self)
-    --self:SetFrameStrata("BACKGROUND")
-    --self:SetFrameLevel(1)
-    --self:SetSize(self.cfg.width, self.cfg.height)
-    --self:SetScale(self.cfg.scale)
-    --self:SetPoint(self.cfg.pos.a1,self.cfg.pos.af,self.cfg.pos.a2,self.cfg.pos.x,self.cfg.pos.y)
-    self.menu = func.menu
     self:RegisterForClicks("AnyDown")
     self:SetScript("OnEnter", UnitFrame_OnEnter)
     self:SetScript("OnLeave", UnitFrame_OnLeave)
-    --func.createBackdrop(self)
-    --func.applyDragFunctionality(self)
   end
 
   --actionbar background

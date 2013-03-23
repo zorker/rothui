@@ -72,56 +72,6 @@
     f:SetBackdropBorderColor(0,0,0,1)
   end
 
-  --menu function from phanx
-  local dropdown = CreateFrame("Frame", "oUF_DiabloUnitMenu", UIParent, "UIDropDownMenuTemplate")
-
-  UIDropDownMenu_Initialize(dropdown, function(self)
-    local unit = self:GetParent().unit
-    if not unit then return end
-    local menu, name, id
-    if UnitIsUnit(unit, "player") then
-      menu = "SELF"
-    elseif UnitIsUnit(unit, "vehicle") then
-      menu = "VEHICLE"
-    elseif UnitIsUnit(unit, "pet") then
-      menu = "PET"
-    elseif UnitIsPlayer(unit) then
-      id = UnitInRaid(unit)
-      if id then
-        menu = "RAID_PLAYER"
-        name = GetRaidRosterInfo(id)
-      elseif UnitInParty(unit) then
-        menu = "PARTY"
-      else
-        menu = "PLAYER"
-      end
-    else
-      menu = "TARGET"
-      name = RAID_TARGET_ICON
-    end
-    if menu then
-      UnitPopup_ShowMenu(self, menu, unit, name, id)
-    end
-  end, "MENU")
-
-  func.menu = function(self)
-    dropdown:SetParent(self)
-    ToggleDropDownMenu(1, nil, dropdown, "cursor", 0, 0)
-  end
-
-  --remove focus from menu list
-  do
-    for k,v in pairs(UnitPopupMenus) do
-      for x,y in pairs(UnitPopupMenus[k]) do
-        if y == "SET_FOCUS" then
-          tremove(UnitPopupMenus[k],x)
-        elseif y == "CLEAR_FOCUS" then
-          tremove(UnitPopupMenus[k],x)
-        end
-      end
-    end
-  end
-
   --create debuff func
   func.createDebuffs = function(self)
     local f = CreateFrame("Frame", nil, self)

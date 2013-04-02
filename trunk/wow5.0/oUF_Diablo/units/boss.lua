@@ -64,6 +64,7 @@
     h.highlight:SetAllPoints(self)
 
     self.Health = h
+    self.Health.frequentUpdates = true
 
   end
 

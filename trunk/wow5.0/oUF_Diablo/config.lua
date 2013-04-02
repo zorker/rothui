@@ -600,7 +600,7 @@
       pos = { a1 = "TOP", a2 = "BOTTOM", af = "Minimap", x = 0, y = -80 },
       health = {
         texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar128_3",
-        tag = "[perhp]%",
+        tag = "[diablo:bosshp]%",
       },
       power = {
         texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar5",

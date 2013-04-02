@@ -173,6 +173,13 @@
 
   ---------------------------------------------
 
+  --boss health value
+  oUF.Tags.Methods["diablo:bosshp"] = function(unit)
+    local val = oUF.Tags.Methods["perhp"](unit)
+    return val or ""
+  end
+  oUF.Tags.Events["diablo:bosshp"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_TARGETABLE_CHANGED"
+  
   --boss power value
   oUF.Tags.Methods["diablo:bosspp"] = function(unit)
     if UnitIsDeadOrGhost(unit) then return "" end
@@ -198,7 +205,7 @@
     --return "93% (|cff"..color..("%s%%"):format(30).."|r)" --debug
     return str or ""
   end
-  oUF.Tags.Events["diablo:bosspp"] = "UNIT_POWER UNIT_MAXPOWER"
+  oUF.Tags.Events["diablo:bosspp"] = "UNIT_POWER UNIT_MAXPOWER UNIT_TARGETABLE_CHANGED"
 
   ---------------------------------------------
 

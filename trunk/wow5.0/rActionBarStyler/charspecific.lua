@@ -24,3 +24,6 @@
     cfg.bars.bags.mouseover.fadeOut.alpha = 0
     cfg.bars.micromenu.mouseover.fadeOut.alpha = 0
   end
+  if playername == "Rothtest" then
+    cfg.bars.bar1.scale = 2
+  end

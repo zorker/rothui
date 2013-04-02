@@ -70,7 +70,7 @@
       },
       [2] = {
         spellid = 469, -- +10% STA
-        spelllist = { 469, 90364, 6307, 21562, 103127, },
+        spelllist = { 469, 90364, 109773, 21562, },
         spec = nil,
         size = 22,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 140, y = 110 },
@@ -352,7 +352,7 @@
 
     --Rothars Debuff List
     cfg.rf3_DebuffList = {
-      [1] = {
+      {
         spellid = 115798, --weakened blows
         spec = nil,
         size = 22,
@@ -374,7 +374,7 @@
           },
         },
       },
-      [2] = {
+      {
         spellid = 113746, --weakened armor
         spec = nil,
         size = 22,
@@ -396,7 +396,7 @@
           },
         },
       },
-      [3] = {
+      {
         spellid = 81326, --physical vulnerability
         spec = nil,
         size = 22,
@@ -418,7 +418,7 @@
           },
         },
       },
-      [4] = {
+      {
         spellid = 115767, --deep wounds
         spec = nil,
         size = 22,
@@ -440,7 +440,7 @@
           },
         },
       },
-      [5] = {
+      {
         spellid = 86346, --colossus
         spec = 1,
         size = 50,
@@ -452,6 +452,52 @@
         desaturate      = true,
         move_ingame     = true,
         hide_ooc        = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0.6,
+          },
+        },
+      },
+      {
+        spellid = 136903, --frigid assault
+        spec = 3,
+        size = 42,
+        framestrata = "BACKGROUND",
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        unit = "player",
+        validate_unit   = true,
+        ismine          = false,
+        desaturate      = true,
+        move_ingame     = true,
+        hide_ooc        = false,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0.6,
+          },
+        },
+      },
+      {
+        spellid = 136903, --frigid assault
+        spec = 3,
+        size = 64,
+        framestrata = "BACKGROUND",
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        unit = "Nudie",
+        validate_unit   = true,
+        ismine          = false,
+        desaturate      = true,
+        move_ingame     = true,
+        hide_ooc        = false,
         alpha = {
           found = {
             frame = 1,

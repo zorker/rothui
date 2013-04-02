@@ -1,0 +1,11 @@
+## Interface: 50200
+## Author: zork
+## Title: oUF_Donut
+## Notes: zork's nom nom layout!
+## RequiredDeps: oUF
+
+modules\oUF_MovableFrames.lua
+
+config.lua
+
+core\style.lua

@@ -253,6 +253,7 @@
 
   --update health func
   func.updateHealth = function(bar, unit, min, max)
+  
     local d = floor(min/max*100)
     local color
     local dead

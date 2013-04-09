@@ -25,15 +25,10 @@
   local manager = CF("Frame", addon, UIP)
   manager:SetSize(200,270)
   manager:SetPoint("TOPLEFT", -185, -180)
+  manager:SetAlpha(0.4)
   manager:SetBackdrop(backdrop)
   manager:SetBackdropColor(0.1,0.1,0.1,0.9)
   manager:SetBackdropBorderColor(0.7,0.7,0.7)
-  manager.state = "closed"
-  manager.moved = false
-  manager.minAlpha = 0.4
-  manager.maxAlpha = 1
-  manager.moveWidth = 75
-  manager:SetAlpha(manager.minAlpha)
 
   --basic button func
   local createBasicButton = function(parent, name, text, tooltipText)
@@ -95,7 +90,7 @@
   previousButton = button
 
   --hover frame
-  local hoverFrame = CF("BUTTON", addon.."HoverFrame", manager)
+  local hoverFrame = CF("BUTTON", addon.."HoverFrame", manager, "SecureHandlerClickTemplate")
   hoverFrame:SetPoint("TOPRIGHT",-3,-3)
   hoverFrame:SetPoint("BOTTOMRIGHT",-3,3)
   hoverFrame:SetWidth(15)
@@ -109,31 +104,30 @@
 
   hoverFrame:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
-    if manager.state == "closed" then
-      GameTooltip:AddLine("Click here to open the raid manager", 0, 1, 0.5, 1, 1, 1)
-    else
-      GameTooltip:AddLine("Click here to close the raid manager", 0, 1, 0.5, 1, 1, 1)
-    end
+    GameTooltip:AddLine("Open or close the raid manager", 0, 1, 0.5, 1, 1, 1)
     GameTooltip:Show()
   end)
   hoverFrame:SetScript("OnLeave", function(self)
-    if manager.state == "closed" then
-    end
     GameTooltip:Hide()
   end)
 
-  hoverFrame:SetScript("OnClick", function(self)
-    if manager.state == "closed" then
-      manager:SetAlpha(manager.maxAlpha)
-      manager:SetPoint("TOPLEFT", -185+manager.moveWidth, -180)
-      manager.state = "open"
-    else
-      manager:SetAlpha(manager.minAlpha)
-      manager:SetPoint("TOPLEFT", -185, -180)
-      manager.state = "closed"
+  hoverFrame:SetAttribute("_onclick", [=[
+    local ref = self:GetFrameRef("manager")
+    if not ref:GetAttribute("state") then
+      ref:SetAttribute("state","closed")
     end
-
-  end)
+    local state = ref:GetAttribute("state")
+    if state == "closed" then
+      ref:SetAlpha(1)
+      ref:SetWidth(275)
+      ref:SetAttribute("state","open")
+    else
+      ref:SetAlpha(0.4)
+      ref:SetWidth(200)
+      ref:SetAttribute("state","closed")
+    end
+  ]=])
+  hoverFrame:SetFrameRef("manager", manager)
 
   --remove the default raidframe manager
   local function BlizzardRaidFrameManagerDisable()

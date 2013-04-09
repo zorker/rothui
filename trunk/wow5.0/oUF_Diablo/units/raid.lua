@@ -365,31 +365,6 @@
 
   if cfg.units.raid.show then
 
-    --rCreateDragFrame(CompactRaidFrameManager, dragFrameList, -2 , false) --frame, dragFrameList, inset, clamp
-
-    local crfm = _G["CompactRaidFrameManager"]
-    CompactRaidFrameManagerToggleButton:HookScript("OnClick", function(m)
-      if CompactRaidFrameManager.collapsed then
-        CompactRaidFrameManager:SetAlpha(0.2)
-      else
-        CompactRaidFrameManager:SetAlpha(1)
-      end
-    end)
-    CompactRaidFrameManager:SetAlpha(0.2)
-    CompactRaidFrameManagerToggleButton:SetScript("OnEnter", function(self)
-      GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-      GameTooltip:AddLine("RaidFrameManger", 0, 1, 0.5, 1, 1, 1)
-      if CompactRaidFrameManager.collapsed then
-        GameTooltip:AddLine("Click to open.", 1, 1, 1, 1, 1, 1)
-      else
-        GameTooltip:AddLine("Click to close.", 1, 1, 1, 1, 1, 1)
-      end
-      GameTooltip:Show()
-    end)
-    CompactRaidFrameManagerToggleButton:SetScript("OnLeave", function(self)
-      GameTooltip:Hide()
-    end)
-
     --register style
     oUF:RegisterStyle("diablo:raid", createStyle)
     oUF:SetActiveStyle("diablo:raid")

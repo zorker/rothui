@@ -51,7 +51,6 @@
   --basic button func
   local function CreateBasicButton(parent, name, text, tooltipText)
     local button = CF("Button", name, parent, "SecureActionButtonTemplate, UIPanelButtonTemplate")
-    --local button = CF("Button", name, parent, "UIPanelButtonTemplate")
     button.text = _G[button:GetName().."Text"]
     button.text:SetText(text)
     button:SetWidth(30)
@@ -153,7 +152,6 @@
 
   --state frame
   local stateFrame = CF("BUTTON", addon.."stateFrame", manager, "SecureHandlerClickTemplate")
-  --local stateFrame = CF("BUTTON", addon.."stateFrame", manager)
   stateFrame:SetPoint("TOPRIGHT",-3,-3)
   stateFrame:SetPoint("BOTTOMRIGHT",-3,3)
   stateFrame:SetWidth(15)

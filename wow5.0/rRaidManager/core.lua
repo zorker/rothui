@@ -64,7 +64,7 @@
     return button
   end
 
-  --world raid mark onclick func
+  --world raid marker onclick func
   local function WorldRaidMarkerClick(self)
     if IsRaidMarkerActive(self.id) then
       ClearRaidMarker(self.id)
@@ -103,7 +103,7 @@
   --create world marker buttons
   for i=1, NUM_WORLD_RAID_MARKERS do
     local text = TEX_WORLD_RAID_MARKERS[i]
-    local button = CreateBasicButton(manager, addon.."Button"..i, text, "WorldMarker"..i)
+    local button = CreateBasicButton(manager, addon.."ButtonWM"..i, text, "Set or clear world marker "..i)
     button.id = i
     button:SetScript("OnClick", WorldRaidMarkerClick)
     if not previousButton then
@@ -115,7 +115,7 @@
   end
 
   --cancel all world markers button
-  local button = CreateBasicButton(manager, addon.."ButtonCancel", "|TInterface\\Buttons\\UI-GroupLoot-Pass-Up:14:14:0:0|t", "Clear All WorldMarkers")
+  local button = CreateBasicButton(manager, addon.."ButtonWMCancel", "|TInterface\\Buttons\\UI-GroupLoot-Pass-Up:14:14:0:0|t", "Clear all world markers")
   button:SetScript("OnClick", ClearRaidMarker)
   button:SetPoint("TOP", previousButton, "BOTTOM", 0, 0)
   previousButton = button
@@ -126,11 +126,21 @@
   button:SetPoint("TOP", previousButton, "BOTTOM", 0, -10)
   previousButton = button
 
+  --raid to party button
+  local buttonLeft = createBasicButton(manager, addon.."ButtonRaidToParty", "|TInterface\\GroupFrame\\UI-Group-AssistantIcon:14:14:0:0|t", "Raid to party")
+  button:SetScript("OnClick", ConvertToParty)
+  buttonLeft:SetPoint("RIGHT", button, "LEFT", 0, 0)
+
   --rolecheck button
   local button = CreateBasicButton(manager, addon.."ButtonRoleCheck", "|TInterface\\LFGFrame\\LFGRole:14:14:0:0:64:16:32:48:0:16|t", "Role check")
   button:SetScript("OnClick", InitiateRolePoll)
   button:SetPoint("TOP", previousButton, "BOTTOM", 0, 0)
   previousButton = button
+
+  --party to raid button
+  local buttonLeft = createBasicButton(manager, addon.."ButtonPartyToRaid", "|TInterface\\GroupFrame\\UI-Group-LeaderIcon:14:14:0:0|t", "Party to raid")
+  button:SetScript("OnClick", ConvertToRaid)
+  buttonLeft:SetPoint("RIGHT", button, "LEFT", 0, 0)
 
   --state frame
   local stateFrame = CF("BUTTON", addon.."stateFrame", manager, "SecureHandlerClickTemplate")

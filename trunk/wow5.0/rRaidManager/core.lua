@@ -50,7 +50,8 @@
 
   --basic button func
   local function CreateBasicButton(parent, name, text, tooltipText)
-    local button = CF("Button", name, parent, "SecureActionButtonTemplate, UIPanelButtonTemplate")
+    --local button = CF("Button", name, parent, "SecureActionButtonTemplate, UIPanelButtonTemplate")
+    local button = CF("Button", name, parent, "UIPanelButtonTemplate")
     button.text = _G[button:GetName().."Text"]
     button.text:SetText(text)
     button:SetWidth(30)
@@ -65,7 +66,7 @@
   end
 
   --world raid marker onclick func
-  local function WorldRaidMarkerClick(self)
+  local function WorldRaidMarkerOnClick(self)
     if IsRaidMarkerActive(self.id) then
       ClearRaidMarker(self.id)
     else
@@ -85,6 +86,18 @@
     CRFC:UnregisterAllEvents()
   end
 
+  --manager onevent
+  local function ManagerOnEvent(self, event)
+    if event == "PLAYER_LOGIN" then
+      BlizzardRaidFrameManagerDisable()
+    end
+    if GetNumGroupMembers() > 0 and not self:IsShown() then
+      self:Show()
+    elseif self:IsShown() then
+      self:Hide()
+    end
+  end
+
   ---------------------------
   -- INIT
   ---------------------------
@@ -97,15 +110,17 @@
   manager:SetBackdrop(backdrop)
   manager:SetBackdropColor(0.1,0.1,0.1,0.9)
   manager:SetBackdropBorderColor(0.7,0.7,0.7)
+  manager.state = "closed"
   manager:RegisterEvent("PLAYER_LOGIN")
-  manager:SetScript("OnEvent", BlizzardRaidFrameManagerDisable)
+  manager:RegisterEvent("PARTY_MEMBERS_CHANGED")
+  manager:SetScript("OnEvent", ManagerOnEvent)
 
   --create world marker buttons
   for i=1, NUM_WORLD_RAID_MARKERS do
     local text = TEX_WORLD_RAID_MARKERS[i]
     local button = CreateBasicButton(manager, addon.."ButtonWM"..i, text, "Set or clear world marker "..i)
     button.id = i
-    button:SetScript("OnClick", WorldRaidMarkerClick)
+    button:SetScript("OnClick", WorldRaidMarkerOnClick)
     if not previousButton then
       button:SetPoint("TOPRIGHT", manager, -25, -10)
     else
@@ -128,7 +143,7 @@
 
   --raid to party button
   local buttonLeft = createBasicButton(manager, addon.."ButtonRaidToParty", "|TInterface\\GroupFrame\\UI-Group-AssistantIcon:14:14:0:0|t", "Raid to party")
-  button:SetScript("OnClick", ConvertToParty)
+  buttonLeft:SetScript("OnClick", ConvertToParty)
   buttonLeft:SetPoint("RIGHT", button, "LEFT", 0, 0)
 
   --rolecheck button
@@ -139,11 +154,12 @@
 
   --party to raid button
   local buttonLeft = createBasicButton(manager, addon.."ButtonPartyToRaid", "|TInterface\\GroupFrame\\UI-Group-LeaderIcon:14:14:0:0|t", "Party to raid")
-  button:SetScript("OnClick", ConvertToRaid)
+  buttonLeft:SetScript("OnClick", ConvertToRaid)
   buttonLeft:SetPoint("RIGHT", button, "LEFT", 0, 0)
 
   --state frame
-  local stateFrame = CF("BUTTON", addon.."stateFrame", manager, "SecureHandlerClickTemplate")
+  --local stateFrame = CF("BUTTON", addon.."stateFrame", manager, "SecureHandlerClickTemplate")
+  local stateFrame = CF("BUTTON", addon.."stateFrame", manager)
   stateFrame:SetPoint("TOPRIGHT",-3,-3)
   stateFrame:SetPoint("BOTTOMRIGHT",-3,3)
   stateFrame:SetWidth(15)
@@ -170,6 +186,21 @@
     GameTooltip:Hide()
   end)
 
+  --state frame onclick
+  stateFrame:SetScript("OnClick", function(self)
+    if manager.state == "closed" then
+      manager:SetAlpha(1)
+      manager:SetWidth(275)
+      manager.state = "open"
+    else
+      manager:SetAlpha(0.4)
+      manager:SetWidth(200)
+      manager.state = "closed"
+    end
+  end)
+
+  --[[
+
   --state frame attribute state
   stateFrame:SetAttribute("state","closed")
 
@@ -190,3 +221,5 @@
 
   --frame reference
   stateFrame:SetFrameRef("manager", manager)
+
+  ]]

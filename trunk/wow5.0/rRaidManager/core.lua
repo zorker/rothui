@@ -92,6 +92,7 @@
 
   --create manager frame
   local manager = CF("Frame", addon, UIP, "SecureHandlerStateTemplate")
+  manager:SetFrameStrata("DIALOG")
   manager:SetSize(200,270)
   manager:SetPoint("TOPLEFT", -185, -180)
   manager:SetAlpha(0.4)

@@ -127,7 +127,7 @@
       end
     --solo
     else
-      tinsert(threatData,UpdateThreatData("player"))
+      UpdateThreatData("player")
       if not UnitInVehicle("player") then
         UpdateThreatData("pet")
       end
@@ -137,7 +137,7 @@
     sort(threatData, Compare)
 
     --update view
-    for i=1,cfg.statusbars.count do
+    for i=1,cfg.statusbar.count do
       --get values out of table
       local data = threatData[i]
       local bar = self.bars[i]
@@ -147,24 +147,24 @@
         bar.perc:SetText(floor(data.scaledPercent).."%")
         bar:SetValue(data.scaledPercent)
         local color = GetColor(data.unit)
-        if cfg.statusbars.marker and UnitGUID(data.unit) == playerGUID then
+        if cfg.statusbar.marker and UnitGUID(data.unit) == playerGUID then
           color = { r=1, g=0, b=0 }
         end
-        bar:SetStatusBarColor(color.r, color.g, color.b, cfg.statusbars.texture.alpha.foreground)
-        bar.bg:SetVertexColor(color.r*cfg.statusbars.texture.multiplier, color.g*cfg.statusbars.texture.multiplier, color.b*cfg.statusbars.texture.multiplier, cfg.statusbars.texture.alpha.background)
+        bar:SetStatusBarColor(color.r, color.g, color.b, cfg.statusbar.color.bar.a)
+        bar.bg:SetVertexColor(color.r*cfg.statusbar.color.bg.multiplier, color.g*cfg.statusbar.color.bg.multiplier, color.b*cfg.statusbar.color.bg.multiplier, cfg.statusbar.color.bg.a)
       else
         bar.name:SetText("")
         bar.perc:SetText("")
         bar.val:SetText("")
         bar:SetValue(0)
         bar:SetStatusBarColor(1,1,1,0)
-        bar.bg:SetVertexColor(cfg.statusbars.inactive.color.r, cfg.statusbars.inactive.color.g, cfg.statusbars.inactive.color.b, cfg.statusbars.inactive.color.a)
+        bar.bg:SetVertexColor(cfg.statusbar.color.inactive.r, cfg.statusbar.color.inactive.g, cfg.statusbar.color.inactive.b, cfg.statusbar.color.inactive.a)
       end
     end
   end
 
   --check status func
-  local function CheckStatus(self)
+  local function CheckStatus(self, event)
     local instanceType = select(2,GetInstanceInfo())
     if (cfg.hideOOC and not InCombatLockdown()) or (cfg.partyOnly and GetNumGroupMembers() == 0) or (cfg.hideInPVP and (instanceType == "arena" or instanceType == "pvp")) then
       self:Hide()
@@ -187,8 +187,8 @@
   -----------------------------
 
   --minimum of 1 row
-  if not cfg.statusbars.count or cfg.statusbars.count < 1 then
-    cfg.statusbars.count = 1
+  if not cfg.statusbar.count or cfg.statusbar.count < 1 then
+    cfg.statusbar.count = 1
   end
 
   --statusbars
@@ -196,10 +196,10 @@
 
   --first create a frame frame to gather all the objects (make that dragable later)
   local frame = CreateFrame("Frame", addon.."BarFrame", UIParent)
-  frame:SetSize(cfg.statusbars.width,cfg.statusbars.height*cfg.statusbars.count+cfg.statusbars.gap*cfg.statusbars.count-cfg.statusbars.gap)
+  frame:SetSize(cfg.statusbar.width,cfg.statusbar.height*cfg.statusbar.count+cfg.statusbar.gap*cfg.statusbar.count-cfg.statusbar.gap)
   frame:SetFrameStrata("BACKGROUND")
   frame:SetFrameLevel(1)
-  frame:SetPoint(cfg.pos.a1,cfg.pos.af,cfg.pos.a2,cfg.pos.x,cfg.pos.y)
+  frame:SetPoint(cfg.frame.pos.a1,cfg.frame.pos.af,cfg.frame.pos.a2,cfg.frame.pos.x,cfg.frame.pos.y)
   frame:SetScale(cfg.scale)
   frame.bars = bars
 
@@ -210,7 +210,7 @@
   local bg = frame:CreateTexture(nil, "BACKGROUND",nil,-8)
   bg:SetTexture(1,1,1)
   bg:SetAllPoints()
-  bg:SetVertexColor(cfg.statusbars.bg.color.r, cfg.statusbars.bg.color.g, cfg.statusbars.bg.color.b, cfg.statusbars.bg.color.a)
+  bg:SetVertexColor(cfg.frame.bg.color.r, cfg.frame.bg.color.g, cfg.frame.bg.color.b, cfg.frame.bg.color.a)
 
   --shadow outline
   if cfg.shadow.show then
@@ -218,37 +218,37 @@
   end
 
   --threat bars
-  for i=1,cfg.statusbars.count do
+  for i=1,cfg.statusbar.count do
     --statusbar
     bars[i] = CreateFrame("StatusBar", nil, frame)
-    bars[i]:SetSize(cfg.statusbars.width,cfg.statusbars.height)
+    bars[i]:SetSize(cfg.statusbar.width,cfg.statusbar.height)
     bars[i]:SetMinMaxValues(0,100)
     if(i==1) then
       bars[i]:SetPoint("TOP",frame,"TOP",0,0)
     else
-      bars[i]:SetPoint("TOP",bars[i-1],"BOTTOM",0,-cfg.statusbars.gap)
+      bars[i]:SetPoint("TOP",bars[i-1],"BOTTOM",0,-cfg.statusbar.gap)
     end
-    bars[i]:SetStatusBarTexture(cfg.statusbars.texture.texture)
+    bars[i]:SetStatusBarTexture(cfg.statusbar.texture)
     --bg
     local bg = bars[i]:CreateTexture(nil, "BACKGROUND",nil,-6)
-    bg:SetTexture(cfg.statusbars.bg.texture)
+    bg:SetTexture(cfg.statusbar.texture)
     bg:SetAllPoints(bars[i])
     --name
     local name = bars[i]:CreateFontString(nil, "LOW")
-    name:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, cfg.statusbars.font.outline)
-    name:SetVertexColor(cfg.statusbars.font.color.r, cfg.statusbars.font.color.g, cfg.statusbars.font.color.b, cfg.statusbars.font.color.a)
+    name:SetFont(cfg.statusbar.font.family, cfg.statusbar.font.size, cfg.statusbar.font.outline)
+    name:SetVertexColor(cfg.statusbar.font.color.r, cfg.statusbar.font.color.g, cfg.statusbar.font.color.b, cfg.statusbar.font.color.a)
     name:SetPoint("LEFT", bars[i], 2, 0)
     name:SetJustifyH("LEFT")
     --perc
     local perc = bars[i]:CreateFontString(nil, "LOW")
-    perc:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, cfg.statusbars.font.outline)
-    perc:SetVertexColor(cfg.statusbars.font.color.r, cfg.statusbars.font.color.g, cfg.statusbars.font.color.b, cfg.statusbars.font.color.a)
+    perc:SetFont(cfg.statusbar.font.family, cfg.statusbar.font.size, cfg.statusbar.font.outline)
+    perc:SetVertexColor(cfg.statusbar.font.color.r, cfg.statusbar.font.color.g, cfg.statusbar.font.color.b, cfg.statusbar.font.color.a)
     perc:SetPoint("RIGHT", bars[i], -2, 0)
     perc:SetJustifyH("RIGHT")
     --val
     local val = bars[i]:CreateFontString(nil, "LOW")
-    val:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, cfg.statusbars.font.outline)
-    val:SetVertexColor(cfg.statusbars.font.color.r, cfg.statusbars.font.color.g, cfg.statusbars.font.color.b, cfg.statusbars.font.color.a)
+    val:SetFont(cfg.statusbar.font.family, cfg.statusbar.font.size, cfg.statusbar.font.outline)
+    val:SetVertexColor(cfg.statusbar.font.color.r, cfg.statusbar.font.color.g, cfg.statusbar.font.color.b, cfg.statusbar.font.color.a)
     val:SetPoint("RIGHT", bars[i], -40, 0)
     val:SetJustifyH("RIGHT")
     --other
@@ -257,6 +257,12 @@
     bars[i].name = name
     bars[i].perc = perc
     bars[i].val = val
+    bars[i].name:SetText("")
+    bars[i].perc:SetText("")
+    bars[i].val:SetText("")
+    bars[i].bg:SetVertexColor(cfg.statusbar.color.inactive.r, cfg.statusbar.color.inactive.g, cfg.statusbar.color.inactive.b, cfg.statusbar.color.inactive.a)
+    bars[i]:SetValue(0)
+    bars[i]:SetStatusBarColor(1,1,1,0)
   end
 
   --frame border

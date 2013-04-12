@@ -21,7 +21,12 @@
   cfg.hideInPVP     = true    -- hide while being in arena / battleground
 
   -- frame position (you can move the frame ingame via "/rthreat")
-  cfg.pos           = { a1 = "LEFT", af = UIParent, a2 = "LEFT", x = 50, y = 0 }
+  cfg.frame = {
+    pos = { a1 = "LEFT", af = UIParent, a2 = "LEFT", x = 50, y = 0 },
+    bg = {
+      color = { r = 0, g = 0, b = 0, a = 0.7 },
+    },
+  }
 
   -- backdrop shadow settings
   cfg.shadow = {
@@ -50,28 +55,22 @@
   }
 
   -- threat bar settings
-  cfg.statusbars = {
+  cfg.statusbar = {
     count           = 5,      -- how many statusbars should be created?
     width           = 160,
     height          = 14,
     gap             = 1,      -- gap between bars
     marker          = true,   -- true/false this will mark your statusbar in red color if active
     font = {
-      font          = STANDARD_TEXT_FONT,
+      family        = STANDARD_TEXT_FONT,
       size          = 11,
       color         = { r = 1, g = 1, b = 1, a = 1 },
       outline       = "THINOUTLINE",
     },
-    bg = {
-      texture       = "Interface\\AddOns\\rThreat\\media\\statusbar",
-      color         = { r = 0, g = 0, b = 0, a = 0.7 },
-    },
-    texture = {
-      texture       = "Interface\\AddOns\\rThreat\\media\\statusbar",
-      multiplier    = 0.5,    -- multiplier allows darker background colors
-      alpha         = { background = 0.6, foreground = 1},
-    },
-    inactive = {
-      color         = { r = 0.5, g = 0.5, b = 0.5, a = 0.1 },
+    texture         = "Interface\\AddOns\\rThreat\\media\\statusbar",
+    color = {
+      bar           = { a = 1 },
+      bg            = { multiplier = 0.5, a = 0.6 },
+      inactive      = { r = 0.5, g = 0.5, b = 0.5, a = 0.1 },
     },
   }

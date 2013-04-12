@@ -42,14 +42,14 @@
         bottom = cfg.inset,
       },
     }
-    local f = CreateFrame("Frame",nil,parent)
-    f:SetPoint("TOPLEFT",parent,"TOPLEFT",-cfg.inset,cfg.inset)
-    f:SetPoint("BOTTOMRIGHT",parent,"BOTTOMRIGHT",cfg.inset,-cfg.inset)
-    f:SetBackdrop(backdrop)
-    f:SetBackdropColor(cfg.bgColor.r, cfg.bgColor.g, cfg.bgColor.b, cfg.bgColor.a)
-    f:SetBackdropBorderColor(cfg.edgeColor.r, cfg.edgeColor.g, cfg.edgeColor.b, cfg.edgeColor.a)
+    local frame = CreateFrame("Frame",nil,parent)
+    frame:SetPoint("TOPLEFT",parent,"TOPLEFT",-cfg.inset,cfg.inset)
+    frame:SetPoint("BOTTOMRIGHT",parent,"BOTTOMRIGHT",cfg.inset,-cfg.inset)
+    frame:SetBackdrop(backdrop)
+    frame:SetBackdropColor(cfg.bgColor.r, cfg.bgColor.g, cfg.bgColor.b, cfg.bgColor.a)
+    frame:SetBackdropBorderColor(cfg.edgeColor.r, cfg.edgeColor.g, cfg.edgeColor.b, cfg.edgeColor.a)
     if typ == "border" then
-      f:SetFrameStrata("LOW") --make the border hover the other frames
+      frame:SetFrameStrata("LOW") --make the border hover the other frames
     end
   end
 
@@ -140,7 +140,7 @@
     for i=1,cfg.statusbars.count do
       --get values out of table
       local data = threatData[i]
-      local bar = self.barcontainer.barframe.bars[i]
+      local bar = self.bars[i]
       if(data) then
         bar.name:SetText(UnitName(data.unit) or "Not found")
         bar.val:SetText(NumFormat(data.threatValue))
@@ -186,116 +186,89 @@
   -- INIT
   -----------------------------
 
-  --create threat bars func
-  local function Init()
-
-    --first create a holder frame to gather all the objects (make that dragable later)
-    local holder = CreateFrame("Frame",addon,UIParent)
-    holder:SetSize(cfg.statusbars.width,cfg.statusbars.height)
-    holder:SetFrameStrata("BACKGROUND")
-    holder:SetFrameLevel(1)
-    holder:SetPoint(cfg.pos.a1,cfg.pos.af,cfg.pos.a2,cfg.pos.x,cfg.pos.y)
-    rCreateDragFrame(holder, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
-
-    --minimum of 1 row
-    if not cfg.statusbars.count or cfg.statusbars.count < 1 then
-      cfg.statusbars.count = 1
-    end
-
-    --bar container
-    local barcontainer = CreateFrame("Frame",nil,holder)
-    barcontainer:SetPoint("TOP",0,0)
-    barcontainer:SetSize(cfg.statusbars.width,cfg.statusbars.height*cfg.statusbars.count+cfg.statusbars.gap*cfg.statusbars.count-cfg.statusbars.gap)
-
-    --shadow stuff
-    if cfg.shadow.show then
-      CreateBackdrop(barcontainer,cfg.shadow,"shadow")
-    end
-
-    --frame to hold all the statusbars
-    local barframe = CreateFrame("Frame",nil,barcontainer)
-    barframe:SetAllPoints(barcontainer)
-
-    --background for statusbarframe
-    local bg = barframe:CreateTexture(nil, "BACKGROUND",nil,-8)
-    bg:SetTexture(cfg.statusbars.bg.texture)
-    bg:SetAllPoints(barframe)
-    bg:SetVertexColor(cfg.statusbars.bg.color.r, cfg.statusbars.bg.color.g, cfg.statusbars.bg.color.b, cfg.statusbars.bg.color.a)
-
-    --statusbars
-    local bars = {}
-
-    for i=1,cfg.statusbars.count do
-
-      bars[i] = CreateFrame("StatusBar", nil, barcontainer)
-      bars[i]:SetSize(cfg.statusbars.width,cfg.statusbars.height)
-      bars[i]:SetMinMaxValues(0,100)
-      if(i==1) then
-        bars[i]:SetPoint("TOP",barframe,"TOP",0,0)
-      else
-        bars[i]:SetPoint("TOP",bars[i-1],"BOTTOM",0,-cfg.statusbars.gap)
-      end
-      bars[i]:SetStatusBarTexture(cfg.statusbars.texture.texture)
-
-      local bg = bars[i]:CreateTexture(nil, "BACKGROUND",nil,-6)
-      bg:SetTexture(cfg.statusbars.texture.texture)
-      bg:SetAllPoints(bars[i])
-      bg:SetVertexColor(cfg.statusbars.inactive.color.r, cfg.statusbars.inactive.color.g, cfg.statusbars.inactive.color.b, cfg.statusbars.inactive.color.a)
-
-      local name = bars[i]:CreateFontString(nil, "LOW")
-      name:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, cfg.statusbars.font.outline)
-      name:SetVertexColor(cfg.statusbars.font.color.r, cfg.statusbars.font.color.g, cfg.statusbars.font.color.b, cfg.statusbars.font.color.a)
-      name:SetPoint("LEFT", bars[i], 2, 0)
-      name:SetJustifyH("LEFT")
-
-      local perc = bars[i]:CreateFontString(nil, "LOW")
-      perc:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, cfg.statusbars.font.outline)
-      perc:SetVertexColor(cfg.statusbars.font.color.r, cfg.statusbars.font.color.g, cfg.statusbars.font.color.b, cfg.statusbars.font.color.a)
-      perc:SetPoint("RIGHT", bars[i], -2, 0)
-      perc:SetJustifyH("RIGHT")
-
-      local val = bars[i]:CreateFontString(nil, "LOW")
-      val:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, cfg.statusbars.font.outline)
-      val:SetVertexColor(cfg.statusbars.font.color.r, cfg.statusbars.font.color.g, cfg.statusbars.font.color.b, cfg.statusbars.font.color.a)
-      val:SetPoint("RIGHT", bars[i], -40, 0)
-      val:SetJustifyH("RIGHT")
-
-      name:SetPoint("RIGHT", val, "LEFT", -10, 0) --right point of name is left point of value
-
-      bars[i].bg = bg
-      bars[i].name = name
-      bars[i].perc = perc
-      bars[i].val = val
-
-    end
-
-    --border stuff
-    if cfg.border.show then
-      CreateBackdrop(barcontainer,cfg.border,"border")
-    end
-
-    barframe.bg = bg
-    barframe.bars = bars
-    barcontainer.barframe = barframe
-    holder.barcontainer = barcontainer
-
-    holder:SetScript("OnEvent", CheckStatus)
-
-    --holder:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE")
-    holder:RegisterEvent("UNIT_THREAT_LIST_UPDATE")
-    holder:RegisterEvent("PLAYER_TARGET_CHANGED")
-    holder:RegisterEvent("PLAYER_ENTERING_WORLD")
-    holder:RegisterEvent("PLAYER_REGEN_DISABLED")
-    holder:RegisterEvent("PLAYER_REGEN_ENABLED")
-    holder:RegisterEvent("PARTY_MEMBERS_CHANGED")
-    holder:RegisterEvent("GROUP_ROSTER_UPDATE")
-
-    holder:SetScale(cfg.scale)
-
+  --minimum of 1 row
+  if not cfg.statusbars.count or cfg.statusbars.count < 1 then
+    cfg.statusbars.count = 1
   end
 
-  -----------------------------
-  -- CALL
-  -----------------------------
+  --statusbars
+  local bars = {}
 
-  Init()
+  --first create a frame frame to gather all the objects (make that dragable later)
+  local frame = CreateFrame("Frame", addon.."BarFrame", UIParent)
+  frame:SetSize(cfg.statusbars.width,cfg.statusbars.height*cfg.statusbars.count+cfg.statusbars.gap*cfg.statusbars.count-cfg.statusbars.gap)
+  frame:SetFrameStrata("BACKGROUND")
+  frame:SetFrameLevel(1)
+  frame:SetPoint(cfg.pos.a1,cfg.pos.af,cfg.pos.a2,cfg.pos.x,cfg.pos.y)
+  frame:SetScale(cfg.scale)
+  frame.bars = bars
+
+  --drag frame
+  rCreateDragFrame(frame, dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+
+  --background
+  local bg = frame:CreateTexture(nil, "BACKGROUND",nil,-8)
+  bg:SetTexture(1,1,1)
+  bg:SetAllPoints()
+  bg:SetVertexColor(cfg.statusbars.bg.color.r, cfg.statusbars.bg.color.g, cfg.statusbars.bg.color.b, cfg.statusbars.bg.color.a)
+
+  --shadow outline
+  if cfg.shadow.show then
+    CreateBackdrop(frame,cfg.shadow,"shadow")
+  end
+
+  --threat bars
+  for i=1,cfg.statusbars.count do
+    --statusbar
+    bars[i] = CreateFrame("StatusBar", nil, frame)
+    bars[i]:SetSize(cfg.statusbars.width,cfg.statusbars.height)
+    bars[i]:SetMinMaxValues(0,100)
+    if(i==1) then
+      bars[i]:SetPoint("TOP",frame,"TOP",0,0)
+    else
+      bars[i]:SetPoint("TOP",bars[i-1],"BOTTOM",0,-cfg.statusbars.gap)
+    end
+    bars[i]:SetStatusBarTexture(cfg.statusbars.texture.texture)
+    --bg
+    local bg = bars[i]:CreateTexture(nil, "BACKGROUND",nil,-6)
+    bg:SetTexture(cfg.statusbars.bg.texture)
+    bg:SetAllPoints(bars[i])
+    --name
+    local name = bars[i]:CreateFontString(nil, "LOW")
+    name:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, cfg.statusbars.font.outline)
+    name:SetVertexColor(cfg.statusbars.font.color.r, cfg.statusbars.font.color.g, cfg.statusbars.font.color.b, cfg.statusbars.font.color.a)
+    name:SetPoint("LEFT", bars[i], 2, 0)
+    name:SetJustifyH("LEFT")
+    --perc
+    local perc = bars[i]:CreateFontString(nil, "LOW")
+    perc:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, cfg.statusbars.font.outline)
+    perc:SetVertexColor(cfg.statusbars.font.color.r, cfg.statusbars.font.color.g, cfg.statusbars.font.color.b, cfg.statusbars.font.color.a)
+    perc:SetPoint("RIGHT", bars[i], -2, 0)
+    perc:SetJustifyH("RIGHT")
+    --val
+    local val = bars[i]:CreateFontString(nil, "LOW")
+    val:SetFont(cfg.statusbars.font.font, cfg.statusbars.font.size, cfg.statusbars.font.outline)
+    val:SetVertexColor(cfg.statusbars.font.color.r, cfg.statusbars.font.color.g, cfg.statusbars.font.color.b, cfg.statusbars.font.color.a)
+    val:SetPoint("RIGHT", bars[i], -40, 0)
+    val:SetJustifyH("RIGHT")
+    --other
+    name:SetPoint("RIGHT", val, "LEFT", -10, 0) --right point of name is left point of value
+    bars[i].bg = bg
+    bars[i].name = name
+    bars[i].perc = perc
+    bars[i].val = val
+  end
+
+  --frame border
+  if cfg.border.show then
+    CreateBackdrop(frame,cfg.border,"border")
+  end
+
+  --events
+  frame:SetScript("OnEvent", CheckStatus)
+  frame:RegisterEvent("UNIT_THREAT_LIST_UPDATE")
+  frame:RegisterEvent("PLAYER_TARGET_CHANGED")
+  frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+  frame:RegisterEvent("PLAYER_REGEN_DISABLED")
+  frame:RegisterEvent("PLAYER_REGEN_ENABLED")
+  frame:RegisterEvent("GROUP_ROSTER_UPDATE")

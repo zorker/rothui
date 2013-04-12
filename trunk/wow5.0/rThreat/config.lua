@@ -21,10 +21,7 @@
   cfg.hideInPVP     = true    -- hide while being in arena / battleground
 
   -- frame position (you can move the frame ingame via "/rthreat")
-  cfg.position = {
-    coord           = { a1 = "LEFT", af = UIParent, a2 = "LEFT", x = 50, y = 0 }, -- default position
-    userplaced      = true,   -- want to place the bar somewhere else?
-  }
+  cfg.pos           = { a1 = "LEFT", af = UIParent, a2 = "LEFT", x = 50, y = 0 }
 
   -- backdrop shadow settings
   cfg.shadow = {
@@ -50,24 +47,6 @@
     tileSize        = 16,
     edgeSize        = 8,
     inset           = 2,
-  }
-
-  -- title bar settings
-  cfg.title = {
-    show            = false,   -- true/false to enable/disable the title frame
-    width           = 160,
-    height          = 14,
-    gap             = 10,     -- gap between title and statusbar container
-    font = {
-      font          = STANDARD_TEXT_FONT,
-      size          = 12,
-      color         = { r = 1, g = 0.8, b = 0, a = 1 },
-      outline       = "THINOUTLINE",
-    },
-    bg = {
-      texture       = "Interface\\AddOns\\rThreat\\media\\statusbar",
-      color         = { r = 0.2, g = 0.2, b = 0.2, a = 0.8 },
-    },
   }
 
   -- threat bar settings

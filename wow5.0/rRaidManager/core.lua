@@ -64,15 +64,6 @@
     return button
   end
 
-  --world raid marker onclick func
-  local function WorldRaidMarkerOnClick(self)
-    if IsRaidMarkerActive(self.id) then
-      ClearRaidMarker(self.id)
-    else
-      PlaceRaidMarker(self.id)
-    end
-  end
-
   --remove the default raidframe manager
   local function BlizzardRaidFrameManagerDisable()
     CRFM:SetScript("OnLoad", nil)
@@ -98,11 +89,9 @@
   manager:SetBackdrop(backdrop)
   manager:SetBackdropColor(0.1,0.1,0.1,0.9)
   manager:SetBackdropBorderColor(0.7,0.7,0.7)
-  manager.state = "closed"
   manager:RegisterEvent("PLAYER_LOGIN")
   manager:SetScript("OnEvent", BlizzardRaidFrameManagerDisable)
   RegisterStateDriver(manager, "visibility", "[group:party][group:raid] show; hide")
-
 
   --create world marker buttons
   for i=1, NUM_WORLD_RAID_MARKERS do

@@ -52,8 +52,52 @@
       frame:SetFrameStrata("LOW") --make the border hover the other frames
     end
   end
+  
+  local function CreateStatusbar(parent)
+    --statusbar
+    local bar = CreateFrame("StatusBar", nil, parent)
+    bar:SetSize(cfg.statusbar.width,cfg.statusbar.height)
+    bar:SetMinMaxValues(0,100)
+    bar:SetStatusBarTexture(cfg.statusbar.texture)
+    --bg
+    local bg = bar:CreateTexture(nil, "BACKGROUND",nil,-6)
+    bg:SetTexture(cfg.statusbar.texture)
+    bg:SetAllPoints(bar)
+    --name
+    local name = bar:CreateFontString(nil, "LOW")
+    name:SetFont(cfg.statusbar.font.family, cfg.statusbar.font.size, cfg.statusbar.font.outline)
+    name:SetVertexColor(cfg.statusbar.font.color.r, cfg.statusbar.font.color.g, cfg.statusbar.font.color.b, cfg.statusbar.font.color.a)
+    name:SetPoint("LEFT", bar, 2, 0)
+    name:SetJustifyH("LEFT")
+    --perc
+    local perc = bar:CreateFontString(nil, "LOW")
+    perc:SetFont(cfg.statusbar.font.family, cfg.statusbar.font.size, cfg.statusbar.font.outline)
+    perc:SetVertexColor(cfg.statusbar.font.color.r, cfg.statusbar.font.color.g, cfg.statusbar.font.color.b, cfg.statusbar.font.color.a)
+    perc:SetPoint("RIGHT", bar, -2, 0)
+    perc:SetJustifyH("RIGHT")
+    --val
+    local val = bar:CreateFontString(nil, "LOW")
+    val:SetFont(cfg.statusbar.font.family, cfg.statusbar.font.size, cfg.statusbar.font.outline)
+    val:SetVertexColor(cfg.statusbar.font.color.r, cfg.statusbar.font.color.g, cfg.statusbar.font.color.b, cfg.statusbar.font.color.a)
+    val:SetPoint("RIGHT", bar, -40, 0)
+    val:SetJustifyH("RIGHT")
+    name:SetPoint("RIGHT", val, "LEFT", -10, 0) --right point of name is left point of value
+    --references
+    bar.bg = bg
+    bar.name = name
+    bar.perc = perc
+    bar.val = val
+    --initial values
+    bar.name:SetText("")
+    bar.perc:SetText("")
+    bar.val:SetText("")
+    bar.bg:SetVertexColor(cfg.statusbar.color.inactive.r, cfg.statusbar.color.inactive.g, cfg.statusbar.color.inactive.b, cfg.statusbar.color.inactive.a)
+    bar:SetValue(0)
+    bar:SetStatusBarColor(1,1,1,0)
+    return bar
+  end
 
-  --get threat data
+  --update threat data
   local function UpdateThreatData(unit)
     if not UnitExists(unit) then return end
     local _, _, scaledPercent, _, threatValue = UnitDetailedThreatSituation(unit, "target")
@@ -191,7 +235,7 @@
     cfg.statusbar.count = 1
   end
 
-  --statusbars
+  --statusbar table
   local bars = {}
 
   --first create a frame frame to gather all the objects (make that dragable later)
@@ -217,52 +261,14 @@
     CreateBackdrop(frame,cfg.shadow,"shadow")
   end
 
-  --threat bars
+  --create statusbars
   for i=1,cfg.statusbar.count do
-    --statusbar
-    bars[i] = CreateFrame("StatusBar", nil, frame)
-    bars[i]:SetSize(cfg.statusbar.width,cfg.statusbar.height)
-    bars[i]:SetMinMaxValues(0,100)
+    bars[i] = CreateStatusbar(frame)    
     if(i==1) then
-      bars[i]:SetPoint("TOP",frame,"TOP",0,0)
+      bars[i]:SetPoint("TOP")
     else
       bars[i]:SetPoint("TOP",bars[i-1],"BOTTOM",0,-cfg.statusbar.gap)
-    end
-    bars[i]:SetStatusBarTexture(cfg.statusbar.texture)
-    --bg
-    local bg = bars[i]:CreateTexture(nil, "BACKGROUND",nil,-6)
-    bg:SetTexture(cfg.statusbar.texture)
-    bg:SetAllPoints(bars[i])
-    --name
-    local name = bars[i]:CreateFontString(nil, "LOW")
-    name:SetFont(cfg.statusbar.font.family, cfg.statusbar.font.size, cfg.statusbar.font.outline)
-    name:SetVertexColor(cfg.statusbar.font.color.r, cfg.statusbar.font.color.g, cfg.statusbar.font.color.b, cfg.statusbar.font.color.a)
-    name:SetPoint("LEFT", bars[i], 2, 0)
-    name:SetJustifyH("LEFT")
-    --perc
-    local perc = bars[i]:CreateFontString(nil, "LOW")
-    perc:SetFont(cfg.statusbar.font.family, cfg.statusbar.font.size, cfg.statusbar.font.outline)
-    perc:SetVertexColor(cfg.statusbar.font.color.r, cfg.statusbar.font.color.g, cfg.statusbar.font.color.b, cfg.statusbar.font.color.a)
-    perc:SetPoint("RIGHT", bars[i], -2, 0)
-    perc:SetJustifyH("RIGHT")
-    --val
-    local val = bars[i]:CreateFontString(nil, "LOW")
-    val:SetFont(cfg.statusbar.font.family, cfg.statusbar.font.size, cfg.statusbar.font.outline)
-    val:SetVertexColor(cfg.statusbar.font.color.r, cfg.statusbar.font.color.g, cfg.statusbar.font.color.b, cfg.statusbar.font.color.a)
-    val:SetPoint("RIGHT", bars[i], -40, 0)
-    val:SetJustifyH("RIGHT")
-    --other
-    name:SetPoint("RIGHT", val, "LEFT", -10, 0) --right point of name is left point of value
-    bars[i].bg = bg
-    bars[i].name = name
-    bars[i].perc = perc
-    bars[i].val = val
-    bars[i].name:SetText("")
-    bars[i].perc:SetText("")
-    bars[i].val:SetText("")
-    bars[i].bg:SetVertexColor(cfg.statusbar.color.inactive.r, cfg.statusbar.color.inactive.g, cfg.statusbar.color.inactive.b, cfg.statusbar.color.inactive.a)
-    bars[i]:SetValue(0)
-    bars[i]:SetStatusBarColor(1,1,1,0)
+    end    
   end
 
   --frame border

@@ -83,7 +83,7 @@
   --create manager frame
   local manager = CF("Frame", addon, UIP, "SecureHandlerStateTemplate")
   manager:SetFrameStrata("DIALOG")
-  manager:SetSize(200,270)
+  manager:SetSize(200,300)
   manager:SetPoint("TOPLEFT", -185, -180)
   manager:SetAlpha(0.4)
   manager:SetBackdrop(backdrop)
@@ -117,20 +117,20 @@
   button:SetPoint("TOP", previousButton, "BOTTOM", 0, 0)
   previousButton = button
 
-  --readycheck button
-  local button = CreateBasicButton(manager, addon.."ButtonReady", "|TInterface\\RaidFrame\\ReadyCheck-Ready:14:14:0:0|t", "Ready check")
-  button:SetScript("OnClick", DoReadyCheck)
+  --rolecheck button
+  local button = CreateBasicButton(manager, addon.."ButtonRoleCheck", "|TInterface\\LFGFrame\\LFGRole:14:14:0:0:64:16:32:48:0:16|t", "Role check")
+  button:SetScript("OnClick", InitiateRolePoll)
   button:SetPoint("TOP", previousButton, "BOTTOM", 0, -10)
   previousButton = button
-
+  
   --raid to party button
   local buttonLeft = CreateBasicButton(manager, addon.."ButtonRaidToParty", "|TInterface\\GroupFrame\\UI-Group-AssistantIcon:14:14:0:0|t", "Raid to party")
   buttonLeft:SetScript("OnClick", ConvertToParty)
   buttonLeft:SetPoint("RIGHT", button, "LEFT", 0, 0)
 
-  --rolecheck button
-  local button = CreateBasicButton(manager, addon.."ButtonRoleCheck", "|TInterface\\LFGFrame\\LFGRole:14:14:0:0:64:16:32:48:0:16|t", "Role check")
-  button:SetScript("OnClick", InitiateRolePoll)
+  --readycheck button
+  local button = CreateBasicButton(manager, addon.."ButtonReady", "|TInterface\\RaidFrame\\ReadyCheck-Ready:14:14:0:0|t", "Ready check")
+  button:SetScript("OnClick", DoReadyCheck)
   button:SetPoint("TOP", previousButton, "BOTTOM", 0, 0)
   previousButton = button
 
@@ -144,6 +144,26 @@
   stateFrame:SetPoint("TOPRIGHT",-3,-3)
   stateFrame:SetPoint("BOTTOMRIGHT",-3,3)
   stateFrame:SetWidth(15)
+  
+  --pull button
+  local pullCounter = 10
+  local button = CreateBasicButton(manager, addon.."ButtonPullCounter", "|TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:14:14:0:0|t", "Boss pull in "..pullCounter)
+  button:SetPoint("TOP", previousButton, "BOTTOM", 0, 0)  
+  button:SetAttribute("type", "macro")  
+  button:SetAttribute("macrotext", format("/pull %d", pullCounter))
+  previousButton = button
+  
+  --stopwatch toggle
+  local buttonLeft = CreateBasicButton(manager, addon.."ButtonStopWatch", "|TInterface\\ChatFrame\\UI-ChatIcon-ArmoryChat-AwayMobile:14:14:0:0|t", "Toggle stopwatch")
+  buttonLeft:SetScript("OnClick", function()
+    if Stopwatch_IsPlaying() then
+      Stopwatch_Clear()
+    else
+      Stopwatch_Play()
+    end    
+    Stopwatch_Toggle()
+  end)
+  buttonLeft:SetPoint("RIGHT", button, "LEFT", 0, 0)
 
   --state frame texture
   local bg = stateFrame:CreateTexture(nil, "BACKGROUND", nil, -8)
@@ -156,7 +176,7 @@
   --state frame onenter
   stateFrame:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
-    GameTooltip:AddLine("Open or close the raid manager", 0, 1, 0.5, 1, 1, 1)
+    GameTooltip:AddLine("Click to toggle the raid manager", 0, 1, 0.5, 1, 1, 1)
     GameTooltip:Show()
   end)
 

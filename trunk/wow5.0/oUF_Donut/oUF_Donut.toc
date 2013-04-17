@@ -4,8 +4,7 @@
 ## Notes: zork's nom nom layout!
 ## RequiredDeps: oUF
 
-modules\oUF_MovableFrames.lua
-
 config.lua
 
-core\style.lua
+core\core.lua
+core\spawn.lua

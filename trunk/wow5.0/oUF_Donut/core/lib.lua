@@ -92,57 +92,59 @@
     scrollFrame.scrollChild = scrollChild
 
     --CASTRING
-    --background
-    local castringBg = lib:CreateRingTexture(self, scrollChild, "bg", -8, self.cfg.castring.textures.bg, self.cfg.castring.radius, self.cfg.castring.colors.bg, scrollFrame.defaultRotation)
-    --filling
-    local castringFill = lib:CreateRingTexture(self, scrollChild, "fill", -7, self.cfg.castring.textures.fill, self.cfg.castring.radius, self.cfg.castring.colors.fill, scrollFrame.defaultRotation)
-    --spark
-    local castringSpark = = lib:CreateRingTexture(self, scrollChild, "spark", -6, self.cfg.castring.textures.spark, self.cfg.castring.radius, self.cfg.castring.colors.fill, scrollFrame.defaultRotation)
-    --latency
-    if self.cfg.style == "player" then
-      --create latency
-      local castringLatency = lib:CreateRingTexture(self, scrollChild, "latency", -5, self.cfg.castring.textures.fill, self.cfg.castring.radius, self.cfg.castring.colors.latency, scrollFrame.defaultRotation)
-      scrollFrame.castringLatency = castringLatency
-      scrollFrame.castringLatency:Hide()
+    if self.cfg.castring.enable then
+      --background
+      local castringBg = lib:CreateRingTexture(self, scrollChild, "bg", -8, self.cfg.castring.textures.bg, self.cfg.castring.radius, self.cfg.castring.colors.bg, scrollFrame.defaultRotation)
+      --filling
+      local castringFill = lib:CreateRingTexture(self, scrollChild, "fill", -7, self.cfg.castring.textures.fill, self.cfg.castring.radius, self.cfg.castring.colors.fill, scrollFrame.defaultRotation)
+      --spark
+      local castringSpark = = lib:CreateRingTexture(self, scrollChild, "spark", -6, self.cfg.castring.textures.spark, self.cfg.castring.radius, self.cfg.castring.colors.fill, scrollFrame.defaultRotation)
+      --latency
+      if self.cfg.style == "player" then
+        --create latency
+        local castringLatency = lib:CreateRingTexture(self, scrollChild, "latency", -5, self.cfg.castring.textures.fill, self.cfg.castring.radius, self.cfg.castring.colors.latency, scrollFrame.defaultRotation)
+        scrollFrame.castringLatency = castringLatency
+        scrollFrame.castringLatency:Hide()
+      end
+      scrollFrame.castringBg       = castringBg
+      scrollFrame.castringFill     = castringFill
+      scrollFrame.castringSpark    = castringSpark
+      scrollFrame.castringBg:Hide()
+      scrollFrame.castringFill:Hide()
+      scrollFrame.castringSpark:Hide()
     end
 
     --POWERRING
-    --background
-    local powerringBg = lib:CreateRingTexture(self, scrollChild, "bg", -3, self.cfg.powerring.textures.bg, self.cfg.powerring.radius, self.cfg.powerring.colors.bg, scrollFrame.defaultRotation)
-    --filling
-    local powerringFill = lib:CreateRingTexture(self, scrollChild, "fill", -2, self.cfg.powerring.textures.fill, self.cfg.powerring.radius, self.cfg.powerring.colors.fill, scrollFrame.defaultRotation)
-    --spark
-    local powerringSpark = = lib:CreateRingTexture(self, scrollChild, "spark", -1, self.cfg.powerring.textures.spark, self.cfg.powerring.radius, self.cfg.powerring.colors.fill, scrollFrame.defaultRotation)
+    if self.cfg.powerring.enable then
+      --background
+      local powerringBg = lib:CreateRingTexture(self, scrollChild, "bg", -3, self.cfg.powerring.textures.bg, self.cfg.powerring.radius, self.cfg.powerring.colors.bg, scrollFrame.defaultRotation)
+      --filling
+      local powerringFill = lib:CreateRingTexture(self, scrollChild, "fill", -2, self.cfg.powerring.textures.fill, self.cfg.powerring.radius, self.cfg.powerring.colors.fill, scrollFrame.defaultRotation)
+      --spark
+      local powerringSpark = = lib:CreateRingTexture(self, scrollChild, "spark", -1, self.cfg.powerring.textures.spark, self.cfg.powerring.radius, self.cfg.powerring.colors.fill, scrollFrame.defaultRotation)
+      scrollFrame.powerringBg      = powerringBg
+      scrollFrame.powerringFill    = powerringFill
+      scrollFrame.powerringSpark   = powerringSpark
+      scrollFrame.powerringBg:Hide()
+      scrollFrame.powerringFill:Hide()
+      scrollFrame.powerringSpark:Hide()
+    end
 
     --HEALTHRING
-    --healthring background
-    local healthringBg = lib:CreateRingTexture(self, scrollChild, "bg", 1, self.cfg.healthring.textures.bg, self.cfg.healthring.radius, self.cfg.healthring.colors.bg, scrollFrame.defaultRotation)
-    --healthring filling
-    local healthringFill = lib:CreateRingTexture(self, scrollChild, "fill", 2, self.cfg.healthring.textures.fill, self.cfg.healthring.radius, self.cfg.healthring.colors.fill, scrollFrame.defaultRotation)
-    --healthring spark
-    local healthringSpark = = lib:CreateRingTexture(self, scrollChild, "spark", 3, self.cfg.healthring.textures.spark, self.cfg.healthring.radius, self.cfg.healthring.colors.fill, scrollFrame.defaultRotation)
-
-    --references
-    scrollFrame.castringBg       = castringBg
-    scrollFrame.castringFill     = castringFill
-    scrollFrame.castringSpark    = castringSpark
-    scrollFrame.powerringBg      = powerringBg
-    scrollFrame.powerringFill    = powerringFill
-    scrollFrame.powerringSpark   = powerringSpark
-    scrollFrame.healthringBg     = healthringBg
-    scrollFrame.healthringFill   = healthringFill
-    scrollFrame.healthringSpark  = healthringSpark
-
-    --hide all frames for now
-    scrollFrame.castringBg:Hide()
-    scrollFrame.castringFill:Hide()
-    scrollFrame.castringSpark:Hide()
-    scrollFrame.powerringBg:Hide()
-    scrollFrame.powerringFill:Hide()
-    scrollFrame.powerringSpark:Hide()
-    scrollFrame.healthringBg:Hide()
-    scrollFrame.healthringFill:Hide()
-    scrollFrame.healthringSpark:Hide()
+    if self.cfg.healthring.enable then
+      --healthring background
+      local healthringBg = lib:CreateRingTexture(self, scrollChild, "bg", 1, self.cfg.healthring.textures.bg, self.cfg.healthring.radius, self.cfg.healthring.colors.bg, scrollFrame.defaultRotation)
+      --healthring filling
+      local healthringFill = lib:CreateRingTexture(self, scrollChild, "fill", 2, self.cfg.healthring.textures.fill, self.cfg.healthring.radius, self.cfg.healthring.colors.fill, scrollFrame.defaultRotation)
+      --healthring spark
+      local healthringSpark = = lib:CreateRingTexture(self, scrollChild, "spark", 3, self.cfg.healthring.textures.spark, self.cfg.healthring.radius, self.cfg.healthring.colors.fill, scrollFrame.defaultRotation)
+      scrollFrame.healthringBg     = healthringBg
+      scrollFrame.healthringFill   = healthringFill
+      scrollFrame.healthringSpark  = healthringSpark
+      scrollFrame.healthringBg:Hide()
+      scrollFrame.healthringFill:Hide()
+      scrollFrame.healthringSpark:Hide()
+    end
 
     return scrollFrame
 
@@ -192,75 +194,82 @@
     --t:SetVertexColor(1,0,1)
     --t:SetAllPoints()
 
-    --first we set up all the rings
-    --but later on we need each ring segment in a specific order making it easier to update all the ring elements
+    --first we set up the ring segments
+    --but later on we need each ring in a specific order based on starting point an direction
 
-    --castring table
-    self.castring = {}
-    self.castringModulo = 1
-    for i=1, self.cfg.castring.numSegmentsUsed do
-      local id = lib:GetSegmentId(self.cfg.castring.startSegment,self.cfg.castring.fillDirection,i)
-      self.castring[i] = self.ringSegments[id]
-      self.castringModulo = self.castringModulo * self.ringSegments[id].primeNum
+    --CASTRING
+    if self.cfg.castring.enable then
+      --castring table
+      self.castring = {}
+      self.castringModulo = 1
+      for i=1, self.cfg.castring.numSegmentsUsed do
+        local id = lib:GetSegmentId(self.cfg.castring.startSegment,self.cfg.castring.fillDirection,i)
+        self.castring[i] = self.ringSegments[id]
+        self.castringModulo = self.castringModulo * self.ringSegments[id].primeNum
+      end
+      --fake castbar
+      local castbar = CreateFrame("StatusBar", nil, self)
+      castbar:SetScript("OnValueChanged", function(self, ...)
+        local parent = self:GetParent()
+        print(parent.cfg.style.. " Castbar OnValueChanged")
+        print(self:GetMinMaxValues())
+        print(...)
+      end)
+      castbar:HookScript("OnShow", function(self, ...)
+        local parent = self:GetParent()
+        print(parent.cfg.style.. " Castbar OnShow")
+        print(self:GetMinMaxValues())
+        print(...)
+      end)
+      castbar:HookScript("OnHide", function(self, ...)
+        local parent = self:GetParent()
+        print(parent.cfg.style.. " Castbar OnHide")
+        print(...)
+      end)
+      self.Castbar = castbar
     end
 
-    --powerring table
-    self.powerring = {}
-    self.powerringModulo = 1
-    for i=1, self.cfg.powerring.numSegmentsUsed do
-      local id = lib:GetSegmentId(self.cfg.powerring.startSegment,self.cfg.powerring.fillDirection,i)
-      self.powerring[i] = self.ringSegments[id]
-      self.powerringModulo = self.powerringModulo * self.ringSegments[id].primeNum
+    --POWERRING
+    if self.cfg.powerring.enable then
+      --powerring table
+      self.powerring = {}
+      self.powerringModulo = 1
+      for i=1, self.cfg.powerring.numSegmentsUsed do
+        local id = lib:GetSegmentId(self.cfg.powerring.startSegment,self.cfg.powerring.fillDirection,i)
+        self.powerring[i] = self.ringSegments[id]
+        self.powerringModulo = self.powerringModulo * self.ringSegments[id].primeNum
+      end
+      --fake power
+      local power = CreateFrame("StatusBar", nil, self)
+      power:SetScript("OnValueChanged", function(self, ...)
+        local parent = self:GetParent()
+        print(parent.cfg.style.. " Power OnValueChanged")
+        print(self:GetMinMaxValues())
+        print(...)
+      end)
+      self.Power = power
     end
 
-    --healthring table
-    self.healthring = {}
-    self.healthringModulo = 1
-    for i=1, self.cfg.healthring.numSegmentsUsed do
-      local id = lib:GetSegmentId(self.cfg.healthring.startSegment,self.cfg.healthring.fillDirection,i)
-      self.healthring[i] = self.ringSegments[id]
-      self.healthringModulo = self.healthringModulo * self.ringSegments[id].primeNum
+    --HEALTHRING
+    if self.cfg.healthring.enable then
+      --healthring table
+      self.healthring = {}
+      self.healthringModulo = 1
+      for i=1, self.cfg.healthring.numSegmentsUsed do
+        local id = lib:GetSegmentId(self.cfg.healthring.startSegment,self.cfg.healthring.fillDirection,i)
+        self.healthring[i] = self.ringSegments[id]
+        self.healthringModulo = self.healthringModulo * self.ringSegments[id].primeNum
+      end
+
+      --fake health
+      local health = CreateFrame("StatusBar", nil, self)
+      health:SetScript("OnValueChanged", function(self, ...)
+        local parent = self:GetParent()
+        print(parent.cfg.style.. " Health OnValueChanged")
+        print(self:GetMinMaxValues())
+        print(...)
+      end)
+      self.Health = health
     end
-
-    --fake health
-    local health = CreateFrame("StatusBar", nil, self)
-    health:SetScript("OnValueChanged", function(self, ...)
-      local parent = self:GetParent()
-      print(parent.cfg.style.. " Health OnValueChanged")
-      print(self:GetMinMaxValues())
-      print(...)
-    end)
-    self.Health = health
-
-    --fake power
-    local power = CreateFrame("StatusBar", nil, self)
-    power:SetScript("OnValueChanged", function(self, ...)
-      local parent = self:GetParent()
-      print(parent.cfg.style.. " Power OnValueChanged")
-      print(self:GetMinMaxValues())
-      print(...)
-    end)
-    self.Power = power
-
-    --fake castbar
-    local castbar = CreateFrame("StatusBar", nil, self)
-    castbar:SetScript("OnValueChanged", function(self, ...)
-      local parent = self:GetParent()
-      print(parent.cfg.style.. " Castbar OnValueChanged")
-      print(self:GetMinMaxValues())
-      print(...)
-    end)
-    castbar:HookScript("OnShow", function(self, ...)
-      local parent = self:GetParent()
-      print(parent.cfg.style.. " Castbar OnShow")
-      print(self:GetMinMaxValues())
-      print(...)
-    end)
-    castbar:HookScript("OnHide", function(self, ...)
-      local parent = self:GetParent()
-      print(parent.cfg.style.. " Castbar OnHide")
-      print(...)
-    end)
-    self.Castbar = castbar
 
   end

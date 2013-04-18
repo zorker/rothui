@@ -31,6 +31,7 @@
       scale = 0.5,
       --castring
       castring = {
+        enable = true,
         radius = 0.9,     -- range 0-1
         textures = {
           bg    = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
@@ -50,6 +51,7 @@
       },
       --powerring
       powerring = {
+        enable = true,
         radius = 0.7,
         textures = {
           bg    = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
@@ -68,6 +70,7 @@
       },
       --healthring
       healthring = {
+        enable = true,
         radius = 0.5,
         textures = {
           bg    = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
@@ -96,6 +99,7 @@
       scale = 1,
       --castring
       castring = {
+        enable = true,
         radius = 0.9,     -- range 0-1
         textures = {
           bg    = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
@@ -106,6 +110,7 @@
           bg        = { r=0, g=0, b=0, a=0.8, },
           fill      = { r=1, g=0.7, b=0, a=1, },
           shielded  = { r=0.5, g=0.5, b=0.5, a=1, },
+          latency   = { r=1, g=0, b=0, a=0.8, },
           colorShielded = true,
         },
         numSegmentsUsed = 4,  -- how many sements are affected? (see ring layout)
@@ -114,6 +119,7 @@
       },
       --powerring
       powerring = {
+        enable = true,
         radius = 0.7,
         textures = {
           bg    = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
@@ -132,6 +138,7 @@
       },
       --healthring
       healthring = {
+        enable = true,
         radius = 0.5,
         textures = {
           bg    = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",

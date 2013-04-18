@@ -11,6 +11,20 @@
   -- variables
   ---------------------------------------------
 
+  local rad = rad
+  local sqrt = sqrt
+  local tinsert = tinsert
+
+  --    ring segment layout
+  --     ____ ____
+  --    /    |    \
+  --    |  4 | 1  |
+  --     ----+----
+  --    |  3 | 2  |
+  --    \____|____/
+  --
+
+
   local ringSegmentSettings = {
     { defaultRotation = 0,    primeNum = 2,   point = "TOPRIGHT",     }, --segment 1
     { defaultRotation = 270,  primeNum = 3,   point = "BOTTOMRIGHT",  }, --segment 2
@@ -50,7 +64,7 @@
       tex:SetAlpha(color.a or 1)
       tex:SetBlendMode("ADD")
     end
-    tex:SetRotation(math.rad(rotation))
+    tex:SetRotation(rad(rotation))
     return tex
   end
 
@@ -73,7 +87,7 @@
     --scrollchild
     local scrollChild = CreateFrame("Frame", "$parentScrollChild", scrollFrame)
     scrollChild:SetSize(128,128)
-    --scrollChild:SetBackdrop(cfg.backdrop)
+    scrollChild:SetBackdrop(cfg.backdrop)
     scrollFrame:SetScrollChild(scrollChild)
     scrollFrame.scrollChild = scrollChild
 
@@ -143,10 +157,10 @@
     self.back = back
     local lastParent = back
 
-    --local t = back:CreateTexture(nil, "BACKGROUND", nil, -8)
-    --t:SetTexture(1,1,1)
-    --t:SetVertexColor(0.1,0.1,0.1)
-    --t:SetAllPoints(self)
+    local t = back:CreateTexture(nil, "BACKGROUND", nil, -8)
+    t:SetTexture(1,1,1)
+    t:SetVertexColor(0.1,0.1,0.1)
+    t:SetAllPoints(self)
 
     --create the 4 ring segments
     self.ringSegments = {}
@@ -178,8 +192,8 @@
     --t:SetVertexColor(1,0,1)
     --t:SetAllPoints()
 
-    --on first loadup we just set up all the rings
-    --but later on we need each ring segment in a specific order thus it is easier to update all the ring elements
+    --first we set up all the rings
+    --but later on we need each ring segment in a specific order making it easier to update all the ring elements
 
     --castring table
     self.castring = {}

@@ -5,6 +5,7 @@
   --object container
   local cfg = ns.cfg
   local lib = ns.lib
+  local tmp = ns.tmp
 
   ---------------------------------------------
   -- variables
@@ -17,6 +18,7 @@
   ---------------------------------------------
 
   local function CreateUnitTemplate(self)
+    self.template = tmp:GetTemplateByName(self.cfg.template)
     self:SetSize(256,256)
     self:SetScale(self.cfg.scale or 1)
     --self:SetBackdrop(cfg.backdrop)

@@ -4,6 +4,10 @@
 ## Notes: zork's nom nom layout!
 ## RequiredDeps: oUF
 
+core\tmp.lua
+
+templates\default.lua
+
 config.lua
 
 core\core.lua

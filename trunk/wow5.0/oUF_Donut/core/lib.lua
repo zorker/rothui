@@ -14,6 +14,7 @@
 
   local rad = rad
   local sqrt = sqrt
+  local floor = floor
   local tinsert = tinsert
 
   --    ring segment layout
@@ -38,42 +39,99 @@
   ---------------------------------------------
 
   --castbar OnValueChanged
-  function lib:CastbarOnValueChanged(self,...)
+  function lib:CastbarOnValueChanged(bar,...)
     --stuff
-    local parent = self:GetParent()
-    print(parent.cfg.style.. " "..parent.unit.." Castbar OnValueChanged")
-    print(self:GetMinMaxValues())
+    local self = bar:GetParent()
+    print(self.cfg.style.. " "..self.unit.." Castbar OnValueChanged")
+    print(bar:GetMinMaxValues())
     print(...)
-  end
+    local numSeg = self.template.castring.numSegmentsUsed
+    local direction = self.template.castring.fillDirection
+    local bmin, bmax = bar:GetMinMaxValues()
+    local perc = 0
+    if bmax > 0 then
+      perc = floor(bmin/bmax*100)
+    end
+    local percPerSeg = 100/numSeg
+    if perc == 0 or UnitIsDeadOrGhost(self.unit) then
+      for i=1, numSeg do
+        --self.castring[i].castringBg:Show()
+        self.castring[i].castringFill:Hide()
+        self.castring[i].castringSpark:Hide()
+      end
+    elseif perc == 100 then
+      for i=1, numSeg do
+        --self.castring[i].castringBg:Show()
+        self.castring[i].castringFill:Show()
+        self.castring[i].castringFill:SetRotation(rad(self.castring[i].defaultRotation))
+        self.castring[i].castringSpark:Hide()
+      end
+    else
+      for i=1, numSeg do
+        if(perc >= (i*percPerSeg)) then
+          --self.castring[i].castringBg:Show()
+          self.castring[i].castringFill:Show()
+          self.castring[i].castringFill:SetRotation(rad(self.castring[i].defaultRotation))
+          self.castring[i].castringSpark:Hide()
+        elseif ((perc > ((i-1)*percPerSeg)) and (perc < (i*percPerSeg))) then
+          local value = floor(((perc-((i-1)*percPerSeg))/percPerSeg)*100)
+          if direction == 0 then
+            value = 100-value
+          end
+          local angle = (value*90/100) + self.castring[i].defaultRotation - 90
+          local arad = rad(angle)
+          --self.castring[i].castringBg:Show()
+          self.castring[i].castringFill:Show()
+          self.castring[i].castringFill:SetRotation(arad)
+          self.castring[i].castringSpark:Show()
+          self.castring[i].castringSpark:SetRotation(arad)
+        else
+          --self.castring[i].castringBg:Show()
+          self.castring[i].castringFill:Hide()
+          self.castring[i].castringSpark:Hide()
+        end--if
+      end --for
+    end--if
+  end--func
 
   --castbar OnShow
-  function lib:CastbarOnShow(self,...)
-    local parent = self:GetParent()
-    print(parent.cfg.style.. " "..parent.unit.." Castbar OnShow")
-    print(self:GetMinMaxValues())
+  function lib:CastbarOnShow(bar,...)
+    local self = bar:GetParent()
+    print(self.cfg.style.. " "..self.unit.." Castbar OnShow")
+    print(bar:GetMinMaxValues())
     print(...)
+    for i=1, self.template.castring.numSegmentsUsed do
+      self.castring[i].castringBg:Show()
+      self.castring[i].castringFill:Hide()
+      self.castring[i].castringSpark:Hide()
+    end
   end
 
   --castbar OnHide
-  function lib:CastbarOnHide(self, ...)
-    local parent = self:GetParent()
-    print(parent.cfg.style.. " "..parent.unit.." Castbar OnHide")
+  function lib:CastbarOnHide(bar, ...)
+    local self = bar:GetParent()
+    print(self.cfg.style.. " "..self.unit.." Castbar OnHide")
     print(...)
+    for i=1, self.template.castring.numSegmentsUsed do
+      self.castring[i].castringBg:Hide()
+      self.castring[i].castringFill:Hide()
+      self.castring[i].castringSpark:Hide()
+    end
   end
 
   --powerbar OnValueChanged
-  function lib:PowerbarOnValueChanged(self, ...)
-    local parent = self:GetParent()
-    print(parent.cfg.style.. " "..parent.unit.." Power OnValueChanged")
-    print(self:GetMinMaxValues())
+  function lib:PowerbarOnValueChanged(bar, ...)
+    local self = bar:GetParent()
+    print(self.cfg.style.. " "..self.unit.." Power OnValueChanged")
+    print(bar:GetMinMaxValues())
     print(...)
   end
 
   --healthbar OnValueChanged
-  function lib:HealthbarOnValueChanged(self, ...)
-    local parent = self:GetParent()
-    print(parent.cfg.style.. " "..parent.unit.." Health OnValueChanged")
-    print(self:GetMinMaxValues())
+  function lib:HealthbarOnValueChanged(bar, ...)
+    local self = bar:GetParent()
+    print(self.cfg.style.. " "..self.unit.." Health OnValueChanged")
+    print(bar:GetMinMaxValues())
     print(...)
   end
 
@@ -268,6 +326,9 @@
       for i=1, template.powerring.numSegmentsUsed do
         local id = lib:GetSegmentId(template.powerring.startSegment,template.powerring.fillDirection,i)
         self.powerring[i] = self.ringSegments[id]
+        self.powerring[i].powerringBg:Show()
+        self.powerring[i].powerringFill:Show()
+        self.powerring[i].powerringSpark:Show()
         self.powerringModulo = self.powerringModulo * self.ringSegments[id].primeNum
       end
       --fake power
@@ -284,6 +345,9 @@
       for i=1, template.healthring.numSegmentsUsed do
         local id = lib:GetSegmentId(template.healthring.startSegment,template.healthring.fillDirection,i)
         self.healthring[i] = self.ringSegments[id]
+        self.healthring[i].healthringBg:Show()
+        self.healthring[i].healthringFill:Show()
+        self.healthring[i].healthringSpark:Show()
         self.healthringModulo = self.healthringModulo * self.ringSegments[id].primeNum
       end
       --fake health

@@ -40,8 +40,9 @@
         spark = "Interface\\AddOns\\oUF_Donut\\media\\ring_spark",
       },
       colors = {
-        bg        = { r=0, g=0, b=0, a=0.8, },
+        bg        = { r=0, g=0, b=0, a=0.4, },
         fill      = { r=1, g=0.7, b=0, a=1, },
+        spark     = { r=1, g=0.7, b=0, a=1, },
         shielded  = { r=0.5, g=0.5, b=0.5, a=1, },
         latency   = { r=1, g=0, b=0, a=0.8, },
         colorShielded = true,
@@ -60,8 +61,9 @@
         spark = "Interface\\AddOns\\oUF_Donut\\media\\ring_spark",
       },
       colors = {
-        bg    = { r=0, g=0, b=0, a=0.8, },
+        bg    = { r=0, g=0, b=0, a=1, },
         fill  = { r=0, g=0.7, b=1, a=1, },
+        spark  = { r=0, g=0.7, b=1, a=1, },
         colorClass        = false,
         colorPower        = true,
       },
@@ -79,8 +81,9 @@
         spark = "Interface\\AddOns\\oUF_Donut\\media\\ring_spark",
       },
       colors = {
-        bg    = { r=0, g=0, b=0, a=0.8, },
-        fill  = { r=0, g=1, b=0, a=1, },
+        bg    = { r=0, g=0, b=0, a=1, },
+        fill  = { r=0, g=0.8, b=0, a=1, },
+        spark  = { r=0, g=1, b=0, a=1, },
         colorTapping      = true,
         colorDisconnected = true,
         colorThreat       = true,

@@ -10,5 +10,5 @@ templates\default.lua
 
 config.lua
 
-core\core.lua
+core\lib.lua
 core\spawn.lua

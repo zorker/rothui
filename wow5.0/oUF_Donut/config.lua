@@ -29,6 +29,21 @@
       scale = 0.5,
       template = "default",
     },
+
+    --TARGETTARGET
+    targettarget = {
+      enable = true,
+      scale = 0.25,
+      template = "twohalfrings",
+    },
+
+    --pet
+    pet = {
+      enable = true,
+      scale = 0.25,
+      template = "default",
+    },
+
   }
 
   ----------------------------------------

@@ -35,7 +35,7 @@
     self.cfg = cfg.units.player
     self.cfg.style = "player"
     CreateUnitTemplate(self)
-    self:SetPoint("CENTER",-256,0)
+    self:SetPoint("CENTER",-356,0)
   end
 
   --target frame
@@ -43,7 +43,23 @@
     self.cfg = cfg.units.target
     self.cfg.style = "target"
     CreateUnitTemplate(self)
-    self:SetPoint("CENTER",256,0)
+    self:SetPoint("CENTER",356,0)
+  end
+
+  --targettarget frame
+  local function CreateTargetTarget(self)
+    self.cfg = cfg.units.targettarget
+    self.cfg.style = "targettarget"
+    CreateUnitTemplate(self)
+    self:SetPoint("CENTER",356,-50)
+  end
+
+  --pet frame
+  local function CreatePet(self)
+    self.cfg = cfg.units.pet
+    self.cfg.style = "pet"
+    CreateUnitTemplate(self)
+    self:SetPoint("CENTER",-356,-50)
   end
 
   ---------------------------------------------
@@ -62,4 +78,18 @@
     oUF:RegisterStyle("donut:target", CreateTarget)
     oUF:SetActiveStyle("donut:target")
     oUF:Spawn("target", addon.."TargetFrame")
+  end
+
+  --spawn targettarget
+  if cfg.units.targettarget.enable then
+    oUF:RegisterStyle("donut:targettarget", CreateTargetTarget)
+    oUF:SetActiveStyle("donut:targettarget")
+    oUF:Spawn("targettarget", addon.."TargetTargetFrame")
+  end
+
+  --spawn pet
+  if cfg.units.pet.enable then
+    oUF:RegisterStyle("donut:pet", CreatePet)
+    oUF:SetActiveStyle("donut:pet")
+    oUF:Spawn("pet", addon.."PetFrame")
   end

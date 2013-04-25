@@ -37,7 +37,14 @@
       textures = {
         bg    = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
         fill  = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
+        latency  = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
         spark = "Interface\\AddOns\\oUF_Donut\\media\\ring_spark",
+      },
+      sublevel = { --display level of the texture
+        bg        = -8,
+        fill      = -7,
+        spark     = -6,
+        latency   = -5,
       },
       colors = {
         bg        = { r=0, g=0, b=0, a=0.4, },
@@ -54,11 +61,17 @@
     --powerring
     powerring = {
       enable = true,
+      hideWhenMaxIsZero = true, --hide the powerring if the maximum power value is 0 (some npcs units have no power at all for example)
       radius = 0.7,
       textures = {
         bg    = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
         fill  = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
         spark = "Interface\\AddOns\\oUF_Donut\\media\\ring_spark",
+      },
+      sublevel = {
+        bg        = -3,
+        fill      = -2,
+        spark     = -1,
       },
       colors = {
         bg    = { r=0, g=0, b=0, a=1, },
@@ -79,6 +92,11 @@
         bg    = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
         fill  = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
         spark = "Interface\\AddOns\\oUF_Donut\\media\\ring_spark",
+      },
+      sublevel = {
+        bg        = 1,
+        fill      = 2,
+        spark     = 3,
       },
       colors = {
         bg    = { r=0, g=0, b=0, a=1, },

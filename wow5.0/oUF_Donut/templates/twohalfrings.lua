@@ -43,6 +43,11 @@
         fill  = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
         spark = "Interface\\AddOns\\oUF_Donut\\media\\ring_spark",
       },
+      sublevel = {
+        bg        = -3,
+        fill      = -2,
+        spark     = -1,
+      },
       colors = {
         bg    = { r=0, g=0, b=0, a=1, },
         fill  = { r=0, g=0.7, b=1, a=1, },
@@ -62,6 +67,11 @@
         bg    = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
         fill  = "Interface\\AddOns\\oUF_Donut\\media\\ring_quarter",
         spark = "Interface\\AddOns\\oUF_Donut\\media\\ring_spark",
+      },
+      sublevel = {
+        bg        = 1,
+        fill      = 2,
+        spark     = 3,
       },
       colors = {
         bg    = { r=0, g=0, b=0, a=1, },

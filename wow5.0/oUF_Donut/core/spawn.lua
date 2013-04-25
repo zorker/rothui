@@ -33,7 +33,7 @@
   --player frame
   local function CreatePlayer(self)
     self.cfg = cfg.units.player
-    self.cfg.style = "player"
+    self.styleUnit = "player"
     CreateUnitTemplate(self)
     self:SetPoint("CENTER",-356,0)
   end
@@ -41,7 +41,7 @@
   --target frame
   local function CreateTarget(self)
     self.cfg = cfg.units.target
-    self.cfg.style = "target"
+    self.styleUnit = "target"
     CreateUnitTemplate(self)
     self:SetPoint("CENTER",356,0)
   end
@@ -49,7 +49,7 @@
   --targettarget frame
   local function CreateTargetTarget(self)
     self.cfg = cfg.units.targettarget
-    self.cfg.style = "targettarget"
+    self.styleUnit = "targettarget"
     CreateUnitTemplate(self)
     self:SetPoint("CENTER",356,-50)
   end
@@ -57,7 +57,7 @@
   --pet frame
   local function CreatePet(self)
     self.cfg = cfg.units.pet
-    self.cfg.style = "pet"
+    self.styleUnit = "pet"
     CreateUnitTemplate(self)
     self:SetPoint("CENTER",-356,-50)
   end

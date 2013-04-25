@@ -96,20 +96,20 @@
   --castbar OnShow
   function lib:CastbarOnShow(bar,...)
     local self = bar:GetParent()
-    ---print(self.cfg.style.. " "..self.unit.." Castbar OnShow")
+    ---print(self.styleUnit.. " "..self.unit.." Castbar OnShow")
     ---print(bar:GetMinMaxValues())
     ---print(...)
     for i=1, self.template.castring.numSegmentsUsed do
       self.castring[i].castringBg:Show()
-      self.castring[i].castringFill:Hide()
-      self.castring[i].castringSpark:Hide()
+      --self.castring[i].castringFill:Hide()
+      --self.castring[i].castringSpark:Hide()
     end
   end
 
   --castbar OnHide
   function lib:CastbarOnHide(bar, ...)
     local self = bar:GetParent()
-    --print(self.cfg.style.. " "..self.unit.." Castbar OnHide")
+    --print(self.styleUnit.. " "..self.unit.." Castbar OnHide")
     --print(...)
     for i=1, self.template.castring.numSegmentsUsed do
       self.castring[i].castringBg:Hide()
@@ -130,13 +130,13 @@
       perc = floor(bcur/bmax*100)
     end
     local percPerSeg = 100/numSeg
-    if bmax == 0 then
-      for i=1, numSeg do
-        self.powerring[i].powerringBg:Hide()
-        self.powerring[i].powerringFill:Hide()
-        self.powerring[i].powerringSpark:Hide()
-      end
-    elseif perc == 0 or UnitIsDeadOrGhost(self.unit) then
+    if bmax == 0 and self.template.powerring.hideWhenMaxIsZero then
+      if bar:IsShown() then bar:Hide() end
+      return
+    elseif not bar:IsShown() then
+      bar:Show()
+    end
+    if perc == 0 or UnitIsDeadOrGhost(self.unit) then
       for i=1, numSeg do
         self.powerring[i].powerringBg:Show()
         self.powerring[i].powerringFill:Hide()
@@ -177,6 +177,31 @@
         end--if
       end --for
     end--if
+  end
+
+  --powerbar OnShow
+  function lib:PowerbarOnShow(bar,...)
+    local self = bar:GetParent()
+    ---print(self.styleUnit.. " "..self.unit.." Powerbar OnShow")
+    ---print(bar:GetMinMaxValues())
+    ---print(...)
+    for i=1, self.template.powerring.numSegmentsUsed do
+      self.powerring[i].powerringBg:Show()
+      --self.powerring[i].powerringFill:Hide()
+      --self.powerring[i].powerringSpark:Hide()
+    end
+  end
+
+  --powerbar OnHide
+  function lib:PowerbarOnHide(bar, ...)
+    local self = bar:GetParent()
+    --print(self.styleUnit.. " "..self.unit.." Powerbar OnHide")
+    --print(...)
+    for i=1, self.template.powerring.numSegmentsUsed do
+      self.powerring[i].powerringBg:Hide()
+      self.powerring[i].powerringFill:Hide()
+      self.powerring[i].powerringSpark:Hide()
+    end
   end
 
   --healthbar OnValueChanged
@@ -232,6 +257,37 @@
         end--if
       end --for
     end--if
+  end
+
+  --Healthbar OnShow
+  function lib:HealthbarOnShow(bar,...)
+    local self = bar:GetParent()
+    ---print(self.styleUnit.. " "..self.unit.." Healthbar OnShow")
+    ---print(bar:GetMinMaxValues())
+    ---print(...)
+    for i=1, self.template.healthring.numSegmentsUsed do
+      self.healthring[i].healthringBg:Show()
+      --self.healthring[i].healthringFill:Hide()
+      --self.healthring[i].healthringSpark:Hide()
+    end
+    if self.styleUnit == "target" then
+      PlaySound("igcreatureaggroselect")
+    end
+  end
+
+  --Healthbar OnHide
+  function lib:HealthbarOnHide(bar, ...)
+    local self = bar:GetParent()
+    --print(self.styleUnit.. " "..self.unit.." Healthbar OnHide")
+    --print(...)
+    for i=1, self.template.healthring.numSegmentsUsed do
+      self.healthring[i].healthringBg:Hide()
+      self.healthring[i].healthringFill:Hide()
+      self.healthring[i].healthringSpark:Hide()
+    end
+    if self.styleUnit == "target" then
+      PlaySound("interfacesound_losttargetunit")
+    end
   end
 
   --calculate the segment id based on direction, index and starting point
@@ -298,15 +354,15 @@
     --CASTRING
     if template.castring.enable then
       --background
-      local castringBg = lib:CreateRingTexture(self, scrollChild, "bg", -8, template.castring.textures.bg, template.castring.radius, template.castring.colors.bg, scrollFrame.defaultRotation)
+      local castringBg = lib:CreateRingTexture(self, scrollChild, "bg", template.castring.sublevel.bg, template.castring.textures.bg, template.castring.radius, template.castring.colors.bg, scrollFrame.defaultRotation)
       --filling
-      local castringFill = lib:CreateRingTexture(self, scrollChild, "fill", -7, template.castring.textures.fill, template.castring.radius, template.castring.colors.fill, scrollFrame.defaultRotation)
+      local castringFill = lib:CreateRingTexture(self, scrollChild, "fill", template.castring.sublevel.fill, template.castring.textures.fill, template.castring.radius, template.castring.colors.fill, scrollFrame.defaultRotation)
       --spark
-      local castringSpark = lib:CreateRingTexture(self, scrollChild, "spark", -6, template.castring.textures.spark, template.castring.radius, template.castring.colors.spark, scrollFrame.defaultRotation)
+      local castringSpark = lib:CreateRingTexture(self, scrollChild, "spark", template.castring.sublevel.spark, template.castring.textures.spark, template.castring.radius, template.castring.colors.spark, scrollFrame.defaultRotation)
       --latency
-      if self.cfg.style == "player" then
+      if self.styleUnit == "player" then
         --create latency
-        local castringLatency = lib:CreateRingTexture(self, scrollChild, "latency", -5, template.castring.textures.fill, template.castring.radius, template.castring.colors.latency, scrollFrame.defaultRotation)
+        local castringLatency = lib:CreateRingTexture(self, scrollChild, "latency", template.castring.sublevel.latency, template.castring.textures.latency, template.castring.radius, template.castring.colors.latency, scrollFrame.defaultRotation)
         scrollFrame.castringLatency = castringLatency
         scrollFrame.castringLatency:Hide()
       end
@@ -321,11 +377,11 @@
     --POWERRING
     if template.powerring.enable then
       --background
-      local powerringBg = lib:CreateRingTexture(self, scrollChild, "bg", -3, template.powerring.textures.bg, template.powerring.radius, template.powerring.colors.bg, scrollFrame.defaultRotation)
+      local powerringBg = lib:CreateRingTexture(self, scrollChild, "bg", template.powerring.sublevel.bg, template.powerring.textures.bg, template.powerring.radius, template.powerring.colors.bg, scrollFrame.defaultRotation)
       --filling
-      local powerringFill = lib:CreateRingTexture(self, scrollChild, "fill", -2, template.powerring.textures.fill, template.powerring.radius, template.powerring.colors.fill, scrollFrame.defaultRotation)
+      local powerringFill = lib:CreateRingTexture(self, scrollChild, "fill", template.powerring.sublevel.fill, template.powerring.textures.fill, template.powerring.radius, template.powerring.colors.fill, scrollFrame.defaultRotation)
       --spark
-      local powerringSpark = lib:CreateRingTexture(self, scrollChild, "spark", -1, template.powerring.textures.spark, template.powerring.radius, template.powerring.colors.spark, scrollFrame.defaultRotation)
+      local powerringSpark = lib:CreateRingTexture(self, scrollChild, "spark", template.powerring.sublevel.spark, template.powerring.textures.spark, template.powerring.radius, template.powerring.colors.spark, scrollFrame.defaultRotation)
       scrollFrame.powerringBg      = powerringBg
       scrollFrame.powerringFill    = powerringFill
       scrollFrame.powerringSpark   = powerringSpark
@@ -337,11 +393,11 @@
     --HEALTHRING
     if template.healthring.enable then
       --healthring background
-      local healthringBg = lib:CreateRingTexture(self, scrollChild, "bg", 1, template.healthring.textures.bg, template.healthring.radius, template.healthring.colors.bg, scrollFrame.defaultRotation)
+      local healthringBg = lib:CreateRingTexture(self, scrollChild, "bg", template.healthring.sublevel.bg, template.healthring.textures.bg, template.healthring.radius, template.healthring.colors.bg, scrollFrame.defaultRotation)
       --healthring filling
-      local healthringFill = lib:CreateRingTexture(self, scrollChild, "fill", 2, template.healthring.textures.fill, template.healthring.radius, template.healthring.colors.fill, scrollFrame.defaultRotation)
+      local healthringFill = lib:CreateRingTexture(self, scrollChild, "fill", template.healthring.sublevel.fill, template.healthring.textures.fill, template.healthring.radius, template.healthring.colors.fill, scrollFrame.defaultRotation)
       --healthring spark
-      local healthringSpark = lib:CreateRingTexture(self, scrollChild, "spark", 3, template.healthring.textures.spark, template.healthring.radius, template.healthring.colors.spark, scrollFrame.defaultRotation)
+      local healthringSpark = lib:CreateRingTexture(self, scrollChild, "spark", template.healthring.sublevel.spark, template.healthring.textures.spark, template.healthring.radius, template.healthring.colors.spark, scrollFrame.defaultRotation)
       scrollFrame.healthringBg     = healthringBg
       scrollFrame.healthringFill   = healthringFill
       scrollFrame.healthringSpark  = healthringSpark
@@ -429,15 +485,14 @@
       for i=1, template.powerring.numSegmentsUsed do
         local id = lib:GetSegmentId(template.powerring.startSegment,template.powerring.fillDirection,i)
         self.powerring[i] = self.ringSegments[id]
-        --self.powerring[i].powerringBg:Show()
-        --self.powerring[i].powerringFill:Show()
-        --self.powerring[i].powerringSpark:Show()
         self.powerringModulo = self.powerringModulo * self.ringSegments[id].primeNum
       end
       --fake power
-      local power = CreateFrame("StatusBar", nil, self)
-      power:SetScript("OnValueChanged", function(...) lib:PowerbarOnValueChanged(...) end)
-      self.Power = power
+      local powerbar = CreateFrame("StatusBar", nil, self)
+      powerbar:SetScript("OnValueChanged", function(...) lib:PowerbarOnValueChanged(...) end)
+      powerbar:HookScript("OnShow", function(...) lib:PowerbarOnShow(...) end)
+      powerbar:HookScript("OnHide", function(...) lib:PowerbarOnHide(...) end)
+      self.Power = powerbar
     end
 
     --HEALTHRING
@@ -448,15 +503,14 @@
       for i=1, template.healthring.numSegmentsUsed do
         local id = lib:GetSegmentId(template.healthring.startSegment,template.healthring.fillDirection,i)
         self.healthring[i] = self.ringSegments[id]
-        --self.healthring[i].healthringBg:Show()
-        --self.healthring[i].healthringFill:Show()
-        --self.healthring[i].healthringSpark:Show()
         self.healthringModulo = self.healthringModulo * self.ringSegments[id].primeNum
       end
       --fake health
-      local health = CreateFrame("StatusBar", nil, self)
-      health:SetScript("OnValueChanged", function(...) lib:HealthbarOnValueChanged(...) end)
-      self.Health = health
+      local healthbar = CreateFrame("StatusBar", nil, self)
+      healthbar:SetScript("OnValueChanged", function(...) lib:HealthbarOnValueChanged(...) end)
+      healthbar:HookScript("OnShow", function(...) lib:HealthbarOnShow(...) end)
+      healthbar:HookScript("OnHide", function(...) lib:HealthbarOnHide(...) end)
+      self.Health = healthbar
     end
 
   end

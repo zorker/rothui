@@ -19,6 +19,7 @@ modules\oUF_RuneOrbs.lua
 modules\oUF_ShadowOrbs.lua
 modules\oUF_Smooth.lua
 modules\oUF_SoulShards.lua
+modules\oUF_TotalAbsorb.lua
 
 config.lua
 charspecific.lua

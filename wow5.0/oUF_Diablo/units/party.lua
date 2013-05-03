@@ -181,6 +181,9 @@
 
     --add heal prediction
     func.healPrediction(self)
+    
+    --add total absorb
+    func.totalAbsorb(self)
 
     --threat
     self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", func.checkThreat)

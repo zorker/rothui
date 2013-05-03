@@ -302,6 +302,14 @@
         },
         maxoverflow = 1.05,
       },
+      totalabsorb = {
+        show = true,
+        texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
+        color = {
+          bar  = {r = 0, g = 1, b = 1, a = 1 },
+        },
+        maxoverflow = 1.05,
+      },
     },
 
     --TARGETTARGET
@@ -373,6 +381,14 @@
         },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 490 },
       },
+      totalabsorb = {
+        show = true,
+        texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
+        color = {
+          bar  = {r = 0, g = 1, b = 1, a = 1 },
+        },
+        maxoverflow = 1.05,
+      },
     },
 
     --FOCUS
@@ -420,6 +436,14 @@
         color = {
           myself  = {r = 0, g = 1, b = 0, a = 1 },
           other   = {r = 0, g = 1, b = 0, a = 0.7 },
+        },
+        maxoverflow = 1.05,
+      },
+      totalabsorb = {
+        show = true,
+        texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
+        color = {
+          bar  = {r = 0, g = 1, b = 1, a = 1 },
         },
         maxoverflow = 1.05,
       },
@@ -519,6 +543,14 @@
         },
         maxoverflow = 1.05,
       },
+      totalabsorb = {
+        show = true,
+        texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
+        color = {
+          bar  = {r = 0, g = 1, b = 1, a = 1 },
+        },
+        maxoverflow = 1.05,
+      },
     },
 
     --RAID
@@ -588,6 +620,14 @@
         color = {
           myself  = {r = 0, g = 1, b = 0, a = 1 },
           other   = {r = 0, g = 1, b = 0, a = 0.7 },
+        },
+        maxoverflow = 1.05,
+      },
+      totalabsorb = {
+        show = true,
+        texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
+        color = {
+          bar  = {r = 0, g = 1, b = 1, a = 1 },
         },
         maxoverflow = 1.05,
       },

@@ -356,6 +356,9 @@
 
     --add heal prediction
     func.healPrediction(self)
+    
+    --add total absorb
+    func.totalAbsorb(self)
 
   end
 

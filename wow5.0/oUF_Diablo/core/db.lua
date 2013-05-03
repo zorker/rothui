@@ -584,6 +584,7 @@
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling17", key = "silver", },
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling18", key = "exile", },
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling19", key = "dominion", },
+    { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling20", key = "runes", },
   }
   db.getListFillingTexture = function() return db.list.filling_texture end
 

@@ -180,6 +180,9 @@
 
     --add heal prediction
     func.healPrediction(self)
+    
+    --add total absorb
+    func.totalAbsorb(self)
 
     --add self to unit container (maybe access to that unit is needed in another style)
     unit.pet = self

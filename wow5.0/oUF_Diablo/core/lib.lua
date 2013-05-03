@@ -666,3 +666,22 @@
       maxOverflow = self.cfg.healprediction.maxoverflow,
     }
   end
+
+  --total absorb
+  func.totalAbsorb = function(self)
+    if not self.cfg.totalabsorb or (self.cfg.totalabsorb and not self.cfg.totalabsorb.show) then return end
+    local w = self.Health:GetWidth()
+    if w == 0 then
+      w = self:GetWidth()-24.5-24.5 --raids and party have no width on the health frame for whatever reason, thus use self and subtract the setpoint values
+    end
+    local absorbBar = CreateFrame("StatusBar", nil, self.Health)
+    absorbBar:SetFrameLevel(self.Health:GetFrameLevel())
+    absorbBar:SetPoint("TOPLEFT", self.Health:GetStatusBarTexture(), "TOPRIGHT", 0, 0)
+    absorbBar:SetPoint("BOTTOMLEFT", self.Health:GetStatusBarTexture(), "BOTTOMRIGHT", 0, 0)
+    absorbBar:SetWidth(w)
+    absorbBar.maxOverflow = 1.05
+    absorbBar:SetStatusBarTexture(self.cfg.totalabsorb.texture)
+    absorbBar:SetStatusBarColor(self.cfg.totalabsorb.color.bar.r,self.cfg.totalabsorb.color.bar.g,self.cfg.totalabsorb.color.bar.b,self.cfg.totalabsorb.color.bar.a)    
+    -- Register with oUF
+    self.TotalAbsorb = absorbBar    
+  end

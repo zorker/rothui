@@ -13,7 +13,7 @@
 
   local playerName = UnitName("player")
   local _, playerClass = UnitClass("player")
-  local spell
+  local spellConfig
 
   -----------------------------
   -- CONFIG
@@ -23,7 +23,7 @@
   if playerName == "Zork" and playerClass == "WARRIOR" then
 
     -- buffs
-    spell = {
+    spellConfig = {
       spellid = 12880,    --spell id
       unit    = "player", --unit that spell should be tracked on
       caster  = nil,      --the unit that casted the spell
@@ -36,10 +36,10 @@
       hFlip   = false,    --texture horizontal flip
     }
     --add the enrage spell to the addon db
-    rASA:AddAura(spellConfig, "buff")
+    rASA:AddBuff(spellConfig)
 
     -- debuffs
-    spell = {
+    spellConfig = {
       spellid = 86346,    --spell id (COLOSSUS SMASH)
       unit    = "target", --unit that spell should be tracked on
       caster  = "player", --the unit that casted the spell
@@ -52,6 +52,6 @@
       hFlip   = false,    --texture horizontal flip
     }
     --add the colossus smash spell to the addon db
-    rASA:AddAura(spellConfig, "debuff")
+    rASA:AddDebuff(spellConfig)
 
   end

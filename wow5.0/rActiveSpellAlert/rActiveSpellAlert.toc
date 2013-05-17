@@ -1,0 +1,8 @@
+## Interface: 50200
+## Author: zork
+## Title: rActiveSpellAlert
+## Notes: Simple wrapper for the Blizzard SpellActivationOverlay frame
+
+core\init.lua
+config.lua
+core\core.lua

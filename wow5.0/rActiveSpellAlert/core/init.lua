@@ -33,3 +33,13 @@
     end
     tinsert(self.auraList,data)
   }
+
+  --add buff func
+  function rASA:AddBuff(data) {
+    rASA:AddAura(data,"buff")
+  }
+
+  --add debuff func
+  function rASA:AddDebuff(data) {
+    rASA:AddAura(data,"debuff")
+  }

@@ -2,7 +2,9 @@
 ## Author: zork
 ## Title: rActiveSpellAlert
 ## Notes: Simple wrapper for the Blizzard SpellActivationOverlay frame
+## RequiredDeps: rLib
 
 core\init.lua
 config.lua
+core\slashcmd.lua
 core\core.lua

@@ -17,7 +17,7 @@
   -----------------------------
 
   --add aura func
-  function rASA:AddAura(data,type) {
+  function rASA:AddAura(data,type)
     if not GetSpellInfo(data.spellid) then
       print(addon..": No spell info found for spellid: "..data.spellid)
       return
@@ -32,14 +32,14 @@
       data.texture = data.spellIcon
     end
     tinsert(self.auraList,data)
-  }
+  end
 
   --add buff func
-  function rASA:AddBuff(data) {
+  function rASA:AddBuff(data)
     rASA:AddAura(data,"buff")
-  }
+  end
 
   --add debuff func
-  function rASA:AddDebuff(data) {
+  function rASA:AddDebuff(data)
     rASA:AddAura(data,"debuff")
-  }
+  end

@@ -1,4 +1,4 @@
-## Interface: 50200
+## Interface: 50300
 ## Author: zork
 ## Title: rDiabloPlates2
 ## Notes: Diablo 3 themed nameplates

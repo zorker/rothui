@@ -113,12 +113,8 @@
     if UnitIsPlayer(unit) then
       return RAID_CLASS_COLORS[select(2,UnitClass(unit))]
     else
-      local reaction = UnitReaction(unit, "player")
-      if reaction then
-        return FACTION_BAR_COLORS[reaction]
-      end
+      return FACTION_BAR_COLORS[UnitReaction(unit, "player")]
     end
-    return { r=1, g=0, b=1 }
   end
 
   --number format func
@@ -190,7 +186,7 @@
         bar.val:SetText(NumFormat(data.threatValue))
         bar.perc:SetText(floor(data.scaledPercent).."%")
         bar:SetValue(data.scaledPercent)
-        local color = GetColor(data.unit)
+        local color = GetColor(data.unit) or { r=1, g=0, b=1 }
         if cfg.statusbar.marker and UnitGUID(data.unit) == playerGUID then
           color = { r=1, g=0, b=0 }
         end

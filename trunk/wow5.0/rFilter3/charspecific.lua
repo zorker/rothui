@@ -41,16 +41,16 @@
         },
       },
     }
-  end    
-  
+  end
+
   if player_name == "Zork" and player_class == "WARRIOR" then
     --Rothars Buff List
     cfg.rf3_BuffList = {
       [1] = {
         spellid = 12880, --enrage
         spec = nil,
-        size = 22,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 80, y = 110 },
+        size = 36,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -130, y = 147 },
         unit = "player",
         validate_unit   = true,
         ismine          = true,
@@ -140,8 +140,8 @@
       [5] = {
         spellid = 132365, --vengeance
         spec = 3,
-        size = 30,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -44, y = 150 },
+        size = 36,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 147 },
         unit = "player",
         validate_unit   = true,
         ismine          = true,
@@ -163,8 +163,8 @@
       [6] = {
         spellid = 132404, --shield block
         spec = 3,
-        size = 36,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 147 },
+        size = 30,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -44, y = 150 },
         unit = "player",
         validate_unit   = true,
         ismine          = true,
@@ -178,6 +178,50 @@
           },
           not_found = {
             frame = 0.2,
+            icon = 0.6,
+          },
+        },
+      },
+      [7] = {
+        spellid = 131116, --meat cleaver
+        spec = 2,
+        size = 30,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -44, y = 150 },
+        unit = "player",
+        validate_unit   = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
+        hide_ooc        = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0.2,
+            icon = 0.6,
+          },
+        },
+      },
+      [8] = {
+        spellid = 85739, --metzger
+        spec = 2,
+        size = 30,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 44, y = 150 },
+        unit = "player",
+        validate_unit   = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
+        hide_ooc        = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
             icon = 0.6,
           },
         },
@@ -276,10 +320,10 @@
       },
       {
         spellid = 86346, --colossus
-        spec = 1,
-        size = 50,
+        spec = 2,
+        size = 36,
         framestrata = "BACKGROUND",
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 150 },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 147 },
         unit = "target",
         validate_unit   = true,
         ismine          = true,
@@ -292,7 +336,7 @@
             icon = 1,
           },
           not_found = {
-            frame = 0,
+            frame = 0.2,
             icon = 0.6,
           },
         },
@@ -300,9 +344,9 @@
       {
         spellid = 136903, --frigid assault
         spec = 3,
-        size = 64,
+        size = 50,
         framestrata = "BACKGROUND",
-        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = -195, y = -90 },
         unit = "Nudie",
         validate_unit   = true,
         ismine          = false,
@@ -323,7 +367,8 @@
     }
 
   --Rothars Cooldown List
-    cfg.rf3_CooldownList = {
+  --[[
+  cfg.rf3_CooldownList = {
       [1] = {
         spellid = 118000, --dragon roar
         spelllist = { 118000, 46968, 46924, },
@@ -345,6 +390,27 @@
           },
         },
       },
+      [2] = {
+        spellid = 86346, --colossus
+        spec = 2,
+        size = 30,
+        framestrata = "LOW",
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 180 },
+        desaturate      = true,
+        move_ingame     = true,
+        hide_ooc        = true,
+        alpha = {
+          cooldown = {
+            frame = 0.9,
+            icon = 1,
+          },
+          no_cooldown = {
+            frame = 1,
+            icon = 1,
+          },
+        },
+      },
     }
+    ]]
 
   end

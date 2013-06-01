@@ -51,35 +51,31 @@
     func.applyDragFunctionality(f)
     local t = f:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetAllPoints(f)
-    if cfg.style >= 1 and cfg.style <= 3 then
-      t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\bar"..cfg.style)
-    else
-      local setupBarTexture = function()
-        if ((HasVehicleActionBar() and UnitVehicleSkin("player") and UnitVehicleSkin("player") ~= "")
-        or (HasOverrideActionBar() and GetOverrideBarSkin() and GetOverrideBarSkin() ~= ""))
-        or UnitHasVehicleUI("player") then
-          t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\bar1")
-        elseif MultiBarBottomRight:IsShown() then
-          t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\bar3")
-        elseif MultiBarBottomLeft:IsShown() then
-          t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\bar2")
-        else
-          t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\bar1")
-        end
+    local setupBarTexture = function()
+      if ((HasVehicleActionBar() and UnitVehicleSkin("player") and UnitVehicleSkin("player") ~= "")
+      or (HasOverrideActionBar() and GetOverrideBarSkin() and GetOverrideBarSkin() ~= ""))
+      or UnitHasVehicleUI("player") then
+        t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\vehiclebar")
+      elseif MultiBarBottomRight:IsShown() then
+        t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\bar3")
+      elseif MultiBarBottomLeft:IsShown() then
+        t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\bar2")
+      else
+        t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\bar1")
       end
-      setupBarTexture()
-      MultiBarBottomRight:HookScript("OnShow", setupBarTexture)
-      MultiBarBottomRight:HookScript("OnHide", setupBarTexture)
-      MultiBarBottomLeft:HookScript("OnShow", setupBarTexture)
-      MultiBarBottomLeft:HookScript("OnHide", setupBarTexture)
-      f:RegisterEvent("UNIT_ENTERED_VEHICLE")
-      f:RegisterEvent("UNIT_EXITED_VEHICLE")
-      f:SetScript("OnEvent", function(...)
-        local self, event, unit = ...
-        if unit and unit ~= "player" then return end
-        setupBarTexture()
-      end)
     end
+    setupBarTexture()
+    MultiBarBottomRight:HookScript("OnShow", setupBarTexture)
+    MultiBarBottomRight:HookScript("OnHide", setupBarTexture)
+    MultiBarBottomLeft:HookScript("OnShow", setupBarTexture)
+    MultiBarBottomLeft:HookScript("OnHide", setupBarTexture)
+    f:RegisterEvent("UNIT_ENTERED_VEHICLE")
+    f:RegisterEvent("UNIT_EXITED_VEHICLE")
+    f:SetScript("OnEvent", function(...)
+      local self, event, unit = ...
+      if unit and unit ~= "player" then return end
+      setupBarTexture()
+    end)
   end
 
   --create the angel

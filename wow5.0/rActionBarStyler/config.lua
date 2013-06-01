@@ -49,7 +49,7 @@
       scale           = 0.82,
       padding         = 2, --frame padding
       buttons         = {
-        size            = 26,
+        size            = 57,
         margin          = 5,
       },
       pos             = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -1, y = 22 },

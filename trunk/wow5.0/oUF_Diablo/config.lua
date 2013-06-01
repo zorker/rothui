@@ -210,7 +210,6 @@
           show = true,
           pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 1, y = 0 },
           scale = 1,
-          style = 0, --0 = automatic bar detection, 1 = 12 button texture fixed, 2 = 24 button texture fixed, 3 = 36 button texture fixed
         },
         angel = {
           show = true,

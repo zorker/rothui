@@ -16,7 +16,7 @@
 
   if not cfg.enable then return end
 
-  local num = NUM_ACTIONBAR_BUTTONS --there seems to be no MAX_OVERRIDE_NUM or the like
+  local num = 6 --NUM_ACTIONBAR_BUTTONS --there seems to be no MAX_OVERRIDE_NUM or the like
   local buttonList = {}
 
   --create the frame to hold the buttons
@@ -32,6 +32,7 @@
   OverrideActionBar:SetScript("OnShow", nil) --remove the onshow script
 
   local leaveButtonPlaced = false
+  OverrideActionBar.LeaveButton:Hide()
 
   for i=1, num do
     local button =  _G["OverrideActionBarButton"..i]

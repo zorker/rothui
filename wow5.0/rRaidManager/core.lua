@@ -66,14 +66,12 @@
 
   --remove the default raidframe manager
   local function BlizzardRaidFrameManagerDisable()
-    CRFM:SetScript("OnLoad", nil)
-    CRFM:SetScript("OnEvent", nil)
-    CRFM:UnregisterAllEvents()
-    CRFM:Hide()
-    CRFC:SetScript("OnLoad", nil)
-    CRFC:SetScript("OnEvent", nil)
-    CRFC:SetScript("OnSizeChanged", nil)
-    CRFC:UnregisterAllEvents()
+    if IsAddOnLoaded("Blizzard_CompactRaidFrames") then
+      DisableAddOn("Blizzard_CompactRaidFrames")
+    end
+    if IsAddOnLoaded("Blizzard_CUFProfiles") then
+      DisableAddOn("Blizzard_CUFProfiles")
+    end
   end
 
   ---------------------------
@@ -90,6 +88,7 @@
   manager:SetBackdropColor(0.1,0.1,0.1,0.9)
   manager:SetBackdropBorderColor(0.7,0.7,0.7)
   manager:RegisterEvent("PLAYER_LOGIN")
+  manager:RegisterEvent("ADDON_LOADED")
   manager:SetScript("OnEvent", BlizzardRaidFrameManagerDisable)
   RegisterStateDriver(manager, "visibility", "[group:party][group:raid] show; hide")
 
@@ -122,7 +121,7 @@
   button:SetScript("OnClick", InitiateRolePoll)
   button:SetPoint("TOP", previousButton, "BOTTOM", 0, -10)
   previousButton = button
-  
+
   --raid to party button
   local buttonLeft = CreateBasicButton(manager, addon.."ButtonRaidToParty", "|TInterface\\GroupFrame\\UI-Group-AssistantIcon:14:14:0:0|t", "Raid to party")
   buttonLeft:SetScript("OnClick", ConvertToParty)
@@ -144,15 +143,15 @@
   stateFrame:SetPoint("TOPRIGHT",-3,-3)
   stateFrame:SetPoint("BOTTOMRIGHT",-3,3)
   stateFrame:SetWidth(15)
-  
+
   --pull button
   local pullCounter = 10
   local button = CreateBasicButton(manager, addon.."ButtonPullCounter", "|TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:14:14:0:0|t", "Boss pull in "..pullCounter)
-  button:SetPoint("TOP", previousButton, "BOTTOM", 0, 0)  
-  button:SetAttribute("type", "macro")  
+  button:SetPoint("TOP", previousButton, "BOTTOM", 0, 0)
+  button:SetAttribute("type", "macro")
   button:SetAttribute("macrotext", format("/pull %d", pullCounter))
   previousButton = button
-  
+
   --stopwatch toggle
   local buttonLeft = CreateBasicButton(manager, addon.."ButtonStopWatch", "|TInterface\\ChatFrame\\UI-ChatIcon-ArmoryChat-AwayMobile:14:14:0:0|t", "Toggle stopwatch")
   buttonLeft:SetScript("OnClick", function()
@@ -160,7 +159,7 @@
       Stopwatch_Clear()
     else
       Stopwatch_Play()
-    end    
+    end
     Stopwatch_Toggle()
   end)
   buttonLeft:SetPoint("RIGHT", button, "LEFT", 0, 0)

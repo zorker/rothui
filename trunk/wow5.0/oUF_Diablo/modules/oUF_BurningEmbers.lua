@@ -8,7 +8,7 @@ local SPELL_POWER_BURNING_EMBERS  = SPELL_POWER_BURNING_EMBERS
 local SPEC_WARLOCK_DESTRUCTION    = SPEC_WARLOCK_DESTRUCTION
 
 local Update = function(self, event, unit, powerType)
-  if(self.unit ~= unit or (powerType and powerType ~= 'BURNING_EMBERS')) then return end
+  if(self.unit ~= unit or (powerType and powerType ~= "BURNING_EMBERS")) then return end
   --other warlock powers will fire even in another spec, double check for spec
   if(GetSpecialization() ~= SPEC_WARLOCK_DESTRUCTION) then return end
   local bar = self.BurningEmberPowerBar
@@ -89,7 +89,7 @@ local Path = function(self, ...)
 end
 
 local ForceUpdate = function(element)
-  return Path(element.__owner, 'ForceUpdate', element.__owner.unit, 'BURNING_EMBERS')
+  return Path(element.__owner, "ForceUpdate", element.__owner.unit, "BURNING_EMBERS")
 end
 
 local function Enable(self)
@@ -98,13 +98,15 @@ local function Enable(self)
     element.__owner = self
     element.ForceUpdate = ForceUpdate
 
-    self:RegisterEvent('UNIT_POWER', Path, true)
-    self:RegisterEvent('UNIT_DISPLAYPOWER', Path, true)
-    self:RegisterEvent('PLAYER_TALENT_UPDATE', Visibility, true)
+    self:RegisterEvent("UNIT_POWER_FREQUENT", Path)
+    self:RegisterEvent("UNIT_DISPLAYPOWER", Path)
+    self:RegisterEvent("PLAYER_TALENT_UPDATE", Visibility, true)
     self:RegisterEvent("SPELLS_CHANGED", Visibility, true)
     self:RegisterEvent("UPDATE_OVERRIDE_ACTIONBAR", Visibility, true)
+    self:RegisterEvent("UNIT_ENTERED_VEHICLE", Visibility)
+    self:RegisterEvent("UNIT_EXITED_VEHICLE", Visibility)
 
-    local helper = CreateFrame("Frame") --this is needed...adding player_login to the visivility events doesn't do anything
+    local helper = CreateFrame("Frame") --this is needed...adding player_login to the visivility events does not do anything
     helper:RegisterEvent("PLAYER_LOGIN")
     helper:SetScript("OnEvent", function() Visibility(self) end)
 
@@ -115,13 +117,15 @@ end
 local function Disable(self)
   local element = self.BurningEmbers
   if(element) then
-    self:UnregisterEvent('UNIT_POWER', Path)
-    self:UnregisterEvent('UNIT_DISPLAYPOWER', Path)
-    self:UnregisterEvent('PLAYER_TALENT_UPDATE', Visibility)
-    self:UnregisterEvent('PLAYER_LOGIN', Visibility)
-    self:UnregisterEvent('SPELLS_CHANGED', Visibility)
-    self:UnregisterEvent('UPDATE_OVERRIDE_ACTIONBAR', Visibility)
+    self:UnregisterEvent("UNIT_POWER", Path)
+    self:UnregisterEvent("UNIT_DISPLAYPOWER", Path)
+    self:UnregisterEvent("PLAYER_TALENT_UPDATE", Visibility)
+    self:UnregisterEvent("PLAYER_LOGIN", Visibility)
+    self:UnregisterEvent("SPELLS_CHANGED", Visibility)
+    self:UnregisterEvent("UPDATE_OVERRIDE_ACTIONBAR", Visibility)
+    self:UnregisterEvent("UNIT_ENTERED_VEHICLE", Visibility)
+    self:UnregisterEvent("UNIT_EXITED_VEHICLE", Visibility)
   end
 end
 
-oUF:AddElement('BurningEmbers', Path, Enable, Disable)
+oUF:AddElement("BurningEmbers", Path, Enable, Disable)

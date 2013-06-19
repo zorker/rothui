@@ -69,7 +69,7 @@ local Visibility = function(self, event, unit)
 end
 
 local ForceUpdate = function(element)
-  return Update(element.__owner, 'ForceUpdate')
+  return Update(element.__owner, "ForceUpdate")
 end
 
 local Enable = function(self, unit)
@@ -84,11 +84,9 @@ local Enable = function(self, unit)
 
     self:RegisterEvent("RUNE_POWER_UPDATE", UpdateRune, true)
     self:RegisterEvent("RUNE_TYPE_UPDATE", UpdateType, true)
-		self:RegisterEvent("UPDATE_OVERRIDE_ACTIONBAR", Visibility, true)
-
-    local helper = CreateFrame("Frame") --this is needed...adding player_login to the visivility events doesn't do anything
-    helper:RegisterEvent("PLAYER_LOGIN")
-    helper:SetScript("OnEvent", function() Visibility(self) end)
+    self:RegisterEvent("UPDATE_OVERRIDE_ACTIONBAR", Visibility, true)
+    self:RegisterEvent("UNIT_ENTERED_VEHICLE", Visibility)
+    self:RegisterEvent("UNIT_EXITED_VEHICLE", Visibility)
 
     RuneFrame.Show = RuneFrame.Hide
     RuneFrame:Hide()
@@ -104,7 +102,9 @@ local Disable = function(self)
 	  RuneFrame:Show()
 	  self:UnregisterEvent("RUNE_POWER_UPDATE", UpdateRune)
 	  self:UnregisterEvent("RUNE_TYPE_UPDATE", UpdateType)
-	  self:UnregisterEvent('UPDATE_OVERRIDE_ACTIONBAR', Visibility)
+    self:UnregisterEvent("UPDATE_OVERRIDE_ACTIONBAR", Visibility)
+    self:UnregisterEvent("UNIT_ENTERED_VEHICLE", Visibility)
+    self:UnregisterEvent("UNIT_EXITED_VEHICLE", Visibility)
 	end
 end
 

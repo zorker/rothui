@@ -50,7 +50,7 @@ local Path = function(self, ...)
 end
 
 local ForceUpdate = function(element)
-  return Path(element.__owner, 'ForceUpdate', element.__owner.unit)
+  return Path(element.__owner, "ForceUpdate", element.__owner.unit)
 end
 
 local Enable = function(self)
@@ -59,8 +59,8 @@ local Enable = function(self)
     element.__owner = self
     element.ForceUpdate = ForceUpdate
 
-    self:RegisterEvent('UNIT_COMBO_POINTS', Path, true)
-    self:RegisterEvent('PLAYER_TARGET_CHANGED', Path, true)
+    self:RegisterEvent("UNIT_COMBO_POINTS", Path, true)
+    self:RegisterEvent("PLAYER_TARGET_CHANGED", Path, true)
 
     return true
   end
@@ -69,9 +69,9 @@ end
 local Disable = function(self)
   local element = self.ComboPoints
   if(element) then
-    self:UnregisterEvent('UNIT_COMBO_POINTS', Path)
-    self:UnregisterEvent('PLAYER_TARGET_CHANGED', Path)
+    self:UnregisterEvent("UNIT_COMBO_POINTS", Path)
+    self:UnregisterEvent("PLAYER_TARGET_CHANGED", Path)
   end
 end
 
-oUF:AddElement('ComboPoints', Path, Enable, Disable)
+oUF:AddElement("ComboPoints", Path, Enable, Disable)

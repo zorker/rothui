@@ -18,11 +18,9 @@
 
   local tinsert = tinsert
   local format = format
-  local NUM_WORLD_RAID_MARKERS = NUM_WORLD_RAID_MARKERS
+  local NUM_WORLD_RAID_MARKERS = NUM_WORLD_RAID_MARKERS or 5
   local UIP = UIParent
   local CF = CreateFrame
-  local CRFM = CompactRaidFrameManager
-  local CRFC = CompactRaidFrameContainer
 
   --create the new manager
   local backdrop = {
@@ -64,16 +62,6 @@
     return button
   end
 
-  --remove the default raidframe manager
-  local function BlizzardRaidFrameManagerDisable()
-    if IsAddOnLoaded("Blizzard_CompactRaidFrames") then
-      DisableAddOn("Blizzard_CompactRaidFrames")
-    end
-    if IsAddOnLoaded("Blizzard_CUFProfiles") then
-      DisableAddOn("Blizzard_CUFProfiles")
-    end
-  end
-
   ---------------------------
   -- INIT
   ---------------------------
@@ -88,8 +76,30 @@
   manager:SetBackdropColor(0.1,0.1,0.1,0.9)
   manager:SetBackdropBorderColor(0.7,0.7,0.7)
   manager:RegisterEvent("PLAYER_LOGIN")
-  manager:RegisterEvent("ADDON_LOADED")
-  manager:SetScript("OnEvent", BlizzardRaidFrameManagerDisable)
+  manager:SetScript("OnEvent", function() 
+    local needReload = false
+    if (LoadAddOn("Blizzard_CUFProfiles")) then print("|cffffff00"..addon.."|r Blizzard_CUFProfiles is loadable") needReload = true end
+    if (LoadAddOn("Blizzard_CompactRaidFrames")) then print("|cffffff00"..addon.."|r Blizzard_CompactRaidFrames is loadable") needReload = true end  
+    if needReload then 
+      DisableAddOn("Blizzard_CUFProfiles")
+      DisableAddOn("Blizzard_CompactRaidFrames")      
+      StaticPopupDialogs["RRAIDMANAGER_RELOADUI_REQUEST"] = {
+        text = "rRaidFrameManager needs a reload to fully disable the Blizzard raid addons. Reload now?",
+        button1 = "Yes",
+        button2 = "No",
+        OnAccept = function()
+          ReloadUI() 
+        end,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        preferredIndex = 3,
+      }
+      StaticPopup_Show ("RRAIDMANAGER_RELOADUI_REQUEST")      
+    else 
+      print("|cffffff00"..addon.."|r Blizzard_CUFProfiles and Blizzard_CompactRaidFrames are disabled properly.") 
+    end
+  end)
   RegisterStateDriver(manager, "visibility", "[group:party][group:raid] show; hide")
 
   --create world marker buttons

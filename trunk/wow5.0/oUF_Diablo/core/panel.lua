@@ -103,7 +103,7 @@
     local scrollChild = CF("Frame",nil,ScrollFrame)
     scrollChild:SetWidth(scrollFrame:GetWidth())
     --set scrollchild height
-    scrollChild:SetHeight(930)
+    scrollChild:SetHeight(1020)
     --left background behind health orb settings
     local t = scrollChild:CreateTexture(nil,"BACKGROUND",nil,-4)
     t:SetTexture(1,1,1)
@@ -701,6 +701,30 @@
     return slider
   end
 
+  --create element health orb galaxies alpha
+  local createSliderHealthOrbGalaxiesAlpha = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelHealthOrbGalaxiesAlpha", "Alpha", 0, 1, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      panel.saveHealthOrbGalaxiesAlpha(value)
+      --update orb view
+      panel.updateHealthOrbGalaxiesAlpha()
+    end)
+    return slider
+  end
+
+  --create element power orb galaxies alpha
+  local createSliderPowerOrbGalaxiesAlpha = function(parent)
+    local slider = createBasicSlider(parent, addon.."PanelPowerOrbGalaxiesAlpha", "Alpha", 0, 1, 0.001)
+    slider:HookScript("OnValueChanged", function(self,value)
+      --save value
+      panel.savePowerOrbGalaxiesAlpha(value)
+      --update orb view
+      panel.updatePowerOrbGalaxiesAlpha()
+    end)
+    return slider
+  end
+  
   --create element health orb value hide empty
   local createCheckButtonHealthOrbValueHideEmpty = function(parent)
     local button = createBasicCheckButton(parent, addon.."PanelHealthOrbValueHideEmpty", "Hide on empty*")
@@ -1154,6 +1178,14 @@
   --create highlight alpha slider
   panel.elementHealthOrbHighlightAlpha = createSliderHealthOrbHighlightAlpha(panel.scrollFrame.scrollChild)
   panel.elementPowerOrbHighlightAlpha = createSliderPowerOrbHighlightAlpha(panel.scrollFrame.scrollChild)
+  --create galaxies headline
+  panel.elementHealthGalaxiesHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Rotating galaxies")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthGalaxiesHeadline,"The following option allows you to adjust the opacity of the rotating galaxy textures.")
+  panel.elementPowerGalaxiesHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Rotating galaxies")
+  createTooltipButton(panel.scrollFrame.scrollChild,panel.elementPowerGalaxiesHeadline,"The following option allows you to adjust the opacity of the rotating galaxy textures.")
+  --create galaxies alpha slider
+  panel.elementHealthOrbGalaxiesAlpha = createSliderHealthOrbGalaxiesAlpha(panel.scrollFrame.scrollChild)
+  panel.elementPowerOrbGalaxiesAlpha = createSliderPowerOrbGalaxiesAlpha(panel.scrollFrame.scrollChild)
   --create spark headline
   panel.elementHealthSparkHeadline = createBasicFontString(panel.scrollFrame.scrollChild,nil,nil,"GameFontNormalLarge","Spark Texture")
   createTooltipButton(panel.scrollFrame.scrollChild,panel.elementHealthSparkHeadline,"The following option allows you to adjust the opacity of the spark texture.\n|cFFFFFFFFThe texture helps blending the filling texture.")
@@ -1209,6 +1241,8 @@
   createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementPowerModelHeadline)
   createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthHighlightHeadline)
   createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementPowerHighlightHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthGalaxiesHeadline)
+  createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementPowerGalaxiesHeadline)
   createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthSparkHeadline)
   createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementPowerSparkHeadline)
   createHeadlineBackground(panel.scrollFrame.scrollChild,panel.elementHealthOrbValueHeadline)
@@ -1291,9 +1325,15 @@
   --position highlight alpha slider
   panel.elementHealthOrbHighlightAlpha:SetPoint("TOPLEFT", panel.elementHealthHighlightHeadline, "BOTTOMLEFT", 0, -20)
   panel.elementPowerOrbHighlightAlpha:SetPoint("TOPLEFT", panel.elementPowerHighlightHeadline, "BOTTOMLEFT", 0, -20)
+  --position galaxies headline
+  panel.elementHealthGalaxiesHeadline:SetPoint("TOPLEFT", panel.elementHealthHighlightHeadline, "BOTTOMLEFT", 0, -60)
+  panel.elementPowerGalaxiesHeadline:SetPoint("TOPLEFT", panel.elementPowerHighlightHeadline, "BOTTOMLEFT", 0, -60)
+  --position galaxies alpha slider
+  panel.elementHealthOrbGalaxiesAlpha:SetPoint("TOPLEFT", panel.elementHealthGalaxiesHeadline, "BOTTOMLEFT", 0, -20)
+  panel.elementPowerOrbGalaxiesAlpha:SetPoint("TOPLEFT", panel.elementPowerGalaxiesHeadline, "BOTTOMLEFT", 0, -20)
   --position spark headline
-  panel.elementHealthSparkHeadline:SetPoint("TOPLEFT", panel.elementHealthHighlightHeadline, "BOTTOMLEFT", 0, -60)
-  panel.elementPowerSparkHeadline:SetPoint("TOPLEFT", panel.elementPowerHighlightHeadline, "BOTTOMLEFT", 0, -60)
+  panel.elementHealthSparkHeadline:SetPoint("TOPLEFT", panel.elementHealthGalaxiesHeadline, "BOTTOMLEFT", 0, -60)
+  panel.elementPowerSparkHeadline:SetPoint("TOPLEFT", panel.elementPowerGalaxiesHeadline, "BOTTOMLEFT", 0, -60)
   --position spark alpha slider
   panel.elementHealthOrbSparkAlpha:SetPoint("TOPLEFT", panel.elementHealthSparkHeadline, "BOTTOMLEFT", 0, -20)
   panel.elementPowerOrbSparkAlpha:SetPoint("TOPLEFT", panel.elementPowerSparkHeadline, "BOTTOMLEFT", 0, -20)
@@ -1518,6 +1558,36 @@
   --update power orb highlight alpha
   panel.updatePowerOrbHighlightAlpha = function()
     ns.PowerOrb.highlight:SetAlpha(panel.loadPowerOrbHighlightAlpha())
+  end
+  
+  --update health orb galaxies alpha
+  panel.updateHealthOrbGalaxiesAlpha = function()
+    if ns.HealthOrb.galaxies then
+      local alpha = panel.loadHealthOrbGalaxiesAlpha() or 0
+      for i, galaxy in pairs(ns.HealthOrb.galaxies) do
+        if galaxy.ag:IsPlaying() and alpha == 0 then
+          galaxy.ag:Stop()
+        elseif not galaxy.ag:IsPlaying() and alpha > 0 then
+          galaxy.ag:Play()
+        end
+        galaxy:SetAlpha(alpha)
+      end
+    end
+  end
+
+  --update power orb galaxies alpha
+  panel.updatePowerOrbGalaxiesAlpha = function()
+    if ns.PowerOrb.galaxies then
+      local alpha = panel.loadPowerOrbGalaxiesAlpha() or 0
+      for i, galaxy in pairs(ns.PowerOrb.galaxies) do
+        if galaxy.ag:IsPlaying() and alpha == 0 then
+          galaxy.ag:Stop()
+        elseif not galaxy.ag:IsPlaying() and alpha > 0 then
+          galaxy.ag:Play()
+        end
+        galaxy:SetAlpha(alpha)
+      end
+    end
   end
 
   --update health orb spark alpha
@@ -1764,6 +1834,16 @@
     panel.elementPowerOrbHighlightAlpha:SetValue(panel.loadPowerOrbHighlightAlpha())
   end
 
+  --update element health orb galxies alpha
+  panel.updateElementHealthOrbGalaxiesAlpha = function()
+    panel.elementHealthOrbGalaxiesAlpha:SetValue(panel.loadHealthOrbGalaxiesAlpha() or 0)
+  end
+
+  --update element power orb galxies alpha
+  panel.updateElementPowerOrbGalaxiesAlpha = function()
+    panel.elementPowerOrbGalaxiesAlpha:SetValue(panel.loadPowerOrbGalaxiesAlpha() or 0)
+  end
+  
   --update element health orb spark alpha
   panel.updateElementHealthOrbSparkAlpha = function()
     panel.elementHealthOrbSparkAlpha:SetValue(panel.loadHealthOrbSparkAlpha())
@@ -1976,6 +2056,16 @@
     db.char["POWER"].highlight.alpha = value
   end
 
+  --save health orb galaxies alpha
+  panel.saveHealthOrbGalaxiesAlpha = function(value)
+    db.char["HEALTH"].galaxies.alpha = value
+  end
+
+  --save power orb galaxies alpha
+  panel.savePowerOrbGalaxiesAlpha = function(value)
+    db.char["POWER"].galaxies.alpha = value
+  end
+  
   --save health orb spark alpha
   panel.saveHealthOrbSparkAlpha = function(value)
     db.char["HEALTH"].spark.alpha = value
@@ -2188,6 +2278,16 @@
     return db.char["POWER"].highlight.alpha
   end
 
+  --load health orb galaxies alpha
+  panel.loadHealthOrbGalaxiesAlpha = function()
+    return db.char["HEALTH"].galaxies.alpha or 0
+  end
+
+  --load power orb galaxies alpha
+  panel.loadPowerOrbGalaxiesAlpha = function()
+    return db.char["POWER"].galaxies.alpha or 0
+  end
+  
   --load health orb spark alpha
   panel.loadHealthOrbSparkAlpha = function()
     return db.char["HEALTH"].spark.alpha
@@ -2324,6 +2424,10 @@
     panel.updateElementHealthOrbHighlightAlpha()
     --update element power orb highlight alpha
     panel.updateElementPowerOrbHighlightAlpha()
+    --update element health orb galaxies alpha
+    panel.updateElementHealthOrbGalaxiesAlpha()
+    --update element power orb galaxies alpha
+    panel.updateElementPowerOrbGalaxiesAlpha()
     --update element health orb spark alpha
     panel.updateElementHealthOrbSparkAlpha()
     --update element power orb spark alpha
@@ -2416,6 +2520,10 @@
     panel.updateHealthOrbHighlightAlpha()
     --update power orb highlight alpha
     panel.updatePowerOrbHighlightAlpha()
+    --update health orb galaxies alpha
+    panel.updateHealthOrbGalaxiesAlpha()
+    --update power orb galaxies alpha
+    panel.updatePowerOrbGalaxiesAlpha()
     --update health orb spark alpha
     panel.updateHealthOrbSparkAlpha()
     --update power orb spark alpha

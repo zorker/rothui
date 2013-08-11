@@ -48,7 +48,9 @@
           alpha             = 1,
         },
         --galaxies
-        galaxies = {},
+        galaxies = {
+          alpha = 0,
+        },
         --spark
         spark = {
           alpha = 0.9,
@@ -92,7 +94,9 @@
           alpha             = 1,
         },
         --galaxies
-        galaxies  = {},
+        galaxies  = {
+          alpha = 0,
+        },
         --spark
         spark = {
           alpha = 0.9,
@@ -144,7 +148,9 @@
           alpha             = 1,
         },
         --galaxies
-        galaxies = {},
+        galaxies = {
+          alpha = 0,
+        },
         --spark
         spark = {
           alpha = 0.9,

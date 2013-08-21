@@ -10,6 +10,14 @@
     cfg.width = 100
     cfg.height = 26
 
+    cfg.colors = {
+      castbar = {
+        default   = { r = 1, g = 0.6, b = 0 },
+        shield    = { r = 0.8, g = 0.8, b = 0.8 },
+      },
+    }
+
+
     -----------------------------------------
     -- VARIABLES
     -----------------------------------------
@@ -27,6 +35,7 @@
     -- FUNCTIONS
     -----------------------------------------
 
+    --convert RGB to Hexadecimal color value
     local function RGBPercToHex(r, g, b)
       r = r <= 1 and r >= 0 and r or 0
       g = g <= 1 and g >= 0 and g or 0
@@ -34,102 +43,140 @@
       return string.format("%02x%02x%02x", r*255, g*255, b*255)
     end
 
+    --round color values to fix them
     local function FixColor(color)
       color.r,color.g,color.b = floor(color.r*100+.5)/100, floor(color.g*100+.5)/100, floor(color.b*100+.5)/100
     end
 
-    --NamePlateOnShow func
-    local function NamePlateOnShow(self)
-      --new plate
-      local newPlate = self.healthbar:GetParent()
-      --hide level
-      self.level:Hide()
-      --healthbar
-      self.healthbar:ClearAllPoints()
-      self.healthbar:SetPoint("TOP", newPlate)
-      self.healthbar:SetPoint("LEFT", newPlate)
-      self.healthbar:SetPoint("RIGHT", newPlate)
-      self.healthbar:SetHeight(newPlate.height/2)
-      --name
-      self.name:ClearAllPoints()
-      self.name:SetPoint("BOTTOM", newPlate, "TOP")
-      self.name:SetPoint("LEFT", newPlate,-10,0)
-      self.name:SetPoint("RIGHT", newPlate,10,0)
-      self.name:SetFont(STANDARD_TEXT_FONT,11,"THINOUTLINE")
-      self.realName = self.name:GetText()
-    end
-
-    --NamePlateCastbarOnShow func
-    local function NamePlateCastbarOnShow(self)
-        --new plate
-        local newPlate = self:GetParent()
-        --castbar
-        self:ClearAllPoints()
-        self:SetPoint("BOTTOM",newPlate)
-        self:SetPoint("LEFT",newPlate)
-        self:SetPoint("RIGHT",newPlate)
-        self:SetHeight(newPlate.height/2)
-        --castbar icon
-        self.icon:ClearAllPoints()
-        self.icon:SetPoint("RIGHT",newPlate, "LEFT")
-    end
-
-    --NamePlateNameUpdate func
-    local function NamePlateNameUpdate(self)
-      if not self.realName then return end
-      local cs = RGBPercToHex(self.level:GetTextColor())
-      --name string
-      local name = self.realName
-      local level = self.level:GetText()
-      if self.boss:IsShown() == 1 then
-        level = "??"
-        cs = "ff6600"
-      elseif self.dragon:IsShown() == 1 then
-        level = level.."+"
-      end
-      self.name:SetText("|cff"..cs..""..level.."|r "..name)
-      self.level:Hide()
-    end
-
-    --NamePlateHealthBarUpdate func
-    local function NamePlateHealthBarUpdate(self)
+    --get difficulty color func
+    local function GetLevelColor(self)
       local color = {}
-      if self.threat:IsShown() then
-        color.r, color.g, color.b = self.threat:GetVertexColor()
-        FixColor(color)
-        if color.r+color.g+color.b < 3 then
-          self.healthbar:SetStatusBarColor(color.r,color.g,color.b)
-          return
-        end
-      end
+      color.r, color.g, color.b = self.level:GetTextColor()
+      FixColor(color)
+      return color
+    end
+
+    --get threat color func
+    local function GetThreatColor(self)
+      local color = {}
+      color.r, color.g, color.b = self.threat:GetVertexColor()
+      FixColor(color)
+      return color
+    end
+
+    --get healthbar color func
+    local function GetHealthbarColor(self)
+      local color = {}
       color.r, color.g, color.b = self.healthbar:GetStatusBarColor()
       FixColor(color)
+      return color
+    end
+
+    --get castbar color func
+    local function GetCastbarColor(self)
+      local color = {}
+      color.r, color.g, color.b = self.castbar:GetStatusBarColor()
+      FixColor(color)
+      return color
+    end
+
+    --based on a given color, guess the cass/faction color
+    local function CalculateClassFactionColor(color)
       for class, _ in pairs(RAID_CLASS_COLORS) do
         if RAID_CLASS_COLORS[class].r == color.r and RAID_CLASS_COLORS[class].g == color.g and RAID_CLASS_COLORS[class].b == color.b then
-          self.healthbar:SetStatusBarColor(RAID_CLASS_COLORS[class].r,RAID_CLASS_COLORS[class].g,RAID_CLASS_COLORS[class].b)
-          return --no color change needed, bar is in class color
+          return --no color change needed, class color found
         end
       end
       if color.g+color.b == 0 then -- hostile
-        self.healthbar:SetStatusBarColor(FACTION_BAR_COLORS[2].r,FACTION_BAR_COLORS[2].g,FACTION_BAR_COLORS[2].b)
+        color.r,color.g,color.b = FACTION_BAR_COLORS[2].r, FACTION_BAR_COLORS[2].g, FACTION_BAR_COLORS[2].b
         return
       elseif color.r+color.b == 0 then -- friendly npc
-        self.healthbar:SetStatusBarColor(FACTION_BAR_COLORS[6].r,FACTION_BAR_COLORS[6].g,FACTION_BAR_COLORS[6].b)
+        color.r,color.g,color.b = FACTION_BAR_COLORS[6].r, FACTION_BAR_COLORS[6].g, FACTION_BAR_COLORS[6].b
         return
-      elseif color.r+color.g == 2 then -- neutral
-        self.healthbar:SetStatusBarColor(FACTION_BAR_COLORS[4].r,FACTION_BAR_COLORS[4].g,FACTION_BAR_COLORS[4].b)
+      elseif color.r+color.g > 1.95 then -- neutral
+        color.r,color.g,color.b = FACTION_BAR_COLORS[4].r, FACTION_BAR_COLORS[4].g, FACTION_BAR_COLORS[4].b
         return
       elseif color.r+color.g == 0 then -- friendly player, we don't like 0,0,1 so we change it to a more likable color
-        self.healthbar:SetStatusBarColor(0/255, 100/255, 255/255)
+        color.r,color.g,color.b = 0/255, 100/255, 255/255
         return
-      else -- enemy player
+      else
         --whatever is left
         return
       end
     end
 
-    --NamePlateInit func
-    local function NamePlateInit(plate)
+    --get hexadecimal color string from color table
+    local function GetHexColor(color)
+      return RGBPercToHex(unpack(color))
+    end
+
+    --NameplateNameUpdate func
+    local function NameplateNameUpdate(self)
+      local hexColor = GetHexColor(GetLevelColor(self))
+      local name = self._name or "Unknown"
+      local level = self.level:GetText()
+      if self.boss:IsShown() then
+        level = "??"
+        hexColor = "ff6600"
+      elseif self.dragon:IsShown() then
+        level = level.."+"
+      end
+      local color = GetHealthbarColor(self)
+      CalculateClassFactionColor(color)
+      self.name:SetTextColor(unpack(color))
+      self.name:SetText("|cff"..hexColor..""..level.."|r "..name)
+      --hide level
+      self.level:Hide()
+    end
+
+    --NameplateOnShow func
+    local function NameplateOnShow(self)
+      --healthbar
+      self.healthbar:ClearAllPoints()
+      self.healthbar:SetPoint("TOP", self.newPlate)
+      self.healthbar:SetPoint("LEFT", self.newPlate)
+      self.healthbar:SetPoint("RIGHT", self.newPlate)
+      self.healthbar:SetHeight(self.newPlate.height/2)
+      --name
+      self.name:ClearAllPoints()
+      self.name:SetPoint("BOTTOM", self.newPlate, "TOP")
+      self.name:SetPoint("LEFT", self.newPlate,-10,0)
+      self.name:SetPoint("RIGHT", self.newPlate,10,0)
+      self.name:SetFont(STANDARD_TEXT_FONT,11,"THINOUTLINE")
+      self._name = self.name:GetText()
+      --update the name and level strings
+      NameplateNameUpdate(self)
+    end
+
+    --NameplateCastbarOnShow func
+    local function NameplateCastbarOnShow(self)
+      local newPlate = self:GetParent()
+      --castbar
+      self:ClearAllPoints()
+      self:SetPoint("BOTTOM", newPlate)
+      self:SetPoint("LEFT", newPlate)
+      self:SetPoint("RIGHT", newPlate)
+      self:SetHeight(newPlate.height/2)
+      --castbar icon
+      self.icon:ClearAllPoints()
+      self.icon:SetPoint("RIGHT", newPlate, "LEFT")
+      --shielded cast
+      if self.shield:IsShown() then
+        self:SetStatusBarColor(0.8,0.8,0.8)
+      else
+        --self:SetStatusBarColor(1,0.6,0)
+      end
+    end
+
+    --NameplateCastbarOnValueChanged func
+    local function NameplateCastbarOnValueChanged(self)
+      local newPlate = self:GetParent()
+      print(newPlate:GetName().." Castbar OnValueChanged")
+      print(self:GetMinMaxValues())
+    end
+
+    --NameplateInit func
+    local function NameplateInit(plate)
       --add some references
       plate.barFrame, plate.nameFrame = plate:GetChildren()
       plate.healthbar, plate.castbar = plate.barFrame:GetChildren()
@@ -186,58 +233,70 @@
       plate.castbar.name:SetFont(STANDARD_TEXT_FONT,10,"THINOUTLINE")
       plate.castbar.name:SetShadowColor(0,0,0,0)
       --nameplate on show hook
-      plate:HookScript("OnShow", NamePlateOnShow)
+      plate:HookScript("OnShow", NameplateOnShow)
       --nameplate castbar on show hook
-      plate.castbar:HookScript("OnShow", NamePlateCastbarOnShow)
+      plate.castbar:HookScript("OnShow", NameplateCastbarOnShow)
+      --plate.castbar:HookScript("OnValueChanged", NameplateCastbarOnValueChanged)
       --i fix
-      NamePlateOnShow(plate)
+      NameplateOnShow(plate)
       --debug
-      --local t = plate:CreateTexture()
-      --t:SetTexture(1,0,0,0.3)
-      --t:SetAllPoints()
+      for i = 1, 100 do
+        local fs = plate:CreateFontString(nil, nil, "GameFontNormalHuge")
+        fs:SetText("BLIZZPLATE")
+        fs:SetPoint("CENTER", math.random(-50,50), math.random(-12,12))
+      end
+      for i = 1, 100 do
+        local fs = RDP.nameplates[plate]:CreateFontString(nil, nil, "GameFontNormalHuge")
+        fs:SetText("NEWPLATE")
+        fs:SetPoint("CENTER", math.random(-50,50), math.random(-12,12))
+      end
     end
 
-    --IsNamePlateFrame func
-    local function IsNamePlateFrame(obj)
+    --IsNameplateFrame func
+    local function IsNameplateFrame(obj)
       local name = obj:GetName()
-      if name and name:find("NamePlate") then
+      if name and name:find("Nameplate") then
         return true
       end
       obj.rdp_checked = true
       return false
     end
 
-    --SearchForNamePlates func
-    local function SearchForNamePlates(self)
-      local currentChildren = self:GetNumChildren()
-      if not currentChildren or currentChildren == 0 then return end
-      for _, obj in pairs({self:GetChildren()}) do
-        if not obj.rdp_checked and IsNamePlateFrame(obj) then
-          NamePlateInit(obj)
+    --SearchForNameplates func
+    local function SearchForNameplates(self)
+      for _, child in pairs({self:GetChildren()}) do
+        if child.rdp_checked then return end
+        if IsNameplateFrame(child) then
+          NameplateInit(obj)
         end
       end
     end
 
-    --NamePlateOnUpdate func
-    local function NamePlateOnUpdate()
+    --RepositionAllNameplates func
+    local function RepositionAllNameplates()
       RDP:Hide()
       for blizzPlate, newPlate in pairs(RDP.nameplates) do
-          newPlate:Hide()
-          if blizzPlate:IsShown() then
-            newPlate:SetPoint("CENTER", WorldFrame, "BOTTOMLEFT", blizzPlate:GetCenter())
-            newPlate:SetAlpha(blizzPlate:GetAlpha())
-            NamePlateNameUpdate(blizzPlate)
-            NamePlateHealthBarUpdate(blizzPlate)
-            newPlate:Show()
-          end
+        newPlate:Hide()
+        if blizzPlate:IsShown() then
+          local scale, x, y = blizzPlate:GetScale(), blizzPlate:GetCenter()
+          newPlate:SetPoint("CENTER", WorldFrame, "BOTTOMLEFT", x*scale, y*scale)
+          newPlate:SetAlpha(blizzPlate:GetAlpha())
+          newPlate:Show()
+        end
       end
       RDP:Show()
     end
 
     --OnUpdate func
-    local function OnUpdate(self)
-      SearchForNamePlates(self)
-      NamePlateOnUpdate()
+    RDP.lastUpdate = 0
+    RDP.updateInterval = 1.0
+    local function OnUpdate(self,elapsed)
+      RDP.lastUpdate = RDP.lastUpdate + elapsed
+      RepositionAllNameplates()
+      if RDP.lastUpdate > RDP.updateInterval then
+        SearchForNameplates(self)
+        RDP.lastUpdate = 0
+      end
     end
 
     -----------------------------------------

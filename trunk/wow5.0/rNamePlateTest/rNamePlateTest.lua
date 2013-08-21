@@ -10,14 +10,6 @@
     cfg.width = 100
     cfg.height = 26
 
-    cfg.colors = {
-      castbar = {
-        default   = { r = 1, g = 0.6, b = 0 },
-        shield    = { r = 0.8, g = 0.8, b = 0.8 },
-      },
-    }
-
-
     -----------------------------------------
     -- VARIABLES
     -----------------------------------------
@@ -93,7 +85,7 @@
       elseif color.r+color.b == 0 then -- friendly npc
         color.r,color.g,color.b = FACTION_BAR_COLORS[6].r, FACTION_BAR_COLORS[6].g, FACTION_BAR_COLORS[6].b
         return
-      elseif color.r+color.g > 1.95 then -- neutral
+      elseif color.r+color.g == 2 then -- neutral
         color.r,color.g,color.b = FACTION_BAR_COLORS[4].r, FACTION_BAR_COLORS[4].g, FACTION_BAR_COLORS[4].b
         return
       elseif color.r+color.g == 0 then -- friendly player, we don't like 0,0,1 so we change it to a more likable color
@@ -278,8 +270,7 @@
       for blizzPlate, newPlate in pairs(RDP.nameplates) do
         newPlate:Hide()
         if blizzPlate:IsShown() then
-          local scale, x, y = blizzPlate:GetScale(), blizzPlate:GetCenter()
-          newPlate:SetPoint("CENTER", WorldFrame, "BOTTOMLEFT", x*scale, y*scale)
+          newPlate:SetPoint("CENTER", WorldFrame, "BOTTOMLEFT", blizzPlate:GetCenter())
           newPlate:SetAlpha(blizzPlate:GetAlpha())
           newPlate:Show()
         end

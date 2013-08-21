@@ -18,10 +18,13 @@
     local RDP = CreateFrame("Frame", "PlateCollector", WorldFrame)
     RDP:SetAllPoints()
     RDP.nameplates = {}
+    
+    --trash can
+    RDP.pastebin = CreateFrame("Frame")
+    RDP.pastebin:Hide()
 
     local RAID_CLASS_COLORS = RAID_CLASS_COLORS
     local FACTION_BAR_COLORS = FACTION_BAR_COLORS
-    local unpack = unpack
 
     -----------------------------------------
     -- FUNCTIONS
@@ -99,14 +102,14 @@
 
     --get hexadecimal color string from color table
     local function GetHexColor(color)
-      return RGBPercToHex(unpack(color))
+      return RGBPercToHex(color.r,color.g,color.b)
     end
 
     --NameplateNameUpdate func
     local function NameplateNameUpdate(self)
-      local hexColor = GetHexColor(GetLevelColor(self))
-      local name = self._name or "Unknown"
-      local level = self.level:GetText()
+      local hexColor = GetHexColor(GetLevelColor(self)) or "ffffff"
+      local name = self.unitName or "Unknown"
+      local level = self.level:GetText() or "-1"
       if self.boss:IsShown() then
         level = "??"
         hexColor = "ff6600"
@@ -115,10 +118,8 @@
       end
       local color = GetHealthbarColor(self)
       CalculateClassFactionColor(color)
-      self.name:SetTextColor(unpack(color))
-      self.name:SetText("|cff"..hexColor..""..level.."|r "..name)
-      --hide level
-      self.level:Hide()
+      self._name:SetTextColor(color.r,color.g,color.b)
+      self._name:SetText("|cff"..hexColor..""..level.."|r "..name)
     end
 
     --NameplateOnShow func
@@ -129,13 +130,8 @@
       self.healthbar:SetPoint("LEFT", self.newPlate)
       self.healthbar:SetPoint("RIGHT", self.newPlate)
       self.healthbar:SetHeight(self.newPlate.height/2)
-      --name
-      self.name:ClearAllPoints()
-      self.name:SetPoint("BOTTOM", self.newPlate, "TOP")
-      self.name:SetPoint("LEFT", self.newPlate,-10,0)
-      self.name:SetPoint("RIGHT", self.newPlate,10,0)
-      self.name:SetFont(STANDARD_TEXT_FONT,11,"THINOUTLINE")
-      self._name = self.name:GetText()
+      --unit name
+      self.unitName = self.name:GetText()
       --update the name and level strings
       NameplateNameUpdate(self)
     end
@@ -170,6 +166,7 @@
     --NameplateInit func
     local function NameplateInit(plate)
       --add some references
+      --print(plate:GetName().." init")
       plate.barFrame, plate.nameFrame = plate:GetChildren()
       plate.healthbar, plate.castbar = plate.barFrame:GetChildren()
       plate.threat, plate.border, plate.highlight, plate.level, plate.boss, plate.raid, plate.dragon = plate.barFrame:GetRegions()
@@ -179,21 +176,23 @@
       plate.rdp_checked = true
       --create new plate and parent it to RDP
       RDP.nameplates[plate] = CreateFrame("Frame", "New"..plate:GetName(), RDP)
-      RDP.nameplates[plate]:SetSize(cfg.width,cfg.height)
-      RDP.nameplates[plate].width, RDP.nameplates[plate].height = RDP.nameplates[plate]:GetSize()
+      local newPlate = RDP.nameplates[plate]
+      newPlate:SetSize(cfg.width,cfg.height)
+      newPlate.width, newPlate.height = newPlate:GetSize()
       --keep the frame reference for later
-      RDP.nameplates[plate].blizzPlate = plate
-      plate.newPlate = RDP.nameplates[plate]
+      newPlate.blizzPlate = plate
+      plate.newPlate = newPlate
       --reparent
-      plate.raid:SetParent(RDP.nameplates[plate])
-      plate.nameFrame:SetParent(RDP.nameplates[plate])
-      plate.castbar:SetParent(RDP.nameplates[plate])
-      plate.healthbar:SetParent(RDP.nameplates[plate])
+      plate.raid:SetParent(newPlate)
+      plate.castbar:SetParent(newPlate)
+      plate.healthbar:SetParent(newPlate)
+      --trash
+      plate.nameFrame:Hide()
+      plate.level:Hide()
+      plate.level:SetParent(RDP.pastebin) --trash the level string, it will come back OnShow and OnDrunk otherwise ;)
       --reparent raid mark
       plate.raid:ClearAllPoints()
-      plate.raid:SetPoint("BOTTOM",RDP.nameplates[plate],"TOP")
-      --hide level
-      plate.level:Hide()
+      plate.raid:SetPoint("BOTTOM",newPlate,"TOP")
       --hide textures
       plate.dragon:SetTexture(nil)
       plate.border:SetTexture(nil)
@@ -207,12 +206,9 @@
       plate.healthbar.bg = plate.healthbar:CreateTexture(nil,"BACKGROUND",nil,-8)
       plate.healthbar.bg:SetTexture(0,0,0,1)
       plate.healthbar.bg:SetAllPoints()
-      --name
-      plate.name:SetFont(STANDARD_TEXT_FONT,11,"THINOUTLINE")
-      plate.name:SetShadowColor(0,0,0,0)
       --castbar icon
       plate.castbar.icon:SetTexCoord(0.1,0.9,0.1,0.9)
-      plate.castbar.icon:SetSize(RDP.nameplates[plate].height,RDP.nameplates[plate].height)
+      plate.castbar.icon:SetSize(newPlate.height,newPlate.height)
       --castbar bg
       plate.castbar.bg = plate.castbar:CreateTexture(nil,"BACKGROUND",nil,-8)
       plate.castbar.bg:SetTexture(0,0,0,1)
@@ -224,6 +220,13 @@
       plate.castbar.name:SetPoint("RIGHT",plate.castbar,-5,0)
       plate.castbar.name:SetFont(STANDARD_TEXT_FONT,10,"THINOUTLINE")
       plate.castbar.name:SetShadowColor(0,0,0,0)
+      --new name string
+      newPlate.name = newPlate:CreateFontString(nil,"BORDER")
+      newPlate.name:SetPoint("BOTTOM", newPlate, "TOP")
+      newPlate.name:SetPoint("LEFT", newPlate,-2,0)
+      newPlate.name:SetPoint("RIGHT", newPlate,2,0)
+      newPlate.name:SetFont(STANDARD_TEXT_FONT,11,"THINOUTLINE")
+      plate._name = newPlate.name
       --nameplate on show hook
       plate:HookScript("OnShow", NameplateOnShow)
       --nameplate castbar on show hook
@@ -231,23 +234,12 @@
       --plate.castbar:HookScript("OnValueChanged", NameplateCastbarOnValueChanged)
       --i fix
       NameplateOnShow(plate)
-      --debug
-      for i = 1, 100 do
-        local fs = plate:CreateFontString(nil, nil, "GameFontNormalHuge")
-        fs:SetText("BLIZZPLATE")
-        fs:SetPoint("CENTER", math.random(-50,50), math.random(-12,12))
-      end
-      for i = 1, 100 do
-        local fs = RDP.nameplates[plate]:CreateFontString(nil, nil, "GameFontNormalHuge")
-        fs:SetText("NEWPLATE")
-        fs:SetPoint("CENTER", math.random(-50,50), math.random(-12,12))
-      end
     end
 
     --IsNameplateFrame func
     local function IsNameplateFrame(obj)
       local name = obj:GetName()
-      if name and name:find("Nameplate") then
+      if name and name:find("NamePlate") then
         return true
       end
       obj.rdp_checked = true
@@ -256,9 +248,8 @@
 
     --SearchForNameplates func
     local function SearchForNameplates(self)
-      for _, child in pairs({self:GetChildren()}) do
-        if child.rdp_checked then return end
-        if IsNameplateFrame(child) then
+      for _, obj in pairs({self:GetChildren()}) do
+        if not obj.rdp_checked and IsNameplateFrame(obj) then
           NameplateInit(obj)
         end
       end

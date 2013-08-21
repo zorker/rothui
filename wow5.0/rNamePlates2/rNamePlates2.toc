@@ -1,0 +1,6 @@
+## Interface: 50300
+## Author: zork
+## Title: rNamePlates2
+## Notes: Just simple nameplates!
+
+core.lua

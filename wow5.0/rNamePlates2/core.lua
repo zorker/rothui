@@ -13,7 +13,7 @@
   local cfg = {}
 
   --width/height
-  cfg.nameplateWidth    = 110
+  cfg.nameplateWidth    = 100
   cfg.healthbarHeight   = 7
   cfg.castbarHeight     = 7
   cfg.threatglowHeight  = 15
@@ -27,8 +27,9 @@
   cfg.raidiconSize      = 25
 
   --statusbars
-  cfg.castbarTexture    = "Interface\\AddOns\\rNamePlates2\\media\\statusbar"
+  --available textures: statusbar, statusbar_smooth, statusbar_rothui
   cfg.healthbarTexture  = "Interface\\AddOns\\rNamePlates2\\media\\statusbar"
+  cfg.castbarTexture    = "Interface\\AddOns\\rNamePlates2\\media\\statusbar"
 
   --backdrop settings
   cfg.backdrop = {
@@ -36,12 +37,12 @@
     edgeFile = "Interface\\AddOns\\rNamePlates2\\media\\backdrop_edge",
     tile = false,
     tileSize = 0,
-    edgeSize = 4,
+    edgeSize = 3,
     insets = {
-      left = 4,
-      right = 4,
-      top = 4,
-      bottom = 4,
+      left = 3,
+      right = 3,
+      top = 3,
+      bottom = 3,
     },
   }
 

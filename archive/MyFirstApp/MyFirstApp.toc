@@ -1,0 +1,6 @@
+## Interface: 50300
+## Author: EnterYourNameHere
+## Title: MyFirstApp
+## Notes: My first addon!
+
+core.lua

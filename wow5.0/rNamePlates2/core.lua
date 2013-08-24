@@ -16,7 +16,6 @@
   cfg.nameplateWidth    = 100
   cfg.healthbarHeight   = 7
   cfg.castbarHeight     = 7
-  cfg.threatglowHeight  = 15
 
   --gap between bars and castbar icon
   cfg.gap               = 5
@@ -28,7 +27,7 @@
 
   --statusbars
   --available textures: statusbar, statusbar_smooth, statusbar_rothui
-  cfg.healthbarTexture  = "Interface\\AddOns\\rNamePlates2\\media\\statusbar"
+  cfg.healthbarTexture  = "Interface\\AddOns\\rNamePlates2\\media\\statusbar_rothui"
   cfg.castbarTexture    = "Interface\\AddOns\\rNamePlates2\\media\\statusbar"
 
   --backdrop settings
@@ -151,7 +150,7 @@
   local function GetHexColor(color)
     return RGBPercToHex(color.r,color.g,color.b)
   end
-
+  
   --NamePlateOnShow func
   local function NamePlateOnShow(self)
     --healthbar
@@ -162,10 +161,8 @@
     self.healthbar:SetHeight(cfg.healthbarHeight)
     --threat glow
     self.threat:ClearAllPoints()
-    self.threat:SetPoint("BOTTOM",self.healthbar,"TOP")
-    self.threat:SetPoint("LEFT", self.healthbar)
-    self.threat:SetPoint("RIGHT", self.healthbar)
-    self.threat:SetHeight(cfg.threatglowHeight)
+    self.threat:SetPoint("TOPLEFT",self.healthbar,-2,2)
+    self.threat:SetPoint("BOTTOMRIGHT",self.healthbar,2,-2)
     --set name and level
     local hexColor = GetHexColor(GetLevelColor(self)) or "ffffff"
     local name = self.name:GetText() or "Unknown"
@@ -234,7 +231,7 @@
     plate.healthbar:SetStatusBarTexture(cfg.healthbarTexture)
     CreateBackdrop(plate.healthbar)
     --threat
-    plate.threat:SetParent(newPlate)
+    plate.threat:SetParent(plate.healthbar)
     plate.threat:SetTexture("Interface\\AddOns\\rNamePlates2\\media\\threat_glow")
     plate.threat:SetTexCoord(0,1,0,1)
     --level

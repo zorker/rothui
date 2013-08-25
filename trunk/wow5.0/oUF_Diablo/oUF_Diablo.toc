@@ -1,4 +1,4 @@
-## Interface: 50300
+## Interface: 50400
 ## Author: zork
 ## Title: oUF_Diablo
 ## Notes: zork's oUF layout with Diablo flavour!

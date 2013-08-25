@@ -1,4 +1,4 @@
-## Interface: 50100
+## Interface: 50400
 ## Author: zork
 ## Version: 1.6
 ## Title: |cff00FF66rIngameModelViewer |r|cff666666 1.6|r

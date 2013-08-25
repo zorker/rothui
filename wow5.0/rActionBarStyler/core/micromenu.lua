@@ -29,6 +29,7 @@
     CompanionsMicroButton,
     EJMicroButton,
     MainMenuMicroButton,
+    StoreMicroButton,
     HelpMicroButton,
   }
 

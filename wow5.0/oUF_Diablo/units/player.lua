@@ -204,7 +204,6 @@
     t:SetPoint("CENTER",x,y)
     t:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\"..texture)
     t:SetBlendMode("ADD")
-    t:SetAlpha(0.5)
     t.ag = t:CreateAnimationGroup()
     t.ag.anim = t.ag:CreateAnimation("Rotation")
     t.ag.anim:SetDegrees(360)

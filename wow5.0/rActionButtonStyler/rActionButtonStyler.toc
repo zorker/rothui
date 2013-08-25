@@ -1,4 +1,4 @@
-## Interface: 50300
+## Interface: 50400
 ## Author: zork
 ## Title: rActionButtonStyler
 ## Notes: The default ActionButtonTemplate with style!

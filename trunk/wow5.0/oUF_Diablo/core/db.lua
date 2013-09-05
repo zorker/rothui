@@ -373,6 +373,7 @@
         { value = 32368, key = "pearl", },
         { value = 44652, key = "the planet", },
         { value = 47882, key = "red chocolate", },
+        { value = 48254, key = "purple chocolate", },
         { value = 33853, key = "red magnet", },
         { value = 34404, key = "white magnet", },
         { value = 38699, key = "dwarf artifact", },
@@ -521,6 +522,7 @@
       menuList = {
         { value = 26753, key = "spark", },
         { value = 27617, key = "yellow spark", },
+        { value = 51486, key = "creme spark", },
         { value = 46920, key = "purple splash", },
         { value = 48210, key = "yellow plasma", },
         { value = 29612, key = "strobo", },
@@ -542,6 +544,7 @@
         { value = 39740, key = "red spirit", },
         { value = 39738, key = "blue spirit", },
         { value = 28089, key = "ghost skull", },
+        { value = 51370, key = "red snake spirit", },
       },
     },
     {
@@ -560,6 +563,7 @@
         { value = 34010, key = "orange egg", },
         { value = 26506, key = "bubble torch", },
         { value = 41853, key = "onyx statue", },
+        { value = 51406, key = "melting pot", },
       },
     },
   }
@@ -591,6 +595,7 @@
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling18", key = "exile", },
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling19", key = "dominion", },
     { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling20", key = "runes", },
+    { value = "Interface\\AddOns\\oUF_Diablo\\media\\orb_filling21", key = "sigil orb", },
   }
   db.getListFillingTexture = function() return db.list.filling_texture end
 

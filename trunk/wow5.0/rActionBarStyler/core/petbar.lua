@@ -47,7 +47,7 @@
   end
 
   if not cfg.show then --wait...you no see me? :(
-    frame:SetParent(rABS_BizzardHider)
+    frame:SetParent(ns.pastebin)
     return
   end
 

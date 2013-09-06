@@ -45,7 +45,7 @@
   MainMenuBarBackpackButton:SetPoint("RIGHT", -cfg.padding, 0)
 
   if not cfg.show then --wait...you no see me? :(
-    frame:SetParent(rABS_BizzardHider)
+    frame:SetParent(ns.pastebin)
     return
   end
 

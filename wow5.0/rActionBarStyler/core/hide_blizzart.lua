@@ -12,21 +12,22 @@
   -----------------------------
 
   --hide blizzard
-  local blizzHider = CreateFrame("Frame","rABS_BizzardHider")
-  blizzHider:Hide()
+  local pastebin = CreateFrame("Frame")
+  pastebin:Hide()
+  ns.pastebin = pastebin
   --hide main menu bar frames
   if gcfg.bars.bar1.enable then
-    MainMenuBar:SetParent(blizzHider)
-    MainMenuBarPageNumber:SetParent(blizzHider)
-    ActionBarDownButton:SetParent(blizzHider)
-    ActionBarUpButton:SetParent(blizzHider)
+    MainMenuBar:SetParent(pastebin)
+    MainMenuBarPageNumber:SetParent(pastebin)
+    ActionBarDownButton:SetParent(pastebin)
+    ActionBarUpButton:SetParent(pastebin)
   end
   --hide override actionbar frames
   if gcfg.bars.overridebar.enable then
-    OverrideActionBarExpBar:SetParent(blizzHider)
-    OverrideActionBarHealthBar:SetParent(blizzHider)
-    OverrideActionBarPowerBar:SetParent(blizzHider)
-    OverrideActionBarPitchFrame:SetParent(blizzHider) --maybe we can use that frame later for pitchig and such
+    OverrideActionBarExpBar:SetParent(pastebin)
+    OverrideActionBarHealthBar:SetParent(pastebin)
+    OverrideActionBarPowerBar:SetParent(pastebin)
+    OverrideActionBarPitchFrame:SetParent(pastebin) --maybe we can use that frame later for pitchig and such
   end
 
   -----------------------------

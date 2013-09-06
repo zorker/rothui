@@ -17,21 +17,17 @@
   if not cfg.enable then return end
 
   --micro menu button objects
-  local buttonList = {
-    CharacterMicroButton,
-    SpellbookMicroButton,
-    TalentMicroButton,
-    AchievementMicroButton,
-    QuestLogMicroButton,
-    GuildMicroButton,
-    PVPMicroButton,
-    LFDMicroButton,
-    CompanionsMicroButton,
-    EJMicroButton,
-    MainMenuMicroButton,
-    StoreMicroButton,
-    HelpMicroButton,
-  }
+  local MICRO_BUTTONS = MICRO_BUTTONS
+  local buttonList = {}
+
+  --check the buttons in the MICRO_BUTTONS table
+  for _, buttonName in pairs(MICRO_BUTTONS) do
+    local button = _G[buttonName]
+    if button then
+      --if not button:IsShown() then print(buttonName.." is not shown") end
+      tinsert(buttonList, button)
+    end
+  end
 
   local NUM_MICROBUTTONS = # buttonList
   local buttonWidth = CharacterMicroButton:GetWidth()
@@ -51,12 +47,12 @@
   end
   CharacterMicroButton:ClearAllPoints();
   CharacterMicroButton:SetPoint("LEFT", cfg.padding, 0)
-  
+
   --disable reanchoring of the micro menu by the petbattle ui
   PetBattleFrame.BottomFrame.MicroButtonFrame:SetScript("OnShow", nil) --remove the onshow script
 
   if not cfg.show then --wait...you no see me? :(
-    frame:SetParent(rABS_BizzardHider)
+    frame:SetParent(ns.pastebin)
     return
   end
 

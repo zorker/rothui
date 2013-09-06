@@ -17,7 +17,7 @@
   if not cfg.enable then return end
 
   local num = NUM_STANCE_SLOTS
-  local num2 = NUM_POSSESS_SLOTS
+  local NUM_POSSESS_SLOTS = NUM_POSSESS_SLOTS
   local buttonList = {}
 
   --make a frame that fits the size of all microbuttons
@@ -52,7 +52,7 @@
   PossessBarFrame:SetParent(frame)
   PossessBarFrame:EnableMouse(false)
 
-  for i=1, num2 do
+  for i=1, NUM_POSSESS_SLOTS do
     local button = _G["PossessButton"..i]
     table.insert(buttonList, button) --add the button object to the list
     button:SetSize(cfg.buttons.size, cfg.buttons.size)
@@ -66,7 +66,7 @@
   end
 
   if not cfg.show then --wait...you no see me? :(
-    frame:SetParent(rABS_BizzardHider)
+    frame:SetParent(ns.pastebin)
     return
   end
 

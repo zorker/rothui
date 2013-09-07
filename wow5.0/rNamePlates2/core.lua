@@ -335,3 +335,7 @@
   -----------------------------------------
 
   WorldFrame:HookScript("OnUpdate", OnUpdate)
+  
+  --fixing the nameplate threat bloat
+  SetCVar("bloatnameplates",0)
+  SetCVar("bloatthreat",0)

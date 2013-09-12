@@ -175,6 +175,9 @@
     end
     local color = GetHealthbarColor(self)
     CalculateClassFactionColor(color)
+    if self.healthbar._texture then
+      self.healthbar._texture:SetVertexColor(color.r,color.g,color.b)
+    end
     self._name:SetTextColor(color.r,color.g,color.b)
     self._name:SetText("|cff"..hexColor..""..level.."|r "..name)
   end
@@ -228,7 +231,21 @@
     plate.nameFrame:Hide()
     --healthbar
     plate.healthbar:SetParent(newPlate)
-    plate.healthbar:SetStatusBarTexture(cfg.healthbarTexture)
+    --plate.healthbar:SetStatusBarTexture(cfg.healthbarTexture)
+    plate.healthbar.texture = plate.healthbar:GetStatusBarTexture()
+    plate.healthbar.texture:SetTexture(nil)
+    --new fake healthbar
+    plate.healthbar._texture = plate.healthbar:CreateTexture(nil, "BACKGROUND",nil,-6)
+    plate.healthbar._texture:SetAllPoints(plate.healthbar.texture)
+    plate.healthbar._texture:SetTexture(cfg.healthbarTexture) --texture file path
+    plate.healthbar._texture:SetVertexColor(0,1,1)
+    --[[
+    --healthbar bg test
+    plate.healthbar.bg = plate.healthbar:CreateTexture(nil, "BACKGROUND",nil,-6)
+    plate.healthbar.bg:SetAllPoints(plate.healthbar)
+    plate.healthbar.bg:SetTexture(1,1,1)
+    plate.healthbar.bg:SetVertexColor(1,0,0,0.2)
+    ]]--
     CreateBackdrop(plate.healthbar)
     --threat
     plate.threat:SetParent(plate.healthbar)

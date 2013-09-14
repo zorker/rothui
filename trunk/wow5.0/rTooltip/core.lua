@@ -125,7 +125,7 @@
   --HookScript GameTooltip OnTooltipSetUnit
   GameTooltip:HookScript("OnTooltipSetUnit", function(self,...)
     local unit = select(2, self:GetUnit()) or (GetMouseFocus() and GetMouseFocus():GetAttribute("unit")) or (UnitExists("mouseover") and "mouseover")
-    if not unit or type(unit) ~= "string" then return end
+    if not unit or (unit and type(unit) ~= "string") then return end
     if not UnitGUID(unit) then return end
     local ricon = GetRaidTargetIndex(unit)
     if ricon then

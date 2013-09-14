@@ -27,7 +27,7 @@
   --  VARIABLES
   ---------------------------------------------
   
-  local unpack = unpack
+  local unpack, type = unpack, type
   local RAID_CLASS_COLORS = RAID_CLASS_COLORS
   local FACTION_BAR_COLORS = FACTION_BAR_COLORS
   local WorldFrame = WorldFrame
@@ -125,8 +125,8 @@
   --HookScript GameTooltip OnTooltipSetUnit
   GameTooltip:HookScript("OnTooltipSetUnit", function(self,...)
     local unit = select(2, self:GetUnit()) or (GetMouseFocus() and GetMouseFocus():GetAttribute("unit")) or (UnitExists("mouseover") and "mouseover")
-    local guid = UnitGUID(unit) or nil
-    if not guid then return end
+    if not unit or type(unit) ~= "string" then return end
+    if not UnitGUID(unit) then return end
     local ricon = GetRaidTargetIndex(unit)
     if ricon then
       local text = GameTooltipTextLeft1:GetText()
@@ -179,8 +179,10 @@
     
     if UnitIsGhost(unit) then
       self:AppendText(" |cffaaaaaa<GHOST>|r")
+      GameTooltipTextLeft1:SetTextColor(0.5,0.5,0.5)
     elseif UnitIsDead(unit) then
       self:AppendText(" |cffaaaaaa<DEAD>|r")
+      GameTooltipTextLeft1:SetTextColor(0.5,0.5,0.5)
     end
     
   end)

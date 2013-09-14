@@ -141,6 +141,7 @@
     if UnitIsPlayer(unit) then
       local _, unitClass = UnitClass(unit)
       local color = RAID_CLASS_COLORS[unitClass]
+      GameTooltipStatusBar:SetStatusBarColor(color.r,color.g,color.b)
       GameTooltipTextLeft1:SetTextColor(color.r,color.g,color.b)
       if UnitIsAFK(unit) then
         self:AppendText(" |cff00cccc<AFK>|r")
@@ -158,10 +159,30 @@
       if reaction then
         local color = FACTION_BAR_COLORS[reaction]
         if color then
+          GameTooltipStatusBar:SetStatusBarColor(color.r,color.g,color.b)
           GameTooltipTextLeft1:SetTextColor(color.r,color.g,color.b)
         end
       end
+      
+      local unitClassification = UnitClassification(unit)
+      if unitClassification == "worldboss" or UnitLevel(unit) == -1 then
+        self:AppendText(" |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:14:14|t")
+      elseif unitClassification == "rare" then
+        self:AppendText(" |TInterface\\AddOns\\rTooltip\\diablo:14:14:0:0:16:16:0:15:0:14|t")
+      elseif unitClassification == "rareelite" then
+        self:AppendText(" |TInterface\\AddOns\\rTooltip\\diablo:14:14:0:0:16:16:0:15:0:14|t")
+      elseif unitClassification == "elite" then
+        self:AppendText(" |TInterface\\AddOns\\rTooltip\\plus:14:14|t")
+      end      
+      
     end
+    
+    if UnitIsGhost(unit) then
+      self:AppendText(" |cffaaaaaa<GHOST>|r")
+    elseif UnitIsDead(unit) then
+      self:AppendText(" |cffaaaaaa<DEAD>|r")
+    end
+    
   end)
   
   --func TooltipOnShow

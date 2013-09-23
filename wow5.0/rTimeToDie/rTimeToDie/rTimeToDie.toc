@@ -1,0 +1,6 @@
+## Interface: 50400
+## Author: zork
+## Title: rTimeToDie
+## Notes: How long does it take for a unit to die
+
+core.lua

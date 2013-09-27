@@ -137,7 +137,24 @@
     self.colorA.h, self.colorA.s, self.colorA.v = self:GetColorHSV()
     self:SetColorRGB(self.colorB.r, self.colorB.g, self.colorB.b)
     self.colorB.h, self.colorB.s, self.colorB.v = self:GetColorHSV()
-    self.colorC.h = floor(self.colorA.h-(self.colorA.h-self.colorB.h)*self.percentage/100)
+    --check if the angle between the two H values is > 180
+    if abs(self.colorA.h-self.colorB.h) > 180 then
+      local radius = (360-abs(self.colorA.h-self.colorB.h))*self.percentage/100
+      --calculate the 360° breakpoint
+      if self.colorA.h < self.colorB.h then
+        self.colorC.h = floor(self.colorA.h-radius)
+        if self.colorC.h < 0 then
+          self.colorC.h = 360+self.colorC.h
+        end
+      else
+        self.colorC.h = floor(self.colorA.h+radius)
+        if self.colorC.h > 360 then
+          self.colorC.h = self.colorC.h-360
+        end
+      end
+    else
+      self.colorC.h = floor(self.colorA.h-(self.colorA.h-self.colorB.h)*self.percentage/100)
+    end    
     self.colorC.s = self.colorA.s-(self.colorA.s-self.colorB.s)*self.percentage/100
     self.colorC.v = self.colorA.v-(self.colorA.v-self.colorB.v)*self.percentage/100
     self:SetColorHSV(self.colorC.h, self.colorC.s, self.colorC.v)

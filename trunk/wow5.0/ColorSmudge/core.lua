@@ -139,15 +139,15 @@
     self.colorB.h, self.colorB.s, self.colorB.v = self:GetColorHSV()
     --check if the angle between the two H values is > 180
     if abs(self.colorA.h-self.colorB.h) > 180 then
-      local radius = (360-abs(self.colorA.h-self.colorB.h))*self.percentage/100
+      local angle = (360-abs(self.colorA.h-self.colorB.h))*self.percentage/100
       --calculate the 360° breakpoint
       if self.colorA.h < self.colorB.h then
-        self.colorC.h = floor(self.colorA.h-radius)
+        self.colorC.h = floor(self.colorA.h-angle)
         if self.colorC.h < 0 then
           self.colorC.h = 360+self.colorC.h
         end
       else
-        self.colorC.h = floor(self.colorA.h+radius)
+        self.colorC.h = floor(self.colorA.h+angle)
         if self.colorC.h > 360 then
           self.colorC.h = self.colorC.h-360
         end

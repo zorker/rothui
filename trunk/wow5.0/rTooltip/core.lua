@@ -223,10 +223,10 @@
       GameTooltipTextLeft1:SetTextColor(0.5,0.5,0.5)
     end
     
-		if (UnitExists(unit.."target")) then
+    if (UnitExists(unit.."target")) then
       GameTooltip:AddDoubleLine("|cffff9999Target|r",GetTarget(unit.."target") or "Unknown")
       --GameTooltip:Show()
-		end
+    end
     
   end)
   

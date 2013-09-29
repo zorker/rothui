@@ -77,28 +77,44 @@
     tooltip:Show()
   end
   
+  --func AddCasterRow
+  local function AddCasterRow(tooltip,caster)
+    tooltip:AddDoubleLine("|cff0099ffCaster|r",caster)
+    tooltip:Show()
+  end
+  
+  --func AddBossDebuffRow
+  local function AddBossDebuffRow(tooltip,isBossDebuff)
+    tooltip:AddDoubleLine("|cff0099ffBossDebuff|r","Yes")
+    tooltip:Show()
+  end
+  
   --hooksecurefunc GameTooltip SetUnitBuff
   hooksecurefunc(GameTooltip, "SetUnitBuff", function(self,...)
     local spellid = select(11,UnitBuff(...))
-    if spellid then
-      AddSpellIdRow(self,spellid)      
-    end
+    if spellid then AddSpellIdRow(self,spellid) end
+    local caster = select(8,UnitBuff(...))
+    AddCasterRow(self,select(8,UnitBuff(...)),select(13,UnitBuff(...)))
   end)
 
   --hooksecurefunc GameTooltip SetUnitDebuff
   hooksecurefunc(GameTooltip, "SetUnitDebuff", function(self,...)
     local spellid = select(11,UnitDebuff(...))
-    if spellid then
-      AddSpellIdRow(self,spellid)
-    end
+    if spellid then AddSpellIdRow(self,spellid) end
+    local caster = select(8,UnitDebuff(...))
+    if caster then AddCasterRow(self,caster) end
+    local isBossDebuff = select(13,UnitDebuff(...))
+    if isBossDebuff then AddBossDebuffRow(self,isBossDebuff) end
   end)
 
   --hooksecurefunc GameTooltip SetUnitAura
   hooksecurefunc(GameTooltip, "SetUnitAura", function(self,...)
     local spellid = select(11,UnitAura(...))
-    if spellid then
-      AddSpellIdRow(self,spellid)
-    end
+    if spellid then AddSpellIdRow(self,spellid) end
+    local caster = select(8,UnitAura(...))
+    if caster then AddCasterRow(self,caster) end
+    local isBossDebuff = select(13,UnitAura(...))
+    if isBossDebuff then AddBossDebuffRow(self,isBossDebuff) end
   end)
 
   --hooksecurefunc SetItemRef
@@ -118,8 +134,30 @@
   end)
   
   --func GetHexColor
-  local GetHexColor = function(color)
-    return ("%.2x%.2x%.2x"):format(color.r * 255, color.g * 255, color.b * 255)
+  local function GetHexColor(color)
+    return ("%.2x%.2x%.2x"):format(color.r*255, color.g*255, color.b*255)
+  end
+  
+  local classColors, reactionColors = {}, {}
+  
+  for class, color in pairs(RAID_CLASS_COLORS) do 
+    classColors[class] = GetHexColor(RAID_CLASS_COLORS[class]) 
+  end
+  
+  for i = 1, #FACTION_BAR_COLORS do
+    reactionColors[i] = GetHexColor(FACTION_BAR_COLORS[i])
+  end
+  
+  local function GetTarget(unit)
+    if UnitIsUnit(unit, "player") then
+      return ("|cffff0000%s|r"):format("<YOU>")
+    elseif UnitIsPlayer(unit, "player")then
+      return ("|cff%s%s|r"):format(classColors[select(2, UnitClass(unit))], UnitName(unit))
+    elseif UnitReaction(unit, "player") then
+      return ("|cff%s%s|r"):format(reactionColors[UnitReaction(unit, "player")], UnitName(unit))
+    else
+      return ("|cffffffff%s|r"):format(UnitName(unit))
+    end
   end
   
   --HookScript GameTooltip OnTooltipSetUnit
@@ -184,6 +222,11 @@
       self:AppendText(" |cffaaaaaa<DEAD>|r")
       GameTooltipTextLeft1:SetTextColor(0.5,0.5,0.5)
     end
+    
+		if (UnitExists(unit.."target")) then
+      GameTooltip:AddDoubleLine("|cffff9999Target|r",GetTarget(unit.."target") or "Unknown")
+      --GameTooltip:Show()
+		end
     
   end)
   

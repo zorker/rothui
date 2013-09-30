@@ -74,7 +74,7 @@ end
 
 local Enable = function(self, unit)
   local element = self.RuneOrbs
-  if(element) then
+  if(element and unit == "player") then
     element.__owner = self
     element.ForceUpdate = ForceUpdate
 
@@ -88,6 +88,10 @@ local Enable = function(self, unit)
     self:RegisterEvent("UNIT_ENTERED_VEHICLE", Visibility)
     self:RegisterEvent("UNIT_EXITED_VEHICLE", Visibility)
 
+    local helper = CreateFrame("Frame") --this is needed...adding player_login to the visivility events does not do anything
+    helper:RegisterEvent("PLAYER_LOGIN")
+    helper:SetScript("OnEvent", function() Visibility(self) end)
+    
     RuneFrame.Show = RuneFrame.Hide
     RuneFrame:Hide()
 

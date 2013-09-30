@@ -76,7 +76,7 @@ local ForceUpdate = function(element)
   return Path(element.__owner, "ForceUpdate", element.__owner.unit, "SHADOW_ORBS")
 end
 
-local Enable = function(self, unit)
+local function Enable(self, unit)
   local element = self.ShadowOrbs
   if(element and unit == "player") then
     element.__owner = self
@@ -98,10 +98,10 @@ local Enable = function(self, unit)
   end
 end
 
-local Disable = function(self)
+local function Disable(self)
   local element = self.ShadowOrbs
   if(element) then
-    self:UnregisterEvent("UNIT_POWER", Path)
+    self:UnregisterEvent("UNIT_POWER_FREQUENT", Path)
     self:UnregisterEvent("UNIT_DISPLAYPOWER", Path)
     self:UnregisterEvent("PLAYER_TALENT_UPDATE", Visibility)
     self:UnregisterEvent("SPELLS_CHANGED", Visibility)

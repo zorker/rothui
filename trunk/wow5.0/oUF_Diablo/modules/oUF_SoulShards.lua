@@ -79,9 +79,9 @@ local ForceUpdate = function(element)
   return Path(element.__owner, "ForceUpdate", element.__owner.unit, "SOUL_SHARDS")
 end
 
-local function Enable(self)
+local function Enable(self, unit)
   local element = self.SoulShards
-  if(element) then
+  if(element and unit == "player") then
     element.__owner = self
     element.ForceUpdate = ForceUpdate
 
@@ -104,10 +104,9 @@ end
 local function Disable(self)
   local element = self.SoulShards
   if(element) then
-    self:UnregisterEvent("UNIT_POWER", Path)
+    self:UnregisterEvent("UNIT_POWER_FREQUENT", Path)
     self:UnregisterEvent("UNIT_DISPLAYPOWER", Path)
     self:UnregisterEvent("PLAYER_TALENT_UPDATE", Visibility)
-    self:UnregisterEvent("PLAYER_LOGIN", Visibility)
     self:UnregisterEvent("SPELLS_CHANGED", Visibility)
     self:UnregisterEvent("UPDATE_OVERRIDE_ACTIONBAR", Visibility)
     self:UnregisterEvent("UNIT_ENTERED_VEHICLE", Visibility)

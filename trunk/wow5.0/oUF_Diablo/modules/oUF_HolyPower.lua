@@ -74,11 +74,12 @@ local ForceUpdate = function(element)
   return Path(element.__owner, "ForceUpdate", element.__owner.unit, "HOLY_POWER")
 end
 
-local function Enable(self)
+local function Enable(self, unit)
   local element = self.HolyPower
-  if(element) then
+  if(element and unit == "player") then
     element.__owner = self
     element.ForceUpdate = ForceUpdate
+    
     self:RegisterEvent("UNIT_POWER_FREQUENT", Path)
     self:RegisterEvent("UNIT_DISPLAYPOWER", Path)
     self:RegisterEvent("PLAYER_TALENT_UPDATE", Visibility, true)
@@ -86,6 +87,11 @@ local function Enable(self)
     self:RegisterEvent("UPDATE_OVERRIDE_ACTIONBAR", Visibility, true)
     self:RegisterEvent("UNIT_ENTERED_VEHICLE", Visibility)
     self:RegisterEvent("UNIT_EXITED_VEHICLE", Visibility)
+    
+    local helper = CreateFrame("Frame") --this is needed...adding player_login to the visivility events does not do anything
+    helper:RegisterEvent("PLAYER_LOGIN")
+    helper:SetScript("OnEvent", function() Visibility(self) end)
+    
     return true
   end
 end
@@ -93,7 +99,7 @@ end
 local function Disable(self)
   local element = self.HolyPower
   if(element) then
-    self:UnregisterEvent("UNIT_POWER", Path)
+    self:UnregisterEvent("UNIT_POWER_FREQUENT", Path)
     self:UnregisterEvent("UNIT_DISPLAYPOWER", Path)
     self:UnregisterEvent("PLAYER_TALENT_UPDATE", Visibility)
     self:UnregisterEvent("SPELLS_CHANGED", Visibility)

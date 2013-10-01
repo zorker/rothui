@@ -23,7 +23,7 @@
     ta:Show()
    
     if(ta.PostUpdate) then
-      return ta:PostUpdate(unit)
+      return ta:PostUpdate(unit,allAbsorbs,maxHealth)
     end
   end
    
@@ -46,12 +46,12 @@
       self:RegisterEvent('UNIT_HEALTH', Path)
    
       if(not ta.maxOverflow) then
-        ta.maxOverflow = 1.05
+        ta.maxOverflow = 1.00
       end
    
-      if(ta and ta:IsObjectType'StatusBar' and not ta:GetStatusBarTexture()) then
-        ta:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
-      end
+      --if(ta and ta:IsObjectType'StatusBar' and not ta:GetStatusBarTexture()) then
+        --ta:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
+      --end
    
       return true
     end

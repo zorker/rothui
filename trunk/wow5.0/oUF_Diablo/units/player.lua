@@ -385,6 +385,29 @@
       self:Tag(orb.values.top, "[diablo:PowerOrbTop]")
       self:Tag(orb.values.bottom, "[diablo:PowerOrbBottom]")
     end
+    
+    --new absorb display directly on the orb
+    if self.cfg.health.showAbsorb and orb.type == "HEALTH" then    
+      local absorbBar = CreateFrame("StatusBar", nil, values)
+      --absorbBar:SetAllPoints()
+      absorbBar:SetPoint("CENTER")
+      absorbBar:SetSize(self.cfg.size-5,self.cfg.size-5)      
+      absorbBar.texture = absorbBar:CreateTexture(nil,"OVERLAY",nil,-8)
+      absorbBar.texture:SetPoint("TOPLEFT")
+      absorbBar.texture:SetPoint("TOPRIGHT")
+      absorbBar.texture.maxHeight = absorbBar:GetHeight()
+      absorbBar.texture:SetHeight(absorbBar.texture.maxHeight)
+      absorbBar.texture:SetTexture("Interface\\AddOns\\oUF_Diablo\\media\\orb_absorb_glow")
+      absorbBar.texture:SetVertexColor(1,1,1,1)
+      --absorbBar.texture:SetBlendMode("ADD")
+      --absorbBar.texture:SetTexCoord(0,1,0,0.2)
+      --absorbBar.texture:SetHeight(absorbBar.texture.maxHeight*0.2)
+      absorbBar.PostUpdate = function(self,unit,absorb,maxHealth)
+        self.texture:SetTexCoord(0,1,0,absorb/maxHealth)
+        self.texture:SetHeight(absorbBar.texture.maxHeight*absorb/maxHealth)
+      end
+      self.TotalAbsorb = absorbBar    
+    end
 
     if orb.type == "POWER" then
       self.Power = orb.fill

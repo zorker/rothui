@@ -50,6 +50,7 @@
       health = {
         frequentUpdates = false,
         smooth = true,
+        showAbsorb = true,
       },
       power = {
         frequentUpdates = false,

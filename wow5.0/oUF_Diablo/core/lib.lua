@@ -675,13 +675,15 @@
       w = self:GetWidth()-24.5-24.5 --raids and party have no width on the health frame for whatever reason, thus use self and subtract the setpoint values
     end
     local absorbBar = CreateFrame("StatusBar", nil, self.Health)
-    absorbBar:SetFrameLevel(self.Health:GetFrameLevel())
-    absorbBar:SetPoint("TOPLEFT", self.Health:GetStatusBarTexture(), "TOPRIGHT", 0, 0)
-    absorbBar:SetPoint("BOTTOMLEFT", self.Health:GetStatusBarTexture(), "BOTTOMRIGHT", 0, 0)
+    --new anchorpoint, absorb will now overlay the healthbar from right to left
+    absorbBar:SetFrameLevel(self.Health:GetFrameLevel()+1)
+    absorbBar:SetPoint("TOPRIGHT", self.Health, 0, 0)
+    absorbBar:SetPoint("BOTTOMRIGHT", self.Health, 0, 0)
     absorbBar:SetWidth(w)
-    absorbBar.maxOverflow = 1.05
+    absorbBar.maxOverflow = self.cfg.totalabsorb.maxoverflow
     absorbBar:SetStatusBarTexture(self.cfg.totalabsorb.texture)
     absorbBar:SetStatusBarColor(self.cfg.totalabsorb.color.bar.r,self.cfg.totalabsorb.color.bar.g,self.cfg.totalabsorb.color.bar.b,self.cfg.totalabsorb.color.bar.a)    
+    absorbBar:SetReverseFill(true)
     -- Register with oUF
     self.TotalAbsorb = absorbBar    
   end

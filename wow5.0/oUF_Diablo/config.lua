@@ -303,11 +303,11 @@
       },
       totalabsorb = {
         show = true,
-        texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
+        texture = "Interface\\AddOns\\oUF_Diablo\\media\\absorb_statusbar_overlay",
         color = {
-          bar  = {r = 0, g = 1, b = 1, a = 1 },
+          bar  = {r = 0.7, g = 1, b = 1, a = 0.9 },
         },
-        maxoverflow = 1.05,
+        maxoverflow = 1.00,
       },
     },
 
@@ -382,11 +382,11 @@
       },
       totalabsorb = {
         show = true,
-        texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
+        texture = "Interface\\AddOns\\oUF_Diablo\\media\\absorb_statusbar_overlay",
         color = {
-          bar  = {r = 0, g = 1, b = 1, a = 1 },
+          bar  = {r = 0.7, g = 1, b = 1, a = 0.9 },
         },
-        maxoverflow = 1.05,
+        maxoverflow = 1.00,
       },
     },
 
@@ -440,11 +440,11 @@
       },
       totalabsorb = {
         show = true,
-        texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
+        texture = "Interface\\AddOns\\oUF_Diablo\\media\\absorb_statusbar_overlay",
         color = {
-          bar  = {r = 0, g = 1, b = 1, a = 1 },
+          bar  = {r = 0.7, g = 1, b = 1, a = 0.9 },
         },
-        maxoverflow = 1.05,
+        maxoverflow = 1.00,
       },
     },
 
@@ -544,11 +544,11 @@
       },
       totalabsorb = {
         show = true,
-        texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
+        texture = "Interface\\AddOns\\oUF_Diablo\\media\\absorb_statusbar_overlay",
         color = {
-          bar  = {r = 0, g = 1, b = 1, a = 1 },
+          bar  = {r = 0.7, g = 1, b = 1, a = 0.9 },
         },
-        maxoverflow = 1.05,
+        maxoverflow = 1.00,
       },
     },
 
@@ -624,11 +624,11 @@
       },
       totalabsorb = {
         show = true,
-        texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
+        texture = "Interface\\AddOns\\oUF_Diablo\\media\\absorb_statusbar_overlay",
         color = {
-          bar  = {r = 0, g = 1, b = 1, a = 1 },
+          bar  = {r = 0.7, g = 1, b = 1, a = 0.9 },
         },
-        maxoverflow = 1.05,
+        maxoverflow = 1.00,
       },
     },
 

@@ -10,6 +10,9 @@
    
     local allAbsorbs = UnitGetTotalAbsorbs(unit) or 0
     local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
+    --decided to not concatenate health + absorb anymore.
+    --instead absorb does now overlay the healthbar from right to left
+    health = 0
    
     if(health + allAbsorbs > maxHealth * ta.maxOverflow) then
       allAbsorbs = maxHealth * ta.maxOverflow - health

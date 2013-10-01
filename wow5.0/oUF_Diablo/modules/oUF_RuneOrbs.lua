@@ -102,14 +102,14 @@ end
 local Disable = function(self)
   local element = self.RuneOrbs
   if(element) then
-	  RuneFrame.Show = nil
-	  RuneFrame:Show()
-	  self:UnregisterEvent("RUNE_POWER_UPDATE", UpdateRune)
-	  self:UnregisterEvent("RUNE_TYPE_UPDATE", UpdateType)
+    RuneFrame.Show = nil
+    RuneFrame:Show()
+    self:UnregisterEvent("RUNE_POWER_UPDATE", UpdateRune)
+    self:UnregisterEvent("RUNE_TYPE_UPDATE", UpdateType)
     self:UnregisterEvent("UPDATE_OVERRIDE_ACTIONBAR", Visibility)
     self:UnregisterEvent("UNIT_ENTERED_VEHICLE", Visibility)
     self:UnregisterEvent("UNIT_EXITED_VEHICLE", Visibility)
-	end
+  end
 end
 
 oUF:AddElement("RuneOrbs", Update, Enable, Disable)

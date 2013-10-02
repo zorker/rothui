@@ -9,13 +9,12 @@
     if(ta.PreUpdate) then ta:PreUpdate(unit) end
    
     local allAbsorbs = UnitGetTotalAbsorbs(unit) or 0
-    local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
-    --decided to not concatenate health + absorb anymore.
-    --instead absorb does now overlay the healthbar from right to left
-    health = 0
+    
+    local maxHealth = UnitHealthMax(unit)
+    --absorb does now overlay the healthbar from right to left
    
-    if(health + allAbsorbs > maxHealth * ta.maxOverflow) then
-      allAbsorbs = maxHealth * ta.maxOverflow - health
+    if allAbsorbs > maxHealth then
+      allAbsorbs = maxHealth
     end
    
     ta:SetMinMaxValues(0, maxHealth)
@@ -43,11 +42,6 @@
    
       self:RegisterEvent('UNIT_ABSORB_AMOUNT_CHANGED', Path)
       self:RegisterEvent('UNIT_MAXHEALTH', Path)
-      self:RegisterEvent('UNIT_HEALTH', Path)
-   
-      if(not ta.maxOverflow) then
-        ta.maxOverflow = 1.00
-      end
    
       --if(ta and ta:IsObjectType'StatusBar' and not ta:GetStatusBarTexture()) then
         --ta:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
@@ -62,7 +56,6 @@
     if(ta) then
       self:UnregisterEvent('UNIT_ABSORB_AMOUNT_CHANGED', Path)
       self:UnregisterEvent('UNIT_MAXHEALTH', Path)
-      self:UnregisterEvent('UNIT_HEALTH', Path)
     end
   end
    

@@ -24,6 +24,9 @@ local function hook(frame)
   if frame.Power and frame.Power.Smooth then
     frame:SmoothBar(frame.Power)
   end
+  if frame.TotalAbsorb and frame.TotalAbsorb.Smooth then
+    frame:SmoothBar(frame.TotalAbsorb)
+  end
 end
 
 for i, frame in ipairs(oUF.objects) do hook(frame) end

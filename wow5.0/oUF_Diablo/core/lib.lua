@@ -680,7 +680,6 @@
     absorbBar:SetPoint("TOPRIGHT", self.Health, 0, 0)
     absorbBar:SetPoint("BOTTOMRIGHT", self.Health, 0, 0)
     absorbBar:SetWidth(w)
-    absorbBar.maxOverflow = self.cfg.totalabsorb.maxoverflow
     absorbBar:SetStatusBarTexture(self.cfg.totalabsorb.texture)
     absorbBar:SetStatusBarColor(self.cfg.totalabsorb.color.bar.r,self.cfg.totalabsorb.color.bar.g,self.cfg.totalabsorb.color.bar.b,self.cfg.totalabsorb.color.bar.a)    
     absorbBar:SetReverseFill(true)

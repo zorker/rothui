@@ -50,10 +50,13 @@
       health = {
         frequentUpdates = false,
         smooth = true,
-        showAbsorb = true,
       },
       power = {
         frequentUpdates = false,
+        smooth = true,
+      },
+      absorb = {
+        show = true,
         smooth = true,
       },
       icons = {
@@ -308,7 +311,6 @@
         color = {
           bar  = {r = 0.7, g = 1, b = 1, a = 0.9 },
         },
-        maxoverflow = 1.00,
       },
     },
 
@@ -337,7 +339,7 @@
           myself  = {r = 0, g = 1, b = 0, a = 1 },
           other   = {r = 0, g = 1, b = 0, a = 0.7 },
         },
-        maxoverflow = 1.00,
+        maxoverflow = 1.05,
       },
     },
 
@@ -387,7 +389,6 @@
         color = {
           bar  = {r = 0.7, g = 1, b = 1, a = 0.9 },
         },
-        maxoverflow = 1.00,
       },
     },
 
@@ -445,7 +446,6 @@
         color = {
           bar  = {r = 0.7, g = 1, b = 1, a = 0.9 },
         },
-        maxoverflow = 1.00,
       },
     },
 
@@ -535,7 +535,7 @@
         point               = "LEFT",
       },
       healprediction = {
-        show = false,
+        show = true,
         texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
         color = {
           myself  = {r = 0, g = 1, b = 0, a = 1 },
@@ -549,7 +549,6 @@
         color = {
           bar  = {r = 0.7, g = 1, b = 1, a = 0.9 },
         },
-        maxoverflow = 1.00,
       },
     },
 
@@ -629,7 +628,6 @@
         color = {
           bar  = {r = 0.7, g = 1, b = 1, a = 0.9 },
         },
-        maxoverflow = 1.00,
       },
     },
 

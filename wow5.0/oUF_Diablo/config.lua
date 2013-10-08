@@ -598,9 +598,7 @@
         pos = { a1 = "CENTER", x = 0, y = -9},
       },
       attributes = {
-        visibility1         = "custom [@raid11,exists] hide;[group:raid] show; hide", --use "party,raid" to show this in party aswell
-        visibility2         = "custom [@raid26,exists] hide; [@raid11,exists] show; hide", --special display for raid > 20 players (lower scale)
-        visibility3         = "custom [@raid26,exists] show; hide", --special display for raid > 30 players (lower scale)
+        visibility          = "custom [group:raid] show; hide",
         showPlayer          = false,  --make this true to show player in party
         showSolo            = false,  --make this true to show while solo (only works if solo is in visiblity aswell
         showParty           = false,  --make this true to show raid in party

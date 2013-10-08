@@ -204,6 +204,10 @@
       
       local unitClassification = UnitClassification(unit)
       if unitClassification == "worldboss" or UnitLevel(unit) == -1 then
+        if UnitReaction(unit, "player") == 2 then
+          --highlight bosses
+          GameTooltipTextLeft1:SetTextColor(1,0.1,0)
+        end
         self:AppendText(" |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:14:14|t")
       elseif unitClassification == "rare" then
         self:AppendText(" |TInterface\\AddOns\\rTooltip\\diablo:14:14:0:0:16:16:0:15:0:14|t")

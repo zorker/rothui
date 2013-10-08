@@ -46,7 +46,8 @@
   if player_name == "Zork" and player_class == "WARRIOR" then
     --Rothars Buff List
     cfg.rf3_BuffList = {
-      [1] = {
+      --[[
+      {
         spellid = 12880, --enrage
         spec = nil,
         size = 36,
@@ -56,19 +57,20 @@
         ismine          = true,
         desaturate      = true,
         move_ingame     = true,
-        hide_ooc        = true,
+        --hide_ooc        = true,
         alpha = {
           found = {
             frame = 1,
             icon = 1,
           },
           not_found = {
-            frame = 0.4,
+            frame = 0.2,
             icon = 0.6,
           },
         },
       },
-      [2] = {
+      ]]--
+      {
         spellid = 469, -- +10% STA
         spelllist = { 469, 90364, 109773, 21562, },
         spec = nil,
@@ -91,7 +93,7 @@
           },
         },
       },
-      [3] = {
+      {
         spellid = 6673, -- +10% AP / RAP
         spelllist = { 6673, 57330, 19506, 133540, },
         spec = nil,
@@ -114,17 +116,17 @@
           },
         },
       },
-      [4] = {
+      {
         spellid = 112048, --shield barrier
         spec = 3,
-        size = 30,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 44, y = 150 },
+        size = 28,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -98, y = 110 },
         unit = "player",
         validate_unit   = true,
         ismine          = true,
         desaturate      = true,
         move_ingame     = true,
-        hide_ooc        = true,
+        --hide_ooc        = true,
         show_value      = 1,
         alpha = {
           found = {
@@ -137,17 +139,17 @@
           },
         },
       },
-      [5] = {
+      {
         spellid = 132365, --vengeance
         spec = 3,
-        size = 36,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 147 },
+        size = 28,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -60, y = 110 },
         unit = "player",
         validate_unit   = true,
         ismine          = true,
         desaturate      = true,
         move_ingame     = true,
-        hide_ooc        = true,
+        --hide_ooc        = true,
         show_value      = 1,
         alpha = {
           found = {
@@ -160,17 +162,17 @@
           },
         },
       },
-      [6] = {
+      {
         spellid = 132404, --shield block
         spec = 3,
-        size = 30,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -44, y = 150 },
+        size = 28,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -136, y = 110 },
         unit = "player",
         validate_unit   = true,
         ismine          = true,
         desaturate      = true,
         move_ingame     = true,
-        hide_ooc        = true,
+        --hide_ooc        = true,
         alpha = {
           found = {
             frame = 1,
@@ -178,50 +180,6 @@
           },
           not_found = {
             frame = 0.2,
-            icon = 0.6,
-          },
-        },
-      },
-      [7] = {
-        spellid = 131116, --meat cleaver
-        spec = 2,
-        size = 30,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -44, y = 150 },
-        unit = "player",
-        validate_unit   = true,
-        ismine          = true,
-        desaturate      = true,
-        move_ingame     = true,
-        hide_ooc        = true,
-        alpha = {
-          found = {
-            frame = 1,
-            icon = 1,
-          },
-          not_found = {
-            frame = 0.2,
-            icon = 0.6,
-          },
-        },
-      },
-      [8] = {
-        spellid = 85739, --metzger
-        spec = 2,
-        size = 30,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 44, y = 150 },
-        unit = "player",
-        validate_unit   = true,
-        ismine          = true,
-        desaturate      = true,
-        move_ingame     = true,
-        hide_ooc        = true,
-        alpha = {
-          found = {
-            frame = 1,
-            icon = 1,
-          },
-          not_found = {
-            frame = 0,
             icon = 0.6,
           },
         },
@@ -234,7 +192,7 @@
         spellid = 115798, --weakened blows
         spec = nil,
         size = 22,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -140, y = 110 },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -15, y = 110 },
         unit = "target",
         validate_unit   = true,
         ismine          = false,
@@ -256,7 +214,7 @@
         spellid = 113746, --weakened armor
         spec = nil,
         size = 22,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -110, y = 110 },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 15, y = 110 },
         unit = "target",
         validate_unit   = true,
         ismine          = false,
@@ -278,7 +236,7 @@
         spellid = 81326, --physical vulnerability
         spec = nil,
         size = 22,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -80, y = 110 },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 45, y = 110 },
         unit = "target",
         validate_unit   = true,
         ismine          = false,
@@ -300,7 +258,7 @@
         spellid = 115767, --deep wounds
         spec = nil,
         size = 22,
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -50, y = 110 },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 75, y = 110 },
         unit = "target",
         validate_unit   = true,
         ismine          = true,
@@ -341,35 +299,12 @@
           },
         },
       },
-      {
-        spellid = 136903, --frigid assault
-        spec = 3,
-        size = 50,
-        framestrata = "BACKGROUND",
-        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = -195, y = -90 },
-        unit = "Nudie",
-        validate_unit   = true,
-        ismine          = false,
-        desaturate      = true,
-        move_ingame     = true,
-        hide_ooc        = false,
-        alpha = {
-          found = {
-            frame = 1,
-            icon = 1,
-          },
-          not_found = {
-            frame = 0,
-            icon = 0.6,
-          },
-        },
-      },
     }
 
   --Rothars Cooldown List
   --[[
   cfg.rf3_CooldownList = {
-      [1] = {
+      {
         spellid = 118000, --dragon roar
         spelllist = { 118000, 46968, 46924, },
         --spec = 1,
@@ -390,7 +325,7 @@
           },
         },
       },
-      [2] = {
+      {
         spellid = 86346, --colossus
         spec = 2,
         size = 30,

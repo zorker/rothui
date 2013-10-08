@@ -22,7 +22,10 @@
   --format time func
   local GetFormattedTime = function(time)
     local hr, m, s, text
-    if time <= 0 then text = ""
+    if time <= 0 then 
+      text = ""
+    elseif time < 2 then 
+      text = floor(time*10)/10
     elseif(time < 3600 and time > 60) then
       hr = floor(time / 3600)
       m = floor(mod(time, 3600) / 60 + 1)

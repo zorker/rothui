@@ -374,82 +374,69 @@
 
     local attr = cfg.units.raid.attributes
 
-    local function getRaidScale(id)
-      if id == 1 then
-        return cfg.units.raid.scale*0.95
-      elseif id == 2 then
-        return cfg.units.raid.scale*0.9
-      else
-        return cfg.units.raid.scale*0.75
-      end
-    end
-
-    local function getRaidVisibility(id)
-      if id == 1 then
-        return attr.visibility1
-      elseif id == 2 then
-        return attr.visibility2
-      else
-        return attr.visibility3
-      end
-    end
-
-    local raid, group, i, j
-
     local raidDragFrame = CreateFrame("Frame", "oUF_DiabloRaidDragFrame", UIParent)
     raidDragFrame:SetSize(50,50)
     raidDragFrame:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
     func.applyDragFunctionality(raidDragFrame)
     table.insert(oUF_Diablo_Units,"oUF_DiabloRaidDragFrame") --add frames to the slash command function
 
-    for i=1, 3 do
-      raid = {}
-      for j=1, NUM_RAID_GROUPS do
-        local name = "oUF_DiabloRaid"..i.."Group"..j
-        group = oUF:SpawnHeader(
-          name, --name of raid group header
-          nil,
-          getRaidVisibility(i),
-          "showPlayer",         attr.showPlayer,
-          "showSolo",           attr.showSolo,
-          "showParty",          attr.showParty,
-          "showRaid",           attr.showRaid,
-          "point",              attr.point,
-          "yOffset",            attr.yOffset,
-          "xoffset",            attr.xoffset,
-          --"groupFilter",        "1,2,3,4,5,6,7,8",
-          "groupFilter",        tostring(j),
-          --"groupBy",            "GROUP",
-          --"groupingOrder",      "1,2,3,4,5,6,7,8",
-          --"sortMethod",         "NAME",
-          --"maxColumns",         attr.maxColumns,
-          "unitsPerColumn",     5,
-          --"unitsPerColumn",     attr.unitsPerColumn,
-          --"columnSpacing",      attr.columnSpacing,
-          --"columnAnchorPoint",  attr.columnAnchorPoint,
-          "oUF-initialConfigFunction", ([[
-            self:SetWidth(%d)
-            self:SetHeight(%d)
-          ]]):format(128, 64)
-        )
-        group:SetScale(getRaidScale(i))
-        if j == 1 then
-          --group:SetPoint(cfg.units.raid.pos.a1,cfg.units.raid.pos.af,cfg.units.raid.pos.a2,cfg.units.raid.pos.x,cfg.units.raid.pos.y)
-          group:SetPoint("TOPLEFT",raidDragFrame,0,0)
+    local groups, group = {}, nil
+    
+    for i=1, NUM_RAID_GROUPS do
+      local name = "oUF_DiabloRaidGroup"..i
+      group = oUF:SpawnHeader(
+        name,
+        nil,
+        attr.visibility,
+        "showPlayer",         attr.showPlayer,
+        "showSolo",           attr.showSolo,
+        "showParty",          attr.showParty,
+        "showRaid",           attr.showRaid,
+        "point",              attr.point,
+        "yOffset",            attr.yOffset,
+        "xoffset",            attr.xoffset,
+        "groupFilter",        tostring(i),
+        "unitsPerColumn",     5,
+        --"unitsPerColumn",     attr.unitsPerColumn,
+        --"columnSpacing",      attr.columnSpacing,
+        --"columnAnchorPoint",  attr.columnAnchorPoint,
+        "oUF-initialConfigFunction", ([[
+          self:SetWidth(%d)
+          self:SetHeight(%d)
+        ]]):format(128, 64)
+      )
+      if i == 1 then
+        group:SetPoint("TOPLEFT",raidDragFrame,0,0)
+      else
+        if attr.columnAnchorPoint == "TOP" then
+          group:SetPoint("TOPLEFT", groups[i-1], "BOTTOMLEFT", 0, attr.columnSpacing)
+        elseif attr.columnAnchorPoint == "BOTTOM" then
+          group:SetPoint("BOTTOMLEFT", groups[i-1], "TOPLEFT", 0, attr.columnSpacing)
+        elseif attr.columnAnchorPoint == "LEFT" then
+          group:SetPoint("TOPLEFT", groups[i-1], "TOPRIGHT", attr.columnSpacing, 0)
         else
-          if attr.columnAnchorPoint == "TOP" then
-            group:SetPoint("TOPLEFT", raid[j-1], "BOTTOMLEFT", 0, attr.columnSpacing)
-          elseif attr.columnAnchorPoint == "BOTTOM" then
-            group:SetPoint("BOTTOMLEFT", raid[j-1], "TOPLEFT", 0, attr.columnSpacing)
-          elseif attr.columnAnchorPoint == "LEFT" then
-            group:SetPoint("TOPLEFT", raid[j-1], "TOPRIGHT", attr.columnSpacing, 0)
-          else
-            group:SetPoint("TOPRIGHT", raid[j-1], "TOPLEFT", attr.columnSpacing, 0)
+          group:SetPoint("TOPRIGHT", groups[i-1], "TOPLEFT", attr.columnSpacing, 0)
+        end
+      end
+      groups[i] = group
+    end
+
+    local updateRaidScale = CreateFrame("Frame")
+    updateRaidScale:RegisterEvent("GROUP_ROSTER_UPDATE")
+    updateRaidScale:RegisterEvent("PLAYER_ENTERING_WORLD")
+    updateRaidScale:SetScript("OnEvent", function(self)
+      if(InCombatLockdown()) then
+        self:RegisterEvent("PLAYER_REGEN_ENABLED")
+      else
+        self:UnregisterEvent("PLAYER_REGEN_ENABLED")
+        local num = GetNumGroupMembers()
+        local scale = (100-num)/100*cfg.units.raid.scale
+        for idx, group in pairs(groups) do
+          if group then
+            group:SetScale(scale)
           end
         end
-        --func.applyDragFunctionality(group)
-        --table.insert(oUF_Diablo_Units,name) --add raid frames to the slash command function
-        raid[j] = group
       end
-    end
+    end)    
+    
   end

@@ -139,7 +139,17 @@
     --create portrait
     if self.cfg.portrait.show then
       func.createPortrait(self)
-      --self:SetHitRectInsets(0, 0, -100, 0);
+      if self.PortraitHolder then
+        if(InCombatLockdown()) then
+          self.PortraitHolder:RegisterEvent("PLAYER_REGEN_ENABLED")
+        else
+          self:SetHitRectInsets(0, 0, -100, 0)
+        end      
+        self.PortraitHolder:SetScript("OnEvent", function(...)
+          self.PortraitHolder:UnregisterEvent("PLAYER_REGEN_ENABLED")
+          self:SetHitRectInsets(0, 0, -100, 0)
+        end)
+      end      
     end
 
     --auras

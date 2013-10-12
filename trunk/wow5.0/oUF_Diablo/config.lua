@@ -561,7 +561,7 @@
       alpha = {
         notinrange = 0.4,
       },
-      scale = 0.95,
+      scale = 1,
       pos = { a1 = "TOPLEFT", a2 = "TOPLEFT", af = "UIParent", x = 5, y = -5 },
       health = {
         texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar128_3",

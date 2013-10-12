@@ -33,10 +33,17 @@ for i, frame in ipairs(oUF.objects) do hook(frame) end
 oUF:RegisterInitCallback(hook)
 
 local f, min, max, abs = CreateFrame("Frame"), math.min, math.max, math.abs
-f:SetScript("OnUpdate", function()
+local lastUpdate, div, new, cur = 0, 15, 0, 0
+f:SetScript("OnUpdate", function(self, elapsed)
+  lastUpdate = lastUpdate+elapsed
+  if lastUpdate > 1 then
+    div = 15*GetFramerate()/100
+    lastUpdate=0
+  end
   for bar, value in pairs(smoothing) do
-    local cur = bar:GetValue()
-    local new = cur + (value-cur)/15
+    cur = bar:GetValue()
+    --at a rate of 100 fps the divisor should be 15
+    new = cur + (value-cur)/div
     bar:SetValue_(new)
     if cur == value or abs(cur - value) < 1 then
       bar:SetValue_(value)

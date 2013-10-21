@@ -179,7 +179,7 @@ oUF.Tags.Events["unit:power"] = "UNIT_DISPLAYPOWER UNIT_POWER_FREQUENT UNIT_MAXP
 local function NewFontString(parent,family,size,outline,layer)
   local fs = parent:CreateFontString(nil, layer or "OVERLAY")
   fs:SetFont(family,size,outline)
-  fs:SetShadowOffset(4, -4)
+  fs:SetShadowOffset(3, -3)
   fs:SetShadowColor(0,0,0,1)
   return fs
 end
@@ -188,9 +188,17 @@ end
 --STYLE TEMPLATE FUNC
 --------------------------------------
 
+local function SetUnitDefaults(self)
+  self:RegisterForClicks("AnyDown")
+  self:SetScript("OnEnter", UnitFrame_OnEnter)
+  self:SetScript("OnLeave", UnitFrame_OnLeave)
+end
+
+
 --player style func
 local function CreatePlayerTemplate(self)
-  self:SetSize(32,32)
+  SetUnitDefaults(self)
+  self:SetSize(64,32)
   self:SetPoint("CENTER", UIParent, -100, 0)
   self.template = "player"
   --create the unit strings
@@ -210,7 +218,8 @@ end
 
 --target style func
 local function CreateTargetTemplate(self)
-  self:SetSize(32,32)
+  SetUnitDefaults(self)
+  self:SetSize(64,32)
   self:SetPoint("CENTER", UIParent, 100, 0)
   self.template = "target"
   --create the unit strings
@@ -230,7 +239,8 @@ end
 
 --target style func
 local function CreateTargetTargetTemplate(self)
-  self:SetSize(32,32)
+  SetUnitDefaults(self)
+  self:SetSize(64,32)
   self:SetPoint("CENTER", UIParent, 100, -70)
   self.template = "targettarget"
   --create the unit strings

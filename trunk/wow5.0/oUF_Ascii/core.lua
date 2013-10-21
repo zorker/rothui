@@ -186,36 +186,47 @@ end
 
 local function CreateUnitStrings(self)
 
-  local hpval = NewFontString(self, fontFamily, 32, "THINOUTLINE")
-  hpval:SetPoint("TOPLEFT", self, 0,0)
+  local hpval = NewFontString(self, fontFamily, 32, "THINOUTLINE")  
   self:Tag(hpval, "[unit:health]")
-
   local ppval = NewFontString(self, fontFamily, 24, "THINOUTLINE")
-  ppval:SetPoint("LEFT", hpval, "RIGHT", 5, 0)
   self:Tag(ppval, "[unit:power]")
-
   local level = NewFontString(self, fontFamily, 18, "THINOUTLINE")
-  level:SetPoint("TOPLEFT", hpval, "BOTTOMLEFT", 0, -5)
   self:Tag(level, "[unit:level]")
-
   local name = NewFontString(self, fontFamily, 18, "THINOUTLINE")
-  name:SetPoint("LEFT", level, "RIGHT", 5, 0)
   self:Tag(name, "[unit:name]")
 
-
-
-
-
+  if self.template == "player" then
+    hpval:SetPoint("TOPRIGHT", self, 0,0)
+    ppval:SetPoint("RIGHT", hpval, "LEFT", -5, 0)
+    level:SetPoint("RIGHT", name, "LEFT", -5, 0)
+    name:SetPoint("TOPRIGHT", hpval, "BOTTOMRIGHT", 0, -5)
+  else
+    hpval:SetPoint("TOPLEFT", self, 0,0)
+    ppval:SetPoint("LEFT", hpval, "RIGHT", 5, 0)
+    level:SetPoint("TOPLEFT", hpval, "BOTTOMLEFT", 0, -5)
+    name:SetPoint("LEFT", level, "RIGHT", 5, 0)
+  end
+  
 end
-
 
 --------------------------------------
 --STYLE TEMPLATE FUNC
 --------------------------------------
 
 --style func
-local function CreateUnitTemplate(self)
+local function CreatePlayerTemplate(self)
   self:SetSize(32,32)
+  self:SetPoint("CENTER", UIParent, -100, 0)
+  self.template = "player"
+  --create the unit strings
+  CreateUnitStrings(self)
+end
+
+--style func
+local function CreateTargetTemplate(self)
+  self:SetSize(32,32)
+  self:SetPoint("CENTER", UIParent, 100, 0)
+  self.template = "target"
   --create the unit strings
   CreateUnitStrings(self)
 end
@@ -225,11 +236,13 @@ end
 --------------------------------------
 
 --register the style function
-oUF:RegisterStyle("DefaultTemplate", CreateUnitTemplate)
-oUF:SetActiveStyle("DefaultTemplate")
+oUF:RegisterStyle(addonName.."PlayerTemplate", CreatePlayerTemplate)
+oUF:RegisterStyle(addonName.."TargetTemplate", CreateTargetTemplate)
 
 --spawn player
-oUF:Spawn("player","DefaultTemplate"):SetPoint("CENTER", UIParent, -100, 0)
+oUF:SetActiveStyle(addonName.."PlayerTemplate")
+oUF:Spawn("player")
 
 --spawn target
-oUF:Spawn("target","DefaultTemplate"):SetPoint("CENTER", UIParent, 100, 0)
+oUF:SetActiveStyle(addonName.."TargetTemplate")
+oUF:Spawn("target")

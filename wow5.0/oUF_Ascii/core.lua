@@ -184,8 +184,16 @@ local function NewFontString(parent,family,size,outline,layer)
   return fs
 end
 
-local function CreateUnitStrings(self)
+--------------------------------------
+--STYLE TEMPLATE FUNC
+--------------------------------------
 
+--player style func
+local function CreatePlayerTemplate(self)
+  self:SetSize(32,32)
+  self:SetPoint("CENTER", UIParent, -100, 0)
+  self.template = "player"
+  --create the unit strings
   local hpval = NewFontString(self, fontFamily, 32, "THINOUTLINE")  
   self:Tag(hpval, "[unit:health]")
   local ppval = NewFontString(self, fontFamily, 24, "THINOUTLINE")
@@ -194,41 +202,44 @@ local function CreateUnitStrings(self)
   self:Tag(level, "[unit:level]")
   local name = NewFontString(self, fontFamily, 18, "THINOUTLINE")
   self:Tag(name, "[unit:name]")
-
-  if self.template == "player" then
-    hpval:SetPoint("TOPRIGHT", self, 0,0)
-    ppval:SetPoint("RIGHT", hpval, "LEFT", -5, 0)
-    level:SetPoint("RIGHT", name, "LEFT", -5, 0)
-    name:SetPoint("TOPRIGHT", hpval, "BOTTOMRIGHT", 0, -5)
-  else
-    hpval:SetPoint("TOPLEFT", self, 0,0)
-    ppval:SetPoint("LEFT", hpval, "RIGHT", 5, 0)
-    level:SetPoint("TOPLEFT", hpval, "BOTTOMLEFT", 0, -5)
-    name:SetPoint("LEFT", level, "RIGHT", 5, 0)
-  end
-  
+  hpval:SetPoint("TOPRIGHT", self, 0,0)
+  ppval:SetPoint("BOTTOMRIGHT", hpval, "BOTTOMLEFT", -5, 0)
+  level:SetPoint("BOTTOMRIGHT", name, "BOTTOMLEFT", -5, 0)
+  name:SetPoint("TOPRIGHT", hpval, "BOTTOMRIGHT", 0, -5)
 end
 
---------------------------------------
---STYLE TEMPLATE FUNC
---------------------------------------
-
---style func
-local function CreatePlayerTemplate(self)
-  self:SetSize(32,32)
-  self:SetPoint("CENTER", UIParent, -100, 0)
-  self.template = "player"
-  --create the unit strings
-  CreateUnitStrings(self)
-end
-
---style func
+--target style func
 local function CreateTargetTemplate(self)
   self:SetSize(32,32)
   self:SetPoint("CENTER", UIParent, 100, 0)
   self.template = "target"
   --create the unit strings
-  CreateUnitStrings(self)
+  local hpval = NewFontString(self, fontFamily, 32, "THINOUTLINE")  
+  self:Tag(hpval, "[unit:health]")
+  local ppval = NewFontString(self, fontFamily, 24, "THINOUTLINE")
+  self:Tag(ppval, "[unit:power]")
+  local level = NewFontString(self, fontFamily, 18, "THINOUTLINE")
+  self:Tag(level, "[unit:level]")
+  local name = NewFontString(self, fontFamily, 18, "THINOUTLINE")
+  self:Tag(name, "[unit:name]")
+  hpval:SetPoint("TOPLEFT", self, 0,0)
+  ppval:SetPoint("BOTTOMLEFT", hpval, "BOTTOMRIGHT", 5, 0)
+  level:SetPoint("TOPLEFT", hpval, "BOTTOMLEFT", 0, -5)
+  name:SetPoint("BOTTOMLEFT", level, "BOTTOMRIGHT", 5, 0)
+end
+
+--target style func
+local function CreateTargetTargetTemplate(self)
+  self:SetSize(32,32)
+  self:SetPoint("CENTER", UIParent, 100, -70)
+  self.template = "targettarget"
+  --create the unit strings
+  local hpval = NewFontString(self, fontFamily, 18, "THINOUTLINE")  
+  self:Tag(hpval, "[unit:health]")
+  local name = NewFontString(self, fontFamily, 18, "THINOUTLINE")
+  self:Tag(name, "[unit:name]")
+  hpval:SetPoint("TOPLEFT", self, 0,0)
+  name:SetPoint("BOTTOMLEFT", hpval, "BOTTOMRIGHT", 5, 0)
 end
 
 --------------------------------------
@@ -238,11 +249,16 @@ end
 --register the style function
 oUF:RegisterStyle(addonName.."PlayerTemplate", CreatePlayerTemplate)
 oUF:RegisterStyle(addonName.."TargetTemplate", CreateTargetTemplate)
+oUF:RegisterStyle(addonName.."TargetTargetTemplate", CreateTargetTargetTemplate)
 
 --spawn player
 oUF:SetActiveStyle(addonName.."PlayerTemplate")
-oUF:Spawn("player")
+oUF:Spawn("player",addonName.."PlayerFrame")
 
 --spawn target
 oUF:SetActiveStyle(addonName.."TargetTemplate")
-oUF:Spawn("target")
+oUF:Spawn("target",addonName.."TargetFrame")
+
+--spawn targettarget
+oUF:SetActiveStyle(addonName.."TargetTargetTemplate")
+oUF:Spawn("targettarget",addonName.."TargetTargetFrame")

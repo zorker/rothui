@@ -20,22 +20,22 @@ local fontFamily = folder.."font.ttf"
 local CS = CreateFrame("ColorSelect")
 
 --get HSV from RGB color
-function CS:GetHSVColor(color)
-  self:SetColorRGB(color.r, color.g, color.b)
-  local h,s,v = self:GetColorHSV()
+function GetHSVColor(color)
+  CS:SetColorRGB(color.r, color.g, color.b)
+  local h,s,v = CS:GetColorHSV()
   return {h=h,s=s,v=v}
 end
 
 --get RGB from HSV color
-function CS:GetRGBColor(color)
-  self:SetColorHSV(color.h, color.s, color.v)
-  local r,g,b = self:GetColorRGB()
+function GetRGBColor(color)
+  CS:SetColorHSV(color.h, color.s, color.v)
+  local r,g,b = CS:GetColorRGB()
   return {r=r,g=g,b=b}
 end
 
 --input two HSV colors and a percentage
 --returns new HSV color
-function CS:GetSmudgeColorHSV(colorA,colorB,percentage)
+function GetSmudgeHSVColor(colorA,colorB,percentage)
   local colorC = {}
   --check if the angle between the two H values is > 180
   if abs(colorA.h-colorB.h) > 180 then
@@ -59,8 +59,8 @@ function CS:GetSmudgeColorHSV(colorA,colorB,percentage)
   return colorC
 end
 
-local redColor = CS:GetHSVColor({r=1,g=0,b=0})
-local greenColor = CS:GetHSVColor({r=0,g=1,b=0})
+local redColor = GetHSVColor({r=1,g=0,b=0})
+local greenColor = GetHSVColor({r=0,g=1,b=0})
 
 --------------------------------------
 --GET RGB as HEX-Color
@@ -115,7 +115,7 @@ local function GetHealthColor(unit)
   local hper = 0
   if hmax > 0 then hper = hcur/hmax end
   --you may need to swap red and green color
-  return CS:GetRGBColor(CS:GetSmudgeColorHSV(redColor,greenColor,hper))
+  return GetRGBColor(GetSmudgeHSVColor(redColor,greenColor,hper))
 end
 
 --------------------------------------
@@ -199,7 +199,7 @@ end
 local function CreatePlayerTemplate(self)
   SetUnitDefaults(self)
   self:SetSize(64,32)
-  self:SetPoint("CENTER", UIParent, -100, 0)
+  self:SetPoint("CENTER", UIParent, -150, 0)
   self.template = "player"
   --create the unit strings
   local hpval = NewFontString(self, fontFamily, 32, "THINOUTLINE, MONOCHROME")  
@@ -220,7 +220,7 @@ end
 local function CreateTargetTemplate(self)
   SetUnitDefaults(self)
   self:SetSize(64,32)
-  self:SetPoint("CENTER", UIParent, 100, 0)
+  self:SetPoint("CENTER", UIParent, 150, 0)
   self.template = "target"
   --create the unit strings
   local hpval = NewFontString(self, fontFamily, 32, "THINOUTLINE, MONOCHROME")  
@@ -241,7 +241,7 @@ end
 local function CreateTargetTargetTemplate(self)
   SetUnitDefaults(self)
   self:SetSize(64,32)
-  self:SetPoint("CENTER", UIParent, 100, -70)
+  self:SetPoint("CENTER", UIParent, 150, -70)
   self.template = "targettarget"
   --create the unit strings
   local hpval = NewFontString(self, fontFamily, 18, "THINOUTLINE, MONOCHROME")  

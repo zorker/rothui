@@ -159,6 +159,8 @@
     self.healthbar:SetPoint("LEFT", self.newPlate)
     self.healthbar:SetPoint("RIGHT", self.newPlate)
     self.healthbar:SetHeight(cfg.healthbarHeight)
+    --highlight
+    self.highlight:SetAllPoints()
     --threat glow
     self.threat:ClearAllPoints()
     self.threat:SetPoint("TOPLEFT",self.healthbar,-2,2)
@@ -256,9 +258,14 @@
     plate.level:Hide()
     --hide textures
     plate.border:SetTexture(nil)
-    plate.highlight:SetTexture(nil)
     plate.boss:SetTexture(nil)
     plate.dragon:SetTexture(nil)
+    --highlight
+    plate.highlight:SetParent(plate.healthbar)
+    plate.highlight:SetTexture(1,1,1)
+    plate.highlight:SetVertexColor(1,1,1,0.2)
+    plate.highlight:SetAllPoints()
+    plate.highlight:SetDrawLayer("OVERLAY")
     --castbar
     plate.castbar:SetParent(newPlate)
     plate.castbar:SetStatusBarTexture(cfg.castbarTexture)

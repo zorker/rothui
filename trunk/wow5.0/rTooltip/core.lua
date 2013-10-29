@@ -7,13 +7,13 @@
   --  zork - 2013
 
   ---------------------------------------------
-  
+
   ---------------------------------------------
   --  CONFIG
   ---------------------------------------------
-  
+
   local cfg = {}
-  
+
   cfg.pos   = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -10, 180 }
   cfg.scale = 0.9
   cfg.font = {}
@@ -21,33 +21,33 @@
   cfg.backdrop = { bgFile = "Interface\\Buttons\\WHITE8x8", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",  tiled = false, edgeSize = 16, insets = {left=3, right=3, top=3, bottom=3} }
   cfg.backdrop.bgColor = {0.08,0.08,0.1,0.92}
   cfg.backdrop.borderColor = {0.3,0.3,0.33,1}
-  
-  
+
+
   ---------------------------------------------
   --  VARIABLES
   ---------------------------------------------
-  
+
   local unpack, type = unpack, type
   local RAID_CLASS_COLORS = RAID_CLASS_COLORS
   local FACTION_BAR_COLORS = FACTION_BAR_COLORS
   local WorldFrame = WorldFrame
   local GameTooltip = GameTooltip
   local GameTooltipStatusBar = GameTooltipStatusBar
-    
+
   ---------------------------------------------
   --  FUNCTIONS
   ---------------------------------------------
- 
+
   --change some text sizes
   GameTooltipHeaderText:SetFont(cfg.font.family, 14, "THINOUTLINE")
   GameTooltipText:SetFont(cfg.font.family, 12, "THINOUTLINE")
   Tooltip_Small:SetFont(cfg.font.family, 11, "THINOUTLINE")
-  
+
   --gametooltip statusbar
   GameTooltipStatusBar:ClearAllPoints()
   GameTooltipStatusBar:SetPoint("LEFT",5,0)
   GameTooltipStatusBar:SetPoint("RIGHT",-5,0)
-  GameTooltipStatusBar:SetPoint("BOTTOM",GameTooltipStatusBar:GetParent(),"TOP",0,-6)  
+  GameTooltipStatusBar:SetPoint("BOTTOM",GameTooltipStatusBar:GetParent(),"TOP",0,-6)
   GameTooltipStatusBar:SetHeight(3)
   --gametooltip statusbar bg
   GameTooltipStatusBar.bg = GameTooltipStatusBar:CreateTexture(nil,"BACKGROUND",nil,-8)
@@ -55,7 +55,7 @@
   GameTooltipStatusBar.bg:SetPoint("BOTTOMRIGHT",1,-1)
   GameTooltipStatusBar.bg:SetTexture(1,1,1)
   GameTooltipStatusBar.bg:SetVertexColor(0,0,0,0.7)
-  
+
   --HookScript GameTooltip OnTooltipCleared
   GameTooltip:HookScript("OnTooltipCleared", function(self)
     GameTooltip_ClearStatusBars(self)
@@ -76,19 +76,19 @@
     tooltip:AddDoubleLine("|cff0099ffSpell ID|r",spellid)
     tooltip:Show()
   end
-  
+
   --func AddCasterRow
   local function AddCasterRow(tooltip,caster)
     tooltip:AddDoubleLine("|cff0099ffCaster|r",caster)
     tooltip:Show()
   end
-  
+
   --func AddBossDebuffRow
   local function AddBossDebuffRow(tooltip,isBossDebuff)
     tooltip:AddDoubleLine("|cff0099ffBossDebuff|r","Yes")
     tooltip:Show()
   end
-  
+
   --hooksecurefunc GameTooltip SetUnitBuff
   hooksecurefunc(GameTooltip, "SetUnitBuff", function(self,...)
     local spellid = select(11,UnitBuff(...))
@@ -132,22 +132,22 @@
       AddSpellIdRow(self,spellid)
     end
   end)
-  
+
   --func GetHexColor
   local function GetHexColor(color)
     return ("%.2x%.2x%.2x"):format(color.r*255, color.g*255, color.b*255)
   end
-  
+
   local classColors, reactionColors = {}, {}
-  
-  for class, color in pairs(RAID_CLASS_COLORS) do 
-    classColors[class] = GetHexColor(RAID_CLASS_COLORS[class]) 
+
+  for class, color in pairs(RAID_CLASS_COLORS) do
+    classColors[class] = GetHexColor(RAID_CLASS_COLORS[class])
   end
-  
+
   for i = 1, #FACTION_BAR_COLORS do
     reactionColors[i] = GetHexColor(FACTION_BAR_COLORS[i])
   end
-  
+
   local function GetTarget(unit)
     if UnitIsUnit(unit, "player") then
       return ("|cffff0000%s|r"):format("<YOU>")
@@ -159,7 +159,7 @@
       return ("|cffffffff%s|r"):format(UnitName(unit))
     end
   end
-  
+
   --HookScript GameTooltip OnTooltipSetUnit
   GameTooltip:HookScript("OnTooltipSetUnit", function(self,...)
     local unit = select(2, self:GetUnit()) or (GetMouseFocus() and GetMouseFocus():GetAttribute("unit")) or (UnitExists("mouseover") and "mouseover")
@@ -201,7 +201,7 @@
           GameTooltipTextLeft1:SetTextColor(color.r,color.g,color.b)
         end
       end
-      
+
       local unitClassification = UnitClassification(unit)
       if unitClassification == "worldboss" or UnitLevel(unit) == -1 then
         if UnitReaction(unit, "player") == 2 then
@@ -212,13 +212,13 @@
       elseif unitClassification == "rare" then
         self:AppendText(" |TInterface\\AddOns\\rTooltip\\diablo:14:14:0:0:16:16:0:15:0:14|t")
       elseif unitClassification == "rareelite" then
-        self:AppendText(" |TInterface\\AddOns\\rTooltip\\diablo:14:14:0:0:16:16:0:15:0:14|t")
+        self:AppendText(" |TInterface\\AddOns\\rTooltip\\diablo_gold:14:14:0:0:16:16:0:15:0:14|t")
       elseif unitClassification == "elite" then
         self:AppendText(" |TInterface\\AddOns\\rTooltip\\plus:14:14|t")
-      end      
-      
+      end
+
     end
-    
+
     if UnitIsGhost(unit) then
       self:AppendText(" |cffaaaaaa<GHOST>|r")
       GameTooltipTextLeft1:SetTextColor(0.5,0.5,0.5)
@@ -226,14 +226,14 @@
       self:AppendText(" |cffaaaaaa<DEAD>|r")
       GameTooltipTextLeft1:SetTextColor(0.5,0.5,0.5)
     end
-    
+
     if (UnitExists(unit.."target")) then
       GameTooltip:AddDoubleLine("|cffff9999Target|r",GetTarget(unit.."target") or "Unknown")
       --GameTooltip:Show()
     end
-    
+
   end)
-  
+
   --func TooltipOnShow
   local function TooltipOnShow(self,...)
     self:SetBackdropColor(unpack(cfg.backdrop.bgColor))
@@ -246,7 +246,7 @@
       end
     end
   end
-  
+
   --loop over tooltips
   local tooltips = { GameTooltip, ItemRefTooltip, ShoppingTooltip1, ShoppingTooltip2, ShoppingTooltip3, WorldMapTooltip, }
   for idx, tooltip in ipairs(tooltips) do
@@ -256,7 +256,7 @@
   end
 
   --loop over menues
-  local menues = {    
+  local menues = {
     DropDownList1MenuBackdrop,
     DropDownList2MenuBackdrop,
   }

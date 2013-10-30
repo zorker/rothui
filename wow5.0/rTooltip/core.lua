@@ -94,7 +94,7 @@
     local spellid = select(11,UnitBuff(...))
     if spellid then AddSpellIdRow(self,spellid) end
     local caster = select(8,UnitBuff(...))
-    AddCasterRow(self,select(8,UnitBuff(...)),select(13,UnitBuff(...)))
+    if caster then AddCasterRow(self,caster) end
   end)
 
   --hooksecurefunc GameTooltip SetUnitDebuff
@@ -212,7 +212,7 @@
       elseif unitClassification == "rare" then
         self:AppendText(" |TInterface\\AddOns\\rTooltip\\diablo:14:14:0:0:16:16:0:15:0:14|t")
       elseif unitClassification == "rareelite" then
-        self:AppendText(" |TInterface\\AddOns\\rTooltip\\diablo_gold:14:14:0:0:16:16:0:15:0:14|t")
+        self:AppendText(" |TInterface\\AddOns\\rTooltip\\diablo:14:14:0:0:16:16:0:15:0:14|t")
       elseif unitClassification == "elite" then
         self:AppendText(" |TInterface\\AddOns\\rTooltip\\plus:14:14|t")
       end

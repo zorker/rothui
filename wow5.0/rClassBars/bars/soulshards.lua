@@ -30,9 +30,9 @@
     if not bar:IsShown() then return end
     if not unit or (unit and unit ~= bar.unit) then return end
     --debugging the powerType. SPELL_POWER_SOUL_SHARDS = 7
-    if powerType then print(powerType) end
+    --if powerType then print(powerType) end
     if powerType and powerType ~= SPELL_POWER_SOUL_SHARDS_TEXT then return end
-    if GetSpecialization() ~= SPEC_WARLOCK_AFFLICTION then return end
+    --if GetSpecialization() ~= SPEC_WARLOCK_AFFLICTION then return end --should be obsolete because of the visibility handler spec check
 
     local cur = UnitPower(unit, SPELL_POWER_SOUL_SHARDS)
     local max = UnitPowerMax(unit, SPELL_POWER_SOUL_SHARDS)

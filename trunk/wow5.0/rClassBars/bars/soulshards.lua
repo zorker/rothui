@@ -2,8 +2,9 @@ if select(2, UnitClass("player")) ~= "WARLOCK" then return end
 
 local addonName, ns = ...
 
-local SPELL_POWER_SOUL_SHARDS     = SPELL_POWER_SOUL_SHARDS
-local SPEC_WARLOCK_AFFLICTION     = SPEC_WARLOCK_AFFLICTION
+local SPELL_POWER_SOUL_SHARDS       = SPELL_POWER_SOUL_SHARDS -- 7
+local SPELL_POWER_SOUL_SHARDS_TEXT  = "SOUL_SHARDS"
+local SPEC_WARLOCK_AFFLICTION       = SPEC_WARLOCK_AFFLICTION -- 1
 
 --textures needed
 --combo_left, combo_right, combo_bar_bg, combo_gem_bg, combo_gem_fill1, combo_gem_border, combo_gem_glow, combo_gem_highlight
@@ -11,8 +12,10 @@ local SPEC_WARLOCK_AFFLICTION     = SPEC_WARLOCK_AFFLICTION
 --update shoulshard bar func
 local function UpdateBar(bar, event, unit, powerType)
   if not bar:IsShown() then return end
-  if unit and unit ~= "player" then return end
-  if powerType and powerType ~= SPELL_POWER_SOUL_SHARDS then return end
+  if not unit or (unit and unit ~= bar.unit) then return end
+  --debugging the powerType. SPELL_POWER_SOUL_SHARDS = 7
+  if powerType then print(powerType) end
+  if powerType and powerType ~= SPELL_POWER_SOUL_SHARDS_TEXT then return end
   if GetSpecialization() ~= SPEC_WARLOCK_AFFLICTION then return end
 
   local cur = UnitPower(unit, SPELL_POWER_SOUL_SHARDS)
@@ -144,8 +147,10 @@ local function CreateBar()
 
   end
 
-  bar:RegisterEvent("UNIT_POWER_FREQUENT", UpdateBar)
-  bar:RegisterEvent("UNIT_DISPLAYPOWER", UpdateBar)
+  bar.unit = "player"
+  bar:RegisterUnitEvent("UNIT_POWER_FREQUENT", bar.unit)
+  bar:RegisterUnitEvent("UNIT_DISPLAYPOWER", bar.unit)
+  bar:SetScript("OnEvent", UpdateBar)
 
   ns.lib:AddSimpleDrag(bar)
 

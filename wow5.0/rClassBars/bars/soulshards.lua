@@ -7,7 +7,7 @@
   if select(2, UnitClass("player")) ~= "WARLOCK" then return end
   --get the addon namespace
   local addonName, ns = ...
-  --check if module enabled
+  --check if module is enabled
   if not ns.cfg.modules.soulshards then return end
 
   ---------------------------------------------
@@ -20,6 +20,7 @@
 
   --textures needed
   --combo_left, combo_right, combo_bar_bg, combo_gem_bg, combo_gem_fill1, combo_gem_border, combo_gem_glow, combo_gem_highlight
+  local mediaPath = "Interface\\AddOns\\"..addonName.."\\media\\"
 
   ---------------------------------------------
   -- FUNCTIONS
@@ -101,14 +102,14 @@
     local t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetSize(64,64)
     t:SetPoint("LEFT",0,0)
-    t:SetTexture("Interface\\AddOns\\"..addonName.."\\media\\combo_left")
+    t:SetTexture(mediaPath.."combo_left")
     bar.leftEdge = t
 
     --right edge
     t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetSize(64,64)
     t:SetPoint("RIGHT",0,0)
-    t:SetTexture("Interface\\AddOns\\"..addonName.."\\media\\combo_right")
+    t:SetTexture(mediaPath.."combo_right")
     bar.rightEdge = t
 
     for i = 1, bar.maxOrbs do
@@ -125,19 +126,19 @@
       orb.barBg = orb:CreateTexture(nil,"BACKGROUND",nil,-8)
       orb.barBg:SetSize(64,64)
       orb.barBg:SetPoint("CENTER")
-      orb.barBg:SetTexture("Interface\\AddOns\\"..addonName.."\\media\\combo_bar_bg")
+      orb.barBg:SetTexture(mediaPath.."combo_bar_bg")
 
       --orb background
       orb.bg = orb:CreateTexture(nil,"BACKGROUND",nil,-7)
       orb.bg:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
       orb.bg:SetPoint("CENTER")
-      orb.bg:SetTexture("Interface\\AddOns\\"..addonName.."\\media\\combo_gem_bg")
+      orb.bg:SetTexture(mediaPath.."combo_gem_bg")
 
       --orb filling
       orb.fill = orb:CreateTexture(nil,"BACKGROUND",nil,-6)
       orb.fill:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
       orb.fill:SetPoint("CENTER")
-      orb.fill:SetTexture("Interface\\AddOns\\"..addonName.."\\media\\combo_gem_fill1")
+      orb.fill:SetTexture(mediaPath.."combo_gem_fill1")
       orb.fill:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
       --orb.fill:SetBlendMode("ADD")
 
@@ -145,13 +146,13 @@
       orb.border = orb:CreateTexture(nil,"BACKGROUND",nil,-5)
       orb.border:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
       orb.border:SetPoint("CENTER")
-      orb.border:SetTexture("Interface\\AddOns\\"..addonName.."\\media\\combo_gem_border")
+      orb.border:SetTexture(mediaPath.."combo_gem_border")
 
       --orb glow
       orb.glow = orb:CreateTexture(nil,"BACKGROUND",nil,-4)
       orb.glow:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
       orb.glow:SetPoint("CENTER")
-      orb.glow:SetTexture("Interface\\AddOns\\"..addonName.."\\media\\combo_gem_glow")
+      orb.glow:SetTexture(mediaPath.."combo_gem_glow")
       orb.glow:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
       orb.glow:SetBlendMode("BLEND")
 
@@ -159,7 +160,7 @@
       orb.highlight = orb:CreateTexture(nil,"BACKGROUND",nil,-3)
       orb.highlight:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
       orb.highlight:SetPoint("CENTER")
-      orb.highlight:SetTexture("Interface\\AddOns\\"..addonName.."\\media\\combo_gem_highlight")
+      orb.highlight:SetTexture(mediaPath.."combo_gem_highlight")
 
     end
 

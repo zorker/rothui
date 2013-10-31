@@ -16,7 +16,8 @@
 
   local POWER_TYPE_INDEX = SPELL_POWER_SOUL_SHARDS -- 7
   local POWER_TYPE_TOKEN = "SOUL_SHARDS"
-  local CLASSBAR_SPEC    = SPEC_WARLOCK_AFFLICTION -- 1
+  local REQ_SPEC         = SPEC_WARLOCK_AFFLICTION -- 1
+  local REQ_SPELL        = WARLOCK_SOULBURN
 
   --textures needed
   --combo_left, combo_right, combo_bar_bg, combo_gem_bg, combo_gem_fill1, combo_gem_border, combo_gem_glow, combo_gem_highlight
@@ -31,10 +32,7 @@
   local function UpdateBar(bar, event, unit, powerType)
     if not bar:IsShown() then return end
     if not unit or (unit and unit ~= bar.unit) then return end
-    --debugging the powerType
-    if powerType then print(powerType) end
     if powerType and powerType ~= POWER_TYPE_TOKEN then return end
-    --if GetSpecialization() ~= CLASSBAR_SPEC then return end --should be obsolete because of the visibility handler spec check
 
     local cur = UnitPower(unit, POWER_TYPE_INDEX)
     local max = UnitPowerMax(unit, POWER_TYPE_INDEX)
@@ -79,19 +77,41 @@
     end
 
   end
+  
+  local function OnAttributeChanged(self,name,value)
+    if name == "switch" then
+      if value == "1" then
+        self:Show()
+      else
+        self:Hide()
+      end
+    end
+  end
+  
+  local function OnEvent(...)
+    local self, event = ...
+    if event == "SPELLS_CHANGED" then
+      if InCombatLockdown() then return end
+      if IsPlayerSpell(REQ_SPELL) and GetSpecialization() ==  REQ_SPEC then
+        self:SetAttribute("switch","1")
+      else
+        self:SetAttribute("switch","0")
+      end
+    else
+      UpdateBar(...)
+    end
+  end
+  
 
   --create bar func
   local function CreateBar()
 
-    local bar = CreateFrame("Frame", barName, UIParent, "SecureHandlerStateTemplate")
-
-    --visibility handler
-    RegisterStateDriver(bar, "visibility", "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists][spec:2/3] hide; show")
-
+    local bar = CreateFrame("Frame", barName, ns.PetbattleVehicleHider)
+    
     bar.maxOrbs = 4
     local w = 64*(bar.maxOrbs+2) --create the bar for
     local h = 64
-    bar:SetPoint("CENTER",0,0)
+    bar:SetPoint("CENTER", UIParent, "CENTER", 0,0)
     bar:SetWidth(w)
     bar:SetHeight(h)
     bar:SetScale(0.4)
@@ -112,6 +132,8 @@
     t:SetPoint("RIGHT")
     t:SetTexture(mediaPath.."combo_right")
     bar.rightEdge = t
+    
+    bar.orbs = {}
 
     for i = 1, bar.maxOrbs do
 
@@ -139,7 +161,7 @@
       orb.fill = orb:CreateTexture(nil,"BACKGROUND",nil,-6)
       orb.fill:SetSize(128*orbSizeMultiplier,128*orbSizeMultiplier)
       orb.fill:SetPoint("CENTER")
-      orb.fill:SetTexture(mediaPath.."combo_gem_fill1")
+      orb.fill:SetTexture(mediaPath.."combo_gem_fill")
       orb.fill:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
       --orb.fill:SetBlendMode("ADD")
 
@@ -168,7 +190,9 @@
     bar.unit = "player"
     bar:RegisterUnitEvent("UNIT_POWER_FREQUENT", bar.unit)
     bar:RegisterUnitEvent("UNIT_DISPLAYPOWER", bar.unit)
-    bar:SetScript("OnEvent", UpdateBar)
+    bar:RegisterEvent("SPELLS_CHANGED")
+    bar:SetScript("OnEvent", OnEvent)
+    bar:SetScript("OnAttributeChanged", OnAttributeChanged)
 
     ns.lib:AddSimpleDrag(bar)
 

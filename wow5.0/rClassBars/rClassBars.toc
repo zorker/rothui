@@ -5,4 +5,4 @@
 
 core\lib.lua
 
-core\soulshards.lua
+bars\soulshards.lua

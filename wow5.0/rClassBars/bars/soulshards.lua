@@ -29,7 +29,7 @@ local function UpdateBar(bar, event, unit, powerType)
   local w = 64*(max+2)
   bar:SetWidth(w)
   for i = 1, bar.maxOrbs do
-    local orb = bar.shards[i]
+    local orb = bar.orbs[i]
     if i > max then
        if orb:IsShown() then orb:Hide() end
     else
@@ -37,7 +37,7 @@ local function UpdateBar(bar, event, unit, powerType)
     end
   end
   for i = 1, max do
-    local orb = bar.shards[i]
+    local orb = bar.orbs[i]
     local full = cur/max
     if(i <= cur) then
       if full == 1 then
@@ -95,7 +95,7 @@ local function CreateBar()
   for i = 1, bar.maxOrbs do
 
     local orb = CreateFrame("Frame",nil,bar)
-    bar.shards[i] = orb
+    bar.orbs[i] = orb
 
     orb:SetSize(64,64)
     orb:SetPoint("LEFT",i*64,0)

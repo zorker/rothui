@@ -14,13 +14,14 @@
   -- VARIABLES
   ---------------------------------------------
 
-  local SPELL_POWER_SOUL_SHARDS       = SPELL_POWER_SOUL_SHARDS -- 7
-  local SPELL_POWER_SOUL_SHARDS_TEXT  = "SOUL_SHARDS"
-  local SPEC_WARLOCK_AFFLICTION       = SPEC_WARLOCK_AFFLICTION -- 1
+  local POWER_TYPE_INDEX = SPELL_POWER_SOUL_SHARDS -- 7
+  local POWER_TYPE_TOKEN = "SOUL_SHARDS"
+  local CLASSBAR_SPEC    = SPEC_WARLOCK_AFFLICTION -- 1
 
   --textures needed
   --combo_left, combo_right, combo_bar_bg, combo_gem_bg, combo_gem_fill1, combo_gem_border, combo_gem_glow, combo_gem_highlight
   local mediaPath = "Interface\\AddOns\\"..addonName.."\\media\\"
+  local barName   = addonName.."SoulShardBar"
 
   ---------------------------------------------
   -- FUNCTIONS
@@ -30,13 +31,13 @@
   local function UpdateBar(bar, event, unit, powerType)
     if not bar:IsShown() then return end
     if not unit or (unit and unit ~= bar.unit) then return end
-    --debugging the powerType. SPELL_POWER_SOUL_SHARDS = 7
-    --if powerType then print(powerType) end
-    if powerType and powerType ~= SPELL_POWER_SOUL_SHARDS_TEXT then return end
-    --if GetSpecialization() ~= SPEC_WARLOCK_AFFLICTION then return end --should be obsolete because of the visibility handler spec check
+    --debugging the powerType
+    if powerType then print(powerType) end
+    if powerType and powerType ~= POWER_TYPE_TOKEN then return end
+    --if GetSpecialization() ~= CLASSBAR_SPEC then return end --should be obsolete because of the visibility handler spec check
 
-    local cur = UnitPower(unit, SPELL_POWER_SOUL_SHARDS)
-    local max = UnitPowerMax(unit, SPELL_POWER_SOUL_SHARDS)
+    local cur = UnitPower(unit, POWER_TYPE_INDEX)
+    local max = UnitPowerMax(unit, POWER_TYPE_INDEX)
     --[[ --do not hide the bar when the value is empty, keep it visible
     if cur < 1 then
       if bar:IsShown() then bar:Hide() end
@@ -45,7 +46,7 @@
       if not bar:IsShown() then bar:Show() end
     end
     ]]
-    --adjust the width of the soulshard power frame
+    --adjust the width of the bar frame
     local w = 64*(max+2)
     bar:SetWidth(w)
     for i = 1, bar.maxOrbs do
@@ -79,10 +80,10 @@
 
   end
 
-  --create soulshard bar func
+  --create bar func
   local function CreateBar()
 
-    local bar = CreateFrame("Frame", addonName.."SoulShardBar", UIParent, "SecureHandlerStateTemplate")
+    local bar = CreateFrame("Frame", barName, UIParent, "SecureHandlerStateTemplate")
 
     --visibility handler
     RegisterStateDriver(bar, "visibility", "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists][spec:2/3] hide; show")
@@ -101,14 +102,14 @@
     --left edge
     local t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetSize(64,64)
-    t:SetPoint("LEFT",0,0)
+    t:SetPoint("LEFT")
     t:SetTexture(mediaPath.."combo_left")
     bar.leftEdge = t
 
     --right edge
     t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     t:SetSize(64,64)
-    t:SetPoint("RIGHT",0,0)
+    t:SetPoint("RIGHT")
     t:SetTexture(mediaPath.."combo_right")
     bar.rightEdge = t
 

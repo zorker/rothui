@@ -1,0 +1,8 @@
+## Interface: 50400
+## Author: zork
+## Title: rClassBars
+## Notes: All the class bars in one mod
+
+core\lib.lua
+
+core\soulshards.lua

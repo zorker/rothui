@@ -3,6 +3,8 @@
 ## Title: rClassBars
 ## Notes: All the class bars in one mod
 
+config.lua
+
 core\lib.lua
 
 bars\soulshards.lua

@@ -2,9 +2,11 @@
 ## Author: zork
 ## Title: rClassBars
 ## Notes: All the class bars in one mod
+## RequiredDeps: rLib
 
 config.lua
 
+core\slashcmd.lua
 core\lib.lua
 
 bars\soulshards.lua

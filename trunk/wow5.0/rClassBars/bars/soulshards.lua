@@ -8,7 +8,9 @@
   --get the addon namespace
   local addonName, ns = ...
   --check if module is enabled
-  if not ns.cfg.modules.soulshards then return end
+  local cfg = ns.cfg.modules.soulshards
+  
+  if not cfg.enable then return end
 
   ---------------------------------------------
   -- VARIABLES
@@ -30,6 +32,7 @@
 
   --update shoulshard bar func
   local function UpdateBar(bar, event, unit, powerType)
+    
     if not bar:IsShown() then return end
     if not unit or (unit and unit ~= bar.unit) then return end
     if powerType and powerType ~= POWER_TYPE_TOKEN then return end
@@ -78,27 +81,17 @@
 
   end
   
-  local function OnAttributeChanged(self,name,value)
-    if name == "switch" then
-      if value == "1" then
+  local function OnEvent(...)
+    local self, event = ...
+    if event == "UNIT_POWER_FREQUENT" then
+      UpdateBar(...)
+    else
+      if IsPlayerSpell(REQ_SPELL) and GetSpecialization() ==  REQ_SPEC then
         self:Show()
+        UpdateBar(self,event,self.unit,POWER_TYPE_TOKEN)
       else
         self:Hide()
       end
-    end
-  end
-  
-  local function OnEvent(...)
-    local self, event = ...
-    if event == "SPELLS_CHANGED" then
-      if InCombatLockdown() then return end
-      if IsPlayerSpell(REQ_SPELL) and GetSpecialization() ==  REQ_SPEC then
-        self:SetAttribute("switch","1")
-      else
-        self:SetAttribute("switch","0")
-      end
-    else
-      UpdateBar(...)
     end
   end
   
@@ -114,10 +107,10 @@
     bar:SetPoint("CENTER", UIParent, "CENTER", 0,0)
     bar:SetWidth(w)
     bar:SetHeight(h)
-    bar:SetScale(0.4)
-
+    bar:SetScale(cfg.scale)
+    
     --color
-    bar.color = {r = 200/255, g = 0/255, b = 255/255, }
+    bar.color = cfg.color
 
     --left edge
     local t = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
@@ -189,12 +182,16 @@
 
     bar.unit = "player"
     bar:RegisterUnitEvent("UNIT_POWER_FREQUENT", bar.unit)
-    bar:RegisterUnitEvent("UNIT_DISPLAYPOWER", bar.unit)
     bar:RegisterEvent("SPELLS_CHANGED")
     bar:SetScript("OnEvent", OnEvent)
     bar:SetScript("OnAttributeChanged", OnAttributeChanged)
 
-    ns.lib:AddSimpleDrag(bar)
+    --rlib drag func
+    rCreateDragFrame(bar, ns.dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+    --rlib combat fader
+    if cfg.combat.enable then
+      rCombatFrameFader(bar, cfg.combat.fadeIn, cfg.combat.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    end
 
   end
 

@@ -10,3 +10,4 @@ core\slashcmd.lua
 core\lib.lua
 
 bars\soulshards.lua
+bars\holypower.lua

@@ -38,7 +38,29 @@
       scale     = 0.32,
       color = {r = 200/255, g = 135/255, b = 190/255, },
       combat          = { --fade the bar in/out in combat/out of combat
-        enable          = true,
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
+    },
+    --chi
+    chi = {
+      enable    = true,
+      scale     = 0.32,
+      color     = {r = 41/255, g = 209/255, b = 157/255, },
+      combat          = { --fade the bar in/out in combat/out of combat
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
+    },
+    --shadow orbs
+    shadoworbs = {
+      enable    = true,
+      scale     = 0.32,
+      color     = {r = 126/255, g = 54/255, b = 180/255, },
+      combat          = { --fade the bar in/out in combat/out of combat
+        enable          = false,
         fadeIn          = {time = 0.4, alpha = 1},
         fadeOut         = {time = 0.3, alpha = 0.2},
       },

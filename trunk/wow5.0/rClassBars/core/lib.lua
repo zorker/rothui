@@ -36,6 +36,12 @@
     local upm = UnitPowerMax(unit, bar.POWER_TYPE_INDEX)
     local up2 = UnitPower(unit, bar.POWER_TYPE_INDEX, true)
     local upm2 = UnitPowerMax(unit, bar.POWER_TYPE_INDEX, true)
+    local maxPerOrb = upm2/upm
+    local val = up2-up*maxPerOrb
+    
+    --print(up.." "..upm)
+    --print(up2.." "..upm2)
+    --print(val)
 
     --adjust the width of the bar frame
     local w = 64*(upm+2)
@@ -48,8 +54,10 @@
         if not orb:IsShown() then orb:Show() end
       end
     end
+    local valueApplied = false
     for i = 1, upm do
       local orb = bar.orbs[i]
+      orb.fill:SetMinMaxValues(0, maxPerOrb)
       if(i <= up) then
         if up == upm then
           orb.fill:SetStatusBarColor(1,0,0)
@@ -58,11 +66,19 @@
           orb.fill:SetStatusBarColor(bar.color.r,bar.color.g,bar.color.b)
           orb.glow:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
         end
+        orb.fill:SetValue(maxPerOrb)
         orb.fill:Show()
         orb.glow:Show()
         orb.highlight:Show()
       else
-        orb.fill:Hide()
+        if not valueApplied then
+          orb.fill:SetStatusBarColor(bar.color.r,bar.color.g,bar.color.b)
+          orb.fill:SetValue(val)
+          orb.fill:Show()
+          valueApplied = true
+        else
+          orb.fill:Hide()        
+        end
         orb.glow:Hide()
         orb.highlight:Hide()
       end
@@ -105,8 +121,8 @@
     --variables
     bar.MAX_ORBS              = cfg.MAX_ORBS or 5
     bar.ORB_TEXTURE           = cfg.ORB_TEXTURE or "orb"
-    bar.ORB_SIZE_FACTOR       = cfg.ORB_SIZE_FACTOR or 0.95
-    bar.ORB_FILL_SIZE_FACTOR  = cfg.ORB_FILL_SIZE_FACTOR or 1
+    bar.ORB_SIZE_FACTOR       = cfg.ORB_SIZE_FACTOR or 0.9
+    bar.ORB_FILL_SIZE_FACTOR  = cfg.ORB_FILL_SIZE_FACTOR or 0.9
     bar.MAX_ORB_POWER         = cfg.MAX_ORB_POWER or 1
     bar.POWER_TYPE_INDEX      = cfg.POWER_TYPE_INDEX
     bar.POWER_TYPE_TOKEN      = cfg.POWER_TYPE_TOKEN
@@ -155,6 +171,12 @@
       orb.bg:SetPoint("CENTER")
       orb.bg:SetTexture(mediaPath.."combo_"..bar.ORB_TEXTURE.."_bg")
 
+      --orb border
+      orb.border = orb:CreateTexture(nil,"BACKGROUND",nil,-5)
+      orb.border:SetSize(128*bar.ORB_SIZE_FACTOR,128*bar.ORB_SIZE_FACTOR)
+      orb.border:SetPoint("CENTER")
+      orb.border:SetTexture(mediaPath.."combo_"..bar.ORB_TEXTURE.."_border")
+      
       --orb filling statusbar
       orb.fill = CreateFrame("StatusBar",nil,orb)
       orb.fill:SetStatusBarTexture(mediaPath.."combo_"..bar.ORB_TEXTURE.."_fill")
@@ -168,12 +190,6 @@
       --frame stacking helper
       orb.overlay = CreateFrame("Frame",nil,orb.fill)
       orb.overlay:SetAllPoints(orb)
-
-      --orb border
-      orb.border = orb.overlay:CreateTexture(nil,"BACKGROUND",nil,-5)
-      orb.border:SetSize(128*bar.ORB_SIZE_FACTOR,128*bar.ORB_SIZE_FACTOR)
-      orb.border:SetPoint("CENTER")
-      orb.border:SetTexture(mediaPath.."combo_"..bar.ORB_TEXTURE.."_border")
 
       --orb glow
       orb.glow = orb.overlay:CreateTexture(nil,"BACKGROUND",nil,-4)

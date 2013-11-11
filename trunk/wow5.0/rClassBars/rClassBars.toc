@@ -10,6 +10,7 @@ core\slashcmd.lua
 core\lib.lua
 
 bars\soulshards.lua
+bars\burningembers.lua
 bars\holypower.lua
 bars\chi.lua
 bars\shadoworbs.lua

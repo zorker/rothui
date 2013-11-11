@@ -32,6 +32,17 @@
         fadeOut         = {time = 0.3, alpha = 0.2},
       },
     },
+    --burning embers
+    burningembers = {
+      enable    = true,
+      scale     = 0.32,
+      color     = {r = 255/255, g = 133/255, b = 0/255, },
+      combat          = { --fade the bar in/out in combat/out of combat
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
+    },
     --holy power
     holypower = {
       enable    = true,

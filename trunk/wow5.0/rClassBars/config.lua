@@ -43,6 +43,18 @@
         fadeOut         = {time = 0.3, alpha = 0.2},
       },
     },
+    --demonic fury
+    demonicfury = {
+      enable    = true,
+      scale     = 0.65,
+      color     = { r = 114/255, g = 192/255, b = 48/255, },
+      bgColor   = { r = 50/255, g = 40/255, b = 40/255, },
+      combat          = { --fade the bar in/out in combat/out of combat
+        enable          = false,
+        fadeIn          = {time = 0.4, alpha = 1},
+        fadeOut         = {time = 0.3, alpha = 0.2},
+      },
+    },
     --holy power
     holypower = {
       enable    = true,

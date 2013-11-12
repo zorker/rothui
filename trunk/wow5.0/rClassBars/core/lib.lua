@@ -39,10 +39,6 @@
     local maxPerOrb = upm2/upm
     local val = up2-up*maxPerOrb
     
-    --print(up.." "..upm)
-    --print(up2.." "..upm2)
-    --print(val)
-
     --adjust the width of the bar frame
     local w = 64*(upm+2)
     bar:SetWidth(w)
@@ -214,6 +210,121 @@
     bar:RegisterUnitEvent("UNIT_DISPLAYPOWER", bar.unit)
     bar:RegisterEvent("SPELLS_CHANGED")
     bar:SetScript("OnEvent", OnEventOrbBar)
+
+    --rlib drag func
+    rCreateDragFrame(bar, ns.dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp
+    --rlib combat fader
+    if cfg.combat and cfg.combat.enable then
+      rCombatFrameFader(bar, cfg.combat.fadeIn, cfg.combat.fadeOut) --frame, buttonList, fadeIn, fadeOut
+    end
+
+  end
+  
+  --update statusbar type bar func
+  local function UpdateStatusBar(bar, event, unit, powerType)
+    if not bar:IsShown() then return end
+    if not unit or (unit and unit ~= bar.unit) then return end
+    if powerType and powerType ~= bar.POWER_TYPE_TOKEN then return end
+    local up = UnitPower(unit, bar.POWER_TYPE_INDEX)
+    local upm = UnitPowerMax(unit, bar.POWER_TYPE_INDEX)    
+    bar.fill:SetMinMaxValues(0, upm)
+    bar.fill:SetValue(up)
+    if up == upm then
+      bar.glow:Show()
+    else
+      bar.glow:Hide()
+    end
+  end
+  
+  --onevent statusbar type bar func
+  local function OnEventStatusBar(...)
+    local bar, event = ...
+    if event == "UNIT_POWER_FREQUENT" then
+      UpdateStatusBar(...)
+    else
+      --spell check
+      if bar.REQ_SPELL then
+        if IsPlayerSpell(bar.REQ_SPELL) then
+          bar:Show()
+        else
+          bar:Hide()
+        end
+      --spec check
+      elseif bar.REQ_SPEC then
+        if GetSpecialization() ==  bar.REQ_SPEC then
+          bar:Show()
+        else
+          bar:Hide()
+        end
+      end
+      UpdateStatusBar(bar,event,bar.unit,bar.POWER_TYPE_TOKEN)
+    end
+  end
+  
+  --create statusbar type bar func
+  function lib.CreateStatusBar(name, cfg)
+    if not cfg then return end
+
+    --create bar
+    local bar = CreateFrame("Frame", name, ns.PetbattleVehicleHider)
+
+    --variables
+    bar.BAR_TEXTURE           = cfg.BAR_TEXTURE or "demonicfury"
+    bar.BAR_WIDTH             = cfg.BAR_WIDTH or 256
+    bar.BAR_HEIGHT            = cfg.BAR_HEIGHT or 32
+    bar.BAR_OFFSET_X          = cfg.BAR_OFFSET_X or 17
+    bar.BAR_OFFSET_Y          = cfg.BAR_OFFSET_X or 5
+    bar.POWER_TYPE_INDEX      = cfg.POWER_TYPE_INDEX
+    bar.POWER_TYPE_TOKEN      = cfg.POWER_TYPE_TOKEN
+    bar.REQ_SPEC              = cfg.REQ_SPEC
+    bar.REQ_SPELL             = cfg.REQ_SPELL
+    bar.color                 = cfg.color
+    bar.bgColor               = cfg.bgColor or {r=0.2,g=0.2,b=0.2,}
+
+    --bar settings
+    bar:SetPoint("CENTER", UIParent, "CENTER", 0,0)
+    bar:SetWidth(bar.BAR_WIDTH)
+    bar:SetHeight(bar.BAR_HEIGHT)
+    bar:SetScale(cfg.scale or 1)
+
+    --bar filling statusbar
+    bar.fill = CreateFrame("StatusBar",nil,bar)
+    bar.fill:SetStatusBarTexture(mediaPath.."statusbar_fill_"..bar.BAR_TEXTURE)
+    bar.fill:SetMinMaxValues(0, 1)
+    bar.fill:SetValue(0)
+    bar.fill:SetPoint("TOPLEFT",bar.BAR_OFFSET_X,-bar.BAR_OFFSET_Y)
+    bar.fill:SetPoint("BOTTOMRIGHT",-bar.BAR_OFFSET_X,bar.BAR_OFFSET_Y)
+    bar.fill:SetStatusBarColor(bar.color.r,bar.color.g,bar.color.b)
+    
+    --bar background
+    bar.fill.bg = bar.fill:CreateTexture(nil,"BACKGROUND",nil,-7)
+    bar.fill.bg:SetAllPoints()
+    bar.fill.bg:SetTexture(mediaPath.."statusbar_fill_"..bar.BAR_TEXTURE)
+    bar.fill.bg:SetVertexColor(bar.bgColor.r,bar.bgColor.g,bar.bgColor.b)
+
+    --frame stacking helper
+    bar.overlay = CreateFrame("Frame",nil,bar.fill)
+    bar.overlay:SetAllPoints(bar)
+    
+    --bar border
+    bar.border = bar.overlay:CreateTexture(nil,"BACKGROUND",nil,-5)
+    bar.border:SetAllPoints()
+    bar.border:SetTexture(mediaPath.."statusbar_border_"..bar.BAR_TEXTURE)
+
+    --bar glow
+    bar.glow = bar.overlay:CreateTexture(nil,"BACKGROUND",nil,-4)
+    bar.glow:SetPoint("CENTER")
+    bar.glow:SetWidth(bar.BAR_WIDTH*2)
+    bar.glow:SetHeight(bar.BAR_HEIGHT*2)
+    bar.glow:SetTexture(mediaPath.."statusbar_glow_"..bar.BAR_TEXTURE)
+    bar.glow:SetVertexColor(bar.color.r,bar.color.g,bar.color.b)
+    bar.glow:SetBlendMode("BLEND")
+
+    bar.unit = "player"
+    bar:RegisterUnitEvent("UNIT_POWER_FREQUENT", bar.unit)
+    bar:RegisterUnitEvent("UNIT_DISPLAYPOWER", bar.unit)
+    bar:RegisterEvent("SPELLS_CHANGED")
+    bar:SetScript("OnEvent", OnEventStatusBar)
 
     --rlib drag func
     rCreateDragFrame(bar, ns.dragFrameList, -2 , true) --frame, dragFrameList, inset, clamp

@@ -99,7 +99,7 @@
     --chat tab skinning
     local tab = _G[name.."Tab"]
     local tabFs = tab:GetFontString()
-    tabFs:SetFont(NAMEPLATE_FONT, 11, "THINOUTLINE")
+    tabFs:SetFont(STANDARD_TEXT_FONT, 11, "THINOUTLINE")
     tabFs:SetShadowOffset(1,-1)
     tabFs:SetShadowColor(0,0,0,0.6)
     tabFs:SetTextColor(unpack(cfg.selectedTabColor))
@@ -111,9 +111,9 @@
       _G[name.."TabSelectedMiddle"]:SetTexture(nil)
       _G[name.."TabSelectedRight"]:SetTexture(nil)
       --_G[name.."TabGlow"]:SetTexture(nil) --do not hide this texture, it will glow when a whisper hits a hidden chat
-      _G[name.."TabHighlightLeft"]:SetTexture(nil)
-      _G[name.."TabHighlightMiddle"]:SetTexture(nil)
-      _G[name.."TabHighlightRight"]:SetTexture(nil)
+      --_G[name.."TabHighlightLeft"]:SetTexture(nil)
+      --_G[name.."TabHighlightMiddle"]:SetTexture(nil)
+      --_G[name.."TabHighlightRight"]:SetTexture(nil)
     end
     tab:SetAlpha(cfg.selectedTabAlpha)
 

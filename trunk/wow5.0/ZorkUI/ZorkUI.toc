@@ -3,4 +3,12 @@
 ## Title: ZorkUI
 ## Notes: A simple UI for World of Warcraft
 
-test.lua
+# config
+config.lua
+configOverride.lua
+
+# core
+core\lib.lua
+
+# modules
+modules\actionbar.lua

@@ -22,7 +22,7 @@ local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 local math = math
 local flatTexture = "Interface\\Buttons\\WHITE8x8"
 local mediaPath = "Interface\\AddOns\\"..addonName.."\\media\\"
-local defaultBorder = mediaPath.."backdrop-border-rothC"
+local defaultBorder = mediaPath.."roth-backdrop-border_3b_3s"
 
 ---------------------------------------------
 --lib variables

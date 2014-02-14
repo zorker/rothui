@@ -1,0 +1,9 @@
+## Interface: 50400
+## Author: zork
+## Title: oUF_SquarePortrait
+## Notes: Square portrait unitframes
+## RequiredDeps: oUF
+
+config.lua
+core.lua
+template.lua

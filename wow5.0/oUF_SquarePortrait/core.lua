@@ -22,3 +22,30 @@
     local mt = getmetatable(parent).__index
     mt.SetDropShadowColor = function(self,r,g,b,a) self.dropShadow:SetBackdropBorderColor(r or 1, g or 1, b or 1, a or 1) end
   end
+
+  --fontstring func
+  function core:NewFontString(parent,family,size,outline,layer)
+    local fs = parent:CreateFontString(nil, layer or "OVERLAY")
+    fs:SetFont(family,size,outline)
+    fs:SetShadowOffset(0, -2)
+    fs:SetShadowColor(0,0,0,1)
+    return fs
+  end
+  
+  ---------------------------------------------
+  -- TAGS
+  ---------------------------------------------
+  
+  --unit name tag
+  oUF.Tags.Methods["square_portrait:name"] = function(unit)
+    local name = oUF.Tags.Methods["name"](unit)
+    return "|cffffffff"..name.."|r"
+  end
+  oUF.Tags.Events["square_portrait:name"] = "UNIT_NAME_UPDATE UNIT_CONNECTION"
+
+  --unit health tag
+  oUF.Tags.Methods["square_portrait:health"] = function(unit)
+    local perhp = oUF.Tags.Methods["perhp"](unit)
+    return "|cffffffff"..perhp.."|r"
+  end
+  oUF.Tags.Events["square_portrait:health"] = "UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH"

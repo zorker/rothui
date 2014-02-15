@@ -98,8 +98,9 @@
       if hmax > 0 then
         hper = hcur/hmax
       end
-      local v = 0.7*hper
-      p2:SetTexCoord(0.15,0.85,0.85-v,0.85)
+      if hper == 0 then p2:Hide() return end
+      if not p2:IsShown() then p2:Show() end --i see no dead people
+      p2:SetTexCoord(0.15,0.85,0.85-(0.7*hper),0.85)
       p2:SetHeight(self:GetHeight()*hper)
     end
 
@@ -156,8 +157,8 @@
   -- SPAWN
   ---------------------------------------------
 
-  local playerFrame = oUF:Spawn("player", addonName.."Player")
-  playerFrame:SetPoint("CENTER",-200,0)
+  --local playerFrame = oUF:Spawn("player", addonName.."Player")
+  --playerFrame:SetPoint("CENTER",-200,0)
 
   local TargetFrame = oUF:Spawn("target", addonName.."Target")
   TargetFrame:SetPoint("CENTER",200,0)
@@ -168,5 +169,5 @@
   local PetFrame = oUF:Spawn("pet", addonName.."Pet")
   PetFrame:SetPoint("CENTER",-100,0)
 
-  local FocusFrame = oUF:Spawn("focus", addonName.."Focus")
-  FocusFrame:SetPoint("CENTER",-300,0)
+  --local FocusFrame = oUF:Spawn("focus", addonName.."Focus")
+  --FocusFrame:SetPoint("CENTER",-300,0)

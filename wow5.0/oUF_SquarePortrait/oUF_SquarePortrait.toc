@@ -7,3 +7,4 @@
 config.lua
 core.lua
 template.lua
+template2.lua

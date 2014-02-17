@@ -40,7 +40,7 @@
     p:SetAlpha(1)
     p:SetDesaturated(1)
     p:SetBlendMode("ADD")
-    SetPortraitTexture(p, self.unit)
+    self.Portrait = p
 
     --red overlay
     local red = self:CreateTexture(nil, "BACKGROUND", nil, -5)
@@ -53,15 +53,17 @@
     local p2 = self:CreateTexture(nil, "BACKGROUND", nil, -4)
     p2:SetPoint("BOTTOMLEFT")
     p2:SetPoint("BOTTOMRIGHT")
-    p2:SetHeight(self:GetHeight())
+    p2.height = self:GetHeight()
+    p2:SetHeight(p2.height)
     p2:SetTexCoord(0.15,0.85,0.15,0.85)
-    SetPortraitTexture(p2, self.unit)
+    self.HealthPortrait = p2
 
-    --fake healthbar for oUF
+    --fake healthbar for use of the oUF health module
     local health = CreateFrame("StatusBar", nil, self)
     health.frequentUpdates = true
     self.Health = health
 
+    --power bar
     local power = CreateFrame("StatusBar", nil, self)
     power:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
     power:SetPoint("TOP",self,"BOTTOM",0, -4)
@@ -78,21 +80,22 @@
     power.colorClassPet = true
     --power.colorClassNPC = true
     self.Power = power
-    
+
     --strings
-    local hpval = core:NewFontString(self, cfg.font, 18, "THINOUTLINE")  
+    local hpval = core:NewFontString(self, cfg.font, 18, "THINOUTLINE")
     hpval:SetPoint("TOPLEFT")
     self:Tag(hpval, "[square_portrait:health]")
-    
+
     local name = core:NewFontString(self, cfg.font, 14, "THINOUTLINE")
     name:SetPoint("LEFT",-5,0)
     name:SetPoint("RIGHT",5,0)
     name:SetPoint("BOTTOM", self, "TOP", 0, 4)
     self:Tag(name, "[square_portrait:name]")
 
-    --once a new health event fires we update our portrait texture
+    --once a new health event fires we update our portrait texture coords
     self.Health.PostUpdate = function(bar,...)
       local hcur = bar:GetValue()
+      local p2 = bar.__owner.HealthPortrait
       local hmin, hmax = bar:GetMinMaxValues()
       local hper = 0
       if hmax > 0 then
@@ -101,48 +104,14 @@
       if hper == 0 then p2:Hide() return end
       if not p2:IsShown() then p2:Show() end --i see no dead people
       p2:SetTexCoord(0.15,0.85,0.85-(0.7*hper),0.85)
-      p2:SetHeight(self:GetHeight()*hper)
+      p2:SetHeight(p2.height*hper)
     end
 
-    --update portrait func
-    local function UpdatePortrait()
-      SetPortraitTexture(p, self.unit)
-      SetPortraitTexture(p2, self.unit)
+    --track the portrait update and apply a new portrait texture p2 aswell
+    self.Portrait.PostUpdate = function(portait,...)
+      SetPortraitTexture(portait.__owner.HealthPortrait, portrait.__owner.unit)
+      --portait.__owner.Health:ForceUpdate(portait.__owner.Health)
     end
-
-    --onshow func
-    local function OnShow(...)
-      UpdatePortrait()
-    end
-
-    --handle some events
-    local eventHandler = CreateFrame("Frame")
-
-    function eventHandler:UNIT_MODEL_CHANGED(...)
-      UpdatePortrait()
-    end
-
-    function eventHandler:UNIT_PORTRAIT_UPDATE(...)
-      UpdatePortrait()
-    end
-
-    function eventHandler:PLAYER_TARGET_CHANGED(...)
-      OnShow()
-    end
-
-    function eventHandler:PLAYER_FOCUS_CHANGED(...)
-      OnShow()
-    end
-
-    eventHandler:HookScript("OnEvent", function(self, event, ...)
-      if not self[event] then print("no event: "..event) return end
-      self[event](self,event, ...)
-    end)
-
-    eventHandler:RegisterUnitEvent("UNIT_PORTRAIT_UPDATE", self.unit)
-    eventHandler:RegisterUnitEvent("UNIT_MODEL_CHANGED", self.unit)
-    eventHandler:RegisterEvent("PLAYER_TARGET_CHANGED")
-    eventHandler:RegisterEvent("PLAYER_FOCUS_CHANGED")
 
   end
 

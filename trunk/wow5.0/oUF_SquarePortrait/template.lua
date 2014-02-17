@@ -93,9 +93,8 @@
     self:Tag(name, "[square_portrait:name]")
 
     --once a new health event fires we update our portrait texture coords
-    self.Health.PostUpdate = function(bar,...)
+    self.Health.PostUpdate = function(bar)
       local hcur = bar:GetValue()
-      local p2 = bar.__owner.HealthPortrait
       local hmin, hmax = bar:GetMinMaxValues()
       local hper = 0
       if hmax > 0 then
@@ -108,9 +107,8 @@
     end
 
     --track the portrait update and apply a new portrait texture p2 aswell
-    self.Portrait.PostUpdate = function(portait,...)
-      SetPortraitTexture(portait.__owner.HealthPortrait, portrait.__owner.unit)
-      --portait.__owner.Health:ForceUpdate(portait.__owner.Health)
+    self.Portrait.PostUpdate = function(portrait,unit)
+      SetPortraitTexture(p2, unit)
     end
 
   end

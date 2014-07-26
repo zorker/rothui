@@ -4,17 +4,23 @@
 
   --local variables
   local G, L, C = at.G, at.L, at.C
-  
+
   --log func
   function G:Log(s)
     print(s)
   end
-  
-  G:Log("hello world")
-  G:Log(L.name)
-  G:Log(L.version)
-  G:Log(L.versionNumber)
-  
+
+  --local log func
+  function L:Log(s)
+    print(L.name..": "..s)
+  end
+
+  L:Log("hello world")
+  L:Log(L.name)
+  L:Log(L.version)
+  L:Log(L.versionNumber)
+  L:Log(L.locale)
+
   --get mouse focus func
   function G:GetMouseFocus()
     local f = GetMouseFocus()

@@ -1,0 +1,7 @@
+## Interface: 60000
+## Author: zork
+## Title: rLib
+## Notes: Library for r-addons
+## Version: 6.001
+
+rLib.xml

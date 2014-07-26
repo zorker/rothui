@@ -1,16 +1,24 @@
 
+  -------------------------------------
+  -- VARIABLES
+  -------------------------------------
+
   -- addon data
   local an, at = ... --addon name, addon table
 
-  --local variables
+  -- local variables
   local G, L, C = at.G, at.L, at.C
 
-  local math = math
+  local math, type, tonumber = math, type, tonumber
 
-  L:Log("number.lua")
+  -------------------------------------
+  -- FUNCTIONS
+  -------------------------------------
 
-  --number abbrev func
+  -- number abbrev func
   function G:NumAbbrev(n)
+    if not G:IsNumber(n) then return n end
+    if type(n) ~= "number" then n = tonumber(n) end
     if n > 1E10 then
       return (math.floor(n/1E9)).."b"
     elseif n > 1E9 then
@@ -27,38 +35,20 @@
       return n
     end
   end
+  
+  -- is number func
+  function G:IsNumber(n)
+    if tonumber(n) then
+      return true
+    else
+      return false
+    end
+  end
 
-  L:Log(G:NumAbbrev(3))
-  L:Log(G:NumAbbrev(33))
-  L:Log(G:NumAbbrev(333))
-  L:Log(G:NumAbbrev(3333))
-  L:Log(G:NumAbbrev(33333))
-  L:Log(G:NumAbbrev(333333))
-  L:Log(G:NumAbbrev(3333333))
-  L:Log(G:NumAbbrev(33333333))
-  L:Log(G:NumAbbrev(333333333))
-  L:Log(G:NumAbbrev(3333333333))
-  L:Log(G:NumAbbrev(33333333333))
-  L:Log(G:NumAbbrev(333333333333))
-  L:Log(G:NumAbbrev(3333333333333))
-
-  --check blizzard large number split
-  --BreakUpLargeNumbers(n)
-
-  L:Log("~~~~~~~~~~~~~")
+  -------------------------------------
+  -- CALLS
+  -------------------------------------
 
   --LARGE_NUMBER_SEPERATOR = ","
+  --G:Log(BreakUpLargeNumbers(3))
 
-  L:Log(BreakUpLargeNumbers(3))
-  L:Log(BreakUpLargeNumbers(33))
-  L:Log(BreakUpLargeNumbers(333))
-  L:Log(BreakUpLargeNumbers(3333))
-  L:Log(BreakUpLargeNumbers(33333))
-  L:Log(BreakUpLargeNumbers(333333))
-  L:Log(BreakUpLargeNumbers(3333333))
-  L:Log(BreakUpLargeNumbers(33333333))
-  L:Log(BreakUpLargeNumbers(333333333))
-  L:Log(BreakUpLargeNumbers(3333333333))
-  L:Log(BreakUpLargeNumbers(33333333333))
-  L:Log(BreakUpLargeNumbers(333333333333))
-  L:Log(BreakUpLargeNumbers(3333333333333))

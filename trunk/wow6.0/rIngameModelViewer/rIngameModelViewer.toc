@@ -1,0 +1,7 @@
+## Interface: 60000
+## Author: zork
+## Version: 60000.01
+## Title: IngameModelViewer
+## Notes: Ingame model viewer
+
+rIngameModelViewer.lua

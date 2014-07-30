@@ -146,8 +146,7 @@
       local size = self:GetParent().modelSize
       self:SetSize(size,size)
       self:SetPoint("TOPLEFT",size*row,size*col*(-1))
-      local fs = math.max(size*10/100,8)
-      self.title:SetFont(STANDARD_TEXT_FONT, fs, "OUTLINE")
+      self.title:SetFont(STANDARD_TEXT_FONT, math.max(size*10/100,8), "OUTLINE")
       self:Show()
     end
 
@@ -418,7 +417,7 @@
     function f:UpdateModels()
       self:HideAllModels()
       self:UpdateModelCount()
-      local displayId = 1 + ((self.canvasPage-1)*self.modelCount)
+      local displayId = 1+((self.canvasPage-1)*self.modelCount)
       local id = 1
       for i=1, self.modelRows do
         for k=1, self.modelCols do
@@ -429,9 +428,9 @@
           M[id]:UpdatePosition(k-1,i-1)
           M[id]:ResetValues()
           M[id]:UpdateDisplayId(displayId)
-          M[id]:UpdateBackgroundColor()
+          --M[id]:UpdateBackgroundColor() --I think this call can be removed
           displayId = displayId+1
-          id=id+1
+          id = id+1
         end--for cols
       end--for rows
     end

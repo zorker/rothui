@@ -82,7 +82,7 @@
     b:SetBackdropBorderColor(0.5,0.5,0.5)
 
     --color picker background color
-    b.color = picker:CreateTexture(nil,"BACKGROUND",nil,-7)
+    b.color = b:CreateTexture(nil,"BACKGROUND",nil,-7)
     b.color:SetPoint("TOPLEFT",4,-4)
     b.color:SetPoint("BOTTOMRIGHT",-4,4)
     b.color:SetTexture(unpack(C.modelBackgroundColor))

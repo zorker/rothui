@@ -77,15 +77,6 @@
     picker.color:SetPoint("TOPLEFT",4,-4)
     picker.color:SetPoint("BOTTOMRIGHT",-4,4)
     picker.color:SetTexture(unpack(C.modelBackgroundColor))
-    --picker.show
-    function picker:Setup(r,g,b,a,callback)
-      CPF:SetColorRGB(r,g,b)
-      CPF.hasOpacity, CPF.opacity = (a ~= nil), a
-      CPF.previousValues = {r,g,b,a}
-      CPF.func, CPF.opacityFunc, CPF.cancelFunc = callback, callback, callback
-      CPF:Hide() -- Need to run the OnShow handler.
-      CPF:Show()
-    end
     function picker:Callback(color)
       local r,g,b
       if color then r,g,b = unpack(color) else r,g,b = CPF:GetColorRGB() end
@@ -93,10 +84,15 @@
       picker:UpdateColor(r,g,b)
     end
     picker:HookScript("OnClick", function(self)
-      --reset the callback functions
-      CPF.func, CPF.opacityFunc, CPF.cancelFunc = function() end, function() end, function() end
+      --set the callback functions
       local r,g,b = self.color:GetVertexColor()
-      self:Setup(r,g,b,nil,self.Callback)
+      local a = nil
+      CPF.func, CPF.opacityFunc, CPF.cancelFunc = self.Callback, self.Callback, self.Callback
+      CPF.hasOpacity, CPF.opacity = (a ~= nil), a
+      CPF.previousValues = {r,g,b,a}
+      CPF:Hide()
+      CPF:Show()
+      CPF:SetColorRGB(r,g,b)
     end)
     return picker
   end

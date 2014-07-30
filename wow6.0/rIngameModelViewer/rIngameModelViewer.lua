@@ -462,7 +462,8 @@
     end)
 
     --murloc OnSizeChanged func
-    m:HookScript("OnSizeChanged", function(self)
+    m:HookScript("OnSizeChanged", function(self,...)
+      print(...) --what else is in there? size maybe?
       local w = math.min(math.max(self:GetWidth(),20),400)
       self:SetSize(w,w) --height = width
     end)

@@ -449,10 +449,24 @@
     m:SetMovable(true)
     m:SetUserPlaced(true)
     m:EnableMouse(true)
+    m:SetClampedToScreen(true)
     m:RegisterForDrag("RightButton")
 
     --murloc OnDragStart func
-    m:HookScript("OnDragStart", function(self) self:StartMoving() end)
+    m:HookScript("OnDragStart", function(self)
+      if IsShiftKeyDown() then
+        self:StartSizing()
+      else
+        self:StartMoving()
+      end
+    end)
+
+    --murloc OnSizeChanged func
+    m:HookScript("OnSizeChanged", function(self)
+      local w,h = self:GetSize()
+      w = math.min(math.max(w,20),400)
+      self:SetSize(w,w)
+    end)
 
     --murloc OnDragStop func
     m:HookScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
@@ -471,7 +485,8 @@
       GT:SetOwner(self, "ANCHOR_TOP",0,5)
       GT:AddLine("rIngameModelViewer", 0, 1, 0.5, 1, 1, 1)
       GT:AddLine("Click |cff00ff00left|r to open the model viewer.", 1, 1, 1, 1, 1, 1)
-      GT:AddLine("Drag |cff00ffffright|r to move the murloc.", 1, 1, 1, 1, 1, 1)
+      GT:AddLine("Hold |cff00ffffright|r to move the murloc.", 1, 1, 1, 1, 1, 1)
+      GT:AddLine("Hold |cffffff00shift|r+|cff00ffffright|r to resize the murloc.", 1, 1, 1, 1, 1, 1)
       GT:Show()
     end)
 

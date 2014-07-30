@@ -134,7 +134,9 @@
 
     --model background color
     m.color = m:CreateTexture(nil,"BACKGROUND",nil,-7)
-    m.color:SetTexture(unpack(C.modelBackgroundColor))
+    m.color:SetTexture(1,1,1)
+    --color bugfix
+    m.color:SetVertexColor(unpack(C.modelBackgroundColor))
     m.color:SetPoint("TOPLEFT", m, "TOPLEFT", 2, -2)
     m.color:SetPoint("BOTTOMRIGHT", m, "BOTTOMRIGHT", -2, 2)
 
@@ -447,6 +449,7 @@
     m:SetSize(200,200)
     m:SetPoint("CENTER",0,0)
     m:SetMovable(true)
+    m:SetResizable(true)
     m:SetUserPlaced(true)
     m:EnableMouse(true)
     m:SetClampedToScreen(true)
@@ -470,6 +473,12 @@
     --murloc OnDragStop func
     m:HookScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
 
+    --murloc OnSizeChanged func
+    m:HookScript("OnSizeChanged", function(self,w,h)
+      w = math.min(math.max(w,40),400)
+      self:SetSize(w,w) --height = width
+    end)
+
     --murloc OnMouseDown func
     m:HookScript("OnMouseDown", function(self,button)
       if button ~= "LeftButton" then return end
@@ -483,9 +492,9 @@
       PlaySound(C.sound.select)
       GT:SetOwner(self, "ANCHOR_TOP",0,5)
       GT:AddLine("rIngameModelViewer", 0, 1, 0.5, 1, 1, 1)
-      GT:AddLine("Click |cff00ff00left|r to open the model viewer.", 1, 1, 1, 1, 1, 1)
-      GT:AddLine("Hold |cff00ffffright|r to move the murloc.", 1, 1, 1, 1, 1, 1)
-      GT:AddLine("Hold |cffffff00shift|r+|cff00ffffright|r to resize the murloc.", 1, 1, 1, 1, 1, 1)
+      GT:AddLine("Click |cffff00ffleft|r to open.", 1, 1, 1, 1, 1, 1)
+      GT:AddLine("Hold |cff00ffffright|r to move.", 1, 1, 1, 1, 1, 1)
+      GT:AddLine("Hold |cffffff00shift|r + |cff00ffffright|r to resize.", 1, 1, 1, 1, 1, 1)
       GT:Show()
     end)
 

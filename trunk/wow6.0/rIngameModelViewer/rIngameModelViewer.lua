@@ -45,9 +45,11 @@
 
   C.modelBackgroundColor = {1,1,1}
 
+  C.defaultmodel = "interface\\buttons\\talktomequestionmark.m2"
+
   C.backdrop = {
     bgFile = "",
-    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    edgeFile = "interface\\tooltips\\ui-tooltip-border",
     tile = false,
     tileSize = 16,
     edgeSize = 16,
@@ -171,11 +173,12 @@
     --model UpdateDisplayId func
     function m:UpdateDisplayId(displayId)
       self:ClearModel()
-      local defaultmodel = "interface\\buttons\\talktomequestionmark.m2"
-      self:SetModel(defaultmodel) --in case setdisplayinfo fails
+      self:SetModel(C.defaultmodel) --in case setdisplayinfo fails
       self:SetDisplayInfo(displayId)
-      local model = self:GetModel()
-      if model == defaultmodel then
+      self.model = self:GetModel()
+      self.displayId = displayId
+      self.title:SetText(self.displayId)
+      if self.model == C.defaultmodel then
         self:SetCamDistanceScale(0.4)
         self:SetPosition(0,0,0.5)
         self:EnableMouse(false)
@@ -184,9 +187,6 @@
         self:EnableMouse(true)
         self:SetAlpha(1)
       end
-      self.model = model
-      self.displayId = displayId
-      self.title:SetText(self.displayId)
     end
 
     return m

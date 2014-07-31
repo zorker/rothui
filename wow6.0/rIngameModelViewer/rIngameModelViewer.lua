@@ -289,21 +289,16 @@
 
     --create model func
     function f:CreateModel(id)
-
       --print("creating new model",id)
-
       --model frame
       local m = CreateFrame("PlayerModel",nil,self)
-
       --model attributes
       m.name = "model"..id
       m.id = id
-
       --model background (border)
       m.bg = m:CreateTexture(nil,"BACKGROUND",nil,-8)
       m.bg:SetTexture(0,0,0,.2)
       m.bg:SetAllPoints()
-
       --model background color
       m.color = m:CreateTexture(nil,"BACKGROUND",nil,-7)
       m.color:SetTexture(1,1,1)
@@ -311,14 +306,11 @@
       m.color:SetVertexColor(unpack(C.modelBackgroundColor))
       m.color:SetPoint("TOPLEFT", m, "TOPLEFT", 2, -2)
       m.color:SetPoint("BOTTOMRIGHT", m, "BOTTOMRIGHT", -2, 2)
-
       --model title
       m.title = m:CreateFontString(nil, "BACKGROUND")
       m.title:SetPoint("TOP", 0, -2)
       m.title:SetAlpha(.5)
-
       return m
-
     end
 
     --canvas UpdateModelCount func

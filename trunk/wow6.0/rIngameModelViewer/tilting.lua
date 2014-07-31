@@ -45,7 +45,7 @@
 
   local function OnUpdate(self, elapsed)
     local x, y = GetCursorPosition()
-    local pitch = model.pitch + (y - self.y) * pi / 256
+    local pitch = self.pitch + (y - self.y) * pi / 256
     local limit = false
     if pitch > halfpi - 0.05 or pitch < - halfpi + 0.05 then
       limit = true
@@ -122,13 +122,13 @@
     elseif IsAltKeyDown() then
       zoom = 1
     end
-    local distance = model.distance - delta * zoom
+    local distance = self.distance - delta * zoom
     if distance > 40 then
       distance = 40
     elseif distance < zoom then
       distance = zoom
     end
-    self:SetOrientation(distance, model.yaw, model.pitch)
+    self:SetOrientation(distance, self.yaw, self.pitch)
   end
 
   local function CreateModelFrame(model)
@@ -190,6 +190,14 @@
     return f
   end
 
-  local m1 = CreateModelFrame("Creature\\Alexstrasza\\LadyAlexstrasa.m2")
-  local m2 = CreateModelFrame(21723)
-  local m3 = CreateModelFrame("player")
+  --models defined on loadup are not rendered properly. model display needs to be delayed.
+  local addonCallAfterLogin = CreateFrame("Frame")
+  addonCallAfterLogin:HookScript("OnEvent", function(self)
+    local m1 = CreateModelFrame("Creature\\Alexstrasza\\LadyAlexstrasa.m2")
+    local m2 = CreateModelFrame(21723)
+    if UnitExists("player") then
+      local m3 = CreateModelFrame("player")
+    end
+    self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+  end)
+  addonCallAfterLogin:RegisterEvent("PLAYER_ENTERING_WORLD")

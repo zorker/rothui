@@ -115,86 +115,6 @@
 
   end
 
-  --create model func
-  function L:CreateCanvasModel(id)
-
-    --print("creating new model",id)
-
-    --model frame
-    local m = CreateFrame("PlayerModel",nil,L.canvas)
-
-    --model attributes
-    m.name = "model"..id
-    m.id = id
-
-    --model background (border)
-    m.bg = m:CreateTexture(nil,"BACKGROUND",nil,-8)
-    m.bg:SetTexture(0,0,0,.2)
-    m.bg:SetAllPoints()
-
-    --model background color
-    m.color = m:CreateTexture(nil,"BACKGROUND",nil,-7)
-    m.color:SetTexture(1,1,1)
-    --color bugfix
-    m.color:SetVertexColor(unpack(C.modelBackgroundColor))
-    m.color:SetPoint("TOPLEFT", m, "TOPLEFT", 2, -2)
-    m.color:SetPoint("BOTTOMRIGHT", m, "BOTTOMRIGHT", -2, 2)
-
-    --model title
-    m.title = m:CreateFontString(nil, "BACKGROUND")
-    m.title:SetPoint("TOP", 0, -2)
-    m.title:SetAlpha(.5)
-
-    --model UpdatePosition func
-    function m:UpdatePosition(row,col)
-      local size = self:GetParent().modelSize
-      self:SetSize(size,size)
-      self:SetPoint("TOPLEFT",size*row,size*col*(-1))
-      self.title:SetFont(STANDARD_TEXT_FONT, math.max(size*10/100,8), "OUTLINE")
-      self:Show()
-    end
-
-    --model ResetValues func
-    function m:ResetValues()
-      self.camDistanceScale = 1
-      self.portraitZoom = 0
-      self.posX = 0
-      self.posY = 0
-      self.rotation = 0
-      self:SetPortraitZoom(self.portraitZoom)
-      self:SetCamDistanceScale(self.camDistanceScale)
-      self:SetPosition(0,self.posX,self.posY)
-      self:SetRotation(self.rotation)
-    end
-
-    --model UpdateBackgroundColor func
-    function m:UpdateBackgroundColor()
-      self.color:SetVertexColor(unpack(C.modelBackgroundColor))
-    end
-
-    --model UpdateDisplayId func
-    function m:UpdateDisplayId(displayId)
-      self:ClearModel()
-      self:SetModel(C.defaultmodel) --in case setdisplayinfo fails
-      self:SetDisplayInfo(displayId)
-      self.model = self:GetModel()
-      self.displayId = displayId
-      self.title:SetText(self.displayId)
-      if self.model == C.defaultmodel then
-        self:SetCamDistanceScale(0.4)
-        self:SetPosition(0,0,0.5)
-        self:EnableMouse(false)
-        self:SetAlpha(0.4)
-      else
-        self:EnableMouse(true)
-        self:SetAlpha(1)
-      end
-    end
-
-    return m
-
-  end
-
   --create canvas func
   function L:CreateCanvas()
 
@@ -367,6 +287,40 @@
       GT:Hide()
     end)
 
+    --create model func
+    function f:CreateModel(id)
+
+      --print("creating new model",id)
+
+      --model frame
+      local m = CreateFrame("PlayerModel",nil,self)
+
+      --model attributes
+      m.name = "model"..id
+      m.id = id
+
+      --model background (border)
+      m.bg = m:CreateTexture(nil,"BACKGROUND",nil,-8)
+      m.bg:SetTexture(0,0,0,.2)
+      m.bg:SetAllPoints()
+
+      --model background color
+      m.color = m:CreateTexture(nil,"BACKGROUND",nil,-7)
+      m.color:SetTexture(1,1,1)
+      --color bugfix
+      m.color:SetVertexColor(unpack(C.modelBackgroundColor))
+      m.color:SetPoint("TOPLEFT", m, "TOPLEFT", 2, -2)
+      m.color:SetPoint("BOTTOMRIGHT", m, "BOTTOMRIGHT", -2, 2)
+
+      --model title
+      m.title = m:CreateFontString(nil, "BACKGROUND")
+      m.title:SetPoint("TOP", 0, -2)
+      m.title:SetAlpha(.5)
+
+      return m
+
+    end
+
     --canvas UpdateModelCount func
     function f:UpdateModelCount()
       self.modelRows = math.floor(self.canvasHeight/self.modelSize)
@@ -380,6 +334,52 @@
       if (self.modelSize+value) > self.canvasHeight and value > 0 then return end
       self.modelSize = self.modelSize+value
       self:UpdateModels()
+    end
+
+    --canvas UpdateModelPosition func
+    function f:UpdateModelPosition(model,row,col)
+      local size = self.modelSize
+      model:SetSize(size,size)
+      model:SetPoint("TOPLEFT",size*row,size*col*(-1))
+      model.title:SetFont(STANDARD_TEXT_FONT, math.max(size*10/100,8), "OUTLINE")
+      model:Show()
+    end
+
+    --canvas ResetModelValues func
+    function f:ResetModelValues(model)
+      model.camDistanceScale = 1
+      model.portraitZoom = 0
+      model.posX = 0
+      model.posY = 0
+      model.rotation = 0
+      model:SetPortraitZoom(model.portraitZoom)
+      model:SetCamDistanceScale(model.camDistanceScale)
+      model:SetPosition(0,model.posX,model.posY)
+      model:SetRotation(model.rotation)
+    end
+
+    --canvas UpdateModelBackgroundColor func
+    function f:UpdateModelBackgroundColor(model)
+      model.color:SetVertexColor(unpack(C.modelBackgroundColor))
+    end
+
+    --canvas UpdateModelDisplayId func
+    function f:UpdateModelDisplayId(model,displayId)
+      model:ClearModel()
+      model:SetModel(C.defaultmodel) --in case setdisplayinfo fails
+      model:SetDisplayInfo(displayId)
+      model.model = model:GetModel()
+      model.displayId = displayId
+      model.title:SetText(model.displayId)
+      if model.model == C.defaultmodel then
+        model:SetCamDistanceScale(0.4)
+        model:SetPosition(0,0,0.5)
+        model:EnableMouse(false)
+        model:SetAlpha(0.4)
+      else
+        model:EnableMouse(true)
+        model:SetAlpha(1)
+      end
     end
 
     --canvas UpdatePage func
@@ -411,7 +411,7 @@
     --canvas UpdateAllModelBackgrounds func
     function f:UpdateAllModelBackgrounds()
       for i, model in pairs(M) do
-        model:UpdateBackgroundColor()
+        self:UpdateModelBackgroundColor(model)
       end
     end
 
@@ -425,12 +425,11 @@
         for k=1, self.modelCols do
           if not M[id] then
             --create a new model frame if needed
-            M[id] = L:CreateCanvasModel(id)
+            M[id] = self:CreateModel(id)
           end
-          M[id]:UpdatePosition(k-1,i-1)
-          M[id]:ResetValues()
-          M[id]:UpdateDisplayId(displayId)
-          --M[id]:UpdateBackgroundColor() --I think this call can be removed
+          self:UpdateModelPosition(M[id],k-1,i-1)
+          self:ResetModelValues(M[id])
+          self:UpdateModelDisplayId(M[id],displayId)
           displayId = displayId+1
           id = id+1
         end--for cols

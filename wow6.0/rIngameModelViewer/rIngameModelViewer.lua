@@ -358,8 +358,15 @@
     --canvas UpdateModelDisplayId func
     function f:UpdateModelDisplayId(model,displayId)
       model:ClearModel()
-      model:SetModel(C.defaultmodel) --in case setdisplayinfo fails
-      model:SetDisplayInfo(displayId)
+      --displayId 1 will return no model...so why not add the player model
+      if displayId == 1 then
+        model.unit = "player"
+        model:SetUnit(model.unit)
+      else
+        model.unit = nil
+        model:SetModel(C.defaultmodel) --in case setdisplayinfo fails
+        model:SetDisplayInfo(displayId)
+      end
       model.model = model:GetModel()
       model.displayId = displayId
       model.title:SetText(model.displayId)

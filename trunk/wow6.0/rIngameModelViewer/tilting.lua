@@ -140,7 +140,9 @@
     f:SetMovable(false)
     function f:CreateModel(model)
       local m = CreateFrame("PlayerModel", nil, self)
-      if IsNumber(model) then
+      if UnitExists(model) then
+        m:SetUnit(model)
+      elseif IsNumber(model) then
         m:SetDisplayInfo(model)
       else
         m:SetModel(model)
@@ -190,3 +192,4 @@
 
   local m1 = CreateModelFrame("Creature\\Alexstrasza\\LadyAlexstrasa.m2")
   local m2 = CreateModelFrame(21723)
+  local m3 = CreateModelFrame("player")

@@ -121,6 +121,7 @@
     f.w, f.h = f:GetSize()
     f:SetPoint("BOTTOMLEFT",0,0)
     f:SetFrameStrata("DIALOG")
+    f:SetClampedToScreen(1)
 
     --attributes
     f.channel = false

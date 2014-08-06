@@ -15,15 +15,38 @@
 
   local cfg = {}
 
-  cfg.scale           = 0.3
+  --player settings
+  cfg["player"] = {}
+  cfg["player"].enable          = true
+  cfg["player"].scale           = 0.2
+  cfg["player"].sparkcolor      = {1,1,1}
+  cfg["player"].bgcolor         = {0.5,0.4,0,1}
+  cfg["player"].ringcolor       = {1,0.8,0,1}
+  cfg["player"].bgblendmode     = "ADD" --"ADD" or "BLEND"
+  cfg["player"].ringblendmode   = "ADD" --"ADD" or "BLEND"
+  cfg["player"].sparkblendmode  = "ADD" --"ADD" or "BLEND"
 
-  cfg.sparkcolor      = {1,1,1}
-  cfg.bgcolor         = {0.7,0.7,1,1}
-  cfg.ringcolor       = {0.7,0.7,1,1}
+  --target settings
+  cfg["target"] = {}
+  cfg["target"].enable          = false
+  cfg["target"].scale           = 0.15
+  cfg["target"].sparkcolor      = {1,0.5,0.5}
+  cfg["target"].bgcolor         = {0.5,0,0,1}
+  cfg["target"].ringcolor       = {1,0,0,1}
+  cfg["target"].bgblendmode     = "ADD" --"ADD" or "BLEND"
+  cfg["target"].ringblendmode   = "ADD" --"ADD" or "BLEND"
+  cfg["target"].sparkblendmode  = "ADD" --"ADD" or "BLEND"
 
-  cfg.bgblendmode     = "ADD" --"ADD" or "BLEND"
-  cfg.ringblendmode   = "ADD" --"ADD" or "BLEND"
-  cfg.sparkblendmode  = "ADD" --"ADD" or "BLEND"
+  --focus settings
+  cfg["focus"] = {}
+  cfg["focus"].enable          = false
+  cfg["focus"].scale           = 0.11
+  cfg["focus"].sparkcolor      = {0.5,0.5,1}
+  cfg["focus"].bgcolor         = {0,0,0.5,1}
+  cfg["focus"].ringcolor       = {0,0.5,1,1}
+  cfg["focus"].bgblendmode     = "ADD" --"ADD" or "BLEND"
+  cfg["focus"].ringblendmode   = "ADD" --"ADD" or "BLEND"
+  cfg["focus"].sparkblendmode  = "ADD" --"ADD" or "BLEND"
 
   -----------------------------
   -- VARIABLES
@@ -112,7 +135,10 @@
     self.elapsed = 0
   end
 
-  local function CreateCompassCastbar()
+  local function CreateCompassCastbar(unit)
+
+    local cfg = cfg[unit]
+    if not cfg or (cfg and not cfg.enable) then return end
 
     local f = CreateFrame("Frame","rCompassCastbarFrame",UIParent)
     f:SetSize(512,512)
@@ -131,7 +157,7 @@
     f.endTime = 0
     f.duration = 0
     f.elapsed = 0
-    f.unit = "player"
+    f.unit = unit
 
     local t = f:CreateTexture(nil, "BACKGROUND", nil, -8)
     t:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose")
@@ -199,16 +225,16 @@
     f.leftRingSpark = rs1
     f.rightRingSpark = rs2
 
-    f:RegisterUnitEvent("UNIT_SPELLCAST_START", "player")
-    f:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", "player")
-    f:RegisterUnitEvent("UNIT_SPELLCAST_STOP", "player")
-    f:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", "player")
-    f:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", "player")
-    f:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", "player")
-    f:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", "player")
-    f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", "player")
-    f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", "player")
-    f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", "player")
+    f:RegisterUnitEvent("UNIT_SPELLCAST_START", unit)
+    f:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit)
+    f:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit)
+    f:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", unit)
+    f:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", unit)
+    f:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", unit)
+    f:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", unit)
+    f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", unit)
+    f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", unit)
+    f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", unit)
 
     f:Hide()
 
@@ -222,4 +248,6 @@
   -- CALL
   -----------------------------
 
-  CreateCompassCastbar()
+  CreateCompassCastbar("player")
+  CreateCompassCastbar("target")
+  CreateCompassCastbar("focus")

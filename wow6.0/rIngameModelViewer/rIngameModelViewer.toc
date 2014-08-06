@@ -4,5 +4,9 @@
 ## Title: IngameModelViewer
 ## Notes: Ingame model viewer
 
-rIngameModelViewer.lua
-tilting.lua
+init.lua
+config.lua
+functions.lua
+murloc.lua
+canvas.lua
+canvasmodelprototype.lua

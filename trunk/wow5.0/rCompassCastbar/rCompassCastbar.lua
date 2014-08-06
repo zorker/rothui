@@ -15,7 +15,7 @@
 
   local cfg = {}
 
-  cfg.scale           = 0.2
+  cfg.scale           = 0.3
 
   cfg.sparkcolor      = {1,1,1}
   cfg.bgcolor         = {0.7,0.7,1,1}
@@ -57,6 +57,7 @@
       self.endTime = endTime
       self.cur = GetTime()-startTime/1e3
       self.duration = (endTime-startTime)/1e3
+      self.elapsed = 0
       self.update = false
     end
     p = math.min(self.cur+self.elapsed,self.duration)/self.duration

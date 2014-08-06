@@ -40,8 +40,10 @@
   -- FUNCTIONS
   -----------------------------
 
+  local x,y,p
+
   local function OnUpdate(self,elapsed)
-    local x, y = GetCursorPosition()
+    x, y = GetCursorPosition()
     x = (x / uipScale / self.scale) - self.w / 2
     y = (y / uipScale / self.scale) - self.h / 2
     self:SetPoint("BOTTOMLEFT",x,y)
@@ -57,7 +59,7 @@
       self.duration = (endTime-startTime)/1e3
       self.update = false
     end
-    local p = math.min(self.cur+self.elapsed,self.duration)/self.duration
+    p = math.min(self.cur+self.elapsed,self.duration)/self.duration
     if p > 0.5 then
       self.leftRingTexture:SetRotation(math.rad(self.leftRingTexture.baseDeg-180*(p*2-1)))
       self.rightRingTexture:SetRotation(math.rad(self.rightRingTexture.baseDeg-180))

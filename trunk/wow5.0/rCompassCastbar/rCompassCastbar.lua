@@ -74,6 +74,18 @@
   -- FUNCTIONS
   -----------------------------
 
+  local function Disable(self)
+    self:SetScript("OnUpdate",nil)
+    self.channel = false
+    self.cast = false
+    self.update = false
+    self.startTime = 0
+    self.endTime = 0
+    self.duration = 0
+    self.elapsed = 0
+    self:Hide()
+  end
+
   local x,y,p,UCI
 
   local function OnUpdate(self,elapsed)
@@ -106,6 +118,10 @@
     self.rightRingSpark:SetRotation(math.rad(self.rightRingSpark.baseDeg-180*(p*2)))
     self.leftRingSpark:SetRotation(math.rad(self.leftRingSpark.baseDeg-180*(p*2-1)))
     self:Show()
+    if self.cur+self.elapsed-self.duration > 0.5 then
+      --sth really bad happened. there is no stop event firing. kill the onUpdate
+      Disable(self)
+    end
     self.elapsed = self.elapsed + elapsed
   end
 
@@ -113,18 +129,6 @@
     uipScale = UIParent:GetEffectiveScale()
     self:Show()
     self:SetScript("OnUpdate",OnUpdate)
-  end
-
-  local function Disable(self)
-    self:SetScript("OnUpdate",nil)
-    self.channel = false
-    self.cast = false
-    self.update = false
-    self.startTime = 0
-    self.endTime = 0
-    self.duration = 0
-    self.elapsed = 0
-    self:Hide()
   end
 
   local function OnEvent(self,event)

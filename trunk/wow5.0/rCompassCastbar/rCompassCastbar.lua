@@ -154,7 +154,7 @@
 
   local function CreateCompassCastbar(unit,cfg)
 
-    local f = CreateFrame("Frame","rCompassCastbarFrame",UIParent)
+    local f = CreateFrame("Frame",nil,UIParent)
     f:SetSize(512,512)
     f:SetScale(cfg.scale)
     f.scale = f:GetScale()

@@ -48,6 +48,17 @@
   cfg["focus"].ringblendmode   = "ADD" --"ADD" or "BLEND"
   cfg["focus"].sparkblendmode  = "ADD" --"ADD" or "BLEND"
 
+  --pet settings
+  cfg["pet"] = {}
+  cfg["pet"].enable          = false
+  cfg["pet"].scale           = 0.08
+  cfg["pet"].sparkcolor      = {0.8,1,0.5}
+  cfg["pet"].bgcolor         = {0,0.5,0,1}
+  cfg["pet"].ringcolor       = {0.5,1,0.3,1}
+  cfg["pet"].bgblendmode     = "ADD" --"ADD" or "BLEND"
+  cfg["pet"].ringblendmode   = "ADD" --"ADD" or "BLEND"
+  cfg["pet"].sparkblendmode  = "ADD" --"ADD" or "BLEND"
+
   -----------------------------
   -- VARIABLES
   -----------------------------
@@ -63,19 +74,18 @@
   -- FUNCTIONS
   -----------------------------
 
-  local x,y,p
+  local x,y,p,uci
 
   local function OnUpdate(self,elapsed)
     x, y = GetCursorPosition()
     x = (x / uipScale / self.scale) - self.w / 2
     y = (y / uipScale / self.scale) - self.h / 2
-    self:SetPoint("BOTTOMLEFT",x,y)
     if (self.startTime == 0 or self.update == true) then
-      local func = UnitCastingInfo
+      uci = UnitCastingInfo
       if self.channel == true then
-        func = UnitChannelInfo
+        uci = UnitChannelInfo
       end
-      local _, _, _, _, startTime, endTime = func(self.unit)
+      local _, _, _, _, startTime, endTime = uci(self.unit)
       self.startTime = startTime
       self.endTime = endTime
       self.cur = GetTime()-startTime/1e3
@@ -84,6 +94,8 @@
       self.update = false
     end
     p = math.min(self.cur+self.elapsed,self.duration)/self.duration
+    self:Hide() --fix the fps bug when repositioning visible objects multiple times per second, check http://www.wowinterface.com/forums/showthread.php?t=46740
+    self:SetPoint("BOTTOMLEFT",x,y)
     if p > 0.5 then
       self.leftRingTexture:SetRotation(math.rad(self.leftRingTexture.baseDeg-180*(p*2-1)))
       self.rightRingTexture:SetRotation(math.rad(self.rightRingTexture.baseDeg-180))
@@ -93,23 +105,42 @@
     end
     self.rightRingSpark:SetRotation(math.rad(self.rightRingSpark.baseDeg-180*(p*2)))
     self.leftRingSpark:SetRotation(math.rad(self.leftRingSpark.baseDeg-180*(p*2-1)))
+    self:Show()
     self.elapsed = self.elapsed + elapsed
+  end
+
+  local function Enable(self)
+    uipScale = UIParent:GetEffectiveScale()
+    self:Show()
+    self:SetScript("OnUpdate",OnUpdate)
+  end
+
+  local function Disable(self)
+    self:SetScript("OnUpdate",nil)
+    self.channel = false
+    self.cast = false
+    self.update = false
+    self.startTime = 0
+    self.endTime = 0
+    self.duration = 0
+    self.elapsed = 0
+    self:Hide()
   end
 
   local function OnEvent(self,event)
     if event == "UNIT_SPELLCAST_CHANNEL_STOP" then
-      self:Hide()
+      Disable(self)
     end
     if event == "UNIT_SPELLCAST_STOP" then
-      self:Hide()
+      Disable(self)
     end
     if event == "UNIT_SPELLCAST_START" then
       self.cast = true
-      self:Show()
+      Enable(self)
     end
     if event == "UNIT_SPELLCAST_CHANNEL_START" then
       self.channel = true
-      self:Show()
+      Enable(self)
     end
     if event == "UNIT_SPELLCAST_DELAYED" then
       self.update = true
@@ -119,26 +150,7 @@
     end
   end
 
-  local function OnShow(self)
-    uipScale = UIParent:GetEffectiveScale()
-    self:SetScript("OnUpdate",OnUpdate)
-  end
-
-  local function OnHide(self)
-    self:SetScript("OnUpdate",nil)
-    self.channel = false
-    self.cast = false
-    self.update = false
-    self.startTime = 0
-    self.endTime = 0
-    self.duration = 0
-    self.elapsed = 0
-  end
-
-  local function CreateCompassCastbar(unit)
-
-    local cfg = cfg[unit]
-    if not cfg or (cfg and not cfg.enable) then return end
+  local function CreateCompassCastbar(unit,cfg)
 
     local f = CreateFrame("Frame","rCompassCastbarFrame",UIParent)
     f:SetSize(512,512)
@@ -238,9 +250,7 @@
 
     f:Hide()
 
-    f:HookScript("OnShow",OnShow)
-    f:HookScript("OnHide",OnHide)
-    f:HookScript("OnEvent",OnEvent)
+    f:SetScript("OnEvent",OnEvent)
 
   end
 
@@ -248,6 +258,8 @@
   -- CALL
   -----------------------------
 
-  CreateCompassCastbar("player")
-  CreateCompassCastbar("target")
-  CreateCompassCastbar("focus")
+  for k, v in pairs(cfg) do
+    if v.enable then
+      CreateCompassCastbar(k,v)
+    end
+  end

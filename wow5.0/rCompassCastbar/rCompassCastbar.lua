@@ -65,7 +65,7 @@
 
   local UnitCastingInfo = UnitCastingInfo
   local UnitChannelInfo = UnitChannelInfo
-  local GetTime = GetTime
+  local GetTime,GetCursorPosition = GetTime,GetCursorPosition
   local math,unpack = math,unpack
 
   local uipScale = UIParent:GetEffectiveScale()
@@ -74,18 +74,15 @@
   -- FUNCTIONS
   -----------------------------
 
-  local x,y,p,uci
+  local x,y,p,UCI
 
   local function OnUpdate(self,elapsed)
-    x, y = GetCursorPosition()
-    x = (x / uipScale / self.scale) - self.w / 2
-    y = (y / uipScale / self.scale) - self.h / 2
-    if (self.startTime == 0 or self.update == true) then
-      uci = UnitCastingInfo
+    if self.update == true then
+      UCI = UnitCastingInfo
       if self.channel == true then
-        uci = UnitChannelInfo
+        UCI = UnitChannelInfo
       end
-      local _, _, _, _, startTime, endTime = uci(self.unit)
+      local _, _, _, _, startTime, endTime = UCI(self.unit)
       self.startTime = startTime
       self.endTime = endTime
       self.cur = GetTime()-startTime/1e3
@@ -93,6 +90,9 @@
       self.elapsed = 0
       self.update = false
     end
+    x, y = GetCursorPosition()
+    x = (x/uipScale/self.scale)-self.w/2
+    y = (y/uipScale/self.scale)-self.h/2
     p = math.min(self.cur+self.elapsed,self.duration)/self.duration
     self:Hide() --fix the fps bug when repositioning visible objects multiple times per second, check http://www.wowinterface.com/forums/showthread.php?t=46740
     self:SetPoint("BOTTOMLEFT",x,y)
@@ -136,10 +136,12 @@
     end
     if event == "UNIT_SPELLCAST_START" then
       self.cast = true
+      self.update = true
       Enable(self)
     end
     if event == "UNIT_SPELLCAST_CHANNEL_START" then
       self.channel = true
+      self.update = true
       Enable(self)
     end
     if event == "UNIT_SPELLCAST_DELAYED" then

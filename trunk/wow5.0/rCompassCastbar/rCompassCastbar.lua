@@ -63,8 +63,7 @@
   -- VARIABLES
   -----------------------------
 
-  local UnitCastingInfo = UnitCastingInfo
-  local UnitChannelInfo = UnitChannelInfo
+  local UnitCastingInfo,UnitChannelInfo,UIParent = UnitCastingInfo,UnitChannelInfo,UIParent
   local GetTime,GetCursorPosition = GetTime,GetCursorPosition
   local math,unpack = math,unpack
 
@@ -75,37 +74,44 @@
   -----------------------------
 
   local function Disable(self)
+    print("Disable",self.unit)
     self:SetScript("OnUpdate",nil)
-    self.channel = false
-    self.cast = false
-    self.update = false
-    self.startTime = 0
-    self.endTime = 0
-    self.duration = 0
-    self.elapsed = 0
+    self.channel, self.cast, self.update, self.isCasting = false,false,false,false
+    self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = nil,nil,nil,nil,nil,nil
+    self.current, self.duration, self.elapsed = 0,0,0
     self:Hide()
   end
 
   local x,y,p,UCI
 
   local function OnUpdate(self,elapsed)
-    if self.update == true then
+    self.elapsed = self.elapsed + elapsed
+    if self.update then
       UCI = UnitCastingInfo
       if self.channel == true then
         UCI = UnitChannelInfo
       end
-      local _, _, _, _, startTime, endTime = UCI(self.unit)
-      self.startTime = startTime
-      self.endTime = endTime
-      self.cur = GetTime()-startTime/1e3
-      self.duration = (endTime-startTime)/1e3
+      self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = UCI(self.unit)
+      if not self.spellName then
+        Disable(self)
+        return
+      end
+      self.isCasting = true
+      self.current = GetTime()-self.startTime/1e3
+      self.duration = (self.endTime-self.startTime)/1e3
+      print(self.spellName,self.unit,self.current,self.duration)
       self.elapsed = 0
       self.update = false
+    end
+    if not self.isCasting then
+      --just in case...
+      Disable(self)
+      return
     end
     x, y = GetCursorPosition()
     x = (x/uipScale/self.scale)-self.w/2
     y = (y/uipScale/self.scale)-self.h/2
-    p = math.min(self.cur+self.elapsed,self.duration)/self.duration
+    p = math.min(self.current+self.elapsed,self.duration)/self.duration
     self:Hide() --fix the fps bug when repositioning visible objects multiple times per second, check http://www.wowinterface.com/forums/showthread.php?t=46740
     self:SetPoint("BOTTOMLEFT",x,y)
     if p > 0.5 then
@@ -118,24 +124,24 @@
     self.rightRingSpark:SetRotation(math.rad(self.rightRingSpark.baseDeg-180*(p*2)))
     self.leftRingSpark:SetRotation(math.rad(self.leftRingSpark.baseDeg-180*(p*2-1)))
     self:Show()
-    if self.cur+self.elapsed-self.duration > 0.5 then
-      --sth really bad happened. there is no stop event firing. kill the onUpdate
+    if self.current+self.elapsed-self.duration > 0.5 then
+      --sth really bad happened. there is no stop event firing. kill the OnUpdate after 0.5 sec over time.
       Disable(self)
+      return
     end
-    self.elapsed = self.elapsed + elapsed
   end
 
   local function Enable(self)
+    print("Enable",self.unit)
     uipScale = UIParent:GetEffectiveScale()
     self:Show()
     self:SetScript("OnUpdate",OnUpdate)
   end
 
   local function OnEvent(self,event)
-    if event == "UNIT_SPELLCAST_CHANNEL_STOP" then
-      Disable(self)
-    end
-    if event == "UNIT_SPELLCAST_STOP" then
+    if event == "UNIT_SPELLCAST_CHANNEL_STOP" or
+       event == "UNIT_SPELLCAST_STOP"
+    then
       Disable(self)
     end
     if event == "UNIT_SPELLCAST_START" then
@@ -148,10 +154,13 @@
       self.update = true
       Enable(self)
     end
-    if event == "UNIT_SPELLCAST_DELAYED" then
-      self.update = true
-    end
-    if event == "UNIT_SPELLCAST_CHANNEL_UPDATE" then
+    if event == "UNIT_SPELLCAST_DELAYED" or
+       event == "UNIT_SPELLCAST_CHANNEL_UPDATE" or
+       event == "UNIT_PET" or
+       event == "PLAYER_FOCUS_CHANGED" or
+       event == "PLAYER_TARGET_CHANGED"
+    then
+      print(event,self.unit)
       self.update = true
     end
   end
@@ -168,14 +177,7 @@
     f:SetClampedToScreen(1)
 
     --attributes
-    f.channel = false
-    f.cast = false
-    f.update = false
-    f.startTime = 0
-    f.endTime = 0
-    f.duration = 0
-    f.elapsed = 0
-    f.unit = unit
+    f.unit    = unit
 
     local t = f:CreateTexture(nil, "BACKGROUND", nil, -8)
     t:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose")
@@ -254,7 +256,18 @@
     f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", unit)
     f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", unit)
 
-    f:Hide()
+    --add special events that may help triggering important updates
+    if unit == "pet" then
+      f:RegisterUnitEvent("UNIT_PET","player") --check for pet changes
+    end
+    if unit == "focus" then
+      f:RegisterEvent("PLAYER_FOCUS_CHANGED") --check for focus changes
+    end
+    if unit == "target" then
+      f:RegisterEvent("PLAYER_TARGET_CHANGED") --check for target changes
+    end
+
+    Disable(f)
 
     f:SetScript("OnEvent",OnEvent)
 

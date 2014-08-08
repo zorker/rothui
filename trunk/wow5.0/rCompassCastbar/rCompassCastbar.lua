@@ -28,7 +28,7 @@
 
   --target settings
   cfg["target"] = {}
-  cfg["target"].enable          = true
+  cfg["target"].enable          = false
   cfg["target"].scale           = 0.15
   cfg["target"].sparkcolor      = {1,0.5,0.5}
   cfg["target"].bgcolor         = {0.5,0,0,1}
@@ -39,7 +39,7 @@
 
   --focus settings
   cfg["focus"] = {}
-  cfg["focus"].enable          = true
+  cfg["focus"].enable          = false
   cfg["focus"].scale           = 0.11
   cfg["focus"].sparkcolor      = {0.5,0.5,1}
   cfg["focus"].bgcolor         = {0,0,0.5,1}
@@ -50,7 +50,7 @@
 
   --pet settings
   cfg["pet"] = {}
-  cfg["pet"].enable          = true
+  cfg["pet"].enable          = false
   cfg["pet"].scale           = 0.08
   cfg["pet"].sparkcolor      = {0.8,1,0.5}
   cfg["pet"].bgcolor         = {0,0.5,0,1}
@@ -77,11 +77,9 @@
     self:SetScript("OnUpdate",nil)
     self.update, self.isCasting, self.isEnabled = false,false,false
     self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = nil,nil,nil,nil,nil,nil
-    self.current, self.duration, self.elapsed = 0,0,0
+    self.current, self.duration, self.elapsed, self.percent = 0,0,0,0
     self:Hide()
   end
-
-  local x,y,p
 
   local function OnUpdate(self,elapsed)
     self.elapsed = self.elapsed + elapsed
@@ -106,21 +104,21 @@
       Disable(self)
       return
     end
-    x, y = GetCursorPosition()
-    x = (x/uipScale/self.scale)-self.w/2
-    y = (y/uipScale/self.scale)-self.h/2
-    p = math.min(self.current+self.elapsed,self.duration)/self.duration
+    self.x, self.y = GetCursorPosition()
+    self.x = (self.x/uipScale/self.scale)-self.w/2
+    self.y = (self.y/uipScale/self.scale)-self.h/2
+    self.percent = math.min(self.current+self.elapsed,self.duration)/self.duration
     self:Hide() --fix the fps bug when repositioning visible objects multiple times per second, check http://www.wowinterface.com/forums/showthread.php?t=46740
-    self:SetPoint("BOTTOMLEFT",x,y)
-    if p > 0.5 then
-      self.leftRingTexture:SetRotation(math.rad(self.leftRingTexture.baseDeg-180*(p*2-1)))
+    self:SetPoint("BOTTOMLEFT",self.x,self.y)
+    if self.percent > 0.5 then
+      self.leftRingTexture:SetRotation(math.rad(self.leftRingTexture.baseDeg-180*(self.percent*2-1)))
       self.rightRingTexture:SetRotation(math.rad(self.rightRingTexture.baseDeg-180))
     else
       self.leftRingTexture:SetRotation(math.rad(self.leftRingTexture.baseDeg-0))
-      self.rightRingTexture:SetRotation(math.rad(self.rightRingTexture.baseDeg-180*(p*2)))
+      self.rightRingTexture:SetRotation(math.rad(self.rightRingTexture.baseDeg-180*(self.percent*2)))
     end
-    self.rightRingSpark:SetRotation(math.rad(self.rightRingSpark.baseDeg-180*(p*2)))
-    self.leftRingSpark:SetRotation(math.rad(self.leftRingSpark.baseDeg-180*(p*2-1)))
+    self.rightRingSpark:SetRotation(math.rad(self.rightRingSpark.baseDeg-180*(self.percent*2)))
+    self.leftRingSpark:SetRotation(math.rad(self.leftRingSpark.baseDeg-180*(self.percent*2-1)))
     self:Show()
     if self.current+self.elapsed-self.duration > 0.5 then
       --sth really bad happened. there is no stop event firing. kill the OnUpdate after 0.5 sec over time.

@@ -28,7 +28,7 @@
 
   --target settings
   cfg["target"] = {}
-  cfg["target"].enable          = false
+  cfg["target"].enable          = true
   cfg["target"].scale           = 0.15
   cfg["target"].sparkcolor      = {1,0.5,0.5}
   cfg["target"].bgcolor         = {0.5,0,0,1}
@@ -39,7 +39,7 @@
 
   --focus settings
   cfg["focus"] = {}
-  cfg["focus"].enable          = false
+  cfg["focus"].enable          = true
   cfg["focus"].scale           = 0.11
   cfg["focus"].sparkcolor      = {0.5,0.5,1}
   cfg["focus"].bgcolor         = {0,0,0.5,1}
@@ -50,7 +50,7 @@
 
   --pet settings
   cfg["pet"] = {}
-  cfg["pet"].enable          = false
+  cfg["pet"].enable          = true
   cfg["pet"].scale           = 0.08
   cfg["pet"].sparkcolor      = {0.8,1,0.5}
   cfg["pet"].bgcolor         = {0,0.5,0,1}
@@ -74,24 +74,22 @@
   -----------------------------
 
   local function Disable(self)
-    print("Disable",self.unit)
     self:SetScript("OnUpdate",nil)
-    self.channel, self.cast, self.update, self.isCasting = false,false,false,false
+    self.update, self.isCasting, self.isEnabled = false,false,false
     self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = nil,nil,nil,nil,nil,nil
     self.current, self.duration, self.elapsed = 0,0,0
     self:Hide()
   end
 
-  local x,y,p,UCI
+  local x,y,p
 
   local function OnUpdate(self,elapsed)
     self.elapsed = self.elapsed + elapsed
     if self.update then
-      UCI = UnitCastingInfo
-      if self.channel == true then
-        UCI = UnitChannelInfo
+      self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = UnitCastingInfo(self.unit)
+      if not self.spellName then
+        self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = UnitChannelInfo(self.unit)
       end
-      self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = UCI(self.unit)
       if not self.spellName then
         Disable(self)
         return
@@ -99,7 +97,7 @@
       self.isCasting = true
       self.current = GetTime()-self.startTime/1e3
       self.duration = (self.endTime-self.startTime)/1e3
-      print(self.spellName,self.unit,self.current,self.duration)
+      --print(self.spellName,self.unit,self.current,self.duration)
       self.elapsed = 0
       self.update = false
     end
@@ -132,7 +130,7 @@
   end
 
   local function Enable(self)
-    print("Enable",self.unit)
+    self.isEnabled = true
     uipScale = UIParent:GetEffectiveScale()
     self:Show()
     self:SetScript("OnUpdate",OnUpdate)
@@ -144,24 +142,18 @@
     then
       Disable(self)
     end
-    if event == "UNIT_SPELLCAST_START" then
-      self.cast = true
-      self.update = true
-      Enable(self)
-    end
-    if event == "UNIT_SPELLCAST_CHANNEL_START" then
-      self.channel = true
-      self.update = true
-      Enable(self)
-    end
-    if event == "UNIT_SPELLCAST_DELAYED" or
+    if event == "UNIT_SPELLCAST_START" or
+       event == "UNIT_SPELLCAST_CHANNEL_START" or
+       event == "UNIT_SPELLCAST_DELAYED" or
        event == "UNIT_SPELLCAST_CHANNEL_UPDATE" or
        event == "UNIT_PET" or
        event == "PLAYER_FOCUS_CHANGED" or
        event == "PLAYER_TARGET_CHANGED"
     then
-      print(event,self.unit)
       self.update = true
+      if not self.isEnabled then
+        Enable(self)
+      end
     end
   end
 

@@ -18,13 +18,16 @@
   --player settings
   cfg["player"] = {}
   cfg["player"].enable          = true
+  cfg["player"].latency         = false
   cfg["player"].scale           = 0.2
   cfg["player"].sparkcolor      = {1,1,1}
   cfg["player"].bgcolor         = {0.5,0.4,0,1}
   cfg["player"].ringcolor       = {1,0.8,0,1}
+  cfg["player"].latencycolor    = {1,0,0,0.8}
   cfg["player"].bgblendmode     = "ADD" --"ADD" or "BLEND"
   cfg["player"].ringblendmode   = "ADD" --"ADD" or "BLEND"
   cfg["player"].sparkblendmode  = "ADD" --"ADD" or "BLEND"
+  cfg["player"].latencyblendmode  = "BLEND" --"ADD" or "BLEND"
 
   --target settings
   cfg["target"] = {}
@@ -64,7 +67,7 @@
   -----------------------------
 
   local UnitCastingInfo,UnitChannelInfo,UIParent = UnitCastingInfo,UnitChannelInfo,UIParent
-  local GetTime,GetCursorPosition = GetTime,GetCursorPosition
+  local GetTime,GetCursorPosition,GetNetStats = GetTime,GetCursorPosition,GetNetStats
   local math,unpack = math,unpack
 
   local uipScale = UIParent:GetEffectiveScale()
@@ -95,6 +98,19 @@
       self.isCasting = true
       self.current = GetTime()-self.startTime/1e3
       self.duration = (self.endTime-self.startTime)/1e3
+      if self.leftRingLatency then
+        self.nsDown, self.nsUp, self.nsLagHome, self.nsLagWord = GetNetStats()
+        if self.nsLagWord and self.nsLagWord > 0 then
+          self.latency = math.max(((self.duration-self.nsLagWord*2/1e3)/self.duration),0)
+          if self.latency < 0.9 then
+            self.leftRingLatency:SetRotation(math.rad(self.leftRingLatency.baseDeg-180*self.latency))
+            self.leftRingLatency:Show()
+          else
+            --latency is barely visible, hide it
+            self.leftRingLatency:Hide()
+          end
+        end
+      end
       --print(self.spellName,self.unit,self.current,self.duration)
       self.elapsed = 0
       self.update = false
@@ -192,7 +208,6 @@
     rt1:SetVertexColor(unpack(cfg.ringcolor))
     rt1:SetBlendMode(cfg.ringblendmode)
     rt1.baseDeg = -180
-    rt1:SetRotation(math.rad(rt1.baseDeg-0)) -- etc
 
     local rs1 = sc1:CreateTexture(nil,"BACKGROUND",nil,-5)
     rs1:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-spark")
@@ -201,7 +216,19 @@
     rs1:SetVertexColor(unpack(cfg.sparkcolor))
     rs1:SetBlendMode(cfg.sparkblendmode)
     rs1.baseDeg = -180
-    rs1:SetRotation(math.rad(rs1.baseDeg-0)) -- etc
+
+    --latency
+    if unit == "player" and cfg.latency then
+      local rl1 = sc1:CreateTexture(nil,"BACKGROUND",nil,-4)
+      rl1:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-ring")
+      rl1:SetSize(sqrt(2)*f.w,sqrt(2)*f.h)
+      rl1:SetPoint("CENTER")
+      rl1:SetVertexColor(unpack(cfg.latencycolor))
+      rl1:SetBlendMode(cfg.latencyblendmode)
+      rl1.baseDeg = 0
+      rl1:SetRotation(math.rad(rl1.baseDeg-180*0.8))
+      f.leftRingLatency = rl1
+    end
 
     --right ring
     local sf2 = CreateFrame("ScrollFrame",nil,f)
@@ -210,25 +237,24 @@
 
     local sc2 = CreateFrame("Frame")
     sf2:SetScrollChild(sc2)
+    sf2:SetHorizontalScroll(f.w/2)
     sc2:SetSize(f.w,f.h)
 
     local rt2 = sc2:CreateTexture(nil,"BACKGROUND",nil,-6)
     rt2:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-ring")
     rt2:SetSize(sqrt(2)*f.w,sqrt(2)*f.h)
-    rt2:SetPoint("CENTER",-f.w/2,0)
+    rt2:SetPoint("CENTER")
     rt2:SetVertexColor(unpack(cfg.ringcolor))
     rt2:SetBlendMode(cfg.ringblendmode)
     rt2.baseDeg = 0
-    rt2:SetRotation(math.rad(rt2.baseDeg-0)) -- etc
 
     local rs2 = sc2:CreateTexture(nil,"BACKGROUND",nil,-5)
     rs2:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-spark")
     rs2:SetSize(sqrt(2)*f.w,sqrt(2)*f.h)
-    rs2:SetPoint("CENTER",-f.w/2,0)
+    rs2:SetPoint("CENTER")
     rs2:SetVertexColor(unpack(cfg.sparkcolor))
     rs2:SetBlendMode(cfg.sparkblendmode)
     rs2.baseDeg = 0
-    rs2:SetRotation(math.rad(rs2.baseDeg-90)) -- etc
 
     f.leftRingTexture = rt1
     f.rightRingTexture = rt2

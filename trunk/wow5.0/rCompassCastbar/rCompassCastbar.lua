@@ -70,12 +70,18 @@
   local GetTime,GetCursorPosition,GetNetStats = GetTime,GetCursorPosition,GetNetStats
   local math,unpack = math,unpack
 
-  local uipScale = UIParent:GetEffectiveScale()
+  local uiscale = 1
 
   -----------------------------
   -- FUNCTIONS
   -----------------------------
 
+  --GetUiScale func
+  local function GetUiScale()
+    uiscale = UIParent:GetEffectiveScale()
+  end
+
+  --Disable func
   local function Disable(self)
     self:SetScript("OnUpdate",nil)
     self.update, self.isCasting, self.isEnabled = false,false,false
@@ -84,13 +90,11 @@
     self:Hide()
   end
 
+  --OnUpdate func
   local function OnUpdate(self,elapsed)
     self.elapsed = self.elapsed + elapsed
     if self.update then
-      self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = UnitCastingInfo(self.unit)
-      if not self.spellName then
-        self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = UnitChannelInfo(self.unit)
-      end
+      self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = UnitCastingInfo(self.unit) or UnitChannelInfo(self.unit)
       if not self.spellName then
         Disable(self)
         return
@@ -99,9 +103,9 @@
       self.current = GetTime()-self.startTime/1e3
       self.duration = (self.endTime-self.startTime)/1e3
       if self.leftRingLatency then
-        self.nsDown, self.nsUp, self.nsLagHome, self.nsLagWord = GetNetStats()
-        if self.nsLagWord and self.nsLagWord > 0 then
-          self.latency = math.max(((self.duration-self.nsLagWord*2/1e3)/self.duration),0)
+        self.nsDown, self.nsUp, self.nsLagHome, self.nsLagWorld = GetNetStats()
+        if self.nsLagWorld and self.nsLagWorld > 0 then
+          self.latency = math.max(((self.duration-self.nsLagWorld*2/1e3)/self.duration),0)
           if self.latency < 0.9 then
             self.leftRingLatency:SetRotation(math.rad(self.leftRingLatency.baseDeg-180*self.latency))
             self.leftRingLatency:Show()
@@ -111,20 +115,21 @@
           end
         end
       end
-      --print(self.spellName,self.unit,self.current,self.duration)
       self.elapsed = 0
       self.update = false
     end
-    if not self.isCasting then
-      --just in case...
+    if not self.isCasting or (self.current+self.elapsed-self.duration > 0.5) then
+      --kill the OnUpdate
       Disable(self)
       return
     end
     self.x, self.y = GetCursorPosition()
-    self.x = (self.x/uipScale/self.scale)-self.w/2
-    self.y = (self.y/uipScale/self.scale)-self.h/2
+    self.x = (self.x/uiscale/self.scale)-self.w/2
+    self.y = (self.y/uiscale/self.scale)-self.h/2
     self.percent = math.min(self.current+self.elapsed,self.duration)/self.duration
-    self:Hide() --fix the fps bug when repositioning visible objects multiple times per second, check http://www.wowinterface.com/forums/showthread.php?t=46740
+    --fix the fps bug when repositioning visible objects multiple times per second
+    --http://www.wowinterface.com/forums/showthread.php?t=46740
+    self:Hide()
     self:SetPoint("BOTTOMLEFT",self.x,self.y)
     if self.percent > 0.5 then
       self.leftRingTexture:SetRotation(math.rad(self.leftRingTexture.baseDeg-180*(self.percent*2-1)))
@@ -136,41 +141,29 @@
     self.rightRingSpark:SetRotation(math.rad(self.rightRingSpark.baseDeg-180*(self.percent*2)))
     self.leftRingSpark:SetRotation(math.rad(self.leftRingSpark.baseDeg-180*(self.percent*2-1)))
     self:Show()
-    if self.current+self.elapsed-self.duration > 0.5 then
-      --sth really bad happened. there is no stop event firing. kill the OnUpdate after 0.5 sec over time.
-      Disable(self)
-      return
-    end
   end
 
+  --Enable func
   local function Enable(self)
     self.isEnabled = true
-    uipScale = UIParent:GetEffectiveScale()
     self:Show()
     self:SetScript("OnUpdate",OnUpdate)
   end
 
+  --OnEvent func
   local function OnEvent(self,event)
-    if event == "UNIT_SPELLCAST_CHANNEL_STOP" or
-       event == "UNIT_SPELLCAST_STOP"
-    then
+    if event == "UNIT_SPELLCAST_CHANNEL_STOP" or event == "UNIT_SPELLCAST_STOP" then
       Disable(self)
+      return
     end
-    if event == "UNIT_SPELLCAST_START" or
-       event == "UNIT_SPELLCAST_CHANNEL_START" or
-       event == "UNIT_SPELLCAST_DELAYED" or
-       event == "UNIT_SPELLCAST_CHANNEL_UPDATE" or
-       event == "UNIT_PET" or
-       event == "PLAYER_FOCUS_CHANGED" or
-       event == "PLAYER_TARGET_CHANGED"
-    then
-      self.update = true
-      if not self.isEnabled then
-        Enable(self)
-      end
+    --update on all other events
+    self.update = true
+    if not self.isEnabled then
+      Enable(self)
     end
   end
 
+  --CreateCompassCastbar func
   local function CreateCompassCastbar(unit,cfg)
 
     local f = CreateFrame("Frame",nil,UIParent)
@@ -265,8 +258,8 @@
     f:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit)
     f:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit)
     f:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", unit)
-    f:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", unit)
-    f:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", unit)
+    --f:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", unit)
+    --f:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", unit)
     f:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", unit)
     f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", unit)
     f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", unit)
@@ -298,3 +291,9 @@
       CreateCompassCastbar(k,v)
     end
   end
+
+  --ui scale change check frame
+  local f = CreateFrame("Frame")
+  f:RegisterEvent("UI_SCALE_CHANGED")
+  f:RegisterEvent("PLAYER_LOGIN")
+  f:SetScript("OnEvent",GetUiScale)

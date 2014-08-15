@@ -23,16 +23,16 @@
   -------------------------------------
 
   local function SetModelOrientation(self, distance, yaw, pitch)
-    if self:HasCustomCamera() then
-      self.distance, self.yaw, self.pitch = distance, yaw, pitch
-      local x = distance * math.cos(yaw) * math.cos(pitch)
-      local y = distance * math.sin(- yaw) * math.cos(pitch)
-      local z = (distance * math.sin(- pitch))
-      self:SetCameraPosition(x, y, z)
-    end
+    if not self:HasCustomCamera() then return end
+    self.distance, self.yaw, self.pitch = distance, yaw, pitch
+    local x = distance * math.cos(yaw) * math.cos(pitch)
+    local y = distance * math.sin(- yaw) * math.cos(pitch)
+    local z = (distance * math.sin(- pitch))
+    self:SetCameraPosition(x, y, z)
   end
 
   local function LeftButtonOnUpdate(self, elapsed)
+    if not self:HasCustomCamera() then return end
     local x, y = GetCursorPosition()
     local pitch = self.pitch + (y - self.cursorY) * pi / 256
     local limit = false
@@ -55,11 +55,19 @@
   local function RightButtonOnUpdate(self, elapsed)
     local x, y = GetCursorPosition()
     local px, py, pz = self:GetPosition()
-    local my = format("%.2f", (py + (x - self.cursorX) / 84))
-    local mz = format("%.2f", (pz + (y - self.cursorY) / 84))
-    if format("%.2f", py) ~= my or format("%.2f", pz) ~= mz then
-      self:SetPosition(px, my, mz)
-      self.posX, self.posY = my, mz
+    if IsAltKeyDown() then
+      local mx = format("%.2f", (px + (y - self.cursorY) / 100))
+      if format("%.2f", px) ~= mx then
+        self:SetPosition(mx, py, pz)
+        self.posX, self.posY = py, pz
+      end
+    else
+      local my = format("%.2f", (py + (x - self.cursorX) / 84))
+      local mz = format("%.2f", (pz + (y - self.cursorY) / 84))
+      if format("%.2f", py) ~= my or format("%.2f", pz) ~= mz then
+        self:SetPosition(px, my, mz)
+        self.posX, self.posY = my, mz
+      end
     end
     self.cursorX, self.cursorY = x, y
   end
@@ -90,7 +98,6 @@
       local x, y, z = self:GetCameraPosition()
       local tx, ty, tz = self:GetCameraTarget()
       self:SetCameraTarget(0, ty, tz)
-      --self:Orientation is a selfwritten function directly on the model
       SetModelOrientation(self, math.sqrt(x * x + y * y + z * z), - math.atan(y / x), - math.atan(z / x))
     end
   end
@@ -98,8 +105,10 @@
   local function ModelOnMouseDown(self,button)
     if button == "LeftButton" then
       --print("open theater")
-      self.cursorX, self.cursorY = GetCursorPosition()
-      self:SetScript("OnUpdate", LeftButtonOnUpdate)
+      if self:HasCustomCamera() then
+        self.cursorX, self.cursorY = GetCursorPosition()
+        self:SetScript("OnUpdate", LeftButtonOnUpdate)
+      end
     elseif button == "RightButton" then
       if IsShiftKeyDown() then
         ResetModelValues(self)

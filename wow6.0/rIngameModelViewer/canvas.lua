@@ -13,13 +13,178 @@
   local G, L, C = at.G, at.L, at.C
 
   --stuff from global scope
-  local math, unpack  = math, unpack
+  local math, unpack, format  = math, unpack, format
   local PlaySound     = PlaySound
   local GT            = GameTooltip
+  local pi, halfpi    = math.pi, math.pi / 2
 
   -------------------------------------
   -- FUNCTIONS
   -------------------------------------
+
+  local function SetModelOrientation(self, distance, yaw, pitch)
+    if self:HasCustomCamera() then
+      self.distance, self.yaw, self.pitch = distance, yaw, pitch
+      local x = distance * math.cos(yaw) * math.cos(pitch)
+      local y = distance * math.sin(- yaw) * math.cos(pitch)
+      local z = (distance * math.sin(- pitch))
+      self:SetCameraPosition(x, y, z)
+    end
+  end
+
+  local function LeftButtonOnUpdate(self, elapsed)
+    local x, y = GetCursorPosition()
+    local pitch = self.pitch + (y - self.cursorY) * pi / 256
+    local limit = false
+    if pitch > halfpi - 0.05 or pitch < - halfpi + 0.05 then
+      limit = true
+    end
+    if limit then
+      local rotation = format("%.0f", math.abs(math.deg(((x - self.cursorX) / 64 + self:GetFacing())) % 360))
+      if rotation ~= format("%.0f", math.abs(math.deg(self:GetFacing()) % 360)) then
+        self:SetRotation(math.rad(rotation))
+        self.rotation = rotation
+      end
+    else
+      local yaw = self.yaw + (x - self.cursorX) * pi / 256
+      SetModelOrientation(self, self.distance, yaw, pitch)
+    end
+    self.cursorX, self.cursorY = x, y
+  end
+
+  local function RightButtonOnUpdate(self, elapsed)
+    local x, y = GetCursorPosition()
+    local px, py, pz = self:GetPosition()
+    local my = format("%.2f", (py + (x - self.cursorX) / 84))
+    local mz = format("%.2f", (pz + (y - self.cursorY) / 84))
+    if format("%.2f", py) ~= my or format("%.2f", pz) ~= mz then
+      self:SetPosition(px, my, mz)
+      self.posX, self.posY = my, mz
+    end
+    self.cursorX, self.cursorY = x, y
+  end
+
+  local function MiddleButtonOnUpdate(self, elapsed)
+    local x, y = GetCursorPosition()
+    local rotation = format("%.0f", math.abs(math.deg(((x - self.cursorX) / 84 + self:GetFacing())) % 360))
+    if rotation ~= format("%.0f", math.abs(math.deg(self:GetFacing()) % 360)) then
+      self:SetRotation(math.rad(rotation))
+      self.rotation = rotation
+    end
+    self.cursorX, self.cursorY = x, y
+  end
+
+  local function ResetModelValues(self)
+    self.camDistanceScale = 1
+    self.portraitZoom = 0
+    self.posX = 0
+    self.posY = 0
+    self.rotation = 0
+    self:SetPortraitZoom(self.portraitZoom)
+    self:SetCamDistanceScale(self.camDistanceScale)
+    self:SetPosition(0,self.posX,self.posY)
+    self:SetRotation(self.rotation)
+    self:RefreshCamera()
+    self:SetCustomCamera(1)
+    if self:HasCustomCamera() then
+      local x, y, z = self:GetCameraPosition()
+      local tx, ty, tz = self:GetCameraTarget()
+      self:SetCameraTarget(0, ty, tz)
+      --self:Orientation is a selfwritten function directly on the model
+      SetModelOrientation(self, math.sqrt(x * x + y * y + z * z), - math.atan(y / x), - math.atan(z / x))
+    end
+  end
+
+  local function ModelOnMouseDown(self,button)
+    if button == "LeftButton" then
+      --print("open theater")
+      self.cursorX, self.cursorY = GetCursorPosition()
+      self:SetScript("OnUpdate", LeftButtonOnUpdate)
+    elseif button == "RightButton" then
+      if IsShiftKeyDown() then
+        ResetModelValues(self)
+      else
+        self.cursorX, self.cursorY = GetCursorPosition()
+        self:SetScript("OnUpdate", RightButtonOnUpdate)
+      end
+    elseif button == "MiddleButton" then
+      if IsShiftKeyDown() then
+        ResetModelValues(self)
+      else
+        self.cursorX, self.cursorY = GetCursorPosition()
+        self:SetScript("OnUpdate", MiddleButtonOnUpdate)
+      end
+    end
+  end
+
+  local function ModelOnMouseUp(self, button)
+    self:SetScript("OnUpdate", nil)
+  end
+
+  local function ModelOnMouseWheel(self,delta)
+    if self:HasCustomCamera() then
+      local max = 40
+      local min = 0.1
+      self.distance = math.min(math.max(self.distance-delta*0.15,min),max)
+      SetModelOrientation(self, self.distance, self.yaw, self.pitch)
+    else
+      if IsShiftKeyDown() then
+        local max = 1
+        local min = 0
+        self.portraitZoom = math.min(math.max(self.portraitZoom+delta*0.15,min),max)
+        self:SetPortraitZoom(self.portraitZoom)
+      else
+        local max = 10
+        local min = 0.1
+        self.camDistanceScale = math.min(math.max(self.camDistanceScale-delta*0.15,min),max)
+        self:SetCamDistanceScale(self.camDistanceScale)
+      end
+    end
+  end
+
+  local function ModelOnEnter(self)
+    if not IsShiftKeyDown() then return end
+    local pz, px, py = self:GetPosition()
+    pz, px, py = L:RoundNumber(pz), L:RoundNumber(px), L:RoundNumber(py)
+    GT:SetOwner(self, "ANCHOR_CURSOR")
+    --GT:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
+    GT:AddLine("Canvas Model", 0, 1, 0.5, 1, 1, 1)
+    GT:AddLine(" ")
+    GT:AddDoubleLine("DisplayID", self.displayIndex, 1, 1, 1, 1, 1, 1)
+    GT:AddDoubleLine("SetPosition", "("..pz..","..px..","..px..")", 1, 1, 1, 1, 1, 1)
+    GT:AddDoubleLine("SetRotation", self.rotation, 1, 1, 1, 1, 1, 1)
+    GT:AddDoubleLine("SetFacing", L:RoundNumber(self:GetFacing()), 1, 1, 1, 1, 1, 1)
+    GT:AddDoubleLine("GetModel", self.model, 1, 1, 1, 1, 1, 1)
+    if self:HasCustomCamera() then
+      local x, y, z = self:GetCameraPosition()
+      local tx, ty, tz = self:GetCameraTarget()
+      x, y, z = L:RoundNumber(x), L:RoundNumber(y), L:RoundNumber(z)
+      tx, ty, tz = L:RoundNumber(tx), L:RoundNumber(ty), L:RoundNumber(tz)
+      GT:AddDoubleLine("CustomCamera", "true", 1, 1, 1, 1, 1, 1)
+      GT:AddDoubleLine("SetCameraPosition", "("..x..","..y..","..z..")", 1, 1, 1, 1, 1, 1)
+      GT:AddDoubleLine("SetCameraTarget", "("..tx..","..ty..","..tz..")", 1, 1, 1, 1, 1, 1)
+    else
+      GT:AddDoubleLine("CustomCamera", "false", 1, 1, 1, 1, 1, 1)
+      GT:AddDoubleLine("SetCamDistanceScale", self.camDistanceScale, 1, 1, 1, 1, 1, 1)
+      GT:AddDoubleLine("SetPortraitZoom", self.portraitZoom, 1, 1, 1, 1, 1, 1)
+    end
+    GT:AddLine(" ")
+    GT:AddLine("Click LEFT to open modal view.")
+    GT:AddLine("Hold RIGHT and DRAG to move.")
+    GT:AddLine("Hold MIDDLE and DRAG to rotate.")
+    if self:HasCustomCamera() then
+      GT:AddLine("Use MWHEEL to scale.")
+    else
+      GT:AddLine("Use MWHEEL to scale.")
+      GT:AddLine("Use SHIFT + MWHEEL to zoom to portrait.")
+    end
+    GT:AddLine("Click SHIFT + RIGHT to reset.")
+    GT:Show()
+  end
+
+  local function ModelOnLeave(self)
+    GT:Hide()
+  end
 
   --create canvas func
   function L:CreateCanvas()
@@ -277,8 +442,8 @@
             self.M[id] = self:CreateModel(id)
           end
           self:UpdateModelPosition(self.M[id],k-1,i-1)
-          self:ResetModelValues(self.M[id])
           self:UpdateDisplayIndex(self.M[id])
+          ResetModelValues(self.M[id])
           id = id+1
         end--for cols
       end--for rows
@@ -302,6 +467,9 @@
     end
 
     function f:UpdateDisplayIndex(model)
+      model:ClearModel()
+      model:EnableMouse(false)
+      model:SetAlpha(0.3)
       model:SetDisplayInfo(model.displayIndex)
       --model:SetCreature(model.displayIndex)
       model.model = model:GetModel()
@@ -309,21 +477,6 @@
       model:EnableMouse(true)
       model:SetAlpha(1)
       model.title:SetText(model.displayIndex)
-    end
-
-    function f:ResetModelValues(model)
-      model.camDistanceScale = 1
-      model.portraitZoom = 0
-      model.posX = 0
-      model.posY = 0
-      model.rotation = 0
-      model:SetPortraitZoom(model.portraitZoom)
-      model:SetCamDistanceScale(model.camDistanceScale)
-      model:SetPosition(0,model.posX,model.posY)
-      model:SetRotation(model.rotation)
-      model:ClearModel()
-      model:EnableMouse(false)
-      model:SetAlpha(0.3)
     end
 
     --create model func
@@ -348,6 +501,13 @@
       m.title = m:CreateFontString(nil, "BACKGROUND")
       m.title:SetPoint("TOP", 0, -2)
       m.title:SetAlpha(.5)
+      --scripts
+      m:SetScript("OnMouseWheel",ModelOnMouseWheel)
+      m:SetScript("OnMouseDown",ModelOnMouseDown)
+      m:SetScript("OnMouseUp",ModelOnMouseUp)
+      m:SetScript("OnEnter",ModelOnEnter)
+      m:SetScript("OnLeave",ModelOnLeave)
+
       return m
     end
 

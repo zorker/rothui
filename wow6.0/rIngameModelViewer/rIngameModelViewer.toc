@@ -2,11 +2,12 @@
 ## Author: zork
 ## Version: 60000.01
 ## Title: IngameModelViewer
-## Notes: Ingame model viewer
+## Notes: Zork's ingame model viewer
+## SavedVariables: rIMV_DBGLOB
+## SavedVariablesPerCharacter: rIMV_DBCHAR
 
 init.lua
 config.lua
 functions.lua
 murloc.lua
 canvas.lua
-canvasmodelprototype.lua

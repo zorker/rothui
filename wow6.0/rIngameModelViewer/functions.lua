@@ -62,7 +62,8 @@
       b:UpdateColor(unpack(color))
     end
 
-    function b:OnClick(self)
+    --color picker OnClick func
+    b:HookScript("OnClick", function(self)
       --set the callback functions
       local r,g,b = self.color:GetVertexColor()
       local a = nil
@@ -73,11 +74,24 @@
       CPF:Hide()
       CPF:Show()
       CPF:SetColorRGB(r,g,b)
-    end
-
-    --color picker OnClick func
-    b:HookScript("OnClick", b.OnClick)
+    end)
 
     return b
 
+  end
+
+  function L:CreateEditBox(parent, name, title, value)
+    local e = CreateFrame("EditBox", name, parent, "InputBoxTemplate")
+    e:SetSize(80,30)
+    e:SetAutoFocus(false)
+    e:SetText(value)
+    e:SetJustifyH("CENTER")
+    if title then
+      e.title = e:CreateFontString(nil, "BACKGROUND")
+      e.title:SetPoint("BOTTOM",e,"TOP", 0, 0)
+      e.title:SetFont(STANDARD_TEXT_FONT, 12, "OUTLINE")
+      e.title:SetText(title)
+      e.title:SetAlpha(0.5)
+    end
+    return e
   end

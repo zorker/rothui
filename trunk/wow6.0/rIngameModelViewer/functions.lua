@@ -24,6 +24,10 @@
   -- FUNCTIONS
   -------------------------------------
 
+  function L:RoundNumber(n)
+    return math.floor((n)*10)/10
+  end
+
   --create button func
   function L:CreateButton(parent,name,text,adjustWidth,adjustHeight)
 

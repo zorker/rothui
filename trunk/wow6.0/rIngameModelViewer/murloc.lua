@@ -71,7 +71,7 @@
     m:HookScript("OnEnter", function(self)
       PlaySound(C.sound.select)
       GT:SetOwner(self, "ANCHOR_TOP",0,5)
-      GT:AddLine("rIngameModelViewer", 0, 1, 0.5, 1, 1, 1)
+      GT:AddLine(L.name.." "..L.versionNumber, 0, 1, 0.5, 1, 1, 1)
       GT:AddLine("Click |cffff00ffleft|r to open.", 1, 1, 1, 1, 1, 1)
       GT:AddLine("Hold |cff00ffffright|r to move.", 1, 1, 1, 1, 1, 1)
       GT:AddLine("Hold |cffffff00shift|r + |cff00ffffright|r to resize.", 1, 1, 1, 1, 1, 1)

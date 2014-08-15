@@ -24,8 +24,6 @@
   --create canvas func
   function L:CreateCanvas()
 
-    --print("creating canvas")
-
     --canvas frame
     local f = CreateFrame("Frame",nil,UIParent)
     f:SetFrameStrata("FULLSCREEN")
@@ -35,17 +33,26 @@
 
     --canvas attributes
     f.canvasWidth, f.canvasHeight = f:GetSize()
-    f.canvasHeight  = f.canvasHeight-70 --remove 70px for the bottom bar
+    f.canvasHeight  = f.canvasHeight-60 --remove 70px for the bottom bar
     f.modelSize     = 200
     f.canvasPage    = 1
     f.M             = {}
 
     --canvas background
-    f.bg = f:CreateTexture()
+    f.bg = f:CreateTexture(nil,"BACKGROUND",nil,-8)
     f.bg:SetAllPoints()
     f.bg:SetTexture(1,1,1)
     local r,g,b = unpack(C.modelBackgroundColor)
     f.bg:SetVertexColor(r*0.1,g*0.1,b*0.1)
+
+    --[[
+    f.panelBg = f:CreateTexture(nil,"BACKGROUND",nil,-7)
+    f.panelBg:SetPoint("BOTTOMLEFT")
+    f.panelBg:SetPoint("BOTTOMRIGHT")
+    f.panelBg:SetHeight(60)
+    f.panelBg:SetTexture(1,1,1)
+    f.panelBg:SetVertexColor(0.15,0.15,0.15)
+    ]]--
 
     --fade in anim
     f.fadeIn = f:CreateAnimationGroup()
@@ -78,13 +85,11 @@
       self:Show()
       self:UpdateAllModels() --model update has to be run, otherwise certain models stay hidden
       self.fadeIn:Play()
-      --print("enabling")
     end
 
     -- canvas disable func
     function f:Disable()
       self.fadeOut:Play()
-      --print("disabling")
     end
 
     --canvas close button
@@ -105,9 +110,20 @@
       GT:Hide()
     end)
 
+    --canvas page editbox
+    f.pageEditBox = L:CreateEditBox(f,L.name.."CanvasPageEditbox","Page",f.canvasPage)
+    f.pageEditBox:SetPoint("BOTTOM",f,"BOTTOM",0,10)
+    f.pageEditBox:SetScript("OnEnterPressed", function(self)
+      PlaySound(C.sound.swap)
+      local value = math.max(math.floor(self:GetNumber()),1)
+      self:SetText(value)
+      self:GetParent().canvasPage = value
+      self:GetParent():UpdateAllModels()
+    end)
+
     --canvas next page button
     f.nextPageButton = L:CreateButton(f,L.name.."CanvasNextPageButton","next >")
-    f.nextPageButton:SetPoint("BOTTOMRIGHT",-200,10)
+    f.nextPageButton:SetPoint("LEFT",f.pageEditBox,"RIGHT",5,0)
     f.nextPageButton:HookScript("OnClick", function(self)
       PlaySound(C.sound.click)
       self:GetParent():UpdatePage(1)
@@ -125,7 +141,7 @@
 
     --canvas previous page button
     f.previousPageButton = L:CreateButton(f,L.name.."CanvasPreviousPageButton","< prev")
-    f.previousPageButton:SetPoint("BOTTOMRIGHT",-400,10)
+    f.previousPageButton:SetPoint("RIGHT",f.pageEditBox,"LEFT",-10,0)
     f.previousPageButton:HookScript("OnClick", function(self)
       PlaySound(C.sound.click)
       self:GetParent():UpdatePage(-1)
@@ -166,7 +182,7 @@
     f.minusSizeButton:SetPoint("LEFT",f.colorPickerButton,"RIGHT",10,0)
     f.minusSizeButton:HookScript("OnClick", function(self)
       PlaySound(C.sound.click)
-      self:GetParent():UpdateModelSize(-50)
+      self:GetParent():UpdateModelSize(-20)
     end)
     f.minusSizeButton:HookScript("OnEnter", function(self)
       --PlaySound(C.sound.select)
@@ -181,10 +197,10 @@
 
     --canvas plus size button
     f.plusSizeButton = L:CreateButton(f,L.name.."CanvasPlusSizeButton","+ size")
-    f.plusSizeButton:SetPoint("LEFT",f.minusSizeButton,"RIGHT",10,0)
+    f.plusSizeButton:SetPoint("LEFT",f.minusSizeButton,"RIGHT",5,0)
     f.plusSizeButton:HookScript("OnClick", function(self)
       PlaySound(C.sound.click)
-      self:GetParent():UpdateModelSize(50)
+      self:GetParent():UpdateModelSize(20)
     end)
     f.plusSizeButton:HookScript("OnEnter", function(self)
       --PlaySound(C.sound.select)
@@ -197,6 +213,16 @@
       GT:Hide()
     end)
 
+    --canvas displayid editbox
+    f.displayIdEditBox = L:CreateEditBox(f,L.name.."CanvasDisplayIdEditbox","DisplayId",1)
+    f.displayIdEditBox:SetPoint("LEFT",f.plusSizeButton,"RIGHT",20,0)
+    f.displayIdEditBox:SetScript("OnEnterPressed", function(self)
+      PlaySound(C.sound.swap)
+      local value = math.max(math.floor(self:GetNumber()),1)
+      self:SetText(value)
+      self:GetParent():UpdatePageForDisplayID(value)
+    end)
+
     --canvas UpdateModelCount func
     function f:UpdateModelCount()
       self.modelRows = math.floor(self.canvasHeight/self.modelSize)
@@ -207,7 +233,7 @@
     --canvas UpdateModelSize func
     function f:UpdateModelSize(value)
       if (self.modelSize+value) < 50 and value < 0 then return end
-      if (self.modelSize+value) > self.canvasHeight and value > 0 then return end
+      if (self.modelSize+value) > 400 and value > 0 then return end
       self.modelSize = self.modelSize+value
       self:UpdateAllModels()
     end
@@ -216,18 +242,46 @@
     function f:UpdatePage(value)
       if self.canvasPage == 1 and value < 0 then return end
       self.canvasPage = self.canvasPage+value
+      self.pageEditBox:SetText(self.canvasPage)
       self:UpdateAllModels()
     end
 
-    --canvas CalcPageForDisplayID func
-    function f:CalcPageForDisplayID(displayId)
+    --canvas GetPageForDisplayID func
+    function f:UpdatePageForDisplayID(displayId)
       self.canvasPage = math.max(math.ceil(displayId/self.modelCount),1)
+      self.pageEditBox:SetText(self.canvasPage)
       self:UpdateAllModels()
     end
 
-    --canvas CalcFirstDisplayIdOfPage func
-    function f:CalcFirstDisplayIdOfPage()
+    --canvas GetFirstDisplayIdOfPage func
+    function f:GetFirstDisplayIdOfPage()
       return ((self.canvasPage*self.modelCount)+1)-self.modelCount
+    end
+
+    --canvas UpdateAllModelBackgroundColors func
+    function f:UpdateAllModelBackgroundColors()
+      for i, model in pairs(self.M) do
+        model.color:SetVertexColor(unpack(C.modelBackgroundColor))
+      end
+    end
+
+    --canvas UpdateAllModels func
+    function f:UpdateAllModels()
+      self:HideAllModels()
+      self:UpdateModelCount()
+      self.displayIdEditBox:SetText(self:GetFirstDisplayIdOfPage())
+      local id = 1
+      for i=1, self.modelRows do
+        for k=1, self.modelCols do
+          if not self.M[id] then
+            self.M[id] = self:CreateModel(id)
+          end
+          self:UpdateModelPosition(self.M[id],k-1,i-1)
+          self:ResetModelValues(self.M[id])
+          self:UpdateDisplayIndex(self.M[id])
+          id = id+1
+        end--for cols
+      end--for rows
     end
 
     --canvas HideAllModels func
@@ -238,51 +292,42 @@
       end
     end
 
-    --canvas UpdateAllModelBackgroundColors func
-    function f:UpdateAllModelBackgroundColors()
-      for i, model in pairs(self.M) do
-        model:UpdateBackgroundColor()
-      end
+    function f:UpdateModelPosition(model,row,col)
+      model.title:SetFont(STANDARD_TEXT_FONT, math.max(self.modelSize*10/100,8), "OUTLINE")
+      model:SetSize(self.modelSize,self.modelSize)
+      model:SetPoint("TOPLEFT",self.modelSize*row,self.modelSize*col*(-1))
+      model.displayIndex = model.id+self.modelCount*(self.canvasPage-1)
+      model.title:SetText("not found")
+      model:Show()
     end
 
-    --canvas UpdateAllModelDisplayIds func
-    function f:UpdateAllModelDisplayIds()
-      local displayId = 1+((self.canvasPage-1)*self.modelCount)
-      local id = 1
-      for i=1, self.modelRows do
-        for k=1, self.modelCols do
-          self.M[id]:ResetValues()
-          self.M[id]:UpdateDisplayId(displayId)
-          displayId = displayId+1
-          id = id+1
-        end--for cols
-      end--for rows
+    function f:UpdateDisplayIndex(model)
+      model:SetDisplayInfo(model.displayIndex)
+      --model:SetCreature(model.displayIndex)
+      model.model = model:GetModel()
+      if model.model == "" then return end
+      model:EnableMouse(true)
+      model:SetAlpha(1)
+      model.title:SetText(model.displayIndex)
     end
 
-    --canvas UpdateAllModels func
-    function f:UpdateAllModels()
-      self:HideAllModels()
-      self:UpdateModelCount()
-      local displayId = 1+((self.canvasPage-1)*self.modelCount)
-      local id = 1
-      for i=1, self.modelRows do
-        for k=1, self.modelCols do
-          if not self.M[id] then
-            --create a new model frame if needed
-            self.M[id] = self:CreateModel(id)
-          end
-          self.M[id]:UpdatePosition(k-1,i-1)
-          self.M[id]:ResetValues()
-          self.M[id]:UpdateDisplayId(displayId)
-          displayId = displayId+1
-          id = id+1
-        end--for cols
-      end--for rows
+    function f:ResetModelValues(model)
+      model.camDistanceScale = 1
+      model.portraitZoom = 0
+      model.posX = 0
+      model.posY = 0
+      model.rotation = 0
+      model:SetPortraitZoom(model.portraitZoom)
+      model:SetCamDistanceScale(model.camDistanceScale)
+      model:SetPosition(0,model.posX,model.posY)
+      model:SetRotation(model.rotation)
+      model:ClearModel()
+      model:EnableMouse(false)
+      model:SetAlpha(0.3)
     end
 
     --create model func
     function f:CreateModel(id)
-      --print("creating new model",id)
       --model frame
       local m = CreateFrame("PlayerModel",nil,self)
       --model attributes
@@ -303,10 +348,6 @@
       m.title = m:CreateFontString(nil, "BACKGROUND")
       m.title:SetPoint("TOP", 0, -2)
       m.title:SetAlpha(.5)
-      --apply canvas model prototype
-      for k, v in pairs(L.canvasModelPrototype) do
-        m[k] = v
-      end
       return m
     end
 

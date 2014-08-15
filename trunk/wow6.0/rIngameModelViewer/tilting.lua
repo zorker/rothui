@@ -43,7 +43,7 @@
     self:SetPoint("CENTER", x, y)
   end
 
-  local function OnUpdate(self, elapsed)
+  local function LeftButtonOnUpdate(self, elapsed)
     local x, y = GetCursorPosition()
     local pitch = self.pitch + (y - self.y) * pi / 256
     local limit = false
@@ -66,13 +66,13 @@
     local x, y = GetCursorPosition()
     local px, py, pz = self:GetPosition()
     if IsAltKeyDown() then
-      local mx = format("%.2f", (px + (y - self.y) / 64))
+      local mx = format("%.2f", (px + (y - self.y) / 100))
       if format("%.2f", px) ~= mx then
         self:SetPosition(mx, py, pz)
       end
     else
-      local my = format("%.2f", (py + (x - self.x) / 64))
-      local mz = format("%.2f", (pz + (y - self.y) / 64))
+      local my = format("%.2f", (py + (x - self.x) / 100))
+      local mz = format("%.2f", (pz + (y - self.y) / 100))
       if format("%.2f", py) ~= my or format("%.2f", pz) ~= mz then
         self:SetPosition(px, my, mz)
       end
@@ -95,7 +95,7 @@
         OnDragStart(self:GetParent())
       else
         self.x, self.y = GetCursorPosition()
-        self:SetScript("OnUpdate", OnUpdate)
+        self:SetScript("OnUpdate", LeftButtonOnUpdate)
       end
     elseif button == "RightButton" then
       self.x, self.y = GetCursorPosition()
@@ -148,7 +148,7 @@
         m:SetModel(model)
       end
       m:SetAllPoints()
-      m:SetSize(512, 512)
+      m:SetSize(256, 256)
       m:SetMovable(false)
       m:EnableMouse(true)
       m:EnableMouseWheel(true)
@@ -195,9 +195,16 @@
   addonCallAfterLogin:HookScript("OnEvent", function(self)
     local m1 = CreateModelFrame("Creature\\Alexstrasza\\LadyAlexstrasa.m2")
     local m2 = CreateModelFrame(21723)
-    if UnitExists("player") then
-      local m3 = CreateModelFrame("player")
-    end
+    local m2a = CreateModelFrame(17010)
+
+        --{ value = 17010, key = "red fog", },
+        --{ value = 17054, key = "purple fog", },
+        --{ value = 17055, key = "green fog", },
+        --{ value = 17286, key = "yellow fog", },
+        --{ value = 18075, key = "turquoise fog", },
+        --{ value = 23343, key = "white fog", },
+
+    local m3 = CreateModelFrame("player")
     self:UnregisterEvent("PLAYER_ENTERING_WORLD")
   end)
   addonCallAfterLogin:RegisterEvent("PLAYER_ENTERING_WORLD")

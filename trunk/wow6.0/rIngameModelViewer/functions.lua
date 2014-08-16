@@ -10,7 +10,7 @@
   -------------------------------------
 
   -- local variables
-  local G, L, C = at.G, at.L, at.C
+  local G, L, C, DB = at.G, at.L, at.C, at.DB
 
   --stuff from global scope
   local math, unpack  = math, unpack
@@ -55,7 +55,8 @@
     b.color = b:CreateTexture(nil,"BACKGROUND",nil,-7)
     b.color:SetPoint("TOPLEFT",4,-4)
     b.color:SetPoint("BOTTOMRIGHT",-4,4)
-    b.color:SetTexture(unpack(C.modelBackgroundColor))
+    b.color:SetTexture(1,1,1)
+    b.color:SetVertexColor(unpack(DB.GLOB["COLOR"]))
 
     --color picker Callback func
     function b:Callback(color)

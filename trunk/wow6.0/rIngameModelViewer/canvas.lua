@@ -195,6 +195,60 @@
     GT:Hide()
   end
 
+  local function UpdateModelPosition(self,row,col,size)
+    self.title:SetFont(STANDARD_TEXT_FONT, math.max(size*10/100,8), "OUTLINE")
+    self:SetSize(size,size)
+    self:SetPoint("TOPLEFT",size*row,size*col*(-1))
+    self.title:SetText("not found")
+    self:Show()
+  end
+
+  local function UpdateDisplayIndex(self,displayIndex)
+    self.displayIndex = displayIndex
+    self:ClearModel()
+    self:EnableMouse(false)
+    self:SetAlpha(0.3)
+    self:SetDisplayInfo(self.displayIndex)
+    --self:SetCreature(self.displayIndex)
+    self.model = self:GetModel()
+    if self.model == "" then return end
+    self:EnableMouse(true)
+    self:SetAlpha(1)
+    self.title:SetText(self.displayIndex)
+  end
+
+  --create model func
+  local function CreateModel(self,id)
+    --model frame
+    local m = CreateFrame("PlayerModel",nil,self)
+    --model attributes
+    m.name = "model"..id
+    m.id = id
+    --model background (border)
+    m.bg = m:CreateTexture(nil,"BACKGROUND",nil,-8)
+    m.bg:SetTexture(0,0,0,.2)
+    m.bg:SetAllPoints()
+    --model background color
+    m.color = m:CreateTexture(nil,"BACKGROUND",nil,-7)
+    m.color:SetTexture(1,1,1)
+    --color bugfix
+    m.color:SetVertexColor(unpack(C.modelBackgroundColor))
+    m.color:SetPoint("TOPLEFT", m, "TOPLEFT", 2, -2)
+    m.color:SetPoint("BOTTOMRIGHT", m, "BOTTOMRIGHT", -2, 2)
+    --model title
+    m.title = m:CreateFontString(nil, "BACKGROUND")
+    m.title:SetPoint("TOP", 0, -2)
+    m.title:SetAlpha(.5)
+    --scripts
+    m:SetScript("OnMouseWheel",ModelOnMouseWheel)
+    m:SetScript("OnMouseDown",ModelOnMouseDown)
+    m:SetScript("OnMouseUp",ModelOnMouseUp)
+    m:SetScript("OnEnter",ModelOnEnter)
+    m:SetScript("OnLeave",ModelOnLeave)
+
+    return m
+  end
+
   --create canvas func
   function L:CreateCanvas()
 
@@ -397,13 +451,6 @@
       self:GetParent():UpdatePageForDisplayID(value)
     end)
 
-    --canvas UpdateModelCount func
-    function f:UpdateModelCount()
-      self.modelRows = math.floor(self.canvasHeight/self.modelSize)
-      self.modelCols = math.floor(self.canvasWidth/self.modelSize)
-      self.modelCount = self.modelRows*self.modelCols
-    end
-
     --canvas UpdateModelSize func
     function f:UpdateModelSize(value)
       if (self.modelSize+value) < 50 and value < 0 then return end
@@ -439,25 +486,6 @@
       end
     end
 
-    --canvas UpdateAllModels func
-    function f:UpdateAllModels()
-      self:HideAllModels()
-      self:UpdateModelCount()
-      self.displayIdEditBox:SetText(self:GetFirstDisplayIdOfPage())
-      local id = 1
-      for i=1, self.modelRows do
-        for k=1, self.modelCols do
-          if not self.M[id] then
-            self.M[id] = self:CreateModel(id)
-          end
-          self:UpdateModelPosition(self.M[id],k-1,i-1)
-          self:UpdateDisplayIndex(self.M[id])
-          ResetModelValues(self.M[id])
-          id = id+1
-        end--for cols
-      end--for rows
-    end
-
     --canvas HideAllModels func
     function f:HideAllModels()
       for i, model in pairs(self.M) do
@@ -466,58 +494,25 @@
       end
     end
 
-    function f:UpdateModelPosition(model,row,col)
-      model.title:SetFont(STANDARD_TEXT_FONT, math.max(self.modelSize*10/100,8), "OUTLINE")
-      model:SetSize(self.modelSize,self.modelSize)
-      model:SetPoint("TOPLEFT",self.modelSize*row,self.modelSize*col*(-1))
-      model.displayIndex = model.id+self.modelCount*(self.canvasPage-1)
-      model.title:SetText("not found")
-      model:Show()
-    end
-
-    function f:UpdateDisplayIndex(model)
-      model:ClearModel()
-      model:EnableMouse(false)
-      model:SetAlpha(0.3)
-      model:SetDisplayInfo(model.displayIndex)
-      --model:SetCreature(model.displayIndex)
-      model.model = model:GetModel()
-      if model.model == "" then return end
-      model:EnableMouse(true)
-      model:SetAlpha(1)
-      model.title:SetText(model.displayIndex)
-    end
-
-    --create model func
-    function f:CreateModel(id)
-      --model frame
-      local m = CreateFrame("PlayerModel",nil,self)
-      --model attributes
-      m.name = "model"..id
-      m.id = id
-      --model background (border)
-      m.bg = m:CreateTexture(nil,"BACKGROUND",nil,-8)
-      m.bg:SetTexture(0,0,0,.2)
-      m.bg:SetAllPoints()
-      --model background color
-      m.color = m:CreateTexture(nil,"BACKGROUND",nil,-7)
-      m.color:SetTexture(1,1,1)
-      --color bugfix
-      m.color:SetVertexColor(unpack(C.modelBackgroundColor))
-      m.color:SetPoint("TOPLEFT", m, "TOPLEFT", 2, -2)
-      m.color:SetPoint("BOTTOMRIGHT", m, "BOTTOMRIGHT", -2, 2)
-      --model title
-      m.title = m:CreateFontString(nil, "BACKGROUND")
-      m.title:SetPoint("TOP", 0, -2)
-      m.title:SetAlpha(.5)
-      --scripts
-      m:SetScript("OnMouseWheel",ModelOnMouseWheel)
-      m:SetScript("OnMouseDown",ModelOnMouseDown)
-      m:SetScript("OnMouseUp",ModelOnMouseUp)
-      m:SetScript("OnEnter",ModelOnEnter)
-      m:SetScript("OnLeave",ModelOnLeave)
-
-      return m
+    --canvas UpdateAllModels func
+    function f:UpdateAllModels()
+      self:HideAllModels()
+      self.modelRows = math.floor(self.canvasHeight/self.modelSize)
+      self.modelCols = math.floor(self.canvasWidth/self.modelSize)
+      self.modelCount = self.modelRows*self.modelCols
+      self.displayIdEditBox:SetText(self:GetFirstDisplayIdOfPage())
+      local id = 1
+      for i=1, self.modelRows do
+        for k=1, self.modelCols do
+          if not self.M[id] then
+            self.M[id] = CreateModel(self,id)
+          end
+          UpdateModelPosition(self.M[id],k-1,i-1,self.modelSize)
+          UpdateDisplayIndex(self.M[id],self.M[id].id+self.modelCount*(self.canvasPage-1))
+          ResetModelValues(self.M[id])
+          id = id+1
+        end--for cols
+      end--for rows
     end
 
     return f

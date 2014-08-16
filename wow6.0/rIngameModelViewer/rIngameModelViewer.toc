@@ -8,6 +8,7 @@
 
 init.lua
 config.lua
+db.lua
 functions.lua
 murloc.lua
 canvas.lua

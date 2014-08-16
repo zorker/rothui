@@ -11,6 +11,7 @@
   at.G = {} --global (if any)
   at.L = {} --local
   at.C = {} --config
+  at.DB = {} --database
 
   -------------------------------------
   -- VARIABLES

@@ -22,10 +22,6 @@
   C.sound.click   = "igmainmenuoption"
   C.sound.clack   = "igmainmenulogout"
 
-  C.modelBackgroundColor = {1,1,1}
-
-  C.defaultmodel = "interface\\buttons\\talktomequestionmark.m2"
-
   C.backdrop = {
     bgFile = "",
     edgeFile = "interface\\tooltips\\ui-tooltip-border",

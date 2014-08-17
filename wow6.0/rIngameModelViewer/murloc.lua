@@ -44,12 +44,6 @@
       end
     end)
 
-    --murloc OnSizeChanged func
-    m:HookScript("OnSizeChanged", function(self,w,h)
-      w = math.min(math.max(w,20),400)
-      self:SetSize(w,w) --height = width
-    end)
-
     --murloc OnDragStop func
     m:HookScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
 

@@ -231,6 +231,8 @@
     self:EnableMouse(false)
     self:SetAlpha(0.3)
     self.title:SetText(self.displayIndex)
+    --quick workaround for the ID that is causing a crash to desktop
+    if self.displayIndex == 50723 then return end
     self:SetDisplayInfo(self.displayIndex)
     --self:SetCreature(self.displayIndex)
     self.model = self:GetModel()
@@ -568,7 +570,7 @@
       f.model:SetPoint("BOTTOMLEFT",100,10)
       f.model:SetPoint("TOPRIGHT",-100,-10)
       f.model:SetPoint("BOTTOMRIGHT",-100,10)
-      f.isOverlayModel = true
+      f.model.isOverlayModel = true
 
       --overlay color picker button
       f.colorPickerButton = L:CreateColorPickerButton(f,L.name.."CanvasOverlayColorPickerButton")

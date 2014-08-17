@@ -1,6 +1,6 @@
 ## Interface: 60000
 ## Author: zork
-## Version: 60000.01
+## Version: 60000.02
 ## Title: IngameModelViewer
 ## Notes: Zork's ingame model viewer
 ## SavedVariables: rIMV_DBGLOB

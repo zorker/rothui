@@ -28,6 +28,7 @@
   cfg["player"].ringblendmode   = "ADD" --"ADD" or "BLEND"
   cfg["player"].sparkblendmode  = "ADD" --"ADD" or "BLEND"
   cfg["player"].latencyblendmode  = "BLEND" --"ADD" or "BLEND"
+  --cfg["player"].point           = {"CENTER",UIParent,"CENTER",0,0}
 
   --target settings
   cfg["target"] = {}
@@ -94,7 +95,10 @@
   local function OnUpdate(self,elapsed)
     self.elapsed = self.elapsed + elapsed
     if self.update then
-      self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = UnitCastingInfo(self.unit) or UnitChannelInfo(self.unit)
+      self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = UnitCastingInfo(self.unit)
+      if not self.spellName then
+        self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = UnitChannelInfo(self.unit)
+      end
       if not self.spellName then
         Disable(self)
         return
@@ -123,14 +127,16 @@
       Disable(self)
       return
     end
-    self.x, self.y = GetCursorPosition()
-    self.x = (self.x/uiscale/self.scale)-self.w/2
-    self.y = (self.y/uiscale/self.scale)-self.h/2
-    self.percent = math.min(self.current+self.elapsed,self.duration)/self.duration
     --fix the fps bug when repositioning visible objects multiple times per second
     --http://www.wowinterface.com/forums/showthread.php?t=46740
     self:Hide()
-    self:SetPoint("BOTTOMLEFT",self.x,self.y)
+    if self.castbarAtCursor then
+      self.x, self.y = GetCursorPosition()
+      self.x = (self.x/uiscale/self.scale)-self.w/2
+      self.y = (self.y/uiscale/self.scale)-self.h/2
+      self:SetPoint("BOTTOMLEFT",self.x,self.y)
+    end
+    self.percent = math.min(self.current+self.elapsed,self.duration)/self.duration
     if self.percent > 0.5 then
       self.leftRingTexture:SetRotation(math.rad(self.leftRingTexture.baseDeg-180*(self.percent*2-1)))
       self.rightRingTexture:SetRotation(math.rad(self.rightRingTexture.baseDeg-180))
@@ -171,9 +177,16 @@
     f:SetScale(cfg.scale)
     f.scale = f:GetScale()
     f.w, f.h = f:GetSize()
-    f:SetPoint("BOTTOMLEFT",0,0)
     f:SetFrameStrata("DIALOG")
-    f:SetClampedToScreen(1)
+    
+    if cfg.point then
+      f.castbarAtCursor = false
+      f:SetPoint(unpack(cfg.point))
+    else
+      f.castbarAtCursor = true
+      f:SetPoint("BOTTOMLEFT",0,0)
+      f:SetClampedToScreen(1)
+    end
 
     --attributes
     f.unit    = unit

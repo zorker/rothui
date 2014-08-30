@@ -28,7 +28,7 @@
   cfg["player"].ringblendmode   = "ADD" --"ADD" or "BLEND"
   cfg["player"].sparkblendmode  = "ADD" --"ADD" or "BLEND"
   cfg["player"].latencyblendmode  = "BLEND" --"ADD" or "BLEND"
-  --cfg["player"].point           = {"CENTER",UIParent,"CENTER",0,0}
+  cfg["player"].point           = {"CENTER",0,0}
 
   --target settings
   cfg["target"] = {}

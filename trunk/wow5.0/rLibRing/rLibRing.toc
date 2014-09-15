@@ -1,0 +1,6 @@
+## Interface: 50300
+## Author: zork
+## Title: rLibRing
+## Notes: A library for ring creation
+
+core\core.lua

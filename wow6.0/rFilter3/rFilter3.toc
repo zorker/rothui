@@ -1,0 +1,10 @@
+## Interface: 60000
+## Author: zork
+## Title: rFilter3
+## Notes: Simple buff, debuff and cooldown tracking for units and spells
+## RequiredDeps: rLib
+
+config.lua
+charspecific.lua
+core\slashcmd.lua
+core\core.lua

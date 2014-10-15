@@ -97,8 +97,8 @@
   L.murlockButton = L:CreateMurlocButton()
 
   --models defined on loadup are not rendered properly. model display needs to be delayed.
-  L.murlockButton:HookScript("OnEvent", function(self)
+  L.murlockButton:HookScript("OnEvent", function(self,event)
     self:UpdateDisplayId()
-    self:UnregisterEvent("PLAYER_LOGIN")
+    self:UnregisterEvent(event)
   end)
   L.murlockButton:RegisterEvent("PLAYER_LOGIN")

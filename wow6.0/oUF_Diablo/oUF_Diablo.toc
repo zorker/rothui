@@ -1,0 +1,44 @@
+## Interface: 60000
+## Author: zork
+## Title: oUF_Diablo
+## Notes: zork's oUF layout with Diablo flavour!
+## RequiredDeps: oUF, rLib
+## SavedVariables: OUF_DIABLO_DB_GLOB
+## SavedVariablesPerCharacter: OUF_DIABLO_DB_CHAR
+
+modules\oUF_AuraWatch.lua
+modules\oUF_BurningEmbers.lua
+modules\oUF_ComboPoints.lua
+modules\oUF_DebuffHighlight.lua
+modules\oUF_DemonicFury.lua
+modules\oUF_Experience.lua
+modules\oUF_Harmony.lua
+modules\oUF_HolyPower.lua
+modules\oUF_Reputation.lua
+modules\oUF_RuneOrbs.lua
+modules\oUF_ShadowOrbs.lua
+modules\oUF_Smooth.lua
+modules\oUF_SoulShards.lua
+modules\oUF_TotalAbsorb.lua
+
+config.lua
+charspecific.lua
+
+core\db.lua
+core\panel.lua
+core\slashcmd.lua
+core\lib.lua
+core\tags.lua
+core\units.lua
+core\bars.lua
+
+units\player.lua
+units\target.lua
+units\targettarget.lua
+units\pet.lua
+units\focus.lua
+units\pettarget.lua
+units\focustarget.lua
+units\party.lua
+units\raid.lua
+units\boss.lua

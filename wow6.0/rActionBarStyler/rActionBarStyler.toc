@@ -1,0 +1,23 @@
+## Interface: 60000
+## Author: zork
+## Title: rActionBarStyler
+## Notes: Simple actionbars
+## RequiredDeps: rLib
+
+config.lua
+charspecific.lua
+core\hide_blizzart.lua
+core\slashcmd.lua
+core\micromenu.lua
+core\bags.lua
+core\bar1.lua
+core\overridebar.lua
+core\bar2.lua
+core\bar3.lua
+core\bar4.lua
+core\bar5.lua
+core\petbar.lua
+core\stancebar.lua
+core\extrabar.lua
+core\leave_vehicle.lua
+core\spellflyout.lua

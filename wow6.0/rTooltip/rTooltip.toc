@@ -1,0 +1,6 @@
+## Interface: 60000
+## Author: zork
+## Title: rTooltip
+## Notes: A simple tooltip mod
+
+core.lua

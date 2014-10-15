@@ -1,0 +1,6 @@
+## Interface: 60000
+## Author: zork
+## Title: rNamePlateTest
+## Notes: nameplate fps test addon
+
+rNamePlateTest.lua

@@ -1,0 +1,9 @@
+## Interface: 60000
+## Author: zork
+## Title: rMinimap
+## Notes: Diablo 3 themed minimap
+## RequiredDeps: rLib
+
+config.lua
+core\slashcmd.lua
+core\core.lua

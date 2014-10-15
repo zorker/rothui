@@ -1,5 +1,0 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/">
-  <Script file="core\init.lua" />
-  <Script file="core\developer.lua" />
-  <Script file="core\number.lua" />
-</Ui>

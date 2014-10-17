@@ -1,0 +1,6 @@
+## Interface: 600000
+## Author: zork
+## Title: rObjectiveTrackerMover
+## Notes: Makes the objective tracker movable.
+
+core.lua

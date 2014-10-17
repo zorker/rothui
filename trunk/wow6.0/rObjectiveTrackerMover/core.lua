@@ -17,11 +17,11 @@
   end
   
   local function OnDragStart(self)
-    self:GetParent():StartMoving()
+    self:GetParent():GetParent():StartMoving()
   end
   
   local function OnDragStop(self)
-    self:GetParent():StopMovingOrSizing()
+    self:GetParent():GetParent():StopMovingOrSizing()
   end
 
   local f = ObjectiveTrackerFrame
@@ -29,7 +29,7 @@
   f:SetMovable(true)
   f:SetUserPlaced(true)
 
-  local dragFrame = CreateFrame("Frame",nil,f)
+  local dragFrame = CreateFrame("Frame",nil,ObjectiveTrackerBlocksFrame)
   dragFrame:EnableMouse(true)
   dragFrame:SetClampedToScreen(true)
   dragFrame:RegisterForDrag("LeftButton")
@@ -49,3 +49,10 @@
   dragFrame:SetScript("OnDragStop", OnDragStop)
   dragFrame:SetScript("OnEnter", ShowTooltip)
   dragFrame:SetScript("OnLeave", HideTooltip)
+  
+  if not ObjectiveTrackerBlocksFrame.QuestHeader:IsShown() then
+    dragFrame:Hide()
+  end
+  
+  ObjectiveTrackerBlocksFrame.QuestHeader:HookScript("OnShow", function() dragFrame:Show() end)
+  ObjectiveTrackerBlocksFrame.QuestHeader:HookScript("OnHide", function() dragFrame:Hide() end)

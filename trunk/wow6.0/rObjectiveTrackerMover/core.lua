@@ -32,7 +32,6 @@
   local dragFrame = CreateFrame("Frame",nil,f)
   dragFrame:EnableMouse(true)
   dragFrame:SetClampedToScreen(true)
-  dragFrame:SetFrameStrata("DIALOG")
   dragFrame:RegisterForDrag("LeftButton")
   dragFrame:SetPoint("TOPRIGHT",2,-24)
   dragFrame:SetSize(20,20)

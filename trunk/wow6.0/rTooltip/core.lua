@@ -66,6 +66,7 @@
       tooltip:SetOwner(parent, "ANCHOR_CURSOR")
     else
       tooltip:SetOwner(parent, "ANCHOR_NONE")
+      tooltip:ClearAllPoints()
       tooltip:SetPoint(unpack(cfg.pos))
     end
   end)
@@ -245,6 +246,12 @@
       end
     end
   end
+  
+  --func TooltipOnShow
+  local function TooltipOnHide(self,...)
+    self:SetBackdropColor(unpack(cfg.backdrop.bgColor))
+    self:SetBackdropBorderColor(unpack(cfg.backdrop.borderColor))
+  end
 
   --loop over tooltips
   local tooltips = { GameTooltip, ItemRefTooltip, ShoppingTooltip1, ShoppingTooltip2, ShoppingTooltip3, WorldMapTooltip, }
@@ -252,6 +259,7 @@
     tooltip:SetBackdrop(cfg.backdrop)
     tooltip:SetScale(cfg.scale)
     tooltip:HookScript("OnShow", TooltipOnShow)
+    tooltip:HookScript("OnHide", TooltipOnHide)
   end
 
   --loop over menues

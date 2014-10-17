@@ -544,6 +544,11 @@
       --position deathknight runes
       bars.createRuneBar(self)
     end
+    
+    --combobar
+    if self.cfg.combobar.show then
+      bars.createComboBar(self)
+    end
 
     --create portrait
     if self.cfg.portrait.show then

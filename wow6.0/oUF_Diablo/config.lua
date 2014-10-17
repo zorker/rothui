@@ -179,18 +179,22 @@
           fadeOut         = {time = 0.3, alpha = 0.2},
         },
       },
+      combobar = {
+        show = true,
+        scale = 0.40,
+        color = {r = 0.9, g = 0.59, b = 0, },
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
+        combat          = { --fade the bar in/out in combat/out of combat
+          enable          = false,
+          fadeIn          = {time = 0.4, alpha = 1},
+          fadeOut         = {time = 0.3, alpha = 0.2},
+        },
+      },
       altpower = {
         show = true,
         scale = 0.5,
         color = {r = 1, g = 0, b = 1, },
         texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
-        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
-      },
-      vengeance = {
-        show = false,
-        scale = 0.7,
-        color = {r = 1, g = 0, b = 0, },
-        texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar5",
         pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
       },
       expbar = { --experience
@@ -283,12 +287,6 @@
           shieldbg = { r = 0.1, g = 0.1, b = 0.1, a = 0.7, },  --the castbar background color while target casting a shielded spell
         },
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 350 },
-      },
-      combobar = {
-        show = true,
-        scale = 0.35,
-        color = {r = 0.9, g = 0.59, b = 0, },
-        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 0, y = 650 },
       },
       portrait = {
         pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 100, y = 0 },

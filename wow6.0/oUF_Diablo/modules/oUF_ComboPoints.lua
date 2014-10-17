@@ -58,10 +58,7 @@ local Enable = function(self)
   if(element) then
     element.__owner = self
     element.ForceUpdate = ForceUpdate
-
     self:RegisterEvent("UNIT_COMBO_POINTS", Path, true)
-    self:RegisterEvent("PLAYER_TARGET_CHANGED", Path, true)
-
     return true
   end
 end
@@ -70,7 +67,6 @@ local Disable = function(self)
   local element = self.ComboPoints
   if(element) then
     self:UnregisterEvent("UNIT_COMBO_POINTS", Path)
-    self:UnregisterEvent("PLAYER_TARGET_CHANGED", Path)
   end
 end
 

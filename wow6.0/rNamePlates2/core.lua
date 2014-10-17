@@ -159,6 +159,8 @@
     self.healthbar:SetPoint("LEFT", self.newPlate)
     self.healthbar:SetPoint("RIGHT", self.newPlate)
     self.healthbar:SetHeight(cfg.healthbarHeight)
+    --dragon fix
+    self.dragon:SetTexture(nil)
     --highlight
     self.highlight:SetAllPoints()
     --threat glow

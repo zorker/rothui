@@ -28,6 +28,11 @@
   f:SetClampedToScreen(false)
   f:SetMovable(true)
   f:SetUserPlaced(true)
+  
+  f:ClearAllPoints()
+  f:SetPoint("TOPRIGHT",0,0)
+  f.ClearAllPoints = function() end
+  f.SetPoint = function() end
 
   local dragFrame = CreateFrame("Frame",nil,ObjectiveTrackerBlocksFrame)
   dragFrame:EnableMouse(true)

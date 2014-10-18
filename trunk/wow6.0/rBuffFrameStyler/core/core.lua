@@ -98,7 +98,7 @@
     --icon
     local icon = _G[name.."Icon"]
     if consolidated then
-     icon:SetTexture(select(3,GetSpellInfo(109077))) --cogwheel
+     icon:SetTexture(select(3,GetSpellInfo(1))) --wor
     end
     icon:SetTexCoord(0.1,0.9,0.1,0.9)
     icon:ClearAllPoints()

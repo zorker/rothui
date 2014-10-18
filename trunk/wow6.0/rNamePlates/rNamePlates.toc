@@ -1,0 +1,6 @@
+## Interface: 60000
+## Author: zork
+## Title: rNamePlates
+## Notes: Just simple nameplates!
+
+rNamePlates.lua

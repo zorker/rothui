@@ -72,7 +72,7 @@
   local manager = CF("Frame", addon, UIP, "SecureHandlerStateTemplate")
   manager:SetFrameStrata("DIALOG")
   manager:SetSize(200,390)
-  manager:SetPoint("TOPLEFT", -185, -180)
+  manager:SetPoint("LEFT", -190, 0)
   manager:SetAlpha(0.4)
   manager:SetBackdrop(backdrop)
   manager:SetBackdropColor(0.1,0.1,0.1,0.9)
@@ -102,7 +102,7 @@
       print("|cffffff00"..addon.."|r Blizzard_CUFProfiles and Blizzard_CompactRaidFrames are disabled properly.")
     end
   end)
-  RegisterStateDriver(manager, "visibility", "[group:party][group:raid] show; hide")
+  --RegisterStateDriver(manager, "visibility", "[group:party][group:raid] show; hide")
 
   --create world marker buttons
   for i=1, #TEX_WORLD_RAID_MARKERS do
@@ -153,7 +153,7 @@
   buttonLeft:SetPoint("RIGHT", button, "LEFT", 0, 0)
 
   --pull button
-  local button = CreateBasicButton(manager, addon.."ButtonPullCounter", "|TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:14:14:0:0|t", "Boss pull in "..pullCounter)
+  local button = CreateBasicButton(manager, addon.."ButtonPullCounter", "|TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:14:14:0:0|t", "Boss pull in 10")
   button:SetPoint("TOP", previousButton, "BOTTOM", 0, 0)
   button:SetAttribute("type", "macro")
   button:SetAttribute("macrotext", format("/pull %d", 10))
@@ -162,11 +162,6 @@
   --stopwatch toggle
   local buttonLeft = CreateBasicButton(manager, addon.."ButtonStopWatch", "|TInterface\\ChatFrame\\UI-ChatIcon-ArmoryChat-AwayMobile:14:14:0:0|t", "Toggle stopwatch")
   buttonLeft:SetScript("OnClick", function()
-    if Stopwatch_IsPlaying() then
-      Stopwatch_Clear()
-    else
-      Stopwatch_Play()
-    end
     Stopwatch_Toggle()
   end)
   buttonLeft:SetPoint("RIGHT", button, "LEFT", 0, 0)

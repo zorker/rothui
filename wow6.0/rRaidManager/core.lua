@@ -18,7 +18,6 @@
 
   local tinsert = tinsert
   local format = format
-  local NUM_WORLD_RAID_MARKERS = NUM_WORLD_RAID_MARKERS or 5
   local UIP = UIParent
   local CF = CreateFrame
 
@@ -39,6 +38,9 @@
   tinsert(TEX_WORLD_RAID_MARKERS, "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_3:14:14|t")
   tinsert(TEX_WORLD_RAID_MARKERS, "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_7:14:14|t")
   tinsert(TEX_WORLD_RAID_MARKERS, "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:14:14|t")
+  tinsert(TEX_WORLD_RAID_MARKERS, "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_2:14:14|t")
+  tinsert(TEX_WORLD_RAID_MARKERS, "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_5:14:14|t")
+  tinsert(TEX_WORLD_RAID_MARKERS, "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_8:14:14|t")
 
   local previousButton
 
@@ -69,41 +71,41 @@
   --create manager frame
   local manager = CF("Frame", addon, UIP, "SecureHandlerStateTemplate")
   manager:SetFrameStrata("DIALOG")
-  manager:SetSize(200,300)
+  manager:SetSize(200,390)
   manager:SetPoint("TOPLEFT", -185, -180)
   manager:SetAlpha(0.4)
   manager:SetBackdrop(backdrop)
   manager:SetBackdropColor(0.1,0.1,0.1,0.9)
   manager:SetBackdropBorderColor(0.7,0.7,0.7)
   manager:RegisterEvent("PLAYER_LOGIN")
-  manager:SetScript("OnEvent", function() 
+  manager:SetScript("OnEvent", function()
     local needReload = false
     if (LoadAddOn("Blizzard_CUFProfiles")) then print("|cffffff00"..addon.."|r Blizzard_CUFProfiles is loadable") needReload = true end
-    if (LoadAddOn("Blizzard_CompactRaidFrames")) then print("|cffffff00"..addon.."|r Blizzard_CompactRaidFrames is loadable") needReload = true end  
-    if needReload then 
+    if (LoadAddOn("Blizzard_CompactRaidFrames")) then print("|cffffff00"..addon.."|r Blizzard_CompactRaidFrames is loadable") needReload = true end
+    if needReload then
       DisableAddOn("Blizzard_CUFProfiles")
-      DisableAddOn("Blizzard_CompactRaidFrames")      
+      DisableAddOn("Blizzard_CompactRaidFrames")
       StaticPopupDialogs["RRAIDMANAGER_RELOADUI_REQUEST"] = {
         text = "rRaidFrameManager needs a reload to fully disable the Blizzard raid addons. Reload now?",
         button1 = "Yes",
         button2 = "No",
         OnAccept = function()
-          ReloadUI() 
+          ReloadUI()
         end,
         timeout = 0,
         whileDead = true,
         hideOnEscape = true,
         preferredIndex = 3,
       }
-      StaticPopup_Show ("RRAIDMANAGER_RELOADUI_REQUEST")      
-    else 
-      print("|cffffff00"..addon.."|r Blizzard_CUFProfiles and Blizzard_CompactRaidFrames are disabled properly.") 
+      StaticPopup_Show ("RRAIDMANAGER_RELOADUI_REQUEST")
+    else
+      print("|cffffff00"..addon.."|r Blizzard_CUFProfiles and Blizzard_CompactRaidFrames are disabled properly.")
     end
   end)
   RegisterStateDriver(manager, "visibility", "[group:party][group:raid] show; hide")
 
   --create world marker buttons
-  for i=1, NUM_WORLD_RAID_MARKERS do
+  for i=1, #TEX_WORLD_RAID_MARKERS do
     local text = TEX_WORLD_RAID_MARKERS[i]
     local button = CreateBasicButton(manager, addon.."Button"..i, text, "WorldMarker"..i)
     button:SetAttribute("type", "macro")
@@ -123,6 +125,8 @@
   --cancel all world markers button
   local button = CreateBasicButton(manager, addon.."ButtonWMCancel", "|TInterface\\Buttons\\UI-GroupLoot-Pass-Up:14:14:0:0|t", "Clear all world markers")
   button:SetScript("OnClick", ClearRaidMarker)
+  --button:SetAttribute("type", "macro")
+  --button:SetAttribute("macrotext", format("/cwm %d", 0))
   button:SetPoint("TOP", previousButton, "BOTTOM", 0, 0)
   previousButton = button
 
@@ -148,18 +152,11 @@
   buttonLeft:SetScript("OnClick", ConvertToRaid)
   buttonLeft:SetPoint("RIGHT", button, "LEFT", 0, 0)
 
-  --state frame
-  local stateFrame = CF("BUTTON", addon.."stateFrame", manager, "SecureHandlerClickTemplate")
-  stateFrame:SetPoint("TOPRIGHT",-3,-3)
-  stateFrame:SetPoint("BOTTOMRIGHT",-3,3)
-  stateFrame:SetWidth(15)
-
   --pull button
-  local pullCounter = 10
   local button = CreateBasicButton(manager, addon.."ButtonPullCounter", "|TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:14:14:0:0|t", "Boss pull in "..pullCounter)
   button:SetPoint("TOP", previousButton, "BOTTOM", 0, 0)
   button:SetAttribute("type", "macro")
-  button:SetAttribute("macrotext", format("/pull %d", pullCounter))
+  button:SetAttribute("macrotext", format("/pull %d", 10))
   previousButton = button
 
   --stopwatch toggle
@@ -173,6 +170,12 @@
     Stopwatch_Toggle()
   end)
   buttonLeft:SetPoint("RIGHT", button, "LEFT", 0, 0)
+
+  --state frame
+  local stateFrame = CF("BUTTON", addon.."stateFrame", manager, "SecureHandlerClickTemplate")
+  stateFrame:SetPoint("TOPRIGHT",-3,-3)
+  stateFrame:SetPoint("BOTTOMRIGHT",-3,3)
+  stateFrame:SetWidth(15)
 
   --state frame texture
   local bg = stateFrame:CreateTexture(nil, "BACKGROUND", nil, -8)

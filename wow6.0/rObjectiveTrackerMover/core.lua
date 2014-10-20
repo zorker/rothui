@@ -55,9 +55,12 @@
   dragFrame:SetScript("OnEnter", ShowTooltip)
   dragFrame:SetScript("OnLeave", HideTooltip)
   
-  if not ObjectiveTrackerBlocksFrame.QuestHeader:IsShown() then
-    dragFrame:Hide()
+  if ObjectiveTrackerBlocksFrame.QuestHeader:IsShown() or ObjectiveTrackerBlocksFrame.ScenarioHeader:IsShown() then
+  else  
+    dragFrame:Hide()  
   end
   
   ObjectiveTrackerBlocksFrame.QuestHeader:HookScript("OnShow", function() dragFrame:Show() end)
   ObjectiveTrackerBlocksFrame.QuestHeader:HookScript("OnHide", function() dragFrame:Hide() end)
+  ObjectiveTrackerBlocksFrame.ScenarioHeader:HookScript("OnShow", function() dragFrame:Show() end)
+  ObjectiveTrackerBlocksFrame.ScenarioHeader:HookScript("OnHide", function() dragFrame:Hide() end)

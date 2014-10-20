@@ -102,7 +102,7 @@
       print("|cffffff00"..addon.."|r Blizzard_CUFProfiles and Blizzard_CompactRaidFrames are disabled properly.")
     end
   end)
-  --RegisterStateDriver(manager, "visibility", "[group:party][group:raid] show; hide")
+  RegisterStateDriver(manager, "visibility", "[group:party][group:raid] show; hide")
 
   --create world marker buttons
   for i=1, #TEX_WORLD_RAID_MARKERS do

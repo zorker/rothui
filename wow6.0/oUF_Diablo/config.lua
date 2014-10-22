@@ -396,7 +396,7 @@
       scale = 0.85,
       pos = { a1 = "LEFT", a2 = "LEFT", af = "UIParent", x = 10, y = 40 },
       aurawatch = {
-        show            = true,
+        show            = false,
         size            = 20,
       },
       auras = {

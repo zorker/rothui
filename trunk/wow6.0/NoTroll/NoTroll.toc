@@ -1,0 +1,7 @@
+## Interface: 60000
+## Author: zork
+## Title: NoTroll
+## Notes: I no has do dat!
+## SavedVariables: NoTrollDB 
+
+core.lua

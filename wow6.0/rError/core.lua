@@ -39,7 +39,7 @@ local frame = CreateFrame("Frame")
 frame.UI_ERROR_MESSAGE = function(self, event, error)
   if(not blacklist[error]) then
     if CombatText_AddMessage and useCombatTextToShowErrors then
-      CombatText_AddMessage(error, COMBAT_TEXT_SCROLL_FUNCTION, 1, 0, 0, "crit", nil)
+      CombatText_AddMessage(error, COMBAT_TEXT_SCROLL_FUNCTION, 1, 0, 0, "sticky", nil)
     else
       UIErrorsFrame:AddMessage(error, 1, .1, .1)
     end

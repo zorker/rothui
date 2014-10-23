@@ -16,12 +16,13 @@
     self:UnregisterEvent(event)
     if not InCombatLockdown() then
       --print(an,"out of combat now, adjusting setpoint now")
-      ObjectiveTrackerFrame:SetPoint(unpack(frame.point))
+      ObjectiveTrackerFrame:SetPoint(unpack(self.point))
     end
   end)
 
-  local function AdjustSetPoint(self,a1,af,a2,x,y)
-    if af == "MinimapCluster" then    
+  local function AdjustSetPoint(self,...)
+    local a1,af,a2,x,y = ...
+    if a1 and af == "MinimapCluster" then    
       if not InCombatLockdown() then
         self:SetPoint(a1,af,a2,x,-75)
       else

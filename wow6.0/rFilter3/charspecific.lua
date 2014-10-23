@@ -162,3 +162,32 @@
     }
 
   end
+  
+  if player_name == "Needler" and player_class == "HUNTER" then
+    --Rothars Buff List
+    cfg.rf3_BuffList = {
+      {
+        spellid = 118455, --beast cleave
+        spec = nil,
+        size = 32,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -210, y = 130 },
+        unit = "pet",
+        validate_unit   = true,
+        ismine          = false,
+        desaturate      = true,
+        move_ingame     = true,
+        hide_ooc        = false,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 1,
+          },
+        },
+      },
+    }
+
+  end

@@ -1,7 +1,9 @@
 ## Interface: 60000
 ## Author: zork
 ## Title: rCombatText
-## Notes: Adjusts the default damage font and the blizzard combat text a little bit
+## Notes: Small tweaks for the default combat text
 ## RequiredDeps: Blizzard_CombatText
+## LoadWith: Blizzard_CombatText
+## LoadOnDemand: 1
 
 rCombatText.lua

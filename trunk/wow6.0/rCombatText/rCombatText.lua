@@ -1,7 +1,3 @@
-LoadAddOn("Blizzard_CombatText")
-
-DAMAGE_TEXT_FONT = "Fonts\\DAMAGE.ttf"
-
 SystemFont_Shadow_Huge3:SetFont(STANDARD_TEXT_FONT, 16, "OUTLINE")
 SystemFont_Shadow_Huge3:SetShadowOffset(1,-1)
 SystemFont_Shadow_Huge3:SetShadowColor(0,0,0,0.6)
@@ -17,5 +13,3 @@ hooksecurefunc("CombatText_UpdateDisplayedMessages", function()
     COMBAT_TEXT_LOCATIONS.endY = 709
   end
 end)
-
-

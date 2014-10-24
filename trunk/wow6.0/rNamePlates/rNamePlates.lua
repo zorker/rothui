@@ -306,6 +306,10 @@
     --skin health and castbar
     SkinHealthBar(blizzPlate)
     SkinCastBar(blizzPlate)
+    --not sure if this if even possible, but maybe (nameplates may found that are currently hidden)
+    if not blizzPlate:IsShown() then
+      blizzPlate.newPlate:Hide()
+    end
     --hook some scripts
     blizzPlate:HookScript("OnShow", NamePlateOnShow)
     blizzPlate:HookScript("OnHide", NamePlateOnHide)

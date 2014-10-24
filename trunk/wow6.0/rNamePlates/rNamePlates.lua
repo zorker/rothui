@@ -219,8 +219,8 @@
 
   end
 
-  --CreateOnSizeChangedHandler func
-  local function CreateOnSizeChangedHandler(blizzPlate)
+  --NamePlatePositionHandler func
+  local function NamePlatePositionHandler(blizzPlate)
     local sizer = CreateFrame("Frame", nil, blizzPlate.newPlate)
     sizer:SetPoint("BOTTOMLEFT", WorldFrame)
     sizer:SetPoint("TOPRIGHT", blizzPlate, "CENTER")
@@ -236,10 +236,9 @@
   --CreateNewPlate func
   local function CreateNewPlate(blizzPlate)
     plates[blizzPlate] = CreateFrame("Frame", nil, WorldFrame)
-    plates[blizzPlate].id = namePlateIndex
-    plates[blizzPlate]:SetSize(36,36)
     blizzPlate.newPlate = plates[blizzPlate]
-    CreateOnSizeChangedHandler(blizzPlate)
+    blizzPlate.newPlate:SetSize(36,36)
+    NamePlatePositionHandler(blizzPlate)
     NamePlateOnInit(blizzPlate)
     NamePlateSetup(blizzPlate)
   end

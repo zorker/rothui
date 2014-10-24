@@ -271,7 +271,7 @@
       castBar.shieldTexture:SetSize(unpack(castBar.shieldTexture.size))
       castBar.spellIconBorder:SetDesaturated(1)
     else
-      castBar.spellIconBorder:SetDesaturated(0)
+      castBar.spellIconBorder:SetDesaturated(nil)
     end
 
   end

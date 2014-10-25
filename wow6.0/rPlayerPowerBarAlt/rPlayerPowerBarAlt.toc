@@ -1,0 +1,8 @@
+## Interface: 60000
+## Author: zork
+## Title: rPlayerPowerBarAlt
+## Notes: Make the PlayerPowerBarAlt movable
+## RequiredDeps: rLib
+
+core/slashcmd.lua
+core/core.lua

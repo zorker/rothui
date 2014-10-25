@@ -191,7 +191,7 @@
         },
       },
       altpower = {
-        show = true,
+        show = false,
         scale = 0.5,
         color = {r = 1, g = 0, b = 1, },
         texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
@@ -360,7 +360,7 @@
         texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",
       },
       altpower = {
-        show = true,
+        show = false,
         scale = 0.5,
         color = {r = 1, g = 0, b = 1, },
         texture = "Interface\\AddOns\\oUF_Diablo\\media\\statusbar",

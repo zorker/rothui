@@ -1,0 +1,6 @@
+## Interface: 60000
+## Author: zork
+## Title: rAfkCamera
+## Notes: AFK camera
+
+rAfkCamera.lua

@@ -1,0 +1,8 @@
+## Interface: 60000
+## Author: zork
+## Title: rBBS_RothUI
+## Notes: Roth UI Layout For rBBS
+## RequiredDeps: rBBS
+
+config.lua
+style.lua

@@ -1,0 +1,8 @@
+## Interface: 60000
+## Author: zork
+## Title: rBBS_Diablo3NoOrbs
+## Notes: Diablo3 flavoured layout for rBBS. With 12 button texture and without any orb.
+## RequiredDeps: rBBS
+
+config.lua
+style.lua

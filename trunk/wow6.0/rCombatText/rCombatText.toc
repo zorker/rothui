@@ -4,6 +4,5 @@
 ## Notes: Small tweaks for the default combat text
 ## RequiredDeps: Blizzard_CombatText
 ## LoadWith: Blizzard_CombatText
-## LoadOnDemand: 1
 
 rCombatText.lua

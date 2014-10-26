@@ -2,5 +2,8 @@
 ## Author: zork
 ## Title: rObjectiveTrackerMover
 ## Notes: Makes the objective tracker movable.
+## RequiredDeps: Blizzard_ObjectiveTracker
+## LoadWith: Blizzard_ObjectiveTracker
+## LoadOnDemand: 1
 
 core.lua

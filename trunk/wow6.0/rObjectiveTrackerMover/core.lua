@@ -21,11 +21,10 @@
 
   local function AdjustSetPoint(self,...)
     local a1,af,a2,x,y = ...
-    if a1 and af == "MinimapCluster" then    
+    if a1 and af == "MinimapCluster" and y ~= cfg.y then    
       if not InCombatLockdown() then
         self:SetPoint(a1,af,a2,x,cfg.y)
       else
-        --print(an,"delaying setpoint because of combat")
         frame.point = {a1,af,a2,x,cfg.y}
         frame:RegisterEvent("PLAYER_REGEN_ENABLED")
       end      
@@ -39,7 +38,6 @@
       hooksecurefunc(ObjectiveTrackerFrame, "SetPoint", AdjustSetPoint)    
     end
     if not InCombatLockdown() then
-      --print(an,"out of combat now, adjusting setpoint now")
       ObjectiveTrackerFrame:SetPoint(unpack(self.point))
     end
   end)

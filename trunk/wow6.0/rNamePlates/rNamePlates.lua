@@ -422,6 +422,7 @@
       blizzPlate.newPlate:Hide()
     end
     blizzPlate.auras = {}
+    blizzPlate.auraButtons = {}
     function blizzPlate:UpdateAura(startTime,expirationTime,unitCaster,spellID,stackCount)
       if not spellDB[spellID] then return end
       if not expirationTime then
@@ -464,8 +465,28 @@
         end
       end
     end
-    function blizzPlate:CheckDebuffs(unit)
-
+    function blizzPlate:CreateAuraButton(index)
+      local button = CreateFrame("Frame",nil,self.newPlate)
+      self.auraButtons[index] = button
+      return button
+    end
+    function blizzPlate:UpdateAllAuras()
+      local buttonIndex = 1
+      for index, button in next, self.auraButtons do
+        button:Hide()
+      end
+      for spellID, data in next, self.auras do
+        local cooldown = data.expirationTime-GetTime()
+        if cooldown < 0 then
+          self:RemoveAura(spellID)
+        else
+          local button = self.auraButtons[buttonIndex] or self:CreateAuraButton(index)
+          --set texture
+          --set cooldown
+          button:Show()
+          buttonIndex = buttonIndex + 1
+        end
+      end
     end
     blizzPlate:HookScript("OnShow", NamePlateOnShow)
     blizzPlate:HookScript("OnHide", NamePlateOnHide)

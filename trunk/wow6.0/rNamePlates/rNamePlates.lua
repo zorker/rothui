@@ -22,7 +22,6 @@
   auras.playerGUID      = nil
   auras.petGUID         = nil
   auras.targetGUID      = nil
-  auras.targetTimer     = 0
   auras.mouseoverGUID   = nil
   auras.updateTarget    = false
   auras.updateMouseover = false
@@ -31,6 +30,8 @@
     if UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then
       self.updateTarget = true
       self.targetGUID = UnitGUID("target")
+    else
+      self.updateTarget = false
     end
   end
 
@@ -38,6 +39,8 @@
     if UnitGUID("mouseover") and UnitExists("mouseover") then
       self.updateMouseover = true
       self.mouseoverGUID = UnitGUID("mouseover")
+    else
+      self.updateMouseover = false
     end
   end
 

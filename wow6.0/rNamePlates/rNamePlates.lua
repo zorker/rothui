@@ -18,8 +18,10 @@
   -- AURAS
   -----------------------------
 
-  local units           = {} --the units guid table
-  local spells          = {} --the aura spellid table
+  local NUM_MAX_AURAS = 40
+
+  local units           = {} --unit table by guid
+  local spells          = {} --aura table by spellid
 
   local AuraModule = CreateFrame("Frame")
   AuraModule.playerGUID      = nil
@@ -39,10 +41,10 @@
   end
 
   function AuraModule:CheckForNewSpells(unit,filter)
-    for index = 1,40 do
+    for index = 1,NUM_MAX_AURAS do
       local name, _, texture, count, debuffType, duration, expirationTime, unitCaster, _, _, spellID = UnitAura(unit, index, filter)
-      if not name or not spellID then 
-        break 
+      if not name or not spellID then
+        break
       end
       if (unitCaster == "player" or unitCaster == "pet") and not spells[spellID] then
         spells[spellID] = {
@@ -84,16 +86,22 @@
     end
   end
 
-  function AuraModule:HandleCLEUEvent(blizzPlate,event,caster,srcGUID,destGUID,spellID,spellName,auraType,stackCount)
-    --print("HandleCLEUEvent",units[destGUID],event,caster,srcGUID,destGUID,spellID,spellName,auraType,stackCount)
-    --print("HandleCLEUEvent",GetSpellInfo(spellID))
+  function AuraModule:HandleCLEUEvent(blizzPlate,event,timestamp,unitCaster,spellID,stackCount)
+    if  event == "SPELL_AURA_APPLIED" or
+        event == "SPELL_AURA_REFRESH" or
+        event == "SPELL_AURA_APPLIED_DOSE" or
+        event == "SPELL_AURA_REMOVED_DOSE" then
+      blizzPlate:UpdateAura(timestamp,unitcaster,spellID,stackCount)
+    else
+      blizzPlate:RemoveAura(spellID)
+    end
   end
 
   AuraModule.CLEU_FILTER = {
-    ["SPELL_AURA_APPLIED"]      = true, --AddAura
-    ["SPELL_AURA_REFRESH"]      = true, --RefreshAura
-    ["SPELL_AURA_APPLIED_DOSE"] = true, --DoseAura
-    ["SPELL_AURA_REMOVED_DOSE"] = true, --DoseAura
+    ["SPELL_AURA_APPLIED"]      = true, --UpdateAura
+    ["SPELL_AURA_REFRESH"]      = true, --UpdateAura
+    ["SPELL_AURA_APPLIED_DOSE"] = true, --UpdateAura
+    ["SPELL_AURA_REMOVED_DOSE"] = true, --UpdateAura
     ["SPELL_AURA_STOLEN"]       = true, --RemoveAura
     ["SPELL_AURA_REMOVED"]      = true, --RemoveAura
     ["SPELL_AURA_BROKEN"]       = true, --RemoveAura
@@ -101,24 +109,31 @@
   }
 
   function AuraModule:COMBAT_LOG_EVENT_UNFILTERED(...)
-    local _, event, _, srcGUID, _, _, _, destGUID, _, _, _, spellID, spellName, spellFlag, auraType, stackCount = ...
+    local timeStamp, event, _, srcGUID, _, _, _, destGUID, _, _, _, spellID, spellName, _, _, stackCount = ...
     if self.CLEU_FILTER[event] then
-      if not units[destGUID] then return end
-      local caster = nil
+      if not units[destGUID] then return end --no corresponding nameplate found
+      if not spells[spellID] then return end --no spell info found
+      local unitCaster = nil
       if srcGUID == self.playerGUID then
-        caster = "player"
+        unitCaster = "player"
       elseif srcGUID == self.petGUID then
-        caster = "pet"
+        unitCaster = "pet"
       else
         return
       end
-      self:HandleCLEUEvent(units[destGUID],event,caster,srcGUID,destGUID,spellID,spellName,auraType,stackCount)
+      self:HandleCLEUEvent(units[destGUID],event,GetTime(),unitCaster,spellID,stackCount or 1)
     end
   end
 
   function AuraModule:ADDON_LOADED(name,...)
     if name == an then
       spells = rNP_SPELL_DB or spells
+      local version, build = GetBuildInfo()
+      if not spells.build then spells.build = build end
+      if spells.build ~= build then
+        spells = {}
+        print(an,"new wow build found, reseting spell db")
+      end --reset spell db when a new wow build is out
       rNP_SPELL_DB = spells
       print(an,"loading spell db")
     end
@@ -128,7 +143,7 @@
     rNP_SPELL_DB = spells
     print(an,"saving spell db")
   end
-  
+
   AuraModule:RegisterEvent("ADDON_LOADED")
   AuraModule:RegisterEvent("PLAYER_LOGOUT")
   AuraModule:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
@@ -411,6 +426,12 @@
     NamePlatePosition(blizzPlate)
     if not blizzPlate:IsShown() then
       blizzPlate.newPlate:Hide()
+    end
+    function blizzPlate:UpdateAura(timestamp,unitcaster,spellID,stackCount)
+      print("updating aura",self.newPlate.id,spellID)
+    end
+    function blizzPlate:RemoveAura(spellID)
+      print("removing aura",self.newPlate.id,spellID)
     end
     blizzPlate:HookScript("OnShow", NamePlateOnShow)
     blizzPlate:HookScript("OnHide", NamePlateOnHide)

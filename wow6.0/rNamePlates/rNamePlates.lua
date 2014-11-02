@@ -18,6 +18,8 @@
   -- AURAS
   -----------------------------
 
+  local units           = {} --the units guid table
+
   local auras = CreateFrame("Frame")
   auras.playerGUID      = nil
   auras.petGUID         = nil
@@ -25,7 +27,7 @@
   auras.mouseoverGUID   = nil
   auras.updateTarget    = false
   auras.updateMouseover = false
-  
+
   function auras:PLAYER_TARGET_CHANGED(...)
     if UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then
       self.updateTarget = true
@@ -54,8 +56,64 @@
     if UnitGUID("player") then
       self.playerGUID = UnitGUID("player")
     end
+    if UnitGUID("pet") and UnitExists("pet") then
+      self.petGUID = UnitGUID("pet")
+    end
   end
 
+  function auras:AddAura(...)
+    print("AddAura",...)
+  end
+
+  function auras:RefreshAura(...)
+    print("RefreshAura",...)
+  end
+
+  function auras:DoseAura(...)
+    print("DoseAura",...)
+  end
+
+  function auras:RemoveAura(...)
+    print("RemoveAura",...)
+  end
+
+  auras.CLEU_Filter = {
+    ["SPELL_AURA_APPLIED"] = auras.AddAura,
+    ["SPELL_AURA_REFRESH"] = auras.RefreshAura,
+    ["SPELL_AURA_APPLIED_DOSE"] = auras.DoseAura,
+    ["SPELL_AURA_REMOVED_DOSE"] = auras.DoseAura,
+    ["SPELL_AURA_STOLEN"] = auras.RemoveAura,
+    ["SPELL_AURA_REMOVED"] = auras.RemoveAura,
+    ["SPELL_AURA_BROKEN"] = auras.RemoveAura,
+    ["SPELL_AURA_BROKEN_SPELL"] = auras.RemoveAura,
+  }
+
+  function auras:COMBAT_LOG_EVENT_UNFILTERED(...)
+    local _, event, _, srcGUID, _, _, _, destGUID, _, _, _, spellID, spellName, spellFlag, spellType, spellCount = ...
+    if self.CLEU_Filter[event] then
+      local blizzPlate = units[destGUID]
+      if blizzPlate and srcGUID == self.playerGUID then
+        print(event,srcGUID,destGUID,spellID,spellName,spellType,spellCount)
+      end
+      if blizzPlate and srcGUID == self.petGUID then
+        print(event,srcGUID,destGUID,spellID,spellName,spellType,spellCount)
+      end
+      --[[if nameplate and destGUID ~= TARGET_GUID and destGUID ~= updateMouseover then
+        local flag = plates[nameplate].isPlayer
+        if (flag and filter[spellID]) or (not flag and (srcGUID == PLAYER_GUID or (BUFFS_SHOW_PET and srcGUID == PET_GUID))) then
+          local startTime = GetTime() -- this will cause it to be a few milliseconds off...
+          local spell = spells[spellID]
+          if spell and spell.duration then
+            startTime = startTime + spell.duration -- = expirationTime
+            CLEU_Filter[event](units[destGUID], spellID or spellName, spell.icon, spell.debuffType, spell.duration, startTime, count)
+          end
+        end
+      end
+      ]]--
+    end
+  end
+
+  auras:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
   auras:RegisterEvent("PLAYER_TARGET_CHANGED")
   auras:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
   auras:RegisterUnitEvent("UNIT_PET", "player")
@@ -245,12 +303,6 @@
 
   end
 
-  local function NamePlateSetGUID(blizzPlate,guid)
-    blizzPlate.guid = guid
-    blizzPlate.healthBar.name:SetText(guid)
-    print(blizzPlate.newPlate.id,guid)
-  end
-
   local function NamePlatePosition(blizzPlate)
     local sizer = CreateFrame("Frame", nil, blizzPlate.newPlate)
     sizer:SetPoint("BOTTOMLEFT", WorldFrame)
@@ -264,6 +316,13 @@
     end)
   end
 
+  local function NamePlateSetGUID(blizzPlate,guid)
+    blizzPlate.guid = guid
+    units[blizzPlate.guid] = blizzPlate
+    blizzPlate.healthBar.name:SetText(guid)
+    --print(blizzPlate.newPlate.id,guid)
+  end
+
   local function NamePlateOnShow(blizzPlate)
     NamePlateSetup(blizzPlate)
     blizzPlate.newPlate:Show()
@@ -271,7 +330,10 @@
 
   local function NamePlateOnHide(blizzPlate)
     blizzPlate.newPlate:Hide()
-    blizzPlate.guid = nil
+    if blizzPlate.guid then
+      units[blizzPlate.guid] = nil
+      blizzPlate.guid = nil
+    end
   end
 
   local function NamePlateCastBarOnShow(castBar)
@@ -336,7 +398,7 @@
   -----------------------------
   -- ONUPDATE
   -----------------------------
-  
+
   local countFramesWithFullAlpha = 0
   local lastNamePlate
 
@@ -344,9 +406,8 @@
     countFramesWithFullAlpha = 0
     for blizzPlate, newPlate in next, plates do
       if blizzPlate:IsShown() then
-        local alpha = RoundNumber(blizzPlate:GetAlpha())
-        newPlate:SetAlpha(alpha)
-        if auras.updateTarget and alpha == 1 then
+        newPlate:SetAlpha(blizzPlate:GetAlpha())
+        if auras.updateTarget and blizzPlate:GetAlpha() == 1 then
           countFramesWithFullAlpha = countFramesWithFullAlpha + 1
           lastNamePlate = blizzPlate
         end

@@ -19,16 +19,17 @@
   -----------------------------
 
   local units           = {} --the units guid table
+  local spells          = {} --the aura spellid table
 
-  local auras = CreateFrame("Frame")
-  auras.playerGUID      = nil
-  auras.petGUID         = nil
-  auras.targetGUID      = nil
-  auras.mouseoverGUID   = nil
-  auras.updateTarget    = false
-  auras.updateMouseover = false
+  local AuraModule = CreateFrame("Frame")
+  AuraModule.playerGUID      = nil
+  AuraModule.petGUID         = nil
+  AuraModule.targetGUID      = nil
+  AuraModule.mouseoverGUID   = nil
+  AuraModule.updateTarget    = false
+  AuraModule.updateMouseover = false
 
-  function auras:PLAYER_TARGET_CHANGED(...)
+  function AuraModule:PLAYER_TARGET_CHANGED(...)
     if UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then
       self.updateTarget = true
       self.targetGUID = UnitGUID("target")
@@ -37,7 +38,29 @@
     end
   end
 
-  function auras:UPDATE_MOUSEOVER_UNIT(...)
+  function AuraModule:CheckForNewSpells(unit,filter)
+    for index = 1,40 do
+      local name, _, texture, count, debuffType, duration, expirationTime, unitCaster, _, _, spellID = UnitAura(unit, index, filter)
+      if not name or not spellID then 
+        break 
+      end
+      if (unitCaster == "player" or unitCaster == "pet") and not spells[spellID] then
+        spells[spellID] = {
+          name        = name,
+          texture     = texture,
+          duration    = duration,
+        }
+        print("Adding new spell to db",name,texture,duration)
+      end
+    end
+  end
+
+  function AuraModule:UNIT_AURA(unit)
+    self:CheckForNewSpells(unit,"HARMFUL")
+    self:CheckForNewSpells(unit,"HELPFUL")
+  end
+
+  function AuraModule:UPDATE_MOUSEOVER_UNIT(...)
     if UnitGUID("mouseover") and UnitExists("mouseover") then
       self.updateMouseover = true
       self.mouseoverGUID = UnitGUID("mouseover")
@@ -46,13 +69,13 @@
     end
   end
 
-  function auras:UNIT_PET(...)
+  function AuraModule:UNIT_PET(...)
     if UnitGUID("pet") and UnitExists("pet") then
       self.petGUID = UnitGUID("pet")
     end
   end
 
-  function auras:PLAYER_LOGIN(...)
+  function AuraModule:PLAYER_LOGIN(...)
     if UnitGUID("player") then
       self.playerGUID = UnitGUID("player")
     end
@@ -61,64 +84,60 @@
     end
   end
 
-  function auras:AddAura(...)
-    print("AddAura",...)
+  function AuraModule:HandleCLEUEvent(blizzPlate,event,caster,srcGUID,destGUID,spellID,spellName,auraType,stackCount)
+    --print("HandleCLEUEvent",units[destGUID],event,caster,srcGUID,destGUID,spellID,spellName,auraType,stackCount)
+    --print("HandleCLEUEvent",GetSpellInfo(spellID))
   end
 
-  function auras:RefreshAura(...)
-    print("RefreshAura",...)
-  end
-
-  function auras:DoseAura(...)
-    print("DoseAura",...)
-  end
-
-  function auras:RemoveAura(...)
-    print("RemoveAura",...)
-  end
-
-  auras.CLEU_Filter = {
-    ["SPELL_AURA_APPLIED"] = auras.AddAura,
-    ["SPELL_AURA_REFRESH"] = auras.RefreshAura,
-    ["SPELL_AURA_APPLIED_DOSE"] = auras.DoseAura,
-    ["SPELL_AURA_REMOVED_DOSE"] = auras.DoseAura,
-    ["SPELL_AURA_STOLEN"] = auras.RemoveAura,
-    ["SPELL_AURA_REMOVED"] = auras.RemoveAura,
-    ["SPELL_AURA_BROKEN"] = auras.RemoveAura,
-    ["SPELL_AURA_BROKEN_SPELL"] = auras.RemoveAura,
+  AuraModule.CLEU_FILTER = {
+    ["SPELL_AURA_APPLIED"]      = true, --AddAura
+    ["SPELL_AURA_REFRESH"]      = true, --RefreshAura
+    ["SPELL_AURA_APPLIED_DOSE"] = true, --DoseAura
+    ["SPELL_AURA_REMOVED_DOSE"] = true, --DoseAura
+    ["SPELL_AURA_STOLEN"]       = true, --RemoveAura
+    ["SPELL_AURA_REMOVED"]      = true, --RemoveAura
+    ["SPELL_AURA_BROKEN"]       = true, --RemoveAura
+    ["SPELL_AURA_BROKEN_SPELL"] = true, --RemoveAura
   }
 
-  function auras:COMBAT_LOG_EVENT_UNFILTERED(...)
-    local _, event, _, srcGUID, _, _, _, destGUID, _, _, _, spellID, spellName, spellFlag, spellType, spellCount = ...
-    if self.CLEU_Filter[event] then
-      local blizzPlate = units[destGUID]
-      if blizzPlate and srcGUID == self.playerGUID then
-        print(event,srcGUID,destGUID,spellID,spellName,spellType,spellCount)
+  function AuraModule:COMBAT_LOG_EVENT_UNFILTERED(...)
+    local _, event, _, srcGUID, _, _, _, destGUID, _, _, _, spellID, spellName, spellFlag, auraType, stackCount = ...
+    if self.CLEU_FILTER[event] then
+      if not units[destGUID] then return end
+      local caster = nil
+      if srcGUID == self.playerGUID then
+        caster = "player"
+      elseif srcGUID == self.petGUID then
+        caster = "pet"
+      else
+        return
       end
-      if blizzPlate and srcGUID == self.petGUID then
-        print(event,srcGUID,destGUID,spellID,spellName,spellType,spellCount)
-      end
-      --[[if nameplate and destGUID ~= TARGET_GUID and destGUID ~= updateMouseover then
-        local flag = plates[nameplate].isPlayer
-        if (flag and filter[spellID]) or (not flag and (srcGUID == PLAYER_GUID or (BUFFS_SHOW_PET and srcGUID == PET_GUID))) then
-          local startTime = GetTime() -- this will cause it to be a few milliseconds off...
-          local spell = spells[spellID]
-          if spell and spell.duration then
-            startTime = startTime + spell.duration -- = expirationTime
-            CLEU_Filter[event](units[destGUID], spellID or spellName, spell.icon, spell.debuffType, spell.duration, startTime, count)
-          end
-        end
-      end
-      ]]--
+      self:HandleCLEUEvent(units[destGUID],event,caster,srcGUID,destGUID,spellID,spellName,auraType,stackCount)
     end
   end
 
-  auras:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-  auras:RegisterEvent("PLAYER_TARGET_CHANGED")
-  auras:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
-  auras:RegisterUnitEvent("UNIT_PET", "player")
-  auras:RegisterEvent("PLAYER_LOGIN")
-  auras:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end)
+  function AuraModule:ADDON_LOADED(name,...)
+    if name == an then
+      spells = rNP_SPELL_DB or spells
+      rNP_SPELL_DB = spells
+      print(an,"loading spell db")
+    end
+  end
+
+  function AuraModule:PLAYER_LOGOUT()
+    rNP_SPELL_DB = spells
+    print(an,"saving spell db")
+  end
+  
+  AuraModule:RegisterEvent("ADDON_LOADED")
+  AuraModule:RegisterEvent("PLAYER_LOGOUT")
+  AuraModule:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+  AuraModule:RegisterEvent("PLAYER_TARGET_CHANGED")
+  AuraModule:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+  AuraModule:RegisterUnitEvent("UNIT_PET", "player")
+  AuraModule:RegisterUnitEvent("UNIT_AURA", "target","mouseover")
+  AuraModule:RegisterEvent("PLAYER_LOGIN")
+  AuraModule:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end)
 
   -----------------------------
   -- FUNCTIONS
@@ -316,7 +335,13 @@
     end)
   end
 
+  local function NamePlateScanAuras(blizzPlate,unit)
+    AuraModule:CheckForNewSpells(unit,"HARMFUL")
+    AuraModule:CheckForNewSpells(unit,"HELPFUL")
+  end
+
   local function NamePlateSetGUID(blizzPlate,guid)
+    if blizzPlate.guid then return end
     blizzPlate.guid = guid
     units[blizzPlate.guid] = blizzPlate
     blizzPlate.healthBar.name:SetText(guid)
@@ -407,19 +432,21 @@
     for blizzPlate, newPlate in next, plates do
       if blizzPlate:IsShown() then
         newPlate:SetAlpha(blizzPlate:GetAlpha())
-        if auras.updateTarget and blizzPlate:GetAlpha() == 1 then
+        if AuraModule.updateTarget and blizzPlate:GetAlpha() == 1 then
           countFramesWithFullAlpha = countFramesWithFullAlpha + 1
           lastNamePlate = blizzPlate
         end
-        if not blizzPlate.guid and auras.updateMouseover and blizzPlate.highlightTexture:IsShown() then
-          NamePlateSetGUID(blizzPlate,auras.mouseoverGUID)
-          auras.updateMouseover = false
+        if AuraModule.updateMouseover and blizzPlate.highlightTexture:IsShown() then
+          NamePlateSetGUID(blizzPlate,AuraModule.mouseoverGUID)
+          NamePlateScanAuras(blizzPlate,"mouseover")
+          AuraModule.updateMouseover = false
         end
       end
     end
-    if lastNamePlate and not lastNamePlate.guid and countFramesWithFullAlpha == 1 and auras.updateTarget then
-      NamePlateSetGUID(lastNamePlate,auras.targetGUID)
-      auras.updateTarget = false
+    if countFramesWithFullAlpha == 1 and AuraModule.updateTarget then
+      NamePlateSetGUID(lastNamePlate,AuraModule.targetGUID)
+      NamePlateScanAuras(blizzPlate,"target")
+      AuraModule.updateTarget = false
       lastNamePlate = nil
     end
     if not namePlateIndex then

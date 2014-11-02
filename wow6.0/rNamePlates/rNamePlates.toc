@@ -2,5 +2,6 @@
 ## Author: zork
 ## Title: rNamePlates
 ## Notes: Just simple nameplates!
+## SavedVariablesPerCharacter: rNP_SPELL_DB
 
 rNamePlates.lua

@@ -30,28 +30,6 @@
   local AuraModule = CreateFrame("Frame")
   AuraModule.playerGUID       = nil
   AuraModule.petGUID          = nil
-  AuraModule.targetGUID       = nil
-  AuraModule.mouseoverGUID    = nil
-  AuraModule.updateTarget     = false
-  AuraModule.updateMouseover  = false
-
-  function AuraModule:PLAYER_TARGET_CHANGED(...)
-    if UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then
-      self.updateTarget = true
-      self.targetGUID = UnitGUID("target")
-    else
-      self.updateTarget = false
-    end
-  end
-
-  function AuraModule:UPDATE_MOUSEOVER_UNIT(...)
-    if UnitGUID("mouseover") and UnitExists("mouseover") then
-      self.updateMouseover = true
-      self.mouseoverGUID = UnitGUID("mouseover")
-    else
-      self.updateMouseover = false
-    end
-  end
 
   function AuraModule:UNIT_PET(...)
     if UnitGUID("pet") and UnitExists("pet") then
@@ -132,9 +110,6 @@
   AuraModule:RegisterEvent("PLAYER_LOGOUT")
   AuraModule:RegisterUnitEvent("UNIT_AURA","target","mouseover")
   AuraModule:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")  
-  --updates do not seem to fire like i need them if I use event driven handlers :/  
-  --AuraModule:RegisterEvent("PLAYER_TARGET_CHANGED") 
-  --AuraModule:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
   AuraModule:RegisterUnitEvent("UNIT_PET", "player")
   AuraModule:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end)
 
@@ -359,7 +334,6 @@
     if blizzPlate.guid then return end
     blizzPlate.guid = guid
     unitDB[guid] = blizzPlate
-    --blizzPlate.healthBar.name:SetText(guid)
   end
 
   local function NamePlateOnShow(blizzPlate)
@@ -391,7 +365,6 @@
     else
       castBar.spellIconBorder:SetDesaturated(0)
     end
-
   end
 
   local function NamePlateCastBarOnValueChanged(castBar)
@@ -406,8 +379,6 @@
       castBar.shieldTexture:SetSize(unpack(castBar.shieldTexture.size))
     end
   end
-
-  local function NamePlateCastBarOnHide(castBar) end
 
   local function CreateNewPlate(blizzPlate)
     blizzPlate.newPlate = CreateFrame("Frame", nil, WorldFrame)
@@ -453,16 +424,13 @@
         unitCaster      = unitCaster,
         stackCount      = stackCount,
       }
-      --print("updating aura",self.newPlate.id,spellID,self.guid)
     end
     function blizzPlate:RemoveAura(spellID)
       if self.auras[spellID] then
         self.auras[spellID] = nil
       end
-      --print("removing aura",self.newPlate.id,spellID,self.guid)
     end
     function blizzPlate:ScanAuras(unit,filter)
-      print("ScanAuras",self.newPlate.id,self.guid,unit)
       for index = 1, NUM_MAX_AURAS do
         local name, _, texture, stackCount, _, duration, expirationTime, unitCaster, _, _, spellID = UnitAura(unit, index, filter)
         if not name then break end
@@ -496,12 +464,10 @@
       button.cooldown = button:CreateFontString(nil, "BORDER")
       button.cooldown:SetFont(cfg.font, cfg.aura_cooldown_fontsize, "OUTLINE")
       button.cooldown:SetPoint("BOTTOM",button,0,-5)
-      --button.cooldown:SetText("3")
       button.cooldown:SetJustifyH("CENTER")
       button.stack = button:CreateFontString(nil, "BORDER")
       button.stack:SetFont(cfg.font, cfg.aura_stack_fontsize, "OUTLINE")
       button.stack:SetPoint("TOPRIGHT",button,5,5)
-      --button.stack:SetText("3")
       button.stack:SetJustifyH("RIGHT")
       if index == 1 then
         button:SetPoint("CENTER")
@@ -541,7 +507,6 @@
     blizzPlate:HookScript("OnShow", NamePlateOnShow)
     blizzPlate:HookScript("OnHide", NamePlateOnHide)
     blizzPlate.castBar:HookScript("OnShow", NamePlateCastBarOnShow)
-    --blizzPlate.castBar:HookScript("OnHide", NamePlateCastBarOnHide)
     blizzPlate.castBar:HookScript("OnValueChanged", NamePlateCastBarOnValueChanged)
     namePlateIndex = namePlateIndex+1
   end
@@ -562,19 +527,16 @@
     for blizzPlate, newPlate in next, plates do
       if blizzPlate:IsShown() then
         newPlate:SetAlpha(blizzPlate:GetAlpha())
-        --if AuraModule.updateTarget and blizzPlate:GetAlpha() == 1 then
         if blizzPlate:GetAlpha() == 1 then
           countFramesWithFullAlpha = countFramesWithFullAlpha + 1
           targetPlate = blizzPlate
         end
-        --if AuraModule.updateMouseover and blizzPlate.highlightTexture:IsShown() then
         if blizzPlate.highlightTexture:IsShown() and UnitGUID("mouseover") and UnitExists("mouseover") then
           NamePlateSetGUID(blizzPlate,UnitGUID("mouseover"))
           if timer > interval then
             blizzPlate:ScanAuras("mouseover","HELPFUL")
             blizzPlate:ScanAuras("mouseover","HARMFUL")
           end
-          --AuraModule.updateMouseover = false
         end
         if timer > interval then
           blizzPlate:UpdateAllAuras()
@@ -584,12 +546,8 @@
     if timer > interval then
       timer = 0
     end
-    --if countFramesWithFullAlpha == 1 and AuraModule.updateTarget then
     if countFramesWithFullAlpha == 1 and UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then    
       NamePlateSetGUID(targetPlate,UnitGUID("target"))
-      --targetPlate:ScanAuras("target","HELPFUL")
-      --targetPlate:ScanAuras("target","HARMFUL")
-      --AuraModule.updateTarget = false
       targetPlate = nil
     end
     if not namePlateIndex then

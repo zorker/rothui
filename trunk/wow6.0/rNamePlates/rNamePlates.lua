@@ -128,13 +128,14 @@
   end
 
   AuraModule:RegisterEvent("ADDON_LOADED")
-  AuraModule:RegisterEvent("PLAYER_LOGOUT")
-  AuraModule:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-  AuraModule:RegisterEvent("PLAYER_TARGET_CHANGED")
-  AuraModule:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
-  AuraModule:RegisterUnitEvent("UNIT_PET", "player")
-  AuraModule:RegisterUnitEvent("UNIT_AURA","target","mouseover")
   AuraModule:RegisterEvent("PLAYER_LOGIN")
+  AuraModule:RegisterEvent("PLAYER_LOGOUT")
+  AuraModule:RegisterUnitEvent("UNIT_AURA","target","mouseover")
+  AuraModule:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")  
+  --updates do not seem to fire like i need them if I use event driven handlers :/  
+  --AuraModule:RegisterEvent("PLAYER_TARGET_CHANGED") 
+  --AuraModule:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+  AuraModule:RegisterUnitEvent("UNIT_PET", "player")
   AuraModule:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end)
 
   -----------------------------
@@ -276,8 +277,8 @@
     local name = bar.hlf:CreateFontString(nil, "BORDER")
     name:SetFont(cfg.font, cfg.healthbar_fontsize, "OUTLINE")
     name:SetPoint("BOTTOM",bar,"TOP",0,-24)
-    name:SetPoint("LEFT",8,0)
-    name:SetPoint("RIGHT",-8,0)
+    --name:SetPoint("LEFT",8,0)
+    --name:SetPoint("RIGHT",-8,0)
     name:SetText("Ich bin ein Berliner!")
     bar.name = name
 
@@ -357,8 +358,8 @@
   local function NamePlateSetGUID(blizzPlate,guid)
     if blizzPlate.guid then return end
     blizzPlate.guid = guid
-    unitDB[blizzPlate.guid] = blizzPlate
-    --blizzPlate.healthBar.name:SetText(guid)
+    unitDB[guid] = blizzPlate
+    blizzPlate.healthBar.name:SetText(guid)
   end
 
   local function NamePlateOnShow(blizzPlate)
@@ -452,13 +453,13 @@
         unitCaster      = unitCaster,
         stackCount      = stackCount,
       }
-      print("updating aura",self.newPlate.id,spellID)
+      --print("updating aura",self.newPlate.id,spellID,self.guid)
     end
     function blizzPlate:RemoveAura(spellID)
       if self.auras[spellID] then
         self.auras[spellID] = nil
       end
-      print("removing aura",self.newPlate.id,spellID)
+      --print("removing aura",self.newPlate.id,spellID,self.guid)
     end
     function blizzPlate:ScanAuras(unit,filter)
       for index = 1, NUM_MAX_AURAS do
@@ -560,15 +561,17 @@
     for blizzPlate, newPlate in next, plates do
       if blizzPlate:IsShown() then
         newPlate:SetAlpha(blizzPlate:GetAlpha())
-        if AuraModule.updateTarget and blizzPlate:GetAlpha() == 1 then
+        --if AuraModule.updateTarget and blizzPlate:GetAlpha() == 1 then
+        if blizzPlate:GetAlpha() == 1 then
           countFramesWithFullAlpha = countFramesWithFullAlpha + 1
           targetPlate = blizzPlate
         end
-        if AuraModule.updateMouseover and blizzPlate.highlightTexture:IsShown() then
-          NamePlateSetGUID(blizzPlate,AuraModule.mouseoverGUID)
+        --if AuraModule.updateMouseover and blizzPlate.highlightTexture:IsShown() then
+        if blizzPlate.highlightTexture:IsShown() and UnitGUID("mouseover") and UnitExists("mouseover") then
+          NamePlateSetGUID(blizzPlate,UnitGUID("mouseover"))
           blizzPlate:ScanAuras("mouseover","HELPFUL")
           blizzPlate:ScanAuras("mouseover","HARMFUL")
-          AuraModule.updateMouseover = false
+          --AuraModule.updateMouseover = false
         end
         if timer > interval then
           blizzPlate:UpdateAllAuras()
@@ -578,11 +581,12 @@
     if timer > interval then
       timer = 0
     end
-    if countFramesWithFullAlpha == 1 and AuraModule.updateTarget then
-      NamePlateSetGUID(targetPlate,AuraModule.targetGUID)
+    --if countFramesWithFullAlpha == 1 and AuraModule.updateTarget then
+    if countFramesWithFullAlpha == 1 and UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then    
+      NamePlateSetGUID(targetPlate,UnitGUID("target"))
       targetPlate:ScanAuras("target","HELPFUL")
       targetPlate:ScanAuras("target","HARMFUL")
-      AuraModule.updateTarget = false
+      --AuraModule.updateTarget = false
       targetPlate = nil
     end
     if not namePlateIndex then

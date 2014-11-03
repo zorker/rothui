@@ -277,8 +277,8 @@
     local name = bar.hlf:CreateFontString(nil, "BORDER")
     name:SetFont(cfg.font, cfg.healthbar_fontsize, "OUTLINE")
     name:SetPoint("BOTTOM",bar,"TOP",0,-24)
-    --name:SetPoint("LEFT",8,0)
-    --name:SetPoint("RIGHT",-8,0)
+    name:SetPoint("LEFT",8,0)
+    name:SetPoint("RIGHT",-8,0)
     name:SetText("Ich bin ein Berliner!")
     bar.name = name
 
@@ -359,7 +359,7 @@
     if blizzPlate.guid then return end
     blizzPlate.guid = guid
     unitDB[guid] = blizzPlate
-    blizzPlate.healthBar.name:SetText(guid)
+    --blizzPlate.healthBar.name:SetText(guid)
   end
 
   local function NamePlateOnShow(blizzPlate)

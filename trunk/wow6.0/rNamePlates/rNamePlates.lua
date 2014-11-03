@@ -462,6 +462,7 @@
       --print("removing aura",self.newPlate.id,spellID,self.guid)
     end
     function blizzPlate:ScanAuras(unit,filter)
+      print("ScanAuras",self.newPlate.id,self.guid,unit)
       for index = 1, NUM_MAX_AURAS do
         local name, _, texture, stackCount, _, duration, expirationTime, unitCaster, _, _, spellID = UnitAura(unit, index, filter)
         if not name then break end
@@ -569,8 +570,10 @@
         --if AuraModule.updateMouseover and blizzPlate.highlightTexture:IsShown() then
         if blizzPlate.highlightTexture:IsShown() and UnitGUID("mouseover") and UnitExists("mouseover") then
           NamePlateSetGUID(blizzPlate,UnitGUID("mouseover"))
-          blizzPlate:ScanAuras("mouseover","HELPFUL")
-          blizzPlate:ScanAuras("mouseover","HARMFUL")
+          if timer > interval then
+            blizzPlate:ScanAuras("mouseover","HELPFUL")
+            blizzPlate:ScanAuras("mouseover","HARMFUL")
+          end
           --AuraModule.updateMouseover = false
         end
         if timer > interval then
@@ -584,8 +587,8 @@
     --if countFramesWithFullAlpha == 1 and AuraModule.updateTarget then
     if countFramesWithFullAlpha == 1 and UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then    
       NamePlateSetGUID(targetPlate,UnitGUID("target"))
-      targetPlate:ScanAuras("target","HELPFUL")
-      targetPlate:ScanAuras("target","HARMFUL")
+      --targetPlate:ScanAuras("target","HELPFUL")
+      --targetPlate:ScanAuras("target","HARMFUL")
       --AuraModule.updateTarget = false
       targetPlate = nil
     end

@@ -343,6 +343,7 @@
 
   local function NamePlateOnHide(blizzPlate)
     blizzPlate.newPlate:Hide()
+    blizzPlate.auraScannedOnTargetInit = false
     wipe(blizzPlate.auras)
     if blizzPlate.guid then
       unitDB[blizzPlate.guid] = nil
@@ -400,6 +401,7 @@
     end
     blizzPlate.auras = {}
     blizzPlate.auraButtons = {}
+    blizzPlate.auraScannedOnTargetInit = false
     function blizzPlate:CreateAuraHeader()
       local auraHeader = CreateFrame("Frame",nil,self.newPlate)
       auraHeader:SetScale(cfg.scale)
@@ -548,6 +550,12 @@
     end
     if countFramesWithFullAlpha == 1 and UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then    
       NamePlateSetGUID(targetPlate,UnitGUID("target"))
+      --when the target is triggered auras may be running already, thus allow scanning for auras 1 time
+      if not targetPlate.auraScannedOnTargetInit then
+        targetPlate:ScanAuras("target","HELPFUL")
+        targetPlate:ScanAuras("target","HARMFUL")
+        targetPlate.auraScannedOnTargetInit = true
+      end      
       targetPlate = nil
     end
     if not namePlateIndex then

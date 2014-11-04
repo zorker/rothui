@@ -411,6 +411,7 @@
     end
     function blizzPlate:UpdateAura(startTime,expirationTime,unitCaster,spellID,stackCount)
       if not spellDB[spellID] then return end
+      if spellDB[spellID].blacklisted then return end
       if not expirationTime then
         expirationTime = startTime+spellDB[spellID].duration
       elseif not startTime then
@@ -441,6 +442,7 @@
             name        = name,
             texture     = texture,
             duration    = duration,
+            blacklisted = false,
           }
           print(an,"AuraModule","adding new spell to db",spellID,name)
         end
@@ -578,3 +580,62 @@
   SetCVar("bloatnameplates",0)
   SetCVar("bloatthreat",0)
   SetCVar("bloattest",0)
+  
+  -----------------------------
+  -- SLASH_COMMAND_LIST
+  -----------------------------
+  
+  local color         = "FFFFAA00"
+  local shortcut      = "rnp"
+  
+  local function HandleSlashCmd(cmd)
+    local spellID = tonumber(strsub(cmd, (strfind(cmd, " ") or 0)+1))
+    if (cmd:match"spelldb") then
+      print("|c"..color..an.." spelldb|r")
+      print("spellID","|","name","|","blacklisted")
+      print("------------------------------------")
+      local count = 0
+      for key, data in next, spellDB do
+        if type(key) == "number" then
+          print(key,"|",data.name,"|",data.blacklisted)
+          count = count+1
+        end
+      end
+      if count == 0 then
+        print("list has no entries")
+      end
+    elseif (cmd:match"blacklist") then
+      print("|c"..color..an.." blacklist|r")
+      if spellID and spellDB[spellID] then
+        spellDB[spellID].blacklisted = true
+        print(spellID,spellDB[spellID].name,"is now blacklisted")
+      else
+        print("no matching spellid found")
+      end
+    elseif (cmd:match"whitelist") then
+      print("|c"..color..an.." whitelist|r")
+      if spellID and spellDB[spellID] then
+        spellDB[spellID].blacklisted = false
+        print(spellID,spellDB[spellID].name,"is now whitelisted")
+      else
+        print("no matching spellid found")
+      end
+    elseif (cmd:match"resetspelldb") then
+      print("|c"..color..an.." resetspelldb|r")
+      wipe(spellDB)
+      print("spell db has been reset")
+    else
+      print("|c"..color..an.." command list|r")
+      print("|c"..color.."\/"..shortcut.." spelldb|r to show the spellDB")
+      print("|c"..color.."\/"..shortcut.." blacklist SPELLID|r to blacklist a spellid in spellDB")
+      print("|c"..color.."\/"..shortcut.." whitelist SPELLID|r to whitelist a spellid in spellDB")
+      print("|c"..color.."\/"..shortcut.." resetspelldb|r to reset the spellDB")
+    end
+  end
+  
+  --slash commands
+  SlashCmdList[shortcut] = HandleSlashCmd
+  SLASH_rnp1 = "/"..shortcut;
+  
+  print("|c"..color..an.." loaded.|r")
+  print("|c"..color.."\/"..shortcut.."|r to display the command list")

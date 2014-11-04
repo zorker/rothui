@@ -81,6 +81,7 @@
   function AuraModule:UNIT_AURA(unit)
     local guid = UnitGUID(unit)
     if guid and unitDB[guid] then
+      --print("ScanAuras", "UNIT_AURA", unitDB[guid].newPlate.id)
       unitDB[guid]:ScanAuras(unit,"HELPFUL")
       unitDB[guid]:ScanAuras(unit,"HARMFUL")
     end
@@ -108,8 +109,11 @@
   AuraModule:RegisterEvent("ADDON_LOADED")
   AuraModule:RegisterEvent("PLAYER_LOGIN")
   AuraModule:RegisterEvent("PLAYER_LOGOUT")
-  AuraModule:RegisterUnitEvent("UNIT_AURA","target","mouseover")
-  AuraModule:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")  
+  --maybe stuff can work out even without unit aura with CLEU only
+  --initial scans are on target and mouseover init
+  --updates come over CLEU
+  --AuraModule:RegisterUnitEvent("UNIT_AURA","target","mouseover")
+  AuraModule:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
   AuraModule:RegisterUnitEvent("UNIT_PET", "player")
   AuraModule:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end)
 
@@ -123,12 +127,12 @@
   local function GetHexColorFromRGB(r, g, b)
     return string.format("%02x%02x%02x", r*255, g*255, b*255)
   end
-  
+
   local function GetFormattedTime(time)
     local hr, m, s, text
-    if time <= 0 then 
+    if time <= 0 then
       text = ""
-    elseif time < 2 then 
+    elseif time < 2 then
       text = math.floor(time*10)/10
     elseif(time < 3600 and time > 60) then
       hr = math.floor(time / 3600)
@@ -344,6 +348,7 @@
   local function NamePlateOnHide(blizzPlate)
     blizzPlate.newPlate:Hide()
     blizzPlate.auraScannedOnTargetInit = false
+    blizzPlate.auraScannedOnMouseoverInit = false
     wipe(blizzPlate.auras)
     if blizzPlate.guid then
       unitDB[blizzPlate.guid] = nil
@@ -402,6 +407,7 @@
     blizzPlate.auras = {}
     blizzPlate.auraButtons = {}
     blizzPlate.auraScannedOnTargetInit = false
+    blizzPlate.auraScannedOnMouseoverInit = false
     function blizzPlate:CreateAuraHeader()
       local auraHeader = CreateFrame("Frame",nil,self.newPlate)
       auraHeader:SetScale(cfg.scale)
@@ -537,9 +543,13 @@
         end
         if blizzPlate.highlightTexture:IsShown() and UnitGUID("mouseover") and UnitExists("mouseover") then
           NamePlateSetGUID(blizzPlate,UnitGUID("mouseover"))
-          if timer > interval then
+          --when mouseover is triggered auras may be running already, thus allow scanning for auras 1 time
+          --after that aura updates come in over CLEU
+          if not blizzPlate.auraScannedOnMouseoverInit then
+            --print("ScanAuras", "auraScannedOnMouseoverInit", blizzPlate.newPlate.id)
             blizzPlate:ScanAuras("mouseover","HELPFUL")
             blizzPlate:ScanAuras("mouseover","HARMFUL")
+            blizzPlate.auraScannedOnMouseoverInit = true
           end
         end
         if timer > interval then
@@ -550,14 +560,16 @@
     if timer > interval then
       timer = 0
     end
-    if countFramesWithFullAlpha == 1 and UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then    
+    if countFramesWithFullAlpha == 1 and UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then
       NamePlateSetGUID(targetPlate,UnitGUID("target"))
-      --when the target is triggered auras may be running already, thus allow scanning for auras 1 time
+      --when target is triggered auras may be running already, thus allow scanning for auras 1 time
+      --after that aura updates come in over CLEU
       if not targetPlate.auraScannedOnTargetInit then
+        --print("ScanAuras", "auraScannedOnTargetInit", targetPlate.newPlate.id)
         targetPlate:ScanAuras("target","HELPFUL")
         targetPlate:ScanAuras("target","HARMFUL")
         targetPlate.auraScannedOnTargetInit = true
-      end      
+      end
       targetPlate = nil
     end
     if not namePlateIndex then
@@ -580,14 +592,14 @@
   SetCVar("bloatnameplates",0)
   SetCVar("bloatthreat",0)
   SetCVar("bloattest",0)
-  
+
   -----------------------------
   -- SLASH_COMMAND_LIST
   -----------------------------
-  
+
   local color         = "FFFFAA00"
   local shortcut      = "rnp"
-  
+
   local function HandleSlashCmd(cmd)
     local spellID = tonumber(strsub(cmd, (strfind(cmd, " ") or 0)+1))
     if (cmd:match"spelldb") then
@@ -632,10 +644,10 @@
       print("|c"..color.."\/"..shortcut.." resetspelldb|r to reset the spellDB")
     end
   end
-  
+
   --slash commands
   SlashCmdList[shortcut] = HandleSlashCmd
   SLASH_rnp1 = "/"..shortcut;
-  
+
   print("|c"..color..an.." loaded.|r")
   print("|c"..color.."\/"..shortcut.."|r to display the command list")

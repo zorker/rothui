@@ -115,24 +115,17 @@
   end
 
   local function GetFormattedTime(time)
-    local hr, m, s, text
     if time <= 0 then
-      text = ""
+      return ""
     elseif time < 2 then
-      text = math.floor(time*10)/10
-    elseif(time < 3600 and time > 60) then
-      hr = math.floor(time / 3600)
-      m = math.floor(mod(time, 3600) / 60 + 1)
-      text = string.format("%dm", m)
+      return (math.floor(time*10)/10)
     elseif time < 60 then
-      m = math.floor(time / 60)
-      s = mod(time, 60)
-      text = (m == 0 and string.format("%ds", s))
+      return string.format("%ds", mod(time, 60))
+    elseif time < 3600 then
+      return string.format("%dm", math.floor(mod(time, 3600) / 60 + 1))
     else
-      hr = math.floor(time / 3600 + 1)
-      text = string.format("%dh", hr)
+      return string.format("%dh", math.floor(time / 3600 + 1))
     end
-    return text
   end
 
   local function RoundNumber(n)

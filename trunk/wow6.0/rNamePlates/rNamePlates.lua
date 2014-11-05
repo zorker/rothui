@@ -24,8 +24,8 @@
 
   local NUM_MAX_AURAS = 40
 
-  local unitDB                = {} --unit table by guid
-  local spellDB               = {} --aura table by spellid
+  local unitDB                = {}  --unit table by guid
+  local spellDB                     --aura table by spellid
 
   local AuraModule = CreateFrame("Frame")
   AuraModule.playerGUID       = nil
@@ -58,6 +58,7 @@
   }
 
   function AuraModule:COMBAT_LOG_EVENT_UNFILTERED(...)
+    if not spellDB then return end
     local _, event, _, srcGUID, _, _, _, destGUID, _, _, _, spellID, spellName, _, _, stackCount = ...
     if self.CLEU_FILTER[event] then
       if not unitDB[destGUID] then return end --no corresponding nameplate found
@@ -87,32 +88,17 @@
     end
   end
 
-  function AuraModule:ADDON_LOADED(name,...)
-    if name == an then
-      spellDB = rNP_SPELL_DB or spellDB
-      local version, build = GetBuildInfo()
-      if not spellDB.build then spellDB.build = build end
-      if spellDB.build ~= build then
-        spellDB = {}
-        print(an,"AuraModule","new wow build found, reseting spell db")
-      end --reset spell db when a new wow build is out
-      rNP_SPELL_DB = spellDB
-      print(an,"AuraModule","loading spell db")
-    end
+  function AuraModule:VARIABLES_LOADED(...)
+    self:UnregisterEvent("VARIABLES_LOADED")
+    spellDB = rNP_SPELL_DB or {} --variable is bound by reference. there is no way this can fuck up. like no way.
+    print(an,"AuraModule","loading spell db")
   end
 
-  function AuraModule:PLAYER_LOGOUT()
-    rNP_SPELL_DB = spellDB
-    print(an,"AuraModule","saving spell db")
-  end
-
-  AuraModule:RegisterEvent("ADDON_LOADED")
+  AuraModule:RegisterEvent("VARIABLES_LOADED")
   AuraModule:RegisterEvent("PLAYER_LOGIN")
-  AuraModule:RegisterEvent("PLAYER_LOGOUT")
-  --maybe stuff can work out even without unit aura with CLEU only
-  --initial scans are on target and mouseover init
-  --updates come over CLEU
-  --AuraModule:RegisterUnitEvent("UNIT_AURA","target","mouseover")
+  --ok unit_aura is important. otherwise new auras will only be found if they are preset on frame init.
+  --one cannot add new spells to the DB via CLEU. there is missing data (duration).
+  AuraModule:RegisterUnitEvent("UNIT_AURA","target","mouseover")
   AuraModule:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
   AuraModule:RegisterUnitEvent("UNIT_PET", "player")
   AuraModule:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end)
@@ -416,6 +402,7 @@
       blizzPlate.auraHeader = auraHeader
     end
     function blizzPlate:UpdateAura(startTime,expirationTime,unitCaster,spellID,stackCount)
+      if not spellDB then return end
       if not spellDB[spellID] then return end
       if spellDB[spellID].blacklisted then return end
       if not expirationTime then
@@ -440,6 +427,7 @@
       end
     end
     function blizzPlate:ScanAuras(unit,filter)
+      if not spellDB then return end
       for index = 1, NUM_MAX_AURAS do
         local name, _, texture, stackCount, _, duration, expirationTime, unitCaster, _, _, spellID = UnitAura(unit, index, filter)
         if not name then break end
@@ -601,22 +589,9 @@
   local shortcut      = "rnp"
 
   local function HandleSlashCmd(cmd)
+    if not spellDB then return end
     local spellID = tonumber(strsub(cmd, (strfind(cmd, " ") or 0)+1))
-    if (cmd:match"spelldb") then
-      print("|c"..color..an.." spelldb|r")
-      print("spellID","|","name","|","blacklisted")
-      print("------------------------------------")
-      local count = 0
-      for key, data in next, spellDB do
-        if type(key) == "number" then
-          print(key,"|",data.name,"|",data.blacklisted)
-          count = count+1
-        end
-      end
-      if count == 0 then
-        print("list has no entries")
-      end
-    elseif (cmd:match"blacklist") then
+    if (cmd:match"blacklist") then
       print("|c"..color..an.." blacklist|r")
       if spellID and spellDB[spellID] then
         spellDB[spellID].blacklisted = true
@@ -632,15 +607,38 @@
       else
         print("no matching spellid found")
       end
+    elseif (cmd:match"list") then
+      print("|c"..color..an.." list|r")
+      print("spellID","|","name","|","blacklisted")
+      print("------------------------------------")
+      local count = 0
+      for key, data in next, spellDB do
+        if type(key) == "number" then
+          print(key,"|",data.name,"|",data.blacklisted)
+          count = count+1
+        end
+      end
+      if count == 0 then
+        print("list has no entries")
+      end
+    elseif (cmd:match"remove") then
+      print("|c"..color..an.." remove|r")
+      if spellID and spellDB[spellID] then
+        print(spellID,spellDB[spellID].name,"removed")
+        spellDB[spellID] = nil        
+      else
+        print("no matching spellid found")
+      end
     elseif (cmd:match"resetspelldb") then
       print("|c"..color..an.." resetspelldb|r")
       wipe(spellDB)
       print("spell db has been reset")
     else
       print("|c"..color..an.." command list|r")
-      print("|c"..color.."\/"..shortcut.." spelldb|r to show the spellDB")
+      print("|c"..color.."\/"..shortcut.." list|r to list all entries in spellDB")
       print("|c"..color.."\/"..shortcut.." blacklist SPELLID|r to blacklist a spellid in spellDB")
       print("|c"..color.."\/"..shortcut.." whitelist SPELLID|r to whitelist a spellid in spellDB")
+      print("|c"..color.."\/"..shortcut.." remove SPELLID|r to remove a spellid from spellDB")
       print("|c"..color.."\/"..shortcut.." resetspelldb|r to reset the spellDB")
     end
   end

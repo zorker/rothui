@@ -30,7 +30,25 @@
   local AuraModule = CreateFrame("Frame")
   AuraModule.playerGUID       = nil
   AuraModule.petGUID          = nil
+  AuraModule.updateTarget     = false
+  AuraModule.updateMouseover  = false
 
+  function AuraModule:PLAYER_TARGET_CHANGED(...)
+    if UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then
+      self.updateTarget = true
+    else
+      self.updateTarget = false
+    end
+  end
+
+  function AuraModule:UPDATE_MOUSEOVER_UNIT(...)
+    if UnitGUID("mouseover") and UnitExists("mouseover") and not UnitIsUnit("mouseover","player") and not UnitIsDead("mouseover") then
+      self.updateMouseover = true
+    else
+      self.updateMouseover = false
+    end
+  end
+  
   function AuraModule:UNIT_PET(...)
     if UnitGUID("pet") and UnitExists("pet") then
       self.petGUID = UnitGUID("pet")
@@ -106,6 +124,8 @@
   AuraModule:RegisterUnitEvent("UNIT_AURA","target","mouseover")
   AuraModule:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
   AuraModule:RegisterUnitEvent("UNIT_PET", "player")
+  AuraModule:RegisterEvent("PLAYER_TARGET_CHANGED")
+  AuraModule:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
   AuraModule:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end)
 
   -----------------------------
@@ -323,10 +343,11 @@
       unitDB[blizzPlate.guid] = nil
       wipe(blizzPlate.auras)
       blizzPlate.auraScannedOnTargetInit = false
-      blizzPlate.auraScannedOnMouseoverInit = false
+      blizzPlate.auraScannedOnMouseoverInit = false    
+    elseif not blizzPlate.guid then
+      blizzPlate.guid = guid
+      unitDB[guid] = blizzPlate
     end
-    blizzPlate.guid = guid
-    unitDB[guid] = blizzPlate
   end
 
   local function NamePlateOnShow(blizzPlate)
@@ -518,7 +539,7 @@
 
   local countFramesWithFullAlpha = 0
   local targetPlate = nil
-
+  local delayCounter = 0
   local timer = 0.0
   local interval = 0.1
 
@@ -528,11 +549,11 @@
     for blizzPlate, newPlate in next, plates do
       if blizzPlate:IsShown() then
         newPlate:SetAlpha(blizzPlate:GetAlpha())
-        if blizzPlate:GetAlpha() == 1 then
+        if AuraModule.updateTarget and blizzPlate:GetAlpha() == 1 then
           countFramesWithFullAlpha = countFramesWithFullAlpha + 1
           targetPlate = blizzPlate
         end
-        if blizzPlate.highlightTexture:IsShown() and UnitGUID("mouseover") and UnitExists("mouseover") then
+        if AuraModule.updateMouseover and blizzPlate.highlightTexture:IsShown() and UnitGUID("mouseover") and UnitExists("mouseover") then
           NamePlateSetGUID(blizzPlate,UnitGUID("mouseover"))
           --when mouseover is triggered auras may be running already, thus allow scanning for auras 1 time
           --after that aura updates come in over CLEU
@@ -542,6 +563,7 @@
             blizzPlate:ScanAuras("mouseover","HARMFUL")
             blizzPlate.auraScannedOnMouseoverInit = true
           end
+          AuraModule.updateMouseover = false
         end
         if timer > interval then
           blizzPlate:UpdateAllAuras()
@@ -551,17 +573,25 @@
     if timer > interval then
       timer = 0
     end
-    if countFramesWithFullAlpha == 1 and UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then
-      NamePlateSetGUID(targetPlate,UnitGUID("target"))
-      --when target is triggered auras may be running already, thus allow scanning for auras 1 time
-      --after that aura updates come in over CLEU
-      if not targetPlate.auraScannedOnTargetInit then
-        --print("ScanAuras", "auraScannedOnTargetInit", targetPlate.newPlate.id)
-        targetPlate:ScanAuras("target","HELPFUL")
-        targetPlate:ScanAuras("target","HARMFUL")
-        targetPlate.auraScannedOnTargetInit = true
+    if AuraModule.updateTarget and countFramesWithFullAlpha == 1 and UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then
+      --this may look wierd but is actually needed.
+      --when the PLAYER_TARGET_CHANGED event fires the nameplate need one cycle to update the alpha, otherwise the old target would be tagged.
+      if delayCounter == 1 then
+        NamePlateSetGUID(targetPlate,UnitGUID("target"))
+        --when target is triggered auras may be running already, thus allow scanning for auras 1 time
+        --after that aura updates come in over CLEU
+        if not targetPlate.auraScannedOnTargetInit then
+          --print("ScanAuras", "auraScannedOnTargetInit", targetPlate.newPlate.id)
+          targetPlate:ScanAuras("target","HELPFUL")
+          targetPlate:ScanAuras("target","HARMFUL")
+          targetPlate.auraScannedOnTargetInit = true
+        end
+        AuraModule.updateTarget = false
+        delayCounter = 0
+        targetPlate = nil
+      else
+        delayCounter = delayCounter + 1
       end
-      targetPlate = nil
     end
     if not namePlateIndex then
       for _, blizzPlate in next, {self:GetChildren()} do

@@ -319,7 +319,12 @@
   end
 
   local function NamePlateSetGUID(blizzPlate,guid)
-    if blizzPlate.guid then return end
+    if blizzPlate.guid and guid ~= blizzPlate.guid then 
+      unitDB[blizzPlate.guid] = nil
+      wipe(blizzPlate.auras)
+      blizzPlate.auraScannedOnTargetInit = false
+      blizzPlate.auraScannedOnMouseoverInit = false
+    end
     blizzPlate.guid = guid
     unitDB[guid] = blizzPlate
   end

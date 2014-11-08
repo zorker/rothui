@@ -260,6 +260,7 @@
         show = true,
         size = 20,
         onlyShowPlayerBuffs = false,
+        showStealableBuffs = true,
         onlyShowPlayerDebuffs = false,
         showDebuffType = false,
         desaturateDebuffs = false,

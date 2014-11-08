@@ -88,13 +88,18 @@
     end
   end
 
-  function AuraModule:VARIABLES_LOADED(...)
-    self:UnregisterEvent("VARIABLES_LOADED")
-    spellDB = rNP_SPELL_DB or {} --variable is bound by reference. there is no way this can fuck up. like no way.
-    print(an,"AuraModule","loading spell db")
+  function AuraModule:ADDON_LOADED(name,...)
+    if name == an then
+      self:UnregisterEvent("ADDON_LOADED")
+      if not rNP_SPELL_DB then
+        rNP_SPELL_DB = {}
+      end
+      spellDB = rNP_SPELL_DB --variable is bound by reference. there is no way this can fuck up. like no way.
+      print(an,"AuraModule","loading spell db")
+    end
   end
 
-  AuraModule:RegisterEvent("VARIABLES_LOADED")
+  AuraModule:RegisterEvent("ADDON_LOADED")
   AuraModule:RegisterEvent("PLAYER_LOGIN")
   --ok unit_aura is important. otherwise new auras will only be found if they are preset on frame init.
   --one cannot add new spells to the DB via CLEU. there is missing data (duration).

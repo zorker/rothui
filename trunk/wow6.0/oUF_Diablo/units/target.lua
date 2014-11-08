@@ -192,6 +192,7 @@
     f["growth-y"] = self.cfg.auras.buffs.growthy
     f.spacing = 5
     f.onlyShowPlayer = self.cfg.auras.onlyShowPlayerBuffs
+    f.showStealableBuffs = self.cfg.auras.showStealableBuffs
     self.Buffs = f
   end
 

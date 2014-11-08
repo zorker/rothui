@@ -17,6 +17,7 @@
   cfg.aura_stack_fontsize     = 24
   cfg.aura_cooldown_fontsize  = 28
   cfg.point                   = {"CENTER",0,-16}
+  cfg.notFocusedPlateAlpha    = 0.4
 
   -----------------------------
   -- AURAS
@@ -548,7 +549,11 @@
     countFramesWithFullAlpha = 0
     for blizzPlate, newPlate in next, plates do
       if blizzPlate:IsShown() then
-        newPlate:SetAlpha(blizzPlate:GetAlpha())
+        if blizzPlate:GetAlpha() == 1 then
+          newPlate:SetAlpha(1)
+        else
+          newPlate:SetAlpha(cfg.notFocusedPlateAlpha)
+        end
         if AuraModule.updateTarget and blizzPlate:GetAlpha() == 1 then
           countFramesWithFullAlpha = countFramesWithFullAlpha + 1
           targetPlate = blizzPlate

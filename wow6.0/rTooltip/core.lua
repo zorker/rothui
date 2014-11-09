@@ -58,6 +58,8 @@
   --HookScript GameTooltip OnTooltipCleared
   GameTooltip:HookScript("OnTooltipCleared", function(self)
     GameTooltip_ClearStatusBars(self)
+    self:SetBackdropColor(unpack(cfg.backdrop.bgColor))
+    self:SetBackdropBorderColor(unpack(cfg.backdrop.borderColor))
   end)
 
   --hooksecurefunc GameTooltip_SetDefaultAnchor

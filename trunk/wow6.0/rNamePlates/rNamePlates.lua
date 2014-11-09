@@ -17,7 +17,7 @@
   cfg.aura_stack_fontsize     = 24
   cfg.aura_cooldown_fontsize  = 28
   cfg.point                   = {"CENTER",0,-16}
-  cfg.notFocusedPlateAlpha    = 0.4
+  cfg.notFocusedPlateAlpha    = 0.5
 
   -----------------------------
   -- AURAS
@@ -35,6 +35,8 @@
   AuraModule.updateMouseover  = false
 
   function AuraModule:PLAYER_TARGET_CHANGED(...)
+    if not spellDB then return end
+    if spellDB.disabled then return end
     if UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then
       self.updateTarget = true
     else
@@ -43,6 +45,8 @@
   end
 
   function AuraModule:UPDATE_MOUSEOVER_UNIT(...)
+    if not spellDB then return end
+    if spellDB.disabled then return end
     if UnitGUID("mouseover") and UnitExists("mouseover") and not UnitIsUnit("mouseover","player") and not UnitIsDead("mouseover") then
       self.updateMouseover = true
     else
@@ -78,6 +82,7 @@
 
   function AuraModule:COMBAT_LOG_EVENT_UNFILTERED(...)
     if not spellDB then return end
+    if spellDB.disabled then return end
     local _, event, _, srcGUID, _, _, _, destGUID, _, _, _, spellID, spellName, _, _, stackCount = ...
     if self.CLEU_FILTER[event] then
       if not unitDB[destGUID] then return end --no corresponding nameplate found
@@ -99,6 +104,8 @@
   end
 
   function AuraModule:UNIT_AURA(unit)
+    if not spellDB then return end
+    if spellDB.disabled then return end
     if UnitIsUnit(unit,"player") then return end --we do not want to track our own buffs if we target ourselves
     local guid = UnitGUID(unit)
     if guid and unitDB[guid] then
@@ -116,6 +123,9 @@
       end
       spellDB = rNP_SPELL_DB --variable is bound by reference. there is no way this can fuck up. like no way.
       print(an,"AuraModule","loading spell db")
+      if spellDB.disabled then
+        print(an,"AuraModule","spell db is currently disabled on this character")
+      end
     end
   end
 
@@ -406,18 +416,8 @@
     blizzPlate.newPlate:SetSize(36,36)
     plates[blizzPlate] = blizzPlate.newPlate
   end
-
-  local function SkinPlate(blizzPlate)
-    if plates[blizzPlate] then return end
-    CreateNewPlate(blizzPlate)
-    NamePlateOnInit(blizzPlate)
-    SkinHealthBar(blizzPlate)
-    SkinCastBar(blizzPlate)
-    NamePlateSetup(blizzPlate)
-    NamePlatePosition(blizzPlate)
-    if not blizzPlate:IsShown() then
-      blizzPlate.newPlate:Hide()
-    end
+  
+  local function CreateNamePlateAuraFunctions(blizzPlate)
     blizzPlate.auras = {}
     blizzPlate.auraButtons = {}
     blizzPlate.auraScannedOnTargetInit = false
@@ -456,6 +456,7 @@
     end
     function blizzPlate:ScanAuras(unit,filter)
       if not spellDB then return end
+      if spellDB.disabled then return end
       for index = 1, NUM_MAX_AURAS do
         local name, _, texture, stackCount, _, duration, expirationTime, unitCaster, _, _, spellID = UnitAura(unit, index, filter)
         if not name then break end
@@ -530,6 +531,20 @@
         end
       end
     end
+  end
+
+  local function SkinPlate(blizzPlate)
+    if plates[blizzPlate] then return end
+    CreateNewPlate(blizzPlate)
+    NamePlateOnInit(blizzPlate)
+    SkinHealthBar(blizzPlate)
+    SkinCastBar(blizzPlate)
+    NamePlateSetup(blizzPlate)
+    NamePlatePosition(blizzPlate)
+    if not blizzPlate:IsShown() then
+      blizzPlate.newPlate:Hide()
+    end
+    CreateNamePlateAuraFunctions(blizzPlate)
     blizzPlate:HookScript("OnShow", NamePlateOnShow)
     blizzPlate:HookScript("OnHide", NamePlateOnHide)
     blizzPlate.castBar:HookScript("OnShow", NamePlateCastBarOnShow)
@@ -674,13 +689,23 @@
       print("|c"..color..an.." resetspelldb|r")
       wipe(spellDB)
       print("spell db has been reset")
+    elseif (cmd:match"disable") then
+      print("|c"..color..an.." disable|r")
+      spellDB.disabled = true
+      print("spell db has been disabled")
+    elseif (cmd:match"enable") then
+      print("|c"..color..an.." enable|r")
+      spellDB.disabled = false
+      print("spell db has been enabled")
     else
       print("|c"..color..an.." command list|r")
       print("|c"..color.."\/"..shortcut.." list|r to list all entries in spellDB")
       print("|c"..color.."\/"..shortcut.." blacklist SPELLID|r to blacklist a spellid in spellDB")
       print("|c"..color.."\/"..shortcut.." whitelist SPELLID|r to whitelist a spellid in spellDB")
       print("|c"..color.."\/"..shortcut.." remove SPELLID|r to remove a spellid from spellDB")
-      print("|c"..color.."\/"..shortcut.." resetspelldb|r to reset the spellDB")
+      print("|c"..color.."\/"..shortcut.." disable|r to disable the spellDB for this character")
+      print("|c"..color.."\/"..shortcut.." enable|r to enable the spellDB for this character")
+      print("|c"..color.."\/"..shortcut.." resetspelldb|r to reset the spellDB for this character")
     end
   end
 

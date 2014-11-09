@@ -99,6 +99,7 @@
   end
 
   function AuraModule:UNIT_AURA(unit)
+    if UnitIsUnit(unit,"player") then return end --we do not want to track our own buffs if we target ourselves
     local guid = UnitGUID(unit)
     if guid and unitDB[guid] then
       --print("ScanAuras", "UNIT_AURA", unitDB[guid].newPlate.id)
@@ -343,6 +344,7 @@
     if blizzPlate.guid and guid ~= blizzPlate.guid then 
       unitDB[blizzPlate.guid] = nil
       wipe(blizzPlate.auras)
+      blizzPlate:UpdateAllAuras() --hide visible buttons
       blizzPlate.auraScannedOnTargetInit = false
       blizzPlate.auraScannedOnMouseoverInit = false    
     elseif not blizzPlate.guid then
@@ -358,9 +360,10 @@
 
   local function NamePlateOnHide(blizzPlate)
     blizzPlate.newPlate:Hide()
+    wipe(blizzPlate.auras)
+    blizzPlate:UpdateAllAuras() --hide visible buttons
     blizzPlate.auraScannedOnTargetInit = false
     blizzPlate.auraScannedOnMouseoverInit = false
-    wipe(blizzPlate.auras)
     if blizzPlate.guid then
       unitDB[blizzPlate.guid] = nil
       blizzPlate.guid = nil

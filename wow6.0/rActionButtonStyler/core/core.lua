@@ -223,6 +223,7 @@
     local name = bu:GetName()
     local ic  = _G[name.."Icon"]
     local fl  = _G[name.."Flash"]
+    local ho  = _G[name.."HotKey"]
     local nt  = _G[name.."NormalTexture2"]
     nt:SetAllPoints(bu)
     --applying color
@@ -243,6 +244,11 @@
     ic:SetTexCoord(0.1,0.9,0.1,0.9)
     ic:SetPoint("TOPLEFT", bu, "TOPLEFT", 2, -2)
     ic:SetPoint("BOTTOMRIGHT", bu, "BOTTOMRIGHT", -2, 2)
+    --hotkeys
+    ho:SetFont(cfg.font, cfg.hotkeys.fontsize, "OUTLINE")
+    ho:ClearAllPoints()
+    ho:SetPoint(cfg.hotkeys.pos1.a1,bu,cfg.hotkeys.pos1.x,cfg.hotkeys.pos1.y)
+    ho:SetPoint(cfg.hotkeys.pos2.a1,bu,cfg.hotkeys.pos2.x,cfg.hotkeys.pos2.y)
     --shadows+background
     if not bu.bg then applyBackground(bu) end
     bu.rabs_styled = true

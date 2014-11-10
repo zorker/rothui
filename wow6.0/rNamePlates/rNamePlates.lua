@@ -37,7 +37,7 @@
   function AuraModule:PLAYER_TARGET_CHANGED(...)
     if not spellDB then return end
     if spellDB.disabled then return end
-    if UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then
+    if UnitGUID("target") and UnitExists("target") and not UnitIsUnit("target","player") and not UnitIsDead("target") then
       self.updateTarget = true
     else
       self.updateTarget = false
@@ -106,9 +106,8 @@
   function AuraModule:UNIT_AURA(unit)
     if not spellDB then return end
     if spellDB.disabled then return end
-    if UnitIsUnit(unit,"player") then return end --we do not want to track our own buffs if we target ourselves
     local guid = UnitGUID(unit)
-    if guid and unitDB[guid] then
+    if guid and unitDB[guid] and not UnitIsUnit(unit,"player") then
       --print("ScanAuras", "UNIT_AURA", unitDB[guid].newPlate.id)
       unitDB[guid]:ScanAuras(unit,"HELPFUL")
       unitDB[guid]:ScanAuras(unit,"HARMFUL")

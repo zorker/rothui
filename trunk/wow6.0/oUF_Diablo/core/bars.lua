@@ -207,7 +207,7 @@
 
     local t
     local bar = CreateFrame("Frame","oUF_DiabloHarmonyPower",self)
-    bar.maxOrbs = 5
+    bar.maxOrbs = 6
     local w = 64*(bar.maxOrbs+2) --create the bar for
     local h = 64
     --bar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)

@@ -24,6 +24,11 @@ local Update = function(self, event, unit, powerType)
   local sb = self.DemonicFury[1]
   sb:SetMinMaxValues(0, max)
   sb:SetValue(cur)
+  if cur > 0 and sb.value then
+    sb.value:SetText(cur)
+  elseif sb.value then
+    sb.value:SetText("")
+  end
   if cur/max == 1 then
     sb.glow:Show()
   else

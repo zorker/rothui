@@ -112,7 +112,7 @@
 
     local t
     local bar = CreateFrame("Frame","oUF_DiabloShadowOrbPower",self)
-    bar.maxOrbs = 3
+    bar.maxOrbs = 5
     local w = 64*(bar.maxOrbs+2) --create the bar for
     local h = 64
     --bar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
@@ -627,6 +627,11 @@
     t:SetVertexColor(self.cfg.demonicfury.color.bar.r,self.cfg.demonicfury.color.bar.g,self.cfg.demonicfury.color.bar.b)
     t:SetBlendMode("BLEND")
     sb.glow = t
+    
+    local text = func.createFontString(border, cfg.font, 14, "THINOUTLINE")
+    text:SetPoint("CENTER")
+    text:SetTextColor(0.8,0.8,0.8)
+    sb.value = text
 
     func.applyDragFunctionality(bar)
 

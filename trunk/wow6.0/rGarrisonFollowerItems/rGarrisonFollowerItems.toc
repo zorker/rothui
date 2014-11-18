@@ -1,0 +1,8 @@
+## Interface: 60000
+## Author: zork
+## Title: rGarrisonFollowerItems
+## Notes: Hack to display the items for all garrison followers
+## RequiredDeps: Blizzard_GarrisonUI
+## LoadWith: Blizzard_GarrisonUI
+
+rGarrisonFollowerItems.lua

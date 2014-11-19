@@ -9,16 +9,12 @@ local class = select(2, UnitClass("player"))
 local Update = function(self, event, unit, powerType)
   if unit and (unit ~= "player" and unit ~= "vehicle") then return end
   if powerType and powerType ~= "COMBO_POINTS" then return end
-
-  --print(event,unit,powerType,GetComboPoints("player"))
-  
   local bar = self.ComboBar
-
   local cp = 0
-  if(UnitExists("vehicle") and GetComboPoints("vehicle") >= 1) then
-    cp = GetComboPoints("vehicle")
+  if(UnitExists("vehicle") and UnitPower("vehicle",4) >= 1) then
+    cp = UnitPower("vehicle",4)
   else
-    cp = GetComboPoints("player")
+    cp = UnitPower("player",4)
   end
 
   if cp < 1 and class ~= "ROGUE" then

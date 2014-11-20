@@ -17,7 +17,7 @@ local Update = function(self, event, unit, powerType)
     cp = UnitPower("player",4)
   end
 
-  if cp < 1 and class ~= "ROGUE" then
+  if cp < 1 and (UnitHasVehicleUI("player") or class ~= "ROGUE") then
     bar:Hide()
     return
   else

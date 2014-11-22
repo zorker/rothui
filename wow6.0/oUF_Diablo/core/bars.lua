@@ -8,6 +8,7 @@
 
   --get the functions
   local func = ns.func
+  local cfg = ns.cfg
 
   ---------------------------------------------
   -- FUNCTIONS

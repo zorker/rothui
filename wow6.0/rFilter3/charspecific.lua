@@ -44,7 +44,8 @@
       },
       {
         spellid = 469, -- +10% STA
-        spelllist = { 469, 90364, 109773, 21562, },
+        isRaidBuff = true,
+        raidBuffIndex = 2,
         spec = nil,
         size = 22,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 140, y = 110 },
@@ -67,7 +68,8 @@
       },
       {
         spellid = 6673, -- +10% AP / RAP
-        spelllist = { 6673, 57330, 19506, 133540, },
+        isRaidBuff = true,
+        raidBuffIndex = 3,
         spec = nil,
         size = 22,
         pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = 110, y = 110 },
@@ -106,7 +108,7 @@
             icon = 1,
           },
           not_found = {
-            frame = 0.2,
+            frame = 0,
             icon = 0.6,
           },
         },
@@ -128,7 +130,122 @@
             icon = 1,
           },
           not_found = {
-            frame = 0.2,
+            frame = 0,
+            icon = 0.6,
+          },
+        },
+      },
+      {
+        spellid = 169667, --shield charge
+        spec = 3,
+        size = 28,
+        pos = { a1 = "BOTTOM", a2 = "BOTTOM", af = "UIParent", x = -136, y = 110 },
+        unit = "player",
+        validate_unit   = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
+        --hide_ooc        = true,
+        show_value      = 1,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0.6,
+          },
+        },
+      },
+      {
+        spellid = 152277, --ravager
+        spec = 3,
+        size = 28,
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        unit = "player",
+        validate_unit   = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
+        --hide_ooc        = true,
+        show_value      = 1,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0.6,
+          },
+        },
+      },
+      {
+        spellid = 871, --shield wall
+        spec = 3,
+        size = 28,
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        unit = "player",
+        validate_unit   = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
+        --hide_ooc        = true,
+        show_value      = 1,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0.6,
+          },
+        },
+      },
+      {
+        spellid = 12975, --last stand
+        spec = 3,
+        size = 28,
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        unit = "player",
+        validate_unit   = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
+        --hide_ooc        = true,
+        show_value      = 1,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0.6,
+          },
+        },
+      },
+      {
+        spellid = 55694, --enraged regen
+        spec = 3,
+        size = 28,
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        unit = "player",
+        validate_unit   = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
+        --hide_ooc        = true,
+        show_value      = 1,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
             icon = 0.6,
           },
         },
@@ -137,6 +254,7 @@
 
     --Rothars Debuff List
     cfg.rf3_DebuffList = {
+      --[[
       {
         spellid = 115767, --deep wounds
         spec = nil,
@@ -155,6 +273,51 @@
           },
           not_found = {
             frame = 0.4,
+            icon = 0.6,
+          },
+        },
+      },
+      ]]--
+      {
+        spellid = 132168, --shockwave
+        spec = 3,
+        size = 28,
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        unit = "target",
+        validate_unit   = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
+        --hide_ooc        = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
+            icon = 0.6,
+          },
+        },
+      },
+      {
+        spellid = 1160, --demo shout
+        spec = 3,
+        size = 28,
+        pos = { a1 = "CENTER", a2 = "CENTER", af = "UIParent", x = 0, y = 0 },
+        unit = "target",
+        validate_unit   = true,
+        ismine          = true,
+        desaturate      = true,
+        move_ingame     = true,
+        --hide_ooc        = true,
+        alpha = {
+          found = {
+            frame = 1,
+            icon = 1,
+          },
+          not_found = {
+            frame = 0,
             icon = 0.6,
           },
         },

@@ -20,25 +20,18 @@
   RegisterStateDriver(visibilityHandler, "visibility", "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; show")
 
   --format time func
-  local GetFormattedTime = function(time)
-    local hr, m, s, text
-    if time <= 0 then 
-      text = ""
-    elseif time < 2 then 
-      text = floor(time*10)/10
-    elseif(time < 3600 and time > 60) then
-      hr = floor(time / 3600)
-      m = floor(mod(time, 3600) / 60 + 1)
-      text = format("%dm", m)
+  local function GetFormattedTime(time)
+    if time <= 0 then
+      return ""
+    elseif time < 2 then
+      return (math.floor(time*10)/10)
     elseif time < 60 then
-      m = floor(time / 60)
-      s = mod(time, 60)
-      text = (m == 0 and format("%ds", s))
+      return string.format("%ds", mod(time, 60))
+    elseif time < 3600 then
+      return string.format("%dm", math.floor(mod(time, 3600) / 60 + 1))
     else
-      hr = floor(time / 3600 + 1)
-      text = format("%dh", hr)
+      return string.format("%dh", math.floor(time / 3600 + 1))
     end
-    return text
   end
 
   --number format func
@@ -177,6 +170,73 @@
     if f.ismine and not f.caster then
       f.caster = "player"
       f.ismine = nil
+    end
+  end
+  
+  --check raid buff func
+  local checkRaidBuff = function(f,index)
+    if not f.iconframe then return end
+    if not f.iconframe:IsShown() then return end
+    if f.spec and f.spec ~= GetSpecialization() then
+      if f.move_ingame and f.iconframe.dragFrame:IsShown() then
+        f.iconframe.dragFrame:Hide() --do not show icons that do not match the spec set by the player
+      end
+      f.iconframe:SetAlpha(0)
+      return
+    end
+    if f.move_ingame and f.iconframe.dragFrame:IsShown() then --make the icon visible in case we want to move it
+      f.iconframe.icon:SetAlpha(1)
+      f.iconframe:SetAlpha(1)
+      f.iconframe.icon:SetDesaturated(nil)
+      f.iconframe.time:SetText("30m")
+      f.iconframe.count:SetText("3")
+      f.iconframe.value:SetText("")
+      return
+    end
+    if not UnitExists(f.unit) and f.validate_unit then
+      f.iconframe:SetAlpha(0)
+      return
+    end
+    if not InCombatLockdown() and f.hide_ooc then
+      f.iconframe:SetAlpha(0)
+      return
+    end
+    if f.name then
+      local name, rank, icon, duration, expires, spID, buffSlot = GetRaidBuffTrayAuraInfo(index)      
+      if name then
+        f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
+        f.iconframe.icon:SetAlpha(f.alpha.found.icon)
+        f.iconframe:SetAlpha(f.alpha.found.frame)
+        f.iconframe.icon:SetTexture(icon)
+        if f.desaturate then
+          f.iconframe.icon:SetDesaturated(nil)
+        end
+        f.iconframe.count:SetText("")
+        local time = expires-GetTime()
+        if time < 10 then
+          f.iconframe.time:SetTextColor(1, 0.4, 0)
+        else
+          f.iconframe.time:SetTextColor(1, 0.8, 0)
+        end
+        f.iconframe.time:SetText(GetFormattedTime(time))
+        f.iconframe.value:SetText("")
+      else
+        f.iconframe:SetAlpha(f.alpha.not_found.frame)
+        f.iconframe.icon:SetAlpha(f.alpha.not_found.icon)
+        if spellid then
+          f.iconframe.icon:SetTexture(f.texture)
+        end
+        f.iconframe.time:SetText("")
+        f.iconframe.count:SetText("")
+        f.iconframe.value:SetText("")
+        f.iconframe.time:SetTextColor(1, 0.8, 0)
+        if cfg.highlightPlayerSpells then
+          f.iconframe.border:SetVertexColor(0.37,0.3,0.3,1)
+        end
+        if f.desaturate then
+          f.iconframe.icon:SetDesaturated(1)
+        end
+      end
     end
   end
   
@@ -352,6 +412,8 @@
             checkAura(f,"HELPFUL",spellid)
           end
         end
+      elseif f.isRaidBuff then
+        checkRaidBuff(f,f.raidBuffIndex or 1)
       else
         checkAura(f,"HELPFUL")
       end

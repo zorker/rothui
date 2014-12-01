@@ -64,13 +64,9 @@
 
   --hooksecurefunc GameTooltip_SetDefaultAnchor
   hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
-    if cursor and GetMouseFocus() == WorldFrame then
-      tooltip:SetOwner(parent, "ANCHOR_CURSOR")
-    else
-      tooltip:SetOwner(parent, "ANCHOR_NONE")
-      tooltip:ClearAllPoints()
-      tooltip:SetPoint(unpack(cfg.pos))
-    end
+    tooltip:SetOwner(parent, "ANCHOR_NONE")
+    tooltip:ClearAllPoints()
+    tooltip:SetPoint(unpack(cfg.pos))
   end)
 
   --func AddSpellIdRow

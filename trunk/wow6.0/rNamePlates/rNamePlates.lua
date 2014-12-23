@@ -174,14 +174,7 @@
     blizzPlate.bossIconTexture:SetTexture(nil)
     blizzPlate.eliteDragonTexture:SetTexture(nil)
     blizzPlate.highlightTexture:SetTexture(nil)
-
-    blizzPlate.threatTexture:ClearAllPoints()
-    blizzPlate.threatTexture:SetPoint("TOPLEFT",blizzPlate.healthBar,-2,2)
-    blizzPlate.threatTexture:SetPoint("BOTTOMRIGHT",blizzPlate.healthBar,2,-2)
-
-    blizzPlate.healthBar:SetSize(unpack(blizzPlate.healthBar.size))
-    blizzPlate.healthBar:ClearAllPoints()
-    blizzPlate.healthBar:SetPoint(unpack(blizzPlate.healthBar.point))
+    blizzPlate.threatTexture:SetTexture(nil)
 
     local name = blizzPlate.nameString:GetText() or "Unknown"
     local level = blizzPlate.levelString:GetText() or "-1"
@@ -193,7 +186,7 @@
     elseif blizzPlate.eliteDragonTexture:IsShown() then
       level = level.."+"
     end
-    blizzPlate.healthBar.name:SetText("|cff"..hexColor..""..level.."|r "..name)
+    blizzPlate.newPlate.healthBar.name:SetText("|cff"..hexColor..""..level.."|r "..name)
   end
 
   local function NamePlateOnInit(blizzPlate)
@@ -207,37 +200,29 @@
 
     blizzPlate.nameFrame:SetParent(trash)
     blizzPlate.levelString:SetParent(trash)
-    blizzPlate.healthBar:SetParent(blizzPlate.newPlate)
-    blizzPlate.castBar:SetParent(blizzPlate.newPlate)
+
+    blizzPlate.healthBar.__owner = blizzPlate
+    blizzPlate.castBar.__owner = blizzPlate
+
+    blizzPlate.healthBar:SetParent(trash)
+    blizzPlate.castBar:SetParent(trash)
 
     blizzPlate.castBar.borderTexture:SetTexture(nil)
     blizzPlate.borderTexture:SetTexture(nil)
     blizzPlate.bossIconTexture:SetTexture(nil)
     blizzPlate.eliteDragonTexture:SetTexture(nil)
     blizzPlate.highlightTexture:SetTexture(nil)
-
-    blizzPlate.raidIconTexture:SetParent(blizzPlate.healthBar)
-    blizzPlate.raidIconTexture:SetSize(60,60)
-    blizzPlate.raidIconTexture:ClearAllPoints()
-    blizzPlate.raidIconTexture:SetPoint("BOTTOM",blizzPlate.healthBar,"TOP",0,40)
-
-    blizzPlate.threatTexture:SetParent(blizzPlate.newPlate)
-    blizzPlate.threatTexture:SetTexture("Interface\\AddOns\\"..an.."\\media\\threat")
-    blizzPlate.threatTexture:SetTexCoord(0,1,0,1)
-    --blizzPlate.threatTexture:SetBlendMode("ADD")
+    blizzPlate.threatTexture:SetTexture(nil)
 
   end
 
   local function SkinHealthBar(blizzPlate)
 
-    local bar = blizzPlate.healthBar
-    bar.size = {256,64}
-    bar:SetSize(unpack(bar.size))
+    local bar = CreateFrame("StatusBar",nil,blizzPlate.newPlate)
+    bar:SetSize(256,64)
     bar:SetStatusBarTexture("Interface\\AddOns\\"..an.."\\media\\statusbar_fill")
     bar:SetScale(cfg.scale)
-    bar:ClearAllPoints()
-    bar.point = cfg.point
-    bar:SetPoint(unpack(bar.point))
+    bar:SetPoint(unpack(cfg.point))
 
     local le = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     le:SetTexture("Interface\\AddOns\\"..an.."\\media\\edge_left")
@@ -276,18 +261,22 @@
     name:SetText("Ich bin ein Berliner!")
     bar.name = name
 
+    blizzPlate.raidIconTexture:SetParent(bar)
+    blizzPlate.raidIconTexture:SetSize(60,60)
+    blizzPlate.raidIconTexture:ClearAllPoints()
+    blizzPlate.raidIconTexture:SetPoint("BOTTOM",bar,"TOP",0,40)
+
+    blizzPlate.newPlate.healthBar = bar
+
   end
 
   local function SkinCastBar(blizzPlate)
 
-    local bar = blizzPlate.castBar
-    bar.size = {256,64}
-    bar:SetSize(unpack(bar.size))
+    local bar = CreateFrame("StatusBar",nil,blizzPlate.newPlate)
+    bar:SetSize(256,64)
     bar:SetStatusBarTexture("Interface\\AddOns\\"..an.."\\media\\statusbar_fill")
     bar:SetScale(cfg.scale)
-    bar:ClearAllPoints()
-    bar.point = {"TOP",blizzPlate.healthBar,"BOTTOM",0,20}
-    bar:SetPoint(unpack(bar.point))
+    bar:SetPoint("TOP",blizzPlate.newPlate.healthBar,"BOTTOM",0,20)
 
     local le = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     le:SetTexture("Interface\\AddOns\\"..an.."\\media\\edge_left")
@@ -303,22 +292,23 @@
     bg:SetTexture("Interface\\AddOns\\"..an.."\\media\\statusbar_bg")
     bg:SetAllPoints()
 
-    bar.nameShadow:ClearAllPoints()
-    bar.nameShadow:SetPoint("TOP",bar,"BOTTOM",0,20)
-    bar.nameShadow:SetSize(256,32)
+    local shadow = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    shadow:SetTexture("Interface\\Common\\NameShadow")
+    shadow:SetPoint("TOP",bar,"BOTTOM",0,20)
+    shadow:SetSize(256,32)
 
-    bar.nameString:SetFont(cfg.font, cfg.castbar_fontsize, "OUTLINE")
-    bar.nameString:ClearAllPoints()
-    bar.nameString:SetPoint("TOP",bar,"BOTTOM",0,30)
-    bar.nameString:SetPoint("LEFT",8,0)
-    bar.nameString:SetPoint("RIGHT",-8,0)
+    local name = bar:CreateFontString(nil, "BORDER")
+    name:SetFont(cfg.font, cfg.castbar_fontsize, "OUTLINE")
+    name:SetPoint("TOP",bar,"BOTTOM",0,30)
+    name:SetPoint("LEFT",8,0)
+    name:SetPoint("RIGHT",-8,0)
+    bar.nameString = name
 
-    bar.spellIconTexture:SetDrawLayer("BACKGROUND",-8)
-    bar.spellIconTexture:SetTexCoord(0.08,0.92,0.08,0.92)
-    bar.spellIconTexture.point = {"RIGHT",bar,"LEFT",-58,22}
-    bar.spellIconTexture:ClearAllPoints()
-    bar.spellIconTexture:SetPoint(unpack(bar.spellIconTexture.point))
-    bar.spellIconTexture:SetSize(60,60)
+    local icon = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
+    icon:SetTexCoord(0.08,0.92,0.08,0.92)
+    icon:SetPoint("RIGHT",bar,"LEFT",-58,22)
+    icon:SetSize(60,60)
+    bar.spellIconTexture = icon
 
     local iconBorder = bar:CreateTexture(nil,"BACKGROUND",nil,-7)
     iconBorder:SetTexture("Interface\\AddOns\\"..an.."\\media\\icon_border")
@@ -326,13 +316,17 @@
     iconBorder:SetSize(78,78)
     bar.spellIconBorder = iconBorder
 
-    bar.shieldTexture:SetDrawLayer("BACKGROUND",-6)
-    bar.shieldTexture:SetTexture("Interface\\AddOns\\"..an.."\\media\\shield")
-    bar.shieldTexture.point = {"BOTTOM",bar.spellIconBorder,0,-5}
-    bar.shieldTexture.size = {36,36}
-    bar.shieldTexture:ClearAllPoints()
-    bar.shieldTexture:SetPoint(unpack(bar.shieldTexture.point))
-    bar.shieldTexture:SetSize(unpack(bar.shieldTexture.size))
+    local shield = bar:CreateTexture(nil,"BACKGROUND",nil,-6)
+    shield:SetTexture("Interface\\AddOns\\"..an.."\\media\\shield")
+    shield:SetPoint("BOTTOM",bar.spellIconBorder,0,-5)
+    shield:SetSize(36,36)
+    bar.shieldTexture = shield
+
+    if not blizzPlate.castBar:IsShown() then
+      bar:Hide()
+    end
+
+    blizzPlate.newPlate.castBar = bar
 
   end
 
@@ -368,6 +362,7 @@
   end
 
   local function NamePlateOnHide(blizzPlate)
+    blizzPlate.newPlate.castBar:Hide()
     blizzPlate.newPlate:Hide()
     wipe(blizzPlate.auras)
     blizzPlate:UpdateAllAuras() --hide visible buttons
@@ -377,34 +372,51 @@
     end
   end
 
-  local function NamePlateCastBarOnShow(castBar)
-    castBar:SetSize(unpack(castBar.size))
-    castBar:ClearAllPoints()
-    castBar:SetPoint(unpack(castBar.point))
-    castBar.spellIconTexture:ClearAllPoints()
-    castBar.spellIconTexture:SetPoint(unpack(castBar.spellIconTexture.point))
+  local function NamePlateCastBarUpdate(castBar)
+    local blizzPlate = castBar.__owner
+    local castBar2 = blizzPlate.newPlate.castBar
+    if castBar:IsShown() then
+      castBar2:Show()
+    end
+    castBar2.spellIconTexture:SetTexture(castBar.spellIconTexture:GetTexture())
+    castBar2.nameString:SetText(castBar.nameString:GetText())
+    castBar2:SetMinMaxValues(castBar:GetMinMaxValues())
+    castBar2:SetValue(castBar:GetValue())
     if castBar.shieldTexture:IsShown() then
-      castBar:SetStatusBarColor(0.8,0.8,0.8)
-      castBar.shieldTexture:ClearAllPoints()
-      castBar.shieldTexture:SetPoint(unpack(castBar.shieldTexture.point))
-      castBar.shieldTexture:SetSize(unpack(castBar.shieldTexture.size))
-      castBar.spellIconBorder:SetDesaturated(1)
+      castBar2.shieldTexture:Show()
+      castBar2:SetStatusBarColor(0.8,0.8,0.8)
+      castBar2.spellIconBorder:SetDesaturated(1)
     else
-      castBar.spellIconBorder:SetDesaturated(0)
+      castBar2.shieldTexture:Hide()
+      castBar2:SetStatusBarColor(castBar:GetStatusBarColor())
+      castBar2.spellIconBorder:SetDesaturated(0)
     end
   end
 
-  local function NamePlateCastBarOnValueChanged(castBar)
-    castBar:SetSize(unpack(castBar.size))
-    castBar:ClearAllPoints()
-    castBar:SetPoint(unpack(castBar.point))
-    castBar.spellIconTexture:ClearAllPoints()
-    castBar.spellIconTexture:SetPoint(unpack(castBar.spellIconTexture.point))
-    if castBar.shieldTexture:IsShown() then
-      castBar.shieldTexture:ClearAllPoints()
-      castBar.shieldTexture:SetPoint(unpack(castBar.shieldTexture.point))
-      castBar.shieldTexture:SetSize(unpack(castBar.shieldTexture.size))
+  local function NamePlateCastBarOnHide(castBar)
+    local blizzPlate = castBar.__owner
+    local castBar2 = blizzPlate.newPlate.castBar
+    castBar2:Hide()
+  end
+
+  local function NamePlateHealthBarUpdate(healthBar)
+    local blizzPlate = healthBar.__owner
+    local healthBar2 = blizzPlate.newPlate.healthBar
+    healthBar2:SetMinMaxValues(healthBar:GetMinMaxValues())
+    healthBar2:SetValue(healthBar:GetValue())
+  end
+
+  local function NamePlateHealthBarColor(blizzPlate)
+    if blizzPlate:threatTexture:IsShown() then
+      local r,g,b = blizzPlate.threatTexture:GetVertexColor()
+      if g+b == 0 then
+        blizzPlate.newPlate.healthBar:SetStatusBarColor(0,1,0)--tank mode
+      else
+        blizzPlate.newPlate.healthBar:SetStatusBarColor(r,g,b)
+      end
+      return
     end
+    blizzPlate.newPlate.healthBar:SetStatusBarColor(blizzPlate.healthBar:GetStatusBarColor())
   end
 
   local function CreateNewPlate(blizzPlate)
@@ -420,7 +432,7 @@
     function blizzPlate:CreateAuraHeader()
       local auraHeader = CreateFrame("Frame",nil,self.newPlate)
       auraHeader:SetScale(cfg.scale)
-      auraHeader:SetPoint("BOTTOMLEFT",self.healthBar,"TOPLEFT",0,15)
+      auraHeader:SetPoint("BOTTOMLEFT",self.newPlate.healthBar,"TOPLEFT",0,15)
       auraHeader:SetSize(60,45)
       blizzPlate.auraHeader = auraHeader
     end
@@ -542,8 +554,12 @@
     CreateNamePlateAuraFunctions(blizzPlate)
     blizzPlate:HookScript("OnShow", NamePlateOnShow)
     blizzPlate:HookScript("OnHide", NamePlateOnHide)
-    blizzPlate.castBar:HookScript("OnShow", NamePlateCastBarOnShow)
-    blizzPlate.castBar:HookScript("OnValueChanged", NamePlateCastBarOnValueChanged)
+    blizzPlate.castBar:HookScript("OnShow", NamePlateCastBarUpdate)
+    blizzPlate.castBar:HookScript("OnHide", NamePlateCastBarOnHide)
+    blizzPlate.castBar:HookScript("OnValueChanged", NamePlateCastBarUpdate)
+    blizzPlate.healthBar:HookScript("OnValueChanged", NamePlateHealthBarUpdate)
+    NamePlateHealthBarUpdate(blizzPlate.healthBar)
+    NamePlateHealthBarColor(blizzPlate)
     namePlateIndex = namePlateIndex+1
   end
 
@@ -562,6 +578,7 @@
     countFramesWithFullAlpha = 0
     for blizzPlate, newPlate in next, plates do
       if blizzPlate:IsShown() then
+        NamePlateHealthBarColor(blizzPlate)
         if blizzPlate:GetAlpha() == 1 then
           newPlate:SetAlpha(1)
         else

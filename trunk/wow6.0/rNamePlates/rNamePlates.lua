@@ -296,8 +296,16 @@
     shadow:SetTexture("Interface\\Common\\NameShadow")
     shadow:SetPoint("TOP",bar,"BOTTOM",0,20)
     shadow:SetSize(256,32)
+    
+    local hlf = CreateFrame("Frame",nil,bar)
+    hlf:SetAllPoints()
+    bar.hlf = hlf
 
-    local name = bar:CreateFontString(nil, "BORDER")
+    local hl = hlf:CreateTexture(nil,"BACKGROUND",nil,-8)
+    hl:SetTexture("Interface\\AddOns\\"..an.."\\media\\statusbar_highlight")
+    hl:SetAllPoints()
+
+    local name = bar.hlf:CreateFontString(nil, "BORDER")
     name:SetFont(cfg.font, cfg.castbar_fontsize, "OUTLINE")
     name:SetPoint("TOP",bar,"BOTTOM",0,30)
     name:SetPoint("LEFT",8,0)
@@ -372,11 +380,24 @@
     end
   end
 
-  local function NamePlateCastBarUpdate(castBar)
+  local function NamePlateCastBarOnHide(castBar)
+    local blizzPlate = castBar.__owner
+    local castBar2 = blizzPlate.newPlate.castBar
+    castBar2:Hide()
+  end
+  
+  local function NamePlateCastBarUpdate(castBar, value)
     local blizzPlate = castBar.__owner
     local castBar2 = blizzPlate.newPlate.castBar
     if castBar:IsShown() then
       castBar2:Show()
+    else
+      castBar2:Hide()
+      return
+    end
+    if value == 0 then
+      castBar2:Hide()
+      return    
     end
     castBar2.spellIconTexture:SetTexture(castBar.spellIconTexture:GetTexture())
     castBar2.nameString:SetText(castBar.nameString:GetText())
@@ -393,12 +414,6 @@
     end
   end
 
-  local function NamePlateCastBarOnHide(castBar)
-    local blizzPlate = castBar.__owner
-    local castBar2 = blizzPlate.newPlate.castBar
-    castBar2:Hide()
-  end
-
   local function NamePlateHealthBarUpdate(healthBar)
     local blizzPlate = healthBar.__owner
     local healthBar2 = blizzPlate.newPlate.healthBar
@@ -407,7 +422,7 @@
   end
 
   local function NamePlateHealthBarColor(blizzPlate)
-    if blizzPlate:threatTexture:IsShown() then
+    if blizzPlate.threatTexture:IsShown() then
       local r,g,b = blizzPlate.threatTexture:GetVertexColor()
       if g+b == 0 then
         blizzPlate.newPlate.healthBar:SetStatusBarColor(0,1,0)--tank mode

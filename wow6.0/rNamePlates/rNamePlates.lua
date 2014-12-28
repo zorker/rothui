@@ -420,6 +420,9 @@
     healthBar2:SetMinMaxValues(healthBar:GetMinMaxValues())
     healthBar2:SetValue(healthBar:GetValue())
   end
+  
+  local RAID_CLASS_COLORS = RAID_CLASS_COLORS
+  local FACTION_BAR_COLORS = FACTION_BAR_COLORS
 
   local function NamePlateHealthBarColor(blizzPlate)
     if blizzPlate.threatTexture:IsShown() then
@@ -431,7 +434,17 @@
       end
       return
     end
-    blizzPlate.newPlate.healthBar:SetStatusBarColor(blizzPlate.healthBar:GetStatusBarColor())
+    local r,g,b = blizzPlate.healthBar:GetStatusBarColor()
+    if g+b == 0 then -- hostile
+      r,g,b = FACTION_BAR_COLORS[2].r, FACTION_BAR_COLORS[2].g, FACTION_BAR_COLORS[2].b
+    elseif r+b == 0 then -- friendly npc
+      r,g,b = FACTION_BAR_COLORS[6].r, FACTION_BAR_COLORS[6].g, FACTION_BAR_COLORS[6].b
+    elseif r+g > 1.95 then -- neutral
+      r,g,b = FACTION_BAR_COLORS[4].r, FACTION_BAR_COLORS[4].g, FACTION_BAR_COLORS[4].b
+    elseif r+g == 0 then -- friendly player, we don't like 0,0,1 so we change it to a more likable color
+      r,g,b = 0/255, 100/255, 255/255
+    end
+    blizzPlate.newPlate.healthBar:SetStatusBarColor(r,g,b)
   end
 
   local function CreateNewPlate(blizzPlate)
@@ -593,7 +606,6 @@
     countFramesWithFullAlpha = 0
     for blizzPlate, newPlate in next, plates do
       if blizzPlate:IsShown() then
-        NamePlateHealthBarColor(blizzPlate)
         if blizzPlate:GetAlpha() == 1 then
           newPlate:SetAlpha(1)
         else
@@ -610,6 +622,7 @@
           AuraModule.updateMouseover = false
         end
         if timer > interval then
+          NamePlateHealthBarColor(blizzPlate)
           blizzPlate:UpdateAllAuras()
         end
       end

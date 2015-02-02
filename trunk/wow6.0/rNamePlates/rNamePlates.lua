@@ -32,6 +32,7 @@
   AuraModule.playerGUID       = nil
   AuraModule.petGUID          = nil
   AuraModule.updateTarget     = false
+  AuraModule.hasTarget        = false
   AuraModule.updateMouseover  = false
 
   function AuraModule:PLAYER_TARGET_CHANGED(...)
@@ -39,8 +40,10 @@
     if spellDB.disabled then return end
     if UnitGUID("target") and UnitExists("target") and not UnitIsUnit("target","player") and not UnitIsDead("target") then
       self.updateTarget = true
+      self.hasTarget = true
     else
       self.updateTarget = false
+      self.hasTarget = false
     end
   end
 
@@ -296,7 +299,7 @@
     shadow:SetTexture("Interface\\Common\\NameShadow")
     shadow:SetPoint("TOP",bar,"BOTTOM",0,20)
     shadow:SetSize(256,32)
-    
+
     local hlf = CreateFrame("Frame",nil,bar)
     hlf:SetAllPoints()
     bar.hlf = hlf
@@ -344,7 +347,7 @@
     sizer:SetPoint("TOPRIGHT", blizzPlate, "CENTER")
     sizer:SetScript("OnSizeChanged", function(self, x, y)
       if blizzPlate:IsShown() then
-        blizzPlate.newPlate:Hide() -- Important, never move the frame while it"s visible
+        blizzPlate.newPlate:Hide() -- Important, never move the frame while it is visible
         blizzPlate.newPlate:SetPoint("CENTER", WorldFrame, "BOTTOMLEFT", x, y) -- Immediately reposition frame
         blizzPlate.newPlate:Show()
       end
@@ -385,7 +388,7 @@
     local castBar2 = blizzPlate.newPlate.castBar
     castBar2:Hide()
   end
-  
+
   local function NamePlateCastBarUpdate(castBar, value)
     local blizzPlate = castBar.__owner
     local castBar2 = blizzPlate.newPlate.castBar
@@ -397,7 +400,7 @@
     end
     if value == 0 then
       castBar2:Hide()
-      return    
+      return
     end
     castBar2.spellIconTexture:SetTexture(castBar.spellIconTexture:GetTexture())
     castBar2.nameString:SetText(castBar.nameString:GetText())
@@ -420,7 +423,7 @@
     healthBar2:SetMinMaxValues(healthBar:GetMinMaxValues())
     healthBar2:SetValue(healthBar:GetValue())
   end
-  
+
   local RAID_CLASS_COLORS = RAID_CLASS_COLORS
   local FACTION_BAR_COLORS = FACTION_BAR_COLORS
 
@@ -435,6 +438,12 @@
       return
     end
     local r,g,b = blizzPlate.healthBar:GetStatusBarColor()
+    r,g,b = RoundNumber(r),RoundNumber(g),RoundNumber(b)
+    for class, color in next, RAID_CLASS_COLORS do
+      if r == color.r and g == color.g and b == color.b then
+        return --no color change needed, bar is in class color
+      end
+    end
     if g+b == 0 then -- hostile
       r,g,b = FACTION_BAR_COLORS[2].r, FACTION_BAR_COLORS[2].g, FACTION_BAR_COLORS[2].b
     elseif r+b == 0 then -- friendly npc
@@ -611,7 +620,7 @@
         else
           newPlate:SetAlpha(cfg.notFocusedPlateAlpha)
         end
-        if AuraModule.updateTarget and blizzPlate:GetAlpha() == 1 then
+        if AuraModule.hasTarget and blizzPlate:GetAlpha() == 1 then
           countFramesWithFullAlpha = countFramesWithFullAlpha + 1
           targetPlate = blizzPlate
         end
@@ -630,7 +639,7 @@
     if timer > interval then
       timer = 0
     end
-    if AuraModule.updateTarget and countFramesWithFullAlpha == 1 and UnitGUID("target") and UnitExists("target") and not UnitIsDead("target") then
+    if AuraModule.hasTarget and countFramesWithFullAlpha == 1 and (AuraModule.updateTarget or not targetPlate.guid) then
       --this may look wierd but is actually needed.
       --when the PLAYER_TARGET_CHANGED event fires the nameplate need one cycle to update the alpha, otherwise the old target would be tagged.
       if delayCounter == 1 then

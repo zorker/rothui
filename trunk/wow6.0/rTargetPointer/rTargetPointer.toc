@@ -1,0 +1,6 @@
+## Interface: 60000
+## Author: zork
+## Title: rTargetPointer
+## Notes: Points to the target!
+
+rTargetPointer.lua

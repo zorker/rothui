@@ -35,9 +35,9 @@
 
   local function rTP_RotateArrow()
     local x2,y2 = WorldFrame:GetCenter()
-    local x3 = math.floor(lastPoint.x-x2)
-    local y3 = math.floor(lastPoint.y-y2)
-    local d = math.floor(math.deg(math.atan(x3/y3)))
+    local x3 = lastPoint.x-x2
+    local y3 = lastPoint.y-y2
+    local d = math.deg(math.atan(x3/y3))
     --print("x",x3,"y",y3,"@",d)
     if x3 >= 0 and y3 >= 0 then
       d = d*(-1)

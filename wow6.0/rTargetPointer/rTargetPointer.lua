@@ -1,6 +1,17 @@
 
   -- // rTargetPointer
   -- // zork - 2015
+  
+  -----------------------------
+  -- CONFIG
+  -----------------------------
+  
+  local cfg = {}
+  
+  cfg.arrowSize       = 256
+  cfg.arrowTexture    = "pointer"
+  cfg.arrowColor      = {1,0,0,1} -- r,g,b,a
+  cfg.arrowBlendMode  = "ADD"     -- "ADD" or "BLEND"
 
   -----------------------------
   -- VARIABLES
@@ -14,6 +25,7 @@
 
   local timer = CreateFrame("Frame")
   local addon = CreateFrame("Frame", nil, UIParent)
+  local arrow = addon:CreateTexture(nil,"BACKGROUND",nil,-8)
   local sizer = CreateFrame("Frame", nil, WorldFrame)
 
   -----------------------------
@@ -22,7 +34,7 @@
 
   --rTP_RotateArrow func
   local function rTP_RotateArrow()
-    local x2,y2 = addon:GetCenter()
+    local x2,y2 = WorldFrame:GetCenter()
     local x3 = lastPoint.x-x2
     local y3 = lastPoint.y-y2
     local d = math.deg(math.atan(x3/y3))
@@ -36,9 +48,6 @@
     elseif x3 <= 0 and y3 <= 0 then
       d = (180-d)
     end
-    --rework this later to work of http://wowprogramming.com/docs/widgets/Rotation
-    --maybe we can rotate the addon frame itself. thus a full set of textures will be rotated at once.
-    --since OnSizeChanged can fire pretty frequently some sort of throttling is needed
     arrow:SetRotation(math.rad(d))
   end
 
@@ -53,15 +62,15 @@
   --rTP_NamePlateTargetSearch func
   local function rTP_NamePlateTargetSearch()
     if not namePlateIndex then return end
-    --print("rTP_NamePlateTargetSearch")
     sizer:Hide()
     if not hasTarget then return end
+    --print("rTP_NamePlateTargetSearch")
     for plate, _ in next, plates do
       if plate:IsShown() and plate:GetAlpha() == 1 then
         sizer:ClearAllPoints()
-        sizer:SetPoint("TOPRIGHT", frame, "CENTER")
+        sizer:SetPoint("TOPRIGHT", plate, "CENTER")
         sizer:SetPoint("BOTTOMLEFT", WorldFrame)
-        lastPoint.x,lastPoint.y = frame:GetCenter()
+        lastPoint.x,lastPoint.y = plate:GetCenter()
         rTP_RotateArrow()
         sizer:Show()
         arrow:Show()
@@ -71,11 +80,12 @@
   end
 
   --rTP_NamePlateLookup func
-  local function rTP_NamePlateLookup()
+  local function rTP_NamePlateLookup()    
     if not namePlateIndex then return end
     local plate = _G["NamePlate"..namePlateIndex]
     if not plate then return end
     if plates[plate] then return end
+    --print("rTP_NamePlateLookup")
     plates[plate] = true
     namePlateIndex = namePlateIndex+1
   end
@@ -83,6 +93,7 @@
   --rTP_NamePlateIndexSearch func
   local function rTP_NamePlateIndexSearch()
     if namePlateIndex then return end
+    --print("rTP_NamePlateIndexSearch")
     for _, frame in next, { WorldFrame:GetChildren() } do
       local name = frame:GetName()
       if name and string.match(name, "^NamePlate%d+$") then
@@ -132,12 +143,11 @@
   addon:SetPoint("CENTER")
 
   --arrow
-  local arrow = addon:CreateTexture(nil,"BACKGROUND",nil,-8)
-  arrow:SetTexture("Interface\\AddOns\\"..an.."\\media\\pointer")
-  arrow:SetSize(sqrt(2)*256,sqrt(2)*256)
+  arrow:SetTexture("Interface\\AddOns\\"..an.."\\media\\"..cfg.arrowTexture)
+  arrow:SetSize(sqrt(2)*cfg.arrowSize,sqrt(2)*cfg.arrowSize)
   arrow:SetPoint("CENTER")
-  arrow:SetVertexColor(1,0,0)
-  arrow:SetBlendMode("ADD") --"ADD" or "BLEND"
+  arrow:SetVertexColor(unpack(cfg.arrowColor))
+  arrow:SetBlendMode(cfg.arrowBlendMode) --"ADD" or "BLEND"
   arrow:SetRotation(math.rad(0))
   arrow:Hide()
 
@@ -145,7 +155,10 @@
   sizer:SetScript("OnSizeChanged", rTP_SizerOnSizeChanged)
   sizer:Hide()
 
-  --local t = sizer:CreateTexture()
-  --t:SetAllPoints()
-  --t:SetTexture(1,1,1)
-  --t:SetVertexColor(0,1,1,0.3)
+  --debug
+  --[[
+  local t = sizer:CreateTexture()
+  t:SetAllPoints()
+  t:SetTexture(1,1,1)
+  t:SetVertexColor(0,1,1,0.3)
+  ]]

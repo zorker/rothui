@@ -22,7 +22,7 @@
 
   --rTP_RotateArrow func
   local function rTP_RotateArrow()
-    local x2,y2 = WorldFrame:GetCenter()
+    local x2,y2 = addon:GetCenter()
     local x3 = lastPoint.x-x2
     local y3 = lastPoint.y-y2
     local d = math.deg(math.atan(x3/y3))
@@ -38,7 +38,7 @@
     end
     --rework this later to work of http://wowprogramming.com/docs/widgets/Rotation
     --maybe we can rotate the addon frame itself. thus a full set of textures will be rotated at once.
-    --since OnSizeChanged can fire pretty frequently any kind of throttling is needed
+    --since OnSizeChanged can fire pretty frequently some sort of throttling is needed
     arrow:SetRotation(math.rad(d))
   end
 

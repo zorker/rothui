@@ -462,7 +462,7 @@
     self.newPlate.castBar:Hide()
     self.newPlate:Hide()
     wipe(self.auras)
-    NamePlateUpdateAllAuras() --hide visible buttons
+    NamePlateUpdateAllAuras(self) --hide visible buttons
     if self.guid then
       unitDB[self.guid] = nil
       self.guid = nil
@@ -673,7 +673,7 @@
 
   local function AuraModuleAddonLoaded(name)
     if name == an then
-      self:UnregisterEvent("ADDON_LOADED")
+      AuraModule:UnregisterEvent("ADDON_LOADED")
       if not rNP_SPELL_DB then
         rNP_SPELL_DB = {}
       end

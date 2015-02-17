@@ -338,8 +338,9 @@
   local function NamePlateCreateNewPlate(self)
     self.newPlate = CreateFrame("Frame", nil, WorldFrame)
     self.newPlate.id = namePlateIndex
-    self.newPlate:SetSize(36,36)
+    namePlateIndex = namePlateIndex+1
     plates[self] = self.newPlate
+    self.newPlate:SetSize(36,36)
   end
 
   local function NamePlateCreateAuraHeader(self)
@@ -438,7 +439,7 @@
     for spellID, data in next, self.auras do
       local cooldown = data.expirationTime-GetTime()
       if cooldown < 0 then
-        self:RemoveAura(spellID)
+        NamePlateRemoveAura(self,spellID)
       else
         local button = self.auraButtons[buttonIndex] or NamePlateCreateAuraButton(self,buttonIndex)
         --set texture
@@ -507,7 +508,6 @@
     if not self:IsShown() then
       self.newPlate:Hide()
     end
-    namePlateIndex = namePlateIndex+1
   end
 
   local function NamePlateScan()
@@ -527,17 +527,16 @@
     updateMouseover = false
   end
 
-  local function NamePlateUpdateTarget()
+  local function NamePlateUpdateTarget(self)
     --this may look wierd but is actually needed.
     --when the PLAYER_TARGET_CHANGED event fires the nameplate need one cycle to update the alpha, otherwise the old target would be tagged.
-    if not targetPlate then return end
+    if not self then return end
     if delayCounter == 1 then
-      NamePlateSetGUID(targetPlate,UnitGUID("target"))
-      NamePlateScanAuras(targetPlate,"target","HELPFUL")
-      NamePlateScanAuras(targetPlate,"target","HARMFUL")
+      NamePlateSetGUID(self,UnitGUID("target"))
+      NamePlateScanAuras(self,"target","HELPFUL")
+      NamePlateScanAuras(self,"target","HARMFUL")
       updateTarget = false
       delayCounter = 0
-      targetPlate = nil
     else
       delayCounter = delayCounter + 1
     end
@@ -545,6 +544,7 @@
 
   local function NamePlateUpdateAll()
     targetPlateCounter = 0
+    targetPlate = nil
     for blizzPlate, newPlate in next, plates do
       if blizzPlate:IsShown() then
         if blizzPlate:GetAlpha() == 1 then
@@ -566,7 +566,7 @@
       end
     end
     if hasTarget and targetPlateCounter == 1 and (updateTarget or not targetPlate.guid) then
-      NamePlateUpdateTarget()
+      NamePlateUpdateTarget(targetPlate)
     else
       delayCounter = 0
     end

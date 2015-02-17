@@ -84,46 +84,46 @@
     return (math.floor(n*100+0.5)/100)
   end
 
-  local function NamePlateSetup(blizzPlate)
+  local function NamePlateSetup(self)
 
-    blizzPlate.castBar.borderTexture:SetTexture(nil)
-    blizzPlate.borderTexture:SetTexture(nil)
-    blizzPlate.bossIconTexture:SetTexture(nil)
-    blizzPlate.eliteDragonTexture:SetTexture(nil)
-    blizzPlate.highlightTexture:SetTexture(nil)
-    blizzPlate.threatTexture:SetTexture(nil)
+    self.castBar.borderTexture:SetTexture(nil)
+    self.borderTexture:SetTexture(nil)
+    self.bossIconTexture:SetTexture(nil)
+    self.eliteDragonTexture:SetTexture(nil)
+    self.highlightTexture:SetTexture(nil)
+    self.threatTexture:SetTexture(nil)
 
-    local name = blizzPlate.nameString:GetText() or "Unknown"
-    local level = blizzPlate.levelString:GetText() or "-1"
-    local hexColor = GetHexColorFromRGB(blizzPlate.levelString:GetTextColor()) or "ffffff"
+    local name = self.nameString:GetText() or "Unknown"
+    local level = self.levelString:GetText() or "-1"
+    local hexColor = GetHexColorFromRGB(self.levelString:GetTextColor()) or "ffffff"
 
-    if blizzPlate.bossIconTexture:IsShown() then
+    if self.bossIconTexture:IsShown() then
       level = "??"
       hexColor = "ff6600"
-    elseif blizzPlate.eliteDragonTexture:IsShown() then
+    elseif self.eliteDragonTexture:IsShown() then
       level = level.."+"
     end
-    blizzPlate.newPlate.healthBar.name:SetText("|cff"..hexColor..""..level.."|r "..name)
+    self.newPlate.healthBar.name:SetText("|cff"..hexColor..""..level.."|r "..name)
   end
 
-  local function NamePlateSetReferences(blizzPlate)
-    blizzPlate.barFrame, blizzPlate.nameFrame = blizzPlate:GetChildren()
-    blizzPlate.healthBar, blizzPlate.castBar = blizzPlate.barFrame:GetChildren()
-    blizzPlate.threatTexture, blizzPlate.borderTexture, blizzPlate.highlightTexture, blizzPlate.levelString, blizzPlate.bossIconTexture, blizzPlate.raidIconTexture, blizzPlate.eliteDragonTexture = blizzPlate.barFrame:GetRegions()
-    blizzPlate.nameString = blizzPlate.nameFrame:GetRegions()
-    blizzPlate.healthBar.statusbarTexture = blizzPlate.healthBar:GetRegions()
-    blizzPlate.castBar.statusbarTexture, blizzPlate.castBar.borderTexture, blizzPlate.castBar.shieldTexture, blizzPlate.castBar.spellIconTexture, blizzPlate.castBar.nameString, blizzPlate.castBar.nameShadow = blizzPlate.castBar:GetRegions()
-    blizzPlate.nameFrame:SetParent(trash)
-    blizzPlate.levelString:SetParent(trash)
-    blizzPlate.healthBar.__owner = blizzPlate
-    blizzPlate.castBar.__owner = blizzPlate
-    blizzPlate.healthBar:SetParent(trash)
-    blizzPlate.castBar:SetParent(trash)
+  local function NamePlateSetReferences(self)
+    self.barFrame, self.nameFrame = self:GetChildren()
+    self.healthBar, self.castBar = self.barFrame:GetChildren()
+    self.threatTexture, self.borderTexture, self.highlightTexture, self.levelString, self.bossIconTexture, self.raidIconTexture, self.eliteDragonTexture = self.barFrame:GetRegions()
+    self.nameString = self.nameFrame:GetRegions()
+    self.healthBar.statusbarTexture = self.healthBar:GetRegions()
+    self.castBar.statusbarTexture, self.castBar.borderTexture, self.castBar.shieldTexture, self.castBar.spellIconTexture, self.castBar.nameString, self.castBar.nameShadow = self.castBar:GetRegions()
+    self.nameFrame:SetParent(trash)
+    self.levelString:SetParent(trash)
+    self.healthBar.__owner = self
+    self.castBar.__owner = self
+    self.healthBar:SetParent(trash)
+    self.castBar:SetParent(trash)
   end
 
-  local function NamePlateSkinHealthBar(blizzPlate)
+  local function NamePlateSkinHealthBar(self)
 
-    local bar = CreateFrame("StatusBar",nil,blizzPlate.newPlate)
+    local bar = CreateFrame("StatusBar",nil,self.newPlate)
     bar:SetSize(256,64)
     bar:SetStatusBarTexture("Interface\\AddOns\\"..an.."\\media\\statusbar_fill")
     bar:SetScale(cfg.scale)
@@ -166,22 +166,22 @@
     name:SetText("Ich bin ein Berliner!")
     bar.name = name
 
-    blizzPlate.raidIconTexture:SetParent(bar)
-    blizzPlate.raidIconTexture:SetSize(60,60)
-    blizzPlate.raidIconTexture:ClearAllPoints()
-    blizzPlate.raidIconTexture:SetPoint("BOTTOM",bar,"TOP",0,40)
+    self.raidIconTexture:SetParent(bar)
+    self.raidIconTexture:SetSize(60,60)
+    self.raidIconTexture:ClearAllPoints()
+    self.raidIconTexture:SetPoint("BOTTOM",bar,"TOP",0,40)
 
-    blizzPlate.newPlate.healthBar = bar
+    self.newPlate.healthBar = bar
 
   end
 
-  local function NamePlateSkinCastBar(blizzPlate)
+  local function NamePlateSkinCastBar(self)
 
-    local bar = CreateFrame("StatusBar",nil,blizzPlate.newPlate)
+    local bar = CreateFrame("StatusBar",nil,self.newPlate)
     bar:SetSize(256,64)
     bar:SetStatusBarTexture("Interface\\AddOns\\"..an.."\\media\\statusbar_fill")
     bar:SetScale(cfg.scale)
-    bar:SetPoint("TOP",blizzPlate.newPlate.healthBar,"BOTTOM",0,20)
+    bar:SetPoint("TOP",self.newPlate.healthBar,"BOTTOM",0,20)
 
     local le = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
     le:SetTexture("Interface\\AddOns\\"..an.."\\media\\edge_left")
@@ -235,99 +235,88 @@
     shield:SetSize(36,36)
     bar.shieldTexture = shield
 
-    if not blizzPlate.castBar:IsShown() then
+    if not self.castBar:IsShown() then
       bar:Hide()
     end
 
-    blizzPlate.newPlate.castBar = bar
+    self.newPlate.castBar = bar
 
   end
 
   local function NamePlateSizerOnSizeChanged(self,x,y)
-    local blizzPlate = self.__blizzPlate
-    if blizzPlate:IsShown() then
-      blizzPlate.newPlate:Hide()
-      blizzPlate.newPlate:SetPoint("CENTER", WorldFrame, "BOTTOMLEFT", x, y)
-      blizzPlate.newPlate:Show()
+    local plate = self.__owner
+    if plate:IsShown() then
+      plate.newPlate:Hide()
+      plate.newPlate:SetPoint("CENTER", WorldFrame, "BOTTOMLEFT", x, y)
+      plate.newPlate:Show()
     end
   end
 
-  local function NamePlateCreateSizer(blizzPlate)
-    local sizer = CreateFrame("Frame", nil, blizzPlate.newPlate)
-    sizer.__blizzPlate = blizzPlate
+  local function NamePlateCreateSizer(self)
+    local sizer = CreateFrame("Frame", nil, self.newPlate)
+    sizer.__owner = self
     sizer:SetPoint("BOTTOMLEFT", WorldFrame)
-    sizer:SetPoint("TOPRIGHT", blizzPlate, "CENTER")
+    sizer:SetPoint("TOPRIGHT", self, "CENTER")
     sizer:SetScript("OnSizeChanged", NamePlateSizerOnSizeChanged)
   end
 
-  local function NamePlateOnShow(blizzPlate)
-    NamePlateSetup(blizzPlate)
-    blizzPlate.newPlate:Show()
+  local function NamePlateOnShow(self)
+    NamePlateSetup(self)
+    self.newPlate:Show()
   end
 
-  local function NamePlateOnHide(blizzPlate)
-    blizzPlate.newPlate.castBar:Hide()
-    blizzPlate.newPlate:Hide()
-    wipe(blizzPlate.auras)
-    blizzPlate:UpdateAllAuras() --hide visible buttons
-    if blizzPlate.guid then
-      unitDB[blizzPlate.guid] = nil
-      blizzPlate.guid = nil
-    end
+  local function NamePlateCastBarOnHide(self)
+    local plate = self.__owner
+    local castBar = plate.newPlate.castBar
+    castBar:Hide()
   end
 
-  local function NamePlateCastBarOnHide(castBar)
-    local blizzPlate = castBar.__owner
-    local castBar2 = blizzPlate.newPlate.castBar
-    castBar2:Hide()
-  end
-
-  local function NamePlateCastBarUpdate(castBar, value)
-    local blizzPlate = castBar.__owner
-    local castBar2 = blizzPlate.newPlate.castBar
-    if castBar:IsShown() then
-      castBar2:Show()
+  local function NamePlateCastBarUpdate(self, value)
+    local plate = self.__owner
+    local castBar = plate.newPlate.castBar
+    if self:IsShown() then
+      castBar:Show()
     else
-      castBar2:Hide()
+      castBar:Hide()
       return
     end
     if value == 0 then
-      castBar2:Hide()
+      castBar:Hide()
       return
     end
-    castBar2.spellIconTexture:SetTexture(castBar.spellIconTexture:GetTexture())
-    castBar2.nameString:SetText(castBar.nameString:GetText())
-    castBar2:SetMinMaxValues(castBar:GetMinMaxValues())
-    castBar2:SetValue(castBar:GetValue())
-    if castBar.shieldTexture:IsShown() then
-      castBar2.shieldTexture:Show()
-      castBar2:SetStatusBarColor(0.8,0.8,0.8)
-      castBar2.spellIconBorder:SetDesaturated(1)
+    castBar.spellIconTexture:SetTexture(self.spellIconTexture:GetTexture())
+    castBar.nameString:SetText(self.nameString:GetText())
+    castBar:SetMinMaxValues(self:GetMinMaxValues())
+    castBar:SetValue(self:GetValue())
+    if self.shieldTexture:IsShown() then
+      castBar.shieldTexture:Show()
+      castBar:SetStatusBarColor(0.8,0.8,0.8)
+      castBar.spellIconBorder:SetDesaturated(1)
     else
-      castBar2.shieldTexture:Hide()
-      castBar2:SetStatusBarColor(castBar:GetStatusBarColor())
-      castBar2.spellIconBorder:SetDesaturated(0)
+      castBar.shieldTexture:Hide()
+      castBar:SetStatusBarColor(self:GetStatusBarColor())
+      castBar.spellIconBorder:SetDesaturated(0)
     end
   end
 
-  local function NamePlateHealthBarUpdate(healthBar)
-    local blizzPlate = healthBar.__owner
-    local healthBar2 = blizzPlate.newPlate.healthBar
-    healthBar2:SetMinMaxValues(healthBar:GetMinMaxValues())
-    healthBar2:SetValue(healthBar:GetValue())
+  local function NamePlateHealthBarUpdate(self)
+    local plate = self.__owner
+    local healthBar = plate.newPlate.healthBar
+    healthBar:SetMinMaxValues(self:GetMinMaxValues())
+    healthBar:SetValue(self:GetValue())
   end
 
-  local function NamePlateHealthBarColor(blizzPlate)
-    if blizzPlate.threatTexture:IsShown() then
-      local r,g,b = blizzPlate.threatTexture:GetVertexColor()
+  local function NamePlateHealthBarColor(self)
+    if self.threatTexture:IsShown() then
+      local r,g,b = self.threatTexture:GetVertexColor()
       if g+b == 0 then
-        blizzPlate.newPlate.healthBar:SetStatusBarColor(0,1,0)--tank mode
+        self.newPlate.healthBar:SetStatusBarColor(0,1,0)--tank mode
       else
-        blizzPlate.newPlate.healthBar:SetStatusBarColor(r,g,b)
+        self.newPlate.healthBar:SetStatusBarColor(r,g,b)
       end
       return
     end
-    local r,g,b = blizzPlate.healthBar:GetStatusBarColor()
+    local r,g,b = self.healthBar:GetStatusBarColor()
     r,g,b = RoundNumber(r),RoundNumber(g),RoundNumber(b)
     for class, color in next, RAID_CLASS_COLORS do
       if r == color.r and g == color.g and b == color.b then
@@ -343,14 +332,14 @@
     elseif r+g == 0 then -- friendly player, we don't like 0,0,1 so we change it to a more likable color
       r,g,b = 0/255, 100/255, 255/255
     end
-    blizzPlate.newPlate.healthBar:SetStatusBarColor(r,g,b)
+    self.newPlate.healthBar:SetStatusBarColor(r,g,b)
   end
 
-  local function NamePlateCreateNewPlate(blizzPlate)
-    blizzPlate.newPlate = CreateFrame("Frame", nil, WorldFrame)
-    blizzPlate.newPlate.id = namePlateIndex
-    blizzPlate.newPlate:SetSize(36,36)
-    plates[blizzPlate] = blizzPlate.newPlate
+  local function NamePlateCreateNewPlate(self)
+    self.newPlate = CreateFrame("Frame", nil, WorldFrame)
+    self.newPlate.id = namePlateIndex
+    self.newPlate:SetSize(36,36)
+    plates[self] = self.newPlate
   end
 
   local function NamePlateCreateAuraHeader(self)
@@ -358,7 +347,7 @@
     auraHeader:SetScale(cfg.scale)
     auraHeader:SetPoint("BOTTOMLEFT",self.newPlate.healthBar,"TOPLEFT",0,15)
     auraHeader:SetSize(60,45)
-    blizzPlate.auraHeader = auraHeader
+    self.auraHeader = auraHeader
   end
 
   local function NamePlateUpdateAura(self,startTime,expirationTime,unitCaster,spellID,stackCount)
@@ -468,51 +457,62 @@
     end
   end
 
-  local function NamePlateSetGUID(blizzPlate,guid)
-    if blizzPlate.guid and guid ~= blizzPlate.guid then
-      unitDB[blizzPlate.guid] = nil
-      wipe(blizzPlate.auras)
-      NamePlateUpdateAllAuras(blizzPlate) --hide visible buttons
-      blizzPlate.guid = guid
-      unitDB[guid] = blizzPlate
-    elseif not blizzPlate.guid then
-      blizzPlate.guid = guid
-      unitDB[guid] = blizzPlate
+  local function NamePlateOnHide(self)
+    self.newPlate.castBar:Hide()
+    self.newPlate:Hide()
+    wipe(self.auras)
+    NamePlateUpdateAllAuras() --hide visible buttons
+    if self.guid then
+      unitDB[self.guid] = nil
+      self.guid = nil
     end
   end
 
-  local function NamePlateInitAuras(blizzPlate)
-    blizzPlate.auras = {}
-    blizzPlate.auraButtons = {}
+  local function NamePlateSetGUID(self,guid)
+    if self.guid and guid ~= self.guid then
+      unitDB[self.guid] = nil
+      wipe(self.auras)
+      NamePlateUpdateAllAuras(self) --hide visible buttons
+      self.guid = guid
+      unitDB[guid] = self
+    elseif not self.guid then
+      self.guid = guid
+      unitDB[guid] = self
+    end
   end
 
-  local function NamePlateInit(blizzPlate)
-    if not blizzPlate then return end
-    if plates[blizzPlate] then return end
-    NamePlateCreateNewPlate(blizzPlate)
-    NamePlateSetReferences(blizzPlate)
-    NamePlateSkinHealthBar(blizzPlate)
-    NamePlateSkinCastBar(blizzPlate)
-    NamePlateSetup(blizzPlate)
-    NamePlateCreateSizer(blizzPlate)
-    NamePlateHealthBarUpdate(blizzPlate.healthBar)
-    NamePlateHealthBarColor(blizzPlate)
-    NamePlateInitAuras(blizzPlate)
-    blizzPlate:HookScript("OnShow", NamePlateOnShow)
-    blizzPlate:HookScript("OnHide", NamePlateOnHide)
-    blizzPlate.castBar:HookScript("OnShow", NamePlateCastBarUpdate)
-    blizzPlate.castBar:HookScript("OnHide", NamePlateCastBarOnHide)
-    blizzPlate.castBar:HookScript("OnValueChanged", NamePlateCastBarUpdate)
-    blizzPlate.healthBar:HookScript("OnValueChanged", NamePlateHealthBarUpdate)
-    if not blizzPlate:IsShown() then
-      blizzPlate.newPlate:Hide()
+  local function NamePlateInitAuras(self)
+    self.auras = {}
+    self.auraButtons = {}
+  end
+
+  local function NamePlateInit(self)
+    if not self then return end
+    if plates[self] then return end
+    NamePlateCreateNewPlate(self)
+    NamePlateSetReferences(self)
+    NamePlateSkinHealthBar(self)
+    NamePlateSkinCastBar(self)
+    NamePlateSetup(self)
+    NamePlateCreateSizer(self)
+    NamePlateHealthBarUpdate(self.healthBar)
+    NamePlateHealthBarColor(self)
+    NamePlateInitAuras(self)
+    self:HookScript("OnShow", NamePlateOnShow)
+    self:HookScript("OnHide", NamePlateOnHide)
+    self.castBar:HookScript("OnShow", NamePlateCastBarUpdate)
+    self.castBar:HookScript("OnHide", NamePlateCastBarOnHide)
+    self.castBar:HookScript("OnValueChanged", NamePlateCastBarUpdate)
+    self.healthBar:HookScript("OnValueChanged", NamePlateHealthBarUpdate)
+    if not self:IsShown() then
+      self.newPlate:Hide()
     end
     namePlateIndex = namePlateIndex+1
   end
 
   local function NamePlateScan()
-    for _, blizzPlate in next, { WorldFrame:GetChildren() } do
-      local name = blizzPlate:GetName()
+    for _, frame in next, { WorldFrame:GetChildren() } do
+      local name = frame:GetName()
       if name and string.match(name, "^NamePlate%d+$") then
         namePlateIndex = string.gsub(name,"NamePlate","")
         break
@@ -520,16 +520,17 @@
     end
   end
 
-  local function NamePlateUpdateMouseover()
-    NamePlateSetGUID(blizzPlate,UnitGUID("mouseover"))
-    NamePlateScanAuras(blizzPlate,"mouseover","HELPFUL")
-    NamePlateScanAuras(blizzPlate,"mouseover","HARMFUL")
+  local function NamePlateUpdateMouseover(self)
+    NamePlateSetGUID(self,UnitGUID("mouseover"))
+    NamePlateScanAuras(self,"mouseover","HELPFUL")
+    NamePlateScanAuras(self,"mouseover","HARMFUL")
     updateMouseover = false
   end
 
   local function NamePlateUpdateTarget()
     --this may look wierd but is actually needed.
     --when the PLAYER_TARGET_CHANGED event fires the nameplate need one cycle to update the alpha, otherwise the old target would be tagged.
+    if not targetPlate then return end
     if delayCounter == 1 then
       NamePlateSetGUID(targetPlate,UnitGUID("target"))
       NamePlateScanAuras(targetPlate,"target","HELPFUL")
@@ -556,7 +557,7 @@
           targetPlate = blizzPlate
         end
         if updateMouseover and blizzPlate.highlightTexture:IsShown() then
-          NamePlateUpdateMouseover()
+          NamePlateUpdateMouseover(blizzPlate)
         end
         if worldFrameTimer > updateInterval then
           NamePlateHealthBarColor(blizzPlate)

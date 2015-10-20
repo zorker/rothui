@@ -108,7 +108,7 @@
 
   local function NamePlateSetReferences(self)
     self.barFrame, self.nameFrame = self:GetChildren()
-    self.healthBar, self.castBar = self.barFrame:GetChildren()
+    self.healthBar, self.absorbBar, self.castBar = self.barFrame:GetChildren()
     self.threatTexture, self.borderTexture, self.highlightTexture, self.levelString, self.bossIconTexture, self.raidIconTexture, self.eliteDragonTexture = self.barFrame:GetRegions()
     self.nameString = self.nameFrame:GetRegions()
     self.healthBar.statusbarTexture = self.healthBar:GetRegions()
@@ -117,8 +117,10 @@
     self.levelString:SetParent(trash)
     self.healthBar.__owner = self
     self.castBar.__owner = self
+    self.absorbBar.__owner = self
     self.healthBar:SetParent(trash)
     self.castBar:SetParent(trash)
+    self.absorbBar:SetParent(trash)
   end
 
   local function NamePlateSkinHealthBar(self)
@@ -163,7 +165,7 @@
     name:SetPoint("BOTTOM",bar,"TOP",0,-24)
     name:SetPoint("LEFT",8,0)
     name:SetPoint("RIGHT",-8,0)
-    name:SetText("Ich bin ein Berliner!")
+    name:SetHeight(cfg.fontsize_healthbar)
     bar.name = name
 
     self.raidIconTexture:SetParent(bar)
@@ -215,6 +217,7 @@
     name:SetPoint("TOP",bar,"BOTTOM",0,30)
     name:SetPoint("LEFT",8,0)
     name:SetPoint("RIGHT",-8,0)
+    name:SetHeight(cfg.fontsize_castbar)
     bar.nameString = name
 
     local icon = bar:CreateTexture(nil,"BACKGROUND",nil,-8)
@@ -470,6 +473,7 @@
   end
 
   local function NamePlateSetGUID(self,guid)
+    if not guid then return end
     if self.guid and guid ~= self.guid then
       unitDB[self.guid] = nil
       wipe(self.auras)
@@ -721,6 +725,9 @@
   -- SLASH COMMAND FUNCTIONS
   -----------------------------
 
+  local color         = "FFFFAA00"
+  local shortcut      = "rnp"
+  
   local function SlashCommandOnEvent(cmd)
     if not spellDB then return end
     local spellID = tonumber(strsub(cmd, (strfind(cmd, " ") or 0)+1))
@@ -785,13 +792,6 @@
       print("|c"..color.."\/"..shortcut.." resetspelldb|r to reset the spellDB for this character")
     end
   end
-
-  -----------------------------
-  -- SLASH COMMAND
-  -----------------------------
-
-  local color         = "FFFFAA00"
-  local shortcut      = "rnp"
 
   --slash commands
   SlashCmdList[shortcut] = SlashCommandOnEvent

@@ -1,0 +1,6 @@
+## Interface: 60200
+## Author: zork
+## Title: rRingo
+## Notes: Ring test mod
+
+rRingo.lua

@@ -8,6 +8,7 @@ local function Round(number, decimals)
     return (("%%.%df"):format(decimals)):format(number)
 end
 
+--semlar's amazing Transform function ... *drool*
 local function Transform(tx, x, y, angle, aspect) -- Translates texture to x, y and rotates about its center
     local c, s = cos(angle), sin(angle)
     local y, oy = y / aspect, 0.5 / aspect
@@ -66,7 +67,9 @@ local function SetValue(self, value)
     -- Rotate the things
     local rads = value * pi2
     if not self._clockwise then rads = -rads + halfpi end
+    --physically rotate the texture
     self._rotation:SetRadians(-rads)
+    --correct the rotation via SetTexCoord
     Transform(self._wedge, -0.5, -0.5, rads, self._aspect)
     end
  

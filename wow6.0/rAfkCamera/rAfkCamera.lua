@@ -17,6 +17,9 @@
     self.isActive = true
     self.title:SetText(UnitName("player").."-"..GetRealmName())
     self.server:SetText("<"..(GetGuildInfo("player") or "No Guild")..">")
+    local alpha = self:GetAlpha()
+    self.fadeOut:Stop()
+    self:SetAlpha(alpha)
     self:Show()
     self.fadeIn:Play()
     self.model:SetUnit("player")
@@ -29,6 +32,9 @@
   -- canvas disable func
   local function Disable(self)
     self.isActive = false
+    local alpha = self:GetAlpha()
+    self.fadeIn:Stop()
+    self:SetAlpha(alpha)
     self.fadeOut:Play()
     UIParent:Show()
     SetUIVisibility(true)
@@ -48,7 +54,6 @@
   --canvas frame
   local f = CreateFrame("Frame",nil,WorldFrame)
   f:SetAllPoints()
-  f:EnableMouse(true)
   f:Hide()
   f:SetAlpha(0)
   f.isActive = false
@@ -59,18 +64,20 @@
   --canvas background
   f.bg = f:CreateTexture(nil,"BACKGROUND",nil,-8)
   f.bg:SetTexture(1,1,1)
-  f.bg:SetVertexColor(0,0,0,0.85)
+  f.bg:SetVertexColor(0,0,0,1)
+  f.bg:SetGradientAlpha("HORIZONTAL", 0, 0, 0, 0.5, 0, 0, 0, 95)
   f.bg:SetPoint("BOTTOMLEFT")
   f.bg:SetPoint("BOTTOMRIGHT")
   f.bg:SetHeight(100)
 
   --canvas background
-  f.bg2 = f:CreateTexture(nil,"BACKGROUND",nil,-8)
-  f.bg2:SetTexture(1,1,1)
-  f.bg2:SetVertexColor(0,0,0,0.85)
-  f.bg2:SetPoint("TOPLEFT")
-  f.bg2:SetPoint("TOPRIGHT")
-  f.bg2:SetHeight(50)
+  f.bgTop = f:CreateTexture(nil,"BACKGROUND",nil,-8)
+  f.bgTop:SetTexture(1,1,1)
+  f.bgTop:SetVertexColor(0,0,0,1)
+  f.bgTop:SetGradientAlpha("HORIZONTAL", 0, 0, 0, 0.4, 0, 0, 0, 0.8)
+  f.bgTop:SetPoint("TOPLEFT")
+  f.bgTop:SetPoint("TOPRIGHT")
+  f.bgTop:SetHeight(f.h*0.05)
   
   --fade in anim
   f.fadeIn = f:CreateAnimationGroup()

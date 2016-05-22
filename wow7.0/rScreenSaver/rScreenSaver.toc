@@ -1,0 +1,6 @@
+## Interface: 70000
+## Author: zork
+## Title: rScreenSaver
+## Notes: Screen saver addon
+
+core.lua

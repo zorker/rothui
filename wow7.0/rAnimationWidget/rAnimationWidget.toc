@@ -1,0 +1,7 @@
+## Interface: 70000
+## Author: zork
+## Version: 700.1
+## Title: rAnimationWidget
+## Notes: Animation Widget Tests
+
+core.lua

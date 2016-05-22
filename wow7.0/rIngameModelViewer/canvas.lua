@@ -195,6 +195,8 @@
     if self.isOverlayModel then
       if self:HasCustomCamera() then
         GT:AddLine("Hold LEFT and drag mouse to move model camera.")
+      else
+        GT:AddLine("Model has no custom camera, cannot be moved freely with LEFT mouse.")
       end
     else
       GT:AddLine("Click LEFT for big overlay.")
@@ -234,7 +236,7 @@
     self:SetDisplayInfo(self.displayIndex)
     --self:SetCreature(self.displayIndex)
     --self.model = self:GetModel()
-	self.model = self.displayIndex
+    self.model = self.displayIndex
     if self.model == "" then
       --self.e404:Show()
       return
@@ -307,13 +309,13 @@
     f.bg:SetTexture(1,1,1)
     f.bg:SetVertexColor(0.15,0.15,0.15)
 
-    --[[
-	--fade in anim
+    --fade in anim
     f.fadeIn = f:CreateAnimationGroup()
     f.fadeIn.anim = f.fadeIn:CreateAnimation("Alpha")
     f.fadeIn.anim:SetDuration(0.8)
     f.fadeIn.anim:SetSmoothing("IN")
-    f.fadeIn.anim:SetChange(1)
+    f.fadeIn.anim:SetFromAlpha(0)
+    f.fadeIn.anim:SetToAlpha(1)
     f.fadeIn:HookScript("OnFinished", function(self)
       self:GetParent():SetAlpha(1)
     end)
@@ -323,7 +325,8 @@
     f.fadeOut.anim = f.fadeOut:CreateAnimation("Alpha")
     f.fadeOut.anim:SetDuration(0.8)
     f.fadeOut.anim:SetSmoothing("OUT")
-    f.fadeOut.anim:SetChange(-1)
+    f.fadeOut.anim:SetFromAlpha(1)
+    f.fadeOut.anim:SetToAlpha(0)
     f.fadeOut:HookScript("OnFinished", function(self)
       self:GetParent():SetAlpha(0)
       --hide canvas
@@ -333,19 +336,17 @@
         ColorPickerFrame:SetFrameStrata(L.defaultColorPickerFrameStrata)
       end
     end)
-	]]
 
     -- canvas enable func
     function f:Enable()
       self:Show()
       self:UpdateAllModels() --model update has to be run, otherwise certain models stay hidden
-      --self.fadeIn:Play()
+      self.fadeIn:Play()
     end
 
     -- canvas disable func
     function f:Disable()
-	  self:Hide()
-      --self.fadeOut:Play()
+      self.fadeOut:Play()
     end
 
     --canvas close button
@@ -572,7 +573,7 @@
       f.model:SetPoint("BOTTOMLEFT",100,10)
       f.model:SetPoint("TOPRIGHT",-100,-10)
       f.model:SetPoint("BOTTOMRIGHT",-100,10)
-      f.isOverlayModel = true
+      f.model.isOverlayModel = true
 
       --overlay color picker button
       f.colorPickerButton = L:CreateColorPickerButton(f,L.name.."CanvasOverlayColorPickerButton")
@@ -636,12 +637,12 @@
       end)
 
       --fade in anim
-	  --[[
       f.fadeIn = f:CreateAnimationGroup()
       f.fadeIn.anim = f.fadeIn:CreateAnimation("Alpha")
       f.fadeIn.anim:SetDuration(0.8)
       f.fadeIn.anim:SetSmoothing("IN")
-      f.fadeIn.anim:SetChange(1)
+      f.fadeIn.anim:SetFromAlpha(0)
+      f.fadeIn.anim:SetToAlpha(1)
       f.fadeIn:HookScript("OnFinished", function(self)
         self:GetParent():SetAlpha(1)
       end)
@@ -651,12 +652,12 @@
       f.fadeOut.anim = f.fadeOut:CreateAnimation("Alpha")
       f.fadeOut.anim:SetDuration(0.8)
       f.fadeOut.anim:SetSmoothing("OUT")
-      f.fadeOut.anim:SetChange(-1)
+      f.fadeOut.anim:SetFromAlpha(1)
+      f.fadeOut.anim:SetToAlpha(0)
       f.fadeOut:HookScript("OnFinished", function(self)
         self:GetParent():SetAlpha(0)
         self:GetParent():Hide()
       end)
-	  ]]
 
       -- previous model
       function f:Previous()
@@ -675,13 +676,12 @@
         self:Show()
         UpdateDisplayIndex(self.model,displayIndex)
         ResetModelValues(self.model)
-        --self.fadeIn:Play()
+        self.fadeIn:Play()
       end
 
       -- canvas disable func
       function f:Disable()
-        self:Hide()
-		--self.fadeOut:Play()
+        self.fadeOut:Play()
       end
 
       f:SetScript("OnMouseDown", function(self)

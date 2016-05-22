@@ -104,3 +104,62 @@ t5.ag.a4:SetOffset(32,16)
 t5.ag.a4:SetDuration(2)
 t5.ag:SetLooping("REPEAT")
 t5.ag:Play()
+
+local button = CreateFrame("Button", A.."Button", UIParent, "UIPanelButtonTemplate")
+button.text = _G[button:GetName().."Text"]
+button.text:SetText("Pause")
+button:SetWidth(button.text:GetStringWidth()+20)
+button:SetHeight(button.text:GetStringHeight()+12)
+button:SetPoint("CENTER",256,-64)
+button:HookScript("OnClick", function(self)
+  if t5.ag:IsPlaying() then
+    t5.ag:Pause()
+    self.text:SetText("Play")
+  else
+    t5.ag:Play()
+    self.text:SetText("Pause")
+  end
+end)
+
+--frame to test animation on
+local f2 = CreateFrame("Frame", nil, UIParent)
+f2:SetSize(128,128)
+f2:SetPoint("CENTER",-128,-128)
+f2:SetAlpha(0)
+
+local m = CreateFrame("PlayerModel",nil,f2)
+m:SetAllPoints()
+--models defined on loadup are not rendered properly. model display needs to be delayed.
+m:HookScript("OnEvent", function(self)
+  self:SetCamDistanceScale(0.8)
+  self:SetRotation(-0.4)
+  self:SetDisplayInfo(21723) --murcloc costume
+  self:UnregisterEvent("PLAYER_LOGIN")
+end)
+m:RegisterEvent("PLAYER_LOGIN")
+
+--texture
+local t = f2:CreateTexture(nil, "BACKGROUND", nil, -8)
+t:SetTexture(1,1,1)
+t:SetVertexColor(1,0,1)
+t:SetAllPoints()
+
+--create animation (rotation)
+f2.ag = f2:CreateAnimationGroup()
+f2.ag.a1 = f2.ag:CreateAnimation("Alpha")
+f2.ag.a1:SetFromAlpha(0)
+f2.ag.a1:SetToAlpha(1)
+f2.ag.a1:SetDuration(2)
+f2.ag:HookScript("OnFinished", function(self)
+  self:GetParent():SetAlpha(1)
+end)
+
+local button = CreateFrame("Button", A.."Button2", UIParent, "UIPanelButtonTemplate")
+button.text = _G[button:GetName().."Text"]
+button.text:SetText("Alpha")
+button:SetWidth(button.text:GetStringWidth()+20)
+button:SetHeight(button.text:GetStringHeight()+12)
+button:SetPoint("CENTER",-256,-64)
+button:HookScript("OnClick", function(self)
+  f2.ag:Play()
+end)

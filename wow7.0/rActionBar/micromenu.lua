@@ -7,11 +7,13 @@
 -----------------------------
 
 local cfg = {}
-cfg.scale     = 1
-cfg.padding   = 10
+cfg.scale     = 0.8
+cfg.gap       = -4.5
+cfg.inset     = -2
+cfg.clamp     = true
 cfg.width     = CharacterMicroButton:GetWidth()
-cfg.height    = CharacterMicroButton:GetHeight()/1.5
-cfg.pos       = { a1 = "TOP", a2 = "TOP", af = UIParent, x = 0, y = 25 }
+cfg.height    = CharacterMicroButton:GetHeight()/1.55
+cfg.pos       = { a1 = "TOP", a2 = "TOP", af = UIParent, x = 0, y = -10 }
 
 -----------------------------
 -- Local Variables
@@ -36,7 +38,7 @@ local num_buttons = # buttonList
 
 --create new parent frame
 local frame = CreateFrame("Frame", "rABS_MicroMenu", UIParent, "SecureHandlerStateTemplate")
-frame:SetWidth(cfg.width)
+frame:SetWidth(num_buttons*cfg.width+(num_buttons-1)*cfg.gap)
 frame:SetHeight(cfg.height)
 frame:SetPoint(cfg.pos.a1,cfg.pos.af,cfg.pos.a2,cfg.pos.x,cfg.pos.y)
 frame:SetScale(cfg.scale)
@@ -48,11 +50,13 @@ end
 
 --repoint the first button
 CharacterMicroButton:ClearAllPoints();
-CharacterMicroButton:SetPoint("CENTER")
+CharacterMicroButton:SetPoint("BOTTOMLEFT")
 
 --disable reanchoring of the micro menu by the petbattle ui
 PetBattleFrame.BottomFrame.MicroButtonFrame:SetScript("OnShow", nil) --remove the onshow script
+
 --show/hide the frame on a given state driver
 RegisterStateDriver(frame, "visibility", "[petbattle] hide; show")
---create drag frame and drag functionality
-rLib:CreateDragFrame(frame, L.dragFrames, -2 , true) --frame, dragFrameList, inset, clamp
+
+--add drag functions
+rLib:CreateDragFrame(frame, L.dragFrames, cfg.inset , cfg.clamp)

@@ -22,9 +22,8 @@ rLib.addonName = A
 
 --L:Print
 function L:Print(str)
-  if str then
+  if not str then return end
   print(str)
-end
 end
 
 --L:GetPoint
@@ -81,14 +80,14 @@ end
 function L:LockFrame(frame)
   if not frame then return end
   if not frame:IsUserPlaced() then return end
-self:Print(str)
+  self:Print(str)
   frame.dragFrame:Hide()
 end
 
 --L:UnlockFrames
 function L:UnlockFrames(frames)
   if not frames then return end
-for idx, frame in next, frames do
+  for idx, frame in next, frames do
     self:UnlockFrame(frame)
   end
 end

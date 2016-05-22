@@ -1,0 +1,14 @@
+## Interface: 70000
+## Author: zork
+## Version: 700.1
+## Title: IngameModelViewer
+## Notes: Zork's ingame model viewer
+## SavedVariables: rIMV_DBGLOB
+## SavedVariablesPerCharacter: rIMV_DBCHAR
+
+init.lua
+config.lua
+db.lua
+functions.lua
+murloc.lua
+canvas.lua

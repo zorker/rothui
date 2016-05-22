@@ -1,0 +1,9 @@
+## Interface: 70000
+## Author: zork
+## Title: rActionBar
+## Notes: Simple actionbar addon
+## RequiredDeps: rLib
+
+slashcmd.lua
+micromenu.lua
+bags.lua

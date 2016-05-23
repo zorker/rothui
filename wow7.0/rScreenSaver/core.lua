@@ -10,48 +10,48 @@
   L.addonName = A
 
 -----------------------------
--- Local Functions
+-- Init
 -----------------------------
 
--- canvas enable func
-local function Enable(self)
+--canvas frame
+local f = CreateFrame("Frame",nil,UIParent)
+f:SetFrameStrata("FULLSCREEN")
+f:SetAllPoints()
+f.h = f:GetHeight()
+f:EnableMouse(true)
+f:SetAlpha(0)
+f:Hide()
+
+--enable frame
+function f:Enable()
+  if self.isActive then return end
   self.isActive = true
   self:Show()
   self.fadeIn:Play()
 end
 
--- canvas disable func
-local function Disable(self)
+--disable frame
+function f:Disable()
+  if not self.isActive then return end
   self.isActive = false
   self.fadeOut:Play()
 end
 
-local function OnEvent(self,event)
+--onevent handler
+function f:OnEvent(event)
   if event == "PLAYER_LOGIN" then
     self.model:SetUnit("player")
     self.model:SetRotation(math.rad(-110))
-    self.model:SetUnit("player")
     self.galaxy:SetDisplayInfo(67918)
-    self.galaxy:SetCamDistanceScale(1.75)
+    self.galaxy:SetCamDistanceScale(2)
     return
   end
   if UnitIsAFK("player") then
-    if self.isActive then return end
-    Enable(self)
+    self:Enable()
   else
-    if not self.isActive then return end
-    Disable(self)
+    self:Disable()
   end
 end
-
---canvas frame
-local f = CreateFrame("Frame",nil,UIParent)
-f:SetFrameStrata("FULLSCREEN")
-f:SetAlpha(0)
-f:SetAllPoints()
-f.h = f:GetHeight()
-f:EnableMouse(true)
-f:Hide()
 
 --fade in anim
 f.fadeIn = f:CreateAnimationGroup()
@@ -76,19 +76,22 @@ f.fadeOut:HookScript("OnFinished", function(self)
   self:GetParent():Hide()
 end)
 
+--black background
 f.bg = f:CreateTexture(nil,"BACKGROUND",nil,-8)
 f.bg:SetTexture(1,1,1)
 f.bg:SetVertexColor(0,0,0,1)
 f.bg:SetAllPoints()
 
+--galaxy animation
 f.galaxy = CreateFrame("PlayerModel",nil,f)
 f.galaxy:SetAllPoints()
 
---model
+--player model
 f.model = CreateFrame("PlayerModel",nil,f.galaxy)
 f.model:SetSize(f.h,f.h*1.5)
 f.model:SetPoint("BOTTOMRIGHT",f.h*0.25,-f.h*0.5)
 
+--inner shadow gradients
 f.gradient = f.model:CreateTexture(nil,"BACKGROUND",nil,-7)
 f.gradient:SetTexture(1,1,1)
 f.gradient:SetVertexColor(0,0,0,1)
@@ -96,8 +99,6 @@ f.gradient:SetGradientAlpha("VERTICAL", 0, 0, 0, 1, 0, 0, 0, 0)
 f.gradient:SetPoint("BOTTOMLEFT",f)
 f.gradient:SetPoint("BOTTOMRIGHT",f)
 f.gradient:SetHeight(100)
-
-
 f.gradient2 = f.model:CreateTexture(nil,"BACKGROUND",nil,-7)
 f.gradient2:SetTexture(1,1,1)
 f.gradient2:SetVertexColor(0,0,0,1)
@@ -105,7 +106,6 @@ f.gradient2:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0, 0, 0, 0.5)
 f.gradient2:SetPoint("TOPLEFT",f)
 f.gradient2:SetPoint("TOPRIGHT",f)
 f.gradient2:SetHeight(50)
-
 f.gradient3 = f.model:CreateTexture(nil,"BACKGROUND",nil,-7)
 f.gradient3:SetTexture(1,1,1)
 f.gradient3:SetVertexColor(0,0,0,1)
@@ -113,7 +113,6 @@ f.gradient3:SetGradientAlpha("HORIZONTAL", 0, 0, 0, 0.5, 0, 0, 0, 0)
 f.gradient3:SetPoint("TOPLEFT",f)
 f.gradient3:SetPoint("BOTTOMLEFT",f)
 f.gradient3:SetWidth(50)
-
 f.gradient4 = f.model:CreateTexture(nil,"BACKGROUND",nil,-7)
 f.gradient4:SetTexture(1,1,1)
 f.gradient4:SetVertexColor(0,0,0,1)
@@ -121,20 +120,23 @@ f.gradient4:SetGradientAlpha("HORIZONTAL", 0, 0, 0, 0, 0, 0, 0, 0.5)
 f.gradient4:SetPoint("TOPRIGHT",f)
 f.gradient4:SetPoint("BOTTOMRIGHT",f)
 f.gradient4:SetWidth(50)
---[[]]--
 
+--close button
 local button = CreateFrame("Button", A.."Button", f.model, "UIPanelButtonTemplate")
 button.text = _G[button:GetName().."Text"]
 button.text:SetText("Close")
 button:SetWidth(button.text:GetStringWidth()+20)
 button:SetHeight(button.text:GetStringHeight()+12)
 button:SetPoint("BOTTOMLEFT",f,10,10)
+button:SetAlpha(0.5)
 button:HookScript("OnClick", function(self)
-  Disable(f)
+  f:Disable()
 end)
 
-f:SetScript("OnEvent",OnEvent)
+--onevent
+f:SetScript("OnEvent",f.OnEvent)
 
+--register events
 f:RegisterEvent("PLAYER_FLAGS_CHANGED")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:RegisterEvent("PLAYER_LEAVING_WORLD")

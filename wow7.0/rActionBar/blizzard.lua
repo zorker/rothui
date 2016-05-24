@@ -17,10 +17,6 @@ local A, L = ...
 local hiddenFrame = CreateFrame("Frame")
 hiddenFrame:Hide()
 
------------------------------
--- Init
------------------------------
-
 local texturesToHide = {
   StanceBarLeft, StanceBarMiddle, StanceBarRight,
   SlidingActionBarTexture0, SlidingActionBarTexture1,
@@ -69,6 +65,10 @@ local overridebarTextures =  {
   "PowerBarOverlay",
 }
 
+-----------------------------
+-- Init
+-----------------------------
+
 --hide all textures
 for idx, texture in next, texturesToHide do
   texture:SetTexture(nil)
@@ -79,7 +79,7 @@ for idx, frame in next, framesToHide do
   frame:SetParent(hiddenFrame)
 end
 
---HideTexture function
+--ResetTexture function
 local function ResetTexture(self,textureFile)
   if textureFile then self:SetTexture(nil) end
 end

@@ -5,5 +5,8 @@
 ## RequiredDeps: rLib
 
 slashcmd.lua
+blizzard.lua
 micromenu.lua
 bags.lua
+bar1.lua
+overridebar.lua

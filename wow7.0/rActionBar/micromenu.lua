@@ -7,13 +7,15 @@
 -----------------------------
 
 local cfg = {}
+--frame settings
 cfg.scale     = 0.8
-cfg.gap       = -4.5
 cfg.inset     = -2
 cfg.clamp     = true
+cfg.pos       = { a1 = "TOP", a2 = "TOP", af = UIParent, x = 0, y = -10 }
+--button settings
 cfg.width     = CharacterMicroButton:GetWidth()
 cfg.height    = CharacterMicroButton:GetHeight()/1.55
-cfg.pos       = { a1 = "TOP", a2 = "TOP", af = UIParent, x = 0, y = -10 }
+cfg.margin    = -4.5
 
 -----------------------------
 -- Local Variables
@@ -38,7 +40,7 @@ local num_buttons = # buttonList
 
 --create new parent frame
 local frame = CreateFrame("Frame", "rABS_MicroMenu", UIParent, "SecureHandlerStateTemplate")
-frame:SetWidth(num_buttons*cfg.width+(num_buttons-1)*cfg.gap)
+frame:SetWidth(num_buttons*cfg.width+(num_buttons-1)*cfg.margin)
 frame:SetHeight(cfg.height)
 frame:SetPoint(cfg.pos.a1,cfg.pos.af,cfg.pos.a2,cfg.pos.x,cfg.pos.y)
 frame:SetScale(cfg.scale)

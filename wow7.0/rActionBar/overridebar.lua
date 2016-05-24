@@ -41,7 +41,7 @@ frame:SetHeight(cfg.height+2*cfg.padding)
 frame:SetPoint(cfg.pos.a1,cfg.pos.af,cfg.pos.a2,cfg.pos.x,cfg.pos.y)
 frame:SetScale(cfg.scale)
 
---reparent the OverrideActionBar frame
+--reparent the bar
 OverrideActionBar:SetParent(frame)
 OverrideActionBar:EnableMouse(false)
 --remove the onshow script to prevent the micromenubuttons from moving

@@ -88,3 +88,7 @@ end
 for idx, texture in next, overridebarTextures do
   hooksecurefunc(OverrideActionBar[texture], "SetTexture", ResetTexture)
 end
+
+--remove the textures from the extraactionbutton1
+ExtraActionButton1.style:SetTexture(nil)
+hooksecurefunc(ExtraActionButton1.style, "SetTexture", ResetTexture)

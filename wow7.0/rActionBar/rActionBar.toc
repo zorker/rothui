@@ -12,3 +12,4 @@ bar1.lua
 bar2.lua
 bar3.lua
 overridebar.lua
+extrabar.lua

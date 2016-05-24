@@ -41,7 +41,7 @@ frame:SetHeight(cfg.height+2*cfg.padding)
 frame:SetPoint(cfg.pos.a1,cfg.pos.af,cfg.pos.a2,cfg.pos.x,cfg.pos.y)
 frame:SetScale(cfg.scale)
 
---reparent the MainMenuBarArtFrame frame
+--reparent the bar
 MainMenuBarArtFrame:SetParent(frame)
 MainMenuBarArtFrame:EnableMouse(false)
 

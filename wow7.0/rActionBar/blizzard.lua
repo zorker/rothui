@@ -22,7 +22,8 @@ local texturesToHide = {
   SlidingActionBarTexture0, SlidingActionBarTexture1,
   PossessBackground1, PossessBackground2,
   MainMenuBarTexture0, MainMenuBarTexture1, MainMenuBarTexture2, MainMenuBarTexture3,
-  MainMenuBarLeftEndCap, MainMenuBarRightEndCap
+  MainMenuBarLeftEndCap, MainMenuBarRightEndCap,
+  ExtraActionButton1.style
 }
 
 local framesToHide = {
@@ -84,11 +85,10 @@ local function ResetTexture(self,textureFile)
   if textureFile then self:SetTexture(nil) end
 end
 
---hide all override textures
+--hook overridebar SetTexture
 for idx, texture in next, overridebarTextures do
   hooksecurefunc(OverrideActionBar[texture], "SetTexture", ResetTexture)
 end
 
---remove the textures from the extraactionbutton1
-ExtraActionButton1.style:SetTexture(nil)
+--hook extraactionbutton1 SetTexture
 hooksecurefunc(ExtraActionButton1.style, "SetTexture", ResetTexture)

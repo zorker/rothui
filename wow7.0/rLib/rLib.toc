@@ -1,7 +1,7 @@
 ## Interface: 70000
 ## Author: zork
 ## Title: rLib
-## Notes: Library for "r" addons
+## Notes: Zork's addon library.
 
 core.lua
 dragframe.lua

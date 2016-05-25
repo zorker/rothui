@@ -40,7 +40,7 @@ function L:SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCo
     button:ClearAllPoints()
     if index == 1 then
       button:SetPoint(p1, frame, fp1, fp2)
-    elseif mod(index, numCols) == 1 then
+    elseif numCols == 1 or mod(index, numCols) == 1 then
       button:SetPoint(p2, buttonList[index-numCols], p3, bm1, bm2)
     else
       button:SetPoint(p4, buttonList[index-1], p5, bm3, bm4)

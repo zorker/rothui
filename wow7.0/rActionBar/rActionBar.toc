@@ -1,18 +1,20 @@
 ## Interface: 70000
 ## Author: zork
 ## Title: rActionBar
-## Notes: Simple actionbar addon
+## Notes: Blizzard Actionbar Overhaulin. Turbo!
 ## RequiredDeps: rLib
 
-init.lua
-slashcmd.lua
-blizzard.lua
-micromenu.lua
-bags.lua
-bar1.lua
-bar2.lua
-bar3.lua
-bar4.lua
-bar5.lua
-overridebar.lua
-extrabar.lua
+config.lua
+config-override.lua
+core\init.lua
+core\slashcmd.lua
+core\blizzard.lua
+core\micromenu.lua
+core\bags.lua
+core\bar1.lua
+core\bar2.lua
+core\bar3.lua
+core\bar4.lua
+core\bar5.lua
+core\overridebar.lua
+core\extrabar.lua

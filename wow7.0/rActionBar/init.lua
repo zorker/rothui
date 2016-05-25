@@ -33,6 +33,9 @@ end
 --3. p4, b-1, p5, bm3, bm4
 function L:SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, p1, fp1, fp2, p2, p3, bm1, bm2, p4, p5, bm3, bm4)
   for index, button in next, buttonList do
+    if frame.resetButtonParent then
+      button:SetParent(frame)
+    end
     button:SetSize(buttonWidth, buttonHeight)
     button:ClearAllPoints()
     if index == 1 then
@@ -47,6 +50,7 @@ end
 
 function L:SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, buttonHeight, buttonMargin, numCols, startPoint)
   local numButtons = # buttonList
+  numCols = min(numButtons, numCols)
   local numRows = ceil(numButtons/numCols)
   local frameWidth = numCols*buttonWidth + (numCols-1)*buttonMargin + 2*framePadding
   local frameHeight = numRows*buttonHeight + (numRows-1)*buttonMargin + 2*framePadding
@@ -79,4 +83,25 @@ function L:SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, button
   if startPoint == "BOTTOMRIGHT" then
     L:SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, -framePadding, framePadding, "BOTTOM", "TOP", 0, buttonMargin, "RIGHT", "LEFT", -buttonMargin, 0)
   end
+end
+
+function L:CreateButtonFrame(cfg,buttonList)
+  --create new parent frame
+  local frame = CreateFrame("Frame", cfg.frameName, cfg.frameParent, cfg.frameTemplate)
+  frame:SetPoint(unpack(cfg.framePoint))
+  frame:SetScale(cfg.frameScale)
+  if cfg.resetButtonParent then
+    frame.resetButtonParent = true
+  end
+  L:SetupButtonFrame(frame, cfg.framePadding, buttonList, cfg.buttonWidth, cfg.buttonHeight, cfg.buttonMargin, cfg.numCols, cfg.startPoint)
+  --reparent the Blizzard bar
+  if cfg.blizzardBar then
+    cfg.blizzardBar:SetParent(frame)
+    cfg.blizzardBar:EnableMouse(false)
+  end
+  --show/hide the frame on a given state driver
+  RegisterStateDriver(frame, "visibility", cfg.frameVisibility)
+  --add drag functions
+  rLib:CreateDragFrame(frame, L.dragFrames, cfg.inset , cfg.clamp)
+  return frame
 end

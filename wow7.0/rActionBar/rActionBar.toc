@@ -4,6 +4,7 @@
 ## Notes: Simple actionbar addon
 ## RequiredDeps: rLib
 
+init.lua
 slashcmd.lua
 blizzard.lua
 micromenu.lua
@@ -11,5 +12,7 @@ bags.lua
 bar1.lua
 bar2.lua
 bar3.lua
+bar4.lua
+bar5.lua
 overridebar.lua
 extrabar.lua

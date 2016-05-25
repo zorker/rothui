@@ -3,16 +3,10 @@
 -- zork, 2016
 
 -----------------------------
--- Local Variables
+-- Variables
 -----------------------------
 
 local A, L = ...
-
---variables
-L.addonName       = A
-L.dragFrames      = {}
-L.addonColor      = "0000FF00"
-L.addonShortcut   = "rabs"
 
 -----------------------------
 -- Init

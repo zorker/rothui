@@ -19,7 +19,7 @@ cfg.height    = 32
 cfg.margin    = 5
 
 -----------------------------
--- Local Variables
+-- Variables
 -----------------------------
 
 local A, L = ...
@@ -50,7 +50,6 @@ OverrideActionBar:SetScript("OnShow", nil)
 --repoint all buttons
 for i=1, num_buttons do
   local button = _G[buttonName..i] or OverrideActionBar.LeaveButton
-  if not button then break end
   table.insert(buttonList, button)
   button:SetSize(cfg.width, cfg.height)
   button:ClearAllPoints()

@@ -1,5 +1,5 @@
 
--- rActionBar: extrabar
+-- rActionBar: bar5
 -- zork, 2016
 
 -----------------------------
@@ -7,20 +7,20 @@
 -----------------------------
 
 local cfg = {}
-cfg.blizzardBar     = ExtraActionBarFrame
-cfg.frameName       = "rABS_ExtraBar"
+cfg.blizzardBar     = MultiBarLeft
+cfg.frameName       = "rABS_Bar5"
 cfg.frameParent     = UIParent
 cfg.frameTemplate   = "SecureHandlerStateTemplate"
-cfg.frameVisibility = "[extrabar] show; hide"
-cfg.framePoint      = { "RIGHT", rABS_MainMenuBar, "LEFT", -5, 0 }
+cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; show"
+cfg.framePoint      = { "BOTTOM", rABS_Bar4, "TOP", 0, 5 }
 cfg.frameScale      = 1
 cfg.framePadding    = 5
 cfg.buttonWidth     = 32
 cfg.buttonHeight    = 32
 cfg.buttonMargin    = 5
-cfg.buttonName      = "ExtraActionButton"
-cfg.numButtons      = 1
-cfg.numCols         = 1
+cfg.buttonName      = "MultiBarLeftButton"
+cfg.numButtons      = NUM_ACTIONBAR_BUTTONS
+cfg.numCols         = 4
 cfg.startPoint      = "BOTTOMLEFT"
 cfg.dragInset       = -2
 cfg.dragClamp       = true
@@ -53,8 +53,3 @@ RegisterStateDriver(frame, "visibility", cfg.frameVisibility)
 
 --add drag functions
 rLib:CreateDragFrame(frame, L.dragFrames, cfg.inset , cfg.clamp)
-
---special settings
-cfg.blizzardBar:ClearAllPoints()
-cfg.blizzardBar:SetPoint("CENTER")
-cfg.blizzardBar.ignoreFramePositionManager = true

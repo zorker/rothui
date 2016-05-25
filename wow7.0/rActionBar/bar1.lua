@@ -7,59 +7,49 @@
 -----------------------------
 
 local cfg = {}
---frame settings
-cfg.scale     = 1
-cfg.padding   = 0
-cfg.inset     = -2
-cfg.clamp     = true
-cfg.pos       = { a1 = "BOTTOM", a2 = "BOTTOM", af = UIParent, x = 0, y = 30 }
---button settings
-cfg.width     = 32
-cfg.height    = 32
-cfg.margin    = 5
+cfg.blizzardBar     = MainMenuBarArtFrame
+cfg.frameName       = "rABS_Bar1"
+cfg.frameParent     = UIParent
+cfg.frameTemplate   = "SecureHandlerStateTemplate"
+cfg.frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; show"
+cfg.framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 20 }
+cfg.frameScale      = 1
+cfg.framePadding    = 5
+cfg.buttonWidth     = 32
+cfg.buttonHeight    = 32
+cfg.buttonMargin    = 5
+cfg.buttonName      = "ActionButton"
+cfg.numButtons      = NUM_ACTIONBAR_BUTTONS
+cfg.numCols         = 6
+cfg.startPoint      = "BOTTOMLEFT"
+cfg.dragInset       = -2
+cfg.dragClamp       = true
 
 -----------------------------
--- Local Variables
+-- Variables
 -----------------------------
 
 local A, L = ...
 
---num_buttons
-local num_buttons = NUM_ACTIONBAR_BUTTONS
---button list
-local buttonList = {}
-local buttonName = "ActionButton"
+--buttonList
+local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
 
 -----------------------------
 -- Init
 -----------------------------
 
 --create new parent frame
-local frame = CreateFrame("Frame", "rABS_MainMenuBar", UIParent, "SecureHandlerStateTemplate")
-frame:SetWidth(num_buttons*cfg.width+(num_buttons-1)*cfg.margin+2*cfg.padding)
-frame:SetHeight(cfg.height+2*cfg.padding)
-frame:SetPoint(cfg.pos.a1,cfg.pos.af,cfg.pos.a2,cfg.pos.x,cfg.pos.y)
-frame:SetScale(cfg.scale)
+local frame = CreateFrame("Frame", cfg.frameName, cfg.frameParent, cfg.frameTemplate)
+frame:SetPoint(unpack(cfg.framePoint))
+frame:SetScale(cfg.frameScale)
+L:SetupButtonFrame(frame, cfg.framePadding, buttonList, cfg.buttonWidth, cfg.buttonHeight, cfg.buttonMargin, cfg.numCols, cfg.startPoint)
 
---reparent the bar
-MainMenuBarArtFrame:SetParent(frame)
-MainMenuBarArtFrame:EnableMouse(false)
-
---repoint all buttons
-for i=1, num_buttons do
-  local button = _G[buttonName..i]
-  table.insert(buttonList, button)
-  button:SetSize(cfg.width, cfg.height)
-  button:ClearAllPoints()
-  if i == 1 then
-    button:SetPoint("BOTTOMLEFT", frame, cfg.padding, cfg.padding)
-  else
-    button:SetPoint("LEFT", _G[buttonName..i-1], "RIGHT", cfg.margin, 0)
-  end
-end
+--reparent the Blizzard bar
+cfg.blizzardBar:SetParent(frame)
+cfg.blizzardBar:EnableMouse(false)
 
 --show/hide the frame on a given state driver
-RegisterStateDriver(frame, "visibility", "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; show")
+RegisterStateDriver(frame, "visibility", cfg.frameVisibility)
 
 --add drag functions
 rLib:CreateDragFrame(frame, L.dragFrames, cfg.inset , cfg.clamp)

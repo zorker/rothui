@@ -9,7 +9,7 @@
 local cfg = {}
 
 -----------------------------
--- Local Variables
+-- Variables
 -----------------------------
 
 local A, L = ...

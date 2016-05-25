@@ -18,7 +18,7 @@ cfg.height    = CharacterMicroButton:GetHeight()/1.55
 cfg.margin    = -4.5
 
 -----------------------------
--- Local Variables
+-- Variables
 -----------------------------
 
 local A, L = ...

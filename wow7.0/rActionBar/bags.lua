@@ -18,7 +18,7 @@ cfg.height    = MainMenuBarBackpackButton:GetHeight()
 cfg.margin    = 2
 
 -----------------------------
--- Local Variables
+-- Variables
 -----------------------------
 
 local A, L = ...

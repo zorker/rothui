@@ -1,5 +1,5 @@
 
--- rActionBar: init
+-- rActionBar: core\init
 -- zork, 2016
 
 -----------------------------

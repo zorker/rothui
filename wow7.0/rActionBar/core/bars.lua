@@ -1,5 +1,5 @@
 
--- rActionBar: bars
+-- rActionBar: core\bars
 -- zork, 2016
 
 -----------------------------

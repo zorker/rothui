@@ -10,3 +10,5 @@ core\init.lua
 core\slashcmd.lua
 core\blizzard.lua
 core\bars.lua
+core\theme.lua
+theme.xml

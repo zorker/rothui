@@ -1,5 +1,5 @@
 
--- rActionBar: blizzard
+-- rActionBar: core\blizzard
 -- zork, 2016
 
 -----------------------------

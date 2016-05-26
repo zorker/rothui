@@ -173,3 +173,65 @@ button:SetPoint("CENTER",-256,-64)
 button:HookScript("OnClick", function(self)
   f2.ag:Play()
 end)
+
+--onmouseover test with alpha conversion
+
+do
+
+  --frame to test animation on
+  local f = CreateFrame("Frame", nil, UIParent)
+  f:SetSize(128,128)
+  f:SetPoint("CENTER",0,128)
+  f.minAlpha = 0.3
+  f.maxAlpha = 1
+  f.animDur = 0.3
+  f:SetAlpha(f.minAlpha)
+
+  local t = f:CreateTexture(nil, "BACKGROUND", nil, -8)
+  t:SetTexture(1,1,1)
+  t:SetVertexColor(1,0,0)
+  t:SetAllPoints()
+
+  --enable func
+  function f:Enable()
+    self.fadeIn.anim:SetFromAlpha(self:GetAlpha())
+    self.fadeOut:Stop()
+    self.fadeIn:Play()
+  end
+
+  --disable func
+  function f:Disable()
+    self.fadeOut.anim:SetFromAlpha(self:GetAlpha())
+    self.fadeIn:Stop()
+    self.fadeOut:Play()
+  end
+
+  --fade in anim
+  f.fadeIn = f:CreateAnimationGroup()
+  f.fadeIn.anim = f.fadeIn:CreateAnimation("Alpha")
+  f.fadeIn.anim:SetDuration(f.animDur)
+  f.fadeIn.anim:SetSmoothing("IN")
+  f.fadeIn.anim:SetFromAlpha(f.minAlpha)
+  f.fadeIn.anim:SetToAlpha(f.maxAlpha)
+  function f.fadeIn:SetMaxAlpha()
+    self:GetParent():SetAlpha(self:GetParent().maxAlpha)
+  end
+  f.fadeIn:HookScript("OnFinished", f.fadeIn.SetMaxAlpha)
+
+  --fade out anim
+  f.fadeOut = f:CreateAnimationGroup()
+  f.fadeOut.anim = f.fadeOut:CreateAnimation("Alpha")
+  f.fadeOut.anim:SetDuration(f.animDur)
+  f.fadeOut.anim:SetSmoothing("OUT")
+  f.fadeOut.anim:SetFromAlpha(f.maxAlpha)
+  f.fadeOut.anim:SetToAlpha(f.minAlpha)
+  function f.fadeOut:SetMinAlpha()
+    self:GetParent():SetAlpha(self:GetParent().minAlpha)
+  end
+  f.fadeOut:HookScript("OnFinished", f.fadeOut.SetMinAlpha)
+
+  f:EnableMouse(true)
+  f:HookScript("OnEnter", f.Enable)
+  f:HookScript("OnLeave", f.Disable)
+
+end

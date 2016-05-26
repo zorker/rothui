@@ -8,13 +8,13 @@
 
 local A, L = ...
 
-local playername, _ = UnitName("player")
+local playerName = UnitName("player")
 
 -----------------------------
 -- Override
 -----------------------------
 
-if playername == "Rothar" then
+if playerName == "Rothar" then
   L.cfg.bar1.numCols = 6
   L.cfg.bar2.frameScale = 0.8
   L.cfg.bar2.framePoint = { "LEFT", "rABS_Bar1", "TOPRIGHT", 10, 0 }

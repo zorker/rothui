@@ -59,7 +59,7 @@ local overridebarTextures =  {
   "PitchDownHighlight",
   --"LeaveUp",
   --"LeaveDown",
-  "LeaveHighlight",
+  --"LeaveHighlight",
   "HealthBarBG",
   "HealthBarOverlay",
   "PowerBarBG",
@@ -71,12 +71,12 @@ local overridebarTextures =  {
 -----------------------------
 
 --hide all textures
-for idx, texture in next, texturesToHide do
+for i, texture in next, texturesToHide do
   texture:SetTexture(nil)
 end
 
 --hide all frames
-for idx, frame in next, framesToHide do
+for i, frame in next, framesToHide do
   frame:SetParent(hiddenFrame)
 end
 
@@ -86,7 +86,7 @@ local function ResetTexture(self,textureFile)
 end
 
 --hook overridebar SetTexture
-for idx, texture in next, overridebarTextures do
+for i, texture in next, overridebarTextures do
   hooksecurefunc(OverrideActionBar[texture], "SetTexture", ResetTexture)
 end
 

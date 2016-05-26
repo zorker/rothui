@@ -184,7 +184,8 @@ do
   f:SetPoint("CENTER",0,128)
   f.minAlpha = 0.3
   f.maxAlpha = 1
-  f.animDur = 0.3
+  f.fadeInDur = 0.3
+  f.fadeOutDur = 0.9
   f:SetAlpha(f.minAlpha)
 
   local t = f:CreateTexture(nil, "BACKGROUND", nil, -8)
@@ -209,7 +210,7 @@ do
   --fade in anim
   f.fadeIn = f:CreateAnimationGroup()
   f.fadeIn.anim = f.fadeIn:CreateAnimation("Alpha")
-  f.fadeIn.anim:SetDuration(f.animDur)
+  f.fadeIn.anim:SetDuration(f.fadeInDur)
   f.fadeIn.anim:SetSmoothing("IN")
   f.fadeIn.anim:SetFromAlpha(f.minAlpha)
   f.fadeIn.anim:SetToAlpha(f.maxAlpha)
@@ -221,7 +222,7 @@ do
   --fade out anim
   f.fadeOut = f:CreateAnimationGroup()
   f.fadeOut.anim = f.fadeOut:CreateAnimation("Alpha")
-  f.fadeOut.anim:SetDuration(f.animDur)
+  f.fadeOut.anim:SetDuration(f.fadeOutDur)
   f.fadeOut.anim:SetSmoothing("OUT")
   f.fadeOut.anim:SetFromAlpha(f.maxAlpha)
   f.fadeOut.anim:SetToAlpha(f.minAlpha)

@@ -1,5 +1,5 @@
 
--- rActionBar: core\theme
+-- rActionBar: core/theme
 -- zork, 2016
 
 -----------------------------
@@ -12,4 +12,4 @@ local A, L = ...
 -- Init
 -----------------------------
 
-print('core\theme.lua')
+--print("core","theme")

@@ -1,5 +1,5 @@
 
--- rActionBar: core\init
+-- rActionBar: core/init
 -- zork, 2016
 
 -----------------------------
@@ -103,5 +103,9 @@ function L:CreateButtonFrame(cfg,buttonList)
   RegisterStateDriver(frame, "visibility", cfg.frameVisibility)
   --add drag functions
   rLib:CreateDragFrame(frame, L.dragFrames, cfg.dragInset, cfg.dragClamp)
+  --hover animation
+  if cfg.fader and cfg.fader.enable then
+    rLib:CreateButtonFrameFader(frame, buttonList, cfg.fader)
+  end
   return frame
 end

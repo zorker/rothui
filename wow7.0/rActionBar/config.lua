@@ -32,6 +32,15 @@ L.cfg.bags = {
   startPoint      = "BOTTOMRIGHT",
   dragInset       = -2,
   dragClamp       = true,
+  fader = {
+    enable = true,
+    fadeInAlpha = 1,
+    fadeInDuration = 0.3,
+    fadeInSmooth = "OUT",
+    fadeOutAlpha = 0.3,
+    fadeOutDuration = 0.9,
+    fadeOutSmooth = "OUT",
+  },
 }
 
 --micro menu
@@ -52,6 +61,15 @@ L.cfg.micromenu = {
   startPoint      = "BOTTOMLEFT",
   dragInset       = -2,
   dragClamp       = true,
+  fader = {
+    enable = true,
+    fadeInAlpha = 1,
+    fadeInDuration = 0.3,
+    fadeInSmooth = "OUT",
+    fadeOutAlpha = 0.3,
+    fadeOutDuration = 0.9,
+    fadeOutSmooth = "OUT",
+  },
 }
 
 --bar1
@@ -136,6 +154,15 @@ L.cfg.bar4 = {
   startPoint      = "TOPRIGHT",
   dragInset       = -2,
   dragClamp       = true,
+  fader = {
+    enable = true,
+    fadeInAlpha = 1,
+    fadeInDuration = 0.3,
+    fadeInSmooth = "OUT",
+    fadeOutAlpha = 0.3,
+    fadeOutDuration = 0.9,
+    fadeOutSmooth = "OUT",
+  },
 }
 
 --bar5
@@ -157,6 +184,15 @@ L.cfg.bar5 = {
   startPoint      = "TOPRIGHT",
   dragInset       = -2,
   dragClamp       = true,
+  fader = {
+    enable = true,
+    fadeInAlpha = 1,
+    fadeInDuration = 0.3,
+    fadeInSmooth = "OUT",
+    fadeOutAlpha = 0.3,
+    fadeOutDuration = 0.9,
+    fadeOutSmooth = "OUT",
+  },
 }
 
 --overridebar
@@ -210,7 +246,7 @@ L.cfg.stancebar = {
   frameTemplate   = "SecureHandlerStateTemplate",
   frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists][possessbar] hide; show",
   framePoint      = { "BOTTOM", "rABS_ActionBar3", "TOP", 0, 0 },
-  frameScale      = 1,
+  frameScale      = 0.8,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
@@ -231,7 +267,7 @@ L.cfg.possessbar = {
   frameTemplate   = "SecureHandlerStateTemplate",
   frameVisibility = "[possessbar,@vehicle,exists] hide; [possessbar] show; hide",
   framePoint      = { "BOTTOM", "rABS_ActionBar3", "TOP", 0, 0 },
-  frameScale      = 1,
+  frameScale      = 0.8,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
@@ -250,9 +286,9 @@ L.cfg.petbar = {
   frameName       = "rABS_PetActionBar",
   frameParent     = UIParent,
   frameTemplate   = "SecureHandlerStateTemplate",
-  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; [nomounted,@pet,exists] show; hide",
+  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; [@pet,exists] show; hide",
   framePoint      = { "BOTTOM", "rABS_ActionBar3", "TOP", 0, 0 },
-  frameScale      = 1,
+  frameScale      = 0.8,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,

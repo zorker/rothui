@@ -5,4 +5,5 @@
 
 core.lua
 dragframe.lua
+framefader.lua
 slashcmd.lua

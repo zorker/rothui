@@ -1,5 +1,5 @@
 
--- rActionBar: themes\diablo3\config
+-- rActionBar: themes/diablo3/config
 -- zork, 2016
 
 -----------------------------
@@ -12,4 +12,4 @@ local A, L = ...
 -- Init
 -----------------------------
 
-print('themes\diablo3\config.lua')
+--print("themes","diablo3","config")

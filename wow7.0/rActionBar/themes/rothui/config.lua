@@ -1,5 +1,5 @@
 
--- rActionBar: themes\rothui\config
+-- rActionBar: themes/rothui/config
 -- zork, 2016
 
 -----------------------------
@@ -12,4 +12,4 @@ local A, L = ...
 -- Init
 -----------------------------
 
-print('themes\rothui\config.lua')
+--print("themes","rothui","config")

@@ -1,3 +1,13 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+  <!--Roth UI Theme-->
+  <!--
   <Script file="themes\rothui\config.lua" />
+  -->
+
+  <!--Diablo 3 Theme-->
+  <!--
+  <Script file="themes\diablo3\config.lua" />
+  -->
+
 </Ui>

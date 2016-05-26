@@ -63,3 +63,17 @@ do
   cfg.blizzardBar:SetPoint("CENTER")
   cfg.blizzardBar.ignoreFramePositionManager = true
 end
+
+--STANCEBAR
+do
+  local cfg = L.cfg.stancebar
+  local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
+  local frame = L:CreateButtonFrame(cfg,buttonList)
+end
+
+--POSSESSBAR
+do
+  local cfg = L.cfg.possessbar
+  local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
+  local frame = L:CreateButtonFrame(cfg,buttonList)
+end

@@ -201,3 +201,45 @@ L.cfg.extrabar = {
   dragInset       = -2,
   dragClamp       = true,
 }
+
+--stancebar
+L.cfg.stancebar = {
+  blizzardBar     = StanceBarFrame,
+  frameName       = "rABS_StanceBar",
+  frameParent     = UIParent,
+  frameTemplate   = "SecureHandlerStateTemplate",
+  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists][possessbar] hide; show",
+  framePoint      = { "BOTTOM", "rABS_Bar3", "TOP", 0, 0 },
+  frameScale      = 1,
+  framePadding    = 5,
+  buttonWidth     = 32,
+  buttonHeight    = 32,
+  buttonMargin    = 5,
+  buttonName      = "StanceButton",
+  numButtons      = NUM_STANCE_SLOTS,
+  numCols         = 12,
+  startPoint      = "BOTTOMLEFT",
+  dragInset       = -2,
+  dragClamp       = true,
+}
+
+--possessbar
+L.cfg.possessbar = {
+  blizzardBar     = PossessBarFrame,
+  frameName       = "rABS_PossessBar",
+  frameParent     = UIParent,
+  frameTemplate   = "SecureHandlerStateTemplate",
+  frameVisibility = "[possessbar,@vehicle,exists] hide; [possessbar] show; hide",
+  framePoint      = { "BOTTOM", "rABS_Bar3", "TOP", 0, 0 },
+  frameScale      = 1,
+  framePadding    = 5,
+  buttonWidth     = 32,
+  buttonHeight    = 32,
+  buttonMargin    = 5,
+  buttonName      = "PossessButton",
+  numButtons      = NUM_POSSESS_SLOTS,
+  numCols         = 12,
+  startPoint      = "BOTTOMLEFT",
+  dragInset       = -2,
+  dragClamp       = true,
+}

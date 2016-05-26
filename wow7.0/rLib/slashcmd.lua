@@ -3,7 +3,7 @@
 -- zork, 2016
 
 -----------------------------
--- Local Variables
+-- Variables
 -----------------------------
 
 local A, L = ...
@@ -11,7 +11,7 @@ local A, L = ...
 local defaultColor = "00FFFFFF"
 
 -----------------------------
--- Global Functions
+-- Functions
 -----------------------------
 
 --rLib:CreateSlashCmd

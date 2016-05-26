@@ -3,13 +3,13 @@
 -- zork, 2016
 
 -----------------------------
--- Local Variables
+-- Variables
 -----------------------------
 
 local A, L = ...
 
 -----------------------------
--- Global Functions
+-- Functions
 -----------------------------
 
 --rLib:CreateDragFrame

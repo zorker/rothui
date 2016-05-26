@@ -3,28 +3,22 @@
 -- zork, 2016
 
 -----------------------------
--- Local Variables
+-- Variables
 -----------------------------
 
 local A, L = ...
 L.addonName = A
 
 -----------------------------
--- Global Variables
+-- rLib Global
 -----------------------------
 
 rLib = {}
 rLib.addonName = A
 
 -----------------------------
--- Local Functions
+-- Functions
 -----------------------------
-
---L:Print
-function L:Print(str)
-  if not str then return end
-  print(str)
-end
 
 --L:GetPoint
 function L:GetPoint(frame)
@@ -80,7 +74,6 @@ end
 function L:LockFrame(frame)
   if not frame then return end
   if not frame:IsUserPlaced() then return end
-  self:Print(str)
   frame.dragFrame:Hide()
 end
 

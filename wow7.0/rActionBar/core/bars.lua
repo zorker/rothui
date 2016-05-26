@@ -84,7 +84,7 @@ do
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --special
-  for idx, button in next, buttonList do
+  for i, button in next, buttonList do
     _G[cfg.buttonName..i.."Cooldown"]:SetAllPoints(button) --fix cooldown display
   end
 end

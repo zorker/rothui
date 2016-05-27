@@ -102,7 +102,7 @@ function rLib:CreateFrameFader(frame, faderConfig)
   CreateFaderAnimation(frame)
   frame:HookScript("OnEnter", FrameHandler)
   frame:HookScript("OnLeave", FrameHandler)
-  OnFrameHoverTrigger(frame)
+  FrameHandler(frame)
 end
 
 function rLib:CreateButtonFrameFader(frame, buttonList, faderConfig)

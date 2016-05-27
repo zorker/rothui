@@ -133,6 +133,15 @@ L.cfg.bar3 = {
   startPoint      = "BOTTOMLEFT",
   dragInset       = -2,
   dragClamp       = true,
+  fader = {
+    enable = false,
+    fadeInAlpha = 1,
+    fadeInDuration = 0.3,
+    fadeInSmooth = "OUT",
+    fadeOutAlpha = 0.3,
+    fadeOutDuration = 0.9,
+    fadeOutSmooth = "OUT",
+  },
 }
 
 --bar4

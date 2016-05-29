@@ -66,6 +66,42 @@ actionButtonConfig.normalTexture = {
   },
 }
 
+--cooldown
+--[[
+actionButtonConfig.cooldown = {
+  points = {
+    {"TOPLEFT", 0, 0 },
+    {"BOTTOMRIGHT", 0, 0 },
+  },
+}
+]]--
+
+--name (macro name fontstring)
+actionButtonConfig.name = {
+  font = { STANDARD_TEXT_FONT, 11, "OUTLINE"},
+  points = {
+    {"BOTTOMLEFT", 0, 0 },
+    {"BOTTOMRIGHT", 0, 0 },
+  },
+}
+
+--hotkey
+actionButtonConfig.hotkey = {
+  font = { STANDARD_TEXT_FONT, 11, "OUTLINE"},
+  points = {
+    {"TOPRIGHT", 0, 0 },
+    {"TOPLEFT", 0, 0 },
+  },
+}
+
+--count
+actionButtonConfig.count = {
+  font = { STANDARD_TEXT_FONT, 11, "OUTLINE"},
+  points = {
+    {"BOTTOMRIGHT", 0, 0 },
+  },
+}
+
 -----------------------------
 -- Init
 -----------------------------

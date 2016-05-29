@@ -51,7 +51,12 @@ local function ApplyVertexColor(texture,color)
   texture:SetVertexColor(unpack(color))
 end
 
-local function ApplyTextureSettings(texture,cfg,fileFunc,fileObj)
+local function ApplyFont(fontString,font)
+  if not font then return end
+  fontString:SetFont(unpack(font))
+end
+
+local function SetupTexture(texture,cfg,fileFunc,fileObj)
   if not cfg then return end
   ApplyTexCoord(texture,cfg.texCoord)
   ApplyPoints(texture,cfg.points)
@@ -61,7 +66,18 @@ local function ApplyTextureSettings(texture,cfg,fileFunc,fileObj)
   end
 end
 
-local function ApplyBackdrop(button,backdrop)
+local function SetupFontString(fontString,cfg)
+  if not cfg then return end
+  ApplyPoints(fontString, cfg.points)
+  ApplyFont(fontString,cfg.font)
+end
+
+local function SetupCooldown(cooldown,cfg)
+  if not cfg then return end
+  ApplyPoints(cooldown, cfg.points)
+end
+
+local function SetupBackdrop(button,backdrop)
   if not backdrop then return end
   local bg = CreateFrame("Frame", nil, button)
   ApplyPoints(bg, backdrop.points)
@@ -85,7 +101,7 @@ function L:StyleActionButton(button, cfg)
   local flyoutBorder = _G[buttonName.."FlyoutBorder"]
   local flyoutBorderShadow = _G[buttonName.."FlyoutBorderShadow"]
   local flyoutArrow = _G[buttonName.."FlyoutArrow"]
-  local hotKey = _G[buttonName.."HotKey"]
+  local hotkey = _G[buttonName.."HotKey"]
   local count = _G[buttonName.."Count"]
   local name = _G[buttonName.."Name"]
   local border = _G[buttonName.."Border"]
@@ -101,18 +117,26 @@ function L:StyleActionButton(button, cfg)
   if floatingBG then floatingBG:Hide() end
 
   --backdrop
-  ApplyBackdrop(button,cfg.backdrop)
+  SetupBackdrop(button,cfg.backdrop)
 
   --textures
-  ApplyTextureSettings(icon,cfg.icon,"SetTexture",icon)
-  ApplyTextureSettings(flash,cfg.flash,"SetTexture",flash)
-  ApplyTextureSettings(flyoutBorder,cfg.flyoutBorder,"SetTexture",flyoutBorder)
-  ApplyTextureSettings(flyoutBorderShadow,cfg.flyoutBorderShadow,"SetTexture",flyoutBorderShadow)
-  ApplyTextureSettings(border,cfg.border,"SetTexture",border)
-  ApplyTextureSettings(normalTexture,cfg.normalTexture,"SetNormalTexture",button)
-  ApplyTextureSettings(pushedTexture,cfg.pushedTexture,"SetPushedTexture",button)
-  ApplyTextureSettings(highlightTexture,cfg.highlightTexture,"SetHighlightTexture",button)
-  ApplyTextureSettings(checkedTexture,cfg.checkedTexture,"SetCheckedTexture",button)
+  SetupTexture(icon,cfg.icon,"SetTexture",icon)
+  SetupTexture(flash,cfg.flash,"SetTexture",flash)
+  SetupTexture(flyoutBorder,cfg.flyoutBorder,"SetTexture",flyoutBorder)
+  SetupTexture(flyoutBorderShadow,cfg.flyoutBorderShadow,"SetTexture",flyoutBorderShadow)
+  SetupTexture(border,cfg.border,"SetTexture",border)
+  SetupTexture(normalTexture,cfg.normalTexture,"SetNormalTexture",button)
+  SetupTexture(pushedTexture,cfg.pushedTexture,"SetPushedTexture",button)
+  SetupTexture(highlightTexture,cfg.highlightTexture,"SetHighlightTexture",button)
+  SetupTexture(checkedTexture,cfg.checkedTexture,"SetCheckedTexture",button)
+
+  --cooldown
+  SetupCooldown(cooldown,cfg.cooldown)
+
+  --hotkey+count+name
+  SetupFontString(hotkey,cfg.hotkey)
+  SetupFontString(count,cfg.count)
+  SetupFontString(name,cfg.name)
 
   --NormalTexture fixes
   if cfg.normalTexture and cfg.normalTexture.file then
@@ -134,7 +158,7 @@ function L:StyleExtraActionButton(cfg)
 
   local icon = _G[buttonName.."Icon"]
   --local flash = _G[buttonName.."Flash"] --wierd the template has two textures of the same name
-  local hotKey = _G[buttonName.."HotKey"]
+  local hotkey = _G[buttonName.."HotKey"]
   local count = _G[buttonName.."Count"]
   local art = button.style --artwork around the button
   local cooldown = _G[buttonName.."Cooldown"]

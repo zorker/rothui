@@ -12,40 +12,70 @@ local A, L = ...
 -- Init
 -----------------------------
 
---print("core","theme")
+local function CallObjectFunction(obj,func,...)
+  if obj and func and obj[func] then
+    obj[func](obj,...)
+  end
+end
 
-local function ResetNormalTexture(self, texture)
-  if texture and texture ~= self.__normalTextureFile then
-    self:SetNormalTexture(self.__normalTextureFile)
+local function ResetNormalTexture(self, file)
+  if not self.__normalTextureFile then return end
+  if file == self.__normalTextureFile then return end
+  self:SetNormalTexture(self.__normalTextureFile)
+end
+
+local function ResetVertexColor(self,r,g,b,a)
+  if not self.__vertexColor then return end
+  local r2,g2,b2,a2 = unpack(self.__vertexColor)
+  if r ~= r2 or g ~= g2 or b ~= b2 or a ~= a2 then
+    self:SetVertexColor(r2,g2,b2,a2 or 1)
   end
 end
 
 local function ApplyPoints(self, points)
-  if points then
-    self:ClearAllPoints()
-    for i, point in next, points do
-      self:SetPoint(unpack(point))
-    end
-  else
-    self:SetAllPoints()
+  if not points then return end
+  self:ClearAllPoints()
+  for i, point in next, points do
+    self:SetPoint(unpack(point))
   end
 end
 
-local function ApplyBackground(button,cfg)
-  if not cfg.backdrop then return end
+local function ApplyTexCoord(texture,texCoord)
+  if not texCoord then return end
+  texture:SetTexCoord(unpack(texCoord))
+end
+
+local function ApplyVertexColor(texture,color)
+  if not color then return end
+  texture.__vertexColor = color
+  texture:SetVertexColor(unpack(color))
+end
+
+local function ApplyTextureSettings(texture,cfg,fileFunc,fileObj)
+  if not cfg then return end
+  ApplyTexCoord(texture,cfg.texCoord)
+  ApplyPoints(texture,cfg.points)
+  ApplyVertexColor(texture,cfg.color)
+  if cfg.file then
+    CallObjectFunction(fileObj,fileFunc,cfg.file)
+  end
+end
+
+local function ApplyBackdrop(button,backdrop)
+  if not backdrop then return end
   local bg = CreateFrame("Frame", nil, button)
-  ApplyPoints(bg, cfg.backdropPoints)
+  ApplyPoints(bg, backdrop.points)
   bg:SetFrameLevel(button:GetFrameLevel()-1)
-  bg:SetBackdrop(cfg.backdrop)
-  if cfg.backdropColor then
-    bg:SetBackdropColor(unpack(cfg.backdropColor))
+  bg:SetBackdrop(backdrop)
+  if backdrop.backgroundColor then
+    bg:SetBackdropColor(unpack(backdrop.backgroundColor))
   end
-  if cfg.backdropBorderColor then
-    bg:SetBackdropBorderColor(unpack(cfg.backdropBorderColor))
+  if backdrop.borderColor then
+    bg:SetBackdropBorderColor(unpack(backdrop.borderColor))
   end
 end
 
-local function StyleActionButton(button, cfg)
+function L:StyleActionButton(button, cfg)
   if not button then return end
   if button.__styled then return end
 
@@ -70,38 +100,26 @@ local function StyleActionButton(button, cfg)
   --hide stuff
   if floatingBG then floatingBG:Hide() end
 
-  --flyout
-  if flyoutBorder then flyoutBorder:SetTexture(nil) end
-  if flyoutBorderShadow then flyoutBorderShadow:SetTexture(nil) end
+  --backdrop
+  ApplyBackdrop(button,cfg.backdrop)
 
-  --BACKDROP
+  --textures
+  ApplyTextureSettings(icon,cfg.icon,"SetTexture",icon)
+  ApplyTextureSettings(flash,cfg.flash,"SetTexture",flash)
+  ApplyTextureSettings(flyoutBorder,cfg.flyoutBorder,"SetTexture",flyoutBorder)
+  ApplyTextureSettings(flyoutBorderShadow,cfg.flyoutBorderShadow,"SetTexture",flyoutBorderShadow)
+  ApplyTextureSettings(border,cfg.border,"SetTexture",border)
+  ApplyTextureSettings(normalTexture,cfg.normalTexture,"SetNormalTexture",button)
+  ApplyTextureSettings(pushedTexture,cfg.pushedTexture,"SetPushedTexture",button)
+  ApplyTextureSettings(highlightTexture,cfg.highlightTexture,"SetHighlightTexture",button)
+  ApplyTextureSettings(checkedTexture,cfg.checkedTexture,"SetCheckedTexture",button)
 
-  ApplyBackground(button,cfg)
-
-  --ICON
-
-  --iconTexCoord
-  if cfg.iconTexCoord then
-    icon:SetTexCoord(unpack(cfg.iconTexCoord))
-  end
-  --iconPoints
-   ApplyPoints(icon, cfg.iconPoints)
-
-   --NORMALTEXTURE
-
-  --normalTextureFile
-  if cfg.normalTextureFile then
-    button:SetNormalTexture(cfg.normalTextureFile)
-    normalTexture = button:GetNormalTexture()
-    button.__normalTextureFile = cfg.normalTextureFile
+  --NormalTexture fixes
+  if cfg.normalTexture and cfg.normalTexture.file then
+    button.__normalTextureFile = cfg.normalTexture.file
     hooksecurefunc(button, "SetNormalTexture", ResetNormalTexture)
   end
-  --normalTexturePoints
-  ApplyPoints(normalTexture, cfg.normalTexturePoints)
-  --normalTextureColor
-  if cfg.normalTextureColor then
-    normalTexture:SetVertexColor(unpack(cfg.normalTextureColor))
-  end
+  hooksecurefunc(normalTexture, "SetVertexColor", ResetVertexColor)
 
   button.__styled = true
 end
@@ -131,25 +149,25 @@ end
 
 function L:StyleAllActionButtons(cfg)
   for i = 1, NUM_ACTIONBAR_BUTTONS do
-    StyleActionButton(_G["ActionButton"..i],cfg)
-    StyleActionButton(_G["MultiBarBottomLeftButton"..i],cfg)
-    StyleActionButton(_G["MultiBarBottomRightButton"..i],cfg)
-    StyleActionButton(_G["MultiBarRightButton"..i],cfg)
-    StyleActionButton(_G["MultiBarLeftButton"..i],cfg)
+    L:StyleActionButton(_G["ActionButton"..i],cfg)
+    L:StyleActionButton(_G["MultiBarBottomLeftButton"..i],cfg)
+    L:StyleActionButton(_G["MultiBarBottomRightButton"..i],cfg)
+    L:StyleActionButton(_G["MultiBarRightButton"..i],cfg)
+    L:StyleActionButton(_G["MultiBarLeftButton"..i],cfg)
   end
   for i = 1, 6 do
-    StyleActionButton(_G["OverrideActionBarButton"..i],cfg)
+    L:StyleActionButton(_G["OverrideActionBarButton"..i],cfg)
   end
   --petbar buttons
   for i=1, NUM_PET_ACTION_SLOTS do
-    StyleActionButton(_G["PetActionButton"..i],cfg)
+    L:StyleActionButton(_G["PetActionButton"..i],cfg)
   end
   --stancebar buttons
   for i=1, NUM_STANCE_SLOTS do
-    StyleActionButton(_G["StanceButton"..i],cfg)
+    L:StyleActionButton(_G["StanceButton"..i],cfg)
   end
   --possess buttons
   for i=1, NUM_POSSESS_SLOTS do
-    StyleActionButton(_G["PossessButton"..i],cfg)
+    L:StyleActionButton(_G["PossessButton"..i],cfg)
   end
 end

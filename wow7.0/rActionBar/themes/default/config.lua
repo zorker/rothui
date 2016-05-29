@@ -56,6 +56,11 @@ actionButtonConfig.flyoutBorderShadow = {
   file = ""
 }
 
+--border
+actionButtonConfig.border = {
+  file = ""
+}
+
 --normalTexture
 actionButtonConfig.normalTexture = {
   file = mediapath.."normal.tga",
@@ -67,18 +72,18 @@ actionButtonConfig.normalTexture = {
 }
 
 --cooldown
---[[
 actionButtonConfig.cooldown = {
+  --[[
   points = {
-    {"TOPLEFT", 0, 0 },
-    {"BOTTOMRIGHT", 0, 0 },
+    {"TOPLEFT", 0, -0 },
+    {"BOTTOMRIGHT", -0, 0 },
   },
+  ]]--
 }
-]]--
 
 --name (macro name fontstring)
 actionButtonConfig.name = {
-  font = { STANDARD_TEXT_FONT, 11, "OUTLINE"},
+  font = { STANDARD_TEXT_FONT, 10, "OUTLINE"},
   points = {
     {"BOTTOMLEFT", 0, 0 },
     {"BOTTOMRIGHT", 0, 0 },

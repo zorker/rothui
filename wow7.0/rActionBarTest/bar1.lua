@@ -52,6 +52,22 @@ frame:Execute([[
 
 frame:SetAttribute("_onstate-page", [[
   print("newstate",newstate,type(newstate))
+  local s=SecureCmdOptionParse
+  print(s("[bonusbar]bb;no-bb"),s("[canexitvehicle]cev;no-cev"),s("[overridebar]ob;no-ob"),s("[possessbar]pb;no-pb"),s("[shapeshift]ss;no-ss"),s("[vehicleui]vui;no-vui"),s("[@vehicle,exists]ve;no-ve"))
+
+  print("GetShapeshiftForm", GetShapeshiftForm())
+  print("GetActionBarPage", GetActionBarPage())
+  print("GetBonusBarOffset", GetBonusBarOffset())
+  print("HasVehicleActionBar", HasVehicleActionBar())
+  print("HasOverrideActionBar", HasOverrideActionBar())
+  print("HasTempShapeshiftActionBar", HasTempShapeshiftActionBar())
+  --print("HasOverrideUI", HasOverrideUI())
+  print("GetVehicleBarIndex", GetVehicleBarIndex())
+  print("GetOverrideBarIndex", GetOverrideBarIndex())
+  print("HasExtraActionBar", HasExtraActionBar())
+  print("GetTempShapeshiftBarIndex", GetTempShapeshiftBarIndex())
+  print("CanExitVehicle", CanExitVehicle())
+
   for i, button in ipairs(buttons) do
     button:SetAttribute("actionpage", tonumber(newstate));
   end
@@ -68,7 +84,7 @@ local barpages = {
   ["ROGUE"] = "[bonusbar:1] 7;",
   ["WARLOCK"] = "[stance:1] 10;",
   ["MONK"] = "[bonusbar:1] 7; [bonusbar:2] 8; [bonusbar:3] 9;",
-  ["DEFAULT"] = "[vehicleui:12] 12; [possessbar] 12; [overridebar] 14; [shapeshift] 13; [bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6;",
+  ["DEFAULT"] = "[vehicleui] 12; [possessbar] 12; [overridebar] 14; [shapeshift] 13; [bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6;",
 }
 
 local function GetBar()

@@ -33,7 +33,7 @@ end
 --3. p4, b-1, p5, bm3, bm4
 function L:SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, p1, fp1, fp2, p2, p3, bm1, bm2, p4, p5, bm3, bm4)
   for index, button in next, buttonList do
-    if frame.resetButtonParent then
+    if not frame.__blizzardBar then
       button:SetParent(frame)
     end
     button:SetSize(buttonWidth, buttonHeight)
@@ -90,9 +90,7 @@ function L:CreateButtonFrame(cfg,buttonList)
   local frame = CreateFrame("Frame", cfg.frameName, cfg.frameParent, cfg.frameTemplate)
   frame:SetPoint(unpack(cfg.framePoint))
   frame:SetScale(cfg.frameScale)
-  if cfg.resetButtonParent then
-    frame.resetButtonParent = true
-  end
+  frame.__blizzardBar = cfg.blizzardBar
   L:SetupButtonFrame(frame, cfg.framePadding, buttonList, cfg.buttonWidth, cfg.buttonHeight, cfg.buttonMargin, cfg.numCols, cfg.startPoint)
   --reparent the Blizzard bar
   if cfg.blizzardBar then
@@ -101,6 +99,35 @@ function L:CreateButtonFrame(cfg,buttonList)
   end
   --show/hide the frame on a given state driver
   RegisterStateDriver(frame, "visibility", cfg.frameVisibility)
+  --page swap
+  if cfg.framePage then
+    for i, button in next, buttonList do
+      frame:SetFrameRef(cfg.buttonName..i, button);
+    end
+    frame:Execute(([[
+      buttons = table.new()
+      for i=1, %d do
+        table.insert(buttons, self:GetFrameRef("%s"..i))
+      end
+    ]]):format(cfg.numButtons, cfg.buttonName))
+    frame:SetAttribute("_onstate-page", [[
+      if HasVehicleActionBar() then
+        newstate = GetVehicleBarIndex()
+      elseif HasOverrideActionBar() then
+        newstate = GetOverrideBarIndex()
+      elseif HasTempShapeshiftActionBar() then
+        newstate = GetTempShapeshiftBarIndex()
+      elseif GetBonusBarOffset() > 0 then
+        newstate = GetBonusBarOffset()+6
+      else
+        newstate = GetActionBarPage()
+      end
+      for i, button in next, buttons do
+        button:SetAttribute("actionpage", newstate);
+      end
+    ]])
+    RegisterStateDriver(frame, "page", cfg.framePage)
+  end
   --add drag functions
   rLib:CreateDragFrame(frame, L.dragFrames, cfg.dragInset, cfg.dragClamp)
   --hover animation

@@ -42,6 +42,7 @@ for i=1, 5 do
 end
 
 --OVERRIDEBAR
+--[[
 do
   local cfg = L.cfg.overridebar
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
@@ -52,6 +53,7 @@ do
   cfg.blizzardBar:SetScript("OnShow", nil) --micromenu
   RegisterStateDriver(cfg.blizzardBar, "visibility", cfg.blizzardBarVisibility) --show/hide
 end
+]]--
 
 --EXTRABAR
 do
@@ -72,11 +74,13 @@ do
 end
 
 --POSSESSBAR
+--[[
 do
   local cfg = L.cfg.possessbar
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
 end
+]]--
 
 --PETBAR
 do

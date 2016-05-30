@@ -29,7 +29,7 @@ frame:SetSize(36,36)
 
 for i=1,12 do
   local button = _G["ActionButton"..i];
-  button:SetParent(frame);
+  button:SetParent(frame)
   frame:SetFrameRef("ActionButton"..i, button);
 end
 
@@ -95,3 +95,4 @@ frame:SetAttribute("_onstate-page", [[
 ]])
 
 RegisterStateDriver(frame, "page", "[vehicleui] 12; [possessbar] 12; [overridebar] 14; [shapeshift] 13; [bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6; [bonusbar:1] 7; [bonusbar:2] 8; [bonusbar:3] 9; [bonusbar:4] 10; 1")
+RegisterStateDriver(frame, "visibility", "[petbattle] hide; show")

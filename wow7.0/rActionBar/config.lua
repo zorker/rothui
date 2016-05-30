@@ -27,7 +27,6 @@ L.cfg.bags = {
   buttonWidth     = 32,
   buttonHeight    = 32,
   buttonMargin    = 2,
-  resetButtonParent = true,
   numCols         = 6,
   startPoint      = "BOTTOMRIGHT",
   dragInset       = -2,
@@ -56,7 +55,6 @@ L.cfg.micromenu = {
   buttonWidth     = 28,
   buttonHeight    = 58,
   buttonMargin    = 0,
-  resetButtonParent = true,
   numCols         = 12,
   startPoint      = "BOTTOMLEFT",
   dragInset       = -2,
@@ -74,11 +72,12 @@ L.cfg.micromenu = {
 
 --bar1
 L.cfg.bar1 = {
-  blizzardBar     = MainMenuBarArtFrame,
+  blizzardBar     = nil, --MainMenuBarArtFrame,
   frameName       = "rABS_ActionBar1",
   frameParent     = UIParent,
   frameTemplate   = "SecureHandlerStateTemplate",
-  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; show",
+  frameVisibility = "[petbattle] hide; show", --"[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; show",
+  framePage       = "[vehicleui] 1; [possessbar] 2; [overridebar] 3; [shapeshift] 4; [bar:2] 5; [bar:3] 6; [bar:4] 7; [bar:5] 8; [bar:6] 9; [bonusbar:1] 10; [bonusbar:2] 11; [bonusbar:3] 12; [bonusbar:4] 13; 14",
   framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 10 },
   frameScale      = 1,
   framePadding    = 5,
@@ -205,6 +204,7 @@ L.cfg.bar5 = {
 }
 
 --overridebar
+--[[
 L.cfg.overridebar = {
   blizzardBar     = OverrideActionBar,
   blizzardBarVisibility = "[overridebar][vehicleui][possessbar,@vehicle,exists] show; hide",
@@ -225,6 +225,7 @@ L.cfg.overridebar = {
   dragInset       = -2,
   dragClamp       = true,
 }
+]]--
 
 --extrabar
 L.cfg.extrabar = {
@@ -269,6 +270,7 @@ L.cfg.stancebar = {
 }
 
 --possessbar
+--[[
 L.cfg.possessbar = {
   blizzardBar     = PossessBarFrame,
   frameName       = "rABS_PossessBar",
@@ -288,6 +290,7 @@ L.cfg.possessbar = {
   dragInset       = -2,
   dragClamp       = true,
 }
+]]--
 
 --petbar
 L.cfg.petbar = {

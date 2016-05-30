@@ -27,9 +27,9 @@ local texturesToHide = {
 }
 
 local framesToHide = {
-  MainMenuBar, MainMenuBarPageNumber,
+  MainMenuBar, --MainMenuBarPageNumber,
   ActionBarDownButton, ActionBarUpButton,
-  OverrideActionBarExpBar, OverrideActionBarHealthBar, OverrideActionBarPowerBar, OverrideActionBarPitchFrame
+  OverrideActionBar, OverrideActionBarExpBar, OverrideActionBarHealthBar, OverrideActionBarPowerBar, OverrideActionBarPitchFrame
 }
 
 local overridebarTextures =  {
@@ -78,6 +78,7 @@ end
 --hide all frames
 for i, frame in next, framesToHide do
   frame:SetParent(hiddenFrame)
+  frame:UnregisterAllEvents()
 end
 
 --ResetTexture function
@@ -92,3 +93,4 @@ end
 
 --hook extraactionbutton1 SetTexture
 hooksecurefunc(ExtraActionButton1.style, "SetTexture", ResetTexture)
+

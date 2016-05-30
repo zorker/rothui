@@ -51,25 +51,41 @@ frame:Execute([[
 ]])
 
 frame:SetAttribute("_onstate-page", [[
-  print("newstate",newstate,type(newstate))
+  --print("newstate",newstate,type(newstate))
   local s=SecureCmdOptionParse
   print(s("[bonusbar]bb;no-bb"),s("[canexitvehicle]cev;no-cev"),s("[overridebar]ob;no-ob"),s("[possessbar]pb;no-pb"),s("[shapeshift]ss;no-ss"),s("[vehicleui]vui;no-vui"),s("[@vehicle,exists]ve;no-ve"))
-
-  print("GetShapeshiftForm", GetShapeshiftForm())
-  print("GetActionBarPage", GetActionBarPage())
-  print("GetBonusBarOffset", GetBonusBarOffset())
-  print("HasVehicleActionBar", HasVehicleActionBar())
-  print("HasOverrideActionBar", HasOverrideActionBar())
-  print("HasTempShapeshiftActionBar", HasTempShapeshiftActionBar())
+  --print("GetShapeshiftForm", GetShapeshiftForm())
+  --print("GetActionBarPage", GetActionBarPage())
+  --print("GetBonusBarOffset", GetBonusBarOffset())
+  --print("HasVehicleActionBar", HasVehicleActionBar())
+  --print("HasOverrideActionBar", HasOverrideActionBar())
+  --print("HasTempShapeshiftActionBar", HasTempShapeshiftActionBar())
   --print("HasOverrideUI", HasOverrideUI())
-  print("GetVehicleBarIndex", GetVehicleBarIndex())
-  print("GetOverrideBarIndex", GetOverrideBarIndex())
-  print("HasExtraActionBar", HasExtraActionBar())
-  print("GetTempShapeshiftBarIndex", GetTempShapeshiftBarIndex())
-  print("CanExitVehicle", CanExitVehicle())
+  --print("GetVehicleBarIndex", GetVehicleBarIndex())
+  --print("GetOverrideBarIndex", GetOverrideBarIndex())
+  --print("HasExtraActionBar", HasExtraActionBar())
+  --print("GetTempShapeshiftBarIndex", GetTempShapeshiftBarIndex())
+  --print("CanExitVehicle", CanExitVehicle())
+  --print("HasBonusActionBar", HasBonusActionBar())
+  --print("GetBonusBarIndex", GetBonusBarIndex())
+
+  --emulate the actionbar controller
+  if HasVehicleActionBar() then
+      newstate = GetVehicleBarIndex()
+  elseif HasOverrideActionBar() then
+      newstate = GetOverrideBarIndex()
+  elseif HasTempShapeshiftActionBar() then
+      newstate = GetTempShapeshiftBarIndex()
+  elseif GetBonusBarOffset() > 0 then
+      newstate = GetBonusBarOffset()+6
+  else
+      newstate = GetActionBarPage()
+  end
+
+  print("newstate",newstate,type(newstate))
 
   for i, button in ipairs(buttons) do
-    button:SetAttribute("actionpage", tonumber(newstate));
+    button:SetAttribute("actionpage", newstate);
   end
   if CanExitVehicle() then
     leave:Show()
@@ -78,21 +94,4 @@ frame:SetAttribute("_onstate-page", [[
   end
 ]])
 
-local barpages = {
-  ["DRUID"] = "[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] 8; [bonusbar:2] 8; [bonusbar:3] 9; [bonusbar:4] 10;",
-  ["PRIEST"] = "[bonusbar:1] 7;",
-  ["ROGUE"] = "[bonusbar:1] 7;",
-  ["WARLOCK"] = "[stance:1] 10;",
-  ["MONK"] = "[bonusbar:1] 7; [bonusbar:2] 8; [bonusbar:3] 9;",
-  ["DEFAULT"] = "[vehicleui] 12; [possessbar] 12; [overridebar] 14; [shapeshift] 13; [bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6;",
-}
-
-local function GetBar()
-  local condition = barpages["DEFAULT"]
-  local page = barpages["WARRIOR"]
-  if page then condition = condition .. " " .. page end
-  condition = condition .. " [form] 1; 1"
-  return condition
-end
-
-RegisterStateDriver(frame, "page", GetBar())
+RegisterStateDriver(frame, "page", "[vehicleui] 12; [possessbar] 12; [overridebar] 14; [shapeshift] 13; [bar:2] 2; [bar:3] 3; [bar:4] 4; [bar:5] 5; [bar:6] 6; [bonusbar:1] 7; [bonusbar:2] 8; [bonusbar:3] 9; [bonusbar:4] 10; 1")

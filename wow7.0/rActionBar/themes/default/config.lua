@@ -58,7 +58,11 @@ actionButtonConfig.flyoutBorderShadow = {
 
 --border
 actionButtonConfig.border = {
-  file = ""
+  file = mediapath.."border.tga",
+  points = {
+    {"TOPLEFT", -2, 2 },
+    {"BOTTOMRIGHT", 2, -2 },
+  },
 }
 
 --normalTexture

@@ -69,6 +69,6 @@ end
 --VEHICLEEXIT
 do
   local cfg = L.cfg.vehicleexit
-  local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
-  local frame = L:CreateButtonFrame(cfg,buttonList)
+  local buttonList = { OverrideActionBar.LeaveButton }
+  local frame = L:CreateButtonFrame(cfg, buttonList)
 end

@@ -31,8 +31,11 @@ local scripts = {
 }
 
 local framesToHide = {
-  MainMenuBar, ActionBarDownButton, ActionBarUpButton, MainMenuBarVehicleLeaveButton, ArtifactWatchBar, HonorWatchBar, MainMenuExpBar, MainMenuBarMaxLevelBar,
-  OverrideActionBar, OverrideActionBarExpBar, OverrideActionBarHealthBar, OverrideActionBarPowerBar, OverrideActionBarPitchFrame,
+  MainMenuBar,
+  ActionBarDownButton, ActionBarUpButton, MainMenuBarVehicleLeaveButton,
+  ReputationWatchBar, ArtifactWatchBar, HonorWatchBar, MainMenuExpBar, MainMenuBarMaxLevelBar,
+  OverrideActionBar,
+  OverrideActionBarExpBar, OverrideActionBarHealthBar, OverrideActionBarPowerBar, OverrideActionBarPitchFrame,
   PossessBarFrame,
   --MainMenuBarArtFrame, artframe has to stay alive probably
 }
@@ -90,11 +93,27 @@ local function DisableAllScripts(frame)
   end
 end
 
+local function PrintAllChildren(parent,depth or 0)
+  local childs = { parent:GetChildren() }
+  print(parent:GetName(), depth, # childs)
+  for _, child in next, childs do
+    PrintAllChildren(child,depth+1)
+  end
+  --[[
+  for _, region in pairs({ f:GetRegions() }) do
+    if region:GetObjectType() == "Texture" then
+      print("region",region:GetName(),region:GetTexture())
+    end
+  end
+  ]]--
+end
+
 --hide all frames
 for i, frame in next, framesToHide do
   frame:SetParent(hiddenFrame)
   frame:UnregisterAllEvents()
   DisableAllScripts(frame)
+  PrintAllChildren(frame)
 end
 
 --ResetTexture function
@@ -119,7 +138,7 @@ local slideouts = {
 }
 
 local function OnPlay(self)
-  self:GetParent().hideOnFinish = true
+  --self:GetParent().hideOnFinish = true
   self:Stop()
 end
 

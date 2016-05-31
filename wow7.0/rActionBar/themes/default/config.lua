@@ -14,6 +14,10 @@ local A, L = ...
 
 local mediapath = "interface\\addons\\"..A.."\\themes\\default\\media\\"
 
+-----------------------------
+-- actionButtonConfig
+-----------------------------
+
 local actionButtonConfig = {}
 
 --backdrop
@@ -110,7 +114,27 @@ actionButtonConfig.count = {
 }
 
 -----------------------------
+-- itemButtonConfig
+-----------------------------
+
+local itemButtonConfig = {}
+
+itemButtonConfig.backdrop = actionButtonConfig.backdrop
+itemButtonConfig.icon = actionButtonConfig.icon
+itemButtonConfig.count = actionButtonConfig.count
+itemButtonConfig.stock = actionButtonConfig.name
+itemButtonConfig.border = actionButtonConfig.border
+itemButtonConfig.normalTexture = actionButtonConfig.normalTexture
+
+-----------------------------
 -- Init
 -----------------------------
 
+--use L:StyleAllActionButtons to style all action buttons
 L:StyleAllActionButtons(actionButtonConfig)
+
+--use L:StyleItemButton to style specific item buttons
+local itemButtons = { MainMenuBarBackpackButton, CharacterBag0Slot, CharacterBag1Slot, CharacterBag2Slot, CharacterBag3Slot }
+for i, button in next, itemButtons do
+  L:StyleItemButton(button, itemButtonConfig)
+end

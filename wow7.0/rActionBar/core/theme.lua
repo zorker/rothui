@@ -171,6 +171,40 @@ function L:StyleExtraActionButton(cfg)
   button.__styled = true
 end
 
+function L:StyleItemButton(button,cfg)
+
+  if not button then return end
+  if button.__styled then return end
+
+  local buttonName = button:GetName()
+  local icon = _G[buttonName.."IconTexture"]
+  local count = _G[buttonName.."Count"]
+  local stock = _G[buttonName.."Stock"]
+  local searchOverlay = _G[buttonName.."SearchOverlay"]
+  local border = button.IconBorder
+  local normalTexture = button:GetNormalTexture()
+  local pushedTexture = button:GetPushedTexture()
+  local highlightTexture = button:GetHighlightTexture()
+
+  --backdrop
+  SetupBackdrop(button,cfg.backdrop)
+
+  --textures
+  SetupTexture(icon,cfg.icon,"SetTexture",icon)
+  SetupTexture(searchOverlay,cfg.icon,"SetTexture",searchOverlay)
+  SetupTexture(border,cfg.border,"SetTexture",border)
+  SetupTexture(normalTexture,cfg.normalTexture,"SetNormalTexture",button)
+  SetupTexture(pushedTexture,cfg.pushedTexture,"SetPushedTexture",button)
+  SetupTexture(highlightTexture,cfg.highlightTexture,"SetHighlightTexture",button)
+
+  --count+stock
+  SetupFontString(count,cfg.count)
+  SetupFontString(stock,cfg.stock)
+
+  button.__styled = true
+
+end
+
 function L:StyleAllActionButtons(cfg)
   for i = 1, NUM_ACTIONBAR_BUTTONS do
     L:StyleActionButton(_G["ActionButton"..i],cfg)

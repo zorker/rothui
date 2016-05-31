@@ -77,12 +77,10 @@ actionButtonConfig.normalTexture = {
 
 --cooldown
 actionButtonConfig.cooldown = {
-  --[[
   points = {
-    {"TOPLEFT", 0, -0 },
-    {"BOTTOMRIGHT", -0, 0 },
+    {"TOPLEFT", 0, 0 },
+    {"BOTTOMRIGHT", 0, 0 },
   },
-  ]]--
 }
 
 --name (macro name fontstring)

@@ -48,7 +48,7 @@ L.cfg.micromenu = {
   frameName       = "rABS_MicroMenuBar",
   frameParent     = UIParent,
   frameTemplate   = "SecureHandlerStateTemplate",
-  frameVisibility = "[petbattle] hide; show",
+  frameVisibility = "show",
   framePoint      = { "TOP", UIParent, "TOP", 0, 0 },
   frameScale      = 0.8,
   framePadding    = 5,
@@ -72,11 +72,11 @@ L.cfg.micromenu = {
 
 --bar1
 L.cfg.bar1 = {
-  blizzardBar     = nil, --MainMenuBarArtFrame,
+  blizzardBar     = nil, --important, we get rid of MainMenuBarArtFrame
   frameName       = "rABS_ActionBar1",
   frameParent     = UIParent,
   frameTemplate   = "SecureHandlerStateTemplate",
-  frameVisibility = "[petbattle] hide; show", --"[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; show",
+  frameVisibility = "[petbattle] hide; show",
   framePage       = "[vehicleui] 1; [possessbar] 2; [overridebar] 3; [shapeshift] 4; [bar:2] 5; [bar:3] 6; [bar:4] 7; [bar:5] 8; [bar:6] 9; [bonusbar:1] 10; [bonusbar:2] 11; [bonusbar:3] 12; [bonusbar:4] 13; 14",
   framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 10 },
   frameScale      = 1,
@@ -98,7 +98,7 @@ L.cfg.bar2 = {
   frameName       = "rABS_ActionBar2",
   frameParent     = UIParent,
   frameTemplate   = "SecureHandlerStateTemplate",
-  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; show",
+  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show",
   framePoint      = { "BOTTOM", "rABS_ActionBar1", "TOP", 0, 0 },
   frameScale      = 1,
   framePadding    = 5,
@@ -119,7 +119,7 @@ L.cfg.bar3 = {
   frameName       = "rABS_ActionBar3",
   frameParent     = UIParent,
   frameTemplate   = "SecureHandlerStateTemplate",
-  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; show",
+  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show",
   framePoint      = { "BOTTOM", "rABS_ActionBar2", "TOP", 0, 0 },
   frameScale      = 1,
   framePadding    = 5,
@@ -149,7 +149,7 @@ L.cfg.bar4 = {
   frameName       = "rABS_ActionBar4",
   frameParent     = UIParent,
   frameTemplate   = "SecureHandlerStateTemplate",
-  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; show",
+  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show",
   framePoint      = { "RIGHT", UIParent, "RIGHT", -5, 0 },
   frameScale      = 1,
   framePadding    = 5,
@@ -179,7 +179,7 @@ L.cfg.bar5 = {
   frameName       = "rABS_ActionBar5",
   frameParent     = UIParent,
   frameTemplate   = "SecureHandlerStateTemplate",
-  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; show",
+  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show",
   framePoint      = { "RIGHT", "rABS_ActionBar4", "LEFT", 0, 0 },
   frameScale      = 1,
   framePadding    = 5,
@@ -203,29 +203,47 @@ L.cfg.bar5 = {
   },
 }
 
---overridebar
---[[
-L.cfg.overridebar = {
-  blizzardBar     = OverrideActionBar,
-  blizzardBarVisibility = "[overridebar][vehicleui][possessbar,@vehicle,exists] show; hide",
-  frameName       = "rABS_OverrideActionBar",
+--stancebar
+L.cfg.stancebar = {
+  blizzardBar     = StanceBarFrame,
+  frameName       = "rABS_StanceBar",
   frameParent     = UIParent,
   frameTemplate   = "SecureHandlerStateTemplate",
-  frameVisibility = "[petbattle] hide; [overridebar][vehicleui][possessbar,@vehicle,exists] show; hide",
-  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 10 },
-  frameScale      = 1,
+  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [stance][form] show; hide",
+  framePoint      = { "BOTTOM", "rABS_ActionBar3", "TOP", 0, 0 },
+  frameScale      = 0.8,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
   buttonMargin    = 5,
-  buttonName      = "OverrideActionBarButton",
-  numButtons      = 6,
+  buttonName      = "StanceButton",
+  numButtons      = NUM_STANCE_SLOTS,
   numCols         = 12,
   startPoint      = "BOTTOMLEFT",
   dragInset       = -2,
   dragClamp       = true,
 }
-]]--
+
+--petbar
+L.cfg.petbar = {
+  blizzardBar     = PetActionBarFrame,
+  frameName       = "rABS_PetActionBar",
+  frameParent     = UIParent,
+  frameTemplate   = "SecureHandlerStateTemplate",
+  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [pet] show; hide",
+  framePoint      = { "BOTTOM", "rABS_ActionBar3", "TOP", 0, 0 },
+  frameScale      = 0.8,
+  framePadding    = 5,
+  buttonWidth     = 32,
+  buttonHeight    = 32,
+  buttonMargin    = 5,
+  buttonName      = "PetActionButton",
+  numButtons      = NUM_PET_ACTION_SLOTS,
+  numCols         = 12,
+  startPoint      = "BOTTOMLEFT",
+  dragInset       = -2,
+  dragClamp       = true,
+}
 
 --extrabar
 L.cfg.extrabar = {
@@ -248,66 +266,22 @@ L.cfg.extrabar = {
   dragClamp       = true,
 }
 
---stancebar
-L.cfg.stancebar = {
-  blizzardBar     = StanceBarFrame,
-  frameName       = "rABS_StanceBar",
+--vehicleexit
+L.cfg.vehicleexit = {
+  blizzardBar     = nil,
+  frameName       = "rABS_VehicleExit",
   frameParent     = UIParent,
   frameTemplate   = "SecureHandlerStateTemplate",
-  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists][possessbar] hide; show",
-  framePoint      = { "BOTTOM", "rABS_ActionBar3", "TOP", 0, 0 },
-  frameScale      = 0.8,
+  frameVisibility = "[canexitvehicle] show; hide",
+  framePoint      = { "LEFT", "rABS_ActionBar1", "RIGHT", 5, 0 },
+  frameScale      = 1,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
   buttonMargin    = 5,
-  buttonName      = "StanceButton",
-  numButtons      = NUM_STANCE_SLOTS,
-  numCols         = 12,
-  startPoint      = "BOTTOMLEFT",
-  dragInset       = -2,
-  dragClamp       = true,
-}
-
---possessbar
---[[
-L.cfg.possessbar = {
-  blizzardBar     = PossessBarFrame,
-  frameName       = "rABS_PossessBar",
-  frameParent     = UIParent,
-  frameTemplate   = "SecureHandlerStateTemplate",
-  frameVisibility = "[possessbar,@vehicle,exists] hide; [possessbar] show; hide",
-  framePoint      = { "BOTTOM", "rABS_ActionBar3", "TOP", 0, 0 },
-  frameScale      = 0.8,
-  framePadding    = 5,
-  buttonWidth     = 32,
-  buttonHeight    = 32,
-  buttonMargin    = 5,
-  buttonName      = "PossessButton",
-  numButtons      = NUM_POSSESS_SLOTS,
-  numCols         = 12,
-  startPoint      = "BOTTOMLEFT",
-  dragInset       = -2,
-  dragClamp       = true,
-}
-]]--
-
---petbar
-L.cfg.petbar = {
-  blizzardBar     = PetActionBarFrame,
-  frameName       = "rABS_PetActionBar",
-  frameParent     = UIParent,
-  frameTemplate   = "SecureHandlerStateTemplate",
-  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar,@vehicle,exists] hide; [@pet,exists] show; hide",
-  framePoint      = { "BOTTOM", "rABS_ActionBar3", "TOP", 0, 0 },
-  frameScale      = 0.8,
-  framePadding    = 5,
-  buttonWidth     = 32,
-  buttonHeight    = 32,
-  buttonMargin    = 5,
-  buttonName      = "PetActionButton",
-  numButtons      = NUM_PET_ACTION_SLOTS,
-  numCols         = 12,
+  buttonName      = "OverrideActionBar.LeaveButton",
+  numButtons      = 1,
+  numCols         = 1,
   startPoint      = "BOTTOMLEFT",
   dragInset       = -2,
   dragClamp       = true,

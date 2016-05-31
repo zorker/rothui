@@ -31,7 +31,7 @@ end
 --1. p1, f, fp1, fp2
 --2. p2, rb-1, p3, bm1, bm2
 --3. p4, b-1, p5, bm3, bm4
-function L:SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, p1, fp1, fp2, p2, p3, bm1, bm2, p4, p5, bm3, bm4)
+local function SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, p1, fp1, fp2, p2, p3, bm1, bm2, p4, p5, bm3, bm4)
   for index, button in next, buttonList do
     if not frame.__blizzardBar then
       button:SetParent(frame)
@@ -48,7 +48,7 @@ function L:SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCo
   end
 end
 
-function L:SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, buttonHeight, buttonMargin, numCols, startPoint)
+local function SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, buttonHeight, buttonMargin, numCols, startPoint)
   local numButtons = # buttonList
   numCols = min(numButtons, numCols)
   local numRows = ceil(numButtons/numCols)
@@ -60,46 +60,49 @@ function L:SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, button
   --2. B, rb-1, T, 0, m
   --3. L, b-1, R, m, 0
   if startPoint == "BOTTOMLEFT" then
-    L:SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, framePadding, framePadding, "BOTTOM", "TOP", 0, buttonMargin, "LEFT", "RIGHT", buttonMargin, 0)
+    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, framePadding, framePadding, "BOTTOM", "TOP", 0, buttonMargin, "LEFT", "RIGHT", buttonMargin, 0)
   end
   --TOPLEFT
   --1. TL, f, p, -p
   --2. T, rb-1, B, 0, -m
   --3. L, b-1, R, m, 0
   if startPoint == "TOPLEFT" then
-    L:SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, framePadding, -framePadding, "TOP", "BOTTOM", 0, -buttonMargin, "LEFT", "RIGHT", buttonMargin, 0)
+    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, framePadding, -framePadding, "TOP", "BOTTOM", 0, -buttonMargin, "LEFT", "RIGHT", buttonMargin, 0)
   end
   --TOPRIGHT
   --1. TR, f, -p, -p
   --2. T, rb-1, B, 0, -m
   --3. R, b-1, L, -m, 0
   if startPoint == "TOPRIGHT" then
-    L:SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, -framePadding, -framePadding, "TOP", "BOTTOM", 0, -buttonMargin, "RIGHT", "LEFT", -buttonMargin, 0)
+    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, -framePadding, -framePadding, "TOP", "BOTTOM", 0, -buttonMargin, "RIGHT", "LEFT", -buttonMargin, 0)
   end
   --BOTTOMRIGHT
   --1. BR, f, -p, p
   --2. B, rb-1, T, 0, m
   --3. R, b-1, L, -m, 0
   if startPoint == "BOTTOMRIGHT" then
-    L:SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, -framePadding, framePadding, "BOTTOM", "TOP", 0, buttonMargin, "RIGHT", "LEFT", -buttonMargin, 0)
+    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, -framePadding, framePadding, "BOTTOM", "TOP", 0, buttonMargin, "RIGHT", "LEFT", -buttonMargin, 0)
   end
 end
 
 function L:CreateButtonFrame(cfg,buttonList)
-  --create new parent frame
+  --create new parent frame for buttons
   local frame = CreateFrame("Frame", cfg.frameName, cfg.frameParent, cfg.frameTemplate)
   frame:SetPoint(unpack(cfg.framePoint))
   frame:SetScale(cfg.frameScale)
   frame.__blizzardBar = cfg.blizzardBar
-  L:SetupButtonFrame(frame, cfg.framePadding, buttonList, cfg.buttonWidth, cfg.buttonHeight, cfg.buttonMargin, cfg.numCols, cfg.startPoint)
+  SetupButtonFrame(frame, cfg.framePadding, buttonList, cfg.buttonWidth, cfg.buttonHeight, cfg.buttonMargin, cfg.numCols, cfg.startPoint)
   --reparent the Blizzard bar
   if cfg.blizzardBar then
     cfg.blizzardBar:SetParent(frame)
     cfg.blizzardBar:EnableMouse(false)
   end
   --show/hide the frame on a given state driver
-  RegisterStateDriver(frame, "visibility", cfg.frameVisibility)
-  --page swap
+  if cfg.frameVisibility and cfg.frameVisibility ~= "show" then
+    RegisterStateDriver(frame, "visibility", cfg.frameVisibility)
+  end
+  --trigger _onstate-page on cfg.framePage macro condition
+  --use actionbarcontroller functions to determine bar-page
   if cfg.framePage then
     for i, button in next, buttonList do
       frame:SetFrameRef(cfg.buttonName..i, button);

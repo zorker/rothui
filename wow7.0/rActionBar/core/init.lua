@@ -114,7 +114,6 @@ function L:CreateButtonFrame(cfg,buttonList)
       end
     ]]):format(cfg.numButtons, cfg.buttonName))
     frame:SetAttribute("_onstate-page", [[
-      print("id",newstate)
       if HasVehicleActionBar() then
         newstate = GetVehicleBarIndex()
       elseif HasOverrideActionBar() then
@@ -126,7 +125,6 @@ function L:CreateButtonFrame(cfg,buttonList)
       else
         newstate = GetActionBarPage()
       end
-      print("bar",newstate)
       for i, button in next, buttons do
         button:SetAttribute("actionpage", newstate);
       end

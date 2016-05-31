@@ -110,11 +110,21 @@ end
 --hook extraactionbutton1 SetTexture
 hooksecurefunc(ExtraActionButton1.style, "SetTexture", ResetTexture)
 
+--slideouts
+
+local slideouts = {
+  OverrideActionBar.slideout,
+  MainMenuBar.slideout,
+  MultiBarRight.slideout,
+}
+
 local function OnPlay(self)
   self:GetParent().hideOnFinish = true
   self:Stop()
 end
 
 --slideouts
-OverrideActionBar.slideout:SetScript("OnPlay", OnPlay)
-MainMenuBar.slideout:SetScript("OnPlay", OnPlay)
+for i, slideout in next, slideouts do
+  slideout:SetScript("OnPlay", OnPlay)
+  slideout:SetScript("OnFinished", nil)
+end

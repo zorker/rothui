@@ -1,4 +1,0 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/">
-  <!--Default Theme-->
-  <Script file="themes\default\config.lua" />
-</Ui>

@@ -61,9 +61,9 @@ do
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --special
-  cfg.blizzardBar:ClearAllPoints()
-  cfg.blizzardBar:SetPoint("CENTER")
-  cfg.blizzardBar.ignoreFramePositionManager = true
+  ExtraActionBarFrame:ClearAllPoints()
+  ExtraActionBarFrame:SetPoint("CENTER")
+  ExtraActionBarFrame.ignoreFramePositionManager = true
 end
 
 --VEHICLEEXIT

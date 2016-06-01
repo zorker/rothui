@@ -1,0 +1,7 @@
+## Interface: 70000
+## Author: zork
+## Title: rActionBar_Default
+## Notes: rActionBar default theme
+## RequiredDeps: rLib, rActionBar
+
+config.lua

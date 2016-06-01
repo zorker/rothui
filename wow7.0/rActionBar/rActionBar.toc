@@ -5,10 +5,8 @@
 ## RequiredDeps: rLib
 
 config.lua
-config-override.lua
-core\init.lua
-core\slashcmd.lua
-core\blizzard.lua
-core\bars.lua
-core\theme.lua
-theme.xml
+core.lua
+slashcmd.lua
+blizzard.lua
+bars.lua
+

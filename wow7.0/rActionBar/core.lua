@@ -1,5 +1,5 @@
 
--- rActionBar: core/init
+-- rActionBar: core
 -- zork, 2016
 
 -----------------------------
@@ -12,6 +12,13 @@ L.addonName       = A
 L.dragFrames      = {}
 L.addonColor      = "0000FF00"
 L.addonShortcut   = "rabs"
+
+-----------------------------
+-- rABS Global
+-----------------------------
+
+rABS = {}
+rABS.addonName = A
 
 -----------------------------
 -- Functions

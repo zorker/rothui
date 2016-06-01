@@ -54,11 +54,13 @@ local function DisableAllScripts(frame)
   end
 end
 
---hide all frames
-for i, frame in next, framesToHide do
-  frame:SetParent(hiddenFrame)
-  frame:UnregisterAllEvents()
-  DisableAllScripts(frame)
+--hide main menu bar
+function L:HideMainMenuBar()
+  for i, frame in next, framesToHide do
+    frame:SetParent(hiddenFrame)
+    frame:UnregisterAllEvents()
+    DisableAllScripts(frame)
+  end
 end
 
 --ResetTexture function

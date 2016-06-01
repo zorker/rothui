@@ -44,10 +44,12 @@ function rActionBar:CreateMicroMenuBar(addonName,cfg)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --special
   PetBattleFrame.BottomFrame.MicroButtonFrame:SetScript("OnShow", nil)
+  OverrideActionBar:SetScript("OnShow", nil)
 end
 
 --Bar1
 function rActionBar:CreateActionBar1(addonName,cfg)
+  L:HideMainMenuBar()
   cfg.blizzardBar = nil
   cfg.frameName = (addonName or A).."Bar1"
   cfg.frameParent = cfg.frameParent or UIParent

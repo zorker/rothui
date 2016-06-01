@@ -62,6 +62,13 @@ local function ApplyVertexColor(texture,color)
   if not color then return end
   texture.__vertexColor = color
   texture:SetVertexColor(unpack(color))
+  hooksecurefunc(texture, "SetVertexColor", ResetVertexColor)
+end
+
+local function ApplyAlpha(obj,alpha)
+  if not alpha then return end
+  obj:SetAlpha(alpha)
+  print(obj:GetName(),alpha)
 end
 
 local function ApplyFont(fontString,font)
@@ -69,20 +76,40 @@ local function ApplyFont(fontString,font)
   fontString:SetFont(unpack(font))
 end
 
+local function ApplyTexture(texture,file)
+  if not file then return end
+  texture.__textureFile = file
+  texture:SetTexture(file)
+  hooksecurefunc(texture, "SetTexture", ResetTexture)
+end
+
+local function ApplyNormalTexture(button,file)
+  if not file then return end
+  button.__normalTextureFile = file
+  button:SetNormalTexture(file)
+  hooksecurefunc(button, "SetNormalTexture", ResetNormalTexture)
+end
+
 local function SetupTexture(texture,cfg,fileFunc,fileObj)
-  if not cfg then return end
+  if not texture or not cfg then return end
   ApplyTexCoord(texture,cfg.texCoord)
   ApplyPoints(texture,cfg.points)
   ApplyVertexColor(texture,cfg.color)
-  if cfg.file then
+  ApplyAlpha(texture,cfg.alpha)
+  if fileFunc == "SetTexture" then
+    ApplyTexture(texture,cfg.file)
+  elseif fileFunc == "SetNormalTexture" then
+    ApplyNormalTexture(fileObj,cfg.file)
+  elseif cfg.file then
     CallObjectFunction(fileObj,fileFunc,cfg.file)
   end
 end
 
 local function SetupFontString(fontString,cfg)
-  if not cfg then return end
+  if not fontString or not cfg then return end
   ApplyPoints(fontString, cfg.points)
   ApplyFont(fontString,cfg.font)
+  ApplyAlpha(fontString,cfg.alpha)
 end
 
 local function SetupCooldown(cooldown,cfg)
@@ -151,13 +178,6 @@ function rButtonTemplate:StyleActionButton(button, cfg)
   SetupFontString(count,cfg.count)
   SetupFontString(name,cfg.name)
 
-  --NormalTexture fixes
-  if cfg.normalTexture and cfg.normalTexture.file then
-    button.__normalTextureFile = cfg.normalTexture.file
-    hooksecurefunc(button, "SetNormalTexture", ResetNormalTexture)
-  end
-  hooksecurefunc(normalTexture, "SetVertexColor", ResetVertexColor)
-
   button.__styled = true
 end
 
@@ -198,6 +218,7 @@ function rButtonTemplate:StyleItemButton(button,cfg)
   local normalTexture = button:GetNormalTexture()
   local pushedTexture = button:GetPushedTexture()
   local highlightTexture = button:GetHighlightTexture()
+  local checkedTexture = button:GetCheckedTexture()
 
   --backdrop
   SetupBackdrop(button,cfg.backdrop)
@@ -209,20 +230,11 @@ function rButtonTemplate:StyleItemButton(button,cfg)
   SetupTexture(normalTexture,cfg.normalTexture,"SetNormalTexture",button)
   SetupTexture(pushedTexture,cfg.pushedTexture,"SetPushedTexture",button)
   SetupTexture(highlightTexture,cfg.highlightTexture,"SetHighlightTexture",button)
+  SetupTexture(checkedTexture,cfg.checkedTexture,"SetCheckedTexture",button)
 
   --count+stock
   SetupFontString(count,cfg.count)
   SetupFontString(stock,cfg.stock)
-
-  if cfg.normalTexture and cfg.normalTexture.file then
-    button.__normalTextureFile = cfg.normalTexture.file
-    hooksecurefunc(button, "SetNormalTexture", ResetNormalTexture)
-  end
-  hooksecurefunc(normalTexture, "SetVertexColor", ResetVertexColor)
-  if cfg.border and cfg.border.file then
-    border.__textureFile = cfg.border.file
-    hooksecurefunc(border, "SetTexture", ResetTexture)
-  end
 
   button.__styled = true
 

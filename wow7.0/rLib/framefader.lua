@@ -27,7 +27,7 @@ local function CreateFaderAnimation(frame)
   frame.fader:HookScript("OnFinished", FaderOnFinished)
 end
 
-local function StartFadeIn(frame)
+function L:StartFadeIn(frame)
   if frame.fader.direction == "in" then return end
   frame.fader:Pause()
   frame.fader.anim:SetFromAlpha(frame.faderConfig.fadeOutAlpha or 0)
@@ -41,7 +41,7 @@ local function StartFadeIn(frame)
   frame.fader:Play()
 end
 
-local function StartFadeOut(frame)
+function L:StartFadeOut(frame)
   if frame.fader.direction == "out" then return end
   frame.fader:Pause()
   frame.fader.anim:SetFromAlpha(frame.faderConfig.fadeInAlpha or 1)
@@ -65,9 +65,9 @@ end
 
 local function FrameHandler(frame)
   if IsMouseOverFrame(frame) then
-    StartFadeIn(frame)
+    L:StartFadeIn(frame)
   else
-    StartFadeOut(frame)
+    L:StartFadeOut(frame)
   end
 end
 

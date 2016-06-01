@@ -11,7 +11,7 @@
 local A, L = ...
 
 -----------------------------
--- Config
+-- mediapath
 -----------------------------
 
 local mediapath = "interface\\addons\\"..A.."\\media\\"
@@ -105,6 +105,7 @@ actionButtonConfig.hotkey = {
     {"TOPRIGHT", 0, 0 },
     {"TOPLEFT", 0, 0 },
   },
+  --alpha = 0,
 }
 
 --count
@@ -116,6 +117,12 @@ actionButtonConfig.count = {
 }
 
 -----------------------------
+-- rButtonTemplate:StyleAllActionButtons
+-----------------------------
+
+rButtonTemplate:StyleAllActionButtons(actionButtonConfig)
+
+-----------------------------
 -- itemButtonConfig
 -----------------------------
 
@@ -125,18 +132,13 @@ itemButtonConfig.backdrop = actionButtonConfig.backdrop
 itemButtonConfig.icon = actionButtonConfig.icon
 itemButtonConfig.count = actionButtonConfig.count
 itemButtonConfig.stock = actionButtonConfig.name
-itemButtonConfig.border = actionButtonConfig.border
-itemButtonConfig.border.file = ""
+itemButtonConfig.border = { file = "" }
 itemButtonConfig.normalTexture = actionButtonConfig.normalTexture
 
 -----------------------------
--- Init
+-- rButtonTemplate:StyleItemButton
 -----------------------------
 
---use L:StyleAllActionButtons to style all action buttons
-rButtonTemplate:StyleAllActionButtons(actionButtonConfig)
-
---use L:StyleItemButton to style specific item buttons
 local itemButtons = { MainMenuBarBackpackButton, CharacterBag0Slot, CharacterBag1Slot, CharacterBag2Slot, CharacterBag3Slot }
 for i, button in next, itemButtons do
   rButtonTemplate:StyleItemButton(button, itemButtonConfig)

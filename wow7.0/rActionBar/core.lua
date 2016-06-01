@@ -62,33 +62,35 @@ local function SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, bu
   local frameWidth = numCols*buttonWidth + (numCols-1)*buttonMargin + 2*framePadding
   local frameHeight = numRows*buttonHeight + (numRows-1)*buttonMargin + 2*framePadding
   frame:SetSize(frameWidth,frameHeight)
-  --BOTTOMLEFT
-  --1. BL, f, p, p
-  --2. B, rb-1, T, 0, m
-  --3. L, b-1, R, m, 0
-  if startPoint == "BOTTOMLEFT" then
-    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, framePadding, framePadding, "BOTTOM", "TOP", 0, buttonMargin, "LEFT", "RIGHT", buttonMargin, 0)
-  end
   --TOPLEFT
   --1. TL, f, p, -p
   --2. T, rb-1, B, 0, -m
   --3. L, b-1, R, m, 0
   if startPoint == "TOPLEFT" then
     SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, framePadding, -framePadding, "TOP", "BOTTOM", 0, -buttonMargin, "LEFT", "RIGHT", buttonMargin, 0)
-  end
+  --end
   --TOPRIGHT
   --1. TR, f, -p, -p
   --2. T, rb-1, B, 0, -m
   --3. R, b-1, L, -m, 0
-  if startPoint == "TOPRIGHT" then
+  elseif startPoint == "TOPRIGHT" then
     SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, -framePadding, -framePadding, "TOP", "BOTTOM", 0, -buttonMargin, "RIGHT", "LEFT", -buttonMargin, 0)
-  end
+  --end
   --BOTTOMRIGHT
   --1. BR, f, -p, p
   --2. B, rb-1, T, 0, m
   --3. R, b-1, L, -m, 0
-  if startPoint == "BOTTOMRIGHT" then
+  elseif startPoint == "BOTTOMRIGHT" then
     SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, -framePadding, framePadding, "BOTTOM", "TOP", 0, buttonMargin, "RIGHT", "LEFT", -buttonMargin, 0)
+  --end
+  --BOTTOMLEFT
+  --1. BL, f, p, p
+  --2. B, rb-1, T, 0, m
+  --3. L, b-1, R, m, 0
+  --elseif startPoint == "BOTTOMLEFT" then
+  else
+    startPoint = "BOTTOMLEFT"
+    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, framePadding, framePadding, "BOTTOM", "TOP", 0, buttonMargin, "LEFT", "RIGHT", buttonMargin, 0)
   end
 end
 

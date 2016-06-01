@@ -11,7 +11,7 @@
 local A, L = ...
 
 -----------------------------
--- Config
+-- Fader
 -----------------------------
 
 local fader = {
@@ -24,10 +24,11 @@ local fader = {
   fadeOutSmooth = "OUT",
 }
 
-local bars = {}
+-----------------------------
+-- BagBar
+-----------------------------
 
---bag config
-bars.bagbar = {
+local bagbar = {
   framePoint      = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5 },
   frameScale      = 1,
   framePadding    = 5,
@@ -38,9 +39,14 @@ bars.bagbar = {
   startPoint      = "BOTTOMRIGHT", --start postion of first button: BOTTOMLEFT, TOPLEFT, TOPRIGHT, BOTTOMRIGHT
   fader           = fader,
 }
+--create
+rActionBar:CreateBagBar(A, bagbar)
 
---micro menu
-bars.micromenubar = {
+-----------------------------
+-- MicroMenuBar
+-----------------------------
+
+local micromenubar = {
   framePoint      = { "TOP", UIParent, "TOP", 0, 0 },
   frameScale      = 0.8,
   framePadding    = 5,
@@ -51,9 +57,14 @@ bars.micromenubar = {
   startPoint      = "BOTTOMLEFT",
   fader           = fader,
 }
+--create
+rActionBar:CreateMicroMenuBar(A, micromenubar)
 
---bar1
-bars.bar1 = {
+-----------------------------
+-- Bar1
+-----------------------------
+
+local bar1 = {
   framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 10 },
   frameScale      = 1,
   framePadding    = 5,
@@ -64,9 +75,14 @@ bars.bar1 = {
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }
+--create
+rActionBar:CreateActionBar1(A, bar1)
 
---bar2
-bars.bar2 = {
+-----------------------------
+-- Bar2
+-----------------------------
+
+local bar2 = {
   framePoint      = { "BOTTOM", A.."Bar1", "TOP", 0, 0 },
   frameScale      = 1,
   framePadding    = 5,
@@ -77,9 +93,14 @@ bars.bar2 = {
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }
+--create
+rActionBar:CreateActionBar2(A, bar2)
 
---bar3
-bars.bar3 = {
+-----------------------------
+-- Bar3
+-----------------------------
+
+local bar3 = {
   framePoint      = { "BOTTOM", A.."Bar2", "TOP", 0, 0 },
   frameScale      = 1,
   framePadding    = 5,
@@ -88,11 +109,16 @@ bars.bar3 = {
   buttonMargin    = 5,
   numCols         = 12,
   startPoint      = "BOTTOMLEFT",
-  fader           = fader,
+  fader           = nil,
 }
+--create
+rActionBar:CreateActionBar3(A, bar3)
 
---bar4
-bars.bar4 = {
+-----------------------------
+-- Bar4
+-----------------------------
+
+local bar4 = {
   framePoint      = { "RIGHT", UIParent, "RIGHT", -5, 0 },
   frameScale      = 1,
   framePadding    = 5,
@@ -103,9 +129,14 @@ bars.bar4 = {
   startPoint      = "TOPRIGHT",
   fader           = fader,
 }
+--create
+rActionBar:CreateActionBar4(A, bar4)
 
---bar5
-bars.bar5 = {
+-----------------------------
+-- Bar5
+-----------------------------
+
+local bar5 = {
   framePoint      = { "RIGHT", A.."Bar4", "LEFT", 0, 0 },
   frameScale      = 1,
   framePadding    = 5,
@@ -116,9 +147,14 @@ bars.bar5 = {
   startPoint      = "TOPRIGHT",
   fader           = fader,
 }
+--create
+rActionBar:CreateActionBar5(A, bar5)
 
---stancebar
-bars.stancebar = {
+-----------------------------
+-- StanceBar
+-----------------------------
+
+local stancebar = {
   framePoint      = { "BOTTOM", A.."Bar3", "TOP", 0, 0 },
   frameScale      = 0.8,
   framePadding    = 5,
@@ -129,9 +165,15 @@ bars.stancebar = {
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }
+--create
+rActionBar:CreateStanceBar(A, stancebar)
+
+-----------------------------
+-- PetBar
+-----------------------------
 
 --petbar
-bars.petbar = {
+local petbar = {
   framePoint      = { "BOTTOM", A.."Bar3", "TOP", 0, 0 },
   frameScale      = 0.8,
   framePadding    = 5,
@@ -142,9 +184,14 @@ bars.petbar = {
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }
+--create
+rActionBar:CreatePetBar(A, petbar)
 
---extrabar
-bars.extrabar = {
+-----------------------------
+-- ExtraBar
+-----------------------------
+
+local extrabar = {
   framePoint      = { "BOTTOMRIGHT", A.."Bar1", "BOTTOMLEFT", -5, 0 },
   frameScale      = 1,
   framePadding    = 5,
@@ -155,9 +202,14 @@ bars.extrabar = {
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }
+--create
+rActionBar:CreateExtraBar(A, extrabar)
 
---vehicleexit
-bars.vehicleexitbar = {
+-----------------------------
+-- VehicleExitBar
+-----------------------------
+
+local vehicleexitbar = {
   framePoint      = { "BOTTOMLEFT", A.."Bar1", "BOTTOMRIGHT", 5, 0 },
   frameScale      = 1,
   framePadding    = 5,
@@ -168,32 +220,5 @@ bars.vehicleexitbar = {
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }
-
------------------------------
--- Init
------------------------------
-
---create all bars
-
---BagBar
-rActionBar:CreateBagBar(A, bars.bagbar)
---MicroMenuBar
-rActionBar:CreateMicroMenuBar(A, bars.micromenubar)
---Bar1
-rActionBar:CreateActionBar1(A, bars.bar1)
---Bar2
-rActionBar:CreateActionBar2(A, bars.bar2)
---Bar3
-rActionBar:CreateActionBar3(A, bars.bar3)
---Bar4
-rActionBar:CreateActionBar4(A, bars.bar4)
---Bar5
-rActionBar:CreateActionBar5(A, bars.bar5)
---StanceBar
-rActionBar:CreateStanceBar(A, bars.stancebar)
---PetBar
-rActionBar:CreatePetBar(A, bars.petbar)
---ExtraBar
-rActionBar:CreateExtraBar(A, bars.extrabar)
---VehicleExitBar
-rActionBar:CreateVehicleExitBar(A, bars.vehicleexitbar)
+--create
+rActionBar:CreateVehicleExitBar(A, vehicleexitbar)

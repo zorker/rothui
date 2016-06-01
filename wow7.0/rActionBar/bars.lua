@@ -45,6 +45,7 @@ function rActionBar:CreateMicroMenuBar(addonName,cfg)
   --special
   PetBattleFrame.BottomFrame.MicroButtonFrame:SetScript("OnShow", nil)
   OverrideActionBar:SetScript("OnShow", nil)
+  MainMenuBar:SetScript("OnShow", nil)
 end
 
 --Bar1
@@ -175,8 +176,8 @@ function rActionBar:CreateExtraBar(addonName,cfg)
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --special
-  local function ResetTexture(self,textureFile)
-    if textureFile then self:SetTexture(nil) end
+  local function ResetTexture(self, file)
+    if file then self:SetTexture(nil) end
   end
   ExtraActionButton1.style:SetTexture(nil)
   hooksecurefunc(ExtraActionButton1.style, "SetTexture", ResetTexture)

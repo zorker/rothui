@@ -12,6 +12,39 @@ local A, L = ...
 -- Functions
 -----------------------------
 
+local function OnDragStart(self)
+  if IsAltKeyDown() and IsShiftKeyDown() then
+    self:GetParent():StartMoving()
+  end
+end
+
+local function OnDragStop(self)
+  self:GetParent():StopMovingOrSizing()
+end
+
+local function OnEnter(self)
+  GameTooltip:SetOwner(self, "ANCHOR_TOP")
+  GameTooltip:AddLine(self:GetParent():GetName(), 0, 1, 0.5, 1, 1, 1)
+  GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
+  GameTooltip:Show()
+end
+
+local function OnLeave(self)
+  GameTooltip:Hide()
+end
+
+local function OnShow(self)
+  local frame = self:GetParent()
+  if not frame.fader then return end
+  L:StartFadeIn(frame)
+end
+
+local function OnHide(self)
+  local frame = self:GetParent()
+  if not frame.fader then return end
+  L:StartFadeOut(frame)
+end
+
 --rLib:CreateDragFrame
 function rLib:CreateDragFrame(frame, frames, inset, clamp)
   if not frame or not frames then return end
@@ -25,21 +58,18 @@ function rLib:CreateDragFrame(frame, frames, inset, clamp)
   df:SetHitRectInsets(inset or 0,inset or 0,inset or 0,inset or 0)
   df:EnableMouse(true)
   df:RegisterForDrag("LeftButton")
-  df:SetScript("OnDragStart", function(frame) if IsAltKeyDown() and IsShiftKeyDown() then frame:GetParent():StartMoving() end end)
-  df:SetScript("OnDragStop", function(frame) frame:GetParent():StopMovingOrSizing() end)
-  df:SetScript("OnEnter", function(frame)
-    GameTooltip:SetOwner(frame, "ANCHOR_TOP")
-    GameTooltip:AddLine(frame:GetParent():GetName(), 0, 1, 0.5, 1, 1, 1)
-    GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
-    GameTooltip:Show()
-  end)
-  df:SetScript("OnLeave", function(s) GameTooltip:Hide() end)
+  df:SetScript("OnDragStart", OnDragStart)
+  df:SetScript("OnDragStop", OnDragStop)
+  df:SetScript("OnEnter", OnEnter)
+  df:SetScript("OnLeave", OnLeave)
+  df:SetScript("OnShow", OnShow)
+  df:SetScript("OnHide", OnHide)
   df:Hide()
   --overlay texture
   local t = df:CreateTexture(nil,"OVERLAY",nil,6)
   t:SetAllPoints(df)
-  t:SetTexture(1,1,1)
-  t:SetVertexColor(0,1,1)
+  t:SetColorTexture(1,1,1)
+  t:SetVertexColor(0,1,0)
   t:SetAlpha(0.3)
   df.texture = t
   --frame stuff

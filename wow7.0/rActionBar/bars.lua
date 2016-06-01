@@ -137,6 +137,10 @@ function rActionBar:CreateStanceBar(addonName,cfg)
   cfg.dragClamp = cfg.dragClamp or true
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
+  --special
+  StanceBarLeft:SetTexture(nil)
+  StanceBarMiddle:SetTexture(nil)
+  StanceBarRight:SetTexture(nil)
 end
 
 --PetBar
@@ -152,6 +156,9 @@ function rActionBar:CreatePetBar(addonName,cfg)
   cfg.dragClamp = cfg.dragClamp or true
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
+  --special
+  SlidingActionBarTexture0:SetTexture(nil)
+  SlidingActionBarTexture1:SetTexture(nil)
 end
 
 --ExtraBar
@@ -168,6 +175,11 @@ function rActionBar:CreateExtraBar(addonName,cfg)
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --special
+  local function ResetTexture(self,textureFile)
+    if textureFile then self:SetTexture(nil) end
+  end
+  ExtraActionButton1.style:SetTexture(nil)
+  hooksecurefunc(ExtraActionButton1.style, "SetTexture", ResetTexture)
   ExtraActionBarFrame:ClearAllPoints()
   ExtraActionBarFrame:SetPoint("CENTER")
   ExtraActionBarFrame.ignoreFramePositionManager = true

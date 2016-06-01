@@ -24,6 +24,12 @@ local function ResetNormalTexture(self, file)
   self:SetNormalTexture(self.__normalTextureFile)
 end
 
+local function ResetTexture(self, file)
+  if not self.__textureFile then return end
+  if file == self.__textureFile then return end
+  self:SetTexture(self.__textureFile)
+end
+
 local function ResetVertexColor(self,r,g,b,a)
   if not self.__vertexColor then return end
   local r2,g2,b2,a2 = unpack(self.__vertexColor)
@@ -200,6 +206,16 @@ function L:StyleItemButton(button,cfg)
   --count+stock
   SetupFontString(count,cfg.count)
   SetupFontString(stock,cfg.stock)
+
+  if cfg.normalTexture and cfg.normalTexture.file then
+    button.__normalTextureFile = cfg.normalTexture.file
+    hooksecurefunc(button, "SetNormalTexture", ResetNormalTexture)
+  end
+  hooksecurefunc(normalTexture, "SetVertexColor", ResetVertexColor)
+  if cfg.border and cfg.border.file then
+    border.__textureFile = cfg.border.file
+    hooksecurefunc(border, "SetTexture", ResetTexture)
+  end
 
   button.__styled = true
 

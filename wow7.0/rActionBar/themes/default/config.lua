@@ -124,6 +124,7 @@ itemButtonConfig.icon = actionButtonConfig.icon
 itemButtonConfig.count = actionButtonConfig.count
 itemButtonConfig.stock = actionButtonConfig.name
 itemButtonConfig.border = actionButtonConfig.border
+itemButtonConfig.border.file = ""
 itemButtonConfig.normalTexture = actionButtonConfig.normalTexture
 
 -----------------------------

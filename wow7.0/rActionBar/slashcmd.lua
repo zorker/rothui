@@ -1,5 +1,5 @@
 
--- rActionBar: core/slashcmd
+-- rActionBar: slashcmd
 -- zork, 2016
 
 -----------------------------

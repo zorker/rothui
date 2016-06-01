@@ -1,6 +1,8 @@
 
--- rActionBar: themes/default/config
+-- rButtonTemplate_Default: theme
 -- zork, 2016
+
+-- Default Button Theme for rButtonTemplate
 
 -----------------------------
 -- Variables
@@ -12,7 +14,7 @@ local A, L = ...
 -- Config
 -----------------------------
 
-local mediapath = "interface\\addons\\"..A.."\\themes\\default\\media\\"
+local mediapath = "interface\\addons\\"..A.."\\media\\"
 
 -----------------------------
 -- actionButtonConfig
@@ -132,10 +134,10 @@ itemButtonConfig.normalTexture = actionButtonConfig.normalTexture
 -----------------------------
 
 --use L:StyleAllActionButtons to style all action buttons
-L:StyleAllActionButtons(actionButtonConfig)
+rButtonTemplate:StyleAllActionButtons(actionButtonConfig)
 
 --use L:StyleItemButton to style specific item buttons
 local itemButtons = { MainMenuBarBackpackButton, CharacterBag0Slot, CharacterBag1Slot, CharacterBag2Slot, CharacterBag3Slot }
 for i, button in next, itemButtons do
-  L:StyleItemButton(button, itemButtonConfig)
+  rButtonTemplate:StyleItemButton(button, itemButtonConfig)
 end

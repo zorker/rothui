@@ -1,5 +1,5 @@
 
--- rActionBar: core/theme
+-- rButtonTemplate: core
 -- zork, 2016
 
 -----------------------------
@@ -7,6 +7,13 @@
 -----------------------------
 
 local A, L = ...
+
+-----------------------------
+-- rButtonTemplate Global
+-----------------------------
+
+rButtonTemplate = {}
+rButtonTemplate.addonName = A
 
 -----------------------------
 -- Init
@@ -97,7 +104,7 @@ local function SetupBackdrop(button,backdrop)
   end
 end
 
-function L:StyleActionButton(button, cfg)
+function rButtonTemplate:StyleActionButton(button, cfg)
   if not button then return end
   if button.__styled then return end
 
@@ -154,7 +161,7 @@ function L:StyleActionButton(button, cfg)
   button.__styled = true
 end
 
-function L:StyleExtraActionButton(cfg)
+function rButtonTemplate:StyleExtraActionButton(cfg)
 
   local button = ExtraActionButton1
 
@@ -177,7 +184,7 @@ function L:StyleExtraActionButton(cfg)
   button.__styled = true
 end
 
-function L:StyleItemButton(button,cfg)
+function rButtonTemplate:StyleItemButton(button,cfg)
 
   if not button then return end
   if button.__styled then return end
@@ -221,27 +228,27 @@ function L:StyleItemButton(button,cfg)
 
 end
 
-function L:StyleAllActionButtons(cfg)
+function rButtonTemplate:StyleAllActionButtons(cfg)
   for i = 1, NUM_ACTIONBAR_BUTTONS do
-    L:StyleActionButton(_G["ActionButton"..i],cfg)
-    L:StyleActionButton(_G["MultiBarBottomLeftButton"..i],cfg)
-    L:StyleActionButton(_G["MultiBarBottomRightButton"..i],cfg)
-    L:StyleActionButton(_G["MultiBarRightButton"..i],cfg)
-    L:StyleActionButton(_G["MultiBarLeftButton"..i],cfg)
+    rButtonTemplate:StyleActionButton(_G["ActionButton"..i],cfg)
+    rButtonTemplate:StyleActionButton(_G["MultiBarBottomLeftButton"..i],cfg)
+    rButtonTemplate:StyleActionButton(_G["MultiBarBottomRightButton"..i],cfg)
+    rButtonTemplate:StyleActionButton(_G["MultiBarRightButton"..i],cfg)
+    rButtonTemplate:StyleActionButton(_G["MultiBarLeftButton"..i],cfg)
   end
   for i = 1, 6 do
-    L:StyleActionButton(_G["OverrideActionBarButton"..i],cfg)
+    rButtonTemplate:StyleActionButton(_G["OverrideActionBarButton"..i],cfg)
   end
   --petbar buttons
   for i=1, NUM_PET_ACTION_SLOTS do
-    L:StyleActionButton(_G["PetActionButton"..i],cfg)
+    rButtonTemplate:StyleActionButton(_G["PetActionButton"..i],cfg)
   end
   --stancebar buttons
   for i=1, NUM_STANCE_SLOTS do
-    L:StyleActionButton(_G["StanceButton"..i],cfg)
+    rButtonTemplate:StyleActionButton(_G["StanceButton"..i],cfg)
   end
   --possess buttons
   for i=1, NUM_POSSESS_SLOTS do
-    L:StyleActionButton(_G["PossessButton"..i],cfg)
+    rButtonTemplate:StyleActionButton(_G["PossessButton"..i],cfg)
   end
 end

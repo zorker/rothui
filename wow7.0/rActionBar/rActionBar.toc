@@ -1,12 +1,10 @@
 ## Interface: 70000
 ## Author: zork
 ## Title: rActionBar
-## Notes: Blizzard Actionbar Overhaulin. Turbo!
+## Notes: Blizzard actionbar framework
 ## RequiredDeps: rLib
 
-config.lua
 core.lua
 slashcmd.lua
 blizzard.lua
 bars.lua
-

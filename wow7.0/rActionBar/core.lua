@@ -14,11 +14,11 @@ L.addonColor      = "0000FF00"
 L.addonShortcut   = "rabs"
 
 -----------------------------
--- rABS Global
+-- rActionBar Global
 -----------------------------
 
-rABS = {}
-rABS.addonName = A
+rActionBar = {}
+rActionBar.addonName = A
 
 -----------------------------
 -- Functions

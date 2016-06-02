@@ -17,7 +17,7 @@ local defaultColor = "00FFFFFF"
 --rLib:CreateSlashCmd
 function rLib:CreateSlashCmd(addonName, shortcut, frames, color)
   if not addonName or not shortcut or not frames then return end
-  local func = function(cmd)
+  SlashCmdList[shortcut] = function(cmd)
     if (cmd:match"unlock") then
       L:UnlockFrames(frames, addonName..": frames unlocked")
     elseif (cmd:match"lock") then
@@ -31,5 +31,5 @@ function rLib:CreateSlashCmd(addonName, shortcut, frames, color)
       print("|c"..(color or defaultColor).."\/"..shortcut.." reset|r, to reset all frames")
     end
   end
-  return func
+  _G["SLASH_"..shortcut.."1"] = "/"..shortcut
 end

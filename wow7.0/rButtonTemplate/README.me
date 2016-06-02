@@ -1,18 +1,18 @@
-# rButtonTemplate API
+#rButtonTemplate API
 
 --rButtonTemplate:StyleActionButton
 rButtonTemplate:StyleActionButton(button, actionButtonConfig)
-* button, type:BUTTON, description: button you want to style
-* actionButtonConfig, type:TABLE, description: style configuration see actionButtonConfig definition below
+|-button, type:BUTTON, description: button you want to style
+|-actionButtonConfig, type:TABLE, description: style configuration see actionButtonConfig definition below
 
 --rButtonTemplate:StyleItemButton
 rButtonTemplate:StyleItemButton(button, itemButtonConfig)
-* button, type:BUTTON, description: button you want to style
-* itemButtonConfig, type:TABLE, description: style configuration see itemButtonConfig definition below
+|-button, type:BUTTON, description: button you want to style
+|-itemButtonConfig, type:TABLE, description: style configuration see itemButtonConfig definition below
 
 --rButtonTemplate:StyleAllActionButtons
 rButtonTemplate:StyleAllActionButtons(actionButtonConfig)
-* actionButtonConfig, type:TABLE, description: style configuration see actionButtonConfig definition below
+|-actionButtonConfig, type:TABLE, description: style configuration see actionButtonConfig definition below
 
 --------------------------------------
 --actionButtonConfig backdrop
@@ -20,16 +20,16 @@ rButtonTemplate:StyleAllActionButtons(actionButtonConfig)
 
 --actionButtonConfig.backdrop
 actionButtonConfig.backdrop, type:BACKDROP, description: http://wowprogramming.com/docs/api_types#backdrop
-* bgFile, type:STRING, description: http://wowprogramming.com/docs/api_types#backdrop
-* edgeFile, type:STRING, description: http://wowprogramming.com/docs/api_types#backdrop
-* tile, type:BOOLEAN, description: http://wowprogramming.com/docs/api_types#backdrop
-* tileSize, type:NUMBER, description: http://wowprogramming.com/docs/api_types#backdrop
-* edgeSize, type:NUMBER, description: http://wowprogramming.com/docs/api_types#backdrop
-* insets, type:TABLE, description: http://wowprogramming.com/docs/api_types#backdrop
-* backgroundColor, type:TABLE, description: http://wowprogramming.com/docs/widgets/Frame/SetBackdropColor
-* borderColor, type:TABLE, description: http://wowprogramming.com/docs/widgets/Frame/SetBackdropBorderColor
-* points, type: TABLE, descriptions: table containing one or more points
-  * type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
+|-bgFile, type:STRING, description: http://wowprogramming.com/docs/api_types#backdrop
+|-edgeFile, type:STRING, description: http://wowprogramming.com/docs/api_types#backdrop
+|-tile, type:BOOLEAN, description: http://wowprogramming.com/docs/api_types#backdrop
+|-tileSize, type:NUMBER, description: http://wowprogramming.com/docs/api_types#backdrop
+|-edgeSize, type:NUMBER, description: http://wowprogramming.com/docs/api_types#backdrop
+|-insets, type:TABLE, description: http://wowprogramming.com/docs/api_types#backdrop
+|-backgroundColor, type:TABLE, description: http://wowprogramming.com/docs/widgets/Frame/SetBackdropColor
+|-borderColor, type:TABLE, description: http://wowprogramming.com/docs/widgets/Frame/SetBackdropBorderColor
+|-points, type: TABLE, descriptions: table containing one or more points
+  |-type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
 
 --------------------------------------
 --actionButtonConfig textures
@@ -39,12 +39,12 @@ actionButtonConfig.backdrop, type:BACKDROP, description: http://wowprogramming.c
 
 --actionButtonConfig.icon
 actionButtonConfig.icon
-* texCoord, type: TABLE, description: http://wowprogramming.com/docs/widgets/Texture/SetTexCoord
-* points, type: TABLE, descriptions: table containing one or more points
-  * type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
-* color, type: TABLE, description: http://wowprogramming.com/docs/widgets/LayeredRegion/SetVertexColor
-* alpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/VisibleRegion/SetAlpha
-* file, type: STRING, description: path to texture you want to display, for no texture use ""
+|-texCoord, type: TABLE, description: http://wowprogramming.com/docs/widgets/Texture/SetTexCoord
+|-points, type: TABLE, descriptions: table containing one or more points
+  |-type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
+|-color, type: TABLE, description: http://wowprogramming.com/docs/widgets/LayeredRegion/SetVertexColor
+|-alpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/VisibleRegion/SetAlpha
+|-file, type: STRING, description: path to texture you want to display, for no texture use ""
 
 --actionButtonConfig.flash
 actionButtonConfig.flash
@@ -69,8 +69,8 @@ actionButtonConfig.checkedTexture
 
 --actionButtonConfig.cooldown
 actionButtonConfig.cooldown
-* points, type: TABLE, descriptions: table containing one or more points
-  * type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
+|-points, type: TABLE, descriptions: table containing one or more points
+  |-type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
 
 --------------------------------------
 -- actionButtonConfig fontstring
@@ -78,10 +78,10 @@ actionButtonConfig.cooldown
 
 --actionButtonConfig.hotkey
 actionButtonConfig.hotkey
-* points, type: TABLE, descriptions: table containing one or more points
-  * type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
-* alpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/VisibleRegion/SetAlpha
-* font: type:TABLE, description: http://wowprogramming.com/docs/widgets/FontInstance/SetFont
+|-points, type: TABLE, descriptions: table containing one or more points
+  |-type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
+|-alpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/VisibleRegion/SetAlpha
+|-font: type:TABLE, description: http://wowprogramming.com/docs/widgets/FontInstance/SetFont
 
 --actionButtonConfig.count
 actionButtonConfig.count

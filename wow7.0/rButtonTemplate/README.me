@@ -1,126 +1,126 @@
-    --rButtonTemplate:StyleActionButton
-    rButtonTemplate:StyleActionButton(button, actionButtonConfig)
-    * button, type:BUTTON, description: button you want to style
-    * actionButtonConfig, type:TABLE, description: style configuration see actionButtonConfig definition below
+--rButtonTemplate:StyleActionButton
+rButtonTemplate:StyleActionButton(button, actionButtonConfig)
+* button, type:BUTTON, description: button you want to style
+* actionButtonConfig, type:TABLE, description: style configuration see actionButtonConfig definition below
 
-    --rButtonTemplate:StyleItemButton
-    rButtonTemplate:StyleItemButton(button, itemButtonConfig)
-    * button, type:BUTTON, description: button you want to style
-    * itemButtonConfig, type:TABLE, description: style configuration see itemButtonConfig definition below
+--rButtonTemplate:StyleItemButton
+rButtonTemplate:StyleItemButton(button, itemButtonConfig)
+* button, type:BUTTON, description: button you want to style
+* itemButtonConfig, type:TABLE, description: style configuration see itemButtonConfig definition below
 
-    --rButtonTemplate:StyleAllActionButtons
-    rButtonTemplate:StyleAllActionButtons(actionButtonConfig)
-    * actionButtonConfig, type:TABLE, description: style configuration see actionButtonConfig definition below
+--rButtonTemplate:StyleAllActionButtons
+rButtonTemplate:StyleAllActionButtons(actionButtonConfig)
+* actionButtonConfig, type:TABLE, description: style configuration see actionButtonConfig definition below
 
-    --------------------------------------
-    --actionButtonConfig backdrop
-    --------------------------------------
+--------------------------------------
+--actionButtonConfig backdrop
+--------------------------------------
 
-    --actionButtonConfig.backdrop
-    actionButtonConfig.backdrop, type:BACKDROP, description: http://wowprogramming.com/docs/api_types#backdrop
-    * bgFile, type:STRING, description: http://wowprogramming.com/docs/api_types#backdrop
-    * edgeFile, type:STRING, description: http://wowprogramming.com/docs/api_types#backdrop
-    * tile, type:BOOLEAN, description: http://wowprogramming.com/docs/api_types#backdrop
-    * tileSize, type:NUMBER, description: http://wowprogramming.com/docs/api_types#backdrop
-    * edgeSize, type:NUMBER, description: http://wowprogramming.com/docs/api_types#backdrop
-    * insets, type:TABLE, description: http://wowprogramming.com/docs/api_types#backdrop
-    * backgroundColor, type:TABLE, description: http://wowprogramming.com/docs/widgets/Frame/SetBackdropColor
-    * borderColor, type:TABLE, description: http://wowprogramming.com/docs/widgets/Frame/SetBackdropBorderColor
-    * points, type: TABLE, descriptions: table containing one or more points
-      * type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
+--actionButtonConfig.backdrop
+actionButtonConfig.backdrop, type:BACKDROP, description: http://wowprogramming.com/docs/api_types#backdrop
+* bgFile, type:STRING, description: http://wowprogramming.com/docs/api_types#backdrop
+* edgeFile, type:STRING, description: http://wowprogramming.com/docs/api_types#backdrop
+* tile, type:BOOLEAN, description: http://wowprogramming.com/docs/api_types#backdrop
+* tileSize, type:NUMBER, description: http://wowprogramming.com/docs/api_types#backdrop
+* edgeSize, type:NUMBER, description: http://wowprogramming.com/docs/api_types#backdrop
+* insets, type:TABLE, description: http://wowprogramming.com/docs/api_types#backdrop
+* backgroundColor, type:TABLE, description: http://wowprogramming.com/docs/widgets/Frame/SetBackdropColor
+* borderColor, type:TABLE, description: http://wowprogramming.com/docs/widgets/Frame/SetBackdropBorderColor
+* points, type: TABLE, descriptions: table containing one or more points
+  * type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
 
-    --------------------------------------
-    --actionButtonConfig textures
-    --------------------------------------
+--------------------------------------
+--actionButtonConfig textures
+--------------------------------------
 
-    --definition is the same for any texture
+--definition is the same for any texture
 
-    --actionButtonConfig.icon
-    actionButtonConfig.icon
-    * texCoord, type: TABLE, description: http://wowprogramming.com/docs/widgets/Texture/SetTexCoord
-    * points, type: TABLE, descriptions: table containing one or more points
-      * type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
-    * color, type: TABLE, description: http://wowprogramming.com/docs/widgets/LayeredRegion/SetVertexColor
-    * alpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/VisibleRegion/SetAlpha
-    * file, type: STRING, description: path to texture you want to display, for no texture use ""
+--actionButtonConfig.icon
+actionButtonConfig.icon
+* texCoord, type: TABLE, description: http://wowprogramming.com/docs/widgets/Texture/SetTexCoord
+* points, type: TABLE, descriptions: table containing one or more points
+  * type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
+* color, type: TABLE, description: http://wowprogramming.com/docs/widgets/LayeredRegion/SetVertexColor
+* alpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/VisibleRegion/SetAlpha
+* file, type: STRING, description: path to texture you want to display, for no texture use ""
 
-    --actionButtonConfig.flash
-    actionButtonConfig.flash
-    --actionButtonConfig.flyoutBorder
-    actionButtonConfig.flyoutBorder
-    --actionButtonConfig.flyoutBorderShadow
-    actionButtonConfig.flyoutBorderShadow
-    --actionButtonConfig.border
-    actionButtonConfig.border
-    --actionButtonConfig.normalTexture
-    actionButtonConfig.normalTexture
-    --actionButtonConfig.pushedTexture
-    actionButtonConfig.pushedTexture
-    --actionButtonConfig.highlightTextureicon
-    actionButtonConfig.highlightTexture
-    --actionButtonConfig.checkedTexture
-    actionButtonConfig.checkedTexture
+--actionButtonConfig.flash
+actionButtonConfig.flash
+--actionButtonConfig.flyoutBorder
+actionButtonConfig.flyoutBorder
+--actionButtonConfig.flyoutBorderShadow
+actionButtonConfig.flyoutBorderShadow
+--actionButtonConfig.border
+actionButtonConfig.border
+--actionButtonConfig.normalTexture
+actionButtonConfig.normalTexture
+--actionButtonConfig.pushedTexture
+actionButtonConfig.pushedTexture
+--actionButtonConfig.highlightTextureicon
+actionButtonConfig.highlightTexture
+--actionButtonConfig.checkedTexture
+actionButtonConfig.checkedTexture
 
-    --------------------------------------
-    --actionButtonConfig cooldown
-    --------------------------------------
+--------------------------------------
+--actionButtonConfig cooldown
+--------------------------------------
 
-    --actionButtonConfig.cooldown
-    actionButtonConfig.cooldown
-    * points, type: TABLE, descriptions: table containing one or more points
-      * type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
+--actionButtonConfig.cooldown
+actionButtonConfig.cooldown
+* points, type: TABLE, descriptions: table containing one or more points
+  * type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
 
-    --------------------------------------
-    -- actionButtonConfig fontstring
-    --------------------------------------
+--------------------------------------
+-- actionButtonConfig fontstring
+--------------------------------------
 
-    --actionButtonConfig.hotkey
-    actionButtonConfig.hotkey
-    * points, type: TABLE, descriptions: table containing one or more points
-      * type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
-    * alpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/VisibleRegion/SetAlpha
-    * font: type:TABLE, description: http://wowprogramming.com/docs/widgets/FontInstance/SetFont
+--actionButtonConfig.hotkey
+actionButtonConfig.hotkey
+* points, type: TABLE, descriptions: table containing one or more points
+  * type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
+* alpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/VisibleRegion/SetAlpha
+* font: type:TABLE, description: http://wowprogramming.com/docs/widgets/FontInstance/SetFont
 
-    --actionButtonConfig.count
-    actionButtonConfig.count
-    --actionButtonConfig.name
-    actionButtonConfig.name
+--actionButtonConfig.count
+actionButtonConfig.count
+--actionButtonConfig.name
+actionButtonConfig.name
 
-    --------------------------------------
-    --itemButtonConfig backdrop
-    --------------------------------------
+--------------------------------------
+--itemButtonConfig backdrop
+--------------------------------------
 
-    --itemButtonConfig.backdrop
-    itemButtonConfig.backdrop, type:BACKDROP, same definition as actionButtonConfig.backdrop
+--itemButtonConfig.backdrop
+itemButtonConfig.backdrop, type:BACKDROP, same definition as actionButtonConfig.backdrop
 
-    --------------------------------------
-    --itemButtonConfig textures
-    --------------------------------------
+--------------------------------------
+--itemButtonConfig textures
+--------------------------------------
 
-    --same definition as actionButtonConfig textures, just different textures
+--same definition as actionButtonConfig textures, just different textures
 
-    --itemButtonConfig.icon
-    itemButtonConfig.icon
-    --itemButtonConfig.searchOverlay
-    itemButtonConfig.searchOverlay
-    --itemButtonConfig.border
-    itemButtonConfig.border
-    --itemButtonConfig.normalTexture
-    itemButtonConfig.normalTexture
-    --itemButtonConfig.pushedTexture
-    itemButtonConfig.pushedTexture
-    --itemButtonConfig.highlightTextureicon
-    itemButtonConfig.highlightTexture
-    --itemButtonConfig.checkedTexture
-    itemButtonConfig.checkedTexture
+--itemButtonConfig.icon
+itemButtonConfig.icon
+--itemButtonConfig.searchOverlay
+itemButtonConfig.searchOverlay
+--itemButtonConfig.border
+itemButtonConfig.border
+--itemButtonConfig.normalTexture
+itemButtonConfig.normalTexture
+--itemButtonConfig.pushedTexture
+itemButtonConfig.pushedTexture
+--itemButtonConfig.highlightTextureicon
+itemButtonConfig.highlightTexture
+--itemButtonConfig.checkedTexture
+itemButtonConfig.checkedTexture
 
-    --------------------------------------
-    -- itemButtonConfig fontstring
-    --------------------------------------
+--------------------------------------
+-- itemButtonConfig fontstring
+--------------------------------------
 
-    --same definition as actionButtonConfig fontstring, just different fontstrings
+--same definition as actionButtonConfig fontstring, just different fontstrings
 
-    --itemButtonConfig.count
-    itemButtonConfig.count
-    --itemButtonConfig.name
-    itemButtonConfig.name
+--itemButtonConfig.count
+itemButtonConfig.count
+--itemButtonConfig.name
+itemButtonConfig.name

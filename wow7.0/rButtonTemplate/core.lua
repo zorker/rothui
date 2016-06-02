@@ -40,8 +40,9 @@ end
 local function ResetVertexColor(self,r,g,b,a)
   if not self.__vertexColor then return end
   local r2,g2,b2,a2 = unpack(self.__vertexColor)
+  if not a2 then a2 = 1 end
   if r ~= r2 or g ~= g2 or b ~= b2 or a ~= a2 then
-    self:SetVertexColor(r2,g2,b2,a2 or 1)
+    self:SetVertexColor(r2,g2,b2,a2)
   end
 end
 

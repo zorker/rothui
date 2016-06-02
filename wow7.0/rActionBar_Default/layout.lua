@@ -15,7 +15,6 @@ local A, L = ...
 -----------------------------
 
 local fader = {
-  enable = true,
   fadeInAlpha = 1,
   fadeInDuration = 0.3,
   fadeInSmooth = "OUT",

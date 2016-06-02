@@ -225,7 +225,7 @@ function rButtonTemplate:StyleItemButton(button,cfg)
 
   --textures
   SetupTexture(icon,cfg.icon,"SetTexture",icon)
-  SetupTexture(searchOverlay,cfg.icon,"SetTexture",searchOverlay)
+  SetupTexture(searchOverlay,cfg.searchOverlay,"SetTexture",searchOverlay)
   SetupTexture(border,cfg.border,"SetTexture",border)
   SetupTexture(normalTexture,cfg.normalTexture,"SetNormalTexture",button)
   SetupTexture(pushedTexture,cfg.pushedTexture,"SetPushedTexture",button)

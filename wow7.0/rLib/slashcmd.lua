@@ -32,4 +32,6 @@ function rLib:CreateSlashCmd(addonName, shortcut, frames, color)
     end
   end
   _G["SLASH_"..shortcut.."1"] = "/"..shortcut
+  print("|c"..L.(color or defaultColor)..addonName.." loaded.|r")
+  print("|c"..L.(color or defaultColor).."\/"..shortcut.."|r to display the command list")
 end

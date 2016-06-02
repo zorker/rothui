@@ -88,7 +88,7 @@ local bar2 = {
   buttonWidth     = 32,
   buttonHeight    = 32,
   buttonMargin    = 5,
-  numCols         = 4,
+  numCols         = 6,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }
@@ -154,13 +154,13 @@ rActionBar:CreateActionBar5(A, bar5)
 -----------------------------
 
 local stancebar = {
-  framePoint      = { "BOTTOM", A.."Bar3", "TOP", 0, 0 },
+  framePoint      = { "BOTTOM", A.."Bar1", "TOP", 0, 0 },
   frameScale      = 0.8,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
   buttonMargin    = 5,
-  numCols         = 12,
+  numCols         = 5,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }
@@ -173,13 +173,13 @@ rActionBar:CreateStanceBar(A, stancebar)
 
 --petbar
 local petbar = {
-  framePoint      = { "BOTTOM", A.."Bar3", "TOP", 0, 0 },
-  frameScale      = 0.8,
+  framePoint      = { "BOTTOM", A.."Bar2", "TOP", 0, 0 },
+  frameScale      = 0.85,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
   buttonMargin    = 5,
-  numCols         = 12,
+  numCols         = 6,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }

@@ -5,6 +5,5 @@
 ## RequiredDeps: rLib
 
 core.lua
-slashcmd.lua
 blizzard.lua
 bars.lua

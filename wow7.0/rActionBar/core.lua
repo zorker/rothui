@@ -143,8 +143,11 @@ function L:CreateButtonFrame(cfg,buttonList)
   --add drag functions
   rLib:CreateDragFrame(frame, L.dragFrames, cfg.dragInset, cfg.dragClamp)
   --hover animation
-  if cfg.fader and cfg.fader.enable then
+  if cfg.fader then
     rLib:CreateButtonFrameFader(frame, buttonList, cfg.fader)
   end
   return frame
 end
+
+--create slash commands
+rLib:CreateSlashCmd(L.addonName, L.addonShortcut, L.dragFrames, L.addonColor)

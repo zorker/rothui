@@ -66,10 +66,9 @@ local function ApplyVertexColor(texture,color)
   hooksecurefunc(texture, "SetVertexColor", ResetVertexColor)
 end
 
-local function ApplyAlpha(obj,alpha)
+local function ApplyAlpha(region,alpha)
   if not alpha then return end
-  obj:SetAlpha(alpha)
-  print(obj:GetName(),alpha)
+  region:SetAlpha(alpha)
 end
 
 local function ApplyFont(fontString,font)

@@ -74,7 +74,6 @@ function rActionBar:CreateActionBar1(addonName,cfg)
     end
   ]]):format(cfg.numButtons, cfg.buttonName))
   frame:SetAttribute("_onstate-page", [[
-    condition = newstate
     if HasVehicleActionBar() then
       newstate = GetVehicleBarIndex()
     elseif HasOverrideActionBar() then
@@ -84,11 +83,10 @@ function rActionBar:CreateActionBar1(addonName,cfg)
     elseif GetBonusBarOffset() > 0 then
       newstate = GetBonusBarOffset()+6
     else
-      newstate = GetActionBarPage()
+      newstate = GetActionBarPage() or 1
     end
-    print(condition,newstate)
     for i, button in next, buttons do
-      button:SetAttribute("actionpage", newstate);
+      button:SetAttribute("actionpage", newstate)
     end
   ]])
   RegisterStateDriver(frame, "page", "[vehicleui]vui; [possessbar]pb; [overridebar]ob; [shapeshift]ss; [bonusbar:1]bb1; [bonusbar:2]bb2; [bonusbar:3]bb3; [bonusbar:4]bb4; [bonusbar:5]bb5; [bar:2]b2; [bar:3]b3; [bar:4]b4; [bar:5]b5; [bar:6]b6; [form]frm; [bar:1]b1; xx")

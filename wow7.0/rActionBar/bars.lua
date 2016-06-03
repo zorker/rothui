@@ -153,14 +153,13 @@ function rActionBar:CreateStanceBar(addonName,cfg)
   cfg.numButtons = NUM_STANCE_SLOTS
   cfg.dragInset = cfg.dragInset or -2
   cfg.dragClamp = cfg.dragClamp or true
-  local delay = CreateFrame("Frame")
-  delay:SetScript("OnEvent", function(self)
-    --delay bar creation until we know for sure that the character has any stances
+  --delay bar creation until we know for sure that the character has any stances
+  local function OnLogin()
     if GetNumShapeshiftForms() == 0 then return end
     local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
     local frame = L:CreateButtonFrame(cfg,buttonList)
-  end)
-  delay:RegisterEvent("PLAYER_LOGIN")
+  end
+  rLib:RegisterCallbackOnLogin(OnLogin)
   --special
   StanceBarLeft:SetTexture(nil)
   StanceBarMiddle:SetTexture(nil)

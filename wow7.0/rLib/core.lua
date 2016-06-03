@@ -15,10 +15,28 @@ L.addonName = A
 
 rLib = {}
 rLib.addonName = A
+rLib.callbacksOnLogin = {}
 
 -----------------------------
 -- Functions
 -----------------------------
+
+--OnEvent PLAYER_LOGIN trigger all Callbacks
+local function OnEvent(self,event)
+  if event == "PLAYER_LOGIN" then
+    for callback, args in next, rLib.callbacksOnLogin do
+      callback(unpack(args))
+    end
+  end
+end
+local eventFrame = CreateFrame("Frame")
+eventFrame:RegisterEvent("PLAYER_LOGIN")
+eventFrame:SetScript("OnEvent", OnEvent)
+
+--rLib:RegisterCallback
+function rLib:RegisterCallbackOnLogin(callback,...)
+  self.callbacksOnLogin[callback] = {...}
+end
 
 --L:GetPoint
 function L:GetPoint(frame)

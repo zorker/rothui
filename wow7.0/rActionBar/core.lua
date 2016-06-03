@@ -110,36 +110,6 @@ function L:CreateButtonFrame(cfg,buttonList)
   if cfg.frameVisibility and cfg.frameVisibility ~= "show" then
     RegisterStateDriver(frame, "visibility", cfg.frameVisibility)
   end
-  --trigger _onstate-page on cfg.framePage macro condition
-  --use actionbarcontroller functions to determine bar-page
-  if cfg.framePage then
-    for i, button in next, buttonList do
-      frame:SetFrameRef(cfg.buttonName..i, button);
-    end
-    frame:Execute(([[
-      buttons = table.new()
-      for i=1, %d do
-        table.insert(buttons, self:GetFrameRef("%s"..i))
-      end
-    ]]):format(cfg.numButtons, cfg.buttonName))
-    frame:SetAttribute("_onstate-page", [[
-      if HasVehicleActionBar() then
-        newstate = GetVehicleBarIndex()
-      elseif HasOverrideActionBar() then
-        newstate = GetOverrideBarIndex()
-      elseif HasTempShapeshiftActionBar() then
-        newstate = GetTempShapeshiftBarIndex()
-      elseif GetBonusBarOffset() > 0 then
-        newstate = GetBonusBarOffset()+6
-      else
-        newstate = GetActionBarPage()
-      end
-      for i, button in next, buttons do
-        button:SetAttribute("actionpage", newstate);
-      end
-    ]])
-    RegisterStateDriver(frame, "page", cfg.framePage)
-  end
   --add drag functions
   rLib:CreateDragFrame(frame, L.dragFrames, cfg.dragInset, cfg.dragClamp)
   --hover animation

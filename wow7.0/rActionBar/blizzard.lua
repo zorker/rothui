@@ -25,7 +25,6 @@ local framesToHide = {
   MainMenuBar,
   OverrideActionBar,
   PossessBarFrame,
-  --MainMenuBarArtFrame, artframe has to stay alive probably
 }
 
 local framesToDisable = {

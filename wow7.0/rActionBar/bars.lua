@@ -56,13 +56,42 @@ function rActionBar:CreateActionBar1(addonName,cfg)
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle] hide; show"
-  cfg.framePage = "[vehicleui]vui; [possessbar]pb; [overridebar]ob; [shapeshift]ss; [bonusbar:1]bb1; [bonusbar:2]bb2; [bonusbar:3]bb3; [bonusbar:4]bb4; [bonusbar:5]bb5; [bar:2]b2; [bar:3]b3; [bar:4]b4; [bar:5]b5; [bar:6]b6; [form]frm; [bar:1]b1; xx"
   cfg.buttonName = "ActionButton"
   cfg.numButtons = NUM_ACTIONBAR_BUTTONS
   cfg.dragInset = cfg.dragInset or -2
   cfg.dragClamp = cfg.dragClamp or true
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
+  --trigger _onstate-page on cfg.framePage macro condition
+  --use actionbarcontroller functions to determine bar-page
+  for i, button in next, buttonList do
+    frame:SetFrameRef(cfg.buttonName..i, button);
+  end
+  frame:Execute(([[
+    buttons = table.new()
+    for i=1, %d do
+      table.insert(buttons, self:GetFrameRef("%s"..i))
+    end
+  ]]):format(cfg.numButtons, cfg.buttonName))
+  frame:SetAttribute("_onstate-page", [[
+    condition = newstate
+    if HasVehicleActionBar() then
+      newstate = GetVehicleBarIndex()
+    elseif HasOverrideActionBar() then
+      newstate = GetOverrideBarIndex()
+    elseif HasTempShapeshiftActionBar() then
+      newstate = GetTempShapeshiftBarIndex()
+    elseif GetBonusBarOffset() > 0 then
+      newstate = GetBonusBarOffset()+6
+    else
+      newstate = GetActionBarPage()
+    end
+    print(condition,newstate)
+    for i, button in next, buttons do
+      button:SetAttribute("actionpage", newstate);
+    end
+  ]])
+  RegisterStateDriver(frame, "page", "[vehicleui]vui; [possessbar]pb; [overridebar]ob; [shapeshift]ss; [bonusbar:1]bb1; [bonusbar:2]bb2; [bonusbar:3]bb3; [bonusbar:4]bb4; [bonusbar:5]bb5; [bar:2]b2; [bar:3]b3; [bar:4]b4; [bar:5]b5; [bar:6]b6; [form]frm; [bar:1]b1; xx")
 end
 
 --Bar2
@@ -131,13 +160,19 @@ function rActionBar:CreateStanceBar(addonName,cfg)
   cfg.frameName = (addonName or A).."StanceBar"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
-  cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [stance][form] show; hide"
+  cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
   cfg.buttonName = "StanceButton"
   cfg.numButtons = NUM_STANCE_SLOTS
   cfg.dragInset = cfg.dragInset or -2
   cfg.dragClamp = cfg.dragClamp or true
-  local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
-  local frame = L:CreateButtonFrame(cfg,buttonList)
+  local delay = CreateFrame("Frame")
+  delay:SetScript("OnEvent", function(self)
+    --delay bar creation until we know for sure that the character has any stances
+    if GetNumShapeshiftForms() == 0 then return end
+    local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
+    local frame = L:CreateButtonFrame(cfg,buttonList)
+  end)
+  delay:RegisterEvent("PLAYER_LOGIN")
   --special
   StanceBarLeft:SetTexture(nil)
   StanceBarMiddle:SetTexture(nil)

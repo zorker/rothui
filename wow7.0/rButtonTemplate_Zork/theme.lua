@@ -96,6 +96,7 @@ actionButtonConfig.name = {
     {"BOTTOMLEFT", 0, 0 },
     {"BOTTOMRIGHT", 0, 0 },
   },
+  alpha = 0,
 }
 
 --hotkey

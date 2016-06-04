@@ -19,9 +19,9 @@ rButtonTemplate.addonName = A
 -- Init
 -----------------------------
 
-local function CallObjectFunction(obj,func,...)
-  if obj and func and obj[func] then
-    obj[func](obj,...)
+local function CallElementFunction(element, func, ...)
+  if element and func and element[func] then
+    element[func](element, ...)
   end
 end
 

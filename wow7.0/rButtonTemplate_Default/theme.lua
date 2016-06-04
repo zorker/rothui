@@ -24,8 +24,8 @@ local actionButtonConfig = {}
 
 --backdrop
 actionButtonConfig.backdrop = {
-  bgFile = mediapath.."backdrop.tga",
-  edgeFile = mediapath.."backdropBorder.tga",
+  bgFile = mediapath.."backdrop",
+  edgeFile = mediapath.."backdropBorder",
   tile = false,
   tileSize = 32,
   edgeSize = 5,
@@ -64,7 +64,7 @@ actionButtonConfig.flyoutBorderShadow = {
 
 --border
 actionButtonConfig.border = {
-  file = mediapath.."border.tga",
+  file = mediapath.."border",
   points = {
     {"TOPLEFT", -2, 2 },
     {"BOTTOMRIGHT", 2, -2 },
@@ -73,7 +73,7 @@ actionButtonConfig.border = {
 
 --normalTexture
 actionButtonConfig.normalTexture = {
-  file = mediapath.."normal.tga",
+  file = mediapath.."normal",
   color = {0.5,0.5,0.5,0.6},
   points = {
     {"TOPLEFT", 0, 0 },

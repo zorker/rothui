@@ -24,8 +24,8 @@ local actionButtonConfig = {}
 
 --backdrop
 actionButtonConfig.backdrop = {
-  bgFile = mediapath.."backdrop.tga",
-  edgeFile = mediapath.."backdropBorder.tga",
+  bgFile = mediapath.."backdrop",
+  edgeFile = mediapath.."backdropBorder",
   tile = false,
   tileSize = 32,
   edgeSize = 5,
@@ -64,7 +64,7 @@ actionButtonConfig.flyoutBorderShadow = {
 
 --border
 actionButtonConfig.border = {
-  file = mediapath.."border.tga",
+  file = mediapath.."border",
   points = {
     {"TOPLEFT", -2, 2 },
     {"BOTTOMRIGHT", 2, -2 },
@@ -73,7 +73,7 @@ actionButtonConfig.border = {
 
 --normalTexture
 actionButtonConfig.normalTexture = {
-  file = mediapath.."normal.tga",
+  file = mediapath.."normal",
   color = {1,1,1,1},
   points = {
     {"TOPLEFT", 0, 0 },
@@ -83,7 +83,7 @@ actionButtonConfig.normalTexture = {
 
 --pushedTexture
 actionButtonConfig.pushedTexture = {
-  file = mediapath.."pushed.tga",
+  file = mediapath.."pushed",
   --color = {1,1,1,1},
   points = {
     {"TOPLEFT", 0, 0 },
@@ -93,7 +93,7 @@ actionButtonConfig.pushedTexture = {
 
 --highlightTexture
 actionButtonConfig.highlightTexture = {
-  file = mediapath.."highlight.tga",
+  file = mediapath.."highlight",
   --color = {1,1,1,1},
   points = {
     {"TOPLEFT", 0, 0 },
@@ -103,7 +103,7 @@ actionButtonConfig.highlightTexture = {
 
 --checkedTexture
 actionButtonConfig.checkedTexture = {
-  file = mediapath.."checked.tga",
+  file = mediapath.."checked",
   --color = {1,1,1,1},
   points = {
     {"TOPLEFT", 0, 0 },

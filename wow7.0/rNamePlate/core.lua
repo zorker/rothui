@@ -19,8 +19,8 @@ local groups = {
 
 local options = {
   useClassColors = true,
-  displayNameWhenSelected = false,
-  displayNameByPlayerNameRules = false,
+  displayNameWhenSelected = true,
+  displayNameByPlayerNameRules = true,
   playLoseAggroHighlight = false,
   displayAggroHighlight = true,
   displaySelectionHighlight = false,

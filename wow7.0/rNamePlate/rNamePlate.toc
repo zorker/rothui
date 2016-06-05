@@ -1,0 +1,7 @@
+## Interface: 70000
+## Author: zork
+## Title: rNamePlate
+## Notes: Blizzard nameplate framework
+## RequiredDeps: rLib
+
+core.lua

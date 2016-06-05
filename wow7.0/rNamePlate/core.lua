@@ -8,10 +8,8 @@
 
 local A, L = ...
 
-local npdf = NamePlateDriverFrame
-
 -----------------------------
--- Functions
+-- Options
 -----------------------------
 
 local groups = {
@@ -24,6 +22,14 @@ local options = {
   displayNameWhenSelected = false,
   displayNameByPlayerNameRules = false,
   playLoseAggroHighlight = false,
+  displayAggroHighlight = true,
+  displaySelectionHighlight = false,
+  --considerSelectionInCombatAsHostile = false,
+  --colorNameWithExtendedColors = true,
+  --colorHealthWithExtendedColors = true,
+  selectedBorderColor = false, --CreateColor(1, 1, 1, .35),
+  tankBorderColor = CreateColor(1, 1, 0, .6),
+  defaultBorderColor = CreateColor(0, 0, 0, 0), --CreateColor(0, 0, 0, 0),
 }
 
 for i, group  in next, groups do
@@ -32,19 +38,36 @@ for i, group  in next, groups do
   end
 end
 
-local function OnNamePlateCreated(self,frame)
-  print("OnNamePlateCreated", self:GetName(), frame:GetName())
+-----------------------------
+-- Functions
+-----------------------------
+
+--UpdateAggroHighlight
+local function UpdateAggroHighlight(frame)
+  if frame.displayedUnit:match("(nameplate)%d?$") ~= "nameplate" then return end
+  local status = UnitThreatSituation("player", frame.displayedUnit)
+  if ( status and status > 0 ) then
+    frame.aggroHighlight:SetVertexColor(GetThreatStatusColor(status))
+    frame.aggroHighlight:Show()
+  else
+    frame.aggroHighlight:Hide()
+  end
 end
+hooksecurefunc("CompactUnitFrame_UpdateAggroHighlight", UpdateAggroHighlight)
 
-local function ApplyFrameOptions(self,frame,unit)
-  print("ApplyFrameOptions", self:GetName(), frame:GetName(), unit)
+--OnEvent
+local function OnEvent(frame,event,...)
+  if event ~= "UNIT_THREAT_LIST_UPDATE" then return end
+  if frame.displayedUnit:match("(nameplate)%d?$") ~= "nameplate" then return end
+  local unit = ...
+  if unit == frame.displayedUnit then
+    CompactUnitFrame_UpdateAggroHighlight(frame)
+  end
 end
+hooksecurefunc("CompactUnitFrame_OnEvent", OnEvent)
 
-local function UpdateNamePlateOptions(self)
-  print("UpdateNamePlateOptions", self:GetName())
+--SetupNamePlate
+local function SetupNamePlate(frame, setupOptions, frameOptions)
+  frame.aggroHighlight:SetAlpha(1)
 end
-
-hooksecurefunc(npdf, "OnNamePlateCreated", OnNamePlateCreated)
-hooksecurefunc(npdf, "ApplyFrameOptions", ApplyFrameOptions)
-hooksecurefunc(npdf, "UpdateNamePlateOptions", UpdateNamePlateOptions)
-
+hooksecurefunc("DefaultCompactNamePlateFrameSetupInternal", SetupNamePlate)

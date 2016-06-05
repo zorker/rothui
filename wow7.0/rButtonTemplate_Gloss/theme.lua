@@ -1,8 +1,8 @@
 
--- rButtonTemplate_Default: theme
+-- rButtonTemplate_Gloss: theme
 -- zork, 2016
 
--- Default Button Theme for rButtonTemplate
+-- Gloss Button Theme for rButtonTemplate
 
 -----------------------------
 -- Variables
@@ -173,3 +173,12 @@ local itemButtons = { MainMenuBarBackpackButton, CharacterBag0Slot, CharacterBag
 for i, button in next, itemButtons do
   rButtonTemplate:StyleItemButton(button, itemButtonConfig)
 end
+
+-----------------------------
+-- extraButtonConfig
+-----------------------------
+
+local extraButtonConfig = actionButtonConfig
+extraButtonConfig.buttonstyle = { file = "" }
+
+rButtonTemplate:StyleExtraActionButton(extraButtonConfig)

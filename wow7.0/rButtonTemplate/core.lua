@@ -193,13 +193,32 @@ function rButtonTemplate:StyleExtraActionButton(cfg)
   --local flash = _G[buttonName.."Flash"] --wierd the template has two textures of the same name
   local hotkey = _G[buttonName.."HotKey"]
   local count = _G[buttonName.."Count"]
-  local art = button.style --artwork around the button
+  local buttonstyle = button.style --artwork around the button
   local cooldown = _G[buttonName.."Cooldown"]
 
   local normalTexture = button:GetNormalTexture()
-  --local pushedTexture = button:GetPushedTexture() --no push texture?!
+  local pushedTexture = button:GetPushedTexture()
   local highlightTexture = button:GetHighlightTexture()
   local checkedTexture = button:GetCheckedTexture()
+
+  print("hello")
+
+  --backdrop
+  SetupBackdrop(button,cfg.backdrop)
+
+  --textures
+  SetupTexture(icon,cfg.icon,"SetTexture",icon)
+  SetupTexture(buttonstyle,cfg.buttonstyle,"SetTexture",buttonstyle)
+  SetupTexture(normalTexture,cfg.normalTexture,"SetNormalTexture",button)
+  SetupTexture(pushedTexture,cfg.pushedTexture,"SetPushedTexture",button)
+  SetupTexture(highlightTexture,cfg.highlightTexture,"SetHighlightTexture",button)
+  SetupTexture(checkedTexture,cfg.checkedTexture,"SetCheckedTexture",button)
+
+  --cooldown
+  SetupCooldown(cooldown,cfg.cooldown)
+
+  --hotkey+count+name
+  SetupFontString(hotkey,cfg.hotkey)
 
   button.__styled = true
 end

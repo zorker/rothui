@@ -198,13 +198,6 @@ function rActionBar:CreateExtraBar(addonName,cfg)
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --special
-  local function ResetTexture(self, file)
-    if file then self:SetTexture(nil) end
-  end
-  ExtraActionButton1.style:SetTexture(nil)
-  hooksecurefunc(ExtraActionButton1.style, "SetTexture", ResetTexture)
-  ExtraActionBarFrame:ClearAllPoints()
-  ExtraActionBarFrame:SetPoint("CENTER")
   ExtraActionBarFrame.ignoreFramePositionManager = true
 end
 

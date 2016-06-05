@@ -143,3 +143,12 @@ local itemButtons = { MainMenuBarBackpackButton, CharacterBag0Slot, CharacterBag
 for i, button in next, itemButtons do
   rButtonTemplate:StyleItemButton(button, itemButtonConfig)
 end
+
+-----------------------------
+-- extraButtonConfig
+-----------------------------
+
+local extraButtonConfig = actionButtonConfig
+extraButtonConfig.buttonstyle = { file = "" }
+
+rButtonTemplate:StyleExtraActionButton(extraButtonConfig)

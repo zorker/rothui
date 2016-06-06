@@ -28,8 +28,8 @@ local options = {
   --colorNameWithExtendedColors = true,
   --colorHealthWithExtendedColors = true,
   selectedBorderColor = false, --CreateColor(1, 1, 1, .35),
-  tankBorderColor = CreateColor(1, 1, 0, .6),
-  defaultBorderColor = CreateColor(0, 0, 0, 0), --CreateColor(0, 0, 0, 0),
+  tankBorderColor = CreateColor(0, 1, 0, 0.8), --CreateColor(0, 1, 0, 0.8),
+  defaultBorderColor = CreateColor(0, 0, 0, 0.2), --CreateColor(0, 0, 0, 0),
 }
 
 for i, group  in next, groups do
@@ -53,7 +53,7 @@ local function UpdateAggroHighlight(frame)
     frame.aggroHighlight:Hide()
   end
 end
-hooksecurefunc("CompactUnitFrame_UpdateAggroHighlight", UpdateAggroHighlight)
+--hooksecurefunc("CompactUnitFrame_UpdateAggroHighlight", UpdateAggroHighlight)
 
 --OnEvent
 local function OnEvent(frame,event,...)
@@ -64,10 +64,30 @@ local function OnEvent(frame,event,...)
     CompactUnitFrame_UpdateAggroHighlight(frame)
   end
 end
-hooksecurefunc("CompactUnitFrame_OnEvent", OnEvent)
+--hooksecurefunc("CompactUnitFrame_OnEvent", OnEvent)
 
 --SetupNamePlate
 local function SetupNamePlate(frame, setupOptions, frameOptions)
-  frame.aggroHighlight:SetAlpha(1)
+  --frame.aggroHighlight:SetAlpha(1)
 end
 hooksecurefunc("DefaultCompactNamePlateFrameSetupInternal", SetupNamePlate)
+
+local function IsTank()
+  local assignedRole = UnitGroupRolesAssigned("player")
+  if assignedRole == "TANK" then return true end
+  local role = GetSpecializationRole(GetSpecialization())
+  if role == "TANK" then return true end
+  return false
+end
+
+--UpdateHealthBorder
+local function UpdateHealthBorder(frame)
+  if frame.displayedUnit:match("(nameplate)%d?$") ~= "nameplate" then return end
+  if not IsInGroup() or not IsTank() or not UnitAffectingCombat(frame.displayedUnit) then return end
+  local status = UnitThreatSituation("player", frame.displayedUnit)
+  if not status or status < 3 then
+    frame.healthBar.border:SetVertexColor(frame.optionTable.tankBorderColor:GetRGBA())
+  end
+end
+--hooksecurefunc("CompactUnitFrame_UpdateHealthBorder", UpdateHealthBorder)
+

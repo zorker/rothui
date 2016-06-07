@@ -86,10 +86,10 @@ GameTimeFrame:SetPushedTexture(nil)
 GameTimeFrame:SetHighlightTexture (nil)
 local fs = GameTimeFrame:GetFontString()
 fs:ClearAllPoints()
-fs:SetPoint("BOTTOM",0,4)
+fs:SetPoint("BOTTOM",0,5)
 fs:SetFont(STANDARD_TEXT_FONT,18)
-fs:SetShadowColor(0,0,0,0.4)
-fs:SetShadowOffset(2,2)
+fs:SetShadowColor(0,0,0,0.3)
+fs:SetShadowOffset(1,-1)
 
 --zoom
 Minimap:EnableMouseWheel()

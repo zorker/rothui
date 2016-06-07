@@ -201,8 +201,6 @@ function rButtonTemplate:StyleExtraActionButton(cfg)
   local highlightTexture = button:GetHighlightTexture()
   local checkedTexture = button:GetCheckedTexture()
 
-  print("hello")
-
   --backdrop
   SetupBackdrop(button,cfg.backdrop)
 

@@ -66,8 +66,12 @@ if TimeManagerClockButton then
   TimeManagerClockTicker:SetShadowColor(0,0,0,0.9)
   TimeManagerClockTicker:SetShadowOffset(2,-1)
   TimeManagerClockButton:ClearAllPoints()
-  TimeManagerClockButton:SetPoint("BOTTOMRIGHT",Minimap,3,-1)
+  TimeManagerClockButton:SetPoint("BOTTOMRIGHT",Minimap,4,-1)
   TimeManagerClockButton:SetAlpha(0.95)
+  local bg = TimeManagerClockButton:CreateTexture(nil,"BACKGROUND",nil,-8)
+  bg:SetAllPoints(TimeManagerClockTicker)
+  bg:SetColorTexture(1,1,1)
+  bg:SetVertexColor(0.5,0.5,0.5,0.6)
 end
 
 --GameTimeFrame

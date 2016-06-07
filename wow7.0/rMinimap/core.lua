@@ -25,14 +25,17 @@ local cfg = {
 -- Init
 -----------------------------
 
+--MinimapCluster
 MinimapCluster:SetScale(cfg.scale)
 
+--Minimap
 local mediapath = "interface\\addons\\"..A.."\\media\\"
 Minimap:SetMaskTexture(mediapath.."mask")
 Minimap:ClearAllPoints()
 Minimap:SetPoint("CENTER")
-Minimap:SetScale(1.35)
+Minimap:SetScale(1.35) --correct the cluster offset
 
+--hide regions
 MinimapBackdrop:Hide()
 MinimapBorder:Hide()
 MinimapZoomIn:Hide()
@@ -49,6 +52,7 @@ MiniMapTracking:SetPoint("TOPLEFT",Minimap,3,-3)
 MiniMapTrackingButton:SetHighlightTexture (nil)
 MiniMapTrackingButton:SetPushedTexture(nil)
 MiniMapTrackingButtonBorder:Hide()
+
 --MiniMapNorthTag
 MinimapNorthTag:ClearAllPoints()
 MinimapNorthTag:SetPoint("TOP",Minimap,0,-3)
@@ -57,8 +61,7 @@ MinimapNorthTag:SetAlpha(0)
 --Blizzard_TimeManager
 LoadAddOn("Blizzard_TimeManager")
 if TimeManagerClockButton then
-  local region = TimeManagerClockButton:GetRegions()
-  region:Hide()
+  TimeManagerClockButton:GetRegions():Hide()
   TimeManagerClockTicker:SetFont(STANDARD_TEXT_FONT,10)
   TimeManagerClockTicker:SetShadowColor(0,0,0,0.9)
   TimeManagerClockTicker:SetShadowOffset(2,-1)
@@ -83,6 +86,14 @@ fs:SetPoint("BOTTOM",0,4)
 fs:SetFont(STANDARD_TEXT_FONT,18)
 fs:SetShadowColor(0,0,0,0.4)
 fs:SetShadowOffset(2,2)
+
+--zoom
+Minimap:EnableMouseWheel()
+local function Zoom(self, direction)
+  if(direction > 0) then Minimap_ZoomIn()
+  else Minimap_ZoomOut() end
+end
+Minimap:SetScript("OnMouseWheel", Zoom)
 
 --drag frame
 rLib:CreateDragFrame(MinimapCluster, L.dragFrames, -2, true)

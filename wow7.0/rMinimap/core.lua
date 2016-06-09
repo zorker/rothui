@@ -1,5 +1,5 @@
 
--- rNamePlate: core
+-- rMinimap: core
 -- zork, 2016
 
 -----------------------------
@@ -18,7 +18,7 @@ L.addonShortcut   = "rmm"
 -----------------------------
 
 local cfg = {
-  scale = 0.75
+  scale = 0.8
 }
 
 -----------------------------
@@ -40,17 +40,50 @@ MinimapBackdrop:Hide()
 MinimapBorder:Hide()
 MinimapZoomIn:Hide()
 MinimapZoomOut:Hide()
+MiniMapRecordingButton:Hide()
 MinimapBorderTop:Hide()
 MiniMapWorldMapButton:Hide()
 MinimapZoneText:Hide()
+
+--dungeon info
+MiniMapChallengeMode:ClearAllPoints()
+MiniMapChallengeMode:SetPoint("TOP",Minimap,"BOTTOM",0,11)
+MiniMapInstanceDifficulty:ClearAllPoints()
+MiniMapInstanceDifficulty:SetPoint("TOP",Minimap,"BOTTOM",0,16)
+GuildInstanceDifficulty:ClearAllPoints()
+GuildInstanceDifficulty:SetPoint("TOP",Minimap,"BOTTOM",0,16)
+
+--QueueStatusMinimapButton (lfi)
+QueueStatusMinimapButton:SetParent(Minimap)
+QueueStatusMinimapButton:SetScale(0.9)
+QueueStatusMinimapButton:ClearAllPoints()
+QueueStatusMinimapButton:SetPoint("BOTTOMLEFT",Minimap,-1,-1)
+QueueStatusMinimapButtonBorder:Hide()
+QueueStatusMinimapButton:SetHighlightTexture (nil)
+QueueStatusMinimapButton:SetPushedTexture(nil)
+
+--garrison+queue
+--GarrisonLandingPageMinimapButton (DIEEEEEE!!!)
+
+--mail
+MiniMapMailFrame:ClearAllPoints()
+MiniMapMailFrame:SetPoint("BOTTOMRIGHT",Minimap,3,-3)
+MiniMapMailIcon:SetTexture(mediapath.."mail")
+MiniMapMailBorder:SetTexture("Interface\\Calendar\\EventNotificationGlow")
+MiniMapMailBorder:SetBlendMode("ADD")
+MiniMapMailBorder:ClearAllPoints()
+MiniMapMailBorder:SetPoint("CENTER",MiniMapMailFrame,0.5,1.5)
+MiniMapMailBorder:SetSize(27,27)
+MiniMapMailBorder:SetAlpha(0.5)
 
 --MiniMapTracking
 MiniMapTracking:SetParent(Minimap)
 MiniMapTracking:SetScale(0.9)
 MiniMapTracking:ClearAllPoints()
-MiniMapTracking:SetPoint("TOPLEFT",Minimap,3,-3)
+MiniMapTracking:SetPoint("TOPLEFT",Minimap,1,-1)
 MiniMapTrackingButton:SetHighlightTexture (nil)
 MiniMapTrackingButton:SetPushedTexture(nil)
+MiniMapTrackingBackground:Hide()
 MiniMapTrackingButtonBorder:Hide()
 
 --MiniMapNorthTag
@@ -60,25 +93,18 @@ MinimapNorthTag:SetAlpha(0)
 
 --Blizzard_TimeManager
 LoadAddOn("Blizzard_TimeManager")
-if TimeManagerClockButton then
-  TimeManagerClockButton:GetRegions():Hide()
-  TimeManagerClockTicker:SetFont(STANDARD_TEXT_FONT,10)
-  TimeManagerClockTicker:SetShadowColor(0,0,0,0.9)
-  TimeManagerClockTicker:SetShadowOffset(2,-1)
-  TimeManagerClockButton:ClearAllPoints()
-  TimeManagerClockButton:SetPoint("BOTTOMRIGHT",Minimap,4,-1)
-  TimeManagerClockButton:SetAlpha(0.95)
-  local bg = TimeManagerClockButton:CreateTexture(nil,"BACKGROUND",nil,-8)
-  bg:SetAllPoints(TimeManagerClockTicker)
-  bg:SetColorTexture(1,1,1)
-  bg:SetVertexColor(0.5,0.5,0.5,0.6)
-end
+TimeManagerClockButton:GetRegions():Hide()
+TimeManagerClockButton:ClearAllPoints()
+TimeManagerClockButton:SetPoint("BOTTOM",-2,0)
+TimeManagerClockTicker:SetFont(STANDARD_TEXT_FONT,9,"OUTLINE")
+TimeManagerClockTicker:SetTextColor(0.8,0.8,0.6,0.8)
 
 --GameTimeFrame
+local gtfscale = 0.5
 GameTimeFrame:SetParent(Minimap)
-GameTimeFrame:SetScale(0.5)
+GameTimeFrame:SetScale(gtfscale)
 GameTimeFrame:ClearAllPoints()
-GameTimeFrame:SetPoint("TOPRIGHT",Minimap,-15,-12)
+GameTimeFrame:SetPoint("TOPRIGHT",Minimap,-1/gtfscale,-7/gtfscale)
 GameTimeFrame:SetHitRectInsets(0, 0, 0, 0)
 GameTimeFrame:GetNormalTexture():SetTexCoord(0,1,0,1)
 GameTimeFrame:SetNormalTexture(mediapath.."calendar")
@@ -86,10 +112,9 @@ GameTimeFrame:SetPushedTexture(nil)
 GameTimeFrame:SetHighlightTexture (nil)
 local fs = GameTimeFrame:GetFontString()
 fs:ClearAllPoints()
-fs:SetPoint("BOTTOM",0,5)
-fs:SetFont(STANDARD_TEXT_FONT,18)
-fs:SetShadowColor(0,0,0,0.3)
-fs:SetShadowOffset(1,-1)
+fs:SetPoint("BOTTOM",0,3/gtfscale)
+fs:SetFont(STANDARD_TEXT_FONT,9/gtfscale)
+fs:SetTextColor(0.2,0.2,0.1)
 
 --zoom
 Minimap:EnableMouseWheel()

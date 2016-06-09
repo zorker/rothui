@@ -12,6 +12,8 @@ local A, L = ...
 -- Options
 -----------------------------
 
+local mediapath = "interface\\addons\\"..A.."\\media\\"
+
 local groups = {
   "Friendly",
   "Enemy",
@@ -21,7 +23,7 @@ local options = {
   useClassColors = true,
   --displayNameWhenSelected = true,
   --displayNameByPlayerNameRules = true,
-  playLoseAggroHighlight = false,
+  --playLoseAggroHighlight = false,
   --displayAggroHighlight = true,
   displaySelectionHighlight = false,
   --considerSelectionInCombatAsHostile = false,
@@ -41,6 +43,20 @@ end
 -----------------------------
 -- Functions
 -----------------------------
+
+--SetupNamePlate
+local function SetupNamePlate(frame, setupOptions, frameOptions)
+  frame.healthBar:SetStatusBarTexture(mediapath.."statusbar")
+  frame.castBar:SetStatusBarTexture(mediapath.."statusbar")
+  frame.castBar.Icon:SetTexCoord(0.1,0.9,0.1,0.9)
+  frame.castBar.Icon:SetSize(17,17)
+  frame.castBar.Icon:ClearAllPoints()
+  frame.castBar.Icon:SetPoint("BOTTOMRIGHT",frame.castBar,"BOTTOMLEFT")
+  if GetCVar("NamePlateVerticalScale") == "1" then
+    frame.castBar:SetHeight(11)
+  end
+end
+hooksecurefunc("DefaultCompactNamePlateFrameSetupInternal", SetupNamePlate)
 
 local function IsTank()
   local assignedRole = UnitGroupRolesAssigned("player")

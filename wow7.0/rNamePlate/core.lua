@@ -19,17 +19,18 @@ local groups = {
 
 local options = {
   useClassColors = true,
-  displayNameWhenSelected = true,
-  displayNameByPlayerNameRules = true,
+  --displayNameWhenSelected = true,
+  --displayNameByPlayerNameRules = true,
   playLoseAggroHighlight = false,
-  displayAggroHighlight = true,
+  --displayAggroHighlight = true,
   displaySelectionHighlight = false,
   --considerSelectionInCombatAsHostile = false,
   --colorNameWithExtendedColors = true,
   --colorHealthWithExtendedColors = true,
   selectedBorderColor = false, --CreateColor(1, 1, 1, .35),
-  tankBorderColor = CreateColor(0, 1, 0, 0.8), --CreateColor(0, 1, 0, 0.8),
-  defaultBorderColor = CreateColor(0, 0, 0, 0.2), --CreateColor(0, 0, 0, 0),
+  tankBorderColor = false,
+  newTankBorderColor = {0, 1, 0, 0.8},
+  defaultBorderColor = CreateColor(0, 0, 0, 0.2),
 }
 
 for i, group  in next, groups do
@@ -70,7 +71,7 @@ end
 local function SetupNamePlate(frame, setupOptions, frameOptions)
   --frame.aggroHighlight:SetAlpha(1)
 end
-hooksecurefunc("DefaultCompactNamePlateFrameSetupInternal", SetupNamePlate)
+--hooksecurefunc("DefaultCompactNamePlateFrameSetupInternal", SetupNamePlate)
 
 local function IsTank()
   local assignedRole = UnitGroupRolesAssigned("player")
@@ -83,11 +84,12 @@ end
 --UpdateHealthBorder
 local function UpdateHealthBorder(frame)
   if frame.displayedUnit:match("(nameplate)%d?$") ~= "nameplate" then return end
-  if not IsInGroup() or not IsTank() or not UnitAffectingCombat(frame.displayedUnit) then return end
+  --print("UpdateHealthBorder", frame:GetName(), frame.displayedUnit, IsTank(), UnitAffectingCombat(frame.displayedUnit))
+  if not IsTank() then return end
   local status = UnitThreatSituation("player", frame.displayedUnit)
-  if not status or status < 3 then
-    frame.healthBar.border:SetVertexColor(frame.optionTable.tankBorderColor:GetRGBA())
+  if status and status >= 3 then
+    frame.healthBar.border:SetVertexColor(unpack(frame.optionTable.newTankBorderColor))
   end
 end
---hooksecurefunc("CompactUnitFrame_UpdateHealthBorder", UpdateHealthBorder)
+hooksecurefunc("CompactUnitFrame_UpdateHealthBorder", UpdateHealthBorder)
 

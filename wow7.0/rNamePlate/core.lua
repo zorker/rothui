@@ -27,9 +27,8 @@ local options = {
   --considerSelectionInCombatAsHostile = false,
   --colorNameWithExtendedColors = true,
   --colorHealthWithExtendedColors = true,
-  selectedBorderColor = false, --CreateColor(1, 1, 1, .35),
+  selectedBorderColor = false,
   tankBorderColor = false,
-  newTankBorderColor = {0, 1, 0, 0.8},
   defaultBorderColor = CreateColor(0, 0, 0, 0.2),
 }
 
@@ -43,36 +42,6 @@ end
 -- Functions
 -----------------------------
 
---UpdateAggroHighlight
-local function UpdateAggroHighlight(frame)
-  if frame.displayedUnit:match("(nameplate)%d?$") ~= "nameplate" then return end
-  local status = UnitThreatSituation("player", frame.displayedUnit)
-  if ( status and status > 0 ) then
-    frame.aggroHighlight:SetVertexColor(GetThreatStatusColor(status))
-    frame.aggroHighlight:Show()
-  else
-    frame.aggroHighlight:Hide()
-  end
-end
---hooksecurefunc("CompactUnitFrame_UpdateAggroHighlight", UpdateAggroHighlight)
-
---OnEvent
-local function OnEvent(frame,event,...)
-  if event ~= "UNIT_THREAT_LIST_UPDATE" then return end
-  if frame.displayedUnit:match("(nameplate)%d?$") ~= "nameplate" then return end
-  local unit = ...
-  if unit == frame.displayedUnit then
-    CompactUnitFrame_UpdateAggroHighlight(frame)
-  end
-end
---hooksecurefunc("CompactUnitFrame_OnEvent", OnEvent)
-
---SetupNamePlate
-local function SetupNamePlate(frame, setupOptions, frameOptions)
-  --frame.aggroHighlight:SetAlpha(1)
-end
---hooksecurefunc("DefaultCompactNamePlateFrameSetupInternal", SetupNamePlate)
-
 local function IsTank()
   local assignedRole = UnitGroupRolesAssigned("player")
   if assignedRole == "TANK" then return true end
@@ -84,11 +53,10 @@ end
 --UpdateHealthBorder
 local function UpdateHealthBorder(frame)
   if frame.displayedUnit:match("(nameplate)%d?$") ~= "nameplate" then return end
-  --print("UpdateHealthBorder", frame:GetName(), frame.displayedUnit, IsTank(), UnitAffectingCombat(frame.displayedUnit))
   if not IsTank() then return end
   local status = UnitThreatSituation("player", frame.displayedUnit)
   if status and status >= 3 then
-    frame.healthBar.border:SetVertexColor(unpack(frame.optionTable.newTankBorderColor))
+    frame.healthBar.border:SetVertexColor(0, 1, 0, 0.8)
   end
 end
 hooksecurefunc("CompactUnitFrame_UpdateHealthBorder", UpdateHealthBorder)

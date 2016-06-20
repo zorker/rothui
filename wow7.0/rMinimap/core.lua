@@ -55,7 +55,7 @@ GuildInstanceDifficulty:SetPoint("TOP",Minimap,"BOTTOM",0,16)
 
 --QueueStatusMinimapButton (lfi)
 QueueStatusMinimapButton:SetParent(Minimap)
-QueueStatusMinimapButton:SetScale(0.9)
+QueueStatusMinimapButton:SetScale(0.8)
 QueueStatusMinimapButton:ClearAllPoints()
 QueueStatusMinimapButton:SetPoint("BOTTOMLEFT",Minimap,-1,-1)
 QueueStatusMinimapButtonBorder:Hide()
@@ -97,14 +97,14 @@ TimeManagerClockButton:GetRegions():Hide()
 TimeManagerClockButton:ClearAllPoints()
 TimeManagerClockButton:SetPoint("BOTTOM",-2,0)
 TimeManagerClockTicker:SetFont(STANDARD_TEXT_FONT,9,"OUTLINE")
-TimeManagerClockTicker:SetTextColor(0.8,0.8,0.6,0.8)
+TimeManagerClockTicker:SetTextColor(0.8,0.8,0.6,1)
 
 --GameTimeFrame
-local gtfscale = 0.5
+local gtfscale = 0.4
 GameTimeFrame:SetParent(Minimap)
 GameTimeFrame:SetScale(gtfscale)
 GameTimeFrame:ClearAllPoints()
-GameTimeFrame:SetPoint("TOPRIGHT",Minimap,-1/gtfscale,-7/gtfscale)
+GameTimeFrame:SetPoint("TOPRIGHT",Minimap,-7/gtfscale,-6/gtfscale)
 GameTimeFrame:SetHitRectInsets(0, 0, 0, 0)
 GameTimeFrame:GetNormalTexture():SetTexCoord(0,1,0,1)
 GameTimeFrame:SetNormalTexture(mediapath.."calendar")
@@ -112,9 +112,9 @@ GameTimeFrame:SetPushedTexture(nil)
 GameTimeFrame:SetHighlightTexture (nil)
 local fs = GameTimeFrame:GetFontString()
 fs:ClearAllPoints()
-fs:SetPoint("BOTTOM",0,3/gtfscale)
-fs:SetFont(STANDARD_TEXT_FONT,9/gtfscale)
-fs:SetTextColor(0.2,0.2,0.1)
+fs:SetPoint("BOTTOM",0,2.2/gtfscale)
+fs:SetFont(STANDARD_TEXT_FONT,7/gtfscale)
+fs:SetTextColor(0.2,0.2,0.1,0.9)
 
 --zoom
 Minimap:EnableMouseWheel()
@@ -123,6 +123,24 @@ local function Zoom(self, direction)
   else Minimap_ZoomOut() end
 end
 Minimap:SetScript("OnMouseWheel", Zoom)
+
+--onenter
+local function Show(self)
+  GameTimeFrame:SetAlpha(1)
+  TimeManagerClockButton:SetAlpha(1)
+  MiniMapTracking:SetAlpha(1)
+end
+Minimap:SetScript("OnEnter", Show)
+--onleave
+local function Hide(self)
+  if self:IsMouseOver() then return end
+  GameTimeFrame:SetAlpha(0)
+  TimeManagerClockButton:SetAlpha(0)
+  MiniMapTracking:SetAlpha(0)
+end
+Minimap:SetScript("OnLeave", Hide)
+Hide(Minimap)
+
 
 --drag frame
 rLib:CreateDragFrame(MinimapCluster, L.dragFrames, -2, true)

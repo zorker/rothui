@@ -1,0 +1,6 @@
+## Interface: 70000
+## Author: zork
+## Title: rAnimatedStatusbarTest
+## Notes: Testing AnimatedStatusbar template
+
+core.lua

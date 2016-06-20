@@ -32,6 +32,7 @@ local options = {
   selectedBorderColor = false,
   tankBorderColor = false,
   defaultBorderColor = CreateColor(0, 0, 0, 0.2),
+  showClassificationIndicator = false,
 }
 
 for i, group  in next, groups do
@@ -46,14 +47,14 @@ end
 
 --SetupNamePlate
 local function SetupNamePlate(frame, setupOptions, frameOptions)
-  frame.healthBar:SetStatusBarTexture(mediapath.."statusbar")
+  --frame.healthBar:SetStatusBarTexture(mediapath.."statusbar")
   frame.castBar:SetStatusBarTexture(mediapath.."statusbar")
-  frame.castBar.Icon:SetTexCoord(0.1,0.9,0.1,0.9)
-  frame.castBar.Icon:SetSize(17,17)
-  frame.castBar.Icon:ClearAllPoints()
-  frame.castBar.Icon:SetPoint("BOTTOMRIGHT",frame.castBar,"BOTTOMLEFT")
   if GetCVar("NamePlateVerticalScale") == "1" then
     frame.castBar:SetHeight(11)
+    frame.castBar.Icon:SetTexCoord(0.1,0.9,0.1,0.9)
+    frame.castBar.Icon:SetSize(17,17)
+    frame.castBar.Icon:ClearAllPoints()
+    frame.castBar.Icon:SetPoint("BOTTOMRIGHT",frame.castBar,"BOTTOMLEFT")
   end
 end
 hooksecurefunc("DefaultCompactNamePlateFrameSetupInternal", SetupNamePlate)

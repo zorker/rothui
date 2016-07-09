@@ -18,7 +18,8 @@ L.addonShortcut   = "rmm"
 -----------------------------
 
 local cfg = {
-  scale = 0.8
+  scale = 0.8,
+  point = { "TOPRIGHT", 0, 0},
 }
 
 -----------------------------
@@ -27,6 +28,8 @@ local cfg = {
 
 --MinimapCluster
 MinimapCluster:SetScale(cfg.scale)
+MinimapCluster:ClearAllPoints()
+MinimapCluster:SetPoint(unpack(cfg.point))
 
 --Minimap
 local mediapath = "interface\\addons\\"..A.."\\media\\"
@@ -131,6 +134,7 @@ local function Show(self)
   MiniMapTracking:SetAlpha(1)
 end
 Minimap:SetScript("OnEnter", Show)
+
 --onleave
 local function Hide(self)
   if self:IsMouseOver() then return end

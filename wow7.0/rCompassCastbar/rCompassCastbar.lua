@@ -32,7 +32,7 @@
 
   --target settings
   cfg["target"] = {}
-  cfg["target"].enable          = false
+  cfg["target"].enable          = true
   cfg["target"].scale           = 0.15
   cfg["target"].sparkcolor      = {1,0.5,0.5}
   cfg["target"].bgcolor         = {0.5,0,0,1}
@@ -43,7 +43,7 @@
 
   --focus settings
   cfg["focus"] = {}
-  cfg["focus"].enable          = false
+  cfg["focus"].enable          = true
   cfg["focus"].scale           = 0.11
   cfg["focus"].sparkcolor      = {0.5,0.5,1}
   cfg["focus"].bgcolor         = {0,0,0.5,1}
@@ -88,7 +88,7 @@
     self.update, self.isCasting, self.isEnabled = false,false,false
     self.spellName, self.spellRang, self.spellText, self.spellTexture, self.startTime, self.endTime = nil,nil,nil,nil,nil,nil
     self.current, self.duration, self.elapsed, self.percent = 0,0,0,0
-    self:Hide()
+    self:SetAlpha(0)
   end
 
   --OnUpdate func
@@ -149,7 +149,7 @@
   local function Enable(self)
     if self.isEnabled then return end
     self.isEnabled = true
-    self:Show()
+    self:SetAlpha(1)
     self:SetScript("OnUpdate",OnUpdate)
   end
 

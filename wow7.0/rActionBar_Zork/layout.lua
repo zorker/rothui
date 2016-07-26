@@ -168,16 +168,6 @@ local stancebar = {
 rActionBar:CreateStanceBar(A, stancebar)
 
 -----------------------------
--- PossessBar
------------------------------
-
-local possessbar = stancebar
-possessbar.framePoint = { "BOTTOMLEFT", A.."Bar3", "TOPLEFT", 0, 0 }
-possessbar.frameVisibility = nil --need to rewrite the value from stance bar
---create
-rActionBar:CreatePossessBar(A, possessbar)
-
------------------------------
 -- PetBar
 -----------------------------
 
@@ -231,3 +221,12 @@ local vehicleexitbar = {
 }
 --create
 rActionBar:CreateVehicleExitBar(A, vehicleexitbar)
+
+-----------------------------
+-- PossessBar
+-----------------------------
+
+local possessbar = vehicleexitbar
+possessbar.frameVisibility = nil --need to rewrite the value from vehicleexitbar
+--create
+rActionBar:CreatePossessBar(A, possessbar)

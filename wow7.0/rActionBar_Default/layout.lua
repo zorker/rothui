@@ -168,6 +168,16 @@ local stancebar = {
 rActionBar:CreateStanceBar(A, stancebar)
 
 -----------------------------
+-- PossessBar
+-----------------------------
+
+local possessbar = stancebar
+possessbar.framePoint = { "BOTTOMLEFT", A.."Bar3", "TOPLEFT", 0, 0 }
+possessbar.frameVisibility = nil --need to rewrite the value from stance bar
+--create
+rActionBar:CreatePossessBar(A, possessbar)
+
+-----------------------------
 -- PetBar
 -----------------------------
 

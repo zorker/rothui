@@ -170,6 +170,24 @@ function rActionBar:CreateStanceBar(addonName,cfg)
   StanceBarRight:SetTexture(nil)
 end
 
+--PossessBar, this is the two button bar to cancel a possess in progress
+function rActionBar:CreatePossessBar(addonName,cfg)
+  cfg.blizzardBar = PossessBarFrame
+  cfg.frameName = (addonName or A).."PossessBar"
+  cfg.frameParent = cfg.frameParent or UIParent
+  cfg.frameTemplate = "SecureHandlerStateTemplate"
+  cfg.frameVisibility = cfg.frameVisibility or "[possessbar] show; hide"
+  cfg.buttonName = "PossessButton"
+  cfg.numButtons = NUM_POSSESS_SLOTS
+  cfg.dragInset = cfg.dragInset or -2
+  cfg.dragClamp = cfg.dragClamp or true
+  local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
+  local frame = L:CreateButtonFrame(cfg,buttonList)
+  --special
+  PossessBackground1:SetTexture(nil)
+  PossessBackground2:SetTexture(nil)
+end
+
 --PetBar
 function rActionBar:CreatePetBar(addonName,cfg)
   cfg.blizzardBar = PetActionBarFrame

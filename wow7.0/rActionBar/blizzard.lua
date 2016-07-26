@@ -24,7 +24,6 @@ local scripts = {
 local framesToHide = {
   MainMenuBar,
   OverrideActionBar,
-  PossessBarFrame,
 }
 
 local framesToDisable = {
@@ -33,7 +32,6 @@ local framesToDisable = {
   ReputationWatchBar, ArtifactWatchBar, HonorWatchBar, MainMenuExpBar, MainMenuBarMaxLevelBar,
   OverrideActionBar,
   OverrideActionBarExpBar, OverrideActionBarHealthBar, OverrideActionBarPowerBar, OverrideActionBarPitchFrame,
-  PossessBarFrame,
 }
 
 -----------------------------
@@ -58,5 +56,4 @@ function L:HideMainMenuBar()
     DisableAllScripts(frame)
   end
 end
-
 

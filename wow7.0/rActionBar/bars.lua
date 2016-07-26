@@ -38,7 +38,11 @@ function rActionBar:CreateMicroMenuBar(addonName,cfg)
   for idx, buttonName in next, MICRO_BUTTONS do
     local button = _G[buttonName]
     if button and button:IsShown() then
-      table.insert(buttonList, button)
+      if buttonName == "StoreMicroButton" then
+         table.insert(buttonList, #buttonList, button) --storemicrobutton fix
+      else
+         table.insert(buttonList, button)
+      end
     end
   end
   local frame = L:CreateButtonFrame(cfg,buttonList)

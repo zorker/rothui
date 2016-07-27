@@ -49,12 +49,14 @@ MiniMapWorldMapButton:Hide()
 MinimapZoneText:Hide()
 
 --dungeon info
-MiniMapChallengeMode:ClearAllPoints()
-MiniMapChallengeMode:SetPoint("TOP",Minimap,"BOTTOM",0,11)
 MiniMapInstanceDifficulty:ClearAllPoints()
-MiniMapInstanceDifficulty:SetPoint("TOP",Minimap,"BOTTOM",0,16)
+MiniMapInstanceDifficulty:SetPoint("TOP",Minimap,"TOP",0,-2)
 GuildInstanceDifficulty:ClearAllPoints()
-GuildInstanceDifficulty:SetPoint("TOP",Minimap,"BOTTOM",0,16)
+GuildInstanceDifficulty:SetPoint("TOP",Minimap,"TOP",0,-4)
+GuildInstanceDifficulty:SetScale(0.7)
+MiniMapChallengeMode:ClearAllPoints()
+MiniMapChallengeMode:SetPoint("TOP",Minimap,"TOP",0,-8)
+MiniMapChallengeMode:SetScale(0.8)
 
 --QueueStatusMinimapButton (lfi)
 QueueStatusMinimapButton:SetParent(Minimap)
@@ -65,8 +67,8 @@ QueueStatusMinimapButtonBorder:Hide()
 QueueStatusMinimapButton:SetHighlightTexture (nil)
 QueueStatusMinimapButton:SetPushedTexture(nil)
 
---garrison+queue
---GarrisonLandingPageMinimapButton (DIEEEEEE!!!)
+--garrison (DIEEEEEE!!!)
+--GarrisonLandingPageMinimapButton
 
 --mail
 MiniMapMailFrame:ClearAllPoints()
@@ -127,22 +129,36 @@ local function Zoom(self, direction)
 end
 Minimap:SetScript("OnMouseWheel", Zoom)
 
---onenter
-local function Show(self)
-  GameTimeFrame:SetAlpha(1)
-  TimeManagerClockButton:SetAlpha(1)
-  MiniMapTracking:SetAlpha(1)
+--onenter/show
+local function Show()
+  GameTimeFrame:SetAlpha(0.9)
+  TimeManagerClockButton:SetAlpha(0.9)
+  MiniMapTracking:SetAlpha(0.9)
+  MiniMapChallengeMode:SetAlpha(0.9)
+  MiniMapInstanceDifficulty:SetAlpha(0.9)
+  GuildInstanceDifficulty:SetAlpha(0.9)
 end
 Minimap:SetScript("OnEnter", Show)
 
---onleave
-local function Hide(self)
-  if self:IsMouseOver() then return end
+--onleave/hide
+local lasttime = 0
+local function Hide()
+  if Minimap:IsMouseOver() then return end
+  if time() < lasttime+1 then return end
   GameTimeFrame:SetAlpha(0)
   TimeManagerClockButton:SetAlpha(0)
   MiniMapTracking:SetAlpha(0)
+  MiniMapChallengeMode:SetAlpha(0)
+  MiniMapInstanceDifficulty:SetAlpha(0)
+  GuildInstanceDifficulty:SetAlpha(0)
 end
-Minimap:SetScript("OnLeave", Hide)
+local function SetTimer()
+  if Minimap:IsMouseOver() then return end
+  lasttime = time()
+  C_Timer.After(2, Hide)
+end
+Minimap:SetScript("OnLeave", SetTimer)
+rLib:RegisterCallback("PLAYER_ENTERING_WORLD", Hide)
 Hide(Minimap)
 
 

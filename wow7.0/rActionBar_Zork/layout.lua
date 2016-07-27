@@ -223,10 +223,10 @@ local vehicleexitbar = {
 rActionBar:CreateVehicleExitBar(A, vehicleexitbar)
 
 -----------------------------
--- PossessBar
+-- PossessExitBar
 -----------------------------
 
-local possessbar = vehicleexitbar
-possessbar.frameVisibility = nil --need to rewrite the value from vehicleexitbar
+local possessexitbar = vehicleexitbar
+possessexitbar.frameVisibility = nil --need to reset the value that is given to vehicleexitbar
 --create
-rActionBar:CreatePossessBar(A, possessbar)
+rActionBar:CreatePossessExitBar(A, possessexitbar)

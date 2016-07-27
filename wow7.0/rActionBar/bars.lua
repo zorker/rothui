@@ -222,10 +222,10 @@ function rActionBar:CreateVehicleExitBar(addonName,cfg)
   local frame = L:CreateButtonFrame(cfg, buttonList)
 end
 
---PossessBar, this is the two button bar to cancel a possess in progress
-function rActionBar:CreatePossessBar(addonName,cfg)
+--PossessExitBar, this is the two button bar to cancel a possess in progress
+function rActionBar:CreatePossessExitBar(addonName,cfg)
   cfg.blizzardBar = PossessBarFrame
-  cfg.frameName = (addonName or A).."PossessBar"
+  cfg.frameName = (addonName or A).."PossessExitBar"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[possessbar] show; hide"
@@ -235,6 +235,12 @@ function rActionBar:CreatePossessBar(addonName,cfg)
   cfg.dragClamp = cfg.dragClamp or true
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
+  --frame test
+  local t = frame:CreateTexture(nil,"BACKGROUND",nil,-8)
+  t:SetAllPoints()
+  t:SetColorTexture(1,1,1)
+  t:SetVertexColor(0,1,0)
+  t:SetAlpha(0.3)
   --special
   PossessBackground1:SetTexture(nil)
   PossessBackground2:SetTexture(nil)

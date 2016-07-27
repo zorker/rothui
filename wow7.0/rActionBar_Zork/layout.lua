@@ -18,7 +18,7 @@ local fader = {
   fadeInAlpha = 1,
   fadeInDuration = 0.3,
   fadeInSmooth = "OUT",
-  fadeOutAlpha = 0.3,
+  fadeOutAlpha = 0,
   fadeOutDuration = 0.9,
   fadeOutSmooth = "OUT",
 }
@@ -99,6 +99,8 @@ rActionBar:CreateActionBar2(A, bar2)
 -- Bar3
 -----------------------------
 
+--note. uses a different fader config object
+
 local bar3 = {
   framePoint      = { "BOTTOM", A.."Bar2", "TOP", 0, 0 },
   frameScale      = 1,
@@ -108,7 +110,14 @@ local bar3 = {
   buttonMargin    = 5,
   numCols         = 12,
   startPoint      = "BOTTOMLEFT",
-  fader           = nil,
+  fader           = {
+                      fadeInAlpha = 1,
+                      fadeInDuration = 0.3,
+                      fadeInSmooth = "OUT",
+                      fadeOutAlpha = 0.5,
+                      fadeOutDuration = 0.9,
+                      fadeOutSmooth = "OUT",
+                    },
 }
 --create
 rActionBar:CreateActionBar3(A, bar3)

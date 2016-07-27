@@ -33,7 +33,7 @@ MinimapCluster:SetPoint(unpack(cfg.point))
 
 --Minimap
 local mediapath = "interface\\addons\\"..A.."\\media\\"
-Minimap:SetMaskTexture(mediapath.."mask")
+Minimap:SetMaskTexture(mediapath.."mask2")
 Minimap:ClearAllPoints()
 Minimap:SetPoint("CENTER")
 Minimap:SetScale(1.35) --correct the cluster offset

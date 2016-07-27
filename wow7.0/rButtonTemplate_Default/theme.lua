@@ -157,6 +157,7 @@ local auraButtonConfig = {}
 auraButtonConfig.backdrop = actionButtonConfig.backdrop
 auraButtonConfig.icon = actionButtonConfig.icon
 auraButtonConfig.border = actionButtonConfig.border
+auraButtonConfig.border.texCoord = {0,1,0,1} --fix the settexcoord on debuff borders
 auraButtonConfig.normalTexture = actionButtonConfig.normalTexture
 auraButtonConfig.count = actionButtonConfig.count
 auraButtonConfig.duration = actionButtonConfig.hotkey

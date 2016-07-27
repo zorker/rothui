@@ -1,24 +1,27 @@
 #rButtonTemplate API
 
---rButtonTemplate:StyleActionButton
+======================================
+-- GLOBAL FUNCTIONS
+======================================
+
 rButtonTemplate:StyleActionButton(button, actionButtonConfig)
-|-button, type:BUTTON, description: button you want to style
-|-actionButtonConfig, type:TABLE, description: style configuration see actionButtonConfig definition below
-
---rButtonTemplate:StyleItemButton
-rButtonTemplate:StyleItemButton(button, itemButtonConfig)
-|-button, type:BUTTON, description: button you want to style
-|-itemButtonConfig, type:TABLE, description: style configuration see itemButtonConfig definition below
-
---rButtonTemplate:StyleAllActionButtons
 rButtonTemplate:StyleAllActionButtons(actionButtonConfig)
-|-actionButtonConfig, type:TABLE, description: style configuration see actionButtonConfig definition below
+rButtonTemplate:StyleItemButton(button, itemButtonConfig)
+rButtonTemplate:StyleExtraActionButton(extraActionButtonConfig)
+rButtonTemplate:StyleAuraButton(button, auraButtonConfig)
+rButtonTemplate:StyleBuffButtons(auraButtonConfig)
+rButtonTemplate:StyleDebuffButtons(auraButtonConfig)
+rButtonTemplate:StyleTempEnchants(auraButtonConfig)
+rButtonTemplate:StyleAllAuraButtons(auraButtonConfig)
 
---------------------------------------
---actionButtonConfig backdrop
---------------------------------------
+======================================
+-- ACTIONBUTTON CONFIG
+======================================
 
---actionButtonConfig.backdrop
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--backdrop
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 actionButtonConfig.backdrop, type:BACKDROP, description: http://wowprogramming.com/docs/api_types#backdrop
 |-bgFile, type:STRING, description: http://wowprogramming.com/docs/api_types#backdrop
 |-edgeFile, type:STRING, description: http://wowprogramming.com/docs/api_types#backdrop
@@ -31,13 +34,12 @@ actionButtonConfig.backdrop, type:BACKDROP, description: http://wowprogramming.c
 |-points, type: TABLE, descriptions: table containing one or more points
   |-type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
 
---------------------------------------
---actionButtonConfig textures
---------------------------------------
+actionButtonConfig.backdrop
 
---definition is the same for any texture
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--textures
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
---actionButtonConfig.icon
 actionButtonConfig.icon
 |-texCoord, type: TABLE, description: http://wowprogramming.com/docs/widgets/Texture/SetTexCoord
 |-points, type: TABLE, descriptions: table containing one or more points
@@ -46,83 +48,145 @@ actionButtonConfig.icon
 |-alpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/VisibleRegion/SetAlpha
 |-file, type: STRING, description: path to texture you want to display, for no texture use ""
 
---actionButtonConfig.flash
+actionButtonConfig.icon
 actionButtonConfig.flash
---actionButtonConfig.flyoutBorder
 actionButtonConfig.flyoutBorder
---actionButtonConfig.flyoutBorderShadow
 actionButtonConfig.flyoutBorderShadow
---actionButtonConfig.border
 actionButtonConfig.border
---actionButtonConfig.normalTexture
 actionButtonConfig.normalTexture
---actionButtonConfig.pushedTexture
 actionButtonConfig.pushedTexture
---actionButtonConfig.highlightTextureicon
 actionButtonConfig.highlightTexture
---actionButtonConfig.checkedTexture
 actionButtonConfig.checkedTexture
 
---------------------------------------
---actionButtonConfig cooldown
---------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--cooldown
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
---actionButtonConfig.cooldown
 actionButtonConfig.cooldown
 |-points, type: TABLE, descriptions: table containing one or more points
   |-type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
 
---------------------------------------
--- actionButtonConfig fontstring
---------------------------------------
+actionButtonConfig.cooldown
 
---actionButtonConfig.hotkey
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--fontstring
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 actionButtonConfig.hotkey
 |-points, type: TABLE, descriptions: table containing one or more points
   |-type:TABLE, description: point http://wowprogramming.com/docs/widgets/Region/SetPoint
 |-alpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/VisibleRegion/SetAlpha
 |-font: type:TABLE, description: http://wowprogramming.com/docs/widgets/FontInstance/SetFont
 
---actionButtonConfig.count
+actionButtonConfig.hotkey
 actionButtonConfig.count
---actionButtonConfig.name
 actionButtonConfig.name
 
---------------------------------------
---itemButtonConfig backdrop
---------------------------------------
+======================================
+-- ITEMBUTTON CONFIG
+======================================
 
---itemButtonConfig.backdrop
-itemButtonConfig.backdrop, type:BACKDROP, same definition as actionButtonConfig.backdrop
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--backdrop
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
---------------------------------------
---itemButtonConfig textures
---------------------------------------
+> see actionbutton config backdrop
 
---same definition as actionButtonConfig textures, just different textures
+itemButtonConfig.backdrop
 
---itemButtonConfig.icon
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--textures
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+> see actionbutton config textures
+
 itemButtonConfig.icon
---itemButtonConfig.searchOverlay
 itemButtonConfig.searchOverlay
---itemButtonConfig.border
 itemButtonConfig.border
---itemButtonConfig.normalTexture
 itemButtonConfig.normalTexture
---itemButtonConfig.pushedTexture
 itemButtonConfig.pushedTexture
---itemButtonConfig.highlightTextureicon
 itemButtonConfig.highlightTexture
---itemButtonConfig.checkedTexture
 itemButtonConfig.checkedTexture
 
---------------------------------------
--- itemButtonConfig fontstring
---------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--fontstring
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
---same definition as actionButtonConfig fontstring, just different fontstrings
+> see actionbutton config fontstring
 
---itemButtonConfig.count
 itemButtonConfig.count
---itemButtonConfig.name
 itemButtonConfig.name
+
+======================================
+-- EXTRAACTIONBUTTON CONFIG
+======================================
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--backdrop
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+> see actionbutton config backdrop
+
+extaActionButtonConfig.backdrop
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--textures
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+> see actionbutton config textures
+
+extaActionButtonConfig.icon
+extaActionButtonConfig.buttonstyle
+extaActionButtonConfig.normalTexture
+extaActionButtonConfig.pushedTexture
+extaActionButtonConfig.highlightTexture
+extaActionButtonConfig.checkedTexture
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--cooldown
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+> see actionbutton config cooldown
+
+extaActionButtonConfig.count
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--fontstring
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+> see actionbutton config fontstring
+
+extaActionButtonConfig.hotkey
+
+======================================
+-- AURABUTTON CONFIG
+======================================
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--backdrop
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+> see actionbutton config backdrop
+
+auraButtonConfig.backdrop
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--textures
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+> see actionbutton config textures
+
+auraButtonConfig.icon
+auraButtonConfig.border
+auraButtonConfig.normalTexture
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--fontstring
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+> see actionbutton config fontstring
+
+auraButtonConfig.count
+auraButtonConfig.duration
+auraButtonConfig.symbol
+

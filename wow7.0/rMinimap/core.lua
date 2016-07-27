@@ -144,7 +144,7 @@ Minimap:SetScript("OnEnter", Show)
 local lasttime = 0
 local function Hide()
   if Minimap:IsMouseOver() then return end
-  if time() < lasttime+1 then return end
+  if time() == lasttime then return end
   GameTimeFrame:SetAlpha(0)
   TimeManagerClockButton:SetAlpha(0)
   MiniMapTracking:SetAlpha(0)
@@ -153,9 +153,8 @@ local function Hide()
   GuildInstanceDifficulty:SetAlpha(0)
 end
 local function SetTimer()
-  if Minimap:IsMouseOver() then return end
   lasttime = time()
-  C_Timer.After(2, Hide)
+  C_Timer.After(1.5, Hide)
 end
 Minimap:SetScript("OnLeave", SetTimer)
 rLib:RegisterCallback("PLAYER_ENTERING_WORLD", Hide)

@@ -111,7 +111,7 @@ function L:CreateButtonFrame(cfg,buttonList)
     RegisterStateDriver(frame, "visibility", cfg.frameVisibility)
   end
   --add drag functions
-  rLib:CreateDragFrame(frame, L.dragFrames, cfg.dragInset, cfg.dragClamp)
+  rLib:CreateDragFrame(frame, L.dragFrames, -2, true)
   --hover animation
   if cfg.fader then
     rLib:CreateButtonFrameFader(frame, buttonList, cfg.fader)

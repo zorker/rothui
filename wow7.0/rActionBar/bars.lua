@@ -19,8 +19,6 @@ function rActionBar:CreateBagBar(addonName,cfg)
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle] hide; show"
-  cfg.dragInset = cfg.dragInset or -2
-  cfg.dragClamp = cfg.dragClamp or true
   local buttonList = { MainMenuBarBackpackButton, CharacterBag0Slot, CharacterBag1Slot, CharacterBag2Slot, CharacterBag3Slot }
   local frame = L:CreateButtonFrame(cfg,buttonList)
 end
@@ -32,8 +30,6 @@ function rActionBar:CreateMicroMenuBar(addonName,cfg)
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle] hide; show"
-  cfg.dragInset = cfg.dragInset or -2
-  cfg.dragClamp = cfg.dragClamp or true
   local buttonList = {}
   for idx, buttonName in next, MICRO_BUTTONS do
     local button = _G[buttonName]
@@ -66,12 +62,9 @@ function rActionBar:CreateActionBar1(addonName,cfg)
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle] hide; show"
   cfg.buttonName = "ActionButton"
   cfg.numButtons = NUM_ACTIONBAR_BUTTONS
-  cfg.dragInset = cfg.dragInset or -2
-  cfg.dragClamp = cfg.dragClamp or true
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
-  --trigger _onstate-page on cfg.framePage macro condition
-  --use actionbarcontroller functions to determine bar-page
+  --_onstate-page state driver
   for i, button in next, buttonList do
     frame:SetFrameRef(cfg.buttonName..i, button)
   end
@@ -99,8 +92,6 @@ function rActionBar:CreateActionBar2(addonName,cfg)
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
   cfg.buttonName = "MultiBarBottomLeftButton"
   cfg.numButtons = NUM_ACTIONBAR_BUTTONS
-  cfg.dragInset = cfg.dragInset or -2
-  cfg.dragClamp = cfg.dragClamp or true
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
 end
@@ -114,8 +105,6 @@ function rActionBar:CreateActionBar3(addonName,cfg)
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
   cfg.buttonName = "MultiBarBottomRightButton"
   cfg.numButtons = NUM_ACTIONBAR_BUTTONS
-  cfg.dragInset = cfg.dragInset or -2
-  cfg.dragClamp = cfg.dragClamp or true
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
 end
@@ -129,8 +118,6 @@ function rActionBar:CreateActionBar4(addonName,cfg)
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
   cfg.buttonName = "MultiBarRightButton"
   cfg.numButtons = NUM_ACTIONBAR_BUTTONS
-  cfg.dragInset = cfg.dragInset or -2
-  cfg.dragClamp = cfg.dragClamp or true
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
 end
@@ -144,8 +131,6 @@ function rActionBar:CreateActionBar5(addonName,cfg)
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
   cfg.buttonName = "MultiBarLeftButton"
   cfg.numButtons = NUM_ACTIONBAR_BUTTONS
-  cfg.dragInset = cfg.dragInset or -2
-  cfg.dragClamp = cfg.dragClamp or true
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
 end
@@ -159,8 +144,6 @@ function rActionBar:CreateStanceBar(addonName,cfg)
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
   cfg.buttonName = "StanceButton"
   cfg.numButtons = NUM_STANCE_SLOTS
-  cfg.dragInset = cfg.dragInset or -2
-  cfg.dragClamp = cfg.dragClamp or true
   --delay bar creation until we know for sure that the character has any stances
   local function OnLogin(...)
     if GetNumShapeshiftForms() == 0 then return end
@@ -183,8 +166,6 @@ function rActionBar:CreatePetBar(addonName,cfg)
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [pet] show; hide"
   cfg.buttonName = "PetActionButton"
   cfg.numButtons = NUM_PET_ACTION_SLOTS
-  cfg.dragInset = cfg.dragInset or -2
-  cfg.dragClamp = cfg.dragClamp or true
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --special
@@ -201,8 +182,6 @@ function rActionBar:CreateExtraBar(addonName,cfg)
   cfg.frameVisibility = cfg.frameVisibility or "[extrabar] show; hide"
   cfg.buttonName = "ExtraActionButton"
   cfg.numButtons = NUM_ACTIONBAR_BUTTONS
-  cfg.dragInset = cfg.dragInset or -2
-  cfg.dragClamp = cfg.dragClamp or true
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --special
@@ -216,8 +195,6 @@ function rActionBar:CreateVehicleExitBar(addonName,cfg)
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[canexitvehicle] show; hide"
-  cfg.dragInset = cfg.dragInset or -2
-  cfg.dragClamp = cfg.dragClamp or true
   local buttonList = { OverrideActionBar.LeaveButton }
   local frame = L:CreateButtonFrame(cfg, buttonList)
 end
@@ -231,8 +208,6 @@ function rActionBar:CreatePossessExitBar(addonName,cfg)
   cfg.frameVisibility = cfg.frameVisibility or "[possessbar] show; hide"
   cfg.buttonName = "PossessButton"
   cfg.numButtons = NUM_POSSESS_SLOTS
-  cfg.dragInset = cfg.dragInset or -2
-  cfg.dragClamp = cfg.dragClamp or true
   local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --frame test

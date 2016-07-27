@@ -116,10 +116,7 @@ actionButtonConfig.count = {
   },
 }
 
------------------------------
--- rButtonTemplate:StyleAllActionButtons
------------------------------
-
+--rButtonTemplate:StyleAllActionButtons
 rButtonTemplate:StyleAllActionButtons(actionButtonConfig)
 
 -----------------------------
@@ -135,10 +132,7 @@ itemButtonConfig.stock = actionButtonConfig.name
 itemButtonConfig.border = { file = "" }
 itemButtonConfig.normalTexture = actionButtonConfig.normalTexture
 
------------------------------
--- rButtonTemplate:StyleItemButton
------------------------------
-
+--rButtonTemplate:StyleItemButton
 local itemButtons = { MainMenuBarBackpackButton, CharacterBag0Slot, CharacterBag1Slot, CharacterBag2Slot, CharacterBag3Slot }
 for i, button in next, itemButtons do
   rButtonTemplate:StyleItemButton(button, itemButtonConfig)
@@ -151,4 +145,28 @@ end
 local extraButtonConfig = actionButtonConfig
 extraButtonConfig.buttonstyle = { file = "" }
 
+--rButtonTemplate:StyleExtraActionButton
 rButtonTemplate:StyleExtraActionButton(extraButtonConfig)
+
+-----------------------------
+-- auraButtonConfig
+-----------------------------
+
+local auraButtonConfig = {}
+
+auraButtonConfig.backdrop = actionButtonConfig.backdrop
+auraButtonConfig.icon = actionButtonConfig.icon
+auraButtonConfig.border = actionButtonConfig.border
+auraButtonConfig.normalTexture = actionButtonConfig.normalTexture
+auraButtonConfig.count = actionButtonConfig.count
+auraButtonConfig.duration = actionButtonConfig.hotkey
+auraButtonConfig.symbol = actionButtonConfig.name
+
+--fix blizzard time abbrev
+HOUR_ONELETTER_ABBR = "%dh"
+DAY_ONELETTER_ABBR = "%dd"
+MINUTE_ONELETTER_ABBR = "%dm"
+SECOND_ONELETTER_ABBR = "%ds"
+
+--rButtonTemplate:StyleAllAuraButtons
+rButtonTemplate:StyleAllAuraButtons(auraButtonConfig)

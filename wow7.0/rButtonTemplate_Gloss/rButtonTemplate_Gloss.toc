@@ -1,7 +1,0 @@
-## Interface: 70000
-## Author: zork
-## Title: rButtonTemplate_Gloss
-## Notes: Glossy button theme for rButtonTemplate
-## RequiredDeps: rButtonTemplate
-
-theme.lua

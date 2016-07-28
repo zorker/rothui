@@ -17,9 +17,9 @@ L.addonShortcut   = "rbf"
 -- Hide Blizzard BuffFrame
 -----------------------------
 
-local hiddenFrame = CreateFrame("Frame")
-hiddenFrame:Hide()
-BuffFrame:SetParent(hiddenFrame)
+--local hiddenFrame = CreateFrame("Frame")
+--hiddenFrame:Hide()
+--BuffFrame:SetParent(hiddenFrame)
 
 -----------------------------
 -- rBuffFrame Global

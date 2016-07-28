@@ -1,0 +1,7 @@
+## Interface: 70000
+## Author: zork
+## Title: rBuffFrame_Default
+## Notes: Default buff frame layout for rBuffFrame
+## RequiredDeps: rBuffFrame
+
+layout.lua

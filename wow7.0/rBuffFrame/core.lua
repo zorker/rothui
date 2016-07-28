@@ -99,7 +99,10 @@ local function SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, bu
   end
 end
 
-function rBuffFrame:CreateBuffButtonFrame(cfg)
+function rBuffFrame:CreateBuffFrame(addonName,cfg)
+  cfg.frameName = addonName.."BuffFrame"
+  cfg.frameParent = cfg.frameParent or UIParent
+  cfg.frameTemplate = nil
   --create new parent frame for buttons
   local frame = CreateFrame("Frame", cfg.frameName, cfg.frameParent, cfg.frameTemplate)
   frame:SetPoint(unpack(cfg.framePoint))
@@ -118,7 +121,10 @@ function rBuffFrame:CreateBuffButtonFrame(cfg)
   return frame
 end
 
-function rBuffFrame:CreateDebuffButtonFrame(cfg)
+function rBuffFrame:CreateDebuffFrame(addonName,cfg)
+  cfg.frameName = addonName.."DebuffFrame"
+  cfg.frameParent = cfg.frameParent or UIParent
+  cfg.frameTemplate = nil
   --create new parent frame for buttons
   local frame = CreateFrame("Frame", cfg.frameName, cfg.frameParent, cfg.frameTemplate)
   frame:SetPoint(unpack(cfg.framePoint))

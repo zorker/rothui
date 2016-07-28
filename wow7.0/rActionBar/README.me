@@ -1,8 +1,28 @@
 #rActionBar API
 
---Arguments are the same for every bar.
+======================================
+-- FUNCTIONS
+======================================
 
---rActionBar:CreateBagBar
+rActionBar:CreateBagBar(addonName,cfg)
+rActionBar:CreateMicroMenuBar(addonName,cfg)
+rActionBar:CreateActionBar1(addonName,cfg)
+rActionBar:CreateActionBar2(addonName,cfg)
+rActionBar:CreateActionBar3(addonName,cfg)
+rActionBar:CreateActionBar4(addonName,cfg)
+rActionBar:CreateActionBar5(addonName,cfg)
+rActionBar:CreateStanceBar(addonName,cfg)
+rActionBar:CreatePetBar(addonName,cfg)
+rActionBar:CreateExtraBar(addonName,cfg)
+rActionBar:CreateVehicleExitBar(addonName,cfg)
+rActionBar:CreatePossessExitBar(addonName,cfg)
+
+======================================
+-- ARGUMENTS
+======================================
+
+Argument definition is the same for all functions.
+
 rActionBar:CreateBagBar(addonName,cfg)
 |-addonName, type:STRING, description: name of the addon that is creating the bar
 |-cfg, type: TABLE, description: bar configuration
@@ -18,25 +38,3 @@ rActionBar:CreateBagBar(addonName,cfg)
   |-startPoint, type:STRING, description: starting point of first button (TOPLEFT, TOPRIGHT, BOTTOMRIGHT, BOTTOMLEFT)
   |-fader, type:TABLE, description: rLib faderConfig, check rLib API for definition
 
---rActionBar:CreateMicroMenuBar
-rActionBar:CreateMicroMenuBar(addonName,cfg)
---rActionBar:CreateActionBar1
-rActionBar:CreateActionBar1(addonName,cfg)
---rActionBar:CreateActionBar2
-rActionBar:CreateActionBar2(addonName,cfg)
---rActionBar:CreateActionBar3
-rActionBar:CreateActionBar3(addonName,cfg)
---rActionBar:CreateActionBar4
-rActionBar:CreateActionBar4(addonName,cfg)
---rActionBar:CreateActionBar5
-rActionBar:CreateActionBar5(addonName,cfg)
---rActionBar:CreateStanceBar
-rActionBar:CreateStanceBar(addonName,cfg)
---rActionBar:CreatePetBar
-rActionBar:CreatePetBar(addonName,cfg)
---rActionBar:CreateExtraBar
-rActionBar:CreateExtraBar(addonName,cfg)
---rActionBar:CreateVehicleExitBar
-rActionBar:CreateVehicleExitBar(addonName,cfg)
---rActionBar:CreatePossessExitBar
-rActionBar:CreatePossessExitBar(addonName,cfg)

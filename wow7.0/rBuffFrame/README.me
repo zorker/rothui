@@ -1,5 +1,18 @@
 #rBuffFrame API
 
+======================================
+-- FUNCTIONS
+======================================
+
+rBuffFrame:CreateBuffFrame(addonName,cfg)
+rBuffFrame:CreateDebuffFrame(addonName,cfg)
+
+======================================
+-- ARGUMENTS
+======================================
+
+Argument definition is the same for all functions.
+
 rBuffFrame:CreateBuffFrame(addonName,cfg)
 |-addonName, type:STRING, description: name of the addon that is creating the bar
 |-cfg, type: TABLE, description: bar configuration
@@ -13,5 +26,3 @@ rBuffFrame:CreateBuffFrame(addonName,cfg)
   |-numCols, type:NUMBER, description: number of buttons per column
   |-startPoint, type:STRING, description: starting point of first button (TOPLEFT, TOPRIGHT, BOTTOMRIGHT, BOTTOMLEFT)
 
-rBuffFrame:CreateBuffFrame
-rBuffFrame:CreateDebuffFrame

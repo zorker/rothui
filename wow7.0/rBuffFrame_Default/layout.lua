@@ -25,14 +25,14 @@ local buffFrameConfig = {
   startPoint      = "TOPRIGHT",
 }
 --create
-rBuffFrame:CreateBuffFrame(A, buffFrameConfig)
+local buffFrame = rBuffFrame:CreateBuffFrame(A, buffFrameConfig)
 
 -----------------------------
 -- debuffFrameConfig
 -----------------------------
 
 local debuffFrameConfig = {
-  framePoint      = { "TOPRIGHT", _G[A.."BuffFrame"], "BOTTOMRIGHT", 0, 0 },
+  framePoint      = { "TOPRIGHT", buffFrame, "BOTTOMRIGHT", 0, 0 },
   frameScale      = 1,
   framePadding    = 5,
   buttonWidth     = 32,

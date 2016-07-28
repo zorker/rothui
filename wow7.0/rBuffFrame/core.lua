@@ -37,7 +37,9 @@ local function GetButtonList(buttonName,numButtons,buttonList)
   for i=1, numButtons do
     local button = _G[buttonName..i]
     if not button then break end
-    table.insert(buttonList, button)
+    if button:IsShown() then
+      table.insert(buttonList, button)
+    end
   end
   return buttonList
 end
@@ -62,8 +64,8 @@ end
 
 local function SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, buttonHeight, buttonMargin, numCols, startPoint)
   local numButtons = # buttonList
-  numCols = min(numButtons, numCols)
-  local numRows = ceil(numButtons/numCols)
+  numCols = max(min(numButtons, numCols),1)
+  local numRows = max(ceil(numButtons/numCols),1)
   local frameWidth = numCols*buttonWidth + (numCols-1)*buttonMargin + 2*framePadding
   local frameHeight = numRows*buttonHeight + (numRows-1)*buttonMargin + 2*framePadding
   frame:SetSize(frameWidth,frameHeight)
@@ -141,4 +143,5 @@ function rBuffFrame:CreateDebuffFrame(addonName,cfg)
   return frame
 end
 
-
+--create slash commands
+rLib:CreateSlashCmd(L.addonName, L.addonShortcut, L.dragFrames, L.addonColor)

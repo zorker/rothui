@@ -11,7 +11,7 @@ local A, L = ...
 L.addonName       = A
 L.dragFrames      = {}
 L.addonColor      = "0000FF00"
-L.addonShortcut   = "rabs"
+L.addonShortcut   = "rab"
 
 -----------------------------
 -- rActionBar Global

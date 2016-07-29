@@ -101,7 +101,7 @@ local function SetupTexture(texture,cfg,fileFunc,fileObj)
   elseif fileFunc == "SetNormalTexture" then
     ApplyNormalTexture(fileObj,cfg.file)
   elseif cfg.file then
-    CallObjectFunction(fileObj,fileFunc,cfg.file)
+    CallElementFunction(fileObj,fileFunc,cfg.file)
   end
 end
 

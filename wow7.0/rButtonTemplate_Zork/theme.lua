@@ -100,6 +100,33 @@ actionButtonConfig.normalTexture = {
   },
 }
 
+--[[
+--pushedTexture
+actionButtonConfig.pushedTexture = {
+  file = mediapath.."pushed",
+  points = {
+    {"TOPLEFT", 0, 0 },
+    {"BOTTOMRIGHT", 0, 0 },
+  },
+}
+--highlightTexture
+actionButtonConfig.highlightTexture = {
+  file = mediapath.."highlight",
+  points = {
+    {"TOPLEFT", 0, 0 },
+    {"BOTTOMRIGHT", 0, 0 },
+  },
+}
+--checkedTexture
+actionButtonConfig.checkedTexture = {
+  file = mediapath.."checked",
+  points = {
+    {"TOPLEFT", 0, 0 },
+    {"BOTTOMRIGHT", 0, 0 },
+  },
+}
+]]--
+
 --cooldown
 actionButtonConfig.cooldown = {
   points = {

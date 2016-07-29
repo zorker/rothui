@@ -19,9 +19,9 @@ rButtonTemplate.addonName = A
 -- Init
 -----------------------------
 
-local function CallElementFunction(element, func, ...)
-  if element and func and element[func] then
-    element[func](element, ...)
+local function CallButtonFunctionByName(button, func, ...)
+  if button and func and button[func] then
+    button[func](button, ...)
   end
 end
 
@@ -90,18 +90,18 @@ local function ApplyNormalTexture(button,file)
   hooksecurefunc(button, "SetNormalTexture", ResetNormalTexture)
 end
 
-local function SetupTexture(texture,cfg,fileFunc,fileObj)
+local function SetupTexture(texture,cfg,func,button)
   if not texture or not cfg then return end
   ApplyTexCoord(texture,cfg.texCoord)
   ApplyPoints(texture,cfg.points)
   ApplyVertexColor(texture,cfg.color)
   ApplyAlpha(texture,cfg.alpha)
-  if fileFunc == "SetTexture" then
+  if func == "SetTexture" then
     ApplyTexture(texture,cfg.file)
-  elseif fileFunc == "SetNormalTexture" then
-    ApplyNormalTexture(fileObj,cfg.file)
+  elseif func == "SetNormalTexture" then
+    ApplyNormalTexture(button,cfg.file)
   elseif cfg.file then
-    CallElementFunction(fileObj,fileFunc,cfg.file)
+    CallButtonFunctionByName(button,func,cfg.file)
   end
 end
 

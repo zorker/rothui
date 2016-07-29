@@ -18,7 +18,7 @@ L.addonShortcut   = "rmm"
 -----------------------------
 
 local cfg = {
-  scale = 0.8,
+  scale = 1,
   point = { "TOPRIGHT", 0, 0},
 }
 
@@ -36,7 +36,7 @@ local mediapath = "interface\\addons\\"..A.."\\media\\"
 Minimap:SetMaskTexture(mediapath.."mask2")
 Minimap:ClearAllPoints()
 Minimap:SetPoint("CENTER")
-Minimap:SetScale(1.35) --correct the cluster offset
+Minimap:SetSize(190,190) --correct the cluster offset
 
 --hide regions
 MinimapBackdrop:Hide()
@@ -50,19 +50,20 @@ MinimapZoneText:Hide()
 
 --dungeon info
 MiniMapInstanceDifficulty:ClearAllPoints()
-MiniMapInstanceDifficulty:SetPoint("TOP",Minimap,"TOP",0,-2)
+MiniMapInstanceDifficulty:SetPoint("TOP",Minimap,"TOP",0,-5)
+MiniMapInstanceDifficulty:SetScale(0.8)
 GuildInstanceDifficulty:ClearAllPoints()
-GuildInstanceDifficulty:SetPoint("TOP",Minimap,"TOP",0,-4)
+GuildInstanceDifficulty:SetPoint("TOP",Minimap,"TOP",0,-5)
 GuildInstanceDifficulty:SetScale(0.7)
 MiniMapChallengeMode:ClearAllPoints()
-MiniMapChallengeMode:SetPoint("TOP",Minimap,"TOP",0,-8)
-MiniMapChallengeMode:SetScale(0.8)
+MiniMapChallengeMode:SetPoint("TOP",Minimap,"TOP",0,-10)
+MiniMapChallengeMode:SetScale(0.6)
 
 --QueueStatusMinimapButton (lfi)
 QueueStatusMinimapButton:SetParent(Minimap)
-QueueStatusMinimapButton:SetScale(0.8)
+QueueStatusMinimapButton:SetScale(1)
 QueueStatusMinimapButton:ClearAllPoints()
-QueueStatusMinimapButton:SetPoint("BOTTOMLEFT",Minimap,-1,-1)
+QueueStatusMinimapButton:SetPoint("BOTTOMLEFT",Minimap,0,0)
 QueueStatusMinimapButtonBorder:Hide()
 QueueStatusMinimapButton:SetHighlightTexture (nil)
 QueueStatusMinimapButton:SetPushedTexture(nil)
@@ -72,7 +73,7 @@ QueueStatusMinimapButton:SetPushedTexture(nil)
 
 --mail
 MiniMapMailFrame:ClearAllPoints()
-MiniMapMailFrame:SetPoint("BOTTOMRIGHT",Minimap,3,-3)
+MiniMapMailFrame:SetPoint("BOTTOMRIGHT",Minimap,-0,0)
 MiniMapMailIcon:SetTexture(mediapath.."mail")
 MiniMapMailBorder:SetTexture("Interface\\Calendar\\EventNotificationGlow")
 MiniMapMailBorder:SetBlendMode("ADD")
@@ -83,9 +84,9 @@ MiniMapMailBorder:SetAlpha(0.5)
 
 --MiniMapTracking
 MiniMapTracking:SetParent(Minimap)
-MiniMapTracking:SetScale(0.9)
+MiniMapTracking:SetScale(1)
 MiniMapTracking:ClearAllPoints()
-MiniMapTracking:SetPoint("TOPLEFT",Minimap,1,-1)
+MiniMapTracking:SetPoint("TOPLEFT",Minimap,5,-5)
 MiniMapTrackingButton:SetHighlightTexture (nil)
 MiniMapTrackingButton:SetPushedTexture(nil)
 MiniMapTrackingBackground:Hide()
@@ -100,16 +101,15 @@ MinimapNorthTag:SetAlpha(0)
 LoadAddOn("Blizzard_TimeManager")
 TimeManagerClockButton:GetRegions():Hide()
 TimeManagerClockButton:ClearAllPoints()
-TimeManagerClockButton:SetPoint("BOTTOM",-2,0)
-TimeManagerClockTicker:SetFont(STANDARD_TEXT_FONT,9,"OUTLINE")
+TimeManagerClockButton:SetPoint("BOTTOM",0,5)
+TimeManagerClockTicker:SetFont(STANDARD_TEXT_FONT,12,"OUTLINE")
 TimeManagerClockTicker:SetTextColor(0.8,0.8,0.6,1)
 
 --GameTimeFrame
-local gtfscale = 0.4
 GameTimeFrame:SetParent(Minimap)
-GameTimeFrame:SetScale(gtfscale)
+GameTimeFrame:SetScale(0.6)
 GameTimeFrame:ClearAllPoints()
-GameTimeFrame:SetPoint("TOPRIGHT",Minimap,-7/gtfscale,-6/gtfscale)
+GameTimeFrame:SetPoint("TOPRIGHT",Minimap,-18,-18)
 GameTimeFrame:SetHitRectInsets(0, 0, 0, 0)
 GameTimeFrame:GetNormalTexture():SetTexCoord(0,1,0,1)
 GameTimeFrame:SetNormalTexture(mediapath.."calendar")
@@ -117,8 +117,8 @@ GameTimeFrame:SetPushedTexture(nil)
 GameTimeFrame:SetHighlightTexture (nil)
 local fs = GameTimeFrame:GetFontString()
 fs:ClearAllPoints()
-fs:SetPoint("BOTTOM",0,2.2/gtfscale)
-fs:SetFont(STANDARD_TEXT_FONT,7/gtfscale)
+fs:SetPoint("CENTER",0,-5)
+fs:SetFont(STANDARD_TEXT_FONT,20)
 fs:SetTextColor(0.2,0.2,0.1,0.9)
 
 --zoom

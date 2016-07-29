@@ -1,8 +1,8 @@
 
--- rButtonTemplate_Zork: theme
+-- rButtonTemplate_Default: theme
 -- zork, 2016
 
--- Zork's Button Theme for rButtonTemplate
+-- Default Button Theme for rButtonTemplate
 
 -----------------------------
 -- Variables

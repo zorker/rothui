@@ -215,8 +215,9 @@ function rButtonTemplate:StyleExtraActionButton(cfg)
   --cooldown
   SetupCooldown(cooldown,cfg.cooldown)
 
-  --hotkey+count+name
+  --hotkey, count
   SetupFontString(hotkey,cfg.hotkey)
+  SetupFontString(count,cfg.count)
 
   button.__styled = true
 end

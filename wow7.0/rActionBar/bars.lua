@@ -15,7 +15,7 @@ local A, L = ...
 --BagBar
 function rActionBar:CreateBagBar(addonName,cfg)
   cfg.blizzardBar = nil
-  cfg.frameName = (addonName or A).."BagBar"
+  cfg.frameName = addonName.."BagBar"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle] hide; show"
@@ -26,7 +26,7 @@ end
 --MicroMenuBar
 function rActionBar:CreateMicroMenuBar(addonName,cfg)
   cfg.blizzardBar = nil
-  cfg.frameName = (addonName or A).."MicroMenuBar"
+  cfg.frameName = addonName.."MicroMenuBar"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle] hide; show"
@@ -56,98 +56,99 @@ end
 function rActionBar:CreateActionBar1(addonName,cfg)
   L:HideMainMenuBar()
   cfg.blizzardBar = nil
-  cfg.frameName = (addonName or A).."Bar1"
+  cfg.frameName = addonName.."Bar1"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle] hide; show"
-  cfg.buttonName = "ActionButton"
-  cfg.numButtons = NUM_ACTIONBAR_BUTTONS
-  local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
+  cfg.actionPage = cfg.actionPage or "[overridebar]14;[shapeshift]13;[vehicleui]12;[possessbar]12;[bonusbar:5]11;[bonusbar:4]10;[bonusbar:3]9;[bonusbar:2]8;[bonusbar:1]7;[bar:6]6;[bar:5]5;[bar:4]4;[bar:3]3;[bar:2]2;1"
+  local buttonName = "ActionButton"
+  local numButtons = NUM_ACTIONBAR_BUTTONS
+  local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --_onstate-page state driver
   for i, button in next, buttonList do
-    frame:SetFrameRef(cfg.buttonName..i, button)
+    frame:SetFrameRef(buttonName..i, button)
   end
   frame:Execute(([[
     buttons = table.new()
     for i=1, %d do
       table.insert(buttons, self:GetFrameRef("%s"..i))
     end
-  ]]):format(cfg.numButtons, cfg.buttonName))
+  ]]):format(numButtons, buttonName))
   frame:SetAttribute("_onstate-page", [[
     print("_onstate-page","index",newstate)
     for i, button in next, buttons do
       button:SetAttribute("actionpage", newstate)
     end
   ]])
-  RegisterStateDriver(frame, "page", "[overridebar]14;[shapeshift]13;[vehicleui]12;[possessbar]12;[bonusbar:5]11;[bonusbar:4]10;[bonusbar:3]9;[bonusbar:2]8;[bonusbar:1]7;[bar:6]6;[bar:5]5;[bar:4]4;[bar:3]3;[bar:2]2;1")
+  RegisterStateDriver(frame, "page", cfg.actionPage)
 end
 
 --Bar2
 function rActionBar:CreateActionBar2(addonName,cfg)
   cfg.blizzardBar = MultiBarBottomLeft
-  cfg.frameName = (addonName or A).."Bar2"
+  cfg.frameName = addonName.."Bar2"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-  cfg.buttonName = "MultiBarBottomLeftButton"
-  cfg.numButtons = NUM_ACTIONBAR_BUTTONS
-  local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
+  local buttonName = "MultiBarBottomLeftButton"
+  local numButtons = NUM_ACTIONBAR_BUTTONS
+  local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
 end
 
 --Bar3
 function rActionBar:CreateActionBar3(addonName,cfg)
   cfg.blizzardBar = MultiBarBottomRight
-  cfg.frameName = (addonName or A).."Bar3"
+  cfg.frameName = addonName.."Bar3"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-  cfg.buttonName = "MultiBarBottomRightButton"
-  cfg.numButtons = NUM_ACTIONBAR_BUTTONS
-  local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
+  local buttonName = "MultiBarBottomRightButton"
+  local numButtons = NUM_ACTIONBAR_BUTTONS
+  local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
 end
 
 --Bar4
 function rActionBar:CreateActionBar4(addonName,cfg)
   cfg.blizzardBar = MultiBarRight
-  cfg.frameName = (addonName or A).."Bar4"
+  cfg.frameName = addonName.."Bar4"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-  cfg.buttonName = "MultiBarRightButton"
-  cfg.numButtons = NUM_ACTIONBAR_BUTTONS
-  local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
+  local buttonName = "MultiBarRightButton"
+  local numButtons = NUM_ACTIONBAR_BUTTONS
+  local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
 end
 
 --Bar5
 function rActionBar:CreateActionBar5(addonName,cfg)
   cfg.blizzardBar = MultiBarLeft
-  cfg.frameName = (addonName or A).."Bar5"
+  cfg.frameName = addonName.."Bar5"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-  cfg.buttonName = "MultiBarLeftButton"
-  cfg.numButtons = NUM_ACTIONBAR_BUTTONS
-  local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
+  local buttonName = "MultiBarLeftButton"
+  local numButtons = NUM_ACTIONBAR_BUTTONS
+  local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
 end
 
 --StanceBar
 function rActionBar:CreateStanceBar(addonName,cfg)
   cfg.blizzardBar = StanceBarFrame
-  cfg.frameName = (addonName or A).."StanceBar"
+  cfg.frameName = addonName.."StanceBar"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
-  cfg.buttonName = "StanceButton"
-  cfg.numButtons = NUM_STANCE_SLOTS
+  local buttonName = "StanceButton"
+  local numButtons = NUM_STANCE_SLOTS
   --delay bar creation until we know for sure that the character has any stances
   local function OnLogin(...)
     if GetNumShapeshiftForms() == 0 then return end
-    local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
+    local buttonList = L:GetButtonList(buttonName, numButtons)
     local frame = L:CreateButtonFrame(cfg,buttonList)
   end
   rLib:RegisterCallback("PLAYER_LOGIN", OnLogin)
@@ -160,13 +161,13 @@ end
 --PetBar
 function rActionBar:CreatePetBar(addonName,cfg)
   cfg.blizzardBar = PetActionBarFrame
-  cfg.frameName = (addonName or A).."PetBar"
+  cfg.frameName = addonName.."PetBar"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [pet] show; hide"
-  cfg.buttonName = "PetActionButton"
-  cfg.numButtons = NUM_PET_ACTION_SLOTS
-  local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
+  local buttonName = "PetActionButton"
+  local numButtons = NUM_PET_ACTION_SLOTS
+  local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --special
   SlidingActionBarTexture0:SetTexture(nil)
@@ -176,13 +177,13 @@ end
 --ExtraBar
 function rActionBar:CreateExtraBar(addonName,cfg)
   cfg.blizzardBar = ExtraActionBarFrame
-  cfg.frameName = (addonName or A).."ExtraBar"
+  cfg.frameName = addonName.."ExtraBar"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[extrabar] show; hide"
-  cfg.buttonName = "ExtraActionButton"
-  cfg.numButtons = NUM_ACTIONBAR_BUTTONS
-  local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
+  local buttonName = "ExtraActionButton"
+  local numButtons = NUM_ACTIONBAR_BUTTONS
+  local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --special
   ExtraActionBarFrame.ignoreFramePositionManager = true
@@ -191,7 +192,7 @@ end
 --VehicleExitBar
 function rActionBar:CreateVehicleExitBar(addonName,cfg)
   cfg.blizzardBar = nil
-  cfg.frameName = (addonName or A).."VehicleExitBar"
+  cfg.frameName = addonName.."VehicleExitBar"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[canexitvehicle] show; hide"
@@ -202,20 +203,14 @@ end
 --PossessExitBar, this is the two button bar to cancel a possess in progress
 function rActionBar:CreatePossessExitBar(addonName,cfg)
   cfg.blizzardBar = PossessBarFrame
-  cfg.frameName = (addonName or A).."PossessExitBar"
+  cfg.frameName = addonName.."PossessExitBar"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[possessbar] show; hide"
-  cfg.buttonName = "PossessButton"
-  cfg.numButtons = NUM_POSSESS_SLOTS
-  local buttonList = L:GetButtonList(cfg.buttonName, cfg.numButtons)
+  local buttonName = "PossessButton"
+  local numButtons = NUM_POSSESS_SLOTS
+  local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
-  --frame test
-  local t = frame:CreateTexture(nil,"BACKGROUND",nil,-8)
-  t:SetAllPoints()
-  t:SetColorTexture(1,1,1)
-  t:SetVertexColor(0,1,0)
-  t:SetAlpha(0.3)
   --special
   PossessBackground1:SetTexture(nil)
   PossessBackground2:SetTexture(nil)

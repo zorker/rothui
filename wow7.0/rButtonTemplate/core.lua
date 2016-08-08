@@ -113,7 +113,7 @@ local function SetupFontString(fontString,cfg)
 end
 
 local function SetupCooldown(cooldown,cfg)
-  if not cfg then return end
+  if not cooldown or not cfg then return end
   ApplyPoints(cooldown, cfg.points)
 end
 

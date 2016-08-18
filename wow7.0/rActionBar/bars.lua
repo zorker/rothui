@@ -41,11 +41,8 @@ function rActionBar:CreateMicroMenuBar(addonName,cfg)
       end
     end
   end
-  --achievement micro button has wrong alpha on first login when buttons are reparented to early, delay bar creation
-  local function OnLogin(...)
-    local frame = L:CreateButtonFrame(cfg,buttonList)
-  end
-  rLib:RegisterCallback("PLAYER_LOGIN", OnLogin)
+  --achievement micro button has wrong alpha on first login when buttons are reparented to early, delay bar setup
+  local frame = L:CreateButtonFrame(cfg,buttonList,true)
   --special
   PetBattleFrame.BottomFrame.MicroButtonFrame:SetScript("OnShow", nil)
   OverrideActionBar:SetScript("OnShow", nil)
@@ -145,11 +142,13 @@ function rActionBar:CreateStanceBar(addonName,cfg)
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; show"
   local buttonName = "StanceButton"
   local numButtons = NUM_STANCE_SLOTS
-  --delay bar creation until we know for sure that the character has any stances
+  local buttonList = L:GetButtonList(buttonName, numButtons)
+  local frame = L:CreateButtonFrame(cfg,buttonList)
   local function OnLogin(...)
-    if GetNumShapeshiftForms() == 0 then return end
-    local buttonList = L:GetButtonList(buttonName, numButtons)
-    local frame = L:CreateButtonFrame(cfg,buttonList)
+    --no stances? be gone!
+    if GetNumShapeshiftForms() == 0 then
+      RegisterStateDriver(frame, "visibility", "hide")
+    end
   end
   rLib:RegisterCallback("PLAYER_LOGIN", OnLogin)
   --special

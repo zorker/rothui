@@ -114,7 +114,8 @@ function L:CreateButtonFrame(cfg,buttonList,delaySetup)
     cfg.blizzardBar:EnableMouse(false)
   end
   --show/hide the frame on a given state driver
-  if cfg.frameVisibility and cfg.frameVisibility ~= "show" then
+  if cfg.frameVisibility then
+    frame.frameVisibility = cfg.frameVisibility
     RegisterStateDriver(frame, "visibility", cfg.frameVisibility)
   end
   --add drag functions

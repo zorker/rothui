@@ -107,6 +107,9 @@ end
 function L:UnlockFrame(frame)
   if not frame then return end
   if not frame:IsUserPlaced() then return end
+  if frame.frameVisibility then
+    RegisterStateDriver(frame, "visibility", "show")
+  end
   frame.dragFrame:Show()
 end
 
@@ -114,6 +117,9 @@ end
 function L:LockFrame(frame)
   if not frame then return end
   if not frame:IsUserPlaced() then return end
+  if frame.frameVisibility then
+    RegisterStateDriver(frame, "visibility", frame.frameVisibility)
+  end
   frame.dragFrame:Hide()
 end
 

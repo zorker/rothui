@@ -35,14 +35,16 @@ end
 
 local function OnShow(self)
   local frame = self:GetParent()
-  if not frame.fader then return end
-  L:StartFadeIn(frame)
+  if frame.fader then
+    L:StartFadeIn(frame)
+  end
 end
 
 local function OnHide(self)
   local frame = self:GetParent()
-  if not frame.fader then return end
-  L:StartFadeOut(frame)
+  if frame.fader then
+    L:StartFadeOut(frame)
+  end
 end
 
 --rLib:CreateDragFrame

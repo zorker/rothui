@@ -142,6 +142,7 @@ actionButtonConfig.name = {
     {"BOTTOMLEFT", 0, 0 },
     {"BOTTOMRIGHT", 0, 0 },
   },
+  alpha = 0,
 }
 
 --hotkey
@@ -151,7 +152,7 @@ actionButtonConfig.hotkey = {
     {"TOPRIGHT", 0, 0 },
     {"TOPLEFT", 0, 0 },
   },
-  --alpha = 0,
+  alpha = 0,
 }
 
 --count
@@ -175,6 +176,7 @@ itemButtonConfig.backdrop = copyTable(actionButtonConfig.backdrop)
 itemButtonConfig.icon = copyTable(actionButtonConfig.icon)
 itemButtonConfig.count = copyTable(actionButtonConfig.count)
 itemButtonConfig.stock = copyTable(actionButtonConfig.name)
+itemButtonConfig.stock.alpha = 1
 itemButtonConfig.border = { file = "" }
 itemButtonConfig.normalTexture = copyTable(actionButtonConfig.normalTexture)
 
@@ -207,7 +209,9 @@ auraButtonConfig.border.texCoord = {0,1,0,1} --fix the settexcoord on debuff bor
 auraButtonConfig.normalTexture = copyTable(actionButtonConfig.normalTexture)
 auraButtonConfig.count = copyTable(actionButtonConfig.count)
 auraButtonConfig.duration = copyTable(actionButtonConfig.hotkey)
+auraButtonConfig.duration.alpha = 1
 auraButtonConfig.symbol = copyTable(actionButtonConfig.name)
+auraButtonConfig.symbol.alpha = 1
 
 --fix blizzard time abbrev
 HOUR_ONELETTER_ABBR = "%dh"

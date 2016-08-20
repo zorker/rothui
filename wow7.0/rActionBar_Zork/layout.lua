@@ -64,13 +64,13 @@ rActionBar:CreateMicroMenuBar(A, micromenubar)
 -----------------------------
 
 local bar1 = {
-  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 10 },
+  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 150 },
   frameScale      = 1,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
   buttonMargin    = 5,
-  numCols         = 12,
+  numCols         = 6,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
 }
@@ -82,7 +82,7 @@ rActionBar:CreateActionBar1(A, bar1)
 -----------------------------
 
 local bar2 = {
-  framePoint      = { "BOTTOM", A.."Bar1", "TOP", 0, 0 },
+  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 10 },
   frameScale      = 1,
   framePadding    = 5,
   buttonWidth     = 32,

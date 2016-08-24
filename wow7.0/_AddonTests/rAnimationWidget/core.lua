@@ -19,16 +19,18 @@ local f = CreateFrame("Frame", nil, UIParent)
 
 --texture
 local t1 = f:CreateTexture(nil, "BACKGROUND", nil, -8)
-t1:SetTexture(1,1,1)
+t1:SetColorTexture(1,1,1)
 t1:SetVertexColor(0,1,1)
 t1:SetPoint("CENTER", UIParent, -256, 0)
-t1:SetSize(64,64)
+t1:SetSize(8,64)
 
 --create animation (rotation)
 t1.ag = t1:CreateAnimationGroup()
 t1.ag.a1 = t1.ag:CreateAnimation("Rotation")
-t1.ag.a1:SetDegrees(-45)
-t1.ag.a1:SetDuration(2)
+t1.ag.a1:SetDegrees(-360)
+t1.ag.a1:SetDuration(0.3)
+t1.ag.a1:SetSmoothing("IN_OUT")
+t1.ag.a1:SetOrigin("BOTTOMLEFT", 20, 20)
 t1.ag:SetLooping("REPEAT")
 t1.ag:Play()
 
@@ -150,6 +152,7 @@ f2.ag.a1 = f2.ag:CreateAnimation("Alpha")
 f2.ag.a1:SetFromAlpha(1)
 f2.ag.a1:SetToAlpha(0)
 f2.ag.a1:SetDuration(2)
+f2.ag.a1:SetSmoothing("OUT")
 f2.ag.a2 = f2.ag:CreateAnimation("Scale")
 f2.ag.a2:SetFromScale(0.3,0.3) --x and y scaling factor
 f2.ag.a2:SetToScale(1.5,2) --x and y scaling factor

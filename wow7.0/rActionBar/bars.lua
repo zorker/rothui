@@ -64,6 +64,10 @@ function rActionBar:CreateActionBar1(addonName,cfg)
   local frame = L:CreateButtonFrame(cfg,buttonList)
   --fix the button grid for actionbar1
   local function ToggleButtonGrid()
+    if InCombatLockdown() then
+      print("Grid toggle for actionbar1 is not possible in combat.")
+      return
+    end
     local showgrid = tonumber(GetCVar("alwaysShowActionBars"))
     for i, button in next, buttonList do
       button:SetAttribute("showgrid", showgrid)

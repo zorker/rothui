@@ -73,7 +73,7 @@ function rActionBar:CreateActionBar1(addonName,cfg)
     end
   ]]):format(numButtons, buttonName))
   frame:SetAttribute("_onstate-page", [[
-    print("_onstate-page","index",newstate)
+    --print("_onstate-page","index",newstate)
     for i, button in next, buttons do
       button:SetAttribute("actionpage", newstate)
     end

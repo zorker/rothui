@@ -235,7 +235,16 @@ rActionBar:CreateVehicleExitBar(A, vehicleexitbar)
 -- PossessExitBar
 -----------------------------
 
-local possessexitbar = vehicleexitbar
-possessexitbar.frameVisibility = nil --need to reset the value that is given to vehicleexitbar
+local possessexitbar = {
+  framePoint      = { "BOTTOMLEFT", A.."Bar1", "BOTTOMRIGHT", 5, 0 },
+  frameScale      = 1,
+  framePadding    = 5,
+  buttonWidth     = 32,
+  buttonHeight    = 32,
+  buttonMargin    = 5,
+  numCols         = 1,
+  startPoint      = "BOTTOMLEFT",
+  fader           = nil,
+}
 --create
 rActionBar:CreatePossessExitBar(A, possessexitbar)

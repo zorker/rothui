@@ -200,11 +200,11 @@ rActionBar:CreatePetBar(A, petbar)
 -----------------------------
 
 local extrabar = {
-  framePoint      = { "BOTTOMRIGHT", A.."Bar1", "BOTTOMLEFT", -5, 0 },
+  framePoint      = { "RIGHT", A.."Bar1", "LEFT", -5, 0 },
   frameScale      = 1,
   framePadding    = 5,
-  buttonWidth     = 32,
-  buttonHeight    = 32,
+  buttonWidth     = 36,
+  buttonHeight    = 36,
   buttonMargin    = 5,
   numCols         = 1,
   startPoint      = "BOTTOMLEFT",
@@ -218,11 +218,11 @@ rActionBar:CreateExtraBar(A, extrabar)
 -----------------------------
 
 local vehicleexitbar = {
-  framePoint      = { "BOTTOMLEFT", A.."Bar1", "BOTTOMRIGHT", 5, 0 },
+  framePoint      = { "LEFT", A.."Bar1", "RIGHT", 5, 0 },
   frameScale      = 1,
   framePadding    = 5,
-  buttonWidth     = 32,
-  buttonHeight    = 32,
+  buttonWidth     = 36,
+  buttonHeight    = 36,
   buttonMargin    = 5,
   numCols         = 1,
   startPoint      = "BOTTOMLEFT",

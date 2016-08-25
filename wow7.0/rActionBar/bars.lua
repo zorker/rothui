@@ -62,6 +62,15 @@ function rActionBar:CreateActionBar1(addonName,cfg)
   local numButtons = NUM_ACTIONBAR_BUTTONS
   local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
+  --fix the button grid for actionbar1
+  local function ToggleButtonGrid()
+    local showgrid = tonumber(GetCVar("alwaysShowActionBars"))
+    for i, button in next, buttonList do
+      button:SetAttribute("showgrid", showgrid)
+      ActionButton_ShowGrid(button)
+    end
+  end
+  hooksecurefunc("MultiActionBar_UpdateGridVisibility", ToggleButtonGrid)
   --_onstate-page state driver
   for i, button in next, buttonList do
     frame:SetFrameRef(buttonName..i, button)
@@ -144,13 +153,6 @@ function rActionBar:CreateStanceBar(addonName,cfg)
   local numButtons = NUM_STANCE_SLOTS
   local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
-  local function OnLogin(...)
-    --no stances? be gone!
-    if GetNumShapeshiftForms() == 0 then
-      RegisterStateDriver(frame, "visibility", "hide")
-    end
-  end
-  rLib:RegisterCallback("PLAYER_LOGIN", OnLogin)
   --special
   StanceBarLeft:SetTexture(nil)
   StanceBarMiddle:SetTexture(nil)

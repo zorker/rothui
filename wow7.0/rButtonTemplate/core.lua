@@ -19,9 +19,9 @@ rButtonTemplate.addonName = A
 -- Init
 -----------------------------
 
-local function CallElementFunction(element, func, ...)
-  if element and func and element[func] then
-    element[func](element, ...)
+local function CallButtonFunctionByName(button, func, ...)
+  if button and func and button[func] then
+    button[func](button, ...)
   end
 end
 
@@ -90,18 +90,18 @@ local function ApplyNormalTexture(button,file)
   hooksecurefunc(button, "SetNormalTexture", ResetNormalTexture)
 end
 
-local function SetupTexture(texture,cfg,fileFunc,fileObj)
+local function SetupTexture(texture,cfg,func,button)
   if not texture or not cfg then return end
   ApplyTexCoord(texture,cfg.texCoord)
   ApplyPoints(texture,cfg.points)
   ApplyVertexColor(texture,cfg.color)
   ApplyAlpha(texture,cfg.alpha)
-  if fileFunc == "SetTexture" then
+  if func == "SetTexture" then
     ApplyTexture(texture,cfg.file)
-  elseif fileFunc == "SetNormalTexture" then
-    ApplyNormalTexture(fileObj,cfg.file)
+  elseif func == "SetNormalTexture" then
+    ApplyNormalTexture(button,cfg.file)
   elseif cfg.file then
-    CallObjectFunction(fileObj,fileFunc,cfg.file)
+    CallButtonFunctionByName(button,func,cfg.file)
   end
 end
 
@@ -113,7 +113,7 @@ local function SetupFontString(fontString,cfg)
 end
 
 local function SetupCooldown(cooldown,cfg)
-  if not cfg then return end
+  if not cooldown or not cfg then return end
   ApplyPoints(cooldown, cfg.points)
 end
 
@@ -215,8 +215,9 @@ function rButtonTemplate:StyleExtraActionButton(cfg)
   --cooldown
   SetupCooldown(cooldown,cfg.cooldown)
 
-  --hotkey+count+name
+  --hotkey, count
   SetupFontString(hotkey,cfg.hotkey)
+  SetupFontString(count,cfg.count)
 
   button.__styled = true
 end
@@ -280,4 +281,75 @@ function rButtonTemplate:StyleAllActionButtons(cfg)
   for i=1, NUM_POSSESS_SLOTS do
     rButtonTemplate:StyleActionButton(_G["PossessButton"..i],cfg)
   end
+end
+
+function rButtonTemplate:StyleAuraButton(button, cfg)
+  if not button then return end
+  if button.__styled then return end
+
+  local buttonName = button:GetName()
+  local icon = _G[buttonName.."Icon"]
+  local count = _G[buttonName.."Count"]
+  local duration = _G[buttonName.."Duration"]
+  local border = _G[buttonName.."Border"]
+  local symbol = button.symbol
+
+  --backdrop
+  SetupBackdrop(button,cfg.backdrop)
+
+  --textures
+  SetupTexture(icon,cfg.icon,"SetTexture",icon)
+  SetupTexture(border,cfg.border,"SetTexture",border)
+
+  --create a normal texture on the aura button
+  if cfg.normalTexture and cfg.normalTexture.file then
+    button:SetNormalTexture(cfg.normalTexture.file)
+    local normalTexture = button:GetNormalTexture()
+    SetupTexture(normalTexture,cfg.normalTexture,"SetNormalTexture",button)
+  end
+
+  --count,duration,symbol
+  SetupFontString(count,cfg.count)
+  SetupFontString(duration,cfg.duration)
+  SetupFontString(symbol,cfg.symbol)
+
+  button.__styled = true
+end
+
+--style player BuffFrame buff buttons
+local buffButtonIndex = 1
+function rButtonTemplate:StyleBuffButtons(cfg)
+  local function UpdateBuffButtons()
+    if buffButtonIndex > BUFF_MAX_DISPLAY then return end
+    for i = buffButtonIndex, BUFF_MAX_DISPLAY do
+      local button = _G["BuffButton"..i]
+      if not button then break end
+      rButtonTemplate:StyleAuraButton(button, cfg)
+      if button.__styled then buffButtonIndex = i+1 end
+    end
+  end
+  hooksecurefunc("BuffFrame_UpdateAllBuffAnchors", UpdateBuffButtons)
+end
+
+--style player BuffFrame debuff buttons
+function rButtonTemplate:StyleDebuffButtons(cfg)
+  local function UpdateDebuffButton(buttonName, i)
+    local button = _G["DebuffButton"..i]
+    rButtonTemplate:StyleAuraButton(button, cfg)
+  end
+  hooksecurefunc("DebuffButton_UpdateAnchors", UpdateDebuffButton)
+end
+
+--style player TempEnchant buttons
+function rButtonTemplate:StyleTempEnchants(cfg)
+  rButtonTemplate:StyleAuraButton(TempEnchant1, cfg)
+  rButtonTemplate:StyleAuraButton(TempEnchant2, cfg)
+  rButtonTemplate:StyleAuraButton(TempEnchant3, cfg)
+end
+
+--style all aura buttons
+function rButtonTemplate:StyleAllAuraButtons(cfg)
+  rButtonTemplate:StyleBuffButtons(cfg)
+  rButtonTemplate:StyleDebuffButtons(cfg)
+  rButtonTemplate:StyleTempEnchants(cfg)
 end

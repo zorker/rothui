@@ -9,6 +9,13 @@
 local A, L = ...
 
 -----------------------------
+-- SetCVar
+-----------------------------
+
+SetCVar("namePlateMinScale", 1)
+SetCVar("namePlateMaxScale", 1)
+
+-----------------------------
 -- Options
 -----------------------------
 
@@ -29,9 +36,9 @@ local options = {
   --considerSelectionInCombatAsHostile = false,
   --colorNameWithExtendedColors = true,
   --colorHealthWithExtendedColors = true,
-  selectedBorderColor = false,
+  selectedBorderColor = CreateColor(0, 0, 0, 0.8),
   tankBorderColor = false,
-  defaultBorderColor = CreateColor(0, 0, 0, 0.2),
+  defaultBorderColor = CreateColor(0, 0, 0, 0.5),
   showClassificationIndicator = false,
 }
 
@@ -48,13 +55,13 @@ end
 --SetupNamePlate
 local function SetupNamePlate(frame, setupOptions, frameOptions)
   --frame.healthBar:SetStatusBarTexture(mediapath.."statusbar")
-  frame.castBar:SetStatusBarTexture(mediapath.."statusbar")
+  --frame.castBar:SetStatusBarTexture(mediapath.."statusbar")
   if GetCVar("NamePlateVerticalScale") == "1" then
     frame.castBar:SetHeight(11)
     frame.castBar.Icon:SetTexCoord(0.1,0.9,0.1,0.9)
     frame.castBar.Icon:SetSize(17,17)
     frame.castBar.Icon:ClearAllPoints()
-    frame.castBar.Icon:SetPoint("BOTTOMRIGHT",frame.castBar,"BOTTOMLEFT")
+    frame.castBar.Icon:SetPoint("BOTTOMRIGHT",frame.castBar,"BOTTOMLEFT",-2,0)
   end
 end
 hooksecurefunc("DefaultCompactNamePlateFrameSetupInternal", SetupNamePlate)

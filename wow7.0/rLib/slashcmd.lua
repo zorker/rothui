@@ -19,11 +19,11 @@ function rLib:CreateSlashCmd(addonName, shortcut, frames, color)
   if not addonName or not shortcut or not frames then return end
   SlashCmdList[shortcut] = function(cmd)
     if (cmd:match"unlock") then
-      L:UnlockFrames(frames, addonName..": frames unlocked")
+      L:UnlockFrames(frames, "|c"..(color or defaultColor)..addonName.."|r frames unlocked")
     elseif (cmd:match"lock") then
-      L:LockFrames(frames, addonName..": frames locked")
+      L:LockFrames(frames, "|c"..(color or defaultColor)..addonName.."|r frames locked")
     elseif (cmd:match"reset") then
-      L:ResetFrames(frames, addonName..": frames reseted")
+      L:ResetFrames(frames, "|c"..(color or defaultColor)..addonName.."|r frames reset")
     else
       print("|c"..(color or defaultColor)..addonName.." command list:|r")
       print("|c"..(color or defaultColor).."\/"..shortcut.." lock|r, to lock all frames")

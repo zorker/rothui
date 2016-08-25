@@ -20,6 +20,22 @@ rLib.addonName = A
 -- Functions
 -----------------------------
 
+--rLib:CopyTable
+function rLib:CopyTable(orig)
+  local orig_type = type(orig)
+  local copy
+  if orig_type == 'table' then
+    copy = {}
+    for orig_key, orig_value in next, orig, nil do
+      copy[copyTable(orig_key)] = copyTable(orig_value)
+    end
+    setmetatable(copy, copyTable(getmetatable(orig)))
+  else -- number, string, boolean, etc
+    copy = orig
+  end
+  return copy
+end
+
 --rLib:RegisterCallback
 function rLib:RegisterCallback(event, callback, ...)
   if not self.eventFrame then
@@ -67,8 +83,8 @@ end
 function L:ResetPoint(frame)
   if not frame then return end
   if not frame.defaultPoint then return end
+  if InCombatLockdown() then return end
   local point = frame.defaultPoint
-  if InCombatLockdown() then return end --sorry not in combat
   frame:ClearAllPoints()
   if point.af and point.a2 then
     frame:SetPoint(point.a1 or "CENTER", point.af, point.a2, point.x or 0, point.y or 0)
@@ -83,7 +99,7 @@ end
 function L:ResetSize(frame)
   if not frame then return end
   if not frame.defaultSize then return end
-  if InCombatLockdown() then return end --sorry not in combat
+  if InCombatLockdown() then return end
   frame:SetSize(frame.defaultSize.w,frame.defaultSize.h)
 end
 
@@ -91,6 +107,9 @@ end
 function L:UnlockFrame(frame)
   if not frame then return end
   if not frame:IsUserPlaced() then return end
+  if frame.frameVisibility then
+    RegisterStateDriver(frame, "visibility", "show")
+  end
   frame.dragFrame:Show()
 end
 
@@ -98,31 +117,41 @@ end
 function L:LockFrame(frame)
   if not frame then return end
   if not frame:IsUserPlaced() then return end
+  if frame.frameVisibility then
+    RegisterStateDriver(frame, "visibility", frame.frameVisibility)
+  end
   frame.dragFrame:Hide()
 end
 
 --L:UnlockFrames
-function L:UnlockFrames(frames)
+function L:UnlockFrames(frames,str)
   if not frames then return end
   for idx, frame in next, frames do
     self:UnlockFrame(frame)
   end
+  print(str)
 end
 
 --L:LockFrames
-function L:LockFrames(frames)
+function L:LockFrames(frames,str)
   if not frames then return end
   for idx, frame in next, frames do
     self:LockFrame(frame)
   end
+  print(str)
 end
 
 --L:ResetFrames
-function L:ResetFrames(frames)
+function L:ResetFrames(frames,str)
   if not frames then return end
+  if InCombatLockdown() then
+    print("|c00FF0000ERROR:|r "..str.." not allowed while in combat!")
+    return
+  end
   for idx, frame in next, frames do
     self:ResetPoint(frame)
     self:ResetSize(frame)
   end
+  print(str)
 end
 

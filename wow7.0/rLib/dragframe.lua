@@ -12,9 +12,14 @@ local A, L = ...
 -- Functions
 -----------------------------
 
-local function OnDragStart(self)
+local function OnDragStart(self, button)
   if IsAltKeyDown() and IsShiftKeyDown() then
-    self:GetParent():StartMoving()
+    if button == "LeftButton" then
+      self:GetParent():StartMoving()
+    end
+    if button == "RightButton" then
+      self:GetParent():StartSizing()
+    end
   end
 end
 
@@ -25,7 +30,10 @@ end
 local function OnEnter(self)
   GameTooltip:SetOwner(self, "ANCHOR_TOP")
   GameTooltip:AddLine(self:GetParent():GetName(), 0, 1, 0.5, 1, 1, 1)
-  GameTooltip:AddLine("Hold down ALT+SHIFT to drag!", 1, 1, 1, 1, 1, 1)
+  GameTooltip:AddLine("Hold ALT+SHIFT+LeftButton to drag!", 1, 1, 1, 1, 1, 1)
+  if self:GetParent().__resizable then
+    GameTooltip:AddLine("Hold ALT+SHIFT+RightButton to resize!", 1, 1, 1, 1, 1, 1)
+  end
   GameTooltip:Show()
 end
 
@@ -35,14 +43,16 @@ end
 
 local function OnShow(self)
   local frame = self:GetParent()
-  if not frame.fader then return end
-  L:StartFadeIn(frame)
+  if frame.fader then
+    L:StartFadeIn(frame)
+  end
 end
 
 local function OnHide(self)
   local frame = self:GetParent()
-  if not frame.fader then return end
-  L:StartFadeOut(frame)
+  if frame.fader then
+    L:StartFadeOut(frame)
+  end
 end
 
 --rLib:CreateDragFrame
@@ -77,4 +87,13 @@ function rLib:CreateDragFrame(frame, frames, inset, clamp)
   frame:SetClampedToScreen(clamp or false)
   frame:SetMovable(true)
   frame:SetUserPlaced(true)
+end
+
+--rLib:CreateDragResizeFrame
+function rLib:CreateDragResizeFrame(frame, frames, inset, clamp)
+  if not frame or not frames then return end
+  rLib:CreateDragFrame(frame, frames, inset, clamp)
+  frame:SetResizable(true)
+  frame.__resizable = true
+  frame.dragFrame:RegisterForDrag("LeftButton","RightButton")
 end

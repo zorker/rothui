@@ -1,5 +1,5 @@
 
--- rActionBar: core
+-- rBuffFrame: core
 -- zork, 2016
 
 -----------------------------
@@ -10,26 +10,36 @@ local A, L = ...
 
 L.addonName       = A
 L.dragFrames      = {}
-L.addonColor      = "0000FF00"
-L.addonShortcut   = "rab"
+L.addonColor      = "0000FFFF"
+L.addonShortcut   = "rbf"
 
 -----------------------------
--- rActionBar Global
+-- Hide Blizzard BuffFrame
 -----------------------------
 
-rActionBar = {}
-rActionBar.addonName = A
+--local hiddenFrame = CreateFrame("Frame")
+--hiddenFrame:Hide()
+--BuffFrame:SetParent(hiddenFrame)
+
+-----------------------------
+-- rBuffFrame Global
+-----------------------------
+
+rBuffFrame = {}
+rBuffFrame.addonName = A
 
 -----------------------------
 -- Functions
 -----------------------------
 
-function L:GetButtonList(buttonName,numButtons)
-  local buttonList = {}
+local function GetButtonList(buttonName,numButtons,buttonList)
+  buttonList = buttonList or {}
   for i=1, numButtons do
     local button = _G[buttonName..i]
     if not button then break end
-    table.insert(buttonList, button)
+    if button:IsShown() then
+      table.insert(buttonList, button)
+    end
   end
   return buttonList
 end
@@ -40,9 +50,6 @@ end
 --3. p4, b-1, p5, bm3, bm4
 local function SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, p1, fp1, fp2, p2, p3, bm1, bm2, p4, p5, bm3, bm4)
   for index, button in next, buttonList do
-    if not frame.__blizzardBar then
-      button:SetParent(frame)
-    end
     button:SetSize(buttonWidth, buttonHeight)
     button:ClearAllPoints()
     if index == 1 then
@@ -57,8 +64,8 @@ end
 
 local function SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, buttonHeight, buttonMargin, numCols, startPoint)
   local numButtons = # buttonList
-  numCols = min(numButtons, numCols)
-  local numRows = ceil(numButtons/numCols)
+  numCols = max(min(numButtons, numCols),1)
+  local numRows = max(ceil(numButtons/numCols),1)
   local frameWidth = numCols*buttonWidth + (numCols-1)*buttonMargin + 2*framePadding
   local frameHeight = numRows*buttonHeight + (numRows-1)*buttonMargin + 2*framePadding
   frame:SetSize(frameWidth,frameHeight)
@@ -94,36 +101,45 @@ local function SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, bu
   end
 end
 
-function L:CreateButtonFrame(cfg,buttonList,delaySetup)
+function rBuffFrame:CreateBuffFrame(addonName,cfg)
+  cfg.frameName = addonName.."BuffFrame"
+  cfg.frameParent = cfg.frameParent or UIParent
+  cfg.frameTemplate = nil
   --create new parent frame for buttons
   local frame = CreateFrame("Frame", cfg.frameName, cfg.frameParent, cfg.frameTemplate)
   frame:SetPoint(unpack(cfg.framePoint))
   frame:SetScale(cfg.frameScale)
-  frame.__blizzardBar = cfg.blizzardBar
-  if delaySetup then
-    local function OnLogin(...)
-      SetupButtonFrame(frame, cfg.framePadding, buttonList, cfg.buttonWidth, cfg.buttonHeight, cfg.buttonMargin, cfg.numCols, cfg.startPoint)
-    end
-    rLib:RegisterCallback("PLAYER_LOGIN", OnLogin)
-  else
+  local function UpdateAllBuffAnchors()
+    --add temp enchant buttons
+    local buttonList = GetButtonList("TempEnchant",BuffFrame.numEnchants)
+    --add all other buff buttons
+    buttonList = GetButtonList("BuffButton",BUFF_MAX_DISPLAY,buttonList)
+    --adjust frame by button list
     SetupButtonFrame(frame, cfg.framePadding, buttonList, cfg.buttonWidth, cfg.buttonHeight, cfg.buttonMargin, cfg.numCols, cfg.startPoint)
   end
-  --reparent the Blizzard bar
-  if cfg.blizzardBar then
-    cfg.blizzardBar:SetParent(frame)
-    cfg.blizzardBar:EnableMouse(false)
-  end
-  --show/hide the frame on a given state driver
-  if cfg.frameVisibility then
-    frame.frameVisibility = cfg.frameVisibility
-    RegisterStateDriver(frame, "visibility", cfg.frameVisibility)
-  end
+  hooksecurefunc("BuffFrame_UpdateAllBuffAnchors", UpdateAllBuffAnchors)
   --add drag functions
   rLib:CreateDragFrame(frame, L.dragFrames, -2, true)
-  --hover animation
-  if cfg.fader then
-    rLib:CreateButtonFrameFader(frame, buttonList, cfg.fader)
+  return frame
+end
+
+function rBuffFrame:CreateDebuffFrame(addonName,cfg)
+  cfg.frameName = addonName.."DebuffFrame"
+  cfg.frameParent = cfg.frameParent or UIParent
+  cfg.frameTemplate = nil
+  --create new parent frame for buttons
+  local frame = CreateFrame("Frame", cfg.frameName, cfg.frameParent, cfg.frameTemplate)
+  frame:SetPoint(unpack(cfg.framePoint))
+  frame:SetScale(cfg.frameScale)
+  local function UpdateAllDebuffAnchors(buttonName, index)
+    --add all other debuff buttons
+    local buttonList = GetButtonList("DebuffButton",DEBUFF_MAX_DISPLAY)
+    --adjust frame by button list
+    SetupButtonFrame(frame, cfg.framePadding, buttonList, cfg.buttonWidth, cfg.buttonHeight, cfg.buttonMargin, cfg.numCols, cfg.startPoint)
   end
+  hooksecurefunc("DebuffButton_UpdateAnchors", UpdateAllDebuffAnchors)
+  --add drag functions
+  rLib:CreateDragFrame(frame, L.dragFrames, -2, true)
   return frame
 end
 

@@ -195,7 +195,13 @@ function rActionBar:CreateVehicleExitBar(addonName,cfg)
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[canexitvehicle] show; hide"
-  local buttonList = { OverrideActionBar.LeaveButton }
+  --create vehicle exit button
+  local button = CreateFrame("CHECKBUTTON", A.."VehicleExitButton", nil, "ActionButtonTemplate, SecureHandlerClickTemplate") --SecureActionButtonTemplate
+  button.cooldown:Hide()
+  button.icon:SetTexture("interface\\addons\\"..A.."\\media\\"..vehicleexit)
+  button:RegisterForClicks("AnyUp")
+  button:SetScript("OnClick", VehicleExit)
+  local buttonList = { button }
   local frame = L:CreateButtonFrame(cfg, buttonList)
 end
 

@@ -200,14 +200,18 @@ function rActionBar:CreateVehicleExitBar(addonName,cfg)
   cfg.frameName = addonName.."VehicleExitBar"
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
-  cfg.frameVisibility = cfg.frameVisibility or "[canexitvehicle] show; hide"
+  cfg.frameVisibility = cfg.frameVisibility or "[canexitvehicle]c;[mounted]m;n"
+  cfg.frameVisibilityFunc = "exit"
   --create vehicle exit button
   local button = CreateFrame("CHECKBUTTON", A.."VehicleExitButton", nil, "ActionButtonTemplate, SecureHandlerClickTemplate")
   button.icon:SetTexture("interface\\addons\\"..A.."\\media\\vehicleexit")
   button:RegisterForClicks("AnyUp")
-  button:SetScript("OnClick", function(self) VehicleExit() self:SetChecked(false) end)
+  button:SetScript("OnClick", function(self) if UnitOnTaxi("player") then TaxiRequestEarlyLanding() else VehicleExit() end self:SetChecked(false) end)
   local buttonList = { button }
   local frame = L:CreateButtonFrame(cfg, buttonList)
+  --[canexitvehicle] is not triggered on taxi, exit workaround
+  frame:SetAttribute("_onstate-exit", [[ if CanExitVehicle() then self:Show() else self:Hide() end ]])
+  if not CanExitVehicle() then frame:Hide() end
 end
 
 --PossessExitBar, this is the two button bar to cancel a possess in progress

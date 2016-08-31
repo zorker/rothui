@@ -19,7 +19,8 @@ L.addonShortcut   = "rot"
 
 local cfg = {
   scale = 1,
-  point = { "TOPRIGHT", -40, -200},
+  point = { "TOPRIGHT", -120, -220 },
+  size = { 260, 450 }
 }
 
 -----------------------------
@@ -30,6 +31,7 @@ local cfg = {
 ObjectiveTrackerFrame:SetScale(cfg.scale)
 ObjectiveTrackerFrame:ClearAllPoints()
 ObjectiveTrackerFrame:SetPoint(unpack(cfg.point))
+ObjectiveTrackerFrame:SetSize(unpack(cfg.size))
 
 --drag frame
 rLib:CreateDragResizeFrame(ObjectiveTrackerFrame, L.dragFrames, -2, true)

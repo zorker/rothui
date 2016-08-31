@@ -93,6 +93,7 @@ end
 function rLib:CreateDragResizeFrame(frame, frames, inset, clamp)
   if not frame or not frames then return end
   rLib:CreateDragFrame(frame, frames, inset, clamp)
+  frame.defaultSize = L:GetSize(frame)
   frame:SetResizable(true)
   frame.__resizable = true
   frame.dragFrame:RegisterForDrag("LeftButton","RightButton")

@@ -206,7 +206,10 @@ function rActionBar:CreateVehicleExitBar(addonName,cfg)
   local button = CreateFrame("CHECKBUTTON", A.."VehicleExitButton", nil, "ActionButtonTemplate, SecureHandlerClickTemplate")
   button.icon:SetTexture("interface\\addons\\"..A.."\\media\\vehicleexit")
   button:RegisterForClicks("AnyUp")
-  button:SetScript("OnClick", function(self) if UnitOnTaxi("player") then TaxiRequestEarlyLanding() else VehicleExit() end self:SetChecked(false) end)
+  local function OnClick(self)
+    if UnitOnTaxi("player") then TaxiRequestEarlyLanding() else VehicleExit() end self:SetChecked(false)
+  end
+  button:SetScript("OnClick", OnClick)
   local buttonList = { button }
   local frame = L:CreateButtonFrame(cfg, buttonList)
   --[canexitvehicle] is not triggered on taxi, exit workaround

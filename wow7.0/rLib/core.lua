@@ -123,7 +123,7 @@ function L:LockFrame(frame)
   if frame.frameVisibility then
     if frame.frameVisibilityFunc then
       UnregisterStateDriver(frame, "visibility")
-      --hack to make it refresh properly, otherwise if you have state n (no vehicle exit button) it would not update properly because the state n is still in place
+      --hack to make it refresh properly, otherwise if you had state n (no vehicle exit button) it would not update properly because the state n is still in place
       RegisterStateDriver(frame, frame.frameVisibilityFunc, "zorkwashere")
       RegisterStateDriver(frame, frame.frameVisibilityFunc, frame.frameVisibility)
     else

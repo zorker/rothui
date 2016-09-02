@@ -30,7 +30,7 @@ cfg.deadColor = {0.5,0.5,0.5}
 cfg.targetColor = {1,0.5,0.5}
 cfg.guildColor = {1,0,1}
 cfg.afkColor = {0,1,1}
-cfg.scale = 1
+cfg.scale = 0.95
 cfg.fontFamily = STANDARD_TEXT_FONT
 cfg.backdrop = { bgFile = "Interface\\Buttons\\WHITE8x8", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",  tiled = false, edgeSize = 16, insets = {left=3, right=3, top=3, bottom=3} }
 cfg.backdrop.bgColor = {0.08,0.08,0.1,0.92}
@@ -86,6 +86,7 @@ local function OnTooltipSetUnit(self)
     if reaction then
       local color = FACTION_BAR_COLORS[reaction]
       if color then
+        cfg.barColor = color
         GameTooltipStatusBar:SetStatusBarColor(color.r,color.g,color.b)
         GameTooltipTextLeft1:SetTextColor(color.r,color.g,color.b)
       end
@@ -106,6 +107,7 @@ local function OnTooltipSetUnit(self)
     local _, unitClass = UnitClass(unit)
     --color textleft1 and statusbar by class color
     local color = RAID_CLASS_COLORS[unitClass]
+    cfg.barColor = color
     GameTooltipStatusBar:SetStatusBarColor(color.r,color.g,color.b)
     GameTooltipTextLeft1:SetTextColor(color.r,color.g,color.b)
     --color textleft2 by guildcolor
@@ -121,7 +123,7 @@ local function OnTooltipSetUnit(self)
   end
   --dead?
   if UnitIsDeadOrGhost(unit) then
-    GameTooltipTextLeft1:SetTextColor(cfg.deadColor)
+    GameTooltipTextLeft1:SetTextColor(unpack(cfg.deadColor))
   end
   --target line
   if (UnitExists(unit.."target")) then
@@ -149,9 +151,17 @@ local function OnTooltipCleared(self)
   --print("OnTooltipCleared")
 end
 
+local function FixBarColor(self,r,g,b)
+  if not cfg.barColor then return end
+  if r == cfg.barColor.r and g == cfg.barColor.g and b == cfg.barColor.b then return end
+  self:SetStatusBarColor(cfg.barColor.r,cfg.barColor.g,cfg.barColor.b)
+end
+
 -----------------------------
 -- Init
 -----------------------------
+
+hooksecurefunc(GameTooltipStatusBar,"SetStatusBarColor", FixBarColor)
 
 --hex class colors
 for class, color in next, RAID_CLASS_COLORS do

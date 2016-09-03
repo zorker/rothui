@@ -26,6 +26,7 @@ cfg.bossColor = {1,0,0}
 cfg.eliteColor = {1,0,0.5}
 cfg.rareeliteColor = {1,0.5,0}
 cfg.rareColor = {1,0.5,0}
+cfg.levelColor = {0.8,0.8,0.5}
 cfg.deadColor = {0.5,0.5,0.5}
 cfg.targetColor = {1,0.5,0.5}
 cfg.guildColor = {1,0,1}
@@ -77,7 +78,9 @@ local function OnTooltipSetUnit(self)
   local raidIconIndex = GetRaidTargetIndex(unit)
   if raidIconIndex then
     --GameTooltipTextLeft1:SetText(("%s %s"):format(ICON_LIST[raidIconIndex].."14|t", unitName))
-    self:AppendText(" "..ICON_LIST[raidIconIndex].."14|t")
+    --self:AppendText(" "..ICON_LIST[raidIconIndex].."14|t")
+    GameTooltipTexture1:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_"..raidIconIndex)
+    GameTooltipTexture1:Show()
   end
   if not UnitIsPlayer(unit) then
     --unit is not a player
@@ -96,11 +99,33 @@ local function OnTooltipSetUnit(self)
     if unitClassification == "worldboss" or UnitLevel(unit) == -1 then
       GameTooltipTextLeft2:SetTextColor(unpack(cfg.bossColor))
     elseif unitClassification == "rare" then
-      GameTooltipTextLeft2:SetTextColor(unpack(cfg.rareColor))
+      local line = GameTooltipTextLeft2
+      if string.find(GameTooltipTextLeft3:GetText(), "%a%s%d") then
+        line:SetTextColor(unpack(cfg.guildColor))
+        line = GameTooltipTextLeft3
+      end
+      line:SetTextColor(unpack(cfg.rareColor))
     elseif unitClassification == "rareelite" then
-      GameTooltipTextLeft2:SetTextColor(unpack(cfg.rareeliteColor))
+      local line = GameTooltipTextLeft2
+      if string.find(GameTooltipTextLeft3:GetText(), "%a%s%d") then
+        line:SetTextColor(unpack(cfg.guildColor))
+        line = GameTooltipTextLeft3
+      end
+      line:SetTextColor(unpack(cfg.rareeliteColor))
     elseif unitClassification == "elite" then
-      GameTooltipTextLeft2:SetTextColor(unpack(cfg.eliteColor))
+      local line = GameTooltipTextLeft2
+      if string.find(GameTooltipTextLeft3:GetText(), "%a%s%d") then
+        line:SetTextColor(unpack(cfg.guildColor))
+        line = GameTooltipTextLeft3
+      end
+      line:SetTextColor(unpack(cfg.eliteColor))
+    else
+      local line = GameTooltipTextLeft2
+      if string.find(GameTooltipTextLeft3:GetText(), "%a%s%d") then
+        line:SetTextColor(unpack(cfg.guildColor))
+        line = GameTooltipTextLeft3
+      end
+      line:SetTextColor(unpack(cfg.levelColor))
     end
   else
     --unit is any player
@@ -115,6 +140,9 @@ local function OnTooltipSetUnit(self)
     if unitGuild then
       GameTooltipTextLeft2:SetText("<"..unitGuild..">")
       GameTooltipTextLeft2:SetTextColor(unpack(cfg.guildColor))
+      GameTooltipTextLeft3:SetTextColor(unpack(cfg.levelColor))
+    else
+      GameTooltipTextLeft2:SetTextColor(unpack(cfg.levelColor))
     end
     --afk?
     if UnitIsAFK(unit) then
@@ -133,6 +161,7 @@ end
 
 --TooltipOnShow
 local function TooltipOnShow(self)
+  --print(self:GetName(),"TooltipOnShow")
   self:SetBackdropColor(unpack(cfg.backdrop.bgColor))
   self:SetBackdropBorderColor(unpack(cfg.backdrop.borderColor))
   local itemName, itemLink = self:GetItem()
@@ -141,14 +170,21 @@ local function TooltipOnShow(self)
     self:SetBackdropBorderColor(GetItemQualityColor(itemRarity))
   end
 end
+
 --TooltipOnHide
 local function TooltipOnHide(self)
+  --print(self:GetName(),"TooltipOnHide")
   self:SetBackdropColor(unpack(cfg.backdrop.bgColor))
   self:SetBackdropBorderColor(unpack(cfg.backdrop.borderColor))
+  GameTooltipTexture1:Hide()
 end
+
 --OnTooltipCleared
 local function OnTooltipCleared(self)
-  --print("OnTooltipCleared")
+  --print(self:GetName(),"OnTooltipCleared")
+  --fix the blue tooltip background...whatever that is
+  self:SetBackdropColor(unpack(cfg.backdrop.bgColor))
+  GameTooltipTexture1:Hide()
 end
 
 local function FixBarColor(self,r,g,b)
@@ -162,6 +198,12 @@ end
 -----------------------------
 
 hooksecurefunc(GameTooltipStatusBar,"SetStatusBarColor", FixBarColor)
+
+GameTooltipTexture1:SetTexture("Interface\\Buttons\\WHITE8x8")
+--GameTooltipTexture1:SetVertexColor(0,1,1,0.8)
+GameTooltipTexture1:SetSize(20,20)
+GameTooltipTexture1:ClearAllPoints()
+GameTooltipTexture1:SetPoint("BOTTOM",GameTooltip,"TOP",0,2)
 
 --hex class colors
 for class, color in next, RAID_CLASS_COLORS do
@@ -195,7 +237,7 @@ GameTooltipStatusBar.bg:SetVertexColor(0,0,0,0.7)
 --OnTooltipSetUnit
 GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
 --OnTooltipCleared
---GameTooltip:HookScript("OnTooltipCleared", OnTooltipCleared) --bugged when hovering an item, fires way to often
+GameTooltip:HookScript("OnTooltipCleared", OnTooltipCleared) --bugged when hovering an item, fires way to often
 
 --loop over tooltips
 local tooltips = { GameTooltip, ItemRefTooltip, ShoppingTooltip1, ShoppingTooltip2, ShoppingTooltip3, WorldMapTooltip, SmallTextTooltip }

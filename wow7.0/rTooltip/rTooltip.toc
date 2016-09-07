@@ -1,0 +1,6 @@
+## Interface: 70000
+## Author: zork
+## Title: rTooltip
+## Notes: Tooltip enhancements
+
+core.lua

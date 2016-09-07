@@ -116,7 +116,8 @@ function L:CreateButtonFrame(cfg,buttonList,delaySetup)
   --show/hide the frame on a given state driver
   if cfg.frameVisibility then
     frame.frameVisibility = cfg.frameVisibility
-    RegisterStateDriver(frame, "visibility", cfg.frameVisibility)
+    frame.frameVisibilityFunc = cfg.frameVisibilityFunc
+    RegisterStateDriver(frame, cfg.frameVisibilityFunc or "visibility", cfg.frameVisibility)
   end
   --add drag functions
   rLib:CreateDragFrame(frame, L.dragFrames, -2, true)

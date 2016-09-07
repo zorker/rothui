@@ -108,6 +108,9 @@ function L:UnlockFrame(frame)
   if not frame then return end
   if not frame:IsUserPlaced() then return end
   if frame.frameVisibility then
+    if frame.frameVisibilityFunc then
+      UnregisterStateDriver(frame,frame.frameVisibilityFunc)
+    end
     RegisterStateDriver(frame, "visibility", "show")
   end
   frame.dragFrame:Show()
@@ -118,7 +121,14 @@ function L:LockFrame(frame)
   if not frame then return end
   if not frame:IsUserPlaced() then return end
   if frame.frameVisibility then
-    RegisterStateDriver(frame, "visibility", frame.frameVisibility)
+    if frame.frameVisibilityFunc then
+      UnregisterStateDriver(frame, "visibility")
+      --hack to make it refresh properly, otherwise if you had state n (no vehicle exit button) it would not update properly because the state n is still in place
+      RegisterStateDriver(frame, frame.frameVisibilityFunc, "zorkwashere")
+      RegisterStateDriver(frame, frame.frameVisibilityFunc, frame.frameVisibility)
+    else
+      RegisterStateDriver(frame, "visibility", frame.frameVisibility)
+    end
   end
   frame.dragFrame:Hide()
 end

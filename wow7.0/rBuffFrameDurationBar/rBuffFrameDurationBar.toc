@@ -1,0 +1,6 @@
+## Interface: 70000
+## Author: zork
+## Title: rBuffFrameDurationBar
+## Notes: Adding duration statusbars to the Blizzard BuffFrame aura buttons
+
+core.lua

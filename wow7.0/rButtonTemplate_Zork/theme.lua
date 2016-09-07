@@ -165,6 +165,8 @@ actionButtonConfig.count = {
 
 --rButtonTemplate:StyleAllActionButtons
 rButtonTemplate:StyleAllActionButtons(actionButtonConfig)
+--style rActionBar vehicle exit button
+rButtonTemplate:StyleActionButton(_G["rActionBarVehicleExitButton"],actionButtonConfig)
 
 -----------------------------
 -- itemButtonConfig

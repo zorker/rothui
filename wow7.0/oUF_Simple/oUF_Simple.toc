@@ -1,0 +1,7 @@
+## Interface: 70000
+## Title: oUF_Simple
+## Author: zork
+## Notes: Simple oUF layout
+## Dependencies: oUF, rLib
+
+core.lua

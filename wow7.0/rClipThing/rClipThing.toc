@@ -1,0 +1,6 @@
+## Interface: 70000
+## Author: zork
+## Title: rClipThing
+## Notes: Does this work?!
+
+core.lua

@@ -8,6 +8,8 @@
 
 local A, L = ...
 
+local floor = floor
+
 L.addonName       = A
 L.dragFrames      = {}
 L.addonColor      = "00FF3300"
@@ -34,6 +36,39 @@ local backdrop = {
 -- Functions
 -----------------------------
 
+--number format func
+local function NumberFormat(v)
+  if v > 1E10 then
+    return (floor(v/1E9)).."b"
+  elseif v > 1E9 then
+    return (floor((v/1E9)*10)/10).."b"
+  elseif v > 1E7 then
+    return (floor(v/1E6)).."m"
+  elseif v > 1E6 then
+    return (floor((v/1E6)*10)/10).."m"
+  elseif v > 1E4 then
+    return (floor(v/1E3)).."k"
+  elseif v > 1E3 then
+    return (floor((v/1E3)*10)/10).."k"
+  else
+    return v
+  end
+end
+
+oUF.Tags.Methods["oUF_Simple:health"] = function(unit)
+  if not UnitIsConnected(unit) then
+    return "|cff999999Offline|r"
+  end
+  if(UnitIsDead(unit) or UnitIsGhost(unit)) then
+    return "|cff999999Dead|r"
+  end
+  local hpmin, hpmax = UnitHealth(unit), UnitHealthMax(unit)
+  local hpper = 0
+  if hpmax > 0 then hpper = floor(hpmin/hpmax*100) end
+  local hpval = NumberFormat(hpmin)
+  return hpval.."|cffcccccc | |r"..hpper.."%"
+end
+oUF.Tags.Events["oUF_Simple:health"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
 
 local function CreateBackdrop(self)
   --helper
@@ -107,6 +142,18 @@ local function CreateName(self,size,align)
   return name
 end
 
+local function CreateHealthText(self,size,align)
+  local text = self:CreateFontString(nil, "OVERLAY")
+  text:SetFont(STANDARD_TEXT_FONT, size or 13, "OUTLINE")
+  text:SetShadowColor(0,0,0,0.6)
+  text:SetShadowOffset(1,-1)
+  text:SetText("Fail")
+  text:SetMaxLines(1)
+  text:SetHeight(text:GetStringHeight()) --fix some wierd bug
+  text:SetJustifyH(align or "RIGHT")
+  return text
+end
+
 local function SetupHeader(self)
   self:RegisterForClicks("AnyDown")
   self:SetScript("OnEnter", UnitFrame_OnEnter)
@@ -133,10 +180,15 @@ local function CreatePlayerStyle(self)
   SetupFrame(self)
   CreateHealth(self)
   CreatePower(self)
+  --name
   local name = CreateName(self.Health)
   self:Tag(name, "[name]")
-  name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -name:GetStringHeight()/2)
+  name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -name:GetStringHeight()/3)
   name:SetPoint("RIGHT",-2,0)
+  --health text
+  local healthText = CreateHealthText(self.Health)
+  self:Tag(healthText, "[oUF_Simple:health]")
+  healthText:SetPoint("RIGHT",-2,0)
   --ouf config
   self.Health.colorClass = true
   self.Health.colorHealth = true
@@ -158,10 +210,15 @@ local function CreateTargetStyle(self)
   SetupFrame(self)
   CreateHealth(self)
   CreatePower(self)
+  --name
   local name = CreateName(self.Health)
   self:Tag(name, "[name]")
-  name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -name:GetStringHeight()/2)
-  name:SetPoint("RIGHT",-2,0)
+  name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -name:GetStringHeight()/3)
+  --health text
+  local healthText = CreateHealthText(self.Health)
+  self:Tag(healthText, "[oUF_Simple:health]")
+  healthText:SetPoint("RIGHT",-2,0)
+  name:SetPoint("RIGHT",healthText,"LEFT",-2,0)
   --ouf config
   self.Health.colorTapping = true
   self.Health.colorDisconnected = true
@@ -185,6 +242,7 @@ local function CreateTargetTargetStyle(self)
   --setup
   SetupFrame(self)
   CreateHealth(self)
+  --name
   local name = CreateName(self.Health,14,"CENTER")
   self:Tag(name, "[name]")
   name:SetPoint("CENTER", self.Health)

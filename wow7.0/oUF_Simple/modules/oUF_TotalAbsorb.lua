@@ -1,5 +1,4 @@
 
-
 local parent, ns = ...
 local oUF = ns.oUF or oUF
 
@@ -19,7 +18,7 @@ local function Path(self, ...)
   return (self.TotalAbsorb.Override or Update) (self, ...)
 end
 
-local ForceUpdate = function(element)
+local function ForceUpdate(element)
   return Path(element.__owner, 'ForceUpdate', element.__owner.unit)
 end
 

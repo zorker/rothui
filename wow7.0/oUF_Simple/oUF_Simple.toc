@@ -5,4 +5,5 @@
 ## Dependencies: oUF, rLib
 
 modules\oUF_TotalAbsorb.lua
+modules\oUF_ClassBar.lua
 core.lua

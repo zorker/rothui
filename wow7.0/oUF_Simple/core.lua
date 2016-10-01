@@ -104,6 +104,24 @@ local function CreateAbsorbBar(self)
   self.TotalAbsorb = s
 end
 
+--CreateClassBar
+local function CreateClassBar(self)
+  local s = CreateFrame("StatusBar", nil, self)
+  s:SetStatusBarTexture(mediapath.."statusbar")
+  s:SetHeight(self:GetHeight()/5)
+  s:SetWidth((self:GetWidth()-5)/2)
+  s:SetPoint("BOTTOMRIGHT",self,"TOPRIGHT",0,5)
+  --bg
+  local bg = s:CreateTexture(nil, "BACKGROUND")
+  bg:SetTexture(mediapath.."statusbar")
+  bg:SetAllPoints(s)
+  s.bg = bg
+  --backdrop
+  CreateBackdrop(s)
+  --references
+  self.ClassBar = s
+end
+
 --CreateHealthBar
 local function CreateHealthBar(self)
   --statusbar
@@ -257,10 +275,13 @@ local function CreatePlayerStyle(self)
   --castbar
   CreateCastBar(self)
   self.Castbar:SetPoint("BOTTOM",self,"TOP",0,15)
+  --classbar
+  CreateClassBar(self)
   --name
   local name = CreateText(self.TotalAbsorb or self.Health,14,"LEFT")
   self:Tag(name, "[name]")
-  name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
+  --name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
+  name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -name:GetStringHeight()/3)
   --health text
   local healthText = CreateText(self.TotalAbsorb or self.Health,13,"RIGHT")
   self:Tag(healthText, "[oUF_Simple:health]")
@@ -273,6 +294,7 @@ local function CreatePlayerStyle(self)
   self.Health.bg.multiplier = 0.3
   self.Power.colorPower = true
   self.Power.bg.multiplier = 0.3
+  self.ClassBar.bg.multiplier = 0.3
   --events
     self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
 end

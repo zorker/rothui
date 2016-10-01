@@ -93,6 +93,25 @@ local function CreateText(self,size,align)
   return text
 end
 
+--CreateAltPowerBar
+local function CreateAltPowerBar(self)
+  local s = CreateFrame("StatusBar", nil, self)
+  s:SetStatusBarTexture(mediapath.."statusbar")
+  s:SetHeight(self:GetHeight()/5)
+  s:SetWidth((self:GetWidth()-5)/2)
+  s:SetPoint("BOTTOMLEFT",self,"TOPLEFT",0,5)
+  --bg
+  local bg = s:CreateTexture(nil, "BACKGROUND")
+  bg:SetTexture(mediapath.."statusbar")
+  bg:SetAllPoints(s)
+  bg:SetVertexColor(0.7*0.3,0.7*0.3,0.7*0.3)
+  s.bg = bg
+  --backdrop
+  CreateBackdrop(s)
+  --reference
+  self.rAltPowerBar = s
+end
+
 --CreateAbsorbBar
 local function CreateAbsorbBar(self)
   local s = CreateFrame("StatusBar", nil, self.Health)
@@ -101,7 +120,7 @@ local function CreateAbsorbBar(self)
   s:SetStatusBarColor(0.1,1,1,0.7)
   s:SetReverseFill(true)
   --reference
-  self.TotalAbsorb = s
+  self.rAbsorbBar = s
 end
 
 --CreateClassBar
@@ -119,7 +138,7 @@ local function CreateClassBar(self)
   --backdrop
   CreateBackdrop(s)
   --references
-  self.ClassBar = s
+  self.rClassBar = s
 end
 
 --CreateHealthBar
@@ -277,13 +296,15 @@ local function CreatePlayerStyle(self)
   self.Castbar:SetPoint("BOTTOM",self,"TOP",0,15)
   --classbar
   CreateClassBar(self)
+  --altpowerbar
+  CreateAltPowerBar(self)
   --name
-  local name = CreateText(self.TotalAbsorb or self.Health,14,"LEFT")
+  local name = CreateText(self.rAbsorbBar or self.Health,14,"LEFT")
   self:Tag(name, "[name]")
-  --name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
-  name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -name:GetStringHeight()/3)
+  name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
+  --name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -name:GetStringHeight()/3)
   --health text
-  local healthText = CreateText(self.TotalAbsorb or self.Health,13,"RIGHT")
+  local healthText = CreateText(self.rAbsorbBar or self.Health,13,"RIGHT")
   self:Tag(healthText, "[oUF_Simple:health]")
   healthText:SetPoint("RIGHT",-2,0)
   name:SetPoint("RIGHT",healthText,"LEFT",-2,0)
@@ -294,7 +315,8 @@ local function CreatePlayerStyle(self)
   self.Health.bg.multiplier = 0.3
   self.Power.colorPower = true
   self.Power.bg.multiplier = 0.3
-  self.ClassBar.bg.multiplier = 0.3
+  self.rClassBar.bg.multiplier = 0.3
+  self.rAltPowerBar.bg.multiplier = 0.3
   --events
     self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
 end
@@ -317,11 +339,11 @@ local function CreateTargetStyle(self)
   CreateCastBar(self)
   self.Castbar:SetPoint("BOTTOM",self,"TOP",0,15)
   --name
-  local name = CreateText(self.TotalAbsorb or self.Health,14,"LEFT")
+  local name = CreateText(self.rAbsorbBar or self.Health,14,"LEFT")
   self:Tag(name, "[name]")
   name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -name:GetStringHeight()/3)
   --health text
-  local healthText = CreateText(self.TotalAbsorb or self.Health,13,"RIGHT")
+  local healthText = CreateText(self.rAbsorbBar or self.Health,13,"RIGHT")
   self:Tag(healthText, "[oUF_Simple:health]")
   healthText:SetPoint("RIGHT",-2,0)
   name:SetPoint("RIGHT",healthText,"LEFT",-2,0)
@@ -382,7 +404,7 @@ local function CreatePetStyle(self)
   CreateCastBar(self)
   self.Castbar:SetPoint("TOP",self,"BOTTOM",0,-5)
   --name
-  local name = CreateText(self.TotalAbsorb or self.Health,14,"CENTER")
+  local name = CreateText(self.rAbsorbBar or self.Health,14,"CENTER")
   self:Tag(name, "[name]")
   --name:SetPoint("CENTER", self.Health)
   name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
@@ -413,7 +435,7 @@ local function CreateFocusStyle(self)
   CreateCastBar(self)
   self.Castbar:SetPoint("TOP",self,"BOTTOM",0,-5)
   --name
-  local name = CreateText(self.TotalAbsorb or self.Health,14,"CENTER")
+  local name = CreateText(self.rAbsorbBar or self.Health,14,"CENTER")
   self:Tag(name, "[name]")
   --name:SetPoint("CENTER", self.Health)
   name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)

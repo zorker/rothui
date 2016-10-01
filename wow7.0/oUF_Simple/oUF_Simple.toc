@@ -4,6 +4,7 @@
 ## Notes: Simple oUF layout
 ## Dependencies: oUF, rLib
 
-modules\oUF_TotalAbsorb.lua
-modules\oUF_ClassBar.lua
+modules\rAbsorbBar.lua
+modules\rClassBar.lua
+modules\rAltPowerBar.lua
 core.lua

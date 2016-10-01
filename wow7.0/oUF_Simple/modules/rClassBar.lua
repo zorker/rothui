@@ -37,7 +37,7 @@ local function Update(self, event, unit, powerType)
     and not (unit == 'vehicle' and powerType == 'COMBO_POINTS') then
     return
   end
-  local cb = self.ClassBar
+  local cb = self.rClassBar
   local ppcur, ppmax
   if unit == 'vehicle' then
     ppcur = GetComboPoints('vehicle', 'target') or 0
@@ -53,7 +53,7 @@ local function Update(self, event, unit, powerType)
     local r,g,b = unpack(color)
     cb:SetStatusBarColor(r,g,b)
     if cb.bg then
-      local mu = cb.bg.multiplier or 1
+      local mu = cb.bg.multiplier or 0.3
       cb.bg:SetVertexColor(r*mu, g*mu, b*mu)
     end
     cb:SetMinMaxValues(0, ppmax)
@@ -63,7 +63,7 @@ local function Update(self, event, unit, powerType)
 end
 
 local function Path(self, ...)
-  return (self.ClassBar.Override or Update) (self, ...)
+  return (self.rClassBar.Override or Update) (self, ...)
 end
 
 local function ClassPowerEnable(self)
@@ -75,7 +75,7 @@ local function ClassPowerEnable(self)
   else
     Path(self, 'ClassPowerEnable', 'player', ClassPowerType)
   end
-  self.ClassBar.isEnabled = true
+  self.rClassBar.isEnabled = true
 end
 
 local function ClassPowerDisable(self)
@@ -83,12 +83,12 @@ local function ClassPowerDisable(self)
   self:UnregisterEvent('UNIT_POWER_FREQUENT', Path)
   self:UnregisterEvent('UNIT_MAXPOWER', Path)
   Path(self, 'ClassPowerDisable', 'player', ClassPowerType)
-  self.ClassBar:Hide()
-  self.ClassBar.isEnabled = false
+  self.rClassBar:Hide()
+  self.rClassBar.isEnabled = false
 end
 
 local function Visibility(self, event, unit)
-  local element = self.ClassBar
+  local element = self.rClassBar
   local shouldEnable
   if(UnitHasVehicleUI('player')) then
     shouldEnable = true
@@ -113,7 +113,7 @@ local function Visibility(self, event, unit)
 end
 
 local function VisibilityPath(self, ...)
-  return (self.ClassBar.OverrideVisibility or Visibility) (self, ...)
+  return (self.rClassBar.OverrideVisibility or Visibility) (self, ...)
 end
 
 local function ForceUpdate(element)
@@ -122,7 +122,7 @@ end
 
 local function Enable(self, unit)
   if(unit ~= 'player') then return end
-  local element = self.ClassBar
+  local element = self.rClassBar
   if(not element) then return end
   element.__owner = self
   element.ForceUpdate = ForceUpdate
@@ -133,9 +133,9 @@ local function Enable(self, unit)
 end
 
 local function Disable(self)
-  local element = self.ClassBar
+  local element = self.rClassBar
   if(not element) then return end
   ClassPowerDisable(self)
 end
 
-oUF:AddElement('ClassBar', VisibilityPath, Enable, Disable)
+oUF:AddElement('rClassBar', VisibilityPath, Enable, Disable)

@@ -4,4 +4,5 @@
 ## Notes: Simple oUF layout
 ## Dependencies: oUF, rLib
 
+modules\oUF_TotalAbsorb.lua
 core.lua

@@ -93,8 +93,19 @@ local function CreateText(self,size,align)
   return text
 end
 
---CreateHealth
-local function CreateHealth(self)
+--CreateAbsorbBar
+local function CreateAbsorbBar(self)
+  local s = CreateFrame("StatusBar", nil, self.Health)
+  s:SetAllPoints()
+  s:SetStatusBarTexture(mediapath.."absorb")
+  s:SetStatusBarColor(0.1,1,1,0.7)
+  s:SetReverseFill(true)
+  --reference
+  self.TotalAbsorb = s
+end
+
+--CreateHealthBar
+local function CreateHealthBar(self)
   --statusbar
   local s = CreateFrame("StatusBar", nil, self)
   s:SetStatusBarTexture(mediapath.."statusbar")
@@ -110,10 +121,14 @@ local function CreateHealth(self)
   self.Health.bg = bg
   --hooks
   self.Health.PostUpdate = PostUpdateHealth
+  --create absorb bar
+  if self.cfg.template ~= "targettarget" then
+    CreateAbsorbBar(self)
+  end
 end
 
---CreatePower
-local function CreatePower(self)
+--CreatePowerBar
+local function CreatePowerBar(self)
   --statusbar
   local s = CreateFrame("StatusBar", nil, self)
   s:SetStatusBarTexture(mediapath.."statusbar")
@@ -236,18 +251,18 @@ local function CreatePlayerStyle(self)
   --setup
   SetupFrame(self)
   --health
-  CreateHealth(self)
+  CreateHealthBar(self)
   --power
-  CreatePower(self)
+  CreatePowerBar(self)
   --castbar
   CreateCastBar(self)
   self.Castbar:SetPoint("BOTTOM",self,"TOP",0,15)
   --name
-  local name = CreateText(self.Health,14,"LEFT")
+  local name = CreateText(self.TotalAbsorb or self.Health,14,"LEFT")
   self:Tag(name, "[name]")
   name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
   --health text
-  local healthText = CreateText(self.Health,13,"RIGHT")
+  local healthText = CreateText(self.TotalAbsorb or self.Health,13,"RIGHT")
   self:Tag(healthText, "[oUF_Simple:health]")
   healthText:SetPoint("RIGHT",-2,0)
   name:SetPoint("RIGHT",healthText,"LEFT",-2,0)
@@ -273,18 +288,18 @@ local function CreateTargetStyle(self)
   --setup
   SetupFrame(self)
   --health
-  CreateHealth(self)
+  CreateHealthBar(self)
   --power
-  CreatePower(self)
+  CreatePowerBar(self)
   --castbar
   CreateCastBar(self)
   self.Castbar:SetPoint("BOTTOM",self,"TOP",0,15)
   --name
-  local name = CreateText(self.Health,14,"LEFT")
+  local name = CreateText(self.TotalAbsorb or self.Health,14,"LEFT")
   self:Tag(name, "[name]")
   name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -name:GetStringHeight()/3)
   --health text
-  local healthText = CreateText(self.Health,13,"RIGHT")
+  local healthText = CreateText(self.TotalAbsorb or self.Health,13,"RIGHT")
   self:Tag(healthText, "[oUF_Simple:health]")
   healthText:SetPoint("RIGHT",-2,0)
   name:SetPoint("RIGHT",healthText,"LEFT",-2,0)
@@ -313,7 +328,7 @@ local function CreateTargetTargetStyle(self)
   --setup
   SetupFrame(self)
   --health
-  CreateHealth(self)
+  CreateHealthBar(self)
   --name
   local name = CreateText(self.Health,14,"CENTER")
   self:Tag(name, "[name]")
@@ -340,12 +355,12 @@ local function CreatePetStyle(self)
   --setup
   SetupFrame(self)
   --health
-  CreateHealth(self)
+  CreateHealthBar(self)
   --castbar
   CreateCastBar(self)
   self.Castbar:SetPoint("TOP",self,"BOTTOM",0,-5)
   --name
-  local name = CreateText(self.Health,14,"CENTER")
+  local name = CreateText(self.TotalAbsorb or self.Health,14,"CENTER")
   self:Tag(name, "[name]")
   --name:SetPoint("CENTER", self.Health)
   name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
@@ -354,7 +369,10 @@ local function CreatePetStyle(self)
   self.Health.colorClass = true
   self.Health.colorReaction = true
   self.Health.colorHealth = true
+  self.Health.colorThreat = true
   self.Health.bg.multiplier = 0.3
+  --events
+  self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
 end
 
 local function CreateFocusStyle(self)
@@ -368,12 +386,12 @@ local function CreateFocusStyle(self)
   --setup
   SetupFrame(self)
   --health
-  CreateHealth(self)
+  CreateHealthBar(self)
   --castbar
   CreateCastBar(self)
   self.Castbar:SetPoint("TOP",self,"BOTTOM",0,-5)
   --name
-  local name = CreateText(self.Health,14,"CENTER")
+  local name = CreateText(self.TotalAbsorb or self.Health,14,"CENTER")
   self:Tag(name, "[name]")
   --name:SetPoint("CENTER", self.Health)
   name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)

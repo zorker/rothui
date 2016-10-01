@@ -56,11 +56,11 @@ local function NumberFormat(v)
 end
 
 --CreateBackdrop
-local function CreateBackdrop(self)
+local function CreateBackdrop(self,anchorFrame)
   local bd = CreateFrame("Frame", nil, self)
   bd:SetFrameLevel(self:GetFrameLevel()-1 or 0)
-  bd:SetPoint("TOPLEFT",-backdrop.inset,backdrop.inset)
-  bd:SetPoint("BOTTOMRIGHT",backdrop.inset,-backdrop.inset)
+  bd:SetPoint("TOPLEFT", anchorFrame or self, "TOPLEFT", -backdrop.inset, backdrop.inset)
+  bd:SetPoint("BOTTOMRIGHT", anchorFrame or self, "BOTTOMRIGHT", backdrop.inset, -backdrop.inset)
   bd:SetBackdrop(backdrop);
   bd:SetBackdropColor(0,0,0,0.8)
   bd:SetBackdropBorderColor(0,0,0,0.8)
@@ -157,6 +157,17 @@ local function CreateCastBar(self)
   s.bg = bg
   --backdrop
   CreateBackdrop(s)
+  --icon for player and target only
+  if self.cfg.template == "player" or self.cfg.template == "target" then
+    --icon
+    local i = s:CreateTexture(nil,"BACKGROUND",nil,-8)
+    i:SetSize(self:GetHeight(),self:GetHeight())
+    i:SetPoint("RIGHT", s, "LEFT", -5, 0)
+    i:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+    s.Icon = i
+    --backdrop (for the icon)
+    CreateBackdrop(s,i)
+  end
   --shield
   local shield = s:CreateTexture(nil,"BACKGROUND",nil,-8)
   shield.__owner = s
@@ -232,9 +243,9 @@ local function CreatePlayerStyle(self)
   CreateCastBar(self)
   self.Castbar:SetPoint("BOTTOM",self,"TOP",0,15)
   --name
-  local name = CreateText(self.Health,16,"LEFT")
+  local name = CreateText(self.Health,14,"LEFT")
   self:Tag(name, "[name]")
-  name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -name:GetStringHeight()/3)
+  name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
   --health text
   local healthText = CreateText(self.Health,13,"RIGHT")
   self:Tag(healthText, "[oUF_Simple:health]")
@@ -306,7 +317,7 @@ local function CreateTargetTargetStyle(self)
   --name
   local name = CreateText(self.Health,14,"CENTER")
   self:Tag(name, "[name]")
-  name:SetPoint("CENTER", self.Health)
+  --name:SetPoint("CENTER", self.Health)
   name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
   name:SetPoint("RIGHT", self.Health, "RIGHT", -2, 0)
   --ouf config
@@ -336,7 +347,7 @@ local function CreatePetStyle(self)
   --name
   local name = CreateText(self.Health,14,"CENTER")
   self:Tag(name, "[name]")
-  name:SetPoint("CENTER", self.Health)
+  --name:SetPoint("CENTER", self.Health)
   name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
   name:SetPoint("RIGHT", self.Health, "RIGHT", -2, 0)
   --ouf config
@@ -364,7 +375,7 @@ local function CreateFocusStyle(self)
   --name
   local name = CreateText(self.Health,14,"CENTER")
   self:Tag(name, "[name]")
-  name:SetPoint("CENTER", self.Health)
+  --name:SetPoint("CENTER", self.Health)
   name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
   name:SetPoint("RIGHT", self.Health, "RIGHT", -2, 0)
   --ouf config

@@ -40,11 +40,11 @@ local function Update(self, event, unit, powerType)
   local cb = self.ClassBar
   local ppcur, ppmax
   if unit == 'vehicle' then
-    ppcur = GetComboPoints('vehicle', 'target')
-    ppmax = MAX_COMBO_POINTS or 0
+    ppcur = GetComboPoints('vehicle', 'target') or 0
+    ppmax = MAX_COMBO_POINTS
   else
-    ppcur = UnitPower('player', ClassPowerID, true)
-    ppmax = UnitPowerMax('player', ClassPowerID, true) or 0
+    ppcur = UnitPower('player', ClassPowerID, true) or 0
+    ppmax = UnitPowerMax('player', ClassPowerID, true)
   end
   if ppcur == 0 then
     cb:Hide()

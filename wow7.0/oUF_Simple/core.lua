@@ -76,6 +76,7 @@ end
 
 --UpdateThreat
 local function UpdateThreat(self,event,unit)
+  print(event,unit)
   self.Health:ForceUpdate()
 end
 
@@ -237,7 +238,7 @@ local function CreateCastBar(self)
   --backdrop
   CreateBackdrop(s)
   --icon for player and target only
-  if self.cfg.template == "player" or self.cfg.template == "target" then
+  if self.cfg.template == "player" or self.cfg.template == "target" or self.cfg.template == "nameplate" then
     --icon
     local i = s:CreateTexture(nil,"BACKGROUND",nil,-8)
     i:SetSize(self:GetHeight(),self:GetHeight())
@@ -510,6 +511,7 @@ local function CreateNamePlateStyle(self)
   self.Health.colorHealth = true
   self.Health.colorThreat = true
   self.Health.bg.multiplier = 0.3
+  self.Health.frequentUpdates = true
   --events
   self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
 end
@@ -521,27 +523,27 @@ end
 --register player
 oUF:RegisterStyle(A.."PlayerStyle", CreatePlayerStyle)
 oUF:SetActiveStyle(A.."PlayerStyle")
-local playerFrame = oUF:Spawn("player", A.."PlayerFrame")
+--local playerFrame = oUF:Spawn("player", A.."PlayerFrame")
 
 --register target
 oUF:RegisterStyle(A.."TargetStyle", CreateTargetStyle)
 oUF:SetActiveStyle(A.."TargetStyle")
-local targetFrame = oUF:Spawn("target", A.."TargetFrame")
+--local targetFrame = oUF:Spawn("target", A.."TargetFrame")
 
 --register targettarget
 oUF:RegisterStyle(A.."TargetTargetStyle", CreateTargetTargetStyle)
 oUF:SetActiveStyle(A.."TargetTargetStyle")
-local targettargetFrame = oUF:Spawn("targettarget", A.."TargetTargetFrame")
+--local targettargetFrame = oUF:Spawn("targettarget", A.."TargetTargetFrame")
 
 --register pet
 oUF:RegisterStyle(A.."PetStyle", CreatePetStyle)
 oUF:SetActiveStyle(A.."PetStyle")
-local petFrame = oUF:Spawn("pet", A.."PetFrame")
+--local petFrame = oUF:Spawn("pet", A.."PetFrame")
 
 --register focus
 oUF:RegisterStyle(A.."FocusStyle", CreateFocusStyle)
 oUF:SetActiveStyle(A.."FocusStyle")
-local focusFrame = oUF:Spawn("focus", A.."FocusFrame")
+--local focusFrame = oUF:Spawn("focus", A.."FocusFrame")
 
 -----------------------------
 -- rLib slash command
@@ -584,35 +586,14 @@ NamePlateDriverFrame.UpdateNamePlateOptions = W.UpdateNamePlateOptions
 -- Worker
 -----------------------------
 
-function W:NAME_PLATE_CREATED(nameplate)
-  print("NAME_PLATE_CREATED",nameplate:GetName(),nameplate:GetSize())
-  --local unitFrame = CreateFrame("Button", nameplate:GetName().."UnitFrame", nameplate)
-  local unitFrame = oUF:Spawn("nameplate1", A..nameplate:GetName())
-  unitFrame:SetParent(nameplate)
-  unitFrame:ClearAllPoints()
-  unitFrame:SetAllPoints()
-  nameplate.unitFrame = unitFrame
-  --mix-in ubm table data
-  Mixin(unitFrame, UFM)
-  --create subframes (health, name, etc...)
-  --unitFrame:Create(nameplate)
-end
-
 function W:NAME_PLATE_UNIT_ADDED(unit)
   local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
-
   if not nameplate.unitFrame then
-    local unitFrame = oUF:Spawn(unit, A..nameplate:GetName())
-    unitFrame:SetParent(nameplate)
-    unitFrame:ClearAllPoints()
-    unitFrame:SetPoint("CENTER")
+    local unitFrame = oUF:SpawnNamePlate(unit, A..nameplate:GetName(),nameplate)
+    unitFrame:EnableMouse(false)
     nameplate.unitFrame = unitFrame
-    --mix-in ubm table data
     Mixin(unitFrame, UFM)
   end
-
-  print(nameplate.unitFrame:GetEffectiveScale(),nameplate.unitFrame:GetSize(),GetCVar("uiScale"))
-
   nameplate.unitFrame:UnitAdded(nameplate,unit)
 end
 
@@ -621,59 +602,37 @@ function W:NAME_PLATE_UNIT_REMOVED(unit)
   nameplate.unitFrame:UnitRemoved(nameplate,unit)
 end
 
+function W:PLAYER_TARGET_CHANGED()
+  local nameplate = C_NamePlate.GetNamePlateForUnit("target")
+  if nameplate then
+    nameplate.unitFrame:PlayerTargetChanged(nameplate,"target")
+  end
+end
+
 function W:OnEvent(event,...)
-  print("W:OnEvent",...)
   self[event](event,...)
 end
 
 W:SetScript("OnEvent", W.OnEvent)
 
---W:RegisterEvent("NAME_PLATE_CREATED")
 W:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 W:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
---W:RegisterEvent("PLAYER_TARGET_CHANGED")
---W:RegisterEvent("DISPLAY_SIZE_CHANGED")
---W:RegisterEvent("UNIT_AURA")
---W:RegisterEvent("VARIABLES_LOADED")
---W:RegisterEvent("CVAR_UPDATE")
---W:RegisterEvent("RAID_TARGET_UPDATE")
---W:RegisterEvent("UNIT_FACTION")
+W:RegisterEvent("PLAYER_TARGET_CHANGED")
 
 -----------------------------
 -- Unit Frame Mixin
 -----------------------------
 
-function UFM:Create(nameplate)
-  print("UFM:Create",self:GetName(),nameplate:GetName())
-  --create health bar
-  local t = self:CreateTexture(nil,"BACKGROUND",nil,-8)
-  t:SetColorTexture(0,1,0)
-  t:SetSize(32,32)
-  t:SetPoint("CENTER")
-
-  --create name
-  self:Hide()
-end
-
 function UFM:UnitAdded(nameplate,unit)
-  print("UFM:UnitAdded",self:GetName(),nameplate:GetName(),unit)
-
-  self.unit = unit
-  self.inVehicle = UnitInVehicle(unit)
-
   self:SetAttribute("unit", unit)
   self:UpdateAllElements("NAME_PLATE_UNIT_ADDED")
-  --self:Show()
+end
 
+function UFM:PlayerTargetChanged(nameplate,unit)
+  self:UpdateAllElements("PLAYER_TARGET_CHANGED")
 end
 
 function UFM:UnitRemoved(nameplate,unit)
-  print("UFM:UnitRemoved",self:GetName(),nameplate:GetName(),unit)
-
-  self.unit = nil
-  self.inVehicle = nil
-  self:SetAttribute("unit", unit)
+  self:SetAttribute("unit", nil)
   self:UpdateAllElements("NAME_PLATE_UNIT_REMOVED")
-  --self:Hide()
-
 end

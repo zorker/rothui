@@ -276,7 +276,9 @@ local function SetupFrame(self)
   self:SetPoint(unpack(self.cfg.point))
   self:SetScale(self.cfg.scale)
   SetupHeader(self)
-  rLib:CreateDragFrame(self, L.dragFrames, -2, true)
+  if self.cfg.template ~= "nameplate" then
+    rLib:CreateDragFrame(self, L.dragFrames, -2, true)
+  end
 end
 
 -----------------------------
@@ -479,6 +481,39 @@ local function CreateFocusStyle(self)
   self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
 end
 
+local function CreateNamePlateStyle(self)
+  --frame config
+  local cfg = {}
+  cfg.size = {110,22}
+  cfg.point = {"CENTER"}
+  cfg.scale = 1*GetCVar("uiScale") --nameplates are not part of uiparent!
+  cfg.template = "nameplate"
+  self.cfg = cfg
+  --setup
+  SetupFrame(self)
+  --health
+  CreateHealthBar(self)
+  --castbar
+  CreateCastBar(self)
+  self.Castbar:SetPoint("TOP",self,"BOTTOM",0,-5)
+  --name
+  local name = CreateText(self.rAbsorbBar or self.Health,14,"CENTER")
+  self:Tag(name, "[name]")
+  --name:SetPoint("CENTER", self.Health)
+  name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
+  name:SetPoint("RIGHT", self.Health, "RIGHT", -2, 0)
+  --ouf config
+  self.Health.colorTapping = true
+  self.Health.colorDisconnected = true
+  self.Health.colorClass = true
+  self.Health.colorReaction = true
+  self.Health.colorHealth = true
+  self.Health.colorThreat = true
+  self.Health.bg.multiplier = 0.3
+  --events
+  self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
+end
+
 -----------------------------
 -- Register Styles
 -----------------------------
@@ -514,3 +549,130 @@ local focusFrame = oUF:Spawn("focus", A.."FocusFrame")
 
 --create slash commands
 rLib:CreateSlashCmd(L.addonName, L.addonShortcut, L.dragFrames, L.addonColor)
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+-- NAMEPLATE TEST
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+--register focus
+oUF:RegisterStyle(A.."NamePlateStyle", CreateNamePlateStyle)
+oUF:SetActiveStyle(A.."NamePlateStyle")
+
+local W = CreateFrame("Frame") --worker
+local UFM = {} --unit frame mixin
+local C_NamePlate = C_NamePlate
+
+-----------------------------
+-- Hide Blizzard
+-----------------------------
+
+function W:UpdateNamePlateOptions(...)
+  print("UpdateNamePlateOptions",...)
+end
+
+--disable blizzard nameplates
+NamePlateDriverFrame:UnregisterAllEvents()
+NamePlateDriverFrame:Hide()
+NamePlateDriverFrame.UpdateNamePlateOptions = W.UpdateNamePlateOptions
+
+-----------------------------
+-- Worker
+-----------------------------
+
+function W:NAME_PLATE_CREATED(nameplate)
+  print("NAME_PLATE_CREATED",nameplate:GetName(),nameplate:GetSize())
+  --local unitFrame = CreateFrame("Button", nameplate:GetName().."UnitFrame", nameplate)
+  local unitFrame = oUF:Spawn("nameplate1", A..nameplate:GetName())
+  unitFrame:SetParent(nameplate)
+  unitFrame:ClearAllPoints()
+  unitFrame:SetAllPoints()
+  nameplate.unitFrame = unitFrame
+  --mix-in ubm table data
+  Mixin(unitFrame, UFM)
+  --create subframes (health, name, etc...)
+  --unitFrame:Create(nameplate)
+end
+
+function W:NAME_PLATE_UNIT_ADDED(unit)
+  local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
+
+  if not nameplate.unitFrame then
+    local unitFrame = oUF:Spawn(unit, A..nameplate:GetName())
+    unitFrame:SetParent(nameplate)
+    unitFrame:ClearAllPoints()
+    unitFrame:SetPoint("CENTER")
+    nameplate.unitFrame = unitFrame
+    --mix-in ubm table data
+    Mixin(unitFrame, UFM)
+  end
+
+  print(nameplate.unitFrame:GetEffectiveScale(),nameplate.unitFrame:GetSize(),GetCVar("uiScale"))
+
+  nameplate.unitFrame:UnitAdded(nameplate,unit)
+end
+
+function W:NAME_PLATE_UNIT_REMOVED(unit)
+  local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
+  nameplate.unitFrame:UnitRemoved(nameplate,unit)
+end
+
+function W:OnEvent(event,...)
+  print("W:OnEvent",...)
+  self[event](event,...)
+end
+
+W:SetScript("OnEvent", W.OnEvent)
+
+--W:RegisterEvent("NAME_PLATE_CREATED")
+W:RegisterEvent("NAME_PLATE_UNIT_ADDED")
+W:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
+--W:RegisterEvent("PLAYER_TARGET_CHANGED")
+--W:RegisterEvent("DISPLAY_SIZE_CHANGED")
+--W:RegisterEvent("UNIT_AURA")
+--W:RegisterEvent("VARIABLES_LOADED")
+--W:RegisterEvent("CVAR_UPDATE")
+--W:RegisterEvent("RAID_TARGET_UPDATE")
+--W:RegisterEvent("UNIT_FACTION")
+
+-----------------------------
+-- Unit Frame Mixin
+-----------------------------
+
+function UFM:Create(nameplate)
+  print("UFM:Create",self:GetName(),nameplate:GetName())
+  --create health bar
+  local t = self:CreateTexture(nil,"BACKGROUND",nil,-8)
+  t:SetColorTexture(0,1,0)
+  t:SetSize(32,32)
+  t:SetPoint("CENTER")
+
+  --create name
+  self:Hide()
+end
+
+function UFM:UnitAdded(nameplate,unit)
+  print("UFM:UnitAdded",self:GetName(),nameplate:GetName(),unit)
+
+  self.unit = unit
+  self.inVehicle = UnitInVehicle(unit)
+
+  self:UpdateAllElements()
+  self:Show()
+
+end
+
+function UFM:UnitRemoved(nameplate,unit)
+  print("UFM:UnitRemoved",self:GetName(),nameplate:GetName(),unit)
+
+  self.unit = nil
+  self.inVehicle = nil
+  self:UpdateAllElements()
+
+  self:Hide()
+
+end

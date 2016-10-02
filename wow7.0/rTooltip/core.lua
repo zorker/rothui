@@ -100,28 +100,28 @@ local function OnTooltipSetUnit(self)
       GameTooltipTextLeft2:SetTextColor(unpack(cfg.bossColor))
     elseif unitClassification == "rare" then
       local line = GameTooltipTextLeft2
-      if string.find(GameTooltipTextLeft3:GetText(), "%a%s%d") then
+      if string.find(GameTooltipTextLeft3:GetText() or "empty", "%a%s%d") then
         line:SetTextColor(unpack(cfg.guildColor))
         line = GameTooltipTextLeft3
       end
       line:SetTextColor(unpack(cfg.rareColor))
     elseif unitClassification == "rareelite" then
       local line = GameTooltipTextLeft2
-      if string.find(GameTooltipTextLeft3:GetText(), "%a%s%d") then
+      if string.find(GameTooltipTextLeft3:GetText() or "empty", "%a%s%d") then
         line:SetTextColor(unpack(cfg.guildColor))
         line = GameTooltipTextLeft3
       end
       line:SetTextColor(unpack(cfg.rareeliteColor))
     elseif unitClassification == "elite" then
       local line = GameTooltipTextLeft2
-      if string.find(GameTooltipTextLeft3:GetText(), "%a%s%d") then
+      if string.find(GameTooltipTextLeft3:GetText() or "empty", "%a%s%d") then
         line:SetTextColor(unpack(cfg.guildColor))
         line = GameTooltipTextLeft3
       end
       line:SetTextColor(unpack(cfg.eliteColor))
     else
       local line = GameTooltipTextLeft2
-      if string.find(GameTooltipTextLeft3:GetText(), "%a%s%d") then
+      if string.find(GameTooltipTextLeft3:GetText() or "empty", "%a%s%d") then
         line:SetTextColor(unpack(cfg.guildColor))
         line = GameTooltipTextLeft3
       end
@@ -167,7 +167,9 @@ local function TooltipOnShow(self)
   local itemName, itemLink = self:GetItem()
   if itemLink then
     local _, _, itemRarity = GetItemInfo(itemLink)
-    self:SetBackdropBorderColor(GetItemQualityColor(itemRarity))
+    if itemRarity then
+      self:SetBackdropBorderColor(GetItemQualityColor(itemRarity))
+    end
   end
 end
 

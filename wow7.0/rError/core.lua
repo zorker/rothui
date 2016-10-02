@@ -10,14 +10,6 @@
 local A, L = ...
 
 -----------------------------
--- Config
------------------------------
-
-local cfg = {
-  redirectErrorsToCombatText = true,
-}
-
------------------------------
 -- Blacklist
 -----------------------------
 
@@ -55,13 +47,8 @@ local blacklist = {
 
 local function OnUIErrorMessage(self, event, messageType, message)
   local errorName, soundKitID, voiceID = GetGameMessageInfo(messageType)
-  --print(errorName, message, messageType)
   if blacklist[errorName] then return end
-  if CombatText_AddMessage and cfg.redirectErrorsToCombatText then
-    CombatText_AddMessage(message, COMBAT_TEXT_SCROLL_FUNCTION, 1, 0, 0, "sticky", nil)
-  else
-    UIErrorsFrame:AddMessage(message, 1, .1, .1)
-  end
+  UIErrorsFrame:AddMessage(message, 1, .1, .1)
 end
 
 -----------------------------

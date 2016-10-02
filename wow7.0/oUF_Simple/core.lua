@@ -661,8 +661,9 @@ function UFM:UnitAdded(nameplate,unit)
   self.unit = unit
   self.inVehicle = UnitInVehicle(unit)
 
-  self:UpdateAllElements()
-  self:Show()
+  self:SetAttribute("unit", unit)
+  self:UpdateAllElements("NAME_PLATE_UNIT_ADDED")
+  --self:Show()
 
 end
 
@@ -671,8 +672,8 @@ function UFM:UnitRemoved(nameplate,unit)
 
   self.unit = nil
   self.inVehicle = nil
-  self:UpdateAllElements()
-
-  self:Hide()
+  self:SetAttribute("unit", unit)
+  self:UpdateAllElements("NAME_PLATE_UNIT_REMOVED")
+  --self:Hide()
 
 end

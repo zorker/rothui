@@ -80,7 +80,6 @@ end
 
 --UpdateThreat
 local function UpdateThreat(self,event,unit)
-  print(event,unit)
   self.Health:ForceUpdate()
 end
 
@@ -527,43 +526,31 @@ end
 --register player
 oUF:RegisterStyle(A.."PlayerStyle", CreatePlayerStyle)
 oUF:SetActiveStyle(A.."PlayerStyle")
---local playerFrame = oUF:Spawn("player", A.."PlayerFrame")
+local playerFrame = oUF:Spawn("player", A.."PlayerFrame")
 
 --register target
 oUF:RegisterStyle(A.."TargetStyle", CreateTargetStyle)
 oUF:SetActiveStyle(A.."TargetStyle")
---local targetFrame = oUF:Spawn("target", A.."TargetFrame")
+local targetFrame = oUF:Spawn("target", A.."TargetFrame")
 
 --register targettarget
 oUF:RegisterStyle(A.."TargetTargetStyle", CreateTargetTargetStyle)
 oUF:SetActiveStyle(A.."TargetTargetStyle")
---local targettargetFrame = oUF:Spawn("targettarget", A.."TargetTargetFrame")
+local targettargetFrame = oUF:Spawn("targettarget", A.."TargetTargetFrame")
 
 --register pet
 oUF:RegisterStyle(A.."PetStyle", CreatePetStyle)
 oUF:SetActiveStyle(A.."PetStyle")
---local petFrame = oUF:Spawn("pet", A.."PetFrame")
+local petFrame = oUF:Spawn("pet", A.."PetFrame")
 
 --register focus
 oUF:RegisterStyle(A.."FocusStyle", CreateFocusStyle)
 oUF:SetActiveStyle(A.."FocusStyle")
---local focusFrame = oUF:Spawn("focus", A.."FocusFrame")
+local focusFrame = oUF:Spawn("focus", A.."FocusFrame")
 
 -----------------------------
--- rLib slash command
+-- Nameplates
 -----------------------------
-
---create slash commands
-rLib:CreateSlashCmd(L.addonName, L.addonShortcut, L.dragFrames, L.addonColor)
-
-
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
--- NAMEPLATE TEST
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-------------------------------------------------------------------------------
 
 --register focus
 oUF:RegisterStyle(A.."NamePlateStyle", CreateNamePlateStyle)
@@ -578,7 +565,7 @@ local C_NamePlate = C_NamePlate
 -----------------------------
 
 function W:UpdateNamePlateOptions(...)
-  print("UpdateNamePlateOptions",...)
+  --print("UpdateNamePlateOptions",...)
 end
 
 --disable blizzard nameplates
@@ -640,3 +627,10 @@ function UFM:UnitRemoved(nameplate,unit)
   self:SetAttribute("unit", nil)
   self:UpdateAllElements("NAME_PLATE_UNIT_REMOVED")
 end
+
+-----------------------------
+-- rLib slash command
+-----------------------------
+
+--create slash commands
+rLib:CreateSlashCmd(L.addonName, L.addonShortcut, L.dragFrames, L.addonColor)

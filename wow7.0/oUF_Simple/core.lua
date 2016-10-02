@@ -93,6 +93,32 @@ local function CreateText(self,size,align)
   return text
 end
 
+--AltPowerBarOverride
+local function AltPowerBarOverride(self, event, unit, powerType)
+  if self.unit ~= unit or powerType ~= 'ALTERNATE' then return end
+  --if not self.AltPowerBar:IsShown() then return end
+  local ppmax = UnitPowerMax(unit, ALTERNATE_POWER_INDEX, true) or 0
+  local ppcur = UnitPower(unit, ALTERNATE_POWER_INDEX, true)
+  local _, r, g, b = UnitAlternatePowerTextureInfo(unit, 2)
+  local _, ppmin = UnitAlternatePowerInfo(unit)
+  local el = self.AltPowerBar
+  el:SetMinMaxValues(ppmin or 0, ppmax)
+  el:SetValue(ppcur)
+  if b then
+    el:SetStatusBarColor(r, g, b)
+    if el.bg then
+      local mu = el.bg.multiplier or 0.3
+      el.bg:SetVertexColor(r*mu, g*mu, b*mu)
+    end
+  else
+    el:SetStatusBarColor(1, 0, 1)
+    if el.bg then
+      local mu = el.bg.multiplier or 0.3
+      el.bg:SetVertexColor(1*mu, 0*mu, 1*mu)
+    end
+  end
+end
+
 --CreateAltPowerBar
 local function CreateAltPowerBar(self)
   local s = CreateFrame("StatusBar", nil, self)
@@ -109,7 +135,8 @@ local function CreateAltPowerBar(self)
   --backdrop
   CreateBackdrop(s)
   --reference
-  self.rAltPowerBar = s
+  self.AltPowerBar = s
+  self.AltPowerBar.Override = AltPowerBarOverride
 end
 
 --CreateAbsorbBar
@@ -316,7 +343,7 @@ local function CreatePlayerStyle(self)
   self.Power.colorPower = true
   self.Power.bg.multiplier = 0.3
   self.rClassBar.bg.multiplier = 0.3
-  self.rAltPowerBar.bg.multiplier = 0.3
+  self.AltPowerBar.bg.multiplier = 0.3
   --events
     self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
 end

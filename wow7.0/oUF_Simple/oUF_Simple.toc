@@ -6,5 +6,4 @@
 
 modules\rAbsorbBar.lua
 modules\rClassBar.lua
-modules\rAltPowerBar.lua
 core.lua

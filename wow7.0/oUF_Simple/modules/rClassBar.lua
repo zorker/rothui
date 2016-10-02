@@ -49,7 +49,7 @@ local function Update(self, event, unit, powerType)
   if ppcur == 0 then
     cb:Hide()
   else
-    local color = oUF.colors.power[powerType]
+    local color = oUF.colors.power[powerType] or {1,1,1}
     local r,g,b = unpack(color)
     cb:SetStatusBarColor(r,g,b)
     if cb.bg then

@@ -326,15 +326,15 @@ local function CreatePlayerStyle(self)
   --altpowerbar
   CreateAltPowerBar(self)
   --name
-  local name = CreateText(self.rAbsorbBar or self.Health,14,"LEFT")
-  self:Tag(name, "[name]")
-  name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
+  --local name = CreateText(self.rAbsorbBar or self.Health,14,"LEFT")
+  --self:Tag(name, "[name]")
+  --name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
   --name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -name:GetStringHeight()/3)
   --health text
   local healthText = CreateText(self.rAbsorbBar or self.Health,13,"RIGHT")
   self:Tag(healthText, "[oUF_Simple:health]")
   healthText:SetPoint("RIGHT",-2,0)
-  name:SetPoint("RIGHT",healthText,"LEFT",-2,0)
+  --name:SetPoint("RIGHT",healthText,"LEFT",-2,0)
   --ouf config
   self.Health.colorClass = true
   self.Health.colorHealth = true

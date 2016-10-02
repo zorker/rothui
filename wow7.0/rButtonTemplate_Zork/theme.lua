@@ -93,7 +93,7 @@ actionButtonConfig.border = {
 --normalTexture
 actionButtonConfig.normalTexture = {
   file = mediapath.."normal",
-  color = {0.5,0.5,0.5,0.6},
+  color = {0.5,0.5,0.5,0.7},
   points = {
     {"TOPLEFT", 0, 0 },
     {"BOTTOMRIGHT", 0, 0 },

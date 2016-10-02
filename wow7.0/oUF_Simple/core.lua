@@ -68,7 +68,11 @@ end
 
 --PostUpdateHealth
 local function PostUpdateHealth(self, unit, min, max)
-  if self.colorThreat and unit and UnitThreatSituation(unit) == 3 then
+  if self.__owner.cfg.template == "nameplate" and self.colorThreat and unit and UnitThreatSituation("player", unit) and UnitThreatSituation("player", unit) >= 3 then
+    --color nameplate units green on full threat
+    self:SetStatusBarColor(0,1,0)
+    self.bg:SetVertexColor(0,1*self.bg.multiplier,0)
+  elseif self.colorThreat and unit and UnitThreatSituation(unit) == 3 then
     self:SetStatusBarColor(1,0,0)
     self.bg:SetVertexColor(1*self.bg.multiplier,0,0)
   end

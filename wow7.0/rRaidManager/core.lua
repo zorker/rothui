@@ -1,5 +1,5 @@
 
--- rChat: core
+-- rRaidManager: core
 -- zork, 2016
 
 -----------------------------

@@ -228,8 +228,8 @@ local function SetColorCastBarGrey(self)
 end
 
 local function SetColorCastBarDefault(self)
-  self.__owner:SetStatusBarColor(1,0.8,0,1)
-  self.__owner.bg:SetVertexColor(1*0.3,0.8*0.3,0)
+  self.__owner:SetStatusBarColor(1,0.7,0,1)
+  self.__owner.bg:SetVertexColor(1*0.3,0.7*0.3,0)
 end
 
 --CreateCastBar
@@ -240,12 +240,12 @@ local function CreateCastBar(self)
   s:SetFrameStrata("HIGH")
   s:SetHeight(self:GetHeight())
   s:SetWidth(self:GetWidth())
-  s:SetStatusBarColor(1,0.8,0,1)
+  s:SetStatusBarColor(1,0.7,0,1)
   --bg
   local bg = s:CreateTexture(nil, "BACKGROUND")
   bg:SetTexture(mediapath.."statusbar")
   bg:SetAllPoints(s)
-  bg:SetVertexColor(1*0.3,0.8*0.3,0) --bg multiplier
+  bg:SetVertexColor(1*0.3,0.7*0.3,0) --bg multiplier
   s.bg = bg
   --backdrop
   CreateBackdrop(s)

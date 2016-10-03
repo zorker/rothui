@@ -55,6 +55,14 @@ local function NumberFormat(v)
   end
 end
 
+--CalcFrameSize
+local function CalcFrameSize(numButtons,numCols,buttonWidth,buttonHeight,buttonMargin,framePadding)
+  local numRows = ceil(numButtons/numCols)
+  local frameWidth = numCols*buttonWidth + (numCols-1)*buttonMargin + 2*framePadding
+  local frameHeight = numRows*buttonHeight + (numRows-1)*buttonMargin + 2*framePadding
+  return frameWidth, frameHeight
+end
+
 --CreateBackdrop
 local function CreateBackdrop(self,anchorFrame)
   local bd = CreateFrame("Frame", nil, self)
@@ -229,6 +237,7 @@ local function CreateCastBar(self)
   --statusbar
   local s = CreateFrame("StatusBar", nil, self)
   s:SetStatusBarTexture(mediapath.."statusbar")
+  s:SetFrameStrata("HIGH")
   s:SetHeight(self:GetHeight())
   s:SetWidth(self:GetWidth())
   s:SetStatusBarColor(1,0.8,0,1)
@@ -265,6 +274,56 @@ local function CreateCastBar(self)
   s.Text = name
   --references
   self.Castbar = s
+end
+
+--PostCreateAura
+local function PostCreateAura(self,button)
+  local bg = button:CreateTexture(nil,"BACKGROUND",nil,-8)
+  bg:SetTexture(mediapath.."square")
+  bg:SetVertexColor(0,0,0)
+  bg:SetPoint("TOPLEFT", -self.size/4, self.size/4)
+  bg:SetPoint("BOTTOMRIGHT", self.size/4, -self.size/4)
+  button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+end
+
+--CreateBuffs
+local function CreateBuffs(self,cfg)
+  local frame = CreateFrame("Frame", nil, self)
+  frame:SetPoint(unpack(cfg.point))
+  frame.num = cfg.num
+  frame.size = cfg.size
+  frame.spacing = cfg.spacing
+  frame.initialAnchor = cfg.initialAnchor
+  frame['growth-x'] = cfg.growthX
+  frame['growth-y'] = cfg.growthY
+  frame.disableCooldown = cfg.disableCooldown
+  frame.PostCreateIcon = PostCreateAura
+  --frame.PostUpdateIcon = PostUpdateBuff
+  frame:SetSize(CalcFrameSize(cfg.num,cfg.cols,cfg.size,cfg.size,cfg.spacing,0))
+  --local t = frame:CreateTexture(nil,"BACKGROUND",nil,-8)
+  --t:SetAllPoints()
+  --t:SetColorTexture(0,1,0,0.2)
+  self.Buffs = frame
+end
+
+--CreateDebuffs
+local function CreateDebuffs(self,cfg)
+  local frame = CreateFrame("Frame", nil, self)
+  frame:SetPoint(unpack(cfg.point))
+  frame.num = cfg.num
+  frame.size = cfg.size
+  frame.spacing = cfg.spacing
+  frame.initialAnchor = cfg.initialAnchor
+  frame['growth-x'] = cfg.growthX
+  frame['growth-y'] = cfg.growthY
+  frame.disableCooldown = cfg.disableCooldown
+  frame.PostCreateIcon = PostCreateAura
+  --frame.PostUpdateIcon = PostUpdateDebuff
+  frame:SetSize(CalcFrameSize(cfg.num,cfg.cols,cfg.size,cfg.size,cfg.spacing,0))
+  --local t = frame:CreateTexture(nil,"BACKGROUND",nil,-8)
+  --t:SetAllPoints()
+  --t:SetColorTexture(1,0,0,0.2)
+  self.Debuffs = frame
 end
 
 --SetupHeader
@@ -371,6 +430,32 @@ local function CreateTargetStyle(self)
   --castbar
   CreateCastBar(self)
   self.Castbar:SetPoint("BOTTOM",self,"TOP",0,15)
+  --CreateBuffs
+  local buffCfg = {
+    point = {"BOTTOMLEFT",self,"RIGHT",10,5},
+    num = 32,
+    cols = 8,
+    size = 20,
+    spacing = 5,
+    initialAnchor = "BOTTOMLEFT",
+    growthX = "RIGHT",
+    growthY = "UP",
+    disableCooldown = true,
+  }
+  CreateBuffs(self,buffCfg)
+  --CreateDebuffs
+  local debuffCfg = {
+    point = {"TOPLEFT",self,"RIGHT",10,-5},
+    num = 40,
+    cols = 8,
+    size = 20,
+    spacing = 5,
+    initialAnchor = "TOPLEFT",
+    growthX = "RIGHT",
+    growthY = "DOWN",
+    disableCooldown = true,
+  }
+  CreateDebuffs(self,debuffCfg)
   --name
   local name = CreateText(self.rAbsorbBar or self.Health,14,"LEFT")
   self:Tag(name, "[name]")
@@ -406,6 +491,19 @@ local function CreateTargetTargetStyle(self)
   SetupFrame(self)
   --health
   CreateHealthBar(self)
+  --CreateDebuffs
+  local debuffCfg = {
+    point = {"TOPLEFT",self,"BOTTOMLEFT",0,-5},
+    num = 5,
+    cols = 5,
+    size = 18,
+    spacing = 5,
+    initialAnchor = "TOPLEFT",
+    growthX = "RIGHT",
+    growthY = "DOWN",
+    disableCooldown = true,
+  }
+  CreateDebuffs(self,debuffCfg)
   --name
   local name = CreateText(self.Health,14,"CENTER")
   self:Tag(name, "[name]")
@@ -433,6 +531,19 @@ local function CreatePetStyle(self)
   SetupFrame(self)
   --health
   CreateHealthBar(self)
+  --CreateDebuffs
+  local debuffCfg = {
+    point = {"TOPLEFT",self,"BOTTOMLEFT",0,-5},
+    num = 5,
+    cols = 5,
+    size = 18,
+    spacing = 5,
+    initialAnchor = "TOPLEFT",
+    growthX = "RIGHT",
+    growthY = "DOWN",
+    disableCooldown = true,
+  }
+  CreateDebuffs(self,debuffCfg)
   --castbar
   CreateCastBar(self)
   self.Castbar:SetPoint("TOP",self,"BOTTOM",0,-5)
@@ -464,6 +575,19 @@ local function CreateFocusStyle(self)
   SetupFrame(self)
   --health
   CreateHealthBar(self)
+  --CreateDebuffs
+  local debuffCfg = {
+    point = {"TOPLEFT",self,"BOTTOMLEFT",0,-5},
+    num = 5,
+    cols = 5,
+    size = 18,
+    spacing = 5,
+    initialAnchor = "TOPLEFT",
+    growthX = "RIGHT",
+    growthY = "DOWN",
+    disableCooldown = true,
+  }
+  CreateDebuffs(self,debuffCfg)
   --castbar
   CreateCastBar(self)
   self.Castbar:SetPoint("TOP",self,"BOTTOM",0,-5)
@@ -496,6 +620,19 @@ local function CreatePartyStyle(self)
   CreateHealthBar(self)
   --power
   CreatePowerBar(self)
+  --CreateDebuffs
+  local debuffCfg = {
+    point = {"LEFT",self,"RIGHT",10,0},
+    num = 5,
+    cols = 5,
+    size = 22,
+    spacing = 5,
+    initialAnchor = "TOPLEFT",
+    growthX = "RIGHT",
+    growthY = "DOWN",
+    disableCooldown = true,
+  }
+  CreateDebuffs(self,debuffCfg)
   --name
   local name = CreateText(self.rAbsorbBar or self.Health,14,"LEFT")
   self:Tag(name, "[name]")
@@ -529,6 +666,20 @@ local function CreateNamePlateStyle(self)
   SetupFrame(self)
   --health
   CreateHealthBar(self)
+  --CreateDebuffs
+  local debuffCfg = {
+    point = {"BOTTOMLEFT",self,"TOPLEFT",0,5},
+    num = 5,
+    cols = 5,
+    size = 18,
+    spacing = 5,
+    initialAnchor = "BOTTOMLEFT",
+    growthX = "RIGHT",
+    growthY = "UP",
+    disableCooldown = true,
+    filter = "HARMFUL|INCLUDE_NAME_PLATE_ONLY"
+  }
+  CreateDebuffs(self,debuffCfg)
   --castbar
   CreateCastBar(self)
   self.Castbar:SetPoint("TOP",self,"BOTTOM",0,-5)

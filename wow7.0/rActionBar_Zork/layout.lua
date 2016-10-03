@@ -65,7 +65,7 @@ rActionBar:CreateMicroMenuBar(A, micromenubar)
 
 local bar1 = {
   framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 150 },
-  frameScale      = 1,
+  frameScale      = 0.95,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
@@ -83,14 +83,21 @@ rActionBar:CreateActionBar1(A, bar1)
 
 local bar2 = {
   framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 10 },
-  frameScale      = 1,
+  frameScale      = 0.85,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
   buttonMargin    = 5,
   numCols         = 12,
   startPoint      = "BOTTOMLEFT",
-  fader           = nil,
+  fader           = {
+                      fadeInAlpha = 1,
+                      fadeInDuration = 0.3,
+                      fadeInSmooth = "OUT",
+                      fadeOutAlpha = 0.5,
+                      fadeOutDuration = 0.9,
+                      fadeOutSmooth = "OUT",
+                    },
 }
 --create
 rActionBar:CreateActionBar2(A, bar2)
@@ -102,8 +109,8 @@ rActionBar:CreateActionBar2(A, bar2)
 --note. uses a different fader config object
 
 local bar3 = {
-  framePoint      = { "BOTTOM", A.."Bar2", "TOP", 0, 0 },
-  frameScale      = 1,
+  framePoint      = { "BOTTOM", _G[A.."Bar2"], "TOP", 0, 0 },
+  frameScale      = 0.85,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
@@ -128,7 +135,7 @@ rActionBar:CreateActionBar3(A, bar3)
 
 local bar4 = {
   framePoint      = { "RIGHT", UIParent, "RIGHT", -5, 0 },
-  frameScale      = 1,
+  frameScale      = 0.85,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
@@ -145,8 +152,8 @@ rActionBar:CreateActionBar4(A, bar4)
 -----------------------------
 
 local bar5 = {
-  framePoint      = { "RIGHT", A.."Bar4", "LEFT", 0, 0 },
-  frameScale      = 1,
+  framePoint      = { "RIGHT", _G[A.."Bar4"], "LEFT", 0, 0 },
+  frameScale      = 0.85,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
@@ -201,7 +208,7 @@ rActionBar:CreatePetBar(A, petbar)
 
 local extrabar = {
   framePoint      = { "RIGHT", A.."Bar1", "LEFT", -5, 0 },
-  frameScale      = 1,
+  frameScale      = 0.95,
   framePadding    = 5,
   buttonWidth     = 36,
   buttonHeight    = 36,
@@ -219,7 +226,7 @@ rActionBar:CreateExtraBar(A, extrabar)
 
 local vehicleexitbar = {
   framePoint      = { "LEFT", A.."Bar1", "RIGHT", 5, 0 },
-  frameScale      = 1,
+  frameScale      = 0.95,
   framePadding    = 5,
   buttonWidth     = 36,
   buttonHeight    = 36,
@@ -237,7 +244,7 @@ rActionBar:CreateVehicleExitBar(A, vehicleexitbar)
 
 local possessexitbar = {
   framePoint      = { "BOTTOMLEFT", A.."Bar1", "BOTTOMRIGHT", 5, 0 },
-  frameScale      = 1,
+  frameScale      = 0.95,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,

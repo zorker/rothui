@@ -77,10 +77,7 @@ local function OnTooltipSetUnit(self)
   --position raidicon
   local raidIconIndex = GetRaidTargetIndex(unit)
   if raidIconIndex then
-    --GameTooltipTextLeft1:SetText(("%s %s"):format(ICON_LIST[raidIconIndex].."14|t", unitName))
-    --self:AppendText(" "..ICON_LIST[raidIconIndex].."14|t")
-    GameTooltipTexture1:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_"..raidIconIndex)
-    GameTooltipTexture1:Show()
+    GameTooltipTextLeft1:SetText(("%s %s"):format(ICON_LIST[raidIconIndex].."14|t", unitName))
   end
   if not UnitIsPlayer(unit) then
     --unit is not a player
@@ -175,18 +172,14 @@ end
 
 --TooltipOnHide
 local function TooltipOnHide(self)
-  --print(self:GetName(),"TooltipOnHide")
   self:SetBackdropColor(unpack(cfg.backdrop.bgColor))
   self:SetBackdropBorderColor(unpack(cfg.backdrop.borderColor))
-  GameTooltipTexture1:Hide()
 end
 
 --OnTooltipCleared
 local function OnTooltipCleared(self)
-  --print(self:GetName(),"OnTooltipCleared")
   --fix the blue tooltip background...whatever that is
   self:SetBackdropColor(unpack(cfg.backdrop.bgColor))
-  GameTooltipTexture1:Hide()
 end
 
 local function FixBarColor(self,r,g,b)
@@ -200,12 +193,6 @@ end
 -----------------------------
 
 hooksecurefunc(GameTooltipStatusBar,"SetStatusBarColor", FixBarColor)
-
-GameTooltipTexture1:SetTexture("Interface\\Buttons\\WHITE8x8")
---GameTooltipTexture1:SetVertexColor(0,1,1,0.8)
-GameTooltipTexture1:SetSize(20,20)
-GameTooltipTexture1:ClearAllPoints()
-GameTooltipTexture1:SetPoint("BOTTOM",GameTooltip,"TOP",0,2)
 
 --hex class colors
 for class, color in next, RAID_CLASS_COLORS do

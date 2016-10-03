@@ -643,6 +643,7 @@ local function CreatePartyStyle(self)
   healthText:SetPoint("RIGHT",-2,0)
   name:SetPoint("RIGHT",healthText,"LEFT",-2,0)
   --ouf config
+  self.Health.colorDisconnected = true
   self.Health.colorClass = true
   self.Health.colorReaction = true
   self.Health.colorHealth = true

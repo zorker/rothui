@@ -485,6 +485,38 @@ local function CreateFocusStyle(self)
   self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
 end
 
+local function CreatePartyStyle(self)
+  --frame config
+  local cfg = {}
+  cfg.template = "party"
+  self.cfg = cfg
+  --setup
+  SetupHeader(self)
+  --health
+  CreateHealthBar(self)
+  --power
+  CreatePowerBar(self)
+  --name
+  local name = CreateText(self.rAbsorbBar or self.Health,14,"LEFT")
+  self:Tag(name, "[name]")
+  name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -name:GetStringHeight()/3)
+  --health text
+  local healthText = CreateText(self.rAbsorbBar or self.Health,13,"RIGHT")
+  self:Tag(healthText, "[oUF_Simple:health]")
+  healthText:SetPoint("RIGHT",-2,0)
+  name:SetPoint("RIGHT",healthText,"LEFT",-2,0)
+  --ouf config
+  self.Health.colorClass = true
+  self.Health.colorReaction = true
+  self.Health.colorHealth = true
+  self.Health.colorThreat = true
+  self.Health.bg.multiplier = 0.3
+  self.Power.colorPower = true
+  self.Power.bg.multiplier = 0.3
+  --events
+  self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
+end
+
 local function CreateNamePlateStyle(self)
   --frame config
   local cfg = {}
@@ -547,6 +579,32 @@ local petFrame = oUF:Spawn("pet", A.."PetFrame")
 oUF:RegisterStyle(A.."FocusStyle", CreateFocusStyle)
 oUF:SetActiveStyle(A.."FocusStyle")
 local focusFrame = oUF:Spawn("focus", A.."FocusFrame")
+
+-----------------------------
+-- Party
+-----------------------------
+
+oUF:RegisterStyle(A.."PartyStyle", CreatePartyStyle)
+oUF:SetActiveStyle(A.."PartyStyle")
+
+local party = oUF:SpawnHeader(
+  A.."PartyHeader",
+  nil,
+  "custom [group:party,nogroup:raid] show; hide",
+  "showPlayer", true,
+  "showSolo",   false,
+  "showParty",  true,
+  "showRaid",   false,
+  "point",      "BOTTOM",
+  "xOffset",    0,
+  "yOffset",    15,
+  "oUF-initialConfigFunction", ([[
+    self:SetWidth(%d)
+    self:SetHeight(%d)
+    self:SetScale(%f)
+  ]]):format(150, 22, 1)
+)
+party:SetPoint("TOPLEFT",20,-20)
 
 -----------------------------
 -- Nameplates

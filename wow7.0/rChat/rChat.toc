@@ -1,0 +1,6 @@
+## Interface: 70000
+## Author: zork
+## Title: rChat
+## Notes: Chat enhancements
+
+core.lua

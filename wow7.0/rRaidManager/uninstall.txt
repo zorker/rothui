@@ -1,0 +1,3 @@
+If you have uninstalled the addon and the default raidfame manager does not show up any more run this script in the game chat:
+
+/run for _, v in ipairs({"Blizzard_CUFProfiles", "Blizzard_CompactRaidFrames"}) do print("~~enable~~~~") print(v) EnableAddOn(v) print(LoadAddOn(v)) print(IsAddOnLoaded(v)) end

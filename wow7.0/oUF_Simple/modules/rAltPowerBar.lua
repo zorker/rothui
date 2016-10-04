@@ -14,20 +14,30 @@ local function HideBar(self)
   self.rAltPowerBar:SetValue(0)
 end
 
+local function BadUnit(self,unit)
+  if unit == "vehicle" and (self.unit ~= "vehicle" and self.unit ~= "player") then
+    return true
+  elseif unit == "player" and (self.unit ~= "vehicle" and self.unit ~= "player") then
+    return true
+  elseif unit ~= self.unit then
+    return true
+  end
+  return false
+end
+
 local function Update(self, event, unit, powerType)
   if powerType ~= 'ALTERNATE' then return end
-  if unit ~= self.unit then return end
+  if BadUnit(self,unit) then return end
   if not self.rAltPowerBar:IsShown() then return end
   local ppmax = UnitPowerMax(unit, ALTERNATE_POWER_INDEX, true) or 0
   local ppcur = UnitPower(unit, ALTERNATE_POWER_INDEX, true)
   if ppmax == 0 then
-    --print("UpdateHide",event,unit,self.unit,self.realunit,ppmin,ppmax,ppcur)
+    --extra factor, get the fuck out of shit stinks
     HideBar(self)
     return
   end
   local _, r, g, b = UnitAlternatePowerTextureInfo(unit, 2)
   local _, ppmin = UnitAlternatePowerInfo(unit)
-  --print("Update",event,unit,ppmin,ppmax,ppcur)
   local el = self.rAltPowerBar
   el:SetMinMaxValues(ppmin or 0, ppmax)
   el:SetValue(ppcur)
@@ -55,8 +65,7 @@ local function ForceUpdate(el)
 end
 
 local function Toggle(self, event, unit)
-  if unit ~= self.unit then return end
-  --print("Toggle",event,unit)
+  if BadUnit(self,unit) then return end
   if event == "UNIT_POWER_BAR_HIDE" then
     HideBar(self)
     return
@@ -64,7 +73,7 @@ local function Toggle(self, event, unit)
   local barType, _, _, _, _, hideFromOthers, showOnRaid = UnitAlternatePowerInfo(unit)
   if(barType and (showOnRaid and (UnitInParty(unit) or UnitInRaid(unit)) or not hideFromOthers or unit == 'player' or self.realUnit == 'player')) then
     self.rAltPowerBar:Show()
-    ForceUpdate(self.rAltPowerBar) --may fail if owner.unit is vehicle but power unit is player
+    ForceUpdate(self.rAltPowerBar)
     self:RegisterEvent('UNIT_POWER', Path)
     self:RegisterEvent('UNIT_MAXPOWER', Path)
   else

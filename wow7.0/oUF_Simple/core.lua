@@ -708,38 +708,44 @@ end
 -- Register Styles
 -----------------------------
 
---register player
+--register player style
 oUF:RegisterStyle(A.."PlayerStyle", CreatePlayerStyle)
 oUF:SetActiveStyle(A.."PlayerStyle")
+--spawn player
 local playerFrame = oUF:Spawn("player", A.."PlayerFrame")
 
---register target
+--register target style
 oUF:RegisterStyle(A.."TargetStyle", CreateTargetStyle)
 oUF:SetActiveStyle(A.."TargetStyle")
+--spawn target
 local targetFrame = oUF:Spawn("target", A.."TargetFrame")
 
---register targettarget
+--register targettarget style
 oUF:RegisterStyle(A.."TargetTargetStyle", CreateTargetTargetStyle)
 oUF:SetActiveStyle(A.."TargetTargetStyle")
+--spawn targettarget
 local targettargetFrame = oUF:Spawn("targettarget", A.."TargetTargetFrame")
 
---register pet
+--register pet style
 oUF:RegisterStyle(A.."PetStyle", CreatePetStyle)
 oUF:SetActiveStyle(A.."PetStyle")
+--spawn pet
 local petFrame = oUF:Spawn("pet", A.."PetFrame")
 
---register focus
+--register focus style
 oUF:RegisterStyle(A.."FocusStyle", CreateFocusStyle)
 oUF:SetActiveStyle(A.."FocusStyle")
+--spawn focus
 local focusFrame = oUF:Spawn("focus", A.."FocusFrame")
 
 -----------------------------
 -- Party
 -----------------------------
 
+--register party style
 oUF:RegisterStyle(A.."PartyStyle", CreatePartyStyle)
 oUF:SetActiveStyle(A.."PartyStyle")
-
+--spawn party
 local party = oUF:SpawnHeader(
   A.."PartyHeader",
   nil,
@@ -763,12 +769,12 @@ party:SetPoint("TOPLEFT",20,-20)
 -- Nameplates
 -----------------------------
 
---register focus
+--register nameplate style
 oUF:RegisterStyle(A.."NamePlateStyle", CreateNamePlateStyle)
 oUF:SetActiveStyle(A.."NamePlateStyle")
 
-local W = CreateFrame("Frame") --worker
-local UFM = {} --unit frame mixin
+local W = CreateFrame("Frame") --worker (nameplate event handler)
+--local UFM = {} --unit frame mixin (seems to be obsolete, check later)
 local C_NamePlate = C_NamePlate
 
 -----------------------------
@@ -791,23 +797,29 @@ NamePlateDriverFrame.UpdateNamePlateOptions = W.UpdateNamePlateOptions
 function W:NAME_PLATE_UNIT_ADDED(unit)
   local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
   if not nameplate.unitFrame then
+    --spawn nameplate unitframe on nameplate base
     local unitFrame = oUF:SpawnNamePlate(unit, A..nameplate:GetName(),nameplate)
     unitFrame:EnableMouse(false)
     nameplate.unitFrame = unitFrame
-    Mixin(unitFrame, UFM)
+    --Mixin(unitFrame, UFM)
   end
-  nameplate.unitFrame:UnitAdded(nameplate,unit)
+  --nameplate.unitFrame:UnitAdded(nameplate,unit)
+  nameplate.unitFrame:SetAttribute("unit", unit)
+  nameplate.unitFrame:UpdateAllElements("NAME_PLATE_UNIT_ADDED")
 end
 
 function W:NAME_PLATE_UNIT_REMOVED(unit)
   local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
-  nameplate.unitFrame:UnitRemoved(nameplate,unit)
+  --nameplate.unitFrame:UnitRemoved(nameplate,unit)
+  nameplate.unitFrame:SetAttribute("unit", nil)
+  nameplate.unitFrame:UpdateAllElements("NAME_PLATE_UNIT_REMOVED")
 end
 
 function W:PLAYER_TARGET_CHANGED()
   local nameplate = C_NamePlate.GetNamePlateForUnit("target")
   if nameplate then
-    nameplate.unitFrame:PlayerTargetChanged(nameplate,"target")
+    --nameplate.unitFrame:PlayerTargetChanged(nameplate,"target")
+    nameplate.unitFrame:UpdateAllElements("PLAYER_TARGET_CHANGED")
   end
 end
 
@@ -825,6 +837,7 @@ W:RegisterEvent("PLAYER_TARGET_CHANGED")
 -- Unit Frame Mixin
 -----------------------------
 
+--[[
 function UFM:UnitAdded(nameplate,unit)
   self:SetAttribute("unit", unit)
   self:UpdateAllElements("NAME_PLATE_UNIT_ADDED")
@@ -838,6 +851,7 @@ function UFM:UnitRemoved(nameplate,unit)
   self:SetAttribute("unit", nil)
   self:UpdateAllElements("NAME_PLATE_UNIT_REMOVED")
 end
+]]--
 
 -----------------------------
 -- rLib slash command

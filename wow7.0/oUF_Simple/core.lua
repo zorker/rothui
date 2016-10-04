@@ -7,6 +7,7 @@
 -----------------------------
 
 local A, L = ...
+local oUF = L.oUF
 
 local floor = floor
 
@@ -766,92 +767,12 @@ local party = oUF:SpawnHeader(
 party:SetPoint("TOPLEFT",20,-20)
 
 -----------------------------
--- Nameplates
+-- NamePlates
 -----------------------------
 
 --register nameplate style
-oUF:RegisterStyle(A.."NamePlateStyle", CreateNamePlateStyle)
-oUF:SetActiveStyle(A.."NamePlateStyle")
-
-local W = CreateFrame("Frame") --worker (nameplate event handler)
---local UFM = {} --unit frame mixin (seems to be obsolete, check later)
-local C_NamePlate = C_NamePlate
-
------------------------------
--- Hide Blizzard
------------------------------
-
-function W:UpdateNamePlateOptions(...)
-  --print("UpdateNamePlateOptions",...)
-end
-
---disable blizzard nameplates
-NamePlateDriverFrame:UnregisterAllEvents()
-NamePlateDriverFrame:Hide()
-NamePlateDriverFrame.UpdateNamePlateOptions = W.UpdateNamePlateOptions
-
------------------------------
--- Worker
------------------------------
-
-function W:NAME_PLATE_UNIT_ADDED(unit)
-  local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
-  if not nameplate.unitFrame then
-    --spawn nameplate unitframe on nameplate base
-    nameplate.unitFrame = oUF:SpawnNamePlate(unit, A..nameplate:GetName(),nameplate)
-    --unitFrame:EnableMouse(false) --do I need this?!
-    --nameplate.unitFrame = unitFrame
-    --Mixin(unitFrame, UFM)
-  end
-  --nameplate.unitFrame:UnitAdded(nameplate,unit)
-  nameplate.unitFrame:SetAttribute("unit", unit)
-  nameplate.unitFrame:UpdateAllElements("NAME_PLATE_UNIT_ADDED")
-end
-
-function W:NAME_PLATE_UNIT_REMOVED(unit)
-  local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
-  --nameplate.unitFrame:UnitRemoved(nameplate,unit)
-  nameplate.unitFrame:SetAttribute("unit", nil)
-  nameplate.unitFrame:UpdateAllElements("NAME_PLATE_UNIT_REMOVED")
-end
-
-function W:PLAYER_TARGET_CHANGED()
-  local nameplate = C_NamePlate.GetNamePlateForUnit("target")
-  if nameplate then
-    --nameplate.unitFrame:PlayerTargetChanged(nameplate,"target")
-    nameplate.unitFrame:UpdateAllElements("PLAYER_TARGET_CHANGED")
-  end
-end
-
-function W:OnEvent(event,...)
-  self[event](event,...)
-end
-
-W:SetScript("OnEvent", W.OnEvent)
-
-W:RegisterEvent("NAME_PLATE_UNIT_ADDED")
-W:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
-W:RegisterEvent("PLAYER_TARGET_CHANGED")
-
------------------------------
--- Unit Frame Mixin
------------------------------
-
---[[
-function UFM:UnitAdded(nameplate,unit)
-  self:SetAttribute("unit", unit)
-  self:UpdateAllElements("NAME_PLATE_UNIT_ADDED")
-end
-
-function UFM:PlayerTargetChanged(nameplate,unit)
-  self:UpdateAllElements("PLAYER_TARGET_CHANGED")
-end
-
-function UFM:UnitRemoved(nameplate,unit)
-  self:SetAttribute("unit", nil)
-  self:UpdateAllElements("NAME_PLATE_UNIT_REMOVED")
-end
-]]--
+oUF:RegisterStyle(A.."NamePlateStyle",CreateNamePlateStyle)
+oUF:SpawnNamePlates(A.."NamePlateStyle", A)
 
 -----------------------------
 -- rLib slash command

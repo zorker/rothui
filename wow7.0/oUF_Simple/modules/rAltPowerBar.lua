@@ -1,6 +1,6 @@
 
-local parent, ns = ...
-local oUF = ns.oUF or oUF
+local A, L = ...
+local oUF = L.oUF or oUF
 
 local ALTERNATE_POWER_INDEX = ALTERNATE_POWER_INDEX
 

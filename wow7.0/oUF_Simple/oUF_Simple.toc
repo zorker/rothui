@@ -1,9 +1,10 @@
 ## Interface: 70000
 ## Title: oUF_Simple
 ## Author: zork
-## Notes: Simple oUF layout
-## Dependencies: oUF, rLib
+## Notes: Simple oUF layout (oUF is embedded!)
+## Dependencies: rLib
 
+oUF\oUF.xml
 modules\rAbsorbBar.lua
 modules\rClassBar.lua
 core.lua

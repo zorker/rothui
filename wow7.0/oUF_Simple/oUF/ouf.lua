@@ -578,6 +578,7 @@ function oUF:SpawnNamePlates(styleName,namePrefix,nameplateOptionsFunc)
     end
     nameplate.unitFrame:SetAttribute("unit", unit)
     nameplate.unitFrame:UpdateAllElements(event)
+    --print(nameplate:GetName(),unit,UnitIsUnit("player",unit))
   end
   --NPEH:NAME_PLATE_UNIT_REMOVED
   function NPEH:NAME_PLATE_UNIT_REMOVED(event,unit)
@@ -585,6 +586,7 @@ function oUF:SpawnNamePlates(styleName,namePrefix,nameplateOptionsFunc)
     if not nameplate then return end
     nameplate.unitFrame:SetAttribute("unit", nil)
     nameplate.unitFrame:UpdateAllElements(event)
+    --print(nameplate:GetName(),unit,UnitIsUnit("player",unit))
   end
   --NPEH:PLAYER_TARGET_CHANGED
   function NPEH:PLAYER_TARGET_CHANGED(event)

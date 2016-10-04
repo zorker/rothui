@@ -317,6 +317,7 @@ local function CreateDebuffs(self,cfg)
   frame['growth-x'] = cfg.growthX
   frame['growth-y'] = cfg.growthY
   frame.disableCooldown = cfg.disableCooldown
+  frame.filter = cfg.filter
   frame.PostCreateIcon = PostCreateAura
   --frame.PostUpdateIcon = PostUpdateDebuff
   frame:SetSize(CalcFrameSize(cfg.num,cfg.cols,cfg.size,cfg.size,cfg.spacing,0))

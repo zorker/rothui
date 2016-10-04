@@ -109,6 +109,14 @@ end
 --AltPowerBarOverride
 local function AltPowerBarOverride(self, event, unit, powerType)
   if self.unit ~= unit or powerType ~= 'ALTERNATE' then return end
+  if self.cfg.template == "pet" then
+    local af = _G[A.."PlayerFrame"]
+    if af then
+      if af.AltPowerBar:IsShown() then af = af.AltPowerBar end
+      self.AltPowerBar:ClearAllPoints()
+      self.AltPowerBar:SetPoint("BOTTOMLEFT",af,"TOPLEFT",0,5)
+    end
+  end
   --if not self.AltPowerBar:IsShown() then return end
   local ppmax = UnitPowerMax(unit, ALTERNATE_POWER_INDEX, true) or 0
   local ppcur = UnitPower(unit, ALTERNATE_POWER_INDEX, true)
@@ -533,6 +541,8 @@ local function CreatePetStyle(self)
   SetupFrame(self)
   --health
   CreateHealthBar(self)
+  --altpowerbar
+  CreateAltPowerBar(self)
   --CreateDebuffs
   local debuffCfg = {
     point = {"TOPLEFT",self,"BOTTOMLEFT",0,-5},

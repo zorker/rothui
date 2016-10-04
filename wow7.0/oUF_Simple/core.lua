@@ -109,15 +109,6 @@ end
 --AltPowerBarOverride
 local function AltPowerBarOverride(self, event, unit, powerType)
   if self.unit ~= unit or powerType ~= 'ALTERNATE' then return end
-  if self.cfg.template == "pet" then
-    local af = _G[A.."PlayerFrame"]
-    if af then
-      if af.AltPowerBar:IsShown() then af = af.AltPowerBar end
-      self.AltPowerBar:ClearAllPoints()
-      self.AltPowerBar:SetPoint("BOTTOMLEFT",af,"TOPLEFT",0,5)
-    end
-  end
-  --if not self.AltPowerBar:IsShown() then return end
   local ppmax = UnitPowerMax(unit, ALTERNATE_POWER_INDEX, true) or 0
   local ppcur = UnitPower(unit, ALTERNATE_POWER_INDEX, true)
   local _, r, g, b = UnitAlternatePowerTextureInfo(unit, 2)
@@ -146,7 +137,14 @@ local function CreateAltPowerBar(self)
   s:SetStatusBarTexture(mediapath.."statusbar")
   s:SetHeight(self:GetHeight()/5)
   s:SetWidth((self:GetWidth()-5)/2)
-  s:SetPoint("BOTTOMLEFT",self,"TOPLEFT",0,5)
+  if self.cfg.template == "pet" then
+    s:SetPoint("BOTTOMLEFT",_G[A.."PlayerFrame"] or self,"TOPLEFT",0,5)
+    if _G[A.."PlayerFrame"].AltPowerBar then
+      s:SetWidth(_G[A.."PlayerFrame"].AltPowerBar:GetWidth())
+    end
+  else
+    s:SetPoint("BOTTOMLEFT",self,"TOPLEFT",0,5)
+  end
   --bg
   local bg = s:CreateTexture(nil, "BACKGROUND")
   bg:SetTexture(mediapath.."statusbar")

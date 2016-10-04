@@ -15,10 +15,12 @@ local function HideBar(self)
 end
 
 local function BadUnit(self,unit)
-  if unit == "vehicle" and (self.unit ~= "vehicle" and self.unit ~= "player") then
-    return true
-  elseif unit == "player" and (self.unit ~= "vehicle" and self.unit ~= "player") then
-    return true
+  if unit == "vehicle" or unit == "player" then
+    if self.unit ~= "vehicle" and self.unit ~= "player" then
+      return true
+    else
+      return false
+    end
   elseif unit ~= self.unit then
     return true
   end

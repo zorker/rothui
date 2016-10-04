@@ -75,6 +75,14 @@ local function CreateBackdrop(self,anchorFrame)
   bd:SetBackdropBorderColor(0,0,0,0.8)
 end
 
+--CreateIcon
+local function CreateIcon(self,layer,sublevel,size,point)
+  local icon = self:CreateTexture(nil,layer,nil,sublevel)
+  icon:SetSize(size,size)
+  icon:SetPoint(unpack(point))
+  return icon
+end
+
 --PostUpdateHealth
 local function PostUpdateHealth(self, unit, min, max)
   if self.__owner.cfg.template == "nameplate" and self.colorThreat and unit and UnitThreatSituation("player", unit) and UnitThreatSituation("player", unit) >= 3 then
@@ -202,6 +210,8 @@ local function CreateHealthBar(self)
   --references
   self.Health = s
   self.Health.bg = bg
+  --raid marker
+  self.RaidIcon = CreateIcon(self.Health,"OVERLAY",-8,self:GetHeight()/1.2,{"CENTER",self.Health,"TOP",0,0})
   --hooks
   self.Health.PostUpdate = PostUpdateHealth
   --create absorb bar
@@ -244,7 +254,7 @@ local function CreateCastBar(self)
   --statusbar
   local s = CreateFrame("StatusBar", nil, self)
   s:SetStatusBarTexture(mediapath.."statusbar")
-  s:SetFrameStrata("HIGH")
+  s:SetFrameStrata("MEDIUM")
   s:SetHeight(self:GetHeight())
   s:SetWidth(self:GetWidth())
   s:SetStatusBarColor(1,0.7,0,1)
@@ -291,6 +301,11 @@ local function PostCreateAura(self,button)
   bg:SetPoint("TOPLEFT", -self.size/4, self.size/4)
   bg:SetPoint("BOTTOMRIGHT", self.size/4, -self.size/4)
   button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+  button.count:SetFont(STANDARD_TEXT_FONT, self.size/1.6, "OUTLINE")
+  button.count:SetShadowColor(0,0,0,0.6)
+  button.count:SetShadowOffset(1,-1)
+  button.count:ClearAllPoints()
+  button.count:SetPoint("BOTTOMRIGHT", self.size/10, -self.size/10)
 end
 
 --CreateBuffs

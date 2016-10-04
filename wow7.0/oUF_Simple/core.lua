@@ -798,9 +798,9 @@ function W:NAME_PLATE_UNIT_ADDED(unit)
   local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
   if not nameplate.unitFrame then
     --spawn nameplate unitframe on nameplate base
-    local unitFrame = oUF:SpawnNamePlate(unit, A..nameplate:GetName(),nameplate)
-    unitFrame:EnableMouse(false)
-    nameplate.unitFrame = unitFrame
+    nameplate.unitFrame = oUF:SpawnNamePlate(unit, A..nameplate:GetName(),nameplate)
+    --unitFrame:EnableMouse(false) --do I need this?!
+    --nameplate.unitFrame = unitFrame
     --Mixin(unitFrame, UFM)
   end
   --nameplate.unitFrame:UnitAdded(nameplate,unit)

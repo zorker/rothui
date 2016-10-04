@@ -18,9 +18,9 @@ L.addonShortcut   = "rot"
 -----------------------------
 
 local cfg = {
-  scale = 1,
+  scale = 0.9,
   point = { "TOPRIGHT", -120, -220 },
-  size = { 260, 450 }
+  size = { 260, 550 }
 }
 
 -----------------------------

@@ -7,5 +7,10 @@
 -----------------------------
 
 local A, L = ...
-local oUF = L.oUF
+
+-----------------------------
+-- CreateBossStyle
+-----------------------------
+
+if not L.C.units.nameplates.enabled then return end
 

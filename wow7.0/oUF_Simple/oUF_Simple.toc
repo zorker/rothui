@@ -9,10 +9,11 @@ oUF\oUF.xml
 modules\rAbsorbBar.lua
 modules\rClassBar.lua
 
+config.lua
+
 core\init.lua
 core\functions.lua
-
-config.lua
+core\tags.lua
 
 units\player.lua
 units\target.lua
@@ -24,5 +25,3 @@ units\boss.lua
 units\nameplates.lua
 
 core\spawn.lua
-
-core.lua

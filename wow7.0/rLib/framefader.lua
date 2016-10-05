@@ -66,11 +66,11 @@ end
 
 local function FrameHandler(frame,delay)
   if IsMouseOverFrame(frame) then
-    frame.delayedTime = 0
+    frame.delayedTime = nil
     L:StartFadeIn(frame)
   else
     if delay then
-      if time() > frame.delayedTime then
+      if frame.delayedTime and time() > frame.delayedTime then
         L:StartFadeOut(frame)
       end
     else

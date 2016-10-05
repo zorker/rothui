@@ -75,7 +75,9 @@ end
 
 local function ApplyAlpha(region,alpha)
   if not alpha then return end
+  --region.__alpha = alpha
   region:SetAlpha(alpha)
+  --hooksecurefunc(region, "SetAlpha", ResetAlpha)
 end
 
 local function ApplyFont(fontString,font)

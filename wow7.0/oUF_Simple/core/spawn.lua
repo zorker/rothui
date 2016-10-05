@@ -74,5 +74,5 @@ end
 --spawn nameplates
 if L.F.CreateNamePlateStyle then
   oUF:RegisterStyle(L.C.units.nameplates.styleName,L.F.CreateNamePlateStyle)
-  oUF:SpawnNamePlates(L.C.units.nameplates.styleName, L.C.units.nameplates.framePrefix)
+  oUF:SpawnNamePlates(L.C.units.nameplates.styleName, L.C.units.nameplates.framePrefix, L.F.NamePlateCallback)
 end

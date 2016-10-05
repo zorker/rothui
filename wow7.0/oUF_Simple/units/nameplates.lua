@@ -46,3 +46,9 @@ local function CreateNamePlateStyle(self)
   self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", L.F.UpdateThreat)
 end
 L.F.CreateNamePlateStyle = CreateNamePlateStyle
+
+local function NamePlateCallback(...)
+  --print(...)
+end
+
+L.F.NamePlateCallback = NamePlateCallback

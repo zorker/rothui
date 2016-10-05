@@ -8,7 +8,7 @@
 
 local A, L = ...
 
-local SpellFlyout = SpellFlyout
+local SpellFlyout, time, C_Timer = SpellFlyout, time, C_Timer
 
 -----------------------------
 -- Functions
@@ -64,11 +64,19 @@ local function IsMouseOverFrame(frame)
   return false
 end
 
-local function FrameHandler(frame)
+local function FrameHandler(frame,delay)
   if IsMouseOverFrame(frame) then
+    frame.delayedTime = 0
     L:StartFadeIn(frame)
   else
-    L:StartFadeOut(frame)
+    if delay then
+      if time() > frame.delayedTime then
+        L:StartFadeOut(frame)
+      end
+    else
+      frame.delayedTime = time()+2
+      C_Timer.After(2.5, frame.DelayFrameHandler)
+    end
   end
 end
 
@@ -105,6 +113,9 @@ function rLib:CreateFrameFader(frame, faderConfig)
   frame.faderConfig = faderConfig
   frame:EnableMouse(true)
   CreateFaderAnimation(frame)
+  function frame:DelayFrameHandler()
+    FrameHandler(self,1)
+  end
   frame:HookScript("OnEnter", FrameHandler)
   frame:HookScript("OnLeave", FrameHandler)
   FrameHandler(frame)

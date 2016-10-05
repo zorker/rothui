@@ -25,6 +25,13 @@ local function CallButtonFunctionByName(button, func, ...)
   end
 end
 
+local function ResetAlpha(self,a)
+  if not self.__alpha then return end
+  if a == self.__alpha then return end
+  self:SetAlpha(self.__alpha)
+  print(self:GetName(),a)
+end
+
 local function ResetNormalTexture(self, file)
   if not self.__normalTextureFile then return end
   if file == self.__normalTextureFile then return end

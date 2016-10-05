@@ -5,6 +5,24 @@
 ## Dependencies: rLib
 
 oUF\oUF.xml
+
 modules\rAbsorbBar.lua
 modules\rClassBar.lua
+
+core\init.lua
+core\functions.lua
+
+config.lua
+
+units\player.lua
+units\target.lua
+units\targettarget.lua
+units\pet.lua
+units\focus.lua
+units\party.lua
+units\boss.lua
+units\nameplates.lua
+
+core\spawn.lua
+
 core.lua

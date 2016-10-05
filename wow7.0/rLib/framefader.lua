@@ -23,6 +23,7 @@ local function CreateFaderAnimation(frame)
   frame.fader = frame:CreateAnimationGroup()
   frame.fader.__owner = frame
   frame.fader.direction = nil
+  frame.fader.setToFinalAlpha = false --test if this will NOT apply the alpha to all regions
   frame.fader.anim = frame.fader:CreateAnimation("Alpha")
   frame.fader:HookScript("OnFinished", FaderOnFinished)
 end

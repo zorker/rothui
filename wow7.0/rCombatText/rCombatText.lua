@@ -1,12 +1,16 @@
-local size = 18
+local size = 16
 
-SystemFont_Shadow_Huge3:SetFont(STANDARD_TEXT_FONT, size, "OUTLINE")
-SystemFont_Shadow_Huge3:SetShadowOffset(1,-1)
-SystemFont_Shadow_Huge3:SetShadowColor(0,0,0,0.6)
+CombatTextFont:SetFont(STANDARD_TEXT_FONT, size, "OUTLINE")
+CombatTextFont:SetShadowOffset(1,-1)
+CombatTextFont:SetShadowColor(0,0,0,0.6)
+
+CombatTextFontOutline:SetFont(STANDARD_TEXT_FONT, size, "OUTLINE")
+CombatTextFontOutline:SetShadowOffset(1,-1)
+CombatTextFontOutline:SetShadowColor(0,0,0,0.6)
 
 COMBAT_TEXT_HEIGHT = size
-COMBAT_TEXT_CRIT_MAXHEIGHT = size*1.8
-COMBAT_TEXT_CRIT_MINHEIGHT = size*1.4
+COMBAT_TEXT_CRIT_MAXHEIGHT = size*1
+COMBAT_TEXT_CRIT_MINHEIGHT = size*1
 COMBAT_TEXT_SCROLLSPEED = 3.5
 
 local function UpdateDisplayMessages()

@@ -130,12 +130,12 @@ local function CreateAltPowerBar(self)
   s:SetHeight(self:GetHeight()/5)
   s:SetWidth((self:GetWidth()-5)/2)
   if self.cfg.template == "pet" then
-    s:SetPoint("BOTTOMLEFT",_G[A.."PlayerFrame"] or self,"TOPLEFT",0,5)
+    s:SetPoint("BOTTOMLEFT",_G[A.."PlayerFrame"] or self,"TOPLEFT",0,3)
     if _G[A.."PlayerFrame"].AltPowerBar then
       s:SetWidth(_G[A.."PlayerFrame"].AltPowerBar:GetWidth())
     end
   else
-    s:SetPoint("BOTTOMLEFT",self,"TOPLEFT",0,5)
+    s:SetPoint("BOTTOMLEFT",self,"TOPLEFT",0,3)
   end
   --bg
   local bg = s:CreateTexture(nil, "BACKGROUND")
@@ -169,7 +169,7 @@ local function CreateClassBar(self)
   s:SetStatusBarTexture(L.C.mediapath.."statusbar")
   s:SetHeight(self:GetHeight()/5)
   s:SetWidth((self:GetWidth()-5)/2)
-  s:SetPoint("BOTTOMRIGHT",self,"TOPRIGHT",0,5)
+  s:SetPoint("BOTTOMRIGHT",self,"TOPRIGHT",0,3)
   --bg
   local bg = s:CreateTexture(nil, "BACKGROUND")
   bg:SetTexture(L.C.mediapath.."statusbar")
@@ -296,6 +296,7 @@ local function PostCreateAura(self,button)
   button.count:SetShadowOffset(1,-1)
   button.count:ClearAllPoints()
   button.count:SetPoint("BOTTOMRIGHT", self.size/10, -self.size/10)
+  button:SetFrameStrata("LOW")
 end
 
 --CreateBuffs

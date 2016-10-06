@@ -174,12 +174,28 @@ L.C.units.party = {
 
 --boss
 L.C.units.boss = {
-  enabled = false,
+  enabled = true,
+  styleName = A.."BossStyle",
+  framePrefix = A, --will be substituted with BossFrame1..n
+  size = {110,22},
+  point = {"TOP",Minimap,"BOTTOM",0,-30},
+  scale = 1,
+  debuffCfg = {
+    point = {"TOPLEFT",0,-32},
+    num = 5,
+    cols = 5,
+    size = 18,
+    spacing = 5,
+    initialAnchor = "TOPLEFT",
+    growthX = "RIGHT",
+    growthY = "DOWN",
+    disableCooldown = true,
+  },
 }
 
 --nameplate CVARS
 
-local function PrintNamePlateCVARS()
+local function SetNamePlateCVARS()
   SetCVar("nameplateShowAll", 1)
   SetCVar("nameplateMaxAlpha", 0.5)
   SetCVar("nameplateShowEnemies", 1)
@@ -192,6 +208,7 @@ local function PrintNamePlateCVARS()
   SetCVar("nameplateMaxDistance", 40)
   SetCVar("NamePlateHorizontalScale", 1)
   SetCVar("NamePlateVerticalScale", 1)
+  --[[
   print('--------------------------------------')
   print(A..' nameplate CVAR settings')
   print('--------------------------------------')
@@ -207,8 +224,9 @@ local function PrintNamePlateCVARS()
   print("nameplateMaxDistance", 'default', GetCVarDefault("nameplateMaxDistance"), 'saved', GetCVar("nameplateMaxDistance"))
   print("NamePlateHorizontalScale", 'default', GetCVarDefault("NamePlateHorizontalScale"), 'saved', GetCVar("NamePlateHorizontalScale"))
   print("NamePlateVerticalScale", 'default', GetCVarDefault("NamePlateVerticalScale"), 'saved', GetCVar("NamePlateVerticalScale"))
+  ]]
 end
-rLib:RegisterCallback("PLAYER_LOGIN",PrintNamePlateCVARS)
+rLib:RegisterCallback("PLAYER_LOGIN",SetNamePlateCVARS)
 
 --nameplates
 L.C.units.nameplates = {

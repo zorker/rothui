@@ -177,6 +177,39 @@ L.C.units.boss = {
   enabled = false,
 }
 
+--nameplate CVARS
+
+local function PrintNamePlateCVARS()
+  SetCVar("nameplateShowAll", 1)
+  SetCVar("nameplateMaxAlpha", 0.5)
+  SetCVar("nameplateShowEnemies", 1)
+  SetCVar("ShowClassColorInNameplate", 1)
+  SetCVar("nameplateOtherTopInset", 0.08)
+  SetCVar("nameplateOtherBottomInset", -1)
+  SetCVar("nameplateMinScale", 1)
+  SetCVar("namePlateMaxScale", 1)
+  SetCVar("nameplateMinScaleDistance", 10)
+  SetCVar("nameplateMaxDistance", 40)
+  SetCVar("NamePlateHorizontalScale", 1)
+  SetCVar("NamePlateVerticalScale", 1)
+  print('--------------------------------------')
+  print(A..' nameplate CVAR settings')
+  print('--------------------------------------')
+  print('nameplateShowAll', 'default', GetCVarDefault("nameplateShowAll"), 'saved', GetCVar("nameplateShowAll"))
+  print("nameplateMaxAlpha", 'default', GetCVarDefault("nameplateMaxAlpha"), 'saved', GetCVar("nameplateMaxAlpha"))
+  print("nameplateShowEnemies", 'default', GetCVarDefault("nameplateShowEnemies"), 'saved', GetCVar("nameplateShowEnemies"))
+  print("ShowClassColorInNameplate", 'default', GetCVarDefault("ShowClassColorInNameplate"), 'saved', GetCVar("ShowClassColorInNameplate"))
+  print("nameplateOtherTopInset", 'default', GetCVarDefault("nameplateOtherTopInset"), 'saved', GetCVar("nameplateOtherTopInset"))
+  print("nameplateOtherBottomInset", 'default', GetCVarDefault("nameplateOtherBottomInset"), 'saved', GetCVar("nameplateOtherBottomInset"))
+  print("nameplateMinScale", 'default', GetCVarDefault("nameplateMinScale"), 'saved', GetCVar("nameplateMinScale"))
+  print("namePlateMaxScale", 'default', GetCVarDefault("namePlateMaxScale"), 'saved', GetCVar("namePlateMaxScale"))
+  print("nameplateMinScaleDistance", 'default', GetCVarDefault("nameplateMinScaleDistance"), 'saved', GetCVar("nameplateMinScaleDistance"))
+  print("nameplateMaxDistance", 'default', GetCVarDefault("nameplateMaxDistance"), 'saved', GetCVar("nameplateMaxDistance"))
+  print("NamePlateHorizontalScale", 'default', GetCVarDefault("NamePlateHorizontalScale"), 'saved', GetCVar("NamePlateHorizontalScale"))
+  print("NamePlateVerticalScale", 'default', GetCVarDefault("NamePlateVerticalScale"), 'saved', GetCVar("NamePlateVerticalScale"))
+end
+rLib:RegisterCallback("PLAYER_LOGIN",PrintNamePlateCVARS)
+
 --nameplates
 L.C.units.nameplates = {
   enabled = true,

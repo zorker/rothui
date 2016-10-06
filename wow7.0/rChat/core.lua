@@ -107,8 +107,9 @@ ChatFrameMenuButton:HookScript("OnShow", ChatFrameMenuButton.Hide)
 ChatFrameMenuButton:Hide()
 
 --hide the friend micro button
-FriendsMicroButton:HookScript("OnShow", FriendsMicroButton.Hide)
-FriendsMicroButton:Hide()
+local button = QuickJoinToastButton or FriendsMicroButton
+button:HookScript("OnShow", button.Hide)
+button:Hide()
 
 --skin chat
 for i = 1, NUM_CHAT_WINDOWS do

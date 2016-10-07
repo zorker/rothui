@@ -24,7 +24,9 @@ L.C.mediapath = "interface\\addons\\"..A.."\\media\\"
 --backdrop
 L.C.backdrop = {
   bgFile = L.C.mediapath.."backdrop",
+  bgColor = {0,0,0,0.8},
   edgeFile = L.C.mediapath.."backdrop_edge",
+  edgeColor = {0,0,0,0.8},
   tile = false,
   tileSize = 0,
   inset = 4,
@@ -55,6 +57,9 @@ L.C.units.player = {
   size = {225,22},
   point = {"RIGHT",UIParent,"BOTTOM",-100,350},
   scale = 1,
+  castbar = {
+    showIcon = true,
+  },
 }
 
 --target
@@ -86,6 +91,9 @@ L.C.units.target = {
     growthX = "RIGHT",
     growthY = "DOWN",
     disableCooldown = true,
+  },
+  castbar = {
+    showIcon = true,
   },
 }
 
@@ -128,6 +136,9 @@ L.C.units.pet = {
     growthX = "RIGHT",
     growthY = "DOWN",
     disableCooldown = true,
+  },
+  castbar = {
+    showIcon = true,
   },
 }
 
@@ -207,7 +218,10 @@ L.C.units.boss = {
     point = "TOP",
     relativePoint = "BOTTOM", --relativeTo will be the boss frame preceding
     xOffset = 0,
-    yOffset = 45,
+    yOffset = -45,
+  },
+  castbar = {
+    showIcon = true,
   },
 }
 

@@ -46,15 +46,15 @@ local function CalcFrameSize(numButtons,numCols,buttonWidth,buttonHeight,buttonM
 end
 
 --CreateBackdrop
-local function CreateBackdrop(self,anchorFrame)
+local function CreateBackdrop(self,relativeTo)
   local backdrop = L.C.backdrop
   local bd = CreateFrame("Frame", nil, self)
   bd:SetFrameLevel(self:GetFrameLevel()-1 or 0)
-  bd:SetPoint("TOPLEFT", anchorFrame or self, "TOPLEFT", -backdrop.inset, backdrop.inset)
-  bd:SetPoint("BOTTOMRIGHT", anchorFrame or self, "BOTTOMRIGHT", backdrop.inset, -backdrop.inset)
-  bd:SetBackdrop(backdrop);
-  bd:SetBackdropColor(0,0,0,0.8)
-  bd:SetBackdropBorderColor(0,0,0,0.8)
+  bd:SetPoint("TOPLEFT", relativeTo or self, "TOPLEFT", -backdrop.inset, backdrop.inset)
+  bd:SetPoint("BOTTOMRIGHT", relativeTo or self, "BOTTOMRIGHT", backdrop.inset, -backdrop.inset)
+  bd:SetBackdrop(backdrop)
+  bd:SetBackdropColor(unpack(backdrop.bgColor))
+  bd:SetBackdropBorderColor(unpack(backdrop.edgeColor))
 end
 
 --CreateIcon
@@ -256,7 +256,7 @@ local function CreateCastBar(self)
   --backdrop
   CreateBackdrop(s)
   --icon for player and target only
-  if self.cfg.template == "player" or self.cfg.template == "target" or self.cfg.template == "nameplate" then
+  if self.cfg.castbar.showIcon then
     --icon
     local i = s:CreateTexture(nil,"BACKGROUND",nil,-8)
     i:SetSize(self:GetHeight(),self:GetHeight())

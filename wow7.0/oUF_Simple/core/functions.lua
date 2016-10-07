@@ -8,7 +8,7 @@
 
 local A, L = ...
 
-local floor = floor
+local floor, unpack = floor, unpack
 
 --functions container
 L.F = {}
@@ -229,13 +229,13 @@ end
 L.F.CreatePowerBar = CreatePowerBar
 
 local function SetColorCastBarGrey(self)
-  self.__owner:SetStatusBarColor(0.7,0.7,0.7,1)
-  self.__owner.bg:SetVertexColor(0.7*0.3,0.7*0.3,0.7*0.3)
+  self.__owner:SetStatusBarColor(unpack(L.C.castbar.colors.shielded))
+  self.__owner.bg:SetVertexColor(unpack(L.C.castbar.colors.shieldedBG))
 end
 
 local function SetColorCastBarDefault(self)
-  self.__owner:SetStatusBarColor(1,0.7,0,1)
-  self.__owner.bg:SetVertexColor(1*0.3,0.7*0.3,0)
+  self.__owner:SetStatusBarColor(unpack(L.C.castbar.colors.default))
+  self.__owner.bg:SetVertexColor(unpack(L.C.castbar.colors.defaultBG))
 end
 
 --CreateCastBar
@@ -246,12 +246,12 @@ local function CreateCastBar(self)
   s:SetFrameStrata("MEDIUM")
   s:SetHeight(self:GetHeight())
   s:SetWidth(self:GetWidth())
-  s:SetStatusBarColor(1,0.7,0,1)
+  s:SetStatusBarColor(unpack(L.C.castbar.colors.default))
   --bg
   local bg = s:CreateTexture(nil, "BACKGROUND")
   bg:SetTexture(L.C.mediapath.."statusbar")
   bg:SetAllPoints(s)
-  bg:SetVertexColor(1*0.3,0.7*0.3,0) --bg multiplier
+  bg:SetVertexColor(unpack(L.C.castbar.colors.defaultBG)) --bg multiplier
   s.bg = bg
   --backdrop
   CreateBackdrop(s)

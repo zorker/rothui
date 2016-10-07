@@ -11,13 +11,17 @@ local oUF = L.oUF
 
 --configs container
 L.C = {}
+--units container
+L.C.units = {}
 
 -----------------------------
 -- Config
 -----------------------------
 
+--mediapath
 L.C.mediapath = "interface\\addons\\"..A.."\\media\\"
 
+--backdrop
 L.C.backdrop = {
   bgFile = L.C.mediapath.."backdrop",
   edgeFile = L.C.mediapath.."backdrop_edge",
@@ -33,7 +37,15 @@ L.C.backdrop = {
   },
 }
 
-L.C.units = {}
+--castbar
+L.C.castbar {
+  colors = {
+    default = {1,0.7,0},
+    defaultBG = {1*0.3,0.7*0.3,0},
+    shielded = {0.7,0.7,0.7},
+    shieldedBG = {0.7*0.3,0.7*0.3,0.7*0.3},
+  },
+}
 
 --player
 L.C.units.player = {
@@ -178,10 +190,10 @@ L.C.units.boss = {
   styleName = A.."BossStyle",
   framePrefix = A, --will be substituted with BossFrame1..n
   size = {110,22},
-  point = {"TOP",Minimap,"BOTTOM",0,-30},
+  point = {"TOP",Minimap,"BOTTOM",0,-30}, --point of first boss frame
   scale = 1,
   debuffCfg = {
-    point = {"TOPLEFT",0,-32},
+    point = {"TOPLEFT",0,-32}, --this may seem wierd but party frames are generated on the fly, no other way
     num = 5,
     cols = 5,
     size = 18,
@@ -190,6 +202,12 @@ L.C.units.boss = {
     growthX = "RIGHT",
     growthY = "DOWN",
     disableCooldown = true,
+  },
+  setup = {
+    point = "TOP",
+    relativePoint = "BOTTOM", --relativeTo will be the boss frame preceding
+    xOffset = 0,
+    yOffset = 45,
   },
 }
 

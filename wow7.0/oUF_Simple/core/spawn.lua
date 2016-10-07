@@ -77,11 +77,11 @@ if L.F.CreateBossStyle then
   oUF:SetActiveStyle(L.C.units.boss.styleName)
   local boss = {}
   for i = 1, MAX_BOSS_FRAMES do
-    boss[i] = oUF:Spawn("boss"..i, L.C.units.nameplates.framePrefix.."BossFrame"..i)
+    boss[i] = oUF:Spawn("boss"..i, L.C.units.boss.framePrefix.."BossFrame"..i)
     if (i == 1) then
       boss[i]:SetPoint(unpack(L.C.units.boss.point))
     else
-      boss[i]:SetPoint("TOP", boss[i-1], "BOTTOM", 0, -45)
+      boss[i]:SetPoint(L.C.units.boss.setup.point, boss[i-1], L.C.units.boss.setup.relativePoint, L.C.units.boss.setup.xOffset, L.C.units.boss.setup.yOffset)
     end
   end
 end

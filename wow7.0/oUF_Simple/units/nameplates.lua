@@ -29,7 +29,7 @@ local function CreateNamePlateStyle(self)
   self.Castbar:SetPoint("TOP",self,"BOTTOM",0,-5)
   --name
   local name = L.F.CreateText(self.rAbsorbBar or self.Health,14,"CENTER")
-  self:Tag(name, "[name]")
+  self:Tag(name, "[difficulty][name]|r")
   --name:SetPoint("CENTER", self.Health)
   name:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
   name:SetPoint("RIGHT", self.Health, "RIGHT", -2, 0)
@@ -40,6 +40,7 @@ local function CreateNamePlateStyle(self)
   self.Health.colorReaction = true
   self.Health.colorHealth = true
   self.Health.colorThreat = true
+  self.Health.colorThreatInvers = true
   self.Health.bg.multiplier = 0.3
   self.Health.frequentUpdates = true
   --events

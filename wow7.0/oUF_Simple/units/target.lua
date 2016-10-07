@@ -33,7 +33,7 @@ local function CreateTargetStyle(self)
   L.F.CreateDebuffs(self,self.cfg.debuffCfg)
   --name
   local name = L.F.CreateText(self.rAbsorbBar or self.Health,14,"LEFT")
-  self:Tag(name, "[name]")
+  self:Tag(name, "[difficulty][name]|r")
   name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -name:GetStringHeight()/3)
   --health text
   local healthText = L.F.CreateText(self.rAbsorbBar or self.Health,13,"RIGHT")
@@ -47,6 +47,7 @@ local function CreateTargetStyle(self)
   self.Health.colorReaction = true
   self.Health.colorHealth = true
   self.Health.colorThreat = true
+  self.Health.colorThreatInvers = true
   self.Health.bg.multiplier = 0.3
   self.Power.colorPower = true
   self.Power.bg.multiplier = 0.3

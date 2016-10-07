@@ -26,6 +26,5 @@ oUF.Tags.Methods["oUF_Simple:health"] = function(unit)
   if hpmax > 0 then hpper = floor(hpmin/hpmax*100) end
   return L.F.NumberFormat(hpmin).."|cffcccccc | |r"..hpper.."%"
 end
-
 --tag event: oUF_Simple:health
 oUF.Tags.Events["oUF_Simple:health"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"

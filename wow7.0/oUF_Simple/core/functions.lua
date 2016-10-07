@@ -256,7 +256,7 @@ local function CreateCastBar(self)
   --backdrop
   CreateBackdrop(s)
   --icon for player and target only
-  if self.cfg.castbar.showIcon then
+  if self.cfg.castbar and self.cfg.castbar.showIcon then
     --icon
     local i = s:CreateTexture(nil,"BACKGROUND",nil,-8)
     i:SetSize(self:GetHeight(),self:GetHeight())

@@ -13,6 +13,8 @@ L.C = {}
 --units container
 L.C.units = {}
 
+local B = "oUF_Simple" --name of the addon that is creating all the frames
+
 --make the config global
 oUF_SimpleConfig = L.C
 
@@ -42,7 +44,7 @@ L.C.backdrop = {
 }
 
 --castbar
-L.C.castbar {
+L.C.castbar = {
   colors = {
     default = {1,0.7,0},
     defaultBG = {1*0.3,0.7*0.3,0},
@@ -54,8 +56,8 @@ L.C.castbar {
 --player
 L.C.units.player = {
   enabled = true,
-  styleName = A.."PlayerStyle",
-  frameName = A.."PlayerFrame",
+  styleName = B.."PlayerStyle",
+  frameName = B.."PlayerFrame",
   size = {225,22},
   point = {"RIGHT",UIParent,"BOTTOM",-100,350},
   scale = 1,
@@ -67,13 +69,13 @@ L.C.units.player = {
 --target
 L.C.units.target = {
   enabled = true,
-  styleName = A.."TargetStyle",
-  frameName = A.."TargetFrame",
+  styleName = B.."TargetStyle",
+  frameName = B.."TargetFrame",
   size = {225,22},
   point = {"LEFT",UIParent,"BOTTOM",100,350},
   scale = 1,
   buffCfg = {
-    point = {"BOTTOMLEFT",A.."TargetFrame","RIGHT",10,5},
+    point = {"BOTTOMLEFT",B.."TargetFrame","RIGHT",10,5},
     num = 32,
     cols = 8,
     size = 20,
@@ -84,7 +86,7 @@ L.C.units.target = {
     disableCooldown = true,
   },
   debuffCfg = {
-    point = {"TOPLEFT",A.."TargetFrame","RIGHT",10,-5},
+    point = {"TOPLEFT",B.."TargetFrame","RIGHT",10,-5},
     num = 40,
     cols = 8,
     size = 20,
@@ -102,13 +104,13 @@ L.C.units.target = {
 --targettarget
 L.C.units.targettarget = {
   enabled = true,
-  styleName = A.."TargetTargetStyle",
-  frameName = A.."TargetTargetFrame",
+  styleName = B.."TargetTargetStyle",
+  frameName = B.."TargetTargetFrame",
   size = {110,22},
-  point = {"TOPLEFT",A.."TargetFrame","BOTTOMLEFT",0,-15},
+  point = {"TOPLEFT",B.."TargetFrame","BOTTOMLEFT",0,-15},
   scale = 1,
   debuffCfg = {
-    point = {"TOPLEFT",A.."TargetTargetFrame","BOTTOMLEFT",0,-5},
+    point = {"TOPLEFT",B.."TargetTargetFrame","BOTTOMLEFT",0,-5},
     num = 5,
     cols = 5,
     size = 18,
@@ -123,13 +125,13 @@ L.C.units.targettarget = {
 --pet
 L.C.units.pet = {
   enabled = true,
-  styleName = A.."PetStyle",
-  frameName = A.."PetFrame",
+  styleName = B.."PetStyle",
+  frameName = B.."PetFrame",
   size = {110,22},
-  point = {"TOPLEFT",A.."PlayerFrame","BOTTOMLEFT",0,-15},
+  point = {"TOPLEFT",B.."PlayerFrame","BOTTOMLEFT",0,-15},
   scale = 1,
   debuffCfg = {
-    point = {"TOPLEFT",A.."PetFrame","BOTTOMLEFT",0,-5},
+    point = {"TOPLEFT",B.."PetFrame","BOTTOMLEFT",0,-5},
     num = 5,
     cols = 5,
     size = 18,
@@ -147,13 +149,13 @@ L.C.units.pet = {
 --focus
 L.C.units.focus = {
   enabled = true,
-  styleName = A.."FocusStyle",
-  frameName = A.."FocusFrame",
+  styleName = B.."FocusStyle",
+  frameName = B.."FocusFrame",
   size = {110,22},
-  point = {"TOPRIGHT",A.."PlayerFrame","BOTTOMRIGHT",0,-15},
+  point = {"TOPRIGHT",B.."PlayerFrame","BOTTOMRIGHT",0,-15},
   scale = 1,
   debuffCfg = {
-    point = {"TOPLEFT",A.."FocusFrame","BOTTOMLEFT",0,-5},
+    point = {"TOPLEFT",B.."FocusFrame","BOTTOMLEFT",0,-5},
     num = 5,
     cols = 5,
     size = 18,
@@ -168,8 +170,8 @@ L.C.units.focus = {
 --party
 L.C.units.party = {
   enabled = true,
-  styleName = A.."PartyStyle",
-  frameName = A.."PartyHeaderFrame",
+  styleName = B.."PartyStyle",
+  frameName = B.."PartyHeaderFrame",
   size = {150,22},
   point = {"TOPLEFT",20,-20}, --party header parent is UIParent
   scale = 1,
@@ -200,7 +202,7 @@ L.C.units.party = {
 --boss
 L.C.units.boss = {
   enabled = true,
-  styleName = A.."BossStyle",
+  styleName = B.."BossStyle",
   framePrefix = A, --will be substituted with BossFrame1..n
   size = {110,22},
   point = {"TOP",Minimap,"BOTTOM",0,-30}, --point of first boss frame
@@ -265,7 +267,7 @@ rLib:RegisterCallback("PLAYER_LOGIN",SetNamePlateCVARS)
 --nameplates
 L.C.units.nameplates = {
   enabled = true,
-  styleName = A.."NamePlateStyle",
+  styleName = B.."NamePlateStyle",
   framePrefix = A, --will be substituted with NamePlate1..n
   size = {110,22},
   point = {"CENTER"}, --relative to the nameplate base!
@@ -281,5 +283,8 @@ L.C.units.nameplates = {
     growthY = "UP",
     disableCooldown = true,
     filter = "HARMFUL|INCLUDE_NAME_PLATE_ONLY"
+  },
+  castbar = {
+    showIcon = true,
   },
 }

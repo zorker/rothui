@@ -228,12 +228,12 @@ local function CreatePowerBar(self)
 end
 L.F.CreatePowerBar = CreatePowerBar
 
-local function SetColorCastBarGrey(self)
+local function SetCastBarColorShielded(self)
   self.__owner:SetStatusBarColor(unpack(L.C.castbar.colors.shielded))
   self.__owner.bg:SetVertexColor(unpack(L.C.castbar.colors.shieldedBG))
 end
 
-local function SetColorCastBarDefault(self)
+local function SetCastBarColorDefault(self)
   self.__owner:SetStatusBarColor(unpack(L.C.castbar.colors.default))
   self.__owner.bg:SetVertexColor(unpack(L.C.castbar.colors.defaultBG))
 end
@@ -270,8 +270,8 @@ local function CreateCastBar(self)
   local shield = s:CreateTexture(nil,"BACKGROUND",nil,-8)
   shield.__owner = s
   --use a trick here...we use the show/hide on the shield texture to recolor the castbar
-  hooksecurefunc(shield,"Show",SetColorCastBarGrey)
-  hooksecurefunc(shield,"Hide",SetColorCastBarDefault)
+  hooksecurefunc(shield,"Show",SetCastBarColorShielded)
+  hooksecurefunc(shield,"Hide",SetCastBarColorDefault)
   s.Shield = shield
   --text
   local name = CreateText(s,14,"LEFT")

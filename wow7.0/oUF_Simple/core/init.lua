@@ -13,6 +13,9 @@ L.dragFrames      = {}
 L.addonColor      = "00FF3300"
 L.addonShortcut   = "rsim"
 
+--get the config
+L.C = oUF_SimpleConfig
+
 -----------------------------
 -- rLib slash command
 -----------------------------

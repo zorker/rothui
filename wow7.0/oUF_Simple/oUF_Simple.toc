@@ -2,14 +2,12 @@
 ## Title: oUF_Simple
 ## Author: zork
 ## Notes: Simple oUF layout (oUF is embedded!)
-## Dependencies: rLib
+## Dependencies: rLib, oUF_SimpleConfig
 
 oUF\oUF.xml
 
 modules\rAbsorbBar.lua
 modules\rClassBar.lua
-
-config.lua
 
 core\init.lua
 core\functions.lua

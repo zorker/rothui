@@ -1,0 +1,7 @@
+## Interface: 70000
+## Author: zork
+## Title: oUF_SimpleConfig
+## Notes: oUF_Simple config
+## RequiredDeps: rLib
+
+config.lua

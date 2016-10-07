@@ -1,5 +1,5 @@
 
--- oUF_Simple: config
+-- oUF_SimpleConfig: config
 -- zork, 2016
 
 -----------------------------
@@ -12,6 +12,9 @@ local A, L = ...
 L.C = {}
 --units container
 L.C.units = {}
+
+--make the config global
+oUF_SimpleConfig = L.C
 
 -----------------------------
 -- Config

@@ -4,4 +4,14 @@
 ## Notes: oUF_Simple config
 ## RequiredDeps: rLib
 
-config.lua
+init.lua
+global.lua
+player.lua
+target.lua
+targettarget.lua
+pet.lua
+focus.lua
+party.lua
+boss.lua
+nameplate.lua
+##raid.lua

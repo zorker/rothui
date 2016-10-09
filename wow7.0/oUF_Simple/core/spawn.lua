@@ -10,84 +10,84 @@ local A, L = ...
 local oUF = L.oUF
 
 -----------------------------
--- Register Styles
+-- Register Style and Spawn Units
 -----------------------------
 
 --spawn player
 if L.F.CreatePlayerStyle then
-  oUF:RegisterStyle(L.C.units.player.styleName, L.F.CreatePlayerStyle)
-  oUF:SetActiveStyle(L.C.units.player.styleName)
-  oUF:Spawn("player", L.C.units.player.frameName)
+  oUF:RegisterStyle(A.."Player", L.F.CreatePlayerStyle)
+  oUF:SetActiveStyle(A.."Player")
+  oUF:Spawn("player", A.."Player")
 end
 
 --spawn target
 if L.F.CreateTargetStyle then
-  oUF:RegisterStyle(L.C.units.target.styleName, L.F.CreateTargetStyle)
-  oUF:SetActiveStyle(L.C.units.target.styleName)
-  oUF:Spawn("target", L.C.units.target.frameName)
+  oUF:RegisterStyle(A.."Target", L.F.CreateTargetStyle)
+  oUF:SetActiveStyle(A.."Target")
+  oUF:Spawn("target", A.."Target")
 end
 
 --spawn targettarget
 if L.F.CreateTargetTargetStyle then
-  oUF:RegisterStyle(L.C.units.targettarget.styleName, L.F.CreateTargetTargetStyle)
-  oUF:SetActiveStyle(L.C.units.targettarget.styleName)
-  oUF:Spawn("targettarget", L.C.units.targettarget.frameName)
+  oUF:RegisterStyle(A.."TargetTarget", L.F.CreateTargetTargetStyle)
+  oUF:SetActiveStyle(A.."TargetTarget")
+  oUF:Spawn("targettarget", A.."TargetTarget")
 end
 
 --spawn pet
 if L.F.CreatePetStyle then
-  oUF:RegisterStyle(L.C.units.pet.styleName, L.F.CreatePetStyle)
-  oUF:SetActiveStyle(L.C.units.pet.styleName)
-  oUF:Spawn("pet", L.C.units.pet.frameName)
+  oUF:RegisterStyle(A.."Pet", L.F.CreatePetStyle)
+  oUF:SetActiveStyle(A.."Pet")
+  oUF:Spawn("pet", A.."Pet")
 end
 
 --spawn focus
 if L.F.CreateFocusStyle then
-  oUF:RegisterStyle(L.C.units.focus.styleName, L.F.CreateFocusStyle)
-  oUF:SetActiveStyle(L.C.units.focus.styleName)
-  oUF:Spawn("focus", L.C.units.focus.frameName)
+  oUF:RegisterStyle(A.."Focus", L.F.CreateFocusStyle)
+  oUF:SetActiveStyle(A.."Focus")
+  oUF:Spawn("focus", A.."Focus")
 end
 
 --spawn party
 if L.F.CreatePartyStyle then
-  oUF:RegisterStyle(L.C.units.party.styleName, L.F.CreatePartyStyle)
-  oUF:SetActiveStyle(L.C.units.party.styleName)
+  oUF:RegisterStyle(A.."Party", L.F.CreatePartyStyle)
+  oUF:SetActiveStyle(A.."Party")
   oUF:SpawnHeader(
-    L.C.units.party.frameName,
-    L.C.units.party.setup.template,
-    L.C.units.party.setup.visibility,
-    "showPlayer", L.C.units.party.setup.showPlayer,
-    "showSolo",   L.C.units.party.setup.showSolo,
-    "showParty",  L.C.units.party.setup.showParty,
-    "showRaid",   L.C.units.party.setup.showRaid,
-    "point",      L.C.units.party.setup.point,
-    "xOffset",    L.C.units.party.setup.xOffset,
-    "yOffset",    L.C.units.party.setup.yOffset,
+    A.."PartyHeader",
+    L.C.party.setup.template,
+    L.C.party.setup.visibility,
+    "showPlayer", L.C.party.setup.showPlayer,
+    "showSolo",   L.C.party.setup.showSolo,
+    "showParty",  L.C.party.setup.showParty,
+    "showRaid",   L.C.party.setup.showRaid,
+    "point",      L.C.party.setup.point,
+    "xOffset",    L.C.party.setup.xOffset,
+    "yOffset",    L.C.party.setup.yOffset,
     "oUF-initialConfigFunction", ([[
       self:SetWidth(%d)
       self:SetHeight(%d)
       self:SetScale(%f)
-    ]]):format(L.C.units.party.size[1], L.C.units.party.size[2], L.C.units.party.scale)
-  ):SetPoint(unpack(L.C.units.party.point))
+    ]]):format(L.C.party.size[1], L.C.party.size[2], L.C.party.scale)
+  ):SetPoint(unpack(L.C.party.point))
 end
 
 --spawn boss frames
 if L.F.CreateBossStyle then
-  oUF:RegisterStyle(L.C.units.boss.styleName, L.F.CreateBossStyle)
-  oUF:SetActiveStyle(L.C.units.boss.styleName)
+  oUF:RegisterStyle(A.."Boss", L.F.CreateBossStyle)
+  oUF:SetActiveStyle(A.."Boss")
   local boss = {}
   for i = 1, MAX_BOSS_FRAMES do
-    boss[i] = oUF:Spawn("boss"..i, L.C.units.boss.framePrefix.."BossFrame"..i)
+    boss[i] = oUF:Spawn("boss"..i, A.."Boss"..i)
     if (i == 1) then
-      boss[i]:SetPoint(unpack(L.C.units.boss.point))
+      boss[i]:SetPoint(unpack(L.C.boss.point))
     else
-      boss[i]:SetPoint(L.C.units.boss.setup.point, boss[i-1], L.C.units.boss.setup.relativePoint, L.C.units.boss.setup.xOffset, L.C.units.boss.setup.yOffset)
+      boss[i]:SetPoint(L.C.boss.setup.point, boss[i-1], L.C.boss.setup.relativePoint, L.C.boss.setup.xOffset, L.C.boss.setup.yOffset)
     end
   end
 end
 
 --spawn nameplates
 if L.F.CreateNamePlateStyle then
-  oUF:RegisterStyle(L.C.units.nameplates.styleName,L.F.CreateNamePlateStyle)
-  oUF:SpawnNamePlates(L.C.units.nameplates.styleName, L.C.units.nameplates.framePrefix, L.F.NamePlateCallback)
+  oUF:RegisterStyle(A.."Nameplate",L.F.CreateNamePlateStyle)
+  oUF:SpawnNamePlates(A.."Nameplate", A, L.C.NamePlateCallback or L.F.NamePlateCallback)
 end

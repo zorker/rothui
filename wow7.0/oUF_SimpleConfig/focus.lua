@@ -57,12 +57,13 @@ L.C.focus = {
     },
   },
   --debuffs
-  debuff = {
-    point = {"TOPLEFT","oUF_SimpleFocus","BOTTOMLEFT",0,-5},
+  debuffs = {
+    enabled = true,
+    point = {"TOPLEFT","BOTTOMLEFT",0*L.C.uiscale,-5*L.C.uiscale},
     num = 5,
     cols = 5,
-    size = 18,
-    spacing = 5,
+    size = 22*L.C.uiscale,
+    spacing = 5*L.C.uiscale,
     initialAnchor = "TOPLEFT",
     growthX = "RIGHT",
     growthY = "DOWN",

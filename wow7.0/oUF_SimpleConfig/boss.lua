@@ -35,11 +35,18 @@ L.C.boss = {
       tag = "[name]",
     },
   },
+  --powerbar
+  powerbar = {
+    enabled = true,
+    size = {130*L.C.uiscale,5*L.C.uiscale},
+    point = {"TOP","BOTTOM",0*L.C.uiscale,-4*L.C.uiscale}, --if no relativeTo is given the frame base will be the relativeTo reference
+    colorPower = true,
+  },
   --castbar
   castbar = {
     enabled = true,
     size = {130*L.C.uiscale,26*L.C.uiscale},
-    point = {"TOP","BOTTOM",0*L.C.uiscale,-5*L.C.uiscale},
+    point = {"TOP","BOTTOM",0*L.C.uiscale,-14*L.C.uiscale},
     name = {
       enabled = true,
       points = {
@@ -54,12 +61,14 @@ L.C.boss = {
       point = {"RIGHT","LEFT",-6*L.C.uiscale,0*L.C.uiscale},
     },
   },
-  debuffCfg = {
-    point = {"TOPLEFT",0,-32}, --this may seem wierd but party frames are generated on the fly, no other way
+  --debuffs
+  debuffs = {
+    enabled = true,
+    point = {"TOPLEFT","BOTTOMLEFT",0*L.C.uiscale,-5*L.C.uiscale},
     num = 5,
     cols = 5,
-    size = 18,
-    spacing = 5,
+    size = 22*L.C.uiscale,
+    spacing = 5*L.C.uiscale,
     initialAnchor = "TOPLEFT",
     growthX = "RIGHT",
     growthY = "DOWN",

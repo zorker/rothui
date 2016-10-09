@@ -61,12 +61,13 @@ L.C.pet = {
     point = {"BOTTOMLEFT","oUF_SimplePlayer","TOPLEFT",0*L.C.uiscale,4*L.C.uiscale},
   },
   --debuffs
-  debuff = {
-    point = {"TOPLEFT","oUF_SimplePet","BOTTOMLEFT",0,-5},
+  debuffs = {
+    enabled = true,
+    point = {"TOPLEFT","BOTTOMLEFT",0*L.C.uiscale,-5*L.C.uiscale},
     num = 5,
     cols = 5,
-    size = 18,
-    spacing = 5,
+    size = 22*L.C.uiscale,
+    spacing = 5*L.C.uiscale,
     initialAnchor = "TOPLEFT",
     growthX = "RIGHT",
     growthY = "DOWN",

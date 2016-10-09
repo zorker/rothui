@@ -352,7 +352,7 @@ L.F.CreateHealthText = CreateHealthText
 --PostCreateAura
 local function PostCreateAura(self,button)
   local bg = button:CreateTexture(nil,"BACKGROUND",nil,-8)
-  bg:SetTexture(L.C.mediapath.."square")
+  bg:SetTexture(L.C.textures.aura)
   bg:SetVertexColor(0,0,0)
   bg:SetPoint("TOPLEFT", -self.size/4, self.size/4)
   bg:SetPoint("BOTTOMRIGHT", self.size/4, -self.size/4)
@@ -366,9 +366,11 @@ local function PostCreateAura(self,button)
 end
 
 --CreateBuffs
-local function CreateBuffs(self,cfg)
+local function CreateBuffs(self)
+  if not self.cfg.buffs or not self.cfg.buffs.enabled then return end
+  local cfg = self.cfg.buffs
   local frame = CreateFrame("Frame", nil, self)
-  frame:SetPoint(unpack(cfg.point))
+  SetPoint(frame,self,cfg.point)
   frame.num = cfg.num
   frame.size = cfg.size
   frame.spacing = cfg.spacing
@@ -382,14 +384,16 @@ local function CreateBuffs(self,cfg)
   --local t = frame:CreateTexture(nil,"BACKGROUND",nil,-8)
   --t:SetAllPoints()
   --t:SetColorTexture(0,1,0,0.2)
-  self.Buffs = frame
+  return frame
 end
 L.F.CreateBuffs = CreateBuffs
 
 --CreateDebuffs
-local function CreateDebuffs(self,cfg)
+local function CreateDebuffs(self)
+  if not self.cfg.debuffs or not self.cfg.debuffs.enabled then return end
+  local cfg = self.cfg.debuffs
   local frame = CreateFrame("Frame", nil, self)
-  frame:SetPoint(unpack(cfg.point))
+  SetPoint(frame,self,cfg.point)
   frame.num = cfg.num
   frame.size = cfg.size
   frame.spacing = cfg.spacing
@@ -404,7 +408,7 @@ local function CreateDebuffs(self,cfg)
   --local t = frame:CreateTexture(nil,"BACKGROUND",nil,-8)
   --t:SetAllPoints()
   --t:SetColorTexture(1,0,0,0.2)
-  self.Debuffs = frame
+  return frame
 end
 L.F.CreateDebuffs = CreateDebuffs
 

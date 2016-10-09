@@ -26,9 +26,9 @@ local function CreateStyle(self)
   self.Castbar = L.F.CreateCastBar(self)
   self.rClassBar = L.F.CreateClassBar(self)
   self.AltPowerBar = L.F.CreateAltPowerBar(self)
+  self.Debuffs = L.F.CreateDebuffs(self)
+  self.Buffs = L.F.CreateBuffs(self)
   --raid marker
   --self.RaidIcon = CreateIcon(self.Health,"OVERLAY",-8,self:GetHeight()/1.2,{"CENTER",self.Health,"TOP",0,0})
-  --buffs
-  --debuffs
 end
 L.F.CreateStyle = CreateStyle

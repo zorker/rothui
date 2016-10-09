@@ -57,16 +57,18 @@ L.C.nameplate = {
       point = {"RIGHT","LEFT",-6*L.C.uiscale,0*L.C.uiscale},
     },
   },
-  debuffCfg = {
-    point = {"BOTTOMLEFT",0,5+22}, --this may seem wierd but nameplate frames are generated on the fly, no other way
+  --debuffs
+  debuffs = {
+    enabled = true,
+    point = {"BOTTOMLEFT","TOPLEFT",0*L.C.uiscale,5*L.C.uiscale},
     num = 5,
     cols = 5,
-    size = 18,
-    spacing = 5,
-    initialAnchor = "BOTTOMLEFT",
+    size = 22*L.C.uiscale,
+    spacing = 5*L.C.uiscale,
+    initialAnchor = "TOPLEFT",
     growthX = "RIGHT",
     growthY = "UP",
     disableCooldown = true,
-    filter = "HARMFUL|INCLUDE_NAME_PLATE_ONLY"
+    filter = "HARMFUL|INCLUDE_NAME_PLATE_ONLY",
   },
 }

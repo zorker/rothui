@@ -48,12 +48,14 @@ L.C.party = {
     point = {"TOP","BOTTOM",0*L.C.uiscale,-4*L.C.uiscale}, --if no relativeTo is given the frame base will be the relativeTo reference
     colorPower = true,
   },
-  debuffCfg = {
-    point = {"LEFT",10+150,0}, --this may seem wierd but party frames are generated on the fly, no other way
+  --debuffs
+  debuffs = {
+    enabled = true,
+    point = {"LEFT","RIGHT",5*L.C.uiscale,0*L.C.uiscale},
     num = 5,
     cols = 5,
-    size = 22,
-    spacing = 5,
+    size = 26*L.C.uiscale,
+    spacing = 5*L.C.uiscale,
     initialAnchor = "TOPLEFT",
     growthX = "RIGHT",
     growthY = "DOWN",

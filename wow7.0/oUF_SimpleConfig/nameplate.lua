@@ -38,6 +38,12 @@ L.C.nameplate = {
       tag = "[difficulty][name]|r",
     },
   },
+  --raidmark
+  raidmark = {
+    enabled = true,
+    size = {18*L.C.uiscale,18*L.C.uiscale},
+    point = {"CENTER","TOP",0,0},
+  },
   --castbar
   castbar = {
     enabled = true,

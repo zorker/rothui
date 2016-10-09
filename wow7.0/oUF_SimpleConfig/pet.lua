@@ -35,6 +35,12 @@ L.C.pet = {
       tag = "[name]",
     },
   },
+  --raidmark
+  raidmark = {
+    enabled = true,
+    size = {18*L.C.uiscale,18*L.C.uiscale},
+    point = {"CENTER","LEFT",0,0},
+  },
   --castbar
   castbar = {
     enabled = true,

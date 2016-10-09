@@ -50,6 +50,12 @@ L.C.target = {
     point = {"TOP","BOTTOM",0*L.C.uiscale,-4*L.C.uiscale}, --if no relativeTo is given the frame base will be the relativeTo reference
     colorPower = true,
   },
+  --raidmark
+  raidmark = {
+    enabled = true,
+    size = {18*L.C.uiscale,18*L.C.uiscale},
+    point = {"CENTER","LEFT",0,0},
+  },
   --castbar
   castbar = {
     enabled = true,

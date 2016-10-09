@@ -36,6 +36,12 @@ L.C.targettarget = {
       tag = "[name]",
     },
   },
+  --raidmark
+  raidmark = {
+    enabled = true,
+    size = {18*L.C.uiscale,18*L.C.uiscale},
+    point = {"CENTER","LEFT",0,0},
+  },
   --debuffs
   debuffs = {
     enabled = true,

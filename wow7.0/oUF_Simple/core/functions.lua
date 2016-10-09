@@ -80,8 +80,8 @@ end
 --CreateIcon
 local function CreateIcon(self,layer,sublevel,size,point)
   local icon = self:CreateTexture(nil,layer,nil,sublevel)
-  icon:SetSize(size,size)
-  icon:SetPoint(unpack(point))
+  icon:SetSize(unpack(size))
+  SetPoint(icon,self,point)
   return icon
 end
 
@@ -320,6 +320,12 @@ local function CreateCastBar(self)
   return s
 end
 L.F.CreateCastBar = CreateCastBar
+
+local function CreateRaidMark(self)
+  if not self.cfg.raidmark or not self.cfg.raidmark.enabled then return end
+  return CreateIcon(self.Health,"OVERLAY",-8,self.cfg.raidmark.size,self.cfg.raidmark.point)
+end
+L.F.CreateRaidMark = CreateRaidMark
 
 --CreateNameText
 local function CreateNameText(self)

@@ -319,6 +319,12 @@ function rButtonTemplate:StyleAuraButton(button, cfg)
     SetupTexture(normalTexture,cfg.normalTexture,"SetNormalTexture",button)
   end
 
+  --no clue why but blizzard created count and duration on background layer, need to fix that
+  local overlay = CreateFrame("Frame",nil,button)
+  overlay:SetAllPoints()
+  if count then count:SetParent(overlay) end
+  if duration then duration:SetParent(overlay) end
+
   --count,duration,symbol
   SetupFontString(count,cfg.count)
   SetupFontString(duration,cfg.duration)

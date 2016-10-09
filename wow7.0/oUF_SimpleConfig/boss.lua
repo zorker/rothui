@@ -70,7 +70,7 @@ L.C.boss = {
   --debuffs
   debuffs = {
     enabled = true,
-    point = {"TOPLEFT","BOTTOMLEFT",0*L.C.uiscale,-5*L.C.uiscale},
+    point = {"TOPLEFT","BOTTOMLEFT",0*L.C.uiscale,-14*L.C.uiscale},
     num = 5,
     cols = 5,
     size = 22*L.C.uiscale,

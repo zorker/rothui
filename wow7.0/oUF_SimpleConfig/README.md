@@ -149,10 +149,10 @@ Classbar element for combo points, chi, holy power, etc. Makes sense for the pla
 * **cols**: type:NUMBER, how many aura icons per column
 * **spacing**: type:NUMBER, space between aura icons
 * **initialAnchor**: type:STRING, initial anchor point (example: "BOTTOMLEFT"). Has to be a corner.
-* **growthX**: type:STRING, grown direction x-axis. "LEFT" or "RIGHT"
-* **growthY**: type:STRING, grown direction y-axis. "UP" or "DOWN"
+* **growthX**: type:STRING, grow direction x-axis. "LEFT" or "RIGHT"
+* **growthY**: type:STRING, grow direction y-axis. "UP" or "DOWN"
 * **disableCooldown**: type:BOOLEAN, disable/enable cooldown spiral
-* **filter**: type:STRING, Custom filter list for auras to display. Defaults to "HELPFUL" on buffs and HARMFUL on "debuffs".
+* **filter**: type:STRING, Custom filter list for auras to display. Defaults to "HELPFUL" on buffs and "HARMFUL" on debuffs.
 
 ### Debuffs attributes
 
@@ -163,14 +163,14 @@ Classbar element for combo points, chi, holy power, etc. Makes sense for the pla
 * **cols**: type:NUMBER, how many aura icons per column
 * **spacing**: type:NUMBER, space between aura icons
 * **initialAnchor**: type:STRING, initial anchor point (example: "BOTTOMLEFT"). Has to be a corner.
-* **growthX**: type:STRING, grown direction x-axis. "LEFT" or "RIGHT"
-* **growthY**: type:STRING, grown direction y-axis. "UP" or "DOWN"
+* **growthX**: type:STRING, grow direction x-axis. "LEFT" or "RIGHT"
+* **growthY**: type:STRING, grow direction y-axis. "UP" or "DOWN"
 * **disableCooldown**: type:BOOLEAN, disable/enable cooldown spiral
-* **filter**: type:STRING, Custom filter list for auras to display. Defaults to "HELPFUL" on buffs and HARMFUL on "debuffs".
+* **filter**: type:STRING, Custom filter list for auras to display. Defaults to "HELPFUL" on buffs and "HARMFUL" on debuffs.
 
 ## Special cases
 
-Raid, party and boss units require special setup elements.
+Raid, party and boss can spawn multiple units of the same type. A special setup table is needed.
 
 * **setup**: type:TABLE, unit specific setup table
 

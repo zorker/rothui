@@ -152,6 +152,7 @@ Classbar element for combo points, chi, holy power, etc. Makes sense for the pla
 * **growthX**: type:STRING, grown direction x-axis. "LEFT" or "RIGHT"
 * **growthY**: type:STRING, grown direction y-axis. "UP" or "DOWN"
 * **disableCooldown**: type:BOOLEAN, disable/enable cooldown spiral
+* **filter**: type:STRING, Custom filter list for auras to display. Defaults to "HELPFUL" on buffs and HARMFUL on "debuffs".
 
 ### Debuffs attributes
 
@@ -165,6 +166,7 @@ Classbar element for combo points, chi, holy power, etc. Makes sense for the pla
 * **growthX**: type:STRING, grown direction x-axis. "LEFT" or "RIGHT"
 * **growthY**: type:STRING, grown direction y-axis. "UP" or "DOWN"
 * **disableCooldown**: type:BOOLEAN, disable/enable cooldown spiral
+* **filter**: type:STRING, Custom filter list for auras to display. Defaults to "HELPFUL" on buffs and HARMFUL on "debuffs".
 
 ## Special cases
 

@@ -19,25 +19,25 @@ oUF_SimpleConfig = L.C
 
 The global.lua has global config settings used among units and elements.
 
-* **L.C.mediapath**: path to the media files
-* **L.C.uiscale**: scale of UIParent. Used to offset the uiscale and make the elements on screen become exactly the described size. Can be set to 1 or any other static value if not desired.
-* **L.C.backdrop**: backdrop setup
-* **L.C.textures**: textures for statusbars and backgrounds
-* **L.C.colors**: Houses colors for castbar and threat that are not handled by oUF attributes. Defines the bgMultiplier.
+* **L.C.mediapath**: type:STRING, path to the media files
+* **L.C.uiscale**: type:NUMBER, scale of UIParent. Used to offset the uiscale and make the elements on screen become exactly the described size. Can be set to 1 or any other static value if not desired.
+* **L.C.backdrop**: type:TABLE, backdrop setup
+* **L.C.textures**: type:TABLE, textures for statusbars and backgrounds
+* **L.C.colors**: type:TABLE, Houses colors for castbar and threat that are not handled by oUF attributes. Defines the bgMultiplier.
 
 ## Units
 
 Each unit has its own config file, like player.lua.
 
-* **L.C.player**: player frame settings
-* **L.C.target**: target frame settings
-* **L.C.targettarget**: targettarget frame settings
-* **L.C.pet**: pet frame settings
-* **L.C.focus**: focus frame settings
-* **L.C.party**: party frame settings
-* **L.C.boss**: boss frame settings
-* **L.C.nameplate**: nameplate frame settings
-* **L.C.raid**: raid frame settings
+* **L.C.player**: type:TABLE, player frame settings
+* **L.C.target**: type:TABLE, target frame settings
+* **L.C.targettarget**: type:TABLE, targettarget frame settings
+* **L.C.pet**: type:TABLE, pet frame settings
+* **L.C.focus**: type:TABLE, focus frame settings
+* **L.C.party**: type:TABLE, party frame settings
+* **L.C.boss**: type:TABLE, boss frame settings
+* **L.C.nameplate**: type:TABLE, nameplate frame settings
+* **L.C.raid**: type:TABLE, raid frame settings
 
 ## Unit attributes
 

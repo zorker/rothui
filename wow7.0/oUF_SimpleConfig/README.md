@@ -168,7 +168,46 @@ Classbar element for combo points, chi, holy power, etc. Makes sense for the pla
 
 ## Special cases
 
-Raid, party and boss units require special setup tables.
+Raid, party and boss units require special setup elements.
+
+* **setup**: type:TABLE, unit specific setup table
+
+### Boss setup
+
+Allows you to define the position of all boss units that are not boss1.
+
+* **point**: type:STRING, Point on this region at which it is to be anchored to another anchorPoint. (example: "TOP")
+* **relativePoint**: type:STRING, Point on the other region to which this region is to be anchored. RelativeTo will be the boss frame preceding.
+* **xOffset**: type:NUMBER, x-axis offset
+* **yOffset**: type:NUMBER, y-axis offset
+
+### Party setup
+
+The following setup is needed to spawn the party header. http://wowprogramming.com/docs/secure_template/Group_Headers
+
+* **template**: type:STRING, Blizzard frame template. When nil the "SecureGroupHeaderTemplate" is used.
+* **visibility**: type:STRING, Custom visibility state driver. (example: "custom [group:party,nogroup:raid] show; hide")
+* **showPlayer**: type:BOOLEAN, See http://wowprogramming.com/docs/secure_template/Group_Headers
+* **showSolo**: type:BOOLEAN, See http://wowprogramming.com/docs/secure_template/Group_Headers
+* **showParty**: type:BOOLEAN, See http://wowprogramming.com/docs/secure_template/Group_Headers
+* **showRaid**: type:BOOLEAN, See http://wowprogramming.com/docs/secure_template/Group_Headers
+* **point**: type:STRING, See http://wowprogramming.com/docs/secure_template/Group_Headers
+* **xOffset**: type:NUMBER, See http://wowprogramming.com/docs/secure_template/Group_Headers
+* **yOffset**: type:NUMBER, See http://wowprogramming.com/docs/secure_template/Group_Headers
+
+### Raid setup
+
+The following setup is needed to spawn the party header. http://wowprogramming.com/docs/secure_template/Group_Headers
+
+* **template**: type:STRING, Blizzard frame template. When nil the "SecureGroupHeaderTemplate" is used.
+* **visibility**: type:STRING, Custom visibility state driver. (example: "custom [group:party,nogroup:raid] show; hide")
+* **showPlayer**: type:BOOLEAN, See http://wowprogramming.com/docs/secure_template/Group_Headers
+* **showSolo**: type:BOOLEAN, See http://wowprogramming.com/docs/secure_template/Group_Headers
+* **showParty**: type:BOOLEAN, See http://wowprogramming.com/docs/secure_template/Group_Headers
+* **showRaid**: type:BOOLEAN, See http://wowprogramming.com/docs/secure_template/Group_Headers
+* **point**: type:STRING, See http://wowprogramming.com/docs/secure_template/Group_Headers
+* **xOffset**: type:NUMBER, See http://wowprogramming.com/docs/secure_template/Group_Headers
+* **yOffset**: type:NUMBER, See http://wowprogramming.com/docs/secure_template/Group_Headers
 
 ## NamePlate callback
 

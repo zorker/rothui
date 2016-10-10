@@ -197,7 +197,7 @@ The following setup is needed to spawn the party header. http://wowprogramming.c
 
 ### Raid setup
 
-The following setup is needed to spawn the party header. http://wowprogramming.com/docs/secure_template/Group_Headers
+The following setup is needed to spawn the raid header. http://wowprogramming.com/docs/secure_template/Group_Headers
 
 * **template**: type:STRING, Blizzard frame template. When nil the "SecureGroupHeaderTemplate" is used.
 * **visibility**: type:STRING, Custom visibility state driver. (example: "custom [group:party,nogroup:raid] show; hide")
@@ -211,7 +211,7 @@ The following setup is needed to spawn the party header. http://wowprogramming.c
 
 ## NamePlate callback
 
-You can define the following function if you manually want to react on nameplate events.
+You can define the following function if you want to react on nameplate events.
 
 ```
 local function NamePlateCallback(...)
@@ -229,6 +229,7 @@ You get notified on the following events:
 
 ## NamePlate CVars
 
+Nameplates base frames are provided by Blizzard. We cannot change them. We only spawn the nameplate unitframe sitting on the nameplate base.
 Blizzard is using hidden cvars that can affect the look of your nameplates. You can use those cvars to manipulate the behaviour of your nameplates.
 If you want to set them you need to wait until PLAYER_LOGIN (hence the callback in my example).
 

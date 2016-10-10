@@ -217,7 +217,6 @@ local function CreateHealthBar(self)
   --attributes
   s.colorTapping = self.cfg.healthbar.colorTapping
   s.colorDisconnected = self.cfg.healthbar.colorDisconnected
-  s.colorClass = self.cfg.healthbar.colorClass
   s.colorReaction = self.cfg.healthbar.colorReaction
   s.colorClass = self.cfg.healthbar.colorClass
   s.colorHealth = self.cfg.healthbar.colorHealth

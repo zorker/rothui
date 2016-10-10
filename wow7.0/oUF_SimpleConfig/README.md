@@ -50,7 +50,7 @@ Attributes on unit level.
 
 ## Unit elements
 
-Any unit can create any of the following elements.
+Any unit can create any of the following elements on unit level.
 
 * **healthbar**: type:TABLE, healthbar config
 * **powerbar**: type:TABLE, powerbar config
@@ -63,11 +63,43 @@ Any unit can create any of the following elements.
 
 ### Healthbar attributes
 
-...
+Healthbar and absorbbar cannot be disabled. Size and position matches the unit frame.
+
+* **colorTapping**: type: BOOLEAN, Enables/disables coloring by tapping color.
+* **colorDisconnected**: type: BOOLEAN, Enables/disables coloring by disconnected color.
+* **colorReaction**: type: BOOLEAN, Enables/disables coloring by reaction color.
+* **colorClass**: type: BOOLEAN, Enables/disables coloring by class color.
+* **colorHealth**: type: BOOLEAN, Enables/disables coloring by health color.
+* **colorThreat**: type: BOOLEAN, Enables/disables coloring by threat color. Checks if the unit has aggro from any other unit.
+* **colorThreatInvers**: type: BOOLEAN, Enables/disables coloring by invers threat color. Checks if unit has aggro against "player".
+* **frequentUpdates**: type: BOOLEAN, Enables/disables frequent updates
+* **name**: type: TABLE, configuration for the name text
+  * enabled: type:BOOLEAN, enable/disable element
+  * points: type:TABLE, contains multiple points
+  * point: type:TABLE, contains a single point
+  * font: type:STRING, font family
+  * size: type:NUMBER, font size
+  * outline: type:STRING, font outline
+  * align: type:STRING, text align
+  * noshadow: type:BOOLEAN, Disable/enable text drop shadow
+  * tag: type:STRING, oUF tag
+* **healthtext**: type: TABLE, configuration for the health text
+  * enabled: type:BOOLEAN, enable/disable element
+  * points: type:TABLE, contains multiple points
+  * point: type:TABLE, contains a single point
+  * font: type:STRING, font family
+  * size: type:NUMBER, font size
+  * outline: type:STRING, font outline
+  * align: type:STRING, text align
+  * noshadow: type:BOOLEAN, Disable/enable text drop shadow
+  * tag: type:STRING, oUF tag
 
 ### Powerbar attributes
 
-...
+* **enabled**: type:BOOLEAN, enable/disable element
+* **size**: type:TABLE, unit frame size http://wowprogramming.com/docs/widgets/Region/SetSize
+* **point**: type:TABLE, unit frame position http://wowprogramming.com/docs/widgets/Region/SetPoint
+* **colorPower**: type: BOOLEAN, Enables/disables coloring by power color.
 
 ### Castbar attributes
 

@@ -97,15 +97,15 @@ Healthbar and absorbbar cannot be disabled. Size and position matches the unit f
 ### Powerbar attributes
 
 * **enabled**: type:BOOLEAN, enable/disable element
-* **size**: type:TABLE, unit frame size http://wowprogramming.com/docs/widgets/Region/SetSize
-* **point**: type:TABLE, unit frame position http://wowprogramming.com/docs/widgets/Region/SetPoint
+* **size**: type:TABLE, element size http://wowprogramming.com/docs/widgets/Region/SetSize
+* **point**: type:TABLE, element position http://wowprogramming.com/docs/widgets/Region/SetPoint
 * **colorPower**: type: BOOLEAN, Enables/disables coloring by power color.
 
 ### Castbar attributes
 
 * **enabled**: type:BOOLEAN, enable/disable element
-* **size**: type:TABLE, unit frame size http://wowprogramming.com/docs/widgets/Region/SetSize
-* **point**: type:TABLE, unit frame position http://wowprogramming.com/docs/widgets/Region/SetPoint
+* **size**: type:TABLE, element size http://wowprogramming.com/docs/widgets/Region/SetSize
+* **point**: type:TABLE, element position http://wowprogramming.com/docs/widgets/Region/SetPoint
 * **name**: type: TABLE, configuration for the name text
   * enabled: type:BOOLEAN, enable/disable element
   * points: type:TABLE, contains multiple points
@@ -118,27 +118,53 @@ Healthbar and absorbbar cannot be disabled. Size and position matches the unit f
 * **icon**: type: TABLE, configuration for the castbar icon
   * enabled: type:BOOLEAN, enable/disable element
   * point: type:TABLE, icon point
-  * size: type:NUMBER, icon size
+  * size: type:TABLE, icon size
 
 ### Classbar attributes
 
-...
+Classbar element for combo points, chi, holy power, etc. Makes sense for the player unit only.
+
+* **enabled**: type:BOOLEAN, enable/disable element
+* **size**: type:TABLE, element size http://wowprogramming.com/docs/widgets/Region/SetSize
+* **point**: type:TABLE, element position http://wowprogramming.com/docs/widgets/Region/SetPoint
 
 ### Altpowerbar attributes
 
-...
+* **enabled**: type:BOOLEAN, enable/disable element
+* **size**: type:TABLE, element size http://wowprogramming.com/docs/widgets/Region/SetSize
+* **point**: type:TABLE, element position http://wowprogramming.com/docs/widgets/Region/SetPoint
 
 ### Raidmark attributes
 
-...
+* **enabled**: type:BOOLEAN, enable/disable element
+* **size**: type:TABLE, element size http://wowprogramming.com/docs/widgets/Region/SetSize
+* **point**: type:TABLE, element position http://wowprogramming.com/docs/widgets/Region/SetPoint
 
 ### Buffs attributes
 
-...
+* **enabled**: type:BOOLEAN, enable/disable element
+* **point**: type:TABLE, element position http://wowprogramming.com/docs/widgets/Region/SetPoint
+* **size**: type:NUMBER, aura icon size, value is applied to both width and height
+* **num**: type:NUMBER, max number of aura icons
+* **cols**: type:NUMBER, how many aura icons per column
+* **spacing**: type:NUMBER, space between aura icons
+* **initialAnchor**: type:STRING, initial anchor point (example: "BOTTOMLEFT"). Has to be a corner.
+* **growthX**: type:STRING, grown direction x-axis. "LEFT" or "RIGHT"
+* **growthY**: type:STRING, grown direction y-axis. "UP" or "DOWN"
+* **disableCooldown**: type:BOOLEAN, disable/enable cooldown spiral
 
 ### Debuffs attributes
 
-...
+* **enabled**: type:BOOLEAN, enable/disable element
+* **point**: type:TABLE, element position http://wowprogramming.com/docs/widgets/Region/SetPoint
+* **size**: type:NUMBER, aura icon size, value is applied to both width and height
+* **num**: type:NUMBER, max number of aura icons
+* **cols**: type:NUMBER, how many aura icons per column
+* **spacing**: type:NUMBER, space between aura icons
+* **initialAnchor**: type:STRING, initial anchor point (example: "BOTTOMLEFT"). Has to be a corner.
+* **growthX**: type:STRING, grown direction x-axis. "LEFT" or "RIGHT"
+* **growthY**: type:STRING, grown direction y-axis. "UP" or "DOWN"
+* **disableCooldown**: type:BOOLEAN, disable/enable cooldown spiral
 
 ## Special cases
 

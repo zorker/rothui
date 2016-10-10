@@ -131,7 +131,7 @@ local function OnTooltipSetUnit(self)
       GameTooltipTextLeft2:SetText("<"..unitGuild..">")
       GameTooltipTextLeft2:SetTextColor(unpack(cfg.guildColor))
     end
-    local levelLine = unitGuild and GameTooltipTextLeft3 else GameTooltipTextLeft2
+    local levelLine = unitGuild and GameTooltipTextLeft3 or GameTooltipTextLeft2
     local l = UnitLevel(unit)
     local color = GetQuestDifficultyColor((l > 0) and l or 99)
     levelLine:SetTextColor(color.r,color.g,color.b)

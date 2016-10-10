@@ -96,3 +96,78 @@ Any unit can create any of the following elements.
 ## Special cases
 
 Raid, party and boss units require special setup tables.
+
+## NamePlate callback
+
+You can define the following function if you manually want to react on nameplate events.
+
+```
+local NamePlateCallback = function(...)
+  print(...)
+end
+L.C.NamePlateCallback
+```
+
+You get notified on the following events:
+
+* UpdateNamePlateOptions
+* NAME_PLATE_UNIT_ADDED
+* NAME_PLATE_UNIT_REMOVED
+* PLAYER_TARGET_CHANGED
+
+## NamePlate CVars
+
+Blizzard is using hidden cvars that can affect the look of your nameplates. You can use those cvars to manipulate the behaviour of your nameplates.
+
+*Build 22731, WoW path 7.1, PTR*
+
+* nameplateClassResourceTopInset
+* nameplateGlobalScale
+* NamePlateHorizontalScale
+* nameplateLargeBottomInset
+* nameplateLargerScale
+* nameplateLargeTopInset
+* nameplateMaxAlpha
+* nameplateMaxAlphaDistance
+* nameplateMaxDistance
+* nameplateMaxScale
+* nameplateMaxScaleDistance
+* nameplateMinAlpha
+* nameplateMinAlphaDistance
+* nameplateMinScale
+* nameplateMinScaleDistance
+* nameplateMotion
+* nameplateMotionSpeed
+* nameplateOtherBottomInset
+* nameplateOtherTopInset
+* nameplateOverlapH
+* nameplateOverlapV
+* NameplatePersonalHideDelayAlpha
+* NameplatePersonalHideDelaySeconds
+* NameplatePersonalShowAlways
+* NameplatePersonalShowInCombat
+* NameplatePersonalShowWithTarget
+* nameplateSelectedAlpha
+* nameplateSelectedScale
+* nameplateSelfAlpha
+* nameplateSelfBottomInset
+* nameplateSelfScale
+* nameplateSelfTopInset
+* nameplateShowAll
+* nameplateShowEnemies
+* nameplateShowEnemyGuardians
+* nameplateShowEnemyMinions
+* nameplateShowEnemyMinus
+* nameplateShowEnemyPets
+* nameplateShowEnemyTotems
+* nameplateShowFriendlyGuardians
+* nameplateShowFriendlyMinions
+* nameplateShowFriendlyNPCs
+* nameplateShowFriendlyPets
+* nameplateShowFriendlyTotems
+* nameplateShowFriends
+* nameplateShowSelf
+* nameplateTargetBehindMaxDistance
+* NamePlateVerticalScale
+* ShowClassColorInNameplate
+* ShowNamePlateLoseAggroFlash

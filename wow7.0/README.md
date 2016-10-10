@@ -4,36 +4,36 @@ Work Work.
 
 ## Addon list
 
-* **oUF_Simple**, layout for the unit framework oUF. oUF is embedded atm until the [nameplate feature](https://github.com/oUF-wow/oUF/pull/312) is backed into the core.
-* **oUF_SimpleConfig**, configuration for oUF_Simple
-* **rActionBar**, Actionbar framework for Blizzard actionbars. Needs a layout.
-* **rActionBar_Default**, Default layout for rActionBar
-* **rActionBar_Zork**, My personal layout for rActionBar
-* **rBuffFrame**, Buff framework for Blizzard buffframe (player only). Needs a layout.
-* **rBuffFrame_Default**, Default layout for rBuffFrame
-* **rBuffFrame_Zork**, My personal layout for rBuffFrame
-* **rButtonTemplate**, Button theme framework for Blizzard action, item and aura button templates. Needs a theme.
-* **rButtonTemplate_Default**, Default theme for rButtonTemplate
-* **rButtonTemplate_Zork**, My personal theme for rButtonTemplate
-* **rChat**, Blizzard chatframe adjustments
-* **rCombatText**, Blizzard player combattext adjustments
-* **rCompassCastbar**, Circluar cursor castbar for any unit.
-* **rEmote**, Redirects npc chat emotes to the Blizzard emote frame
-* **rError**, Overrides the Blizzard errorframe blacklist and allows you to create your own.
-* **rIngameModelViewer**, View any DisplayID ingame
-* **rLib**, Addon library, required for most of my addons
-* **rMinimap**, Blizzard minimap adjustments
-* **rNamePlate**, Nameplate skeleton. Made me realize that I may be able to do nameplates with oUF. Which I am now. Will not continue here since I can do them with oUF.
-* **rObjectiveTracker**, Allows you to scale the objective tracker frame and adds the ability to drag and resize the frame ingame.
-* **rRaidManager**, Replaces the Blizzard raid manager and disables the Blizzard addons Blizzard_CUFProfiles and Blizzard_CompactRaidFrames.
-* **rScreenSaver**, Came along a super nice DisplayID (galaxy animation with planets). Made a screensaver from it. Go /afk to see it.
-* **rTalkingHead**, Allows you to scale the talking head frame and adds the ability to drag the frame ingame.
-* **rTooltip**, Blizzard tooltip adjustments
-* **rVignette**, Whenever a unique VignetteID (rare mob, chest, etc.) spawned nearby you will get alterted.
+* **[oUF_Simple](http://www.wowinterface.com/downloads/info14831-oUF_Simple.html)**: layout for the unit framework oUF. oUF is embedded atm until the [nameplate feature](https://github.com/oUF-wow/oUF/pull/312) is backed into the core.
+* **[oUF_SimpleConfig](http://www.wowinterface.com/downloads/info24264-oUF_SimpleConfig.html)**: configuration for oUF_Simple
+* **[rActionBar](http://www.wowinterface.com/downloads/info12168-rActionBar.html)**: Actionbar framework for Blizzard actionbars. Needs a layout.
+* **[rActionBar_Default](http://www.wowinterface.com/downloads/info24245-rActionBar_Default.html)**: Default layout for rActionBar
+* **[rActionBar_Zork](http://www.wowinterface.com/downloads/info24246-rActionBar_Zork.html)**: My personal layout for rActionBar
+* **[rBuffFrame](http://www.wowinterface.com/downloads/info18783-rBuffFrame.html)**: Buff framework for Blizzard buffframe (player only). Needs a layout.
+* **[rBuffFrame_Default](http://www.wowinterface.com/downloads/info24247-rBuffFrame_Default.html)**: Default layout for rBuffFrame
+* **[rBuffFrame_Zork](http://www.wowinterface.com/downloads/info24248-rBuffFrame_Zork.html)**: My personal layout for rBuffFrame
+* **[rButtonTemplate](http://www.wowinterface.com/downloads/info12024-rButtonTemplate.html)**: Button theme framework for Blizzard action, item and aura button templates. Needs a theme.
+* **[rButtonTemplate_Default](http://www.wowinterface.com/downloads/info24249-rButtonTemplate_Default.html)**: Default theme for rButtonTemplate
+* **[rButtonTemplate_Zork](http://www.wowinterface.com/downloads/info24250-rButtonTemplate_Zork.html)**: My personal theme for rButtonTemplate
+* **[rChat](http://www.wowinterface.com/downloads/info18319-rChat.html)**: Blizzard chatframe adjustments
+* **[rCombatText](http://www.wowinterface.com/downloads/info24251-rCombatText.html)**: Blizzard player combattext adjustments
+* **[rCompassCastbar](http://www.wowinterface.com/downloads/info23017-rCompassCastbar.html)**: Circluar cursor castbar for any unit.
+* **[rEmote](http://www.wowinterface.com/downloads/info24254-rEmote.html)**: Redirects npc chat emotes to the Blizzard emote frame
+* **[rError](http://www.wowinterface.com/downloads/info24253-rError.html)**: Overrides the Blizzard errorframe blacklist and allows you to create your own.
+* **[rIngameModelViewer](http://www.wowinterface.com/downloads/info18393-rIngameModelViewer.html)**: View any DisplayID ingame
+* **[rLib](http://www.wowinterface.com/downloads/info24242-rLib.html)**: Addon library, required for most of my addons
+* **[rMinimap](http://www.wowinterface.com/downloads/info11253-rMinimap.html)**: Blizzard minimap adjustments
+* **[rNamePlate](https://github.com/zorker/rothui/tree/master/wow7.0/rNamePlate)**: Nameplate skeleton. Made me realize that I may be able to do nameplates with oUF. Which I am now. Will not continue here since I can do them with oUF.
+* **[rObjectiveTracker](http://www.wowinterface.com/downloads/info18322-rObjectiveTracker.html)**: Allows you to scale the objective tracker frame and adds the ability to drag and resize the frame ingame.
+* **[rRaidManager](http://www.wowinterface.com/downloads/info22236-rRaidManager.html)**: Replaces the Blizzard raid manager and disables the Blizzard addons Blizzard_CUFProfiles and Blizzard_CompactRaidFrames.
+* **[rScreenSaver](http://www.wowinterface.com/downloads/info24244-rScreenSaver.html)**: Came along a super nice DisplayID (galaxy animation with planets). Made a screensaver from it. Go /afk to see it.
+* **[rTalkingHead](http://www.wowinterface.com/downloads/info24243-rTalkingHead.html)**: Allows you to scale the talking head frame and adds the ability to drag the frame ingame.
+* **[rTooltip](http://www.wowinterface.com/downloads/info22501-rTooltip.html)**: Blizzard tooltip adjustments
+* **[rVignette](http://www.wowinterface.com/downloads/info23282-rVignette.html)**: Whenever a unique VignetteID (rare mob, chest, etc.) spawned nearby you will get alterted.
 
 ##Todo
 
-* **oUF_Simple**, Still needs some work and is still missing raidframes. Has top priority
+* **[oUF_Simple](http://www.wowinterface.com/downloads/info14831-oUF_Simple.html)**: Still needs some work and is still missing raidframes. Has top priority
 * *Get to level 110...*
-* **rFilter3**, Fix compatibility with the new rLib. Currenty I do not intend to rewrite that addon.
-* **rThreat**, Fix compatibility with the new rLib. Currenty I do not intend to rewrite that addon.
+* **[rFilter3](http://www.wowinterface.com/downloads/info13006-rFilter3.html)**: Fix compatibility with the new rLib. Currenty I do not intend to rewrite that addon.
+* **[rThreat](http://www.wowinterface.com/downloads/info19263-rThreat.html)**: Fix compatibility with the new rLib. Currenty I do not intend to rewrite that addon.

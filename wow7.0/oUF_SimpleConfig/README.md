@@ -39,16 +39,16 @@ Each unit has its own config file, like player.lua.
 * **L.C.nameplate**: nameplate frame settings
 * **L.C.raid**: raid frame settings
 
-### unit config attributes
+## Unit attributes
 
-Attributes set on unit level.
+Attributes on unit level.
 
 * **enabled**: type:BOOLEAN, enable or disable this unit frame
 * **size**: type:TABLE, unit frame size http://wowprogramming.com/docs/widgets/Region/SetSize
 * **point**: type:TABLE, unit frame position http://wowprogramming.com/docs/widgets/Region/SetPoint
 * **scale**: type:INTEGER, defines the scale of the unit frame http://wowprogramming.com/docs/widgets/Frame/SetScale
 
-## Elements
+## Unit elements
 
 Any unit can create any of the following elements.
 
@@ -118,6 +118,12 @@ You get notified on the following events:
 ## NamePlate CVars
 
 Blizzard is using hidden cvars that can affect the look of your nameplates. You can use those cvars to manipulate the behaviour of your nameplates.
+If you want to set them you need to wait until PLAYER_LOGIN (hence the callback in my example).
+
+#### Chat command to print the default settings for a specific cvar
+```lua
+/run local cv = "nameplateShowAll"; print(cv, "default", GetCVarDefault(cv), "saved", GetCVar(cv))
+```
 
 *Build 22731, WoW path 7.1, PTR*
 

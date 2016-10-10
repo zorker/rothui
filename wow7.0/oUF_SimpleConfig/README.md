@@ -46,7 +46,7 @@ Attributes on unit level.
 * **enabled**: type:BOOLEAN, enable or disable this unit frame
 * **size**: type:TABLE, unit frame size http://wowprogramming.com/docs/widgets/Region/SetSize
 * **point**: type:TABLE, unit frame position http://wowprogramming.com/docs/widgets/Region/SetPoint
-* **scale**: type:INTEGER, defines the scale of the unit frame http://wowprogramming.com/docs/widgets/Frame/SetScale
+* **scale**: type:NUMBER, defines the scale of the unit frame http://wowprogramming.com/docs/widgets/Frame/SetScale
 
 ## Unit elements
 
@@ -103,7 +103,22 @@ Healthbar and absorbbar cannot be disabled. Size and position matches the unit f
 
 ### Castbar attributes
 
-...
+* **enabled**: type:BOOLEAN, enable/disable element
+* **size**: type:TABLE, unit frame size http://wowprogramming.com/docs/widgets/Region/SetSize
+* **point**: type:TABLE, unit frame position http://wowprogramming.com/docs/widgets/Region/SetPoint
+* **name**: type: TABLE, configuration for the name text
+  * enabled: type:BOOLEAN, enable/disable element
+  * points: type:TABLE, contains multiple points
+  * point: type:TABLE, contains a single point
+  * font: type:STRING, font family
+  * size: type:NUMBER, font size
+  * outline: type:STRING, font outline
+  * align: type:STRING, text align
+  * noshadow: type:BOOLEAN, Disable/enable text drop shadow
+* **icon**: type: TABLE, configuration for the castbar icon
+  * enabled: type:BOOLEAN, enable/disable element
+  * point: type:TABLE, icon point
+  * size: type:NUMBER, icon size
 
 ### Classbar attributes
 
@@ -157,7 +172,7 @@ If you want to set them you need to wait until PLAYER_LOGIN (hence the callback 
 /run local cv = "nameplateShowAll"; print(cv, "default", GetCVarDefault(cv), "saved", GetCVar(cv))
 ```
 
-*Build 22731, WoW path 7.1, PTR*
+*Build 22731, WoW patch 7.1, PTR*
 
 ```
 nameplateClassResourceTopInset

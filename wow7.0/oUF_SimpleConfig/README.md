@@ -102,10 +102,10 @@ Raid, party and boss units require special setup tables.
 You can define the following function if you manually want to react on nameplate events.
 
 ```
-local NamePlateCallback = function(...)
+local function NamePlateCallback(...)
   print(...)
 end
-L.C.NamePlateCallback
+L.C.NamePlateCallback = NamePlateCallback
 ```
 
 You get notified on the following events:
@@ -121,53 +121,55 @@ Blizzard is using hidden cvars that can affect the look of your nameplates. You 
 
 *Build 22731, WoW path 7.1, PTR*
 
-* nameplateClassResourceTopInset
-* nameplateGlobalScale
-* NamePlateHorizontalScale
-* nameplateLargeBottomInset
-* nameplateLargerScale
-* nameplateLargeTopInset
-* nameplateMaxAlpha
-* nameplateMaxAlphaDistance
-* nameplateMaxDistance
-* nameplateMaxScale
-* nameplateMaxScaleDistance
-* nameplateMinAlpha
-* nameplateMinAlphaDistance
-* nameplateMinScale
-* nameplateMinScaleDistance
-* nameplateMotion
-* nameplateMotionSpeed
-* nameplateOtherBottomInset
-* nameplateOtherTopInset
-* nameplateOverlapH
-* nameplateOverlapV
-* NameplatePersonalHideDelayAlpha
-* NameplatePersonalHideDelaySeconds
-* NameplatePersonalShowAlways
-* NameplatePersonalShowInCombat
-* NameplatePersonalShowWithTarget
-* nameplateSelectedAlpha
-* nameplateSelectedScale
-* nameplateSelfAlpha
-* nameplateSelfBottomInset
-* nameplateSelfScale
-* nameplateSelfTopInset
-* nameplateShowAll
-* nameplateShowEnemies
-* nameplateShowEnemyGuardians
-* nameplateShowEnemyMinions
-* nameplateShowEnemyMinus
-* nameplateShowEnemyPets
-* nameplateShowEnemyTotems
-* nameplateShowFriendlyGuardians
-* nameplateShowFriendlyMinions
-* nameplateShowFriendlyNPCs
-* nameplateShowFriendlyPets
-* nameplateShowFriendlyTotems
-* nameplateShowFriends
-* nameplateShowSelf
-* nameplateTargetBehindMaxDistance
-* NamePlateVerticalScale
-* ShowClassColorInNameplate
-* ShowNamePlateLoseAggroFlash
+```
+nameplateClassResourceTopInset
+nameplateGlobalScale
+NamePlateHorizontalScale
+nameplateLargeBottomInset
+nameplateLargerScale
+nameplateLargeTopInset
+nameplateMaxAlpha
+nameplateMaxAlphaDistance
+nameplateMaxDistance
+nameplateMaxScale
+nameplateMaxScaleDistance
+nameplateMinAlpha
+nameplateMinAlphaDistance
+nameplateMinScale
+nameplateMinScaleDistance
+nameplateMotion
+nameplateMotionSpeed
+nameplateOtherBottomInset
+nameplateOtherTopInset
+nameplateOverlapH
+nameplateOverlapV
+NameplatePersonalHideDelayAlpha
+NameplatePersonalHideDelaySeconds
+NameplatePersonalShowAlways
+NameplatePersonalShowInCombat
+NameplatePersonalShowWithTarget
+nameplateSelectedAlpha
+nameplateSelectedScale
+nameplateSelfAlpha
+nameplateSelfBottomInset
+nameplateSelfScale
+nameplateSelfTopInset
+nameplateShowAll
+nameplateShowEnemies
+nameplateShowEnemyGuardians
+nameplateShowEnemyMinions
+nameplateShowEnemyMinus
+nameplateShowEnemyPets
+nameplateShowEnemyTotems
+nameplateShowFriendlyGuardians
+nameplateShowFriendlyMinions
+nameplateShowFriendlyNPCs
+nameplateShowFriendlyPets
+nameplateShowFriendlyTotems
+nameplateShowFriends
+nameplateShowSelf
+nameplateTargetBehindMaxDistance
+NamePlateVerticalScale
+ShowClassColorInNameplate
+ShowNamePlateLoseAggroFlash
+```

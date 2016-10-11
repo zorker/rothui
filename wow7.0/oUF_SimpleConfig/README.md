@@ -28,7 +28,7 @@ The global.lua has global config settings used among units and elements.
 * **L.C.textures**: type:TABLE, textures for statusbars and backgrounds
 * **L.C.colors**: type:TABLE, Houses colors for castbar and threat that are not handled by oUF attributes. Defines the bgMultiplier.
 
-#Tag methods and events
+## Tag methods and events
 
 Are you not satisfied with the tags provided by oUF or oUF_Simple? No problem. Open the tags.lua and create your own tag.
 Make sure to give it a unique name! An example tag method and event is given.
@@ -218,7 +218,7 @@ The following setup is needed to spawn the party header. http://wowprogramming.c
 * **xOffset**: type:NUMBER, See http://wowprogramming.com/docs/secure_template/Group_Headers
 * **yOffset**: type:NUMBER, See http://wowprogramming.com/docs/secure_template/Group_Headers
 
-## NamePlate callback
+## NamePlate callback: L.C.NamePlateCallback
 
 You can define the following function if you want to react on nameplate events.
 
@@ -238,12 +238,13 @@ You get notified on the following events:
 * NAME_PLATE_UNIT_REMOVED
 * PLAYER_TARGET_CHANGED
 
-## NamePlate CVars
+## NamePlate CVars: L.C.NamePlateCVars
 
 Nameplates base frames are provided by Blizzard. We cannot change them. We only spawn the nameplate unitframe sitting on the nameplate base.
 Blizzard is using hidden cvars that can affect the look of your nameplates. You can use those cvars to manipulate the behaviour of your nameplates.
 
 If you want to adjust some of the nameplate cvars to your like you can provide a cvar list. It will be loaded automatically on PLAYER_LOGIN.
+**Beware**: Only change cvars that you want to be changed. Do not use this blindly!
 
 Example on top of the nameplate.lua.
 
@@ -253,11 +254,9 @@ cvars["nameplateMinScale"] = 1
 L.C.NamePlateCVars = cvars
 ```
 
-### NamePlate CVar list
+## NamePlate CVar List
 
 *Build 22731, WoW patch 7.1, PTR*
-
-#### List
 
 ```
 nameplateClassResourceTopInset
@@ -312,7 +311,7 @@ ShowClassColorInNameplate
 ShowNamePlateLoseAggroFlash
 ```
 
-#### Chat Command
+Chat command to print the values of a specific cvar
 
 ```lua
 /run local cv = "nameplateShowAll"; print(cv, "default", GetCVarDefault(cv), "saved", GetCVar(cv))

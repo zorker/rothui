@@ -11,11 +11,14 @@ that oUF_SimpleConfig defines the following config container and makes it global
 ```lua
 --config container
 L.C = {}
+--tags and events
+L.C.tagMethods = {}
+L.C.tagEvents = {}
 --make the config global
 oUF_SimpleConfig = L.C
 ```
 
-# Global config
+## Global config
 
 The global.lua has global config settings used among units and elements.
 
@@ -24,6 +27,11 @@ The global.lua has global config settings used among units and elements.
 * **L.C.backdrop**: type:TABLE, backdrop setup
 * **L.C.textures**: type:TABLE, textures for statusbars and backgrounds
 * **L.C.colors**: type:TABLE, Houses colors for castbar and threat that are not handled by oUF attributes. Defines the bgMultiplier.
+
+#Tag methods and events
+
+Are you not satisfied with the tags provided by oUF or oUF_Simple? No problem. Open the tags.lua and create your own tag.
+Make sure to give it a unique name! An example tag method and event is given.
 
 ## Units
 
@@ -84,7 +92,7 @@ Healthbar and absorbbar cannot be disabled. Size and position matches the unit f
   * align: type:STRING, text align
   * noshadow: type:BOOLEAN, Disable/enable text drop shadow
   * tag: type:STRING, oUF tag
-* **healthtext**: type: TABLE, configuration for the health text
+* **health**: type: TABLE, configuration for the health text
   * enabled: type:BOOLEAN, enable/disable element
   * points: type:TABLE, contains multiple points
   * point: type:TABLE, contains a single point
@@ -101,6 +109,16 @@ Healthbar and absorbbar cannot be disabled. Size and position matches the unit f
 * **size**: type:TABLE, element size http://wowprogramming.com/docs/widgets/Region/SetSize
 * **point**: type:TABLE, element position http://wowprogramming.com/docs/widgets/Region/SetPoint
 * **colorPower**: type: BOOLEAN, Enables/disables coloring by power color.
+* **power**: type: TABLE, configuration for the power text
+  * enabled: type:BOOLEAN, enable/disable element
+  * points: type:TABLE, contains multiple points
+  * point: type:TABLE, contains a single point
+  * font: type:STRING, font family
+  * size: type:NUMBER, font size
+  * outline: type:STRING, font outline
+  * align: type:STRING, text align
+  * noshadow: type:BOOLEAN, Disable/enable text drop shadow
+  * tag: type:STRING, oUF tag
 
 ### Castbar attributes
 
@@ -204,7 +222,9 @@ The following setup is needed to spawn the party header. http://wowprogramming.c
 
 You can define the following function if you want to react on nameplate events.
 
-```
+Example on top of the nameplate.lua.
+
+```lua
 local function NamePlateCallback(...)
   print(...)
 end
@@ -222,14 +242,22 @@ You get notified on the following events:
 
 Nameplates base frames are provided by Blizzard. We cannot change them. We only spawn the nameplate unitframe sitting on the nameplate base.
 Blizzard is using hidden cvars that can affect the look of your nameplates. You can use those cvars to manipulate the behaviour of your nameplates.
-If you want to set them you need to wait until PLAYER_LOGIN (hence the callback in my example).
 
-#### Chat command to print the default settings for a specific cvar
+If you want to adjust some of the nameplate cvars to your like you can provide a cvar list. It will be loaded automatically on PLAYER_LOGIN.
+
+Example on top of the nameplate.lua.
+
 ```lua
-/run local cv = "nameplateShowAll"; print(cv, "default", GetCVarDefault(cv), "saved", GetCVar(cv))
+local cvars = {}
+cvars["nameplateMinScale"] = 1
+L.C.NamePlateCVars = cvars
 ```
 
+### NamePlate CVar list
+
 *Build 22731, WoW patch 7.1, PTR*
+
+#### List
 
 ```
 nameplateClassResourceTopInset
@@ -282,4 +310,10 @@ nameplateTargetBehindMaxDistance
 NamePlateVerticalScale
 ShowClassColorInNameplate
 ShowNamePlateLoseAggroFlash
+```
+
+#### Chat Command
+
+```lua
+/run local cv = "nameplateShowAll"; print(cv, "default", GetCVarDefault(cv), "saved", GetCVar(cv))
 ```

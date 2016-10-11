@@ -354,6 +354,20 @@ local function CreateHealthText(self)
 end
 L.F.CreateHealthText = CreateHealthText
 
+--CreatePowerText
+local function CreatePowerText(self)
+  if not self.cfg.powerbar or not self.cfg.powerbar.power or not self.cfg.powerbar.power.enabled then return end
+  local cfg = self.cfg.powerbar.power
+  local text = CreateText(self.Power,cfg.font,cfg.size,cfg.outline,cfg.align,cfg.noshadow)
+  if cfg.points then
+    SetPoints(text,self.Power,cfg.points)
+  else
+    SetPoint(text,self.Power,cfg.point)
+  end
+  self:Tag(text, cfg.tag)
+end
+L.F.CreatePowerText = CreatePowerText
+
 --PostCreateAura
 local function PostCreateAura(self,button)
   local bg = button:CreateTexture(nil,"BACKGROUND",nil,-8)

@@ -45,6 +45,12 @@ L.C.player = {
     size = {265*L.C.uiscale,5*L.C.uiscale},
     point = {"TOP","BOTTOM",0*L.C.uiscale,-4*L.C.uiscale}, --if no relativeTo is given the frame base will be the relativeTo reference
     colorPower = true,
+    power = {
+      enabled = false,
+      point = {"RIGHT",-2*L.C.uiscale,0*L.C.uiscale},
+      size = 16*L.C.uiscale,
+      tag = "[perpp]",
+    },
   },
   --raidmark
   raidmark = {

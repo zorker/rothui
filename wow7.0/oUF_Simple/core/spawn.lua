@@ -91,3 +91,30 @@ if L.F.CreateNamePlateStyle then
   oUF:RegisterStyle(A.."Nameplate",L.F.CreateNamePlateStyle)
   oUF:SpawnNamePlates(A.."Nameplate", A, L.C.NamePlateCallback or L.F.NamePlateCallback)
 end
+
+--spawn raid
+if L.F.CreateRaidStyle then
+  oUF:RegisterStyle(A.."Raid", L.F.CreateRaidStyle)
+  oUF:SetActiveStyle(A.."Raid")
+  for i=1, NUM_RAID_GROUPS do
+    oUF:SpawnHeader(
+      A.."RaidHeader"..i,
+      L.C.raid.setup.template,
+      L.C.raid.setup.visibility,
+      "showPlayer", L.C.raid.setup.showPlayer,
+      "showSolo",   L.C.raid.setup.showSolo,
+      "showParty",  L.C.raid.setup.showParty,
+      "showRaid",   L.C.raid.setup.showRaid,
+      "point",      L.C.raid.setup.point,
+      "xOffset",    L.C.raid.setup.xOffset,
+      "yOffset",    L.C.raid.setup.yOffset,
+      "groupFilter",    tostring(i),
+      "unitsPerColumn", 5,
+      "oUF-initialConfigFunction", ([[
+        self:SetWidth(%d)
+        self:SetHeight(%d)
+        self:SetScale(%f)
+      ]]):format(L.C.raid.size[1], L.C.raid.size[2], L.C.raid.scale)
+    ):SetPoint(unpack(L.C.raid.points[i])) --config needs to provide 8 point tables, one for each raid group
+  end
+end

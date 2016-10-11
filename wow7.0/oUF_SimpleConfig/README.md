@@ -47,6 +47,7 @@ Attributes on unit level.
 * **size**: type:TABLE, unit frame size http://wowprogramming.com/docs/widgets/Region/SetSize
 * **point**: type:TABLE, unit frame position http://wowprogramming.com/docs/widgets/Region/SetPoint
 * **scale**: type:NUMBER, defines the scale of the unit frame http://wowprogramming.com/docs/widgets/Frame/SetScale
+* **points**: type:TABLE, contains multiple points. Raid unit only! In a raid you spawn up to 8 secure group headers. You must support 8 points. One for each header.
 
 ## Unit elements
 
@@ -185,23 +186,9 @@ Allows you to define the position of all boss units that are not boss1.
 * **xOffset**: type:NUMBER, x-axis offset
 * **yOffset**: type:NUMBER, y-axis offset
 
-### Party setup
+### Party setup and Raid setup
 
 The following setup is needed to spawn the party header. http://wowprogramming.com/docs/secure_template/Group_Headers
-
-* **template**: type:STRING, Blizzard frame template. When nil the "SecureGroupHeaderTemplate" is used.
-* **visibility**: type:STRING, Custom visibility state driver. (example: "custom [group:party,nogroup:raid] show; hide")
-* **showPlayer**: type:BOOLEAN, See http://wowprogramming.com/docs/secure_template/Group_Headers
-* **showSolo**: type:BOOLEAN, See http://wowprogramming.com/docs/secure_template/Group_Headers
-* **showParty**: type:BOOLEAN, See http://wowprogramming.com/docs/secure_template/Group_Headers
-* **showRaid**: type:BOOLEAN, See http://wowprogramming.com/docs/secure_template/Group_Headers
-* **point**: type:STRING, See http://wowprogramming.com/docs/secure_template/Group_Headers
-* **xOffset**: type:NUMBER, See http://wowprogramming.com/docs/secure_template/Group_Headers
-* **yOffset**: type:NUMBER, See http://wowprogramming.com/docs/secure_template/Group_Headers
-
-### Raid setup
-
-The following setup is needed to spawn the raid header. http://wowprogramming.com/docs/secure_template/Group_Headers
 
 * **template**: type:STRING, Blizzard frame template. When nil the "SecureGroupHeaderTemplate" is used.
 * **visibility**: type:STRING, Custom visibility state driver. (example: "custom [group:party,nogroup:raid] show; hide")

@@ -22,6 +22,6 @@ templates\focus.lua
 templates\party.lua
 templates\boss.lua
 templates\nameplate.lua
-##templates\raid.lua
+templates\raid.lua
 
 core\spawn.lua

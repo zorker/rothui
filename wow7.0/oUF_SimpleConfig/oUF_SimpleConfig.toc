@@ -14,5 +14,4 @@ focus.lua
 party.lua
 boss.lua
 nameplate.lua
-nameplateCVars.lua
-##raid.lua
+raid.lua

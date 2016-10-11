@@ -15,7 +15,9 @@ local A, L = ...
 --custom filter for nameplate debuffs
 local function CustomFilter(...)
   local _, _, _, name, _, _, _, _, _, _, caster, _, nameplateShowPersonal, _, _, _, _, nameplateShowAll = ...
-  return nameplateShowAll or (nameplateShowPersonal and (caster == "player" or caster == "pet" or caster == "vehicle"))
+  --print(name,caster,nameplateShowPersonal,nameplateShowAll)
+  --return nameplateShowAll or (nameplateShowPersonal and (caster == "player" or caster == "pet" or caster == "vehicle"))
+  return nameplateShowAll or (caster == "player" or caster == "pet" or caster == "vehicle")
 end
 
 L.C.nameplate = {

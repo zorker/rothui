@@ -16,7 +16,7 @@ local A, L = ...
 L.C.mediapath = "interface\\addons\\"..A.."\\media\\"
 
 L.C.uiscale = UIParent:GetScale()
-print("Your UI scale: "..L.C.uiscale)
+--print("Your UI scale: "..L.C.uiscale)
 
 --backdrop
 L.C.backdrop = {

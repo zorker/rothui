@@ -12,7 +12,7 @@ local A, L = ...
 -- CreateRaidStyle
 -----------------------------
 
-if not L.C.units.raid.enabled then return end
+if not L.C.raid or not L.C.raid.enabled then return end
 
 local function CreateRaidStyle(self)
   --config

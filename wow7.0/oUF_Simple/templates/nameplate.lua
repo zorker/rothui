@@ -27,8 +27,3 @@ local function CreateNamePlateStyle(self)
   L.F.CreateStyle(self)
 end
 L.F.CreateNamePlateStyle = CreateNamePlateStyle
-
-local function NamePlateCallback(...)
-  --print(...)
-end
-L.F.NamePlateCallback = NamePlateCallback

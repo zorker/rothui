@@ -9,6 +9,23 @@
 local A, L = ...
 
 -----------------------------
+-- NamePlateCallback
+-----------------------------
+
+local function NamePlateCallback(...)
+  print(...)
+end
+--L.C.NamePlateCallback = NamePlateCallback
+
+-----------------------------
+-- NamePlateCVars
+-----------------------------
+
+local cvars = {}
+cvars["nameplateMinScale"] = 1
+L.C.NamePlateCVars = cvars
+
+-----------------------------
 -- NamePlateConfig
 -----------------------------
 

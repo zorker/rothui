@@ -41,7 +41,7 @@ L.C.nameplate = {
   enabled = true,
   size = {130*L.C.uiscale,26*L.C.uiscale},
   point = {"CENTER"}, --relative to the nameplate base!
-  scale = 1*L.C.uiscale,--nameplates are not part of uiparent!
+  scale = 1*UIParent:GetScale(),--nameplates are not part of uiparent!
   --healthbar
   healthbar = {
     --health and absorb bar cannot be disabled, they match the size of the frame

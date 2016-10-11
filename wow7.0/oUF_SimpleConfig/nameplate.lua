@@ -12,6 +12,12 @@ local A, L = ...
 -- NamePlateConfig
 -----------------------------
 
+--custom filter for nameplate debuffs
+local function CustomFilter(...)
+  local _, _, _, name, _, _, _, _, _, _, caster, _, nameplateShowPersonal, _, _, _, _, nameplateShowAll = ...
+  return nameplateShowAll or (nameplateShowPersonal and (caster == "player" or caster == "pet" or caster == "vehicle"))
+end
+
 L.C.nameplate = {
   enabled = true,
   size = {130*L.C.uiscale,26*L.C.uiscale},
@@ -76,5 +82,6 @@ L.C.nameplate = {
     growthY = "UP",
     disableCooldown = true,
     filter = "HARMFUL|INCLUDE_NAME_PLATE_ONLY",
+    CustomFilter = CustomFilter
   },
 }

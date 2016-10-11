@@ -152,7 +152,8 @@ Classbar element for combo points, chi, holy power, etc. Makes sense for the pla
 * **growthX**: type:STRING, grow direction x-axis. "LEFT" or "RIGHT"
 * **growthY**: type:STRING, grow direction y-axis. "UP" or "DOWN"
 * **disableCooldown**: type:BOOLEAN, disable/enable cooldown spiral
-* **filter**: type:STRING, Custom filter list for auras to display. Defaults to "HELPFUL" on buffs and "HARMFUL" on debuffs.
+* **filter**: type:STRING, Unit aura filter. Defaults to "HELPFUL" on buffs and "HARMFUL" on debuffs.
+* **CustomFilter**: type:FUNCTION, Custom filter function to filter the UnitAura result for specific icons
 
 ### Debuffs attributes
 
@@ -166,7 +167,8 @@ Classbar element for combo points, chi, holy power, etc. Makes sense for the pla
 * **growthX**: type:STRING, grow direction x-axis. "LEFT" or "RIGHT"
 * **growthY**: type:STRING, grow direction y-axis. "UP" or "DOWN"
 * **disableCooldown**: type:BOOLEAN, disable/enable cooldown spiral
-* **filter**: type:STRING, Custom filter list for auras to display. Defaults to "HELPFUL" on buffs and "HARMFUL" on debuffs.
+* **filter**: type:STRING, Unit aura filter. Defaults to "HELPFUL" on buffs and "HARMFUL" on debuffs.
+* **CustomFilter**: type:FUNCTION, Custom filter function to filter the UnitAura result for specific icons. Must return true or false.
 
 ## Special cases
 

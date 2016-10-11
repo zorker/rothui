@@ -383,7 +383,9 @@ local function CreateBuffs(self)
   frame["growth-x"] = cfg.growthX
   frame["growth-y"] = cfg.growthY
   frame.disableCooldown = cfg.disableCooldown
-  frame.PostCreateIcon = PostCreateAura
+  frame.filter = cfg.filter
+  frame.CustomFilter = cfg.CustomFilter
+  frame.PostCreateIcon = cfg.PostCreateAura or PostCreateAura
   --frame.PostUpdateIcon = PostUpdateBuff
   frame:SetSize(CalcFrameSize(cfg.num,cfg.cols,cfg.size,cfg.size,cfg.spacing,0))
   --local t = frame:CreateTexture(nil,"BACKGROUND",nil,-8)
@@ -407,7 +409,8 @@ local function CreateDebuffs(self)
   frame["growth-y"] = cfg.growthY
   frame.disableCooldown = cfg.disableCooldown
   frame.filter = cfg.filter
-  frame.PostCreateIcon = PostCreateAura
+  frame.CustomFilter = cfg.CustomFilter
+  frame.PostCreateIcon = cfg.PostCreateAura or PostCreateAura
   --frame.PostUpdateIcon = PostUpdateDebuff
   frame:SetSize(CalcFrameSize(cfg.num,cfg.cols,cfg.size,cfg.size,cfg.spacing,0))
   --local t = frame:CreateTexture(nil,"BACKGROUND",nil,-8)

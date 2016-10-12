@@ -98,6 +98,7 @@ end
 
 --UpdateThreat
 local function UpdateThreat(self,event,unit)
+  if self.unit ~= unit then return end
   self.Health:ForceUpdate()
 end
 L.F.UpdateThreat = UpdateThreat

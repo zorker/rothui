@@ -24,13 +24,13 @@ L.C.player = {
     colorHealth = true,
     colorThreat = true,
     name = {
-      enabled = false,
+      enabled = true,
       points = {
-        {"LEFT",2,0},
-        {"RIGHT",-135,0},
+        {"TOPLEFT",2,10},
+        {"TOPRIGHT",-2,10},
       },
-      size = 18,
-      tag = "[name]",
+      size = 17,
+      tag = "[resting]",
     },
     health = {
       enabled = true,

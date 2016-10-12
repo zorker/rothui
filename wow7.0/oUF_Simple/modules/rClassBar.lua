@@ -33,41 +33,42 @@ do
 end
 
 local function CreateSplit(self,i)
-  local split = self:CreateTexture()
-  split:SetTexture("abc")
-  split:SetPoint("TOP")
-  split:SetPoint("BOTTOM")
-  split:SetWidth(math.max(self:GetWidth()*8/360,4))
-  local layer, sublayer = self:GetStatusBarTexture():GetDrawLayer()
+  local bar = self.rClassBar
+  local split = bar:CreateTexture()
+  split:SetTexture(self.cfg.classbar.splits.texture)
+  split:SetSize(unpack(self.cfg.classbar.splits.size))
+  split:SetVertexColor(unpack(self.cfg.classbar.splits.color))
+  local layer, sublayer = bar:GetStatusBarTexture():GetDrawLayer()
   split:SetDrawLayer(layer,sublayer+1)
-  self.splits[i] = split
+  bar.splits[i] = split
   return split
 end
 
 local function UpdateSplits(self,maxSegments)
-  if not self.useSplits then return end
-  if self.maxSegments == maxSegments then return end
-  self.maxSegments = maxSegments
-  if maxSegements < 2 then
-    if not self.splits then return end
+  if not self.cfg.classbar.splits or not self.cfg.classbar.splits.enabled then return end
+  local bar = self.rClassBar
+  if bar.maxSegments == maxSegments then return end
+  bar.maxSegments = maxSegments
+  if not maxSegments or maxSegments < 2 then
+    if not bar.splits then return end
     for i=1,7 do
-      if self.splits[i] and self.splits[i]:IsShown() then
-        self.splits[i]:Hide()
+      if bar.splits[i] and bar.splits[i]:IsShown() then
+        bar.splits[i]:Hide()
       end
     end
     return
   end
-  if maxSemgents > 8 then maxSegments = 5 end --anything above 8 will be split into 5 parts of 20%.
-  if not self.splits then self.splits = {} end
-  local p = self:GetWidth()/maxSegments
+  if maxSegments > 8 then maxSegments = 5 end --anything above 8 will be split into 5 parts of 20%.
+  if not bar.splits then bar.splits = {} end
+  local p = bar:GetWidth()/maxSegments
   for i=1,7 do
-    if i>maxSemgents-1 then
-      if self.splits[i] and self.splits[i]:IsShown() then
-        self.splits[i]:Hide()
+    if i>maxSegments-1 then
+      if bar.splits[i] and bar.splits[i]:IsShown() then
+        bar.splits[i]:Hide()
       end
     else
-      local split = self.splits[i] or CreateSplit(self,i)
-      split:SetPoint("CENTER",self,"LEFT",p*i,0)
+      local split = bar.splits[i] or CreateSplit(self,i)
+      split:SetPoint("CENTER",bar,"LEFT",p*i,0)
       if not split:IsShown() then split:Show() end
     end
   end

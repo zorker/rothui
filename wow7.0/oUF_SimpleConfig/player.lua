@@ -86,6 +86,12 @@ L.C.player = {
     enabled = true,
     size = {130,5},
     point = {"BOTTOMRIGHT","TOPRIGHT",0,4},
+    splits = {
+      enabled = true,
+      texture = L.C.textures.split,
+      size = {5,5},
+      color = {0,0,0,1}
+    },
   },
   --altpowerbar
   altpowerbar = {

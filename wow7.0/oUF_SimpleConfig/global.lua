@@ -43,6 +43,7 @@ L.C.textures = {
   statusbarBG = L.C.mediapath.."statusbar",
   absorb = L.C.mediapath.."absorb",
   aura = L.C.mediapath.."square",
+  split = L.C.mediapath.."split",
 }
 
 --colors

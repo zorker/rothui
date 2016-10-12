@@ -23,7 +23,7 @@ oUF_SimpleConfig = L.C
 The global.lua has global config settings used among units and elements.
 
 * **L.C.mediapath**: type:STRING, path to the media files
-* **L.C.globalscale**: type:NUMBER, global scale to scale all elements at the same time. Can be multiplied with any other muliplier like ui-scale.
+* **L.C.globalscale**: type:NUMBER, global scale to scale all unit elements at the same time. Can be multiplied with any other multiplier like ui-scale.
 * **L.C.backdrop**: type:TABLE, backdrop setup
 * **L.C.textures**: type:TABLE, textures for statusbars and backgrounds
 * **L.C.colors**: type:TABLE, Houses colors for castbar and threat that are not handled by oUF attributes. Defines the bgMultiplier.

@@ -233,6 +233,7 @@ local function CreateHealthBar(self)
   s.PostUpdate = PostUpdateHealth
   if s.colorThreat then
     self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", L.F.UpdateThreat)
+    self:RegisterEvent("UNIT_THREAT_LIST_UPDATE", L.F.UpdateThreat)
   end
   return s
 end

@@ -1,0 +1,8 @@
+## Interface: 70000
+## Author: zork
+## Title: rThreat
+## Notes: Simple threat table
+## RequiredDeps: rLib
+
+config.lua
+core\core.lua

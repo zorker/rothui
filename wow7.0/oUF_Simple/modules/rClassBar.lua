@@ -32,6 +32,47 @@ do
   end
 end
 
+local function CreateSplit(self,i)
+  local split = self:CreateTexture()
+  split:SetTexture("abc")
+  split:SetPoint("TOP")
+  split:SetPoint("BOTTOM")
+  split:SetWidth(math.max(self:GetWidth()*8/360,4))
+  local layer, sublayer = self:GetStatusBarTexture():GetDrawLayer()
+  split:SetDrawLayer(layer,sublayer+1)
+  self.splits[i] = split
+  return split
+end
+
+local function UpdateSplits(self,maxSegments)
+  if not self.useSplits then return end
+  if self.maxSegments == maxSegments then return end
+  self.maxSegments = maxSegments
+  if maxSegements < 2 then
+    if not self.splits then return end
+    for i=1,7 do
+      if self.splits[i] and self.splits[i]:IsShown() then
+        self.splits[i]:Hide()
+      end
+    end
+    return
+  end
+  if maxSemgents > 8 then maxSegments = 5 end --anything above 8 will be split into 5 parts of 20%.
+  if not self.splits then self.splits = {} end
+  local p = self:GetWidth()/maxSegments
+  for i=1,7 do
+    if i>maxSemgents-1 then
+      if self.splits[i] and self.splits[i]:IsShown() then
+        self.splits[i]:Hide()
+      end
+    else
+      local split = self.splits[i] or CreateSplit(self,i)
+      split:SetPoint("CENTER",self,"LEFT",p*i,0)
+      if not split:IsShown() then split:Show() end
+    end
+  end
+end
+
 local function Update(self, event, unit, powerType)
   if not (unit == 'player' and powerType == ClassPowerType)
     and not (unit == 'vehicle' and powerType == 'COMBO_POINTS') then
@@ -42,9 +83,11 @@ local function Update(self, event, unit, powerType)
   if unit == 'vehicle' then
     ppcur = GetComboPoints('vehicle', 'target') or 0
     ppmax = MAX_COMBO_POINTS
+    UpdateSplits(self,ppmax)
   else
     ppcur = UnitPower('player', ClassPowerID, true) or 0
     ppmax = UnitPowerMax('player', ClassPowerID, true)
+    UpdateSplits(self,UnitPowerMax('player', ClassPowerID))
   end
   if ppcur == 0 then
     cb:Hide()

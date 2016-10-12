@@ -14,7 +14,7 @@ local A, L = ...
 
 L.C.raid = {
   enabled = true,
-  size = {130*L.C.uiscale,26*L.C.uiscale},
+  size = {130,26},
   points = { --list of 8 points, one for each raid group
     {"TOPLEFT",20,-20},
     {"TOP", "oUF_SimpleRaidHeader1", "BOTTOM", 0, -10},
@@ -25,7 +25,7 @@ L.C.raid = {
     {"TOP", "oUF_SimpleRaidHeader6", "BOTTOM", 0, -10},
     {"TOP", "oUF_SimpleRaidHeader7", "BOTTOM", 0, -10},
   },
-  scale = 1,
+  scale = 1*L.C.globalscale,
   --healthbar
   healthbar = {
     --health and absorb bar cannot be disabled, they match the size of the frame
@@ -37,10 +37,10 @@ L.C.raid = {
     name = {
       enabled = true,
       points = {
-        {"LEFT",2*L.C.uiscale,0*L.C.uiscale},
-        {"RIGHT",-2*L.C.uiscale,0*L.C.uiscale},
+        {"LEFT",2,0},
+        {"RIGHT",-2,0},
       },
-      size = 16*L.C.uiscale,
+      size = 16,
       align = "CENTER",
       tag = "[name]",
     },
@@ -48,7 +48,7 @@ L.C.raid = {
   --raidmark
   raidmark = {
     enabled = true,
-    size = {18*L.C.uiscale,18*L.C.uiscale},
+    size = {18,18},
     point = {"CENTER","LEFT",0,0},
   },
   setup = {
@@ -59,7 +59,7 @@ L.C.raid = {
     showParty = false,
     showRaid = true,
     point = "BOTTOM",
-    xOffset = 0*L.C.uiscale,
-    yOffset = 5*L.C.uiscale,
+    xOffset = 0,
+    yOffset = 5,
   },
 }

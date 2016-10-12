@@ -449,6 +449,7 @@ local function SetupFrame(self)
   self:SetSize(unpack(self.cfg.size))
   SetPoint(self,nil,self.cfg.point)
   self:SetScale(self.cfg.scale)
+  --print(self:GetName(),self:GetScale(),self:GetEffectiveScale(),self:GetWidth(),self:GetHeight(),self:GetPoint())
 end
 L.F.SetupFrame = SetupFrame
 

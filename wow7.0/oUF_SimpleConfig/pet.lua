@@ -14,9 +14,9 @@ local A, L = ...
 
 L.C.pet = {
   enabled = true,
-  size = {130*L.C.uiscale,26*L.C.uiscale},
-  point = {"TOPLEFT","oUF_SimplePlayer","BOTTOMLEFT",0*L.C.uiscale,-14*L.C.uiscale},
-  scale = 1,
+  size = {130,26},
+  point = {"TOPLEFT","oUF_SimplePlayer","BOTTOMLEFT",0,-14},
+  scale = 1*L.C.globalscale,
   --healthbar
   healthbar = {
     --health and absorb bar cannot be disabled, they match the size of the frame
@@ -27,10 +27,10 @@ L.C.pet = {
     name = {
       enabled = true,
       points = {
-        {"LEFT",2*L.C.uiscale,0*L.C.uiscale},
-        {"RIGHT",-2*L.C.uiscale,0*L.C.uiscale},
+        {"LEFT",2,0},
+        {"RIGHT",-2,0},
       },
-      size = 16*L.C.uiscale,
+      size = 16,
       align = "CENTER",
       tag = "[name]",
     },
@@ -38,42 +38,42 @@ L.C.pet = {
   --raidmark
   raidmark = {
     enabled = true,
-    size = {18*L.C.uiscale,18*L.C.uiscale},
+    size = {18,18},
     point = {"CENTER","LEFT",0,0},
   },
   --castbar
   castbar = {
     enabled = true,
-    size = {130*L.C.uiscale,26*L.C.uiscale},
-    point = {"TOP","BOTTOM",0*L.C.uiscale,-5*L.C.uiscale},
+    size = {130,26},
+    point = {"TOP","BOTTOM",0,-5},
     name = {
       enabled = true,
       points = {
-        {"LEFT",2*L.C.uiscale,0*L.C.uiscale},
-        {"RIGHT",-2*L.C.uiscale,0*L.C.uiscale},
+        {"LEFT",2,0},
+        {"RIGHT",-2,0},
       },
-      size = 16*L.C.uiscale,
+      size = 16,
     },
     icon = {
       enabled = true,
-      size = {26*L.C.uiscale,26*L.C.uiscale},
-      point = {"RIGHT","LEFT",-6*L.C.uiscale,0*L.C.uiscale},
+      size = {26,26},
+      point = {"RIGHT","LEFT",-6,0},
     },
   },
   --altpowerbar (for vehicles)
   altpowerbar = {
     enabled = true,
-    size = {130*L.C.uiscale,5*L.C.uiscale},
-    point = {"BOTTOMLEFT","oUF_SimplePlayer","TOPLEFT",0*L.C.uiscale,4*L.C.uiscale},
+    size = {130,5},
+    point = {"BOTTOMLEFT","oUF_SimplePlayer","TOPLEFT",0,4},
   },
   --debuffs
   debuffs = {
     enabled = true,
-    point = {"TOPLEFT","BOTTOMLEFT",0*L.C.uiscale,-5*L.C.uiscale},
+    point = {"TOPLEFT","BOTTOMLEFT",0,-5},
     num = 5,
     cols = 5,
-    size = 22*L.C.uiscale,
-    spacing = 5*L.C.uiscale,
+    size = 22,
+    spacing = 5,
     initialAnchor = "TOPLEFT",
     growthX = "RIGHT",
     growthY = "DOWN",

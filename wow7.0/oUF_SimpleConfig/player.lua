@@ -14,9 +14,9 @@ local A, L = ...
 
 L.C.player = {
   enabled = true,
-  size = {265*L.C.uiscale,26*L.C.uiscale},
-  point = {"RIGHT",UIParent,"CENTER",-120*L.C.uiscale,-120*L.C.uiscale},
-  scale = 1,
+  size = {265,26},
+  point = {"RIGHT",UIParent,"CENTER",-120,-120},
+  scale = 1*L.C.globalscale,
   --healthbar
   healthbar = {
     --health and absorb bar cannot be disabled, they match the size of the frame
@@ -26,71 +26,71 @@ L.C.player = {
     name = {
       enabled = false,
       points = {
-        {"LEFT",2*L.C.uiscale,0*L.C.uiscale},
-        {"RIGHT",-135*L.C.uiscale,0*L.C.uiscale},
+        {"LEFT",2,0},
+        {"RIGHT",-135,0},
       },
-      size = 18*L.C.uiscale,
+      size = 18,
       tag = "[name]",
     },
     health = {
       enabled = true,
-      point = {"RIGHT",-2*L.C.uiscale,0*L.C.uiscale},
-      size = 16*L.C.uiscale,
+      point = {"RIGHT",-2,0},
+      size = 16,
       tag = "[oUF_Simple:health]",
     },
   },
   --powerbar
   powerbar = {
     enabled = true,
-    size = {265*L.C.uiscale,5*L.C.uiscale},
-    point = {"TOP","BOTTOM",0*L.C.uiscale,-4*L.C.uiscale}, --if no relativeTo is given the frame base will be the relativeTo reference
+    size = {265,5},
+    point = {"TOP","BOTTOM",0,-4}, --if no relativeTo is given the frame base will be the relativeTo reference
     colorPower = true,
     power = {
       enabled = false,
-      point = {"RIGHT",-2*L.C.uiscale,0*L.C.uiscale},
-      size = 16*L.C.uiscale,
+      point = {"RIGHT",-2,0},
+      size = 16,
       tag = "[perpp]",
     },
   },
   --raidmark
   raidmark = {
     enabled = true,
-    size = {18*L.C.uiscale,18*L.C.uiscale},
+    size = {18,18},
     point = {"CENTER","LEFT",0,0},
   },
   --castbar
   castbar = {
     enabled = true,
-    size = {265*L.C.uiscale,26*L.C.uiscale},
-    point = {"BOTTOM","TOP",0*L.C.uiscale,14*L.C.uiscale},
+    size = {265,26},
+    point = {"BOTTOM","TOP",0,14},
     name = {
       enabled = true,
       points = {
-        {"LEFT",2*L.C.uiscale,0*L.C.uiscale},
-        {"RIGHT",-2*L.C.uiscale,0*L.C.uiscale},
+        {"LEFT",2,0},
+        {"RIGHT",-2,0},
       },
       --font = STANDARD_TEXT_FONT,
-      size = 16*L.C.uiscale,
+      size = 16,
       --outline = "",--OUTLINE",
       --align = "CENTER",
       --noshadow = true,
     },
     icon = {
       enabled = true,
-      size = {26*L.C.uiscale,26*L.C.uiscale},
-      point = {"RIGHT","LEFT",-6*L.C.uiscale,0*L.C.uiscale},
+      size = {26,26},
+      point = {"RIGHT","LEFT",-6,0},
     },
   },
   --classbar
   classbar = {
     enabled = true,
-    size = {130*L.C.uiscale,5*L.C.uiscale},
-    point = {"BOTTOMRIGHT","TOPRIGHT",0*L.C.uiscale,4*L.C.uiscale},
+    size = {130,5},
+    point = {"BOTTOMRIGHT","TOPRIGHT",0,4},
   },
   --altpowerbar
   altpowerbar = {
     enabled = true,
-    size = {130*L.C.uiscale,5*L.C.uiscale},
-    point = {"BOTTOMLEFT","TOPLEFT",0*L.C.uiscale,4*L.C.uiscale},
+    size = {130,5},
+    point = {"BOTTOMLEFT","TOPLEFT",0,4},
   },
 }

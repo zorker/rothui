@@ -15,8 +15,9 @@ local A, L = ...
 --mediapath
 L.C.mediapath = "interface\\addons\\"..A.."\\media\\"
 
-L.C.uiscale = UIParent:GetScale()
---print("Your UI scale: "..L.C.uiscale)
+L.C.globalscale = 0.85
+
+print("ouf_SimepleConfig:","UI scale",UIParent:GetScale(),"L.C.globalscale",L.C.globalscale)
 
 --backdrop
 L.C.backdrop = {
@@ -26,13 +27,13 @@ L.C.backdrop = {
   edgeColor = {0,0,0,0.8},
   tile = false,
   tileSize = 0,
-  inset = 5*L.C.uiscale,
-  edgeSize = 5*L.C.uiscale,
+  inset = 5,
+  edgeSize = 5,
   insets = {
-    left = 5*L.C.uiscale,
-    right = 5*L.C.uiscale,
-    top = 5*L.C.uiscale,
-    bottom = 5*L.C.uiscale,
+    left = 5,
+    right = 5,
+    top = 5,
+    bottom = 5,
   },
 }
 

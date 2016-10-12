@@ -39,9 +39,9 @@ end
 
 L.C.nameplate = {
   enabled = true,
-  size = {130*L.C.uiscale,26*L.C.uiscale},
+  size = {130,26},
   point = {"CENTER"}, --relative to the nameplate base!
-  scale = 1*UIParent:GetScale(),--nameplates are not part of uiparent!
+  scale = 1*UIParent:GetScale()*L.C.globalscale,--nameplates are not part of uiparent, they must be multiplied by uiparent scale!
   --healthbar
   healthbar = {
     --health and absorb bar cannot be disabled, they match the size of the frame
@@ -55,10 +55,10 @@ L.C.nameplate = {
     name = {
       enabled = true,
       points = {
-        {"LEFT",2*L.C.uiscale,0*L.C.uiscale},
-        {"RIGHT",-2*L.C.uiscale,0*L.C.uiscale},
+        {"LEFT",2,0},
+        {"RIGHT",-2,0},
       },
-      size = 16*L.C.uiscale,
+      size = 16,
       align = "CENTER",
       tag = "[difficulty][name]|r",
     },
@@ -66,36 +66,36 @@ L.C.nameplate = {
   --raidmark
   raidmark = {
     enabled = true,
-    size = {18*L.C.uiscale,18*L.C.uiscale},
+    size = {18,18},
     point = {"CENTER","TOP",0,0},
   },
   --castbar
   castbar = {
     enabled = true,
-    size = {130*L.C.uiscale,26*L.C.uiscale},
-    point = {"TOP","BOTTOM",0*L.C.uiscale,-5*L.C.uiscale},
+    size = {130,26},
+    point = {"TOP","BOTTOM",0,-5},
     name = {
       enabled = true,
       points = {
-        {"LEFT",2*L.C.uiscale,0*L.C.uiscale},
-        {"RIGHT",-2*L.C.uiscale,0*L.C.uiscale},
+        {"LEFT",2,0},
+        {"RIGHT",-2,0},
       },
-      size = 16*L.C.uiscale,
+      size = 16,
     },
     icon = {
       enabled = true,
-      size = {26*L.C.uiscale,26*L.C.uiscale},
-      point = {"RIGHT","LEFT",-6*L.C.uiscale,0*L.C.uiscale},
+      size = {26,26},
+      point = {"RIGHT","LEFT",-6,0},
     },
   },
   --debuffs
   debuffs = {
     enabled = true,
-    point = {"BOTTOMLEFT","TOPLEFT",0*L.C.uiscale,5*L.C.uiscale},
+    point = {"BOTTOMLEFT","TOPLEFT",0,5},
     num = 5,
     cols = 5,
-    size = 22*L.C.uiscale,
-    spacing = 5*L.C.uiscale,
+    size = 22,
+    spacing = 5,
     initialAnchor = "TOPLEFT",
     growthX = "RIGHT",
     growthY = "UP",

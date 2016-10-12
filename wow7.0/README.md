@@ -33,7 +33,7 @@ Work Work.
 
 ##Todo
 
-* **[oUF_Simple](http://www.wowinterface.com/downloads/info14831-oUF_Simple.html)**: Still needs some work and is still missing raidframes. Has top priority
-* *Get to level 110...*
-* **[rFilter3](http://www.wowinterface.com/downloads/info13006-rFilter3.html)**: Fix compatibility with the new rLib. Currenty I do not intend to rewrite that addon.
-* **[rThreat](http://www.wowinterface.com/downloads/info19263-rThreat.html)**: Fix compatibility with the new rLib. Currenty I do not intend to rewrite that addon.
+* **[oUF_Simple](http://www.wowinterface.com/downloads/info14831-oUF_Simple.html)**: Still is nearly finished. Only small adjustments needed.
+* *Four more levels to go...*
+* **[rFilter3](http://www.wowinterface.com/downloads/info13006-rFilter3.html)**: Fix compatibility with the new rLib.
+* **[rThreat](http://www.wowinterface.com/downloads/info19263-rThreat.html)**: Fix compatibility with the new rLib.

@@ -85,8 +85,7 @@ local function CreateIcon(self,layer,sublevel,size,point)
   return icon
 end
 
---PostUpdateHealth
-local function PostUpdateHealth(self, unit, min, max)
+local function ColorHealthbarOnThreat(self,unit)
   if self.colorThreat and self.colorThreatInvers and unit and UnitThreatSituation("player", unit) == 3 then
     self:SetStatusBarColor(unpack(L.C.colors.healthbar.threatInvers))
     self.bg:SetVertexColor(unpack(L.C.colors.healthbar.threatInversBG))
@@ -96,10 +95,15 @@ local function PostUpdateHealth(self, unit, min, max)
   end
 end
 
+--PostUpdateHealth
+local function PostUpdateHealth(self, unit, min, max)
+  ColorHealthbarOnThreat(self,unit)
+end
+
 --UpdateThreat
 local function UpdateThreat(self,event,unit)
   if self.unit ~= unit then return end
-  self.Health:ForceUpdate()
+  ColorHealthbarOnThreat(self.Health,unit)
 end
 L.F.UpdateThreat = UpdateThreat
 

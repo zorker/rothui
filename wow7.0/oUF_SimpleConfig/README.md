@@ -146,6 +146,11 @@ Classbar element for combo points, chi, holy power, etc. Makes sense for the pla
 * **enabled**: type:BOOLEAN, enable/disable element
 * **size**: type:TABLE, element size http://wowprogramming.com/docs/widgets/Region/SetSize
 * **point**: type:TABLE, element position http://wowprogramming.com/docs/widgets/Region/SetPoint
+* **splits**: type: TABLE, do you want to seperate your classbar into segments?
+  * enabled: type:BOOLEAN, enable/disable element
+  * texture: type:STRING, path to split texture
+  * size: type:TABLE, split size
+  * color: type:TABLE, split color
 
 ### Altpowerbar attributes
 

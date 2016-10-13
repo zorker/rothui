@@ -28,12 +28,12 @@ Work Work.
 * **[rRaidManager](http://www.wowinterface.com/downloads/info22236-rRaidManager.html)**: Replaces the Blizzard raid manager and disables the Blizzard addons Blizzard_CUFProfiles and Blizzard_CompactRaidFrames.
 * **[rScreenSaver](http://www.wowinterface.com/downloads/info24244-rScreenSaver.html)**: Came along a super nice DisplayID (galaxy animation with planets). Made a screensaver from it. Go /afk to see it.
 * **[rTalkingHead](http://www.wowinterface.com/downloads/info24243-rTalkingHead.html)**: Allows you to scale the talking head frame and adds the ability to drag the frame ingame.
+* **[rThreat](http://www.wowinterface.com/downloads/info19263-rThreat.html)**: Small threat table.
 * **[rTooltip](http://www.wowinterface.com/downloads/info22501-rTooltip.html)**: Blizzard tooltip adjustments
 * **[rVignette](http://www.wowinterface.com/downloads/info23282-rVignette.html)**: Whenever a unique VignetteID (rare mob, chest, etc.) spawned nearby you will get alterted.
 
 ##Todo
 
-* **[oUF_Simple](http://www.wowinterface.com/downloads/info14831-oUF_Simple.html)**: Still is nearly finished. Only small adjustments needed.
-* *Four more levels to go...*
+* *Three more levels to go...*
 * **[rFilter3](http://www.wowinterface.com/downloads/info13006-rFilter3.html)**: Fix compatibility with the new rLib.
-* **[rThreat](http://www.wowinterface.com/downloads/info19263-rThreat.html)**: Fix compatibility with the new rLib.
+

@@ -103,7 +103,7 @@ local function OnTooltipSetUnit(self)
     end
     if levelLine then
       local l = UnitLevel(unit)
-      local color = GetQuestDifficultyColor((l > 0) and l or 199)
+      local color = GetCreatureDifficultyColor((l > 0) and l or 199)
       levelLine:SetTextColor(color.r,color.g,color.b)
     end
     if unitClassification == "worldboss" or UnitLevel(unit) == -1 then

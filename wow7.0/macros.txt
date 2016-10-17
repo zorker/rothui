@@ -1,1 +1,91 @@
 /run local Q,P=IsQuestFlaggedCompleted,print; if Q(44311) then P('Available') elseif Q(44312) then P('Denied') else P('None') end
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+VER 3 000000000000000E "camera" "Ability_Creature_Cursed_04"
+/run print("cameraDistanceMaxis currently at: "..GetCVar("cameraDistanceMax").." Factor: "..GetCVar("cameraDistanceMaxFactor"))
+/script SetCVar("cameraDistanceMax",50)
+/script SetCVar("cameraDistanceMaxFactor",5)
+END
+VER 3 0000000000000031 "console" "INV_MISC_QUESTIONMARK"
+/run SetConsoleKey("#")
+END
+VER 3 000000000000002E "raidbuff" "INV_MISC_QUESTIONMARK"
+/run for i=1,NUM_LE_RAID_BUFF_TYPES do local name, rank, texture, duration, expiration, spellId, slot = GetRaidBuffTrayAuraInfo(i); print(i,name,texture); end
+END
+VER 3 000000000000002D "rl" "INV_Misc_Orb_03"
+/Reload
+END
+VER 3 0000000000000012 "tal1" "Ability_Vehicle_SiegeEngineCannon"
+/equipset [modifier:ctrl] pvp; [modifier:alt] dps; [modifier:shift] tank
+/usetalents [spec:2, nomodifier] 1; [nomodifier] 2
+END
+VER 3 000000000000002F "ve" "INV_MISC_QUESTIONMARK"
+/run local s,p=SecureCmdOptionParse,print p(s("[canexitvehicle]cev1;cev0")) p(s("[flying]f1;f0"))  p(s("[mounted]m1;m0"))p(CanExitVehicle())
+END
+VER 3 0000000000000030 "xp" "INV_MISC_QUESTIONMARK"
+/run local x,m=UnitXP("player"),UnitXPMax("player"); print(math.floor((x/m)*100))
+END
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+VER 3 0100000000000001 "charge" "INV_MISC_QUESTIONMARK"
+/wirken [@mouseover,help][@targettarget,help][@focus,help][]Abfangen
+/wirken [@mouseover,harm]Heldenhafter Wurf; Heldenhafter Wurf
+END
+VER 3 0100000000000003 "demo" "INV_MISC_QUESTIONMARK"
+/wirken Demoralisierender Ruf
+/wirken Steingestalt(Volksfähigkeit)
+END
+VER 3 0100000000000006 "dev" "INV_MISC_QUESTIONMARK"
+#showtooltip Verwüsten
+/wirken Demoralisierender Ruf
+/wirken Berserkerwut
+/wirken Kampfschrei
+/wirken Zauberreflexion
+/wirken Schildblock
+/wirken Zähne zusammenbeißen
+/wirken Fokussierte Wut
+/wirken Verwüsten
+END
+VER 3 0100000000000002 "jump" "INV_MISC_QUESTIONMARK"
+#show Heldenhafter Sprung
+/wirken [@mouseover,harm]Heldenhafter Wurf; Heldenhafter Wurf
+/wirken Heldenhafter Sprung
+END
+VER 3 0100000000000005 "rev" "INV_MISC_QUESTIONMARK"
+#showtooltip Rache
+/wirken Demoralisierender Ruf
+/wirken Berserkerwut
+/wirken Kampfschrei
+/wirken Zauberreflexion
+/wirken Schildblock
+/wirken Zähne zusammenbeißen
+/wirken Fokussierte Wut
+/wirken Rache
+END
+VER 3 0100000000000004 "ss" "INV_MISC_QUESTIONMARK"
+#showtooltip Schildschlag
+/wirken Demoralisierender Ruf
+/wirken Berserkerwut
+/wirken Kampfschrei
+/wirken Zauberreflexion
+/wirken Schildblock
+/wirken Zähne zusammenbeißen
+/wirken Fokussierte Wut
+/wirken Schildschlag
+END
+VER 3 0100000000000007 "taunt" "INV_MISC_QUESTIONMARK"
+/wirken Spott
+/wirken [@mouseover,harm]Heldenhafter Wurf; Heldenhafter Wurf
+END
+VER 3 0100000000000009 "totem" "INV_MISC_QUESTIONMARK"
+/benutzen Schlachtstandarte der Zusammenarbeit
+/benutzen Standarte der Einheit
+/benutzen Banner der Zusammenarbeit
+END
+VER 3 0100000000000008 "wrath" "INV_MISC_QUESTIONMARK"
+#showtooltip Neltharions Zorn
+/wirken Kampfschrei
+/wirken Neltharions Zorn(Artefakt)
+END

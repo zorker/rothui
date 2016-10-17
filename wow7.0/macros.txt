@@ -1,0 +1,1 @@
+/run local Q,P=IsQuestFlaggedCompleted,print; if Q(44311) then P('Available') elseif Q(44312) then P('Denied') else P('None') end

@@ -34,6 +34,5 @@ Work Work.
 
 ##Todo
 
-* *Three more levels to go...*
-* **[rFilter3](http://www.wowinterface.com/downloads/info13006-rFilter3.html)**: Fix compatibility with the new rLib.
+* **[rFilter3](http://www.wowinterface.com/downloads/info13006-rFilter3.html)**: Fix compatibility with the new rLib or rewrite from scratch.
 

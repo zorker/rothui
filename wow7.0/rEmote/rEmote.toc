@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Author: zork
 ## Title: rEmote
 ## Notes: Redirects NPC emotes to blizzards scrolling combattext

@@ -23,6 +23,9 @@ end
 
 local cvars = {}
 cvars["nameplateMinScale"] = 1
+cvars["nameplateMaxScale"] = 1
+cvars["nameplateGlobalScale"] = 1
+cvars["nameplateShowFriendlyNPCs"] = 1
 L.C.NamePlateCVars = cvars
 
 -----------------------------

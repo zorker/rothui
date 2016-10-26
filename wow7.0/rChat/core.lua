@@ -22,8 +22,10 @@ local function SkinChat(self)
   self:SetClampRectInsets(0, 0, 0, 0)
   self:SetMaxResize(UIParent:GetWidth()/2, UIParent:GetHeight()/2)
   self:SetMinResize(100, 50)
+  self:SetShadowOffset(1,-2)
+  self:SetShadowColor(0,0,0,0.9)
   --chat fading
-  --self:SetFading(false)
+  self:SetFading(false)
   --hide button frame
   local bf = _G[name.."ButtonFrame"]
   bf:HookScript("OnShow", bf.Hide)
@@ -37,7 +39,11 @@ local function SkinChat(self)
   _G[name.."EditBoxRight"]:Hide()
   --reposition
   eb:ClearAllPoints()
-  eb:SetPoint("BOTTOM",self,"TOP",0,22)
+  if name == "ChatFrame2" then
+    eb:SetPoint("BOTTOM",self,"TOP",0,22+24) --CombatLogQuickButtonFrame_Custom:GetHeight()
+  else
+    eb:SetPoint("BOTTOM",self,"TOP",0,22)
+  end
   eb:SetPoint("LEFT",self,-5,0)
   eb:SetPoint("RIGHT",self,10,0)
 end
@@ -55,7 +61,9 @@ end
 -----------------------------
 
 --editbox font
-ChatFontNormal:SetFont(STANDARD_TEXT_FONT, 13)
+ChatFontNormal:SetFont(STANDARD_TEXT_FONT, 12.5)
+ChatFontNormal:SetShadowOffset(1,-2)
+ChatFontNormal:SetShadowColor(0,0,0,0.9)
 
 --font size
 CHAT_FONT_HEIGHTS = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}

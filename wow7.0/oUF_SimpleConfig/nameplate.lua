@@ -33,6 +33,7 @@ L.C.NamePlateCVars = cvars
 -----------------------------
 
 --custom filter for nameplate debuffs
+--local function CustomFilter(icons, unit, icon, name, rank, texture, count, dispelType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll)
 local function CustomFilter(...)
   local _, _, _, name, _, _, _, _, _, _, caster, _, nameplateShowPersonal, _, _, _, _, nameplateShowAll = ...
   --print(name,caster,nameplateShowPersonal,nameplateShowAll)

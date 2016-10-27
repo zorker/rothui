@@ -8,7 +8,12 @@
 
 local A, L = ...
 
-local DefaultSetItemRef, DefaultChatFrame_OnHyperlinkShow = SetItemRef, ChatFrame_OnHyperlinkShow
+local DefaultSetItemRef = SetItemRef
+
+local cfg = {}
+cfg.dropshadow.offset = {1,-1}
+cfg.dropshadow.color = {0,0,0,0.9}
+cfg.editbox.font = {STANDARD_TEXT_FONT, 12}
 
 -----------------------------
 -- Functions
@@ -22,8 +27,8 @@ local function SkinChat(self)
   self:SetClampRectInsets(0, 0, 0, 0)
   self:SetMaxResize(UIParent:GetWidth()/2, UIParent:GetHeight()/2)
   self:SetMinResize(100, 50)
-  self:SetShadowOffset(1,-2)
-  self:SetShadowColor(0,0,0,0.9)
+  self:SetShadowOffset(unpack(cfg.dropshadow.offset))
+  self:SetShadowColor(unpack(cfg.dropshadow.color))
   --chat fading
   self:SetFading(false)
   --hide button frame
@@ -57,36 +62,30 @@ local function OnMOuseScroll(self,dir)
   end
 end
 
---AltInvite
-local function AltInvite(link, text, button)
-  local linkType = string.sub(link, 1, 6)
-  if IsAltKeyDown() and linkType == "player" then
-    local name = string.match(link, "player:([^:]+)")
-    InviteUnit(name)
-    return nil
-  end
-  return DefaultSetItemRef(link,text,button)
-end
-
---ChannelReplace
-local function ChannelReplace(self, text, ...)
-  return self.DefaultAddMessage(self, text:gsub('|h%[(%d+)%. .-%]|h', '|h%1|h'), ...)
-end
-
---URL copy
-local function UrlCopy(frame, link, text, button)
+--we replace the default setitemref and use it to parse links for alt invite and url copy
+function SetItemRef(link, ...)
   local type, value = link:match("(%a+):(.+)")
   print(type,value)
-  if (type == "url") then
-    local eb = LAST_ACTIVE_CHAT_EDIT_BOX or _G[frame:GetName().."EditBox"]
-    if eb then
-      eb:SetText(value)
-      eb:SetFocus()
-      eb:HighlightText()
-    end
-  else
-    DefaultChatFrame_OnHyperlinkShow(self, link, text, button)
+  if IsAltKeyDown() and type == "player" then
+    InviteUnit(value)
+  elseif (type == "url") then
+    local eb = LAST_ACTIVE_CHAT_EDIT_BOX or ChatFrame1EditBox
+    if not eb then return end
+    eb:SetText(value)
+    eb:SetFocus()
+    eb:HighlightText()
+    if not eb:IsShown() then eb:Show() end
   end
+  return DefaultSetItemRef(link, ...)
+end
+
+--AddMessage
+local function AddMessage(self, text, ...)
+  --channel replace (Trade and such)
+  text = text:gsub('|h%[(%d+)%. .-%]|h', '|h%1|h')
+  --url search
+  text = text:gsub('([wWhH][wWtT][wWtT][%.pP]%S+[^%p%s])', '|cffffffff|Hurl:%1|h[%1]|h|r')
+  return self.DefaultAddMessage(self, text, ...)
 end
 
 -----------------------------
@@ -94,9 +93,9 @@ end
 -----------------------------
 
 --editbox font
-ChatFontNormal:SetFont(STANDARD_TEXT_FONT, 12.5)
-ChatFontNormal:SetShadowOffset(1,-2)
-ChatFontNormal:SetShadowColor(0,0,0,0.9)
+ChatFontNormal:SetFont(unpack(cfg.editbox.font))
+ChatFontNormal:SetShadowOffset(unpack(cfg.dropshadow.offset))
+ChatFontNormal:SetShadowColor(unpack(cfg.dropshadow.color))
 
 --font size
 CHAT_FONT_HEIGHTS = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
@@ -161,15 +160,9 @@ for i = 1, NUM_CHAT_WINDOWS do
   --adjust channel display
   if (i ~= 2) then
     chatframe.DefaultAddMessage = chatframe.AddMessage
-    chatframe.AddMessage = ChannelReplace
+    chatframe.AddMessage = AddMessage
   end
 end
 
 --scroll
 FloatingChatFrame_OnMouseScroll = OnMOuseScroll
-
---altinvite
-SetItemRef = AltInvite
-
---url copy
-ChatFrame_OnHyperlinkShow = UrlCopy

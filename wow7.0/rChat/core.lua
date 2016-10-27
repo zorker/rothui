@@ -75,8 +75,9 @@ function SetItemRef(link, ...)
     eb:SetFocus()
     eb:HighlightText()
     if not eb:IsShown() then eb:Show() end
+  else
+    return DefaultSetItemRef(link, ...)
   end
-  return DefaultSetItemRef(link, ...)
 end
 
 --AddMessage

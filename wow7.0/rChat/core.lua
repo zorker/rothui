@@ -11,8 +11,10 @@ local A, L = ...
 local DefaultSetItemRef = SetItemRef
 
 local cfg = {}
-cfg.dropshadow.offset = {1,-1}
+cfg.dropshadow = {}
+cfg.dropshadow.offset = {1,-2}
 cfg.dropshadow.color = {0,0,0,0.9}
+cfg.editbox = {}
 cfg.editbox.font = {STANDARD_TEXT_FONT, 12}
 
 -----------------------------
@@ -65,9 +67,8 @@ end
 --we replace the default setitemref and use it to parse links for alt invite and url copy
 function SetItemRef(link, ...)
   local type, value = link:match("(%a+):(.+)")
-  print(type,value)
   if IsAltKeyDown() and type == "player" then
-    InviteUnit(value)
+    InviteUnit(value:match("([^:]+)"))
   elseif (type == "url") then
     local eb = LAST_ACTIVE_CHAT_EDIT_BOX or ChatFrame1EditBox
     if not eb then return end
@@ -83,7 +84,7 @@ end
 --AddMessage
 local function AddMessage(self, text, ...)
   --channel replace (Trade and such)
-  text = text:gsub('|h%[(%d+)%. .-%]|h', '|h%1|h')
+  text = text:gsub('|h%[(%d+)%. .-%]|h', '|h%1.|h')
   --url search
   text = text:gsub('([wWhH][wWtT][wWtT][%.pP]%S+[^%p%s])', '|cffffffff|Hurl:%1|h[%1]|h|r')
   return self.DefaultAddMessage(self, text, ...)

@@ -75,14 +75,13 @@ local function UpdateSplits(self,maxSegments)
 end
 
 local function Update(self, event, unit, powerType)
-  if not (unit == 'player' and powerType == ClassPowerType)
-    and not (unit == 'vehicle' and powerType == 'COMBO_POINTS') then
+  if(not (unit == 'player' and powerType == ClassPowerType
+  or unit == 'vehicle' and powerType == 'COMBO_POINTS')) then
     return
   end
   local cb = self.rClassBar
   local ppcur, ppmax
   if unit == 'vehicle' then
-    ppcur = GetComboPoints('vehicle', 'target') or 0
     ppmax = MAX_COMBO_POINTS
     UpdateSplits(self,ppmax)
   else
@@ -136,6 +135,7 @@ local function Visibility(self, event, unit)
   local shouldEnable
   if(UnitHasVehicleUI('player')) then
     shouldEnable = true
+    unit = 'vehicle'
   elseif(ClassPowerID) then
     if(not RequireSpec or RequireSpec == GetSpecialization()) then
       if(not RequireSpell or IsPlayerSpell(RequireSpell)) then

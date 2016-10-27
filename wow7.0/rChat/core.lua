@@ -8,13 +8,13 @@
 
 local A, L = ...
 
+local DefaultSetItemRef, DefaultChatFrame_OnHyperlinkShow = SetItemRef, ChatFrame_OnHyperlinkShow
+
 -----------------------------
 -- Functions
 -----------------------------
 
---found this nice function, may need it sometime
---ChatEdit_FocusActiveWindow
-
+--SkinChat
 local function SkinChat(self)
   if not self then return end
   local name = self:GetName()
@@ -48,11 +48,44 @@ local function SkinChat(self)
   eb:SetPoint("RIGHT",self,10,0)
 end
 
+--OnMOuseScroll
 local function OnMOuseScroll(self,dir)
   if(dir > 0) then
     if(IsShiftKeyDown()) then self:ScrollToTop() else self:ScrollUp() end
   else
     if(IsShiftKeyDown()) then self:ScrollToBottom() else self:ScrollDown() end
+  end
+end
+
+--AltInvite
+local function AltInvite(link, text, button)
+  local linkType = string.sub(link, 1, 6)
+  if IsAltKeyDown() and linkType == "player" then
+    local name = string.match(link, "player:([^:]+)")
+    InviteUnit(name)
+    return nil
+  end
+  return DefaultSetItemRef(link,text,button)
+end
+
+--ChannelReplace
+local function ChannelReplace(self, text, ...)
+  return self.DefaultAddMessage(self, text:gsub('|h%[(%d+)%. .-%]|h', '|h%1|h'), ...)
+end
+
+--URL copy
+local function UrlCopy(frame, link, text, button)
+  local type, value = link:match("(%a+):(.+)")
+  print(type,value)
+  if (type == "url") then
+    local eb = LAST_ACTIVE_CHAT_EDIT_BOX or _G[frame:GetName().."EditBox"]
+    if eb then
+      eb:SetText(value)
+      eb:SetFocus()
+      eb:HighlightText()
+    end
+  else
+    DefaultChatFrame_OnHyperlinkShow(self, link, text, button)
   end
 end
 
@@ -78,8 +111,10 @@ CHAT_FRAME_TAB_ALERTING_MOUSEOVER_ALPHA = 1
 CHAT_FRAME_TAB_ALERTING_NOMOUSE_ALPHA = 1
 
 --channels
-CHAT_WHISPER_GET 				      = "Von %s "
-CHAT_WHISPER_INFORM_GET 		  = "An %s "
+CHAT_WHISPER_GET 				      = "<< %s "
+CHAT_WHISPER_INFORM_GET 		  = ">> %s "
+CHAT_BN_WHISPER_GET           = "<< %s "
+CHAT_BN_WHISPER_INFORM_GET    = ">> %s "
 CHAT_YELL_GET 					      = "%s "
 CHAT_SAY_GET 					        = "%s "
 CHAT_BATTLEGROUND_GET			    = "|Hchannel:Battleground|hBG.|h %s: "
@@ -121,8 +156,20 @@ button:Hide()
 
 --skin chat
 for i = 1, NUM_CHAT_WINDOWS do
-  SkinChat(_G["ChatFrame"..i])
+  local chatframe = _G["ChatFrame"..i]
+  SkinChat(chatframe)
+  --adjust channel display
+  if (i ~= 2) then
+    chatframe.DefaultAddMessage = chatframe.AddMessage
+    chatframe.AddMessage = ChannelReplace
+  end
 end
 
 --scroll
 FloatingChatFrame_OnMouseScroll = OnMOuseScroll
+
+--altinvite
+SetItemRef = AltInvite
+
+--url copy
+ChatFrame_OnHyperlinkShow = UrlCopy

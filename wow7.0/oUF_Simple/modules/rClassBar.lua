@@ -82,6 +82,7 @@ local function Update(self, event, unit, powerType)
   local cb = self.rClassBar
   local ppcur, ppmax
   if unit == 'vehicle' then
+    ppcur = GetComboPoints(unit) or 0
     ppmax = MAX_COMBO_POINTS
     UpdateSplits(self,ppmax)
   else

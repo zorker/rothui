@@ -12,7 +12,7 @@
 	<Script file='elements\power.lua' />
 	<Script file='elements\aura.lua' />
 	<Script file='elements\health.lua' />
-	<!--<Script file='elements\cpoints.lua' />-->
+	<Script file='elements\cpoints.lua' />
 	<Script file='elements\ricons.lua' />
 	<Script file='elements\leader.lua' />
 	<Script file='elements\combat.lua' />
@@ -21,22 +21,22 @@
 	<Script file='elements\portraits.lua' />
 	<Script file='elements\range.lua' />
 	<Script file='elements\castbar.lua' />
-	<!--<Script file='elements\threat.lua' />-->
+	<Script file='elements\threat.lua' />
 	<Script file='elements\tags.lua' />
 	<Script file='elements\masterlooter.lua' />
 	<Script file='elements\assistant.lua' />
-	<!--<Script file='elements\runebar.lua' />-->
+	<Script file='elements\runebar.lua' />
 	<Script file='elements\lfdrole.lua' />
-	<!--<Script file='elements\healprediction.lua' />-->
-	<!--<Script file='elements\powerprediction.lua' />-->
+	<Script file='elements\healprediction.lua' />
+	<Script file='elements\powerprediction.lua' />
 	<Script file='elements\picon.lua' />
 	<Script file='elements\readycheck.lua' />
 	<Script file='elements\qicon.lua' />
 	<Script file='elements\altpowerbar.lua' />
 	<Script file='elements\totems.lua' />
 	<Script file='elements\resurrect.lua' />
-	<Script file='elements\druidmana.lua' />
-	<!--<Script file='elements\classicons.lua' />-->
+	<Script file='elements\additionalpower.lua' />
+	<Script file='elements\classicons.lua' />
 	<Script file='elements\stagger.lua' />
 
 	<!-- Clique support -->
@@ -48,7 +48,7 @@
 	</Button>
 
 	<!-- Pet Battle Hider Frame -->
-	<Frame name="oUF_PetBattleFrameHider" inherits="SecureHandlerStateTemplate" parent="UIParent" setAllPoints="true">
+	<Frame name="oUF_PetBattleFrameHider" frameStrata="LOW" inherits="SecureHandlerStateTemplate" parent="UIParent" setAllPoints="true">
 		<Scripts>
 			<OnLoad>
 				RegisterStateDriver(self, "visibility", "[petbattle] hide; show")

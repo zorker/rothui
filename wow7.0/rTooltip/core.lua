@@ -21,6 +21,7 @@ local classColorHex, factionColorHex = {}, {}
 -----------------------------
 
 local cfg = {}
+--cfg.pos = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -10, 180 }
 cfg.textColor = {0.4,0.4,0.4}
 cfg.bossColor = {1,0,0}
 cfg.eliteColor = {1,0,0.5}
@@ -182,11 +183,20 @@ local function FixBarColor(self,r,g,b)
   self:SetStatusBarColor(cfg.barColor.r,cfg.barColor.g,cfg.barColor.b)
 end
 
+local function ResetTooltipPosition(self,parent)
+  self:SetOwner(parent, "ANCHOR_NONE")
+  self:ClearAllPoints()
+  self:SetPoint(unpack(cfg.pos))
+end
+
 -----------------------------
 -- Init
 -----------------------------
 
 hooksecurefunc(GameTooltipStatusBar,"SetStatusBarColor", FixBarColor)
+if cfg.pos then
+  hooksecurefunc("GameTooltip_SetDefaultAnchor", ResetTooltipPosition)
+end
 
 --hex class colors
 for class, color in next, RAID_CLASS_COLORS do

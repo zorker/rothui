@@ -46,12 +46,11 @@ local updateActiveUnit = function(self, event, unit)
 		realUnit = 'target'
 	end
 
-	if(modUnit == "pet" and realUnit ~= "pet") then
-		modUnit = "vehicle"
+	if(modUnit == 'pet' and realUnit ~= 'pet') then
+		modUnit = 'vehicle'
 	end
 
-	-- Drop out if the event unit doesn't match any of the frame units.
-	if(not UnitExists(modUnit) or unit and unit ~= realUnit and unit ~= modUnit) then return end
+	if(not UnitExists(modUnit)) then return end
 
 	-- Change the active unit and run a full update.
 	if Private.UpdateUnits(self, modUnit, realUnit) then
@@ -150,6 +149,8 @@ for k, v in pairs{
 		local unit = self.unit
 		if(not UnitExists(unit)) then return end
 
+		assert(type(event) == 'string', 'Invalid argument "event" in UpdateAllElements.')
+
 		if(self.PreUpdate) then
 			self:PreUpdate(event)
 		end
@@ -213,8 +214,8 @@ local initObject = function(unit, style, styleFunc, header, ...)
 		end
 
 		if(not (suffix == 'target' or objectUnit and objectUnit:match'target')) then
-			object:RegisterEvent('UNIT_ENTERED_VEHICLE', updateActiveUnit, true)
-			object:RegisterEvent('UNIT_EXITED_VEHICLE', updateActiveUnit, true)
+			object:RegisterEvent('UNIT_ENTERED_VEHICLE', updateActiveUnit)
+			object:RegisterEvent('UNIT_EXITED_VEHICLE', updateActiveUnit)
 
 			-- We don't need to register UNIT_PET for the player unit. We register it
 			-- mainly because UNIT_EXITED_VEHICLE and UNIT_ENTERED_VEHICLE doesn't always

@@ -35,7 +35,7 @@ local function NumberFormat(v)
 end
 L.F.NumberFormat = NumberFormat
 
-local function CreateButton(type,buttonName,spellid,unit,size,point,visibility,alpha,desaturate,playerOnly)
+local function CreateButton(type,buttonName,spellid,unit,size,point,visibility,alpha,desaturate,caster)
   local spellName, spellRank, spellIcon = GetSpellInfo(spellid)
   if not spellName then print(A,"error",buttonName,"Spell not found",spellid) return end
   local button = CreateFrame("CHECKBUTTON", A..buttonName..spellid, UIParent, "ActionButtonTemplate, SecureHandlerStateTemplate")
@@ -48,12 +48,13 @@ local function CreateButton(type,buttonName,spellid,unit,size,point,visibility,a
     alphaOff = alpha[1],
     alphaOn = alpha[2],
     desaturate = desaturate,
-    playerOnly = playerOnly,
+    caster = caster,
     spellName = spellName,
     spellRank = spellRank,
     spellIcon = spellIcon,
   }
   button.icon:SetTexture(spellIcon)
+  button.border = button.Border
   button:EnableMouse(false)
   button:SetSize(size,size)
   button:SetPoint(unpack(point))
@@ -70,23 +71,39 @@ L.F.CreateButton = CreateButton
 
 local function ResetButton(button)
   button:SetAlpha(button.settings.alphaOff)
-  button.Border:Hide()
+  button.border:Hide()
+end
+
+local function PreviewButton(button)
+  button:SetAlpha(1)
+  local name = _G[button:GetName().."Name"]
+  name:SetText("30m")
+  --name:SetJustifyH("LEFT")
+  local hotkey = _G[button:GetName().."HotKey"]
+  hotkey:SetText("146k")
+  local count = _G[button:GetName().."Count"]
+  count:SetText("3")
+  button.border:Hide()
 end
 
 local function UpdateAura(button,filter)
+  if button.dragFrame:IsShown() then
+    PreviewButton(button)
+    return
+  end
   local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, nameplateShowPersonal,
     spellID, canApplyAura, isBossDebuff, _, nameplateShowAll, timeMod,
     value1, value2, value3 = UnitAura(button.settings.unit, button.settings.spellName, button.settings.spellRank, filter)
-  if not name then
+  if not name or (button.settings.caster and caster ~= button.settings.caster) then
     ResetButton(button)
     return
   end
   button:SetAlpha(button.settings.alphaOn)
   if caster == "player" then
-    button.Border:SetVertexColor(0.2,0.6,0.8,1)
-    button.Border:Show()
+    button.border:SetVertexColor(0.2,0.6,0.8,1)
+    button.border:Show()
   else
-    button.Border:Hide()
+    button.border:Hide()
   end
 end
 

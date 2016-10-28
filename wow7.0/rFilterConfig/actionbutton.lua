@@ -79,9 +79,9 @@ L.C.actionButtonConfig.cooldown = {
 
 --name, we use the default actionbutton.name fontstring and use it as our duration fontstring
 L.C.actionButtonConfig.name = {
-  font = { STANDARD_TEXT_FONT, 10, "OUTLINE"},
+  font = { STANDARD_TEXT_FONT, 13, "OUTLINE"},
   points = {
-    {"BOTTOMLEFT", 0, 0 },
+    {"CENTER", 0, 0 },
   },
 }
 

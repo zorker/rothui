@@ -14,8 +14,8 @@ local A, L = ...
 
 if not L.C.buffs or #L.C.buffs == 0 then return end
 
-local function CreateBuff(spellid,unit,size,point,visibility,alpha,desaturate,playerOnly)
-  local button = L.F.CreateButton("buff","BuffButton",spellid,unit,size,point,visibility,alpha,desaturate,playerOnly)
+local function CreateBuff(spellid,unit,size,point,visibility,alpha,desaturate,caster)
+  local button = L.F.CreateButton("buff","BuffButton",spellid,unit,size,point,visibility,alpha,desaturate,caster)
   if not button then return end
   table.insert(L.buffs,button)
 end

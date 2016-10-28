@@ -13,14 +13,14 @@ local A, L = ...
 -----------------------------
 
 --AddBuff
-local function AddBuff(spellid,unit,size,point,visibility,alpha,desaturate,playerOnly)
-  table.insert(L.C.buffs,{spellid,unit,size,point,visibility,alpha,desaturate,playerOnly})
+local function AddBuff(spellid,unit,size,point,visibility,alpha,desaturate,caster)
+  table.insert(L.C.buffs,{spellid,unit,size,point,visibility,alpha,desaturate,caster})
 end
 L.F.AddBuff = AddBuff
 
 --AddDebuff
-local function AddDebuff(spellid,unit,size,point,visibility,alpha,desaturate,playerOnly)
-  table.insert(L.C.debuffs,{spellid,unit,size,point,visibility,alpha,desaturate,playerOnly})
+local function AddDebuff(spellid,unit,size,point,visibility,alpha,desaturate,caster)
+  table.insert(L.C.debuffs,{spellid,unit,size,point,visibility,alpha,desaturate,caster})
 end
 L.F.AddDebuff = AddDebuff
 

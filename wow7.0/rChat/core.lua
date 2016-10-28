@@ -58,6 +58,16 @@ local function SkinChat(self)
   eb:SetPoint("RIGHT",self,10,0)
 end
 
+--OpenTemporaryWindow
+local function OpenTemporaryWindow()
+  for _, name in next, CHAT_FRAMES do
+    local frame = _G[name]
+    if (frame.isTemporary) then
+      SkinChat(frame)
+    end
+  end
+end
+
 --OnMOuseScroll
 local function OnMOuseScroll(self,dir)
   if(dir > 0) then
@@ -171,3 +181,6 @@ end
 
 --scroll
 FloatingChatFrame_OnMouseScroll = OnMOuseScroll
+
+--temporary chat windows
+hooksecurefunc("FCF_OpenTemporaryWindow", OpenTemporaryWindow)

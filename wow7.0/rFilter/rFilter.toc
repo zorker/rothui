@@ -1,0 +1,10 @@
+## Interface: 70100
+## Title: rFilter
+## Author: zork
+## Notes: Buff, debuff, raidbuff and cooldown filter. Eats puppies!
+## Dependencies: rLib, rFilterConfig
+
+core\init.lua
+core\functions.lua
+core\core.lua
+

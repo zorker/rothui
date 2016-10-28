@@ -255,3 +255,40 @@ local menues = {
 for idx, menu in ipairs(menues) do
   menu:SetScale(cfg.scale)
 end
+
+--spellid line
+
+--func TooltipAddSpellID
+local function TooltipAddSpellID(self,spellid)
+  if not spellid then return end
+  self:AddDoubleLine("|cff0099ffSpell ID|r",spellid)
+  self:Show()
+end
+
+--hooksecurefunc GameTooltip SetUnitBuff
+hooksecurefunc(GameTooltip, "SetUnitBuff", function(self,...)
+  TooltipAddSpellID(self,select(11,UnitBuff(...)))
+end)
+
+--hooksecurefunc GameTooltip SetUnitDebuff
+hooksecurefunc(GameTooltip, "SetUnitDebuff", function(self,...)
+  TooltipAddSpellID(self,select(11,UnitDebuff(...)))
+end)
+
+--hooksecurefunc GameTooltip SetUnitAura
+hooksecurefunc(GameTooltip, "SetUnitAura", function(self,...)
+  TooltipAddSpellID(self,select(11,UnitAura(...)))
+end)
+
+--hooksecurefunc SetItemRef
+hooksecurefunc("SetItemRef", function(link)
+  local type, value = link:match("(%a+):(.+)")
+  if type == "spell" then
+    TooltipAddSpellID(ItemRefTooltip,value:match("([^:]+)"))
+  end
+end)
+
+--HookScript GameTooltip OnTooltipSetSpell
+GameTooltip:HookScript("OnTooltipSetSpell", function(self)
+  TooltipAddSpellID(self,select(3,self:GetSpell()))
+end)

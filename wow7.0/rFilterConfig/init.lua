@@ -21,8 +21,8 @@ local _, playerClass = UnitClass("player")
 L.C.playerClass = playerClass
 
 --buff, debuff, raidbuff, cooldown
-L.C.buff = {}
-L.C.debuff = {}
-L.C.raidbuff = {}
-L.C.cooldown = {}
+L.C.buffs = {}
+L.C.debuffs = {}
+L.C.raidbuffs = {}
+L.C.cooldowns = {}
 L.C.actionButtonConfig = {}

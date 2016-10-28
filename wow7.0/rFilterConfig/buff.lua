@@ -13,6 +13,6 @@ local A, L = ...
 -----------------------------
 
 if L.C.playerName == "Zörk" then
-  L.F.AddBuff(469,"player",32,{"CENTER"},nil,{0,1},true,true)
+  L.F.AddBuff(132404,"player",36,{"CENTER"},nil,{0.2,1},true,true)
 end
 

@@ -34,3 +34,63 @@ local function NumberFormat(v)
   end
 end
 L.F.NumberFormat = NumberFormat
+
+local function CreateButton(type,buttonName,spellid,unit,size,point,visibility,alpha,desaturate,playerOnly)
+  local spellName, spellRank, spellIcon = GetSpellInfo(spellid)
+  if not spellName then print(A,"error",buttonName,"Spell not found",spellid) return end
+  local button = CreateFrame("CHECKBUTTON", A..buttonName..spellid, UIParent, "ActionButtonTemplate, SecureHandlerStateTemplate")
+  button.settings = {
+    type = type,
+    spellid = spellid,
+    index = spellid, --raidbuffs use index
+    unit = unit,
+    size = size,
+    alphaOff = alpha[1],
+    alphaOn = alpha[2],
+    desaturate = desaturate,
+    playerOnly = playerOnly,
+    spellName = spellName,
+    spellRank = spellRank,
+    spellIcon = spellIcon,
+  }
+  button.icon:SetTexture(spellIcon)
+  button:EnableMouse(false)
+  button:SetSize(size,size)
+  button:SetPoint(unpack(point))
+  if visibility then
+    RegisterStateDriver(button, "visibility", visibility)
+  end
+  --style button
+  rButtonTemplate:StyleActionButton(button,L.C.actionButtonConfig)
+  --drag/resize frame
+  rLib:CreateDragResizeFrame(button, L.dragFrames, -2, true)
+  return button
+end
+L.F.CreateButton = CreateButton
+
+local function ResetButton(button)
+  button:SetAlpha(button.settings.alphaOff)
+  button.Border:Hide()
+end
+
+local function UpdateAura(button,filter)
+  local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, nameplateShowPersonal,
+    spellID, canApplyAura, isBossDebuff, _, nameplateShowAll, timeMod,
+    value1, value2, value3 = UnitAura(button.settings.unit, button.settings.spellName, button.settings.spellRank, filter)
+  if not name then
+    ResetButton(button)
+    return
+  end
+  button:SetAlpha(button.settings.alphaOn)
+  if caster == "player" then
+    button.Border:SetVertexColor(0.2,0.6,0.8,1)
+    button.Border:Show()
+  else
+    button.Border:Hide()
+  end
+end
+
+local function UpdateBuff(button)
+  UpdateAura(button,"HELPFUL")
+end
+L.F.UpdateBuff = UpdateBuff

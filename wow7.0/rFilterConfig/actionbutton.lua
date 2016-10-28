@@ -15,6 +15,9 @@ local A, L = ...
 --mediapath
 local mediapath = "interface\\addons\\"..A.."\\media\\"
 
+--time between updates
+L.C.tick = 1
+
 --actionButtonConfig
 
 --backdrop

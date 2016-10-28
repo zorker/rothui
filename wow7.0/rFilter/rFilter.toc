@@ -2,9 +2,12 @@
 ## Title: rFilter
 ## Author: zork
 ## Notes: Buff, debuff, raidbuff and cooldown filter. Eats puppies!
-## Dependencies: rLib, rFilterConfig
+## Dependencies: rLib, rFilterConfig, rButtonTemplate
 
 core\init.lua
 core\functions.lua
-core\core.lua
-
+core\buff.lua
+core\debuff.lua
+core\raidbuff.lua
+core\cooldown.lua
+core\timer.lua

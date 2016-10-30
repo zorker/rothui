@@ -1,0 +1,7 @@
+## Interface: 70100
+## Author: zork
+## Title: rFarclip
+## Notes: Load WoW with low farclip and reset it after player login
+## RequiredDeps: rLib
+
+core.lua

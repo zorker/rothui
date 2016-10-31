@@ -9,5 +9,4 @@ functions.lua
 actionbutton.lua
 buff.lua
 debuff.lua
-raidbuff.lua
 cooldown.lua

@@ -24,12 +24,6 @@ local function AddDebuff(spellid,unit,size,point,visibility,alpha,desaturate,cas
 end
 L.F.AddDebuff = AddDebuff
 
---AddRaidbuff
-local function AddRaidbuff(index,size,point,visibility,alpha,desaturate)
-  table.insert(L.C.raidbuffs,{index,size,point,visibility,alpha,desaturate})
-end
-L.F.AddRaidbuff = AddRaidbuff
-
 --AddCooldown
 local function AddCooldown(spellid,size,point,visibility,alpha,desaturate)
   table.insert(L.C.cooldowns,{spellid,size,point,visibility,alpha,desaturate})

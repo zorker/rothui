@@ -16,10 +16,9 @@ L.addonShortcut   = "rfilter"
 --get the config
 L.C = rFilterConfig
 
---container for buff, debuffs, raidbuff and cooldown
+--container for buff, debuffs, cooldown
 L.buffs = {}
 L.debuffs = {}
-L.raidbuffs = {}
 L.cooldowns = {}
 
 -----------------------------

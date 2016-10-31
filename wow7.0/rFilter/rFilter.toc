@@ -8,6 +8,5 @@ core\init.lua
 core\functions.lua
 core\buff.lua
 core\debuff.lua
-core\raidbuff.lua
 core\cooldown.lua
 core\timer.lua

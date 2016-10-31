@@ -90,16 +90,12 @@ end
 
 --CreateButton
 local function CreateButton(type,buttonName,spellid,unit,size,point,visibility,alpha,desaturate,caster)
-  local spellName, spellRank, spellIcon
-  if type == "raidbuff" then
-    spellName, spellRank, spellIcon = GetRaidBuffTrayAuraInfo(spellid)  --spellid will be the index
-  else
-    spellName, spellRank, spellIcon = GetSpellInfo(spellid)
-  end
+  local spellName, spellRank, spellIcon = GetSpellInfo(spellid)
   if not spellName then print(A,"error",buttonName,"Spell not found",spellid) return end
   local button = CreateFrame("CHECKBUTTON", A..buttonName..spellid, UIParent, "ActionButtonTemplate, SecureHandlerStateTemplate")
   button.settings = {
     type = type,
+    spellid = spellid,
     unit = unit,
     size = size,
     alphaOff = alpha[1],
@@ -110,11 +106,6 @@ local function CreateButton(type,buttonName,spellid,unit,size,point,visibility,a
     spellRank = spellRank,
     spellIcon = spellIcon,
   }
-  if type == "raidbuff" then
-    button.settings.index = spellid
-  else
-    button.settings.spellid = spellid
-  end
   buttonName = button:GetName()
   button.icon:SetTexture(spellIcon)
   button.border = button.Border
@@ -218,22 +209,6 @@ local function UpdateDebuff(button)
   UpdateAura(button,"HARMFUL")
 end
 L.F.UpdateDebuff = UpdateDebuff
-
---UpdateRaidbuff
-local function UpdateRaidbuff(button)
-  if button.dragFrame:IsShown() then
-    PreviewButton(button)
-    return
-  end
-  local name, rank, icon, duration, expires, spellid, buffSlot --= GetRaidBuffTrayAuraInfo(button.settings.index)
-  if not name then
-    ResetButton(button)
-    return
-  end
-  SetDuration(button,expires-GetTime())
-  EnableButton(button)
-end
-L.F.UpdateRaidbuff = UpdateRaidbuff
 
 --UpdateCooldown
 local function UpdateCooldown(button)

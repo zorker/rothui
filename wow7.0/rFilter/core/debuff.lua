@@ -17,7 +17,7 @@ if not L.C.debuffs or #L.C.debuffs == 0 then return end
 local function CreateDebuff(spellid,unit,size,point,visibility,alpha,desaturate,caster)
   local button = L.F.CreateButton("debuff","DebuffButton",spellid,unit,size,point,visibility,alpha,desaturate,caster)
   if not button then return end
-  table.insert(L.buffs,button)
+  table.insert(L.debuffs,button)
 end
 
 for i, cfg in next, L.C.debuffs do

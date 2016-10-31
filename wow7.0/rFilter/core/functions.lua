@@ -35,7 +35,7 @@ local function SetDuration(button,duration)
   if duration <= 0 or duration > 10 then
     button.duration:SetText(GetFormatedTime(duration))
     button.duration:SetTextColor(1, 1, 1)
-  elseif  duraton < 2 then
+  elseif duration < 2 then
     button.duration:SetText(GetFormatedTime(duration))
     button.duration:SetTextColor(1, 0.4, 0)
   else
@@ -54,6 +54,7 @@ end
 
 --NumberFormat
 local function NumberFormat(v)
+  if not v then return nil end
   if v > 1E10 then
     return (floor(v/1E9)).."b"
   elseif v > 1E9 then
@@ -72,19 +73,19 @@ local function NumberFormat(v)
 end
 
 --UpdateFont
-local UpdateFont(button,fontString,fontCfg,buttonSize)
-  local family,size,outline = unpack(fontCfg)
-  local fontSize = buttonSize*size/button.settings.size
-  fontString:SetFont(family,fontSize,outline)
+local function UpdateFont(button,fontString,fontCfg,buttonSize)
+  local fontFamily,fontSize,fontOutline = unpack(fontCfg)
+  fontSize = buttonSize*fontSize/button.settings.size
+  fontString:SetFont(fontFamily,fontSize,fontOutline)
 end
 
 --OnSizeChanged
 local function OnSizeChanged(button, width, height)
-  local size = math.max(width,10)
+  local size = math.max(width,button.settings.size)
   button:SetSize(size,size)
-  UpdateFont(button,button.duration,L.C.actionButtonConfig.name,size)
-  UpdateFont(button,button.count,L.C.actionButtonConfig.count,size)
-  UpdateFont(button,button.extravalue,L.C.actionButtonConfig.hotkey,size)
+  UpdateFont(button,button.duration,L.C.actionButtonConfig.name.font,size)
+  UpdateFont(button,button.count,L.C.actionButtonConfig.count.font,size)
+  UpdateFont(button,button.extravalue,L.C.actionButtonConfig.hotkey.font,size)
 end
 
 --CreateButton
@@ -117,13 +118,15 @@ local function CreateButton(type,buttonName,spellid,unit,size,point,visibility,a
   buttonName = button:GetName()
   button.icon:SetTexture(spellIcon)
   button.border = button.Border
-  button.duration = button[buttonName.."Name"]
-  button.extravalue = button[buttonName.."HotKey"]
-  button.count = button[buttonName.."HotKey"]
+  button.border:Show()
+  button.duration = _G[buttonName.."Name"]
+  button.extravalue = _G[buttonName.."HotKey"]
+  button.count = _G[buttonName.."Count"]
   button:EnableMouse(false)
   button:SetSize(size,size)
   button:SetPoint(unpack(point))
   if visibility then
+    button.frameVisibility = visibility
     RegisterStateDriver(button, "visibility", visibility)
   end
   --style button
@@ -182,7 +185,7 @@ local function UpdateAura(button, filter)
     PreviewButton(button)
     return
   end
-  if button.settings.unit not UnitExists(button.settings.unit) then
+  if button.settings.unit and not UnitExists(button.settings.unit) then
     ResetButton(button)
     return
   end
@@ -195,8 +198,8 @@ local function UpdateAura(button, filter)
   end
   SetDuration(button,expires-GetTime())
   SetCount(button,count)
-  button.extravalue:SetText(value1 or value2 or value3)
-  if caster == "player" then
+  button.extravalue:SetText(NumberFormat(value1 or value2 or value3))
+  if button.settings.caster and caster == "player" then
     button.border:SetVertexColor(0.2,0.6,0.8,1)
   else
     button.border:SetVertexColor(0.2,0.6,0.8,0)
@@ -222,7 +225,7 @@ local function UpdateRaidbuff(button)
     PreviewButton(button)
     return
   end
-  local name, rank, icon, duration, expires, spellid, buffSlot = GetRaidBuffTrayAuraInfo(button.settings.index)
+  local name, rank, icon, duration, expires, spellid, buffSlot --= GetRaidBuffTrayAuraInfo(button.settings.index)
   if not name then
     ResetButton(button)
     return

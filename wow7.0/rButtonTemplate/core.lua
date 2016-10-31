@@ -85,6 +85,16 @@ local function ApplyFont(fontString,font)
   fontString:SetFont(unpack(font))
 end
 
+local function ApplyHorizontalAlign(fontString,align)
+  if not align then return end
+  fontString:SetJustifyH(align)
+end
+
+local function ApplyVerticalAlign(fontString,align)
+  if not align then return end
+  fontString:SetJustifyV(align)
+end
+
 local function ApplyTexture(texture,file)
   if not file then return end
   texture.__textureFile = file
@@ -119,6 +129,8 @@ local function SetupFontString(fontString,cfg)
   ApplyPoints(fontString, cfg.points)
   ApplyFont(fontString,cfg.font)
   ApplyAlpha(fontString,cfg.alpha)
+  ApplyHorizontalAlign(fontString,cfg.halign)
+  ApplyVerticalAlign(fontString,cfg.valign)
 end
 
 local function SetupCooldown(cooldown,cfg)
@@ -183,6 +195,13 @@ function rButtonTemplate:StyleActionButton(button, cfg)
 
   --cooldown
   SetupCooldown(cooldown,cfg.cooldown)
+
+  --no clue why but blizzard created count and duration on background layer, need to fix that
+  local overlay = CreateFrame("Frame",nil,button)
+  overlay:SetAllPoints()
+  if count then count:SetParent(overlay) end
+  if hotkey then hotkey:SetParent(overlay) end
+  if name then name:SetParent(overlay) end
 
   --hotkey+count+name
   SetupFontString(hotkey,cfg.hotkey)

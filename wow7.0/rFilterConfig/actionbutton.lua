@@ -16,7 +16,7 @@ local A, L = ...
 local mediapath = "interface\\addons\\"..A.."\\media\\"
 
 --time between updates
-L.C.tick = 0.1
+--L.C.tick = 0.1 --default is 0.1
 
 --actionButtonConfig
 

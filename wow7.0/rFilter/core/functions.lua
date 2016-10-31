@@ -15,6 +15,43 @@ L.F = {}
 -- Functions
 -----------------------------
 
+local floor,mod,format = floor,mod,format
+
+local function GetFormatedTime(time)
+  if time <= 0 then
+    return nil
+  elseif time < 2 then
+    return floor(time*10)/10
+  elseif time < 60 then
+    return format("%ds", mod(time, 60))
+  elseif time < 3600 then
+    return format("%dm", floor(mod(time, 3600) / 60 + 1))
+  else
+    return format("%dh", floor(time / 3600 + 1))
+  end
+end
+
+local function SetDuration(button,duration)
+  if duration <= 0 or duration > 10 then
+    button.duration:SetText(GetFormatedTime(duration))
+    button.duration:SetTextColor(1, 1, 1)
+  elseif  duraton < 2 then
+    button.duration:SetText(GetFormatedTime(duration))
+    button.duration:SetTextColor(1, 0.4, 0)
+  else
+    button.duration:SetText(GetFormatedTime(duration))
+    button.duration:SetTextColor(1, 0.8, 0)
+  end
+end
+
+local function SetCount(button,count)
+  if count and count > 1 then
+    button.count:SetText(count)
+  else
+    button.count:SetText("")
+  end
+end
+
 --NumberFormat
 local function NumberFormat(v)
   if v > 1E10 then
@@ -33,16 +70,35 @@ local function NumberFormat(v)
     return v
   end
 end
-L.F.NumberFormat = NumberFormat
 
+--UpdateFont
+local UpdateFont(button,fontString,fontCfg,buttonSize)
+  local family,size,outline = unpack(fontCfg)
+  local fontSize = buttonSize*size/button.settings.size
+  fontString:SetFont(family,fontSize,outline)
+end
+
+--OnSizeChanged
+local function OnSizeChanged(button, width, height)
+  local size = math.max(width,10)
+  button:SetSize(size,size)
+  UpdateFont(button,button.duration,L.C.actionButtonConfig.name,size)
+  UpdateFont(button,button.count,L.C.actionButtonConfig.count,size)
+  UpdateFont(button,button.extravalue,L.C.actionButtonConfig.hotkey,size)
+end
+
+--CreateButton
 local function CreateButton(type,buttonName,spellid,unit,size,point,visibility,alpha,desaturate,caster)
-  local spellName, spellRank, spellIcon = GetSpellInfo(spellid)
+  local spellName, spellRank, spellIcon
+  if type == "raidbuff" then
+    spellName, spellRank, spellIcon = GetRaidBuffTrayAuraInfo(spellid)  --spellid will be the index
+  else
+    spellName, spellRank, spellIcon = GetSpellInfo(spellid)
+  end
   if not spellName then print(A,"error",buttonName,"Spell not found",spellid) return end
   local button = CreateFrame("CHECKBUTTON", A..buttonName..spellid, UIParent, "ActionButtonTemplate, SecureHandlerStateTemplate")
   button.settings = {
     type = type,
-    spellid = spellid,
-    index = spellid, --raidbuffs use index
     unit = unit,
     size = size,
     alphaOff = alpha[1],
@@ -53,8 +109,17 @@ local function CreateButton(type,buttonName,spellid,unit,size,point,visibility,a
     spellRank = spellRank,
     spellIcon = spellIcon,
   }
+  if type == "raidbuff" then
+    button.settings.index = spellid
+  else
+    button.settings.spellid = spellid
+  end
+  buttonName = button:GetName()
   button.icon:SetTexture(spellIcon)
   button.border = button.Border
+  button.duration = button[buttonName.."Name"]
+  button.extravalue = button[buttonName.."HotKey"]
+  button.count = button[buttonName.."HotKey"]
   button:EnableMouse(false)
   button:SetSize(size,size)
   button:SetPoint(unpack(point))
@@ -65,49 +130,128 @@ local function CreateButton(type,buttonName,spellid,unit,size,point,visibility,a
   rButtonTemplate:StyleActionButton(button,L.C.actionButtonConfig)
   --drag/resize frame
   rLib:CreateDragResizeFrame(button, L.dragFrames, -2, true)
+  --onsizechanged
+  button:SetScript("OnSizeChanged", OnSizeChanged)
   return button
 end
 L.F.CreateButton = CreateButton
 
+--ResetButton
 local function ResetButton(button)
+  if button.state == 1 then return end
   button:SetAlpha(button.settings.alphaOff)
-  button.border:Hide()
+  button.duration:SetText("")
+  button.extravalue:SetText("")
+  button.count:SetText("")
+  if button.settings.desaturate then
+    button.icon:SetDesaturated(1)
+  end
+  button.border:SetVertexColor(0.2,0.6,0.8,0)
+  button.state = 1
 end
 
+--PreviewButton
 local function PreviewButton(button)
+  if button.state == -1 then return end
   button:SetAlpha(1)
-  local name = _G[button:GetName().."Name"]
-  name:SetText("30m")
-  --name:SetJustifyH("LEFT")
-  local hotkey = _G[button:GetName().."HotKey"]
-  hotkey:SetText("146k")
-  local count = _G[button:GetName().."Count"]
-  count:SetText("3")
-  button.border:Hide()
+  button.duration:SetText("30m")
+  if button.settings.type == "buff" or button.settings.type == "debuff" then
+    button.extravalue:SetText("146k")
+    button.count:SetText("3")
+  end
+  if button.settings.desaturate then
+    button.icon:SetDesaturated(nil)
+  end
+  button.border:SetVertexColor(0.2,0.6,0.8,0)
+  button.state = -1
 end
 
-local function UpdateAura(button,filter)
+--EnableButton
+local function EnableButton(button)
+  if button.state == 2 then return end
+  button:SetAlpha(button.settings.alphaOn)
+  if button.settings.desaturate then
+    button.icon:SetDesaturated(nil)
+  end
+  button.state = 2
+end
+
+--UpdateAura
+local function UpdateAura(button, filter)
   if button.dragFrame:IsShown() then
     PreviewButton(button)
     return
   end
+  if button.settings.unit not UnitExists(button.settings.unit) then
+    ResetButton(button)
+    return
+  end
   local name, rank, icon, count, dispelType, duration, expires, caster, isStealable, nameplateShowPersonal,
-    spellID, canApplyAura, isBossDebuff, _, nameplateShowAll, timeMod,
+    spellid, canApplyAura, isBossDebuff, _, nameplateShowAll, timeMod,
     value1, value2, value3 = UnitAura(button.settings.unit, button.settings.spellName, button.settings.spellRank, filter)
   if not name or (button.settings.caster and caster ~= button.settings.caster) then
     ResetButton(button)
     return
   end
-  button:SetAlpha(button.settings.alphaOn)
+  SetDuration(button,expires-GetTime())
+  SetCount(button,count)
+  button.extravalue:SetText(value1 or value2 or value3)
   if caster == "player" then
     button.border:SetVertexColor(0.2,0.6,0.8,1)
-    button.border:Show()
   else
-    button.border:Hide()
+    button.border:SetVertexColor(0.2,0.6,0.8,0)
   end
+  EnableButton(button)
 end
 
+--UpdateBuff
 local function UpdateBuff(button)
   UpdateAura(button,"HELPFUL")
 end
 L.F.UpdateBuff = UpdateBuff
+
+--UpdateDebuff
+local function UpdateDebuff(button)
+  UpdateAura(button,"HARMFUL")
+end
+L.F.UpdateDebuff = UpdateDebuff
+
+--UpdateRaidbuff
+local function UpdateRaidbuff(button)
+  if button.dragFrame:IsShown() then
+    PreviewButton(button)
+    return
+  end
+  local name, rank, icon, duration, expires, spellid, buffSlot = GetRaidBuffTrayAuraInfo(button.settings.index)
+  if not name then
+    ResetButton(button)
+    return
+  end
+  SetDuration(button,expires-GetTime())
+  EnableButton(button)
+end
+L.F.UpdateRaidbuff = UpdateRaidbuff
+
+--UpdateCooldown
+local function UpdateCooldown(button)
+  if button.dragFrame:IsShown() then
+    PreviewButton(button)
+    return
+  end
+  local start, cooldown, enable = GetSpellCooldown(button.settings.spellid)
+  local duration = start+cooldown-GetTime()
+  if duration > 0 and cooldown > 2 then
+    ResetButton(button)
+    SetDuration(button,duration)
+  else
+    local isUsable, notEnoughMana = IsUsableSpell(button.settings.spellName)
+    if not isUsable or notEnoughMana then
+      ResetButton(button)
+      return
+    end
+    button.duration:SetText("RDY")
+    button.duration:SetTextColor(0, 0.8, 0)
+    EnableButton(button)
+  end
+end
+L.F.UpdateCooldown = UpdateCooldown

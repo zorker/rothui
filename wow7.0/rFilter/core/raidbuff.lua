@@ -14,8 +14,10 @@ local A, L = ...
 
 if not L.C.raidbuffs or #L.C.raidbuffs == 0 then return end
 
-local function CreateRaidbuff(...)
-  print("CreateRaidbuff",...)
+local function CreateRaidbuff(index,size,point,visibility,alpha,desaturate)
+  local button = L.F.CreateButton("raidbuff","RaidbuffButton",index,nil,size,point,visibility,alpha,desaturate,nil) --no unit and no caster
+  if not button then return end
+  table.insert(L.buffs,button)
 end
 
 for i, cfg in next, L.C.raidbuffs do

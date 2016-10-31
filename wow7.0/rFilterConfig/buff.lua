@@ -13,6 +13,6 @@ local A, L = ...
 -----------------------------
 
 if L.C.playerName == "Zörk" then
-  L.F.AddBuff(132404,"player",36,{"CENTER"},nil,{0.2,1},true,nil)
+  L.F.AddBuff(132404,"player",36,{"CENTER"},"[combat]show;hide",{0.2,1},true,nil)
 end
 

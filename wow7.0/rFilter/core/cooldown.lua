@@ -14,8 +14,10 @@ local A, L = ...
 
 if not L.C.cooldowns or #L.C.cooldowns == 0 then return end
 
-local function CreateCooldown(...)
-  print("CreateCooldown",...)
+local function CreateCooldown(spellid,size,point,visibility,alpha,desaturate)
+  local button = L.F.CreateButton("cooldown","CooldownButton",spellid,nil,size,point,visibility,alpha,desaturate,nil) --no unit and no caster
+  if not button then return end
+  table.insert(L.buffs,button)
 end
 
 for i, cfg in next, L.C.cooldowns do

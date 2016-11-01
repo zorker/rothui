@@ -31,8 +31,7 @@ Following are the root elements of rFilterConfig.
 
 The [functions.lua](https://github.com/zorker/rothui/blob/master/wow7.0/rFilterConfig/functions.lua) defines functions that will make life easier to add buffs, debuffs and cooldowns.
 
-* **L.F.AddBuff**: type:FUNCTION, function to add buffs to L.C.buffs config table.
-    L.C.AddBuff(spellid,unit,size,point,visibility,alpha,desaturate,caster)
+* **L.F.AddBuff**: type:FUNCTION, function to add buffs to L.C.buffs buff list
   * spellid: type:NUMBER, spellid of the buff you want to track
   * unit: type:STRING, unit on which the buff should be tracked
   * size: type:NUMBER, default size of the button
@@ -41,8 +40,7 @@ The [functions.lua](https://github.com/zorker/rothui/blob/master/wow7.0/rFilterC
   * alpha: type:TABLE, table containing two numbers defining the alpha of the button when off and on. example: {0.2, 1} --off,on
   * desaturate: type:BOOLEAN, desaturate the button texture when the buff is not found
   * caster: type:STRING, additional unit check to test if a buff is casted by a specific unit. example: "player"
-* **L.F.AddDebuff**: type:FUNCTION, function to add debuffs to L.C.debuffs config table.
-  L.C.AddDebuff(spellid,unit,size,point,visibility,alpha,desaturate,caster)
+* **L.F.AddDebuff**: type:FUNCTION, function to add debuffs to L.C.debuffs debuff list
   * spellid: type:NUMBER, spellid of the debuffs you want to track
   * unit: type:STRING, unit on which the debuffs should be tracked
   * size: type:NUMBER, default size of the button
@@ -51,8 +49,7 @@ The [functions.lua](https://github.com/zorker/rothui/blob/master/wow7.0/rFilterC
   * alpha: type:TABLE, table containing two numbers defining the alpha of the button when off and on. example: {0.2, 1} --off,on
   * desaturate: type:BOOLEAN, desaturate the button texture when the debuff is not found
   * caster: type:STRING, additional unit check to test if a debuff is casted by a specific unit. example: "player"
-* **L.F.AddCooldown**: type:FUNCTION, function to add cooldowns to L.C.cooldowns config table.
-  L.C.AddCooldown(spellid,size,point,visibility,alpha,desaturate)
+* **L.F.AddCooldown**: type:FUNCTION, function to add cooldowns to L.C.cooldowns cooldown list
   * spellid: type:NUMBER, spellid of the cooldown you want to track
   * size: type:NUMBER, default size of the button
   * point: type:TABLE, default point http://wowprogramming.com/docs/widgets/Region/SetPoint

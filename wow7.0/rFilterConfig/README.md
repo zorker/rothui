@@ -65,10 +65,16 @@ The [actionbutton.lua](https://github.com/zorker/rothui/blob/master/wow7.0/rFilt
 
 The [buff.lua](https://github.com/zorker/rothui/blob/master/wow7.0/rFilterConfig/buff.lua) defines the buffs you want to spawn. Optionally you can limit these by L.C.playerName or L.C.playerClass.
 
+    L.C.AddBuff(spellid,unit,size,point,visibility,alpha,desaturate,caster)
+
 ## Debuff
 
 The [debuff.lua](https://github.com/zorker/rothui/blob/master/wow7.0/rFilterConfig/debuff.lua) defines the debuffs you want to spawn. Optionally you can limit these by L.C.playerName or L.C.playerClass.
 
+    L.C.AddDebuff(spellid,unit,size,point,visibility,alpha,desaturate,caster)
+
 ## Cooldown
 
 The [cooldown.lua](https://github.com/zorker/rothui/blob/master/wow7.0/rFilterConfig/cooldown.lua) defines the cooldowns you want to spawn. Optionally you can limit these by L.C.playerName or L.C.playerClass.
+
+    L.C.AddCooldown(spellid,size,point,visibility,alpha,desaturate)

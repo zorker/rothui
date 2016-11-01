@@ -32,6 +32,7 @@ Following are the root elements of rFilterConfig.
 The [functions.lua](https://github.com/zorker/rothui/blob/master/wow7.0/rFilterConfig/functions.lua) defines functions that will make life easier to add buffs, debuffs and cooldowns.
 
 * **L.F.AddBuff**: type:FUNCTION, function to add buffs to L.C.buffs config table.<br>Arguments: spellid,unit,size,point,visibility,alpha,desaturate,caster
+    L.C.AddBuff(spellid,unit,size,point,visibility,alpha,desaturate,caster)
   * spellid: type:NUMBER, spellid of the buff you want to track
   * unit: type:STRING, unit on which the buff should be tracked
   * size: type:NUMBER, default size of the button

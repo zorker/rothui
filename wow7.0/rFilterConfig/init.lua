@@ -8,8 +8,6 @@
 
 local A, L = ...
 
---functions container
-L.F = {}
 --config container
 L.C = {}
 --make the config global

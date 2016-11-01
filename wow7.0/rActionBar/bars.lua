@@ -57,7 +57,7 @@ function rActionBar:CreateActionBar1(addonName,cfg)
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle] hide; show"
-  cfg.actionPage = cfg.actionPage or "[overridebar]14;[shapeshift]13;[vehicleui]12;[possessbar]12;[bar:6]6;[bar:5]5;[bar:4]4;[bar:3]3;[bar:2]2;[bonusbar:5]11;[bonusbar:4]10;[bonusbar:3]9;[bonusbar:2]8;[bonusbar:1]7;1"
+  cfg.actionPage = cfg.actionPage or "[bar:6]6;[bar:5]5;[bar:4]4;[bar:3]3;[bar:2]2;[overridebar]14;[shapeshift]13;[vehicleui]12;[possessbar]12;[bonusbar:5]11;[bonusbar:4]10;[bonusbar:3]9;[bonusbar:2]8;[bonusbar:1]7;1"
   local buttonName = "ActionButton"
   local numButtons = NUM_ACTIONBAR_BUTTONS
   local buttonList = L:GetButtonList(buttonName, numButtons)

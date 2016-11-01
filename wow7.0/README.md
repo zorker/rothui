@@ -20,6 +20,8 @@ Work Work.
 * **[rCompassCastbar](http://www.wowinterface.com/downloads/info23017-rCompassCastbar.html)**: Circluar cursor castbar for any unit.
 * **[rEmote](http://www.wowinterface.com/downloads/info24254-rEmote.html)**: Redirects npc chat emotes to the Blizzard emote frame
 * **[rError](http://www.wowinterface.com/downloads/info24253-rError.html)**: Overrides the Blizzard errorframe blacklist and allows you to create your own.
+* **[rFilter](http://www.wowinterface.com/downloads/info13006-rFilter.html)**: buff, debuff, cooldown filter addon
+* **[rFilterConfig](http://www.wowinterface.com/downloads/info24279-rFilterConfig.html)**: configuration for rFilter
 * **[rIngameModelViewer](http://www.wowinterface.com/downloads/info18393-rIngameModelViewer.html)**: View any DisplayID ingame
 * **[rLib](http://www.wowinterface.com/downloads/info24242-rLib.html)**: Addon library, required for most of my addons
 * **[rMinimap](http://www.wowinterface.com/downloads/info11253-rMinimap.html)**: Blizzard minimap adjustments
@@ -34,5 +36,5 @@ Work Work.
 
 ##Todo
 
-* **[rFilter3](http://www.wowinterface.com/downloads/info13006-rFilter3.html)**: Fix compatibility with the new rLib or rewrite from scratch.
+* Nothing on the list atm...
 

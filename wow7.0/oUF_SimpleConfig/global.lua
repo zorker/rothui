@@ -17,7 +17,7 @@ L.C.mediapath = "interface\\addons\\"..A.."\\media\\"
 
 L.C.globalscale = 0.85
 
-print("ouf_SimepleConfig:","UI scale",UIParent:GetScale(),"L.C.globalscale",L.C.globalscale)
+--print("ouf_SimepleConfig:","UI scale",UIParent:GetScale(),"L.C.globalscale",L.C.globalscale)
 
 --backdrop
 L.C.backdrop = {

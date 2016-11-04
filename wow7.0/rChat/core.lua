@@ -12,7 +12,7 @@ local DefaultSetItemRef = SetItemRef
 
 local cfg = {}
 cfg.dropshadow = {}
-cfg.dropshadow.offset = {1,-2}
+cfg.dropshadow.offset = {1,-1}
 cfg.dropshadow.color = {0,0,0,0.9}
 cfg.editbox = {}
 cfg.editbox.font = {STANDARD_TEXT_FONT, 12}

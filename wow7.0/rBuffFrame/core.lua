@@ -139,7 +139,15 @@ function rBuffFrame:CreateDebuffFrame(addonName,cfg)
   end
   hooksecurefunc("DebuffButton_UpdateAnchors", UpdateAllDebuffAnchors)
   --add drag functions
-  rLib:CreateDragFrame(frame, L.dragFrames, -2, true)
+  local relativeToName, _, relativeTo  = nil, unpack(cfg.framePoint)
+  if type(relativeTo) == "table" then
+    relativeToName = relativeTo:GetName()
+  elseif type(relativeTo) == "string" and _G[relativeTo] then
+    relativeToName = relativeTo
+  end
+  if relativeToName ~= addonName.."BuffFrame" then
+    rLib:CreateDragFrame(frame, L.dragFrames, -2, true)
+  end
   return frame
 end
 

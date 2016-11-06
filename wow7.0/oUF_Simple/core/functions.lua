@@ -114,7 +114,7 @@ L.F.UpdateThreat = UpdateThreat
 --CreateText
 local function CreateText(self,font,size,outline,align,noshadow)
   local text = self:CreateFontString(nil, "ARTWORK") --"BORDER", "OVERLAY"
-  text:SetFont(font or STANDARD_TEXT_FONT, size or 14, outline or "OUTLINE")
+  text:SetFont(font or L.C.font.family, size or L.C.font.size, outline or L.C.font.outline)
   text:SetJustifyH(align or "LEFT")
   if not noshadow then
     text:SetShadowColor(0,0,0,0.6)

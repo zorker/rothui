@@ -65,3 +65,10 @@ L.C.colors.healthbar = {
   threatInversBG = {0,1*L.C.colors.bgMultiplier,0},
   absorb = {0.1,1,1,0.7}
 }
+
+-- fonts
+L.C.font = {
+  family = STANDARD_TEXT_FONT,
+  size = 14,
+  outline = "OUTLINE"
+}

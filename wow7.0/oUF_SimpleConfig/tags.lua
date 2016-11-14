@@ -34,6 +34,7 @@ L.C.tagEvents["oUF_SimpleConfig:health"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONN
 L.C.tagMethods["oUF_SimpleConfig:combat"] = function(unit)
   if UnitAffectingCombat(unit) then
     return "|cffffffffX|r"
+    --return "|TInterface\\CharacterFrame\\UI-StateIcon:14:14:0:0:64:64:32:64:0:32|t"
   end
 end
 --tag event: oUF_Simple:combat

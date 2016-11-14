@@ -29,3 +29,12 @@ L.C.tagMethods["oUF_SimpleConfig:health"] = function(unit)
 end
 --tag event: oUF_Simple:health
 L.C.tagEvents["oUF_SimpleConfig:health"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
+
+--tag method: oUF_SimpleConfig:combat
+L.C.tagMethods["oUF_SimpleConfig:combat"] = function(unit)
+  if UnitAffectingCombat(unit) then
+    return "|cffffffffX|r"
+  end
+end
+--tag event: oUF_Simple:combat
+L.C.tagEvents["oUF_SimpleConfig:combat"] = "PLAYER_ENTERING_WORLD PLAYER_ENTER_COMBAT PLAYER_LEAVE_COMBAT"

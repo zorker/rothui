@@ -14,28 +14,13 @@ local A, L = ...
 
 local floor = floor
 
---tag method: oUF_SimpleConfig:health
-L.C.tagMethods["oUF_SimpleConfig:health"] = function(unit)
-  if not UnitIsConnected(unit) then
-    return "|cff999999Offline|r"
-  end
-  if(UnitIsDead(unit) or UnitIsGhost(unit)) then
-    return "|cff999999Dead|r"
-  end
-  local hpmin, hpmax = UnitHealth(unit), UnitHealthMax(unit)
-  local hpper = 0
-  if hpmax > 0 then hpper = floor(hpmin/hpmax*100) end
-  return hpmin.."|cffcccccc | |r"..hpper.."%"
-end
---tag event: oUF_Simple:health
-L.C.tagEvents["oUF_SimpleConfig:health"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
-
---tag method: oUF_SimpleConfig:combat
-L.C.tagMethods["oUF_SimpleConfig:combat"] = function(unit)
+--tag method: oUF_SimpleConfig:status
+L.C.tagMethods["oUF_SimpleConfig:status"] = function(unit,...)
   if UnitAffectingCombat(unit) then
-    return "|cffffffffX|r"
-    --return "|TInterface\\CharacterFrame\\UI-StateIcon:14:14:0:0:64:64:32:64:0:32|t"
+    return "|TInterface\\CharacterFrame\\UI-StateIcon:20:20:0:0:64:64:33:64:0:31|t"
+  elseif unit == "player" and IsResting() then
+    return "|TInterface\\CharacterFrame\\UI-StateIcon:20:20:0:0:64:64:0:31:0:31|t"
   end
 end
---tag event: oUF_Simple:combat
-L.C.tagEvents["oUF_SimpleConfig:combat"] = "PLAYER_ENTERING_WORLD PLAYER_ENTER_COMBAT PLAYER_LEAVE_COMBAT"
+--tag event: oUF_Simple:status
+L.C.tagEvents["oUF_SimpleConfig:status"] = "PLAYER_REGEN_DISABLED PLAYER_REGEN_ENABLED PLAYER_UPDATE_RESTING"

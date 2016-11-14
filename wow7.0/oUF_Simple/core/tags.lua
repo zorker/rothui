@@ -38,3 +38,7 @@ for key, value in next, L.C.tagMethods do
     oUF.Tags.Events[key] = L.C.tagEvents[key]
   end
 end
+
+--add player regen to the unitless event tags
+oUF.Tags.SharedEvents["PLAYER_REGEN_DISABLED"] = true
+oUF.Tags.SharedEvents["PLAYER_REGEN_ENABLED"] = true

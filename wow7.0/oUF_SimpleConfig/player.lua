@@ -30,7 +30,7 @@ L.C.player = {
         {"TOPRIGHT",-2,10},
       },
       size = 17,
-      tag = "[resting]",
+      tag = "[oUF_SimpleConfig:status]",
     },
     health = {
       enabled = true,

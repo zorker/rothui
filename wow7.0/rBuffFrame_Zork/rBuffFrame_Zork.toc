@@ -2,6 +2,6 @@
 ## Author: zork
 ## Title: rBuffFrame_Zork
 ## Notes: Zork's buff frame layout for rBuffFrame
-## RequiredDeps: rBuffFrame
+## RequiredDeps: rLib, rBuffFrame
 
 layout.lua

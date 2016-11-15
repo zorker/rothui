@@ -14,9 +14,9 @@ local A, L = ...
 
 L.C.party = {
   enabled = true,
-  size = {180,26},
-  point = {"TOPLEFT",20,-20},
-  scale = 1*L.C.globalscale,
+  size = {180*L.C.globalscale,26*L.C.globalscale},
+  point = {"TOPLEFT",20*L.C.globalscale,-20*L.C.globalscale},
+  scale = 1,--1*L.C.globalscale,
   --healthbar
   healthbar = {
     --health and absorb bar cannot be disabled, they match the size of the frame
@@ -28,40 +28,40 @@ L.C.party = {
     name = {
       enabled = true,
       points = {
-        {"TOPLEFT",2,10},
-        {"TOPRIGHT",-2,10},
+        {"TOPLEFT",2*L.C.globalscale,10*L.C.globalscale},
+        {"TOPRIGHT",-2*L.C.globalscale,10*L.C.globalscale},
       },
-      size = 17,
+      size = 17*L.C.globalscale,
       tag = "[name] [leader]",
     },
     health = {
       enabled = true,
-      point = {"RIGHT",-2,0},
-      size = 16,
+      point = {"RIGHT",-2*L.C.globalscale,0*L.C.globalscale},
+      size = 16*L.C.globalscale,
       tag = "[oUF_Simple:health]",
     },
   },
   --powerbar
   powerbar = {
     enabled = true,
-    size = {180,5},
-    point = {"TOP","BOTTOM",0,-4}, --if no relativeTo is given the frame base will be the relativeTo reference
+    size = {180*L.C.globalscale,5*L.C.globalscale},
+    point = {"TOP","BOTTOM",0*L.C.globalscale,-4*L.C.globalscale}, --if no relativeTo is given the frame base will be the relativeTo reference
     colorPower = true,
   },
   --raidmark
   raidmark = {
     enabled = true,
-    size = {18,18},
-    point = {"CENTER","LEFT",0,0},
+    size = {18*L.C.globalscale,18*L.C.globalscale},
+    point = {"CENTER","LEFT",0*L.C.globalscale,0*L.C.globalscale},
   },
   --debuffs
   debuffs = {
     enabled = true,
-    point = {"LEFT","RIGHT",5,0},
+    point = {"LEFT","RIGHT",5*L.C.globalscale,0*L.C.globalscale},
     num = 5,
     cols = 5,
-    size = 26,
-    spacing = 5,
+    size = 26*L.C.globalscale,
+    spacing = 5*L.C.globalscale,
     initialAnchor = "TOPLEFT",
     growthX = "RIGHT",
     growthY = "DOWN",
@@ -74,8 +74,8 @@ L.C.party = {
     showSolo = false,
     showParty = true,
     showRaid = false,
-    point = "BOTTOM",
-    xOffset = 0,
-    yOffset = 14,
+    point = "TOP",
+    xOffset = 0*L.C.globalscale,
+    yOffset = -14*L.C.globalscale,
   },
 }

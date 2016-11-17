@@ -83,9 +83,15 @@ end
 local function OnSizeChanged(button, width, height)
   local size = math.max(width,button.settings.size)
   button:SetSize(size,size)
-  UpdateFont(button,button.duration,L.C.actionButtonConfig.name.font,size)
-  UpdateFont(button,button.count,L.C.actionButtonConfig.count.font,size)
-  UpdateFont(button,button.extravalue,L.C.actionButtonConfig.hotkey.font,size)
+  --button.settings.durationFont
+  button.settings.durationFont = button.settings.durationFont or {button.duration:GetFont()}
+  UpdateFont(button,button.duration,button.settings.durationFont,size)
+  --button.settings.countFont
+  button.settings.countFont = button.settings.countFont or {button.count:GetFont()}
+  UpdateFont(button,button.count,button.settings.countFont,size)
+  --button.settings.extravalueFont
+  button.settings.extravalueFont = button.settings.extravalueFont or {button.extravalue:GetFont()}
+  UpdateFont(button,button.extravalue,button.settings.extravalueFont,size)
 end
 
 --CreateButton

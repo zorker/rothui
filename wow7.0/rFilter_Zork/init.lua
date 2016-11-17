@@ -1,5 +1,5 @@
 
--- rFilterConfig: init
+-- rFilter_Zork: init
 -- zork, 2016
 
 -----------------------------

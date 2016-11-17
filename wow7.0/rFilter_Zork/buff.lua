@@ -1,5 +1,5 @@
 
--- rFilterConfig: buff
+-- rFilter_Zork: buff
 -- zork, 2016
 
 -----------------------------

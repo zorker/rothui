@@ -1,5 +1,5 @@
 
--- rFilterConfig: actionbutton
+-- rFilter_Zork: theme
 -- zork, 2016
 
 -----------------------------
@@ -8,12 +8,12 @@
 
 local A, L = ...
 
+--check if the button template addon and the action button config theme is available
+if not rButtonTemplate or not rButtonTemplate_Zork_ActionButtonConfig then return end
+
 -----------------------------
 -- Actionbutton Config
 -----------------------------
-
---check if the button template addon and the action button config theme is available
-if not rButtonTemplate or not rButtonTemplate_Zork_ActionButtonConfig then return end
 
 --load the default button theme
 local actionButtonConfig = rLib.CopyTable(rButtonTemplate_Zork_ActionButtonConfig)
@@ -53,6 +53,10 @@ actionButtonConfig.count = {
   valign = "BOTTOM",
   alpha = 1,
 }
+
+-----------------------------
+-- rButtonTemplate:StyleActionButton
+-----------------------------
 
 --Style every single button we created
 local numBuffs, numDebuffs, numCooldowns = #L.buffs, #L.debuffs, #L.cooldowns

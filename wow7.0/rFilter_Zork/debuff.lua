@@ -1,5 +1,5 @@
 
--- rFilterConfig: debuff
+-- rFilter_Zork: debuff
 -- zork, 2016
 
 -----------------------------

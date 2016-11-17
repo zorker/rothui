@@ -1,5 +1,5 @@
 
--- rFilterConfig: cooldown
+-- rFilter_Zork: cooldown
 -- zork, 2016
 
 -----------------------------

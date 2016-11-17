@@ -17,7 +17,8 @@ local numBuffs, numDebuffs, numCooldowns = 0,0,0
 --optional function to change the tick
 function rFilter:SetTick(tick)
   if type(tick) == "number" then
-  L.tick = tick
+    L.tick = tick
+  end
 end
 
 --Update function

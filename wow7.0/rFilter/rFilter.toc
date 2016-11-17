@@ -4,9 +4,9 @@
 ## Notes: Buff, debuff, raidbuff and cooldown filter. Eats puppies!
 ## Dependencies: rLib
 
-core\init.lua
-core\functions.lua
-core\buff.lua
-core\debuff.lua
-core\cooldown.lua
-core\timer.lua
+init.lua
+functions.lua
+buff.lua
+debuff.lua
+cooldown.lua
+timer.lua

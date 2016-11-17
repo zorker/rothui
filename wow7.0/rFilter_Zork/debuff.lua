@@ -13,6 +13,6 @@ local A, L = ...
 -----------------------------
 
 if L.C.playerName == "Zörk" then
-  --local button = rFilter:AddDebuff(11196,"player",36,{"CENTER"},nil,{0.2,1},true,nil)
+  --local button = rFilter:CreateDebuff(11196,"player",36,{"CENTER"},nil,{0.2,1},true,nil)
   --if button then table.insert(L.debuffs,button) end
 end

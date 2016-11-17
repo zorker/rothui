@@ -1,0 +1,12 @@
+## Interface: 70100
+## Author: zork
+## Title: rFilter_Zork
+## Notes: Layout and optional theme for rFilter
+## RequiredDeps: rLib, rFilter
+## OptionalDeps: rButtonTemplate, rButtonTemplate_Zork
+
+init.lua
+buff.lua
+debuff.lua
+cooldown.lua
+theme.lua

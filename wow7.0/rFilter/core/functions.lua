@@ -132,8 +132,6 @@ local function CreateButton(type,buttonName,spellid,unit,size,point,visibility,a
     button.frameVisibility = visibility
     RegisterStateDriver(button, "visibility", visibility)
   end
-  --style button
-  rButtonTemplate:StyleActionButton(button,L.C.actionButtonConfig)
   --drag/resize frame
   rLib:CreateDragResizeFrame(button, L.dragFrames, -2, true)
   --onsizechanged

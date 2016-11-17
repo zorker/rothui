@@ -8,14 +8,18 @@
 
 local A, L = ...
 
-local numBuffs, numDebuffs, numCooldowns = #L.buffs, #L.debuffs, #L.cooldowns
+local numBuffs, numDebuffs, numCooldowns = 0,0,0
 
 -----------------------------
 -- CreateTimer
 -----------------------------
 
-if (numBuffs + numDebuffs + numCooldowns) == 0 then return end
+--optional function to change the tick
+function rFilter:SetTick(tick)
+  L.C.tick = tick
+end
 
+--Update function
 local function Update()
   if numBuffs > 0 then
     for i, button in next, L.buffs do
@@ -32,6 +36,15 @@ local function Update()
       L.F.UpdateCooldown(button)
     end
   end
-  C_Timer.After(L.C.tick or 0.1, Update)
+  C_Timer.After(L.C.tick, Update)
 end
-Update()
+
+--OnLogin function
+local function OnLogin()
+  numBuffs, numDebuffs, numCooldowns = #L.buffs, #L.debuffs, #L.cooldowns
+  if (numBuffs + numDebuffs + numCooldowns) == 0 then return end
+  Update()
+end
+
+--RegisterCallback PLAYER_LOGIN
+rLib:RegisterCallback("PLAYER_LOGIN", OnLogin)

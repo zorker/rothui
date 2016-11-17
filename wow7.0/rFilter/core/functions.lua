@@ -84,13 +84,19 @@ local function OnSizeChanged(button, width, height)
   local size = math.max(width,button.settings.size)
   button:SetSize(size,size)
   --button.settings.durationFont
-  button.settings.durationFont = button.settings.durationFont or {button.duration:GetFont()}
+  if not button.settings.durationFont then
+    button.settings.durationFont = {button.duration:GetFont()}
+  end
   UpdateFont(button,button.duration,button.settings.durationFont,size)
   --button.settings.countFont
-  button.settings.countFont = button.settings.countFont or {button.count:GetFont()}
+  if not button.settings.countFont then
+    button.settings.countFont = {button.count:GetFont()}
+  end
   UpdateFont(button,button.count,button.settings.countFont,size)
   --button.settings.extravalueFont
-  button.settings.extravalueFont = button.settings.extravalueFont or {button.extravalue:GetFont()}
+  if not button.settings.extravalueFont then
+    button.settings.extravalueFont = {button.extravalue:GetFont()}
+  end
   UpdateFont(button,button.extravalue,button.settings.extravalueFont,size)
 end
 

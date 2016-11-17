@@ -239,6 +239,7 @@ local function UpdateCooldown(button)
     end
     button.duration:SetText("RDY")
     button.duration:SetTextColor(0, 0.8, 0)
+    button.border:SetVertexColor(0.2,0.6,0.8,0)
     EnableButton(button)
   end
 end

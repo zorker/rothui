@@ -25,9 +25,5 @@ local function CreatePartyStyle(self)
   self.settings.createDrag = false
   --style
   L.F.CreateStyle(self)
-  --attributes
-  --self:SetAttribute("initial-width", self.cfg.size[1])
-  --self:SetAttribute("initial-height", self.cfg.size[2])
-  --self:SetAttribute("initial-scale", self.cfg.scale)
 end
 L.F.CreatePartyStyle = CreatePartyStyle

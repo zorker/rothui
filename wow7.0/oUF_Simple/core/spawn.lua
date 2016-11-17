@@ -63,9 +63,6 @@ if L.F.CreatePartyStyle then
     "point",      L.C.party.setup.point,
     "xOffset",    L.C.party.setup.xOffset,
     "yOffset",    L.C.party.setup.yOffset,
-    --"initial-width",  L.C.party.size[1],
-    --"initial-height", L.C.party.size[2],
-    --"initial-scale",  L.C.party.scale,
     "oUF-initialConfigFunction", ([[
       self:SetWidth(%d)
       self:SetHeight(%d)
@@ -113,9 +110,6 @@ if L.F.CreateRaidStyle then
       "yOffset",    L.C.raid.setup.yOffset,
       "groupFilter",    tostring(i),
       "unitsPerColumn", 5,
-      --"initial-width",  L.C.raid.size[1],
-      --"initial-height", L.C.raid.size[2],
-      --"initial-scale",  L.C.raid.scale,
       "oUF-initialConfigFunction", ([[
         self:SetWidth(%d)
         self:SetHeight(%d)

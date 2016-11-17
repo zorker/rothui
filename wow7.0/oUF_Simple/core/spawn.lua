@@ -63,10 +63,13 @@ if L.F.CreatePartyStyle then
     "point",      L.C.party.setup.point,
     "xOffset",    L.C.party.setup.xOffset,
     "yOffset",    L.C.party.setup.yOffset,
+    --"initial-width",  L.C.party.size[1],
+    --"initial-height", L.C.party.size[2],
+    --"initial-scale",  L.C.party.scale,
     "oUF-initialConfigFunction", ([[
       self:SetWidth(%d)
       self:SetHeight(%d)
-      self:SetScale(%f)
+      self:GetParent():SetScale(%f)
     ]]):format(L.C.party.size[1], L.C.party.size[2], L.C.party.scale)
   ):SetPoint(unpack(L.C.party.point))
 end
@@ -110,10 +113,13 @@ if L.F.CreateRaidStyle then
       "yOffset",    L.C.raid.setup.yOffset,
       "groupFilter",    tostring(i),
       "unitsPerColumn", 5,
+      --"initial-width",  L.C.raid.size[1],
+      --"initial-height", L.C.raid.size[2],
+      --"initial-scale",  L.C.raid.scale,
       "oUF-initialConfigFunction", ([[
         self:SetWidth(%d)
         self:SetHeight(%d)
-        self:SetScale(%f)
+        self:GetParent():SetScale(%f)
       ]]):format(L.C.raid.size[1], L.C.raid.size[2], L.C.raid.scale)
     ):SetPoint(unpack(L.C.raid.points[i])) --config needs to provide 8 point tables, one for each raid group
   end

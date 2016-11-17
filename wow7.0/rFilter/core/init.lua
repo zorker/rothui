@@ -13,9 +13,8 @@ L.dragFrames      = {}
 L.addonColor      = "0099FF00"
 L.addonShortcut   = "rfilter"
 
---config cointainer
-L.C = {}
-L.C.tick = 0.1
+--tick
+L.tick = 0.1
 
 --container for buff, debuffs, cooldown
 L.buffs = {}

@@ -16,7 +16,8 @@ local numBuffs, numDebuffs, numCooldowns = 0,0,0
 
 --optional function to change the tick
 function rFilter:SetTick(tick)
-  L.C.tick = tick
+  if type(tick) == "number" then
+  L.tick = tick
 end
 
 --Update function
@@ -36,7 +37,7 @@ local function Update()
       L.F.UpdateCooldown(button)
     end
   end
-  C_Timer.After(L.C.tick, Update)
+  C_Timer.After(L.tick, Update)
 end
 
 --OnLogin function

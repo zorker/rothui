@@ -20,8 +20,8 @@ rLib.addonName = A
 -- Functions
 -----------------------------
 
---rLib:CopyTable
-function rLib:CopyTable(orig)
+--copyTable
+local function copyTable(orig)
   local orig_type = type(orig)
   local copy
   if orig_type == 'table' then
@@ -35,6 +35,7 @@ function rLib:CopyTable(orig)
   end
   return copy
 end
+rLib.CopyTable = copyTable
 
 --rLib:RegisterCallback
 function rLib:RegisterCallback(event, callback, ...)

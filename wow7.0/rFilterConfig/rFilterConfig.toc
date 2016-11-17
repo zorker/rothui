@@ -2,7 +2,7 @@
 ## Author: zork
 ## Title: rFilterConfig
 ## Notes: Config for rFilter
-## RequiredDeps: rLib
+## RequiredDeps: rLib, rButtonTemplate, rButtonTemplate_Zork
 
 init.lua
 functions.lua

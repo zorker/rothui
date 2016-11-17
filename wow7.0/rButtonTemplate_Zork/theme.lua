@@ -40,6 +40,8 @@ end
 -----------------------------
 
 local actionButtonConfig = {}
+--make it global
+rButtonTemplate_Zork_ActionButtonConfig = actionButtonConfig
 
 --backdrop
 actionButtonConfig.backdrop = {

@@ -59,6 +59,8 @@ L.C.colors.castbar = {
 }
 --colors healthbar
 L.C.colors.healthbar = {
+  --default = {0,1,0},
+  --defaultBG = {0*L.C.colors.bgMultiplier,1*L.C.colors.bgMultiplier,0},
   threat = {1,0,0},
   threatBG = {1*L.C.colors.bgMultiplier,0,0},
   threatInvers = {0,1,0},

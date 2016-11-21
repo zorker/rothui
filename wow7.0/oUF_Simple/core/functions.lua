@@ -216,10 +216,16 @@ local function CreateHealthBar(self)
   local s = CreateFrame("StatusBar", nil, self)
   s:SetStatusBarTexture(L.C.textures.statusbar)
   s:SetAllPoints()
+  if L.C.colors.healthbar and L.C.colors.healthbar.default then
+    s:SetStatusBarColor(unpack(L.C.colors.healthbar.default))
+  end
   --bg
   local bg = s:CreateTexture(nil, "BACKGROUND")
   bg:SetTexture(L.C.textures.statusbarBG)
   bg:SetAllPoints()
+  if L.C.colors.healthbar and L.C.colors.healthbar.defaultBG then
+    bg:SetVertexColor(unpack(L.C.colors.healthbar.defaultBG))
+  end
   s.bg = bg
   --backdrop
   CreateBackdrop(s)

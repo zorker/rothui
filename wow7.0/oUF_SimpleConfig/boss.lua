@@ -42,6 +42,12 @@ L.C.boss = {
     point = {"TOP","BOTTOM",0,-4}, --if no relativeTo is given the frame base will be the relativeTo reference
     colorPower = true,
   },
+  --altpowerbar
+  altpowerbar = {
+    enabled = true,
+    size = {130,5},
+    point = {"BOTTOMLEFT","TOPLEFT",0,4},
+  },
   --raidmark
   raidmark = {
     enabled = true,
@@ -84,6 +90,6 @@ L.C.boss = {
     point = "TOP",
     relativePoint = "BOTTOM", --relativeTo will be the boss frame preceding
     xOffset = 0,
-    yOffset = -45,
+    yOffset = -50,
   },
 }

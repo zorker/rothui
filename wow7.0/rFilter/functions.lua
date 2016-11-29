@@ -143,6 +143,7 @@ L.F.CreateButton = CreateButton
 --ResetButton
 local function ResetButton(button)
   if button.state == 1 then return end
+  button.state = 1
   button:SetAlpha(button.settings.alphaOff)
   button.duration:SetText("")
   button.extravalue:SetText("")
@@ -151,12 +152,12 @@ local function ResetButton(button)
     button.icon:SetDesaturated(1)
   end
   button.border:SetVertexColor(0.2,0.6,0.8,0)
-  button.state = 1
 end
 
 --PreviewButton
 local function PreviewButton(button)
   if button.state == -1 then return end
+  button.state = -1
   button:SetAlpha(1)
   button.duration:SetText("30m")
   if button.settings.type == "buff" or button.settings.type == "debuff" then
@@ -167,17 +168,16 @@ local function PreviewButton(button)
     button.icon:SetDesaturated(nil)
   end
   button.border:SetVertexColor(0.2,0.6,0.8,0)
-  button.state = -1
 end
 
 --EnableButton
 local function EnableButton(button)
   if button.state == 2 then return end
+  button.state = 2
   button:SetAlpha(button.settings.alphaOn)
   if button.settings.desaturate then
     button.icon:SetDesaturated(nil)
   end
-  button.state = 2
 end
 
 --UpdateAura

@@ -15,17 +15,27 @@ local SpellFlyout = SpellFlyout
 -----------------------------
 
 local function FaderOnFinished(self)
+  --print("FaderOnFinished",self.__owner:GetName(),self.finAlpha)
   self.__owner:SetAlpha(self.finAlpha)
+end
+
+local function FaderOnUpdate(self)
+  --print("FaderOnUpdate",self.__owner:GetName(),self.__animFrame:GetAlpha())
+  self.__owner:SetAlpha(self.__animFrame:GetAlpha())
 end
 
 local function CreateFaderAnimation(frame)
   if frame.fader then return end
-  frame.fader = frame:CreateAnimationGroup()
+  local animFrame = CreateFrame("Frame",nil,frame)
+  animFrame.__owner = frame
+  frame.fader = animFrame:CreateAnimationGroup()
   frame.fader.__owner = frame
+  frame.fader.__animFrame = animFrame
   frame.fader.direction = nil
-  frame.fader.setToFinalAlpha = false --test if this will NOT apply the alpha to all regions
+  frame.fader.setToFinalAlpha = false
   frame.fader.anim = frame.fader:CreateAnimation("Alpha")
   frame.fader:HookScript("OnFinished", FaderOnFinished)
+  frame.fader:HookScript("OnUpdate", FaderOnUpdate)
 end
 
 function L:StartFadeIn(frame)

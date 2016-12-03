@@ -15,13 +15,15 @@
 
   local cfg = {}
 
+  local overallScale = 0.8
+
   --player settings
   cfg["player"] = {}
   cfg["player"].enable          = true
-  cfg["player"].latency         = false
-  cfg["player"].scale           = 0.2
+  cfg["player"].latency         = true
+  cfg["player"].scale           = 0.2 * overallScale
   cfg["player"].sparkcolor      = {1,1,1}
-  cfg["player"].bgcolor         = {0.5,0.4,0,1}
+  cfg["player"].bgcolor         = {0.5,0.4,0,0.3}
   cfg["player"].ringcolor       = {1,0.8,0,1}
   cfg["player"].latencycolor    = {1,0,0,0.8}
   cfg["player"].bgblendmode     = "ADD" --"ADD" or "BLEND"
@@ -33,9 +35,9 @@
   --target settings
   cfg["target"] = {}
   cfg["target"].enable          = true
-  cfg["target"].scale           = 0.15
+  cfg["target"].scale           = 0.15 * overallScale
   cfg["target"].sparkcolor      = {1,0.5,0.5}
-  cfg["target"].bgcolor         = {0.5,0,0,1}
+  cfg["target"].bgcolor         = {0.5,0,0,3}
   cfg["target"].ringcolor       = {1,0,0,1}
   cfg["target"].bgblendmode     = "ADD" --"ADD" or "BLEND"
   cfg["target"].ringblendmode   = "ADD" --"ADD" or "BLEND"
@@ -44,9 +46,9 @@
   --focus settings
   cfg["focus"] = {}
   cfg["focus"].enable          = true
-  cfg["focus"].scale           = 0.11
+  cfg["focus"].scale           = 0.11 * overallScale
   cfg["focus"].sparkcolor      = {0.5,0.5,1}
-  cfg["focus"].bgcolor         = {0,0,0.5,1}
+  cfg["focus"].bgcolor         = {0,0,0.5,3}
   cfg["focus"].ringcolor       = {0,0.5,1,1}
   cfg["focus"].bgblendmode     = "ADD" --"ADD" or "BLEND"
   cfg["focus"].ringblendmode   = "ADD" --"ADD" or "BLEND"
@@ -55,9 +57,9 @@
   --pet settings
   cfg["pet"] = {}
   cfg["pet"].enable          = false
-  cfg["pet"].scale           = 0.08
+  cfg["pet"].scale           = 0.08 * overallScale
   cfg["pet"].sparkcolor      = {0.8,1,0.5}
-  cfg["pet"].bgcolor         = {0,0.5,0,1}
+  cfg["pet"].bgcolor         = {0,0.5,0,3}
   cfg["pet"].ringcolor       = {0.5,1,0.3,1}
   cfg["pet"].bgblendmode     = "ADD" --"ADD" or "BLEND"
   cfg["pet"].ringblendmode   = "ADD" --"ADD" or "BLEND"

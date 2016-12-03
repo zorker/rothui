@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 ## Author: zork
 ## Title: rCompassCastbar
 ## Notes: A circular compass cursor castbar

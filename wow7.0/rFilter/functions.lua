@@ -103,8 +103,9 @@ end
 --CreateButton
 local function CreateButton(type,buttonName,spellid,unit,size,point,visibility,alpha,desaturate,caster)
   local spellName, spellRank, spellIcon = GetSpellInfo(spellid)
+  buttonName = A..buttonName..spellid..unit:sub(1,1):upper()..unit:sub(2)
   if not spellName then print(A,"error",buttonName,"Spell not found",spellid) return end
-  local button = CreateFrame("CHECKBUTTON", A..buttonName..spellid, UIParent, "ActionButtonTemplate, SecureHandlerStateTemplate")
+  local button = CreateFrame("CHECKBUTTON", buttonName, UIParent, "ActionButtonTemplate, SecureHandlerStateTemplate")
   button.settings = {
     type = type,
     spellid = spellid,

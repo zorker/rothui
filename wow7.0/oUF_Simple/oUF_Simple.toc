@@ -1,10 +1,8 @@
 ## Interface: 70100
 ## Title: oUF_Simple
 ## Author: zork
-## Notes: Simple oUF layout (oUF is embedded!)
-## Dependencies: rLib, oUF_SimpleConfig
-
-oUF\oUF.xml
+## Notes: Simple oUF layout
+## Dependencies: oUF, rLib, oUF_SimpleConfig
 
 modules\rAbsorbBar.lua
 modules\rClassBar.lua

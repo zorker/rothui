@@ -89,7 +89,8 @@ end
 --spawn nameplates
 if L.F.CreateNamePlateStyle then
   oUF:RegisterStyle(A.."Nameplate",L.F.CreateNamePlateStyle)
-  oUF:SpawnNamePlates(A.."Nameplate", A, L.C.NamePlateCallback, L.C.NamePlateCVars)
+  oUF:SetActiveStyle(A.."Nameplate")
+  oUF:SpawnNamePlates(A, L.C.NamePlateCallback, L.C.NamePlateCVars)
 end
 
 --spawn raid

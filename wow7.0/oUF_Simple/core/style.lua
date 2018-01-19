@@ -7,7 +7,7 @@
 -----------------------------
 
 local A, L = ...
-local oUF = L.oUF
+local oUF = L.oUF or oUF
 
 -----------------------------
 -- Style

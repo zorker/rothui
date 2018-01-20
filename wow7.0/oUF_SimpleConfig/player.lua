@@ -17,6 +17,7 @@ L.C.player = {
   size = {265,26},
   point = {"RIGHT",UIParent,"CENTER",-120,-120},
   scale = 1*L.C.globalscale,
+  frameVisibility = "[combat][target,exists][modifier] show; hide",
   --healthbar
   healthbar = {
     --health and absorb bar cannot be disabled, they match the size of the frame

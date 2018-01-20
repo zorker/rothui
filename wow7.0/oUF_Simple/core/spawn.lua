@@ -17,7 +17,14 @@ local oUF = L.oUF or oUF
 if L.F.CreatePlayerStyle then
   oUF:RegisterStyle(A.."Player", L.F.CreatePlayerStyle)
   oUF:SetActiveStyle(A.."Player")
-  oUF:Spawn("player", A.."Player")
+  local player = oUF:Spawn("player", A.."Player")
+  --show/hide the frame on a given state driver
+  if player.cfg.frameVisibility then
+    player:Disable()
+    --frameVisibility needed for rLib drag and drop
+    player.frameVisibility = player.cfg.frameVisibility
+    RegisterStateDriver(player, "visibility", player.cfg.frameVisibility)
+  end
 end
 
 --spawn target

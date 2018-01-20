@@ -1,4 +1,4 @@
-## Interface: 70100
+## Interface: 70300
 ## Author: zork
 ## Title: rBuffFrame_Zork
 ## Notes: Zork's buff frame layout for rBuffFrame

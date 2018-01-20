@@ -135,7 +135,7 @@ local function AltPowerBarOverride(self, event, unit, powerType)
   local ppcur = UnitPower(unit, ALTERNATE_POWER_INDEX, true)
   local _, r, g, b = UnitAlternatePowerTextureInfo(unit, 2)
   local _, ppmin = UnitAlternatePowerInfo(unit)
-  local el = self.AltPowerBar
+  local el = self.AlternativePower
   el:SetMinMaxValues(ppmin or 0, ppmax)
   el:SetValue(ppcur)
   if b then

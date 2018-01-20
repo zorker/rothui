@@ -1,4 +1,4 @@
-## Interface: 70100
+## Interface: 70300
 ## Title: oUF_Simple
 ## Author: zork
 ## Notes: Simple oUF layout

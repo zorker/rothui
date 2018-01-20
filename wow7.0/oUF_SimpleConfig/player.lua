@@ -57,7 +57,7 @@ L.C.player = {
   raidmark = {
     enabled = true,
     size = {18,18},
-    point = {"CENTER","LEFT",0,0},
+    point = {"CENTER","TOP",0,0},
   },
   --castbar
   castbar = {

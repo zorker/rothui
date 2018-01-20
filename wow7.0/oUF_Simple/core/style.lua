@@ -29,6 +29,6 @@ local function CreateStyle(self)
   self.AlternativePower = L.F.CreateAltPowerBar(self)
   self.Debuffs = L.F.CreateDebuffs(self)
   self.Buffs = L.F.CreateBuffs(self)
-  self.RaidIcon = L.F.CreateRaidMark(self)
+  self.RaidTargetIndicator = L.F.CreateRaidMark(self)
 end
 L.F.CreateStyle = CreateStyle

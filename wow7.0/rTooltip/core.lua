@@ -21,7 +21,6 @@ local classColorHex, factionColorHex = {}, {}
 -----------------------------
 
 local cfg = {}
---cfg.pos = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -10, 180 }
 cfg.textColor = {0.4,0.4,0.4}
 cfg.bossColor = {1,0,0}
 cfg.eliteColor = {1,0,0.5}
@@ -37,6 +36,10 @@ cfg.fontFamily = STANDARD_TEXT_FONT
 cfg.backdrop = { bgFile = "Interface\\Buttons\\WHITE8x8", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",  tiled = false, edgeSize = 16, insets = {left=3, right=3, top=3, bottom=3} }
 cfg.backdrop.bgColor = {0.08,0.08,0.1,0.92}
 cfg.backdrop.borderColor = {0.3,0.3,0.33,1}
+
+--pos can be either a point table or a anchor string
+--cfg.pos = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -10, 180 }
+cfg.pos = "ANCHOR_CURSOR"
 
 -----------------------------
 -- Functions
@@ -184,9 +187,13 @@ local function FixBarColor(self,r,g,b)
 end
 
 local function ResetTooltipPosition(self,parent)
-  self:SetOwner(parent, "ANCHOR_NONE")
-  self:ClearAllPoints()
-  self:SetPoint(unpack(cfg.pos))
+  if type(cfg.pos) == "string" then
+    self:SetOwner(parent, cfg.pos)
+  else
+    self:SetOwner(parent, "ANCHOR_NONE")
+    self:ClearAllPoints()
+    self:SetPoint(unpack(cfg.pos))
+  end
 end
 
 -----------------------------

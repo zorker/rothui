@@ -60,9 +60,9 @@ end
 --fix blizzard cooldown flash
 hooksecurefunc(getmetatable(ActionButton1Cooldown).__index, 'SetCooldown', function(self)
   if not self then return end
-	if self:GetEffectiveAlpha() > 0 then
-		self:Show()
-	else
-		self:Hide()
-	end
+  if self:GetEffectiveAlpha() > 0 then
+    self:Show()
+  else
+    self:Hide()
+  end
 end)

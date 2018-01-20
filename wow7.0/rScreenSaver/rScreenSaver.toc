@@ -1,4 +1,4 @@
-## Interface: 70100
+## Interface: 70300
 ## Author: zork
 ## Title: rScreenSaver
 ## Notes: Does not save your screen. Doh!

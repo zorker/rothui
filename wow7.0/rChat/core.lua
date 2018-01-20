@@ -35,7 +35,7 @@ local function SkinChat(self)
   self:SetShadowOffset(unpack(cfg.dropshadow.offset))
   self:SetShadowColor(unpack(cfg.dropshadow.color))
   --chat fading
-  self:SetFading(false)
+  self:SetFading(true)
   --hide button frame
   local bf = _G[name.."ButtonFrame"]
   bf:HookScript("OnShow", bf.Hide)

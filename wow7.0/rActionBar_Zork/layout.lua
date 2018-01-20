@@ -74,7 +74,7 @@ local bar1 = {
   numCols         = 6,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
-  frameVisibility = "[combat][modifier][@target,exists] show; hide"
+  frameVisibility = "[combat][modifier][@target,exists,nodead] show; hide"
 }
 --create
 rActionBar:CreateActionBar1(A, bar1)

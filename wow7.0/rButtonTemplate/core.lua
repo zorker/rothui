@@ -66,6 +66,17 @@ local function ApplyTexCoord(texture,texCoord)
   texture:SetTexCoord(unpack(texCoord))
 end
 
+local function ApplyBlendMode(texture,blendMode)
+  if not blendMode then return end
+  texture:SetBlendMode(blendMode)
+end
+
+local function ApplySizeFactor(texture,sizeFactor)
+  if not sizeFactor then return end
+  local w,h = texture:GetParent():GetSize()
+  texture:SetSize(w*sizeFactor,h*sizeFactor)
+end
+
 local function ApplyVertexColor(texture,color)
   if not color then return end
   texture.__vertexColor = color
@@ -112,6 +123,8 @@ end
 local function SetupTexture(texture,cfg,func,button)
   if not texture or not cfg then return end
   ApplyTexCoord(texture,cfg.texCoord)
+  ApplyBlendMode(texture,cfg.blendMode)
+  ApplySizeFactor(texture,cfg.sizeFactor)
   ApplyPoints(texture,cfg.points)
   ApplyVertexColor(texture,cfg.color)
   ApplyAlpha(texture,cfg.alpha)

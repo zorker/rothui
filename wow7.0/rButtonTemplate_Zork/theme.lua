@@ -85,11 +85,10 @@ actionButtonConfig.flyoutBorderShadow = {
 
 --border
 actionButtonConfig.border = {
-  file = mediapath.."border",
-  points = {
-    {"TOPLEFT", -2, 2 },
-    {"BOTTOMRIGHT", 2, -2 },
-  },
+  file = _G["ActionButton1Border"]:GetTexture(),
+  blendMode = "ADD",
+  sizeFactor = 1.8,
+  texCoord = {0,1,0,1},
 }
 
 --normalTexture
@@ -181,7 +180,7 @@ itemButtonConfig.icon = copyTable(actionButtonConfig.icon)
 itemButtonConfig.count = copyTable(actionButtonConfig.count)
 itemButtonConfig.stock = copyTable(actionButtonConfig.name)
 itemButtonConfig.stock.alpha = 1
-itemButtonConfig.border = { file = "" }
+itemButtonConfig.border = copyTable(actionButtonConfig.border)
 itemButtonConfig.normalTexture = copyTable(actionButtonConfig.normalTexture)
 
 --rButtonTemplate:StyleItemButton
@@ -209,7 +208,6 @@ local auraButtonConfig = {}
 auraButtonConfig.backdrop = copyTable(actionButtonConfig.backdrop)
 auraButtonConfig.icon = copyTable(actionButtonConfig.icon)
 auraButtonConfig.border = copyTable(actionButtonConfig.border)
-auraButtonConfig.border.texCoord = {0,1,0,1} --fix the settexcoord on debuff borders
 auraButtonConfig.normalTexture = copyTable(actionButtonConfig.normalTexture)
 auraButtonConfig.count = copyTable(actionButtonConfig.count)
 auraButtonConfig.duration = copyTable(actionButtonConfig.hotkey)

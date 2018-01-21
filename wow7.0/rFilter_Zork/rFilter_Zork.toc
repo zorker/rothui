@@ -1,4 +1,4 @@
-## Interface: 70100
+## Interface: 70300
 ## Author: zork
 ## Title: rFilter_Zork
 ## Notes: Layout and optional theme for rFilter

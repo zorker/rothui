@@ -37,6 +37,36 @@ local aura = {
 }
 table.insert(auras,aura)
 
+local aura = {
+  border          = _G["MultiBarBottomLeftButton1Border"],
+  unit            = "player",
+  caster          = "player",
+  spellId         = 12975,
+  filter          = "HELPFUL",
+  color           = {0,1,0}
+}
+table.insert(auras,aura)
+
+local aura = {
+  border          = _G["MultiBarBottomLeftButton2Border"],
+  unit            = "player",
+  caster          = "player",
+  spellId         = 871,
+  filter          = "HELPFUL",
+  color           = {0,1,0}
+}
+table.insert(auras,aura)
+
+local aura = {
+  border          = _G["MultiBarBottomLeftButton3Border"],
+  unit            = "player",
+  caster          = "player",
+  spellId         = 125565,
+  filter          = "HELPFUL",
+  color           = {0,1,0}
+}
+table.insert(auras,aura)
+
 -----------------------------
 -- Functions
 -----------------------------

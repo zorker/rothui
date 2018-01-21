@@ -1,0 +1,7 @@
+## Interface: 70300
+## Author: zork
+## Title: rDamageFont
+## Notes: New damage font
+## RequiredDeps: rLib
+
+core.lua

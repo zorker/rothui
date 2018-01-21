@@ -18,6 +18,16 @@ local auras = {}
 -----------------------------
 
 local aura = {
+  border          = _G["ActionButton3Border"],
+  unit            = "target",
+  caster          = "player",
+  spellId         = 243016,
+  filter          = "HARMFUL",
+  color           = {0,1,1}
+}
+table.insert(auras,aura)
+
+local aura = {
   border          = _G["ActionButton8Border"],
   unit            = "player",
   caster          = "player",
@@ -74,7 +84,7 @@ table.insert(auras,aura)
 --UpdateAura
 local function UpdateAura(aura)
   local name, rank, icon, _, _, _, _, caster, _, _, spellid = UnitAura(aura.unit, aura.spellName, aura.spellRank, aura.filter)
-  if name or caster == aura.caster then
+  if name and caster == aura.caster then
     aura.border:Show()
   else
     aura.border:Hide()

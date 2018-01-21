@@ -83,18 +83,8 @@ end
 
 --Update
 local function Update()
-  if numAuras > 0 then
-    for i, aura in next, auras do
-      if not aura.spellName then
-        aura.spellName, aura.spellRank = GetSpellInfo(aura.spellId)
-        if not aura.spellName then
-          print(A,aura.spellId,"spell id not found")
-          break
-        end
-        aura.border:SetVertexColor(unpack(aura.color))
-      end
-      UpdateAura(aura)
-    end
+  for i, aura in next, auras do
+    UpdateAura(aura)
   end
   C_Timer.After(tick, Update)
 end
@@ -103,7 +93,19 @@ end
 local function Login()
   numAuras = #auras
   if numAuras == 0 then return end
-  Update()
+  local error = false
+  for i, aura in next, auras do
+    aura.spellName, aura.spellRank = GetSpellInfo(aura.spellId)
+    if not aura.spellName then
+      print(A,aura.spellId,"spell id not found")
+      error = true
+      break
+    end
+    aura.border:SetVertexColor(unpack(aura.color))
+  end
+  if not error then
+    Update()
+  end
 end
 
 --RegisterCallback PLAYER_LOGIN

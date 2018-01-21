@@ -75,7 +75,6 @@ local bar1 = {
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
   frameVisibility = "[combat][modifier][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide"
-
 }
 --create
 rActionBar:CreateActionBar1(A, bar1)
@@ -93,7 +92,8 @@ local bar2 = {
   buttonMargin    = 5,
   numCols         = 12,
   startPoint      = "BOTTOMLEFT",
-  fader           = fader,
+  fader           = nil,
+  frameVisibility = "[combat][modifier][@target,exists,nodead] show; hide"
 }
 --create
 rActionBar:CreateActionBar2(A, bar2)

@@ -135,6 +135,7 @@ end
 
 local function SetupCooldown(cooldown,cfg)
   if not cooldown or not cfg then return end
+  cooldown:SetFrameLevel(cooldown:GetParent():GetFrameLevel())
   ApplyPoints(cooldown, cfg.points)
 end
 

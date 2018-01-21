@@ -45,7 +45,14 @@ end
 if L.F.CreatePetStyle then
   oUF:RegisterStyle(A.."Pet", L.F.CreatePetStyle)
   oUF:SetActiveStyle(A.."Pet")
-  oUF:Spawn("pet", A.."Pet")
+  local pet = oUF:Spawn("pet", A.."Pet")
+  --show/hide the frame on a given state driver
+  if pet.cfg.frameVisibility then
+    pet:Disable()
+    --frameVisibility needed for rLib drag and drop
+    pet.frameVisibility = pet.cfg.frameVisibility
+    RegisterStateDriver(pet, "visibility", pet.cfg.frameVisibility)
+  end
 end
 
 --spawn focus

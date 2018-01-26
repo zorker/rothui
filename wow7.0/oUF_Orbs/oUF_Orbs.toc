@@ -1,0 +1,7 @@
+## Interface: 70300
+## Title: oUF_Orbs
+## Author: zork
+## Notes: oUF layout using orbs and rings
+## RequiredDeps: rLib
+
+oUF_Orbs.lua

@@ -34,12 +34,29 @@ t:SetVertexColor(1,0,0)
 t:AddMaskTexture(m)
 --t:RemoveMaskTexture(m)
 
+--fog
+local t2 = lr:CreateTexture(nil,"BACKGROUND",nil,-7)
+t2:SetTexture(mediapath.."fog")
+t2:SetSize(f:GetSize())
+t2:SetPoint("CENTER",f,"CENTER",0,0)
+t2:SetVertexColor(1,1,1)
+t2:SetBlendMode("BLEND")
+t2:AddMaskTexture(m)
+
 --you can create additional textures on different layers and use the same mask
 
 --animation group
 local ag = m:CreateAnimationGroup()
 local anim = ag:CreateAnimation("Rotation")
 anim:SetDegrees(360)
-anim:SetDuration(10)
+anim:SetDuration(60)
+ag:Play()
+ag:SetLooping("REPEAT")
+
+--animation group
+local ag = t2:CreateAnimationGroup()
+local anim = ag:CreateAnimation("Rotation")
+anim:SetDegrees(360)
+anim:SetDuration(20)
 ag:Play()
 ag:SetLooping("REPEAT")

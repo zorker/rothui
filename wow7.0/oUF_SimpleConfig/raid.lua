@@ -42,7 +42,7 @@ L.C.raid = {
       },
       size = 16,
       align = "CENTER",
-      tag = "[name]",
+      tag = "[name][oUF_Simple:role]",
     },
   },
   --raidmark

@@ -32,7 +32,7 @@ L.C.party = {
         {"TOPRIGHT",-2,10},
       },
       size = 17,
-      tag = "[name] [leader]",
+      tag = "[name][oUF_Simple:leader][oUF_Simple:role]",
     },
     health = {
       enabled = true,

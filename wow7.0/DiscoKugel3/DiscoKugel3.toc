@@ -1,0 +1,6 @@
+## Interface: 70300
+## Title: DiscoKugel3
+## Author: zork
+## Notes: Test adddon for rings and orbs
+
+core.lua

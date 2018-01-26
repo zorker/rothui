@@ -13,6 +13,10 @@ local oUF = L.oUF or oUF
 -- oUF Tags
 -----------------------------
 
+--add player regen to the unitless event tags
+oUF.Tags.SharedEvents["PLAYER_REGEN_DISABLED"] = true
+oUF.Tags.SharedEvents["PLAYER_REGEN_ENABLED"] = true
+
 --tag method: oUF_Simple:health
 oUF.Tags.Methods["oUF_Simple:health"] = function(unit)
   if not UnitIsConnected(unit) then
@@ -30,15 +34,12 @@ end
 oUF.Tags.Events["oUF_Simple:health"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_CONNECTION"
 
 --load tags from the config
-if not L.C.tagMethods and type(L.C.tagMethods) ~= "table" then return end
-if not L.C.tagEvents and type(L.C.tagEvents) ~= "table" then return end
-for key, value in next, L.C.tagMethods do
-  if L.C.tagMethods[key] and L.C.tagEvents[key] then
-    oUF.Tags.Methods[key] = L.C.tagMethods[key]
-    oUF.Tags.Events[key] = L.C.tagEvents[key]
+if L.C.tagMethods and type(L.C.tagMethods) == "table" and
+   L.C.tagEvents  and type(L.C.tagEvents) == "table" then
+  for key, value in next, L.C.tagMethods do
+    if L.C.tagMethods[key] and L.C.tagEvents[key] then
+      oUF.Tags.Methods[key] = L.C.tagMethods[key]
+      oUF.Tags.Events[key] = L.C.tagEvents[key]
+    end
   end
 end
-
---add player regen to the unitless event tags
-oUF.Tags.SharedEvents["PLAYER_REGEN_DISABLED"] = true
-oUF.Tags.SharedEvents["PLAYER_REGEN_ENABLED"] = true

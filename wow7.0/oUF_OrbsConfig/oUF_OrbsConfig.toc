@@ -1,0 +1,18 @@
+## Interface: 70300
+## Author: zork
+## Title: oUF_OrbsConfig
+## Notes: oUF_Orbs config
+## RequiredDeps: rLib
+
+init.lua
+global.lua
+tags.lua
+player.lua
+target.lua
+targettarget.lua
+pet.lua
+focus.lua
+party.lua
+boss.lua
+nameplate.lua
+raid.lua

@@ -1,7 +1,25 @@
 ## Interface: 70300
 ## Title: oUF_Orbs
 ## Author: zork
-## Notes: oUF layout using orbs and rings
-## RequiredDeps: rLib
+## Notes: oUF layout using rings and orbs
+## Dependencies: oUF, rLib, oUF_OrbsConfig
 
-oUF_Orbs.lua
+modules\oAbsorbBar.lua
+modules\oClassBar.lua
+
+core\init.lua
+core\functions.lua
+core\tags.lua
+core\style.lua
+
+templates\player.lua
+templates\target.lua
+templates\targettarget.lua
+templates\pet.lua
+templates\focus.lua
+templates\party.lua
+templates\boss.lua
+templates\nameplate.lua
+templates\raid.lua
+
+core\spawn.lua

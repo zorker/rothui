@@ -19,9 +19,7 @@ L.C = oUF_OrbsConfig
 --mediapath
 L.C.mediapath = "interface\\addons\\"..A.."\\media\\"
 --size
-if not L.C.size then
-  L.C.size = 256
-end
+L.C.size = 256
 
 -----------------------------
 -- rLib slash command

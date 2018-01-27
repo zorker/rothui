@@ -211,21 +211,27 @@ L.F.CreateClassBar = CreateClassBar
 
 --CreateHealthBar
 local function CreateHealthBar(self)
-  --hidden statusbar
+  --orb health statusbar
   local s = CreateFrame("StatusBar", nil, self)
-  s:HookScript("OnValueChanged", function(...)
-    print("OnValueChanged",...)
-  end)
-  hooksecurefunc(s,"SetStatusBarColor", function(...)
-    print("SetStatusBarColor",...)
-  end)
-  --background on self (not statusbar)
-  local t = self:CreateTexture(nil,"BACKGROUND",nil,-8)
-  t:SetTexture(L.C.mediapath.."orb_bg")
-  t:SetAllPoints()
+  s:SetStatusBarTexture(L.C.mediapath.."orb_fill")
+  s:SetPoint("CENTER")
+  s:SetSize(L.C.size*0.63,L.C.size*0.63)
+  s:SetOrientation("VERTICAL")
+  --default color
   if L.C.colors.healthbar and L.C.colors.healthbar.default then
-    --s:SetStatusBarColor(unpack(L.C.colors.healthbar.default))
+    s:SetStatusBarColor(unpack(L.C.colors.healthbar.default))
   end
+  --orb background
+  local bg = s:CreateTexture(nil,"BACKGROUND",nil,-8)
+  bg:SetTexture(L.C.mediapath.."orb_bg")
+  --point to self not statusbar
+  bg:SetAllPoints(self)
+  --make sure the statusbar texture has the correct draw layer
+  s:GetStatusBarTexture():SetDrawLayer("BACKGROUND", -7)
+  --orb highlight
+  local hl = s:CreateTexture(nil,"BACKGROUND",nil,1)
+  hl:SetTexture(L.C.mediapath.."orb_hl")
+  hl:SetAllPoints(self)
   --attributes
   s.colorTapping = self.cfg.healthbar.colorTapping
   s.colorDisconnected = self.cfg.healthbar.colorDisconnected

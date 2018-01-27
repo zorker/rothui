@@ -13,7 +13,7 @@ local A, L = ...
 -----------------------------
 
 --scale
-L.C.scale = 1
+L.C.scale = 0.85
 
 --colors
 L.C.colors = {}

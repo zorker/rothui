@@ -13,5 +13,16 @@ local A, L = ...
 -----------------------------
 
 L.C.target = {
-  enabled = false,
+  enabled = true,
+  point = {"LEFT",UIParent,"CENTER",150,0},
+  scale = 1*L.C.scale,
+  --healthbar
+  healthbar = {
+    colorTapping = true,
+    colorDisconnected = true,
+    colorClass = true,
+    colorReaction = true,
+    colorHealth = true,
+    colorThreat = true,
+  },
 }

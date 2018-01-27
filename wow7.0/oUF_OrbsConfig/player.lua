@@ -14,7 +14,7 @@ local A, L = ...
 
 L.C.player = {
   enabled = true,
-  point = {"RIGHT",UIParent,"CENTER",-120,-120},
+  point = {"RIGHT",UIParent,"CENTER",-150,0},
   scale = 1*L.C.scale,
   --healthbar (cannot be disabled)
   healthbar = {

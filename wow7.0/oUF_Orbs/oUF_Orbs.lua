@@ -18,8 +18,9 @@ L.C = {}
 L.C.mediapath = "interface\\addons\\"..A.."\\media\\"
 local size = 128
 
-local function AddTexture(self,file,index)
-  local t = self:CreateTexture(nil,"BACKGROUND",nil,index)
+local function AddTexture(self,file,index,layer)
+  if not layer then layer = "BACKGROUND" end
+  local t = self:CreateTexture(nil,layer,nil,index)
   t:SetTexture(L.C.mediapath..file)
   t:SetAllPoints()
   return t
@@ -35,8 +36,16 @@ local function CreateUnitFrame()
 
   local orbBg = AddTexture(healthbar,"orb_bg",-8)
   local orbFill = AddTexture(healthbar,"orb_fill",-7)
-  orbFill:SetVertexColor(0,.8,0)
-  local orbHl = AddTexture(healthbar,"orb_hl",-6)
+  orbFill:SetVertexColor(.8,0,0)
+  local orbDebuffGlow = AddTexture(healthbar,"orb_debuff_glow",-6,"BORDER")
+  orbDebuffGlow:SetBlendMode("BLEND")
+  orbDebuffGlow:SetVertexColor(1,0,1)
+  orbDebuffGlow:ClearAllPoints()
+  orbDebuffGlow:SetPoint("CENTER")
+  local glowSize = size*0.7
+  orbDebuffGlow:SetSize(glowSize,glowSize)
+  --orbDebuffGlow:Hide()
+  local orbHl = AddTexture(healthbar,"orb_hl",-7,"BORDER")
 
   local powerbar = CreateFrame("Frame",nil,frame)
   powerbar:SetAllPoints()

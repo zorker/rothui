@@ -14,7 +14,7 @@ local A, L = ...
 
 L.C.target = {
   enabled = true,
-  point = {"LEFT",UIParent,"CENTER",150,0},
+  point = {"LEFT",UIParent,"CENTER",230,0},
   scale = 1*L.C.scale,
   --healthbar
   healthbar = {
@@ -24,5 +24,11 @@ L.C.target = {
     colorReaction = true,
     colorHealth = true,
     colorThreat = true,
+  },
+  --powerbar
+  powerbar = {
+    enabled = true,
+    clockwise = false,
+    colorPower = true,
   },
 }

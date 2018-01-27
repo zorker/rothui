@@ -8,7 +8,7 @@
 
 local A, L = ...
 
-local floor, unpack = floor, unpack
+local floor, unpack, mrad = floor, unpack, math.rad
 
 --functions container
 L.F = {}
@@ -75,6 +75,22 @@ local function CreateBackdrop(self,relativeTo)
   bd:SetBackdrop(backdrop)
   bd:SetBackdropColor(unpack(backdrop.bgColor))
   bd:SetBackdropBorderColor(unpack(backdrop.edgeColor))
+end
+
+--StatusBarOnColorChanged
+local function StatusBarOnColorChanged(self,r,g,b,a)
+  if not self.__texture then return end
+  self.__texture:SetVertexColor(r,g,b,a or 1)
+end
+
+--StatusBarOnValueChanged
+local function StatusBarOnValueChanged(self,value)
+  if not self.__texture then return end
+  local minvalue, maxvalue = self:GetMinMaxValues()
+  local percvalue, direction = value/maxvalue, -1
+  if not self.__texture.clockwise then direction = 1 end
+  local arc = 180*percvalue*direction+self.__texture.baseRotation
+  self.__texture:SetRotation(mrad(arc))
 end
 
 --CreateIcon
@@ -224,7 +240,6 @@ local function CreateHealthBar(self)
   --orb background
   local bg = s:CreateTexture(nil,"BACKGROUND",nil,-8)
   bg:SetTexture(L.C.mediapath.."orb_bg")
-  --point to self not statusbar
   bg:SetAllPoints(self)
   --make sure the statusbar texture has the correct draw layer
   s:GetStatusBarTexture():SetDrawLayer("BACKGROUND", -7)
@@ -250,19 +265,30 @@ local function CreatePowerBar(self)
   if not self.cfg.powerbar or not self.cfg.powerbar.enabled then return end
   --statusbar
   local s = CreateFrame("StatusBar", nil, self)
-  s:SetStatusBarTexture(L.C.textures.statusbar)
-  s:SetSize(unpack(self.cfg.powerbar.size))
-  SetPoint(s,self,self.cfg.powerbar.point)
-  --bg
-  local bg = s:CreateTexture(nil, "BACKGROUND")
-  bg:SetTexture(L.C.textures.statusbarBG)
-  bg:SetAllPoints()
-  s.bg = bg
-  --backdrop
-  CreateBackdrop(s)
+  s:HookScript("OnValueChanged",StatusBarOnValueChanged)
+  hooksecurefunc(s,"SetStatusBarColor",StatusBarOnColorChanged)
+  --ring background
+  local bg = self:CreateTexture(nil,"BACKGROUND",nil,-8)
+  bg:SetTexture(L.C.mediapath.."ring_bottom_bg")
+  bg:SetAllPoints(self)
+  --ring mask
+  local mask = s:CreateMaskTexture()
+  mask:SetTexture(L.C.mediapath.."ring_bottom_mask")
+  mask:SetAllPoints(self)
+  --fill
+  local fill = self:CreateTexture(nil,"BACKGROUND",nil,-7)
+  fill:SetTexture(L.C.mediapath.."ring_bottom_fill")
+  fill:SetPoint("CENTER")
+  --size is kind of wonky because of math mult with sqrt(2) (Blizzards intention was it make the texture fit on rotation)
+  local w,h = self:GetSize()
+  fill:SetSize(sqrt(2)*w,sqrt(2)*h)
+  fill:AddMaskTexture(mask)
+  fill.baseRotation = -180
+  fill.clockwise = self.cfg.powerbar.clockwise
+  fill:SetRotation(mrad(fill.baseRotation))
+  s.__texture = fill
   --attributes
   s.colorPower = self.cfg.powerbar.colorPower
-  s.bg.multiplier = L.C.colors.bgMultiplier
   return s
 end
 L.F.CreatePowerBar = CreatePowerBar

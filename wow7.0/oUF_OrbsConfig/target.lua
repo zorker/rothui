@@ -28,8 +28,17 @@ L.C.target = {
   --powerbar
   powerbar = {
     enabled = true,
+    clockwise = false,
+    segment = "ring_bottom",
+    colorPower = true,
+  },
+  --castbar
+  castbar = {
+    enabled = true,
     clockwise = true,
     segment = "ring_top",
-    colorPower = true,
+    icon = {
+      enabled = true,
+    },
   },
 }

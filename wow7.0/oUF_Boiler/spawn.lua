@@ -157,30 +157,38 @@ oUF:RegisterStyle(A.."PartyStyle", CreatePartyStyle)
 -- Spawn
 -----------------------------
 
--- player
-oUF:SetActiveStyle(A.."PlayerStyle")
-local player = oUF:Spawn("player", A.."Player")
+local function Factory(self)
 
---target
-oUF:SetActiveStyle(A.."TargetStyle")
-local target = oUF:Spawn("target", A.."Target")
+  local oUF = self
 
---spawn party header
-oUF:SetActiveStyle(A.."PartyStyle")
-oUF:SpawnHeader(
-  A.."PartyHeader",
-  L.C.party.header.template,
-  L.C.party.header.visibility,
-  "showPlayer", L.C.party.header.showPlayer,
-  "showSolo",   L.C.party.header.showSolo,
-  "showParty",  L.C.party.header.showParty,
-  "showRaid",   L.C.party.header.showRaid,
-  "point",      L.C.party.header.point,
-  "xOffset",    L.C.party.header.xOffset,
-  "yOffset",    L.C.party.header.yOffset,
-  "oUF-initialConfigFunction", ([[
-    self:SetWidth(%d)
-    self:SetHeight(%d)
-    self:GetParent():SetScale(%f)
-  ]]):format(L.C.party.size[1], L.C.party.size[2], L.C.party.scale)
-):SetPoint(unpack(L.C.party.point))
+  -- player
+  oUF:SetActiveStyle(A.."PlayerStyle")
+  local player = oUF:Spawn("player", A.."Player")
+
+  --target
+  oUF:SetActiveStyle(A.."TargetStyle")
+  local target = oUF:Spawn("target", A.."Target")
+
+  --spawn party header
+  oUF:SetActiveStyle(A.."PartyStyle")
+  oUF:SpawnHeader(
+    A.."PartyHeader",
+    L.C.party.header.template,
+    L.C.party.header.visibility,
+    "showPlayer", L.C.party.header.showPlayer,
+    "showSolo",   L.C.party.header.showSolo,
+    "showParty",  L.C.party.header.showParty,
+    "showRaid",   L.C.party.header.showRaid,
+    "point",      L.C.party.header.point,
+    "xOffset",    L.C.party.header.xOffset,
+    "yOffset",    L.C.party.header.yOffset,
+    "oUF-initialConfigFunction", ([[
+      self:SetWidth(%d)
+      self:SetHeight(%d)
+      self:GetParent():SetScale(%f)
+    ]]):format(L.C.party.size[1], L.C.party.size[2], L.C.party.scale)
+  ):SetPoint(unpack(L.C.party.point))
+
+end
+
+oUF:Factory(Factory)

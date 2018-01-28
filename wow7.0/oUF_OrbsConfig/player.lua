@@ -26,11 +26,14 @@ L.C.player = {
   powerbar = {
     enabled = true,
     clockwise = false,
+    segment = "ring_bottom",
     colorPower = true,
   },
   --castbar
   castbar = {
-    enabled = false,
+    enabled = true,
+    clockwise = true,
+    segment = "ring_top",
     icon = {
       enabled = true,
     },

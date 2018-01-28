@@ -28,7 +28,8 @@ L.C.target = {
   --powerbar
   powerbar = {
     enabled = true,
-    clockwise = false,
+    clockwise = true,
+    segment = "ring_top",
     colorPower = true,
   },
 }

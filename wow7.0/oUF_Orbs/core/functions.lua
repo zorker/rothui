@@ -79,18 +79,29 @@ end
 
 --StatusBarOnColorChanged
 local function StatusBarOnColorChanged(self,r,g,b,a)
-  if not self.__texture then return end
-  self.__texture:SetVertexColor(r,g,b,a or 1)
+  if not self.__fill then return end
+  self.__fill:SetVertexColor(r,g,b,a or 1)
 end
 
 --StatusBarOnValueChanged
 local function StatusBarOnValueChanged(self,value)
-  if not self.__texture then return end
+  if not self.__fill then return end
+  if self:GetStatusBarTexture() and self:GetStatusBarTexture():GetTexture() then
+    self.texture = nil
+    self:SetStatusBarTexture(nil)
+  end
+  if not value then value = self:GetValue() end
+  if value == 0 then
+    self:Hide()
+    return
+  elseif not self:IsShown() then
+    self:Show()
+  end
   local minvalue, maxvalue = self:GetMinMaxValues()
   local percvalue, direction = value/maxvalue, -1
-  if not self.__texture.clockwise then direction = 1 end
-  local arc = 180*percvalue*direction+self.__texture.baseRotation
-  self.__texture:SetRotation(mrad(arc))
+  if not self.__fill.clockwise then direction = 1 end
+  local arc = 180*percvalue*direction+self.__fill.baseRotation
+  self.__fill:SetRotation(mrad(arc))
 end
 
 --CreateIcon
@@ -260,100 +271,68 @@ local function CreateHealthBar(self)
 end
 L.F.CreateHealthBar = CreateHealthBar
 
---CreatePowerBar
-local function CreatePowerBar(self)
-  if not self.cfg.powerbar or not self.cfg.powerbar.enabled then return end
+local function CreateRingBar(self,segment,clockwise)
   --statusbar
   local s = CreateFrame("StatusBar", nil, self)
+  s:SetAllPoints(self)
   s:HookScript("OnValueChanged",StatusBarOnValueChanged)
   hooksecurefunc(s,"SetStatusBarColor",StatusBarOnColorChanged)
   --ring background
-  local bg = self:CreateTexture(nil,"BACKGROUND",nil,-8)
-  bg:SetTexture(L.C.mediapath.."ring_bottom_bg")
+  local bg = s:CreateTexture(nil,"BACKGROUND",nil,-8)
+  bg:SetTexture(L.C.mediapath..segment.."_bg")
   bg:SetAllPoints(self)
   --ring mask
   local mask = s:CreateMaskTexture()
-  mask:SetTexture(L.C.mediapath.."ring_bottom_mask")
+  mask:SetTexture(L.C.mediapath..segment.."_mask")
   mask:SetAllPoints(self)
   --fill
-  local fill = self:CreateTexture(nil,"BACKGROUND",nil,-7)
-  fill:SetTexture(L.C.mediapath.."ring_bottom_fill")
+  local fill = s:CreateTexture(nil,"BACKGROUND",nil,-7)
+  s.__fill = fill
+  fill:AddMaskTexture(mask)
+  fill:SetTexture(L.C.mediapath..segment.."_fill")
   fill:SetPoint("CENTER")
-  --size is kind of wonky because of math mult with sqrt(2) (Blizzards intention was it make the texture fit on rotation)
+  --size is kind of wonky because of math mult with sqrt(2) (Blizzards intention was it make the texture fit to square on rotation)
   local w,h = self:GetSize()
   fill:SetSize(sqrt(2)*w,sqrt(2)*h)
-  fill:AddMaskTexture(mask)
   fill.baseRotation = -180
-  fill.clockwise = self.cfg.powerbar.clockwise
+  fill.clockwise = clockwise
   fill:SetRotation(mrad(fill.baseRotation))
-  s.__texture = fill
+  --highlight
+  local hl = s:CreateTexture(nil,"BACKGROUND",nil,1)
+  hl:SetTexture(L.C.mediapath..segment.."_hl")
+  hl:SetAllPoints(self)
+  return s
+end
+
+--CreatePowerBar
+local function CreatePowerBar(self)
+  if not self.cfg.powerbar or not self.cfg.powerbar.enabled then return end
+  local s = CreateRingBar(self,self.cfg.powerbar.segment,self.cfg.powerbar.clockwise)
   --attributes
   s.colorPower = self.cfg.powerbar.colorPower
   return s
 end
 L.F.CreatePowerBar = CreatePowerBar
 
-local function SetCastBarColorShielded(self)
-  self.__owner:SetStatusBarColor(unpack(L.C.colors.castbar.shielded))
-  self.__owner.bg:SetVertexColor(unpack(L.C.colors.castbar.shieldedBG))
+local function CastBarShieldOnShow(self)
+  self.__fill:SetVertexColor(unpack(L.C.colors.castbar.shielded))
 end
 
-local function SetCastBarColorDefault(self)
-  self.__owner:SetStatusBarColor(unpack(L.C.colors.castbar.default))
-  self.__owner.bg:SetVertexColor(unpack(L.C.colors.castbar.defaultBG))
+local function CastBarShieldOnHide(self)
+  self.__fill:SetVertexColor(unpack(L.C.colors.castbar.default))
 end
 
 --CreateCastBar
 local function CreateCastBar(self)
   if not self.cfg.castbar or not self.cfg.castbar.enabled then return end
-  --statusbar
-  local s = CreateFrame("StatusBar", nil, self)
-  s:SetStatusBarTexture(L.C.textures.statusbar)
-  s:SetFrameStrata("MEDIUM")
-  s:SetSize(unpack(self.cfg.castbar.size))
-  SetPoint(s,self,self.cfg.castbar.point)
-  s:SetStatusBarColor(unpack(L.C.colors.castbar.default))
-  --bg
-  local bg = s:CreateTexture(nil, "BACKGROUND")
-  bg:SetTexture(L.C.textures.statusbar)
-  bg:SetAllPoints()
-  bg:SetVertexColor(unpack(L.C.colors.castbar.defaultBG)) --bg multiplier
-  s.bg = bg
-  --backdrop
-  CreateBackdrop(s)
-  --icon for player and target only
-  if self.cfg.castbar.icon and self.cfg.castbar.icon.enabled then
-    --icon
-    local i = s:CreateTexture(nil,"BACKGROUND",nil,-8)
-    i:SetSize(unpack(self.cfg.castbar.icon.size))
-    SetPoint(i,s,self.cfg.castbar.icon.point)
-    if self.cfg.castbar.icon.texCoord then
-      i:SetTexCoord(unpack(self.cfg.castbar.icon.texCoord))
-    else
-      i:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-    end
-    s.Icon = i
-    --backdrop (for the icon)
-    CreateBackdrop(s,i)
-  end
+  local s = CreateRingBar(self,self.cfg.castbar.segment,self.cfg.castbar.clockwise)
   --shield
   local shield = s:CreateTexture(nil,"BACKGROUND",nil,-8)
-  shield.__owner = s
+  shield.__fill = s.__fill
   s.Shield = shield
   --use a trick here...we use the show/hide on the shield texture to recolor the castbar
-  hooksecurefunc(shield,"Show",SetCastBarColorShielded)
-  hooksecurefunc(shield,"Hide",SetCastBarColorDefault)
-  --text
-  if self.cfg.castbar.name and self.cfg.castbar.name.enabled then
-    local cfg = self.cfg.castbar.name
-    local name = CreateText(s,cfg.font,cfg.size,cfg.outline,cfg.align,cfg.noshadow)
-    if cfg.points then
-      SetPoints(name,s,cfg.points)
-    else
-      SetPoint(name,s,cfg.point)
-    end
-    s.Text = name
-  end
+  hooksecurefunc(shield,"Show",CastBarShieldOnShow)
+  hooksecurefunc(shield,"Hide",CastBarShieldOnHide)
   return s
 end
 L.F.CreateCastBar = CreateCastBar

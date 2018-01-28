@@ -253,7 +253,25 @@ local function CreateHealthBar(self)
   bg:SetTexture(L.C.mediapath.."orb_bg")
   bg:SetAllPoints(self)
   --make sure the statusbar texture has the correct draw layer
-  s:GetStatusBarTexture():SetDrawLayer("BACKGROUND", -7)
+  s:GetStatusBarTexture():SetDrawLayer("BACKGROUND", -6)
+  --low health glow
+  local lowhp = s:CreateTexture(nil,"BACKGROUND",nil,-4)
+  lowhp:SetTexture(L.C.mediapath.."orb_health_glow")
+  lowhp:SetPoint("CENTER")
+  lowhp:SetSize(L.C.size*0.68,L.C.size*0.68)
+  lowhp:SetVertexColor(1,0,0)
+  lowhp:SetBlendMode("BLEND")
+  lowhp:Hide()
+  s.__lowhp = lowhp
+  --debuff glow
+  local debuff = s:CreateTexture(nil,"BACKGROUND",nil,-3)
+  debuff:SetTexture(L.C.mediapath.."orb_debuff_glow")
+  debuff:SetPoint("CENTER")
+  debuff:SetSize(L.C.size*0.68,L.C.size*0.68)
+  debuff:SetVertexColor(1,0,1)
+  debuff:SetBlendMode("BLEND")
+  debuff:Hide()
+  s.__debuff = debuff
   --orb highlight
   local hl = s:CreateTexture(nil,"BACKGROUND",nil,1)
   hl:SetTexture(L.C.mediapath.."orb_hl")
@@ -281,12 +299,17 @@ local function CreateRingBar(self,segment,clockwise)
   local bg = s:CreateTexture(nil,"BACKGROUND",nil,-8)
   bg:SetTexture(L.C.mediapath..segment.."_bg")
   bg:SetAllPoints(self)
+  --ring background 2 (based on the mask for additional shadow)
+  local bg2 = s:CreateTexture(nil,"BACKGROUND",nil,-7)
+  bg2:SetTexture(L.C.mediapath..segment.."_mask")
+  bg2:SetAllPoints(self)
+  bg2:SetVertexColor(0,0,0,0.8)
   --ring mask
   local mask = s:CreateMaskTexture()
   mask:SetTexture(L.C.mediapath..segment.."_mask")
   mask:SetAllPoints(self)
   --fill
-  local fill = s:CreateTexture(nil,"BACKGROUND",nil,-7)
+  local fill = s:CreateTexture(nil,"BACKGROUND",nil,-6)
   s.__fill = fill
   fill:AddMaskTexture(mask)
   fill:SetTexture(L.C.mediapath..segment.."_fill")
@@ -327,6 +350,30 @@ end
 local function CreateCastBar(self)
   if not self.cfg.castbar or not self.cfg.castbar.enabled then return end
   local s = CreateRingBar(self,self.cfg.castbar.segment,self.cfg.castbar.clockwise)
+  --icon
+  if self.cfg.castbar.icon and self.cfg.castbar.icon.enabled then
+    local size = self.cfg.castbar.icon.size or 72
+    local point = self.cfg.castbar.icon.point or {"CENTER","LEFT",36,0}
+    --bg
+    local bg = s:CreateTexture(nil,"BACKGROUND",nil,2)
+    bg:SetTexture(L.C.mediapath.."icon_bg")
+    --icon
+    local i = s:CreateTexture(nil,"BACKGROUND",nil,3)
+    i:SetSize(size,size)
+    SetPoint(i,s,point)
+    --highlight
+    local hl = s:CreateTexture(nil,"BACKGROUND",nil,4)
+    hl:SetTexture(L.C.mediapath.."icon_hl")
+    --portrait mask
+    local mask = s:CreateMaskTexture()
+    mask:SetTexture(L.C.mediapath.."icon_mask")
+    --points
+    bg:SetAllPoints(i)
+    hl:SetAllPoints(i)
+    mask:SetAllPoints(i)
+    i:AddMaskTexture(mask)
+    s.Icon = i
+  end
   --shield
   local shield = s:CreateTexture(nil,"BACKGROUND",nil,-8)
   shield.__fill = s.__fill

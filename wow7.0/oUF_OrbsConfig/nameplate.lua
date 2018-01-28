@@ -33,6 +33,7 @@ L.C.nameplate = {
     segment = "ring_top",
     icon = {
       enabled = true,
+      size = 80,
     },
   },
 }

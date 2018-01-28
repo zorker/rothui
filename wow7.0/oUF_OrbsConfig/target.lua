@@ -14,7 +14,7 @@ local A, L = ...
 
 L.C.target = {
   enabled = true,
-  point = {"LEFT",UIParent,"CENTER",230,0},
+  point = {"LEFT",UIParent,"CENTER",250,-150},
   scale = 1*L.C.scale,
   --healthbar
   healthbar = {

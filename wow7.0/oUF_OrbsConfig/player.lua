@@ -14,7 +14,7 @@ local A, L = ...
 
 L.C.player = {
   enabled = true,
-  point = {"RIGHT",UIParent,"CENTER",-230,0},
+  point = {"RIGHT",UIParent,"CENTER",-250,-150},
   scale = 1*L.C.scale,
   --healthbar (cannot be disabled)
   healthbar = {
@@ -36,6 +36,8 @@ L.C.player = {
     segment = "ring_top",
     icon = {
       enabled = true,
+      point = {"CENTER","LEFT",36,0},
+      size = 72,
     },
   },
   --classbar

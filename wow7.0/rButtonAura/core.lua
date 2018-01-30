@@ -36,7 +36,7 @@ local aura = {
   spellId         = 132404,
   filter          = "HELPFUL|PLAYER",
   useBar          = true,
-  barColor        = {0,1,0},
+  barColor        = {0,1,0,0.8},
   useBorder       = false,
   borderColor     = {0,1,0,0.5},
 }
@@ -49,7 +49,7 @@ local aura = {
   spellId         = 190456,
   filter          = "HELPFUL|PLAYER",
   useBar          = true,
-  barColor        = {0,1,0},
+  barColor        = {0,1,0,0.8},
   useBorder       = false,
   borderColor     = {0,1,0},
 }
@@ -125,12 +125,14 @@ end
 
 --Login
 local function Login()
+  print(A,"Login")
   numAuras = #auras
   if numAuras == 0 then return end
   local error = false
   for i, aura in next, auras do
     if not aura.border then
       print(A,aura.spellId,"border not found")
+      error = true
       break
     end
     aura.spellName, aura.spellRank = GetSpellInfo(aura.spellId)

@@ -3,5 +3,9 @@
 ## Author: zork
 ## Notes: Highlights action button borders when a matching unit aura is present
 ## RequiredDeps: rLib
+## SavedVariables: rButtonAura_DBG
+## SavedVariablesPerCharacter: rButtonAura_DBC
 
+db.lua
+panel.lua
 core.lua

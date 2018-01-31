@@ -28,6 +28,7 @@ end
 local function GetDBCDefault()
   return {
     type = "C",
+    ["SPELLS"] = {},
   }
 end
 
@@ -35,7 +36,6 @@ end
 local function ResetDBG()
   print(A,"reseting rButtonAura_DBG")
   rButtonAura_DBG = GetDBGDefault()
-  L.DB.G = rButtonAura_DBG
 end
 L.F.ResetDBG = ResetDBG
 
@@ -43,9 +43,20 @@ L.F.ResetDBG = ResetDBG
 local function ResetDBC()
   print(A,"reseting rButtonAura_DBC")
   rButtonAura_DBC = GetDBCDefault()
-  L.DB.C = rButtonAura_DBC
 end
 L.F.ResetDBC = ResetDBC
+
+--AddAuraToDBC
+local function AddAuraToDBC(spellId,data)
+  rButtonAura_DBC["SPELLS"]["SPELL-"..spellId] = data
+end
+L.F.AddAuraToDBC = AddAuraToDBC
+
+--RemoveAuraFromDBC
+local function RemoveAuraFromDBC(spellId)
+  rButtonAura_DBC["SPELLS"]["SPELL-"..spellId] = nil
+end
+L.F.RemoveAuraFromDBC = RemoveAuraFromDBC
 
 --VariablesLoaded
 local function VariablesLoaded()

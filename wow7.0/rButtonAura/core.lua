@@ -161,5 +161,5 @@ local function Login()
 end
 
 --RegisterCallback PLAYER_LOGIN
-rLib:RegisterCallback("PLAYER_LOGIN", Login)
+--rLib:RegisterCallback("PLAYER_LOGIN", Login)
 

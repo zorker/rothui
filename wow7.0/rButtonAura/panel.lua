@@ -15,16 +15,21 @@ L.P = {}
 -- Functions
 -----------------------------
 
-local function Okay(self,...)
+--IOFPanelOkay
+local function IOFPanelOkay(panel,...)
   --xpcall(function(...) print(...) end, geterrorhandler())
-  print(self:GetName(),"okay")
+  print(panel:GetName(),"okay")
 end
 
-local function Default(self,...)
-  print(self:GetName(),"default")
+--IOFPanelDefault
+local function IOFPanelDefault(panel,...)
+  print(panel:GetName(),"default")
+  L.F.ResetDBG()
+  L.F.ResetDBC()
 end
 
-local function Refresh(panel,...)
+--IOFPanelRefresh
+local function IOFPanelRefresh(panel,...)
   print(panel:GetName(),"refresh")
   for i, button in next, panel.buttons do
     local type, id, subType, spellID = GetActionInfo(button.blizzardButton.action)
@@ -37,17 +42,20 @@ local function Refresh(panel,...)
   end
 end
 
-local function Cancel(self,...)
-  print(self:GetName(),"cancel")
+--IOFPanelCancel
+local function IOFPanelCancel(panel,...)
+  print(panel:GetName(),"cancel")
 end
 
-local function InitPanelButtons(panel)
-  panel.okay = Okay
-  panel.cancel = Cancel
-  panel.refresh = Refresh
-  panel.default = Default
+--InitIOFButtons
+local function InitIOFButtons(panel)
+  panel.okay = IOFPanelOkay
+  panel.cancel = IOFPanelCancel
+  panel.refresh = IOFPanelRefresh
+  panel.default = IOFPanelDefault
 end
 
+--CreatePanelHeader
 local function CreatePanelHeader(panel,title,subtitle)
   local t = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
   t:SetPoint("TOPLEFT", 16, -16)
@@ -63,10 +71,37 @@ local function CreatePanelHeader(panel,title,subtitle)
   st:SetText(subtitle)
 end
 
-local function CreatePanelButton(panel,blizzardButton,i,r)
+--PanelActionButtonOnClick
+local function PanelActionButtonOnClick(button)
+  local panel = button.__owner
+  if panel.activeActionButton and panel.activeActionButton ~= button and panel.activeActionButton:GetChecked() then
+    --disable the last checked action button, only one may survive
+    panel.activeActionButton:SetChecked(false)
+  end
+  if button:GetChecked() then
+    panel.activeActionButton = button
+  else
+    panel.activeActionButton = nil
+  end
+end
+
+--more templates!
+
+--CheckButton "OptionsCheckButtonTemplate"
+--CheckButton "OptionsSmallCheckButtonTemplate"
+--CheckButton "InterfaceOptionsCheckButtonTemplate"
+--CheckButton "UICheckButtonTemplate"
+--CheckButton "UIRadioButtonTemplate"
+--Slider "OptionsSliderTemplate"
+--EditBox "InputBoxTemplate"
+
+--CreatePanelActionButton
+local function CreatePanelActionButton(panel,blizzardButton,i,r)
   if not blizzardButton then return end
   local k = i+NUM_ACTIONBAR_BUTTONS*r
-  local button = CreateFrame("Button", A.."PanelButton"..k, panel, "ActionButtonTemplate, SecureHandlerClickTemplate")
+  --"ActionButtonTemplate, SecureHandlerClickTemplate"
+  local button = CreateFrame("Checkbutton", A.."PanelButton"..k, panel, "ActionButtonTemplate")
+  button.__owner = panel
   button.blizzardButton = blizzardButton
   button:SetSize(32,32)
   if k == 1 then
@@ -78,26 +113,31 @@ local function CreatePanelButton(panel,blizzardButton,i,r)
     local prevButton = _G[A.."PanelButton"..(k-1)]
     button:SetPoint("LEFT", prevButton, "RIGHT", 8, 0)
   end
+  button:HookScript("OnClick",PanelActionButtonOnClick)
   table.insert(panel.buttons,button)
 end
 
-local function CreatePanelButtons(panel)
+--CreatePanelActionButtons
+local function CreatePanelActionButtons(panel)
   panel.buttons = {}
   for i = 1, NUM_ACTIONBAR_BUTTONS do
-    CreatePanelButton(panel,_G["ActionButton"..i],i,0)
-    CreatePanelButton(panel,_G["MultiBarBottomLeftButton"..i],i,1)
-    CreatePanelButton(panel,_G["MultiBarBottomRightButton"..i],i,2)
-    CreatePanelButton(panel,_G["MultiBarRightButton"..i],i,3)
-    CreatePanelButton(panel,_G["MultiBarLeftButton"..i],i,4)
+    CreatePanelActionButton(panel,_G["ActionButton"..i],i,0)
+    CreatePanelActionButton(panel,_G["MultiBarBottomLeftButton"..i],i,1)
+    CreatePanelActionButton(panel,_G["MultiBarBottomRightButton"..i],i,2)
+    CreatePanelActionButton(panel,_G["MultiBarRightButton"..i],i,3)
+    CreatePanelActionButton(panel,_G["MultiBarLeftButton"..i],i,4)
   end
 end
 
---mainPanel
+-----------------------------
+-- Main Panel
+-----------------------------
+
 local panel = CreateFrame("Frame", A.."MainPanel", UIParent)
 panel.name = A
-InitPanelButtons(panel)
-CreatePanelHeader(panel,"Buttons","Setup your aura buttons here.")
-CreatePanelButtons(panel)
+InitIOFButtons(panel)
+CreatePanelHeader(panel,"Button Aura Setup","Pick one of the action buttons and configure the aura you want to display on the button.")
+CreatePanelActionButtons(panel)
 InterfaceOptions_AddCategory(panel)
 L.P.mainPanel = panel
 
@@ -105,6 +145,6 @@ L.P.mainPanel = panel
 --[[ L.P.childPanel1 = CreateFrame("Frame", A.."ChildPanel1", L.P.mainPanel)
 L.P.childPanel1.name = L.P.childPanel1:GetName()
 L.P.childPanel1.parent = L.P.mainPanel.name
-InitPanelButtons(L.P.childPanel1)
+CreatePanelHeader(panel,"ChildPanel1Header","Nothing here yet.")
 InterfaceOptions_AddCategory(L.P.childPanel1) ]]
 

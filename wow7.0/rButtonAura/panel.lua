@@ -35,6 +35,11 @@ end
 --ActionButtonOnClick
 local function ActionButtonOnClick(button)
   local panel = button.__owner
+  local type, id, subType, spellID = GetActionInfo(button.blizzardButton.action)
+  if not type then
+    button:SetChecked(false)
+    return
+  end
   if panel.activeActionButton and panel.activeActionButton ~= button and panel.activeActionButton:GetChecked() then
     --disable the last checked action button, only one may survive
     panel.activeActionButton:SetChecked(false)
@@ -56,7 +61,7 @@ local function CreateActionButton(panel,blizzardButton,i,r)
   button.blizzardButton = blizzardButton
   button:SetSize(32,32)
   if k == 1 then
-    button:SetPoint("TOPLEFT", 16, -66)
+    button:SetPoint("TOPLEFT", panel.frame.subtitle or panel.frame.title, "BOTTOMLEFT", 0, -16)
   elseif i == 1 then
     local aboveButton = _G[panel:GetName().."Button"..(k-NUM_ACTIONBAR_BUTTONS)]
     button:SetPoint("TOPLEFT", aboveButton, "BOTTOMLEFT", 0, -8)
@@ -70,7 +75,6 @@ end
 
 --CreateActionButtons
 local function CreateActionButtons(panel)
-  local title, subtitle = CreateHeader(panel,"Buttons","Select the actionbutton you want to configure.",16,-16)
   panel.buttons = {}
   for i = 1, NUM_ACTIONBAR_BUTTONS do
     CreateActionButton(panel,_G["ActionButton"..i],i,0)
@@ -81,13 +85,27 @@ local function CreateActionButtons(panel)
   end
 end
 
---AuraButtonOnClick
-local function AuraButtonOnClick(button,mouseButton)
+--OnClickAuraButton
+local function OnClickAuraButton(button,mouseButton)
   print(button:GetName(),mouseButton,button.spellId)
   if mouseButton == "RightButton" then
     L.F.RemoveAuraFromDBC(button.spellId)
     button.__owner:refresh()
   end
+end
+
+--OnEnterAuraButton
+local function OnEnterAuraButton(self)
+  GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT",-6,6)
+  GameTooltip:AddLine(self.spellName, 0, 1, 0.5, 1, 1, 1)
+  GameTooltip:AddDoubleLine("|cff0099ffSpell ID|r",self.spellId)
+  GameTooltip:AddLine("Right-click to remove.", 1, 1, 1, 1, 1, 1)
+  GameTooltip:Show()
+end
+
+--OnLeaveAuraButton
+local function OnLeaveAuraButton()
+  GameTooltip:Hide()
 end
 
 --CreateAuraButton
@@ -97,24 +115,51 @@ local function CreateAuraButton(panel,i)
   button:RegisterForClicks("AnyUp")
   button.__owner = panel
   button:SetSize(32,32)
+  local numCols = 15
   if i == 1 then
-    button:SetPoint("TOPLEFT", panel.frame.editbox, "BOTTOMLEFT", 0, -8)
+    button:SetPoint("TOPLEFT", panel.frame.editbox, "BOTTOMLEFT", 0, -16)
+  elseif mod(i,numCols) == 1 then
+    local aboveButton = _G[panel:GetName().."Button"..(i-numCols)]
+    button:SetPoint("TOPLEFT", aboveButton, "BOTTOMLEFT", 0, -8)
   else
     local prevButton = _G[panel:GetName().."Button"..(i-1)]
     button:SetPoint("LEFT", prevButton, "RIGHT", 8, 0)
   end
-  button:HookScript("OnClick",AuraButtonOnClick)
-  button:HookScript("OnEnter", function(self)
-    GameTooltip:SetOwner(self, "ANCHOR_TOPLEFT",-6,6)
-    GameTooltip:AddLine(self.spellName, 0, 1, 0.5, 1, 1, 1)
-    GameTooltip:AddDoubleLine("|cff0099ffSpell ID|r",self.spellId)
-    GameTooltip:AddLine("Right-click to remove.", 1, 1, 1, 1, 1, 1)
-    GameTooltip:Show()
-  end)
-  button:HookScript("OnLeave", function(self)
-    GameTooltip:Hide()
-  end)
+  button:HookScript("OnClick",OnClickAuraButton)
+  button:HookScript("OnEnter", OnEnterAuraButton)
+  button:HookScript("OnLeave", OnLeaveAuraButton)
   return button
+end
+
+--OnEnterPressedSpellSearch
+local function OnEnterPressedSpellSearch(self)
+  local value = math.max(math.floor(self:GetNumber()),1)
+  self:SetText(value)
+  if value == 1 then print(A,"Bad Aura ID!") return end
+  local name, rank, icon, castingTime, minRange, maxRange, spellId = GetSpellInfo(value)
+  if not name then
+    print(A,"Aura not found!")
+    return
+  end
+  print(A,spellId,name,"Aura added")
+  L.F.AddAuraToDBC(spellId,{name, rank, icon, castingTime, minRange, maxRange, spellId})
+  self:GetParent():GetParent():refresh()
+end
+
+--CreateMainPanelFrame
+local function CreateMainPanelFrame(panel)
+  print(A,panel:GetName(),"create")
+  local frame = CreateFrame("Frame",nil,panel)
+  panel.frame = frame
+  frame:SetPoint("TOPLEFT",16,-16)
+  frame:SetPoint("BOTTOMRIGHT",-16,16)
+  local bg = frame:CreateTexture(nil,"BACKGROUND",nil,-8)
+  bg:SetAllPoints()
+  bg:SetColorTexture(0,1,0,0.5)
+  bg:Hide()
+  frame.title, frame.subtitle = CreateHeader(frame,"Buttons","Select the actionbutton you want to configure.")
+  --action buttons
+  CreateActionButtons(panel)
 end
 
 --CreateChildPanel1Frame
@@ -130,21 +175,9 @@ local function CreateChildPanel1Frame(panel)
   bg:Hide()
   frame.title, frame.subtitle = CreateHeader(frame,"Character Aura Database","Enter any aura spellid in the following search field and hit return to add it. Right-click any button to remove the aura.")
   frame.editbox = CreateFrame("EditBox", panel:GetName().."SpellSearch", frame, "SearchBoxTemplate")
-  frame.editbox:SetPoint("TOPLEFT", frame.subtitle or frame.title, "BOTTOMLEFT", 0, -4)
-  frame.editbox:SetSize(120,30)
-  frame.editbox:SetScript("OnEnterPressed", function(self)
-    local value = math.max(math.floor(self:GetNumber()),1)
-    self:SetText(value)
-    if value == 1 then print(A,"Bad Aura ID!") return end
-    local name, rank, icon, castingTime, minRange, maxRange, spellId = GetSpellInfo(value)
-    if not name then
-      print(A,"Aura not found!")
-      return
-    end
-    print(A,spellId,name,"Aura added")
-    L.F.AddAuraToDBC(spellId,{name, rank, icon, castingTime, minRange, maxRange, spellId})
-    panel:refresh()
-  end)
+  frame.editbox:SetPoint("TOPLEFT", frame.subtitle or frame.title, "BOTTOMLEFT", 0, -12)
+  frame.editbox:SetSize(120,20)
+  frame.editbox:SetScript("OnEnterPressed", OnEnterPressedSpellSearch)
 end
 
 --SubmitIOFPanel
@@ -214,8 +247,9 @@ mainPanel.okay = SubmitIOFPanel
 mainPanel.cancel = CancelIOFPanel
 mainPanel.refresh = RefreshMainPanel
 mainPanel.default = ResetIOFPanel
-CreateActionButtons(mainPanel)
+CreateMainPanelFrame(mainPanel)
 InterfaceOptions_AddCategory(mainPanel)
+L.P.mainPanel = mainPanel
 
 --childPanel1
 local childPanel1 = CreateFrame("Frame", A.."ChildPanel1", mainPanel)
@@ -227,16 +261,6 @@ childPanel1.refresh = RefreshChildPanel1
 childPanel1.default = ResetIOFPanel
 CreateChildPanel1Frame(childPanel1)
 InterfaceOptions_AddCategory(childPanel1)
-
-
-
-
-
-
-
-
-
-L.P.mainPanel = panel
 L.P.childPanel1 = childPanel1
 
 --[[ local radio = CreateFrame("CheckButton",A.."PanelRadio1",panel,"UIRadioButtonTemplate")

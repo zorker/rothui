@@ -33,6 +33,10 @@ if L.F.CreateFocusStyle then
   oUF:RegisterStyle(A.."Focus", L.F.CreateFocusStyle)
 end
 
+if L.F.CreateMouseoverStyle then
+  oUF:RegisterStyle(A.."Mouseover", L.F.CreateMouseoverStyle)
+end
+
 if L.F.CreatePartyStyle then
   oUF:RegisterStyle(A.."Party", L.F.CreatePartyStyle)
 end
@@ -57,7 +61,6 @@ local function Factory(oUF)
 
   --spawn player
   if L.F.CreatePlayerStyle then
-    --oUF:RegisterStyle(A.."Player", L.F.CreatePlayerStyle)
     oUF:SetActiveStyle(A.."Player")
     local player = oUF:Spawn("player", A.."Player")
     --show/hide the frame on a given state driver
@@ -71,21 +74,18 @@ local function Factory(oUF)
 
   --spawn target
   if L.F.CreateTargetStyle then
-    --oUF:RegisterStyle(A.."Target", L.F.CreateTargetStyle)
     oUF:SetActiveStyle(A.."Target")
     oUF:Spawn("target", A.."Target")
   end
 
   --spawn targettarget
   if L.F.CreateTargetTargetStyle then
-    --oUF:RegisterStyle(A.."TargetTarget", L.F.CreateTargetTargetStyle)
     oUF:SetActiveStyle(A.."TargetTarget")
     oUF:Spawn("targettarget", A.."TargetTarget")
   end
 
   --spawn pet
   if L.F.CreatePetStyle then
-    --oUF:RegisterStyle(A.."Pet", L.F.CreatePetStyle)
     oUF:SetActiveStyle(A.."Pet")
     local pet = oUF:Spawn("pet", A.."Pet")
     --show/hide the frame on a given state driver
@@ -99,14 +99,18 @@ local function Factory(oUF)
 
   --spawn focus
   if L.F.CreateFocusStyle then
-    --oUF:RegisterStyle(A.."Focus", L.F.CreateFocusStyle)
     oUF:SetActiveStyle(A.."Focus")
     oUF:Spawn("focus", A.."Focus")
   end
 
+  --spawn mouseover
+  if L.F.CreateMouseoverStyle then
+    oUF:SetActiveStyle(A.."Mouseover")
+    oUF:Spawn("mouseover", A.."Mouseover")
+  end
+
   --spawn party
   if L.F.CreatePartyStyle then
-    --oUF:RegisterStyle(A.."Party", L.F.CreatePartyStyle)
     oUF:SetActiveStyle(A.."Party")
     oUF:SpawnHeader(
       A.."PartyHeader",
@@ -129,7 +133,6 @@ local function Factory(oUF)
 
   --spawn boss frames
   if L.F.CreateBossStyle then
-    --oUF:RegisterStyle(A.."Boss", L.F.CreateBossStyle)
     oUF:SetActiveStyle(A.."Boss")
     local boss = {}
     for i = 1, MAX_BOSS_FRAMES do
@@ -144,14 +147,12 @@ local function Factory(oUF)
 
   --spawn nameplates
   if L.F.CreateNamePlateStyle then
-    --oUF:RegisterStyle(A.."Nameplate",L.F.CreateNamePlateStyle)
     oUF:SetActiveStyle(A.."Nameplate")
     oUF:SpawnNamePlates(A, L.C.NamePlateCallback, L.C.NamePlateCVars)
   end
 
   --spawn raid
   if L.F.CreateRaidStyle then
-    --oUF:RegisterStyle(A.."Raid", L.F.CreateRaidStyle)
     oUF:SetActiveStyle(A.."Raid")
     for i=1, NUM_RAID_GROUPS do
       oUF:SpawnHeader(

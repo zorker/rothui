@@ -12,6 +12,7 @@ target.lua
 targettarget.lua
 pet.lua
 focus.lua
+mouseover.lua
 party.lua
 boss.lua
 nameplate.lua

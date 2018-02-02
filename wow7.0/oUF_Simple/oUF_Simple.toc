@@ -17,6 +17,7 @@ templates\target.lua
 templates\targettarget.lua
 templates\pet.lua
 templates\focus.lua
+templates\mouseover.lua
 templates\party.lua
 templates\boss.lua
 templates\nameplate.lua

@@ -34,6 +34,7 @@ end
 
 --ActionButtonOnClick
 local function ActionButtonOnClick(button)
+  PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
   local panel = button.__owner
   local type, id, subType, spellID = GetActionInfo(button.blizzardButton.action)
   if not type then
@@ -87,6 +88,7 @@ end
 
 --OnClickAuraButton
 local function OnClickAuraButton(button,mouseButton)
+  PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
   print(button:GetName(),mouseButton,button.spellId)
   if mouseButton == "RightButton" then
     L.F.RemoveAuraFromDBC(button.spellId)
@@ -146,6 +148,26 @@ local function OnEnterPressedSpellSearch(self)
   self:GetParent():GetParent():refresh()
 end
 
+--OnClickColorButton
+local function OnClickColorButton(button)
+  print(button:GetName(),button.icon:GetVertexColor())
+  PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
+  local r, g, b, a = button.icon:GetVertexColor()
+  ColorPickerFrame.hasOpacity = button.hasOpacity
+  ColorPickerFrame.opacity = 1 - (a or 1)
+  ColorPickerFrame.func = function()
+    local r, g, b = ColorPickerFrame:GetColorRGB()
+    local a = button.hasOpacity and (1 - OpacitySliderFrame:GetValue()) or 1
+    button.icon:SetVertexColor(r,g,b,a)
+  end
+  ColorPickerFrame.opacityFunc = ColorPickerFrame.func
+  ColorPickerFrame.cancelFunc = function()
+    button.icon:SetVertexColor(r,g,b,a)
+  end
+  ColorPickerFrame:SetColorRGB(r or 1, g or 1, b or 1)
+  ShowUIPanel(ColorPickerFrame)
+end
+
 --CreateMainPanelFrame
 local function CreateMainPanelFrame(panel)
   print(A,panel:GetName(),"create")
@@ -160,6 +182,23 @@ local function CreateMainPanelFrame(panel)
   frame.title, frame.subtitle = CreateHeader(frame,"Buttons","Select the actionbutton you want to configure.")
   --action buttons
   CreateActionButtons(panel)
+  --color picker test
+  local button = CreateFrame("Button", panel:GetName().."BorderColorButton", frame, "ActionButtonTemplate")
+  button:SetSize(32,32)
+  button:SetPoint("BOTTOMLEFT",0,0)
+  button.icon:SetColorTexture(1,1,1)
+  button.icon:SetVertexColor(0,1,0,1)
+  button.hasOpacity = true
+  button:SetScript("OnClick", OnClickColorButton)
+  --color picker test
+  local button2 = CreateFrame("Button", panel:GetName().."BarColorButton", frame, "ActionButtonTemplate")
+  button2:SetSize(32,32)
+  button2:SetPoint("BOTTOMLEFT",100,0)
+  button2.icon:SetColorTexture(1,1,1)
+  button2.icon:SetVertexColor(0,1,1,1)
+  button2.hasOpacity = true
+  button2:SetScript("OnClick", OnClickColorButton)
+
 end
 
 --CreateChildPanel1Frame

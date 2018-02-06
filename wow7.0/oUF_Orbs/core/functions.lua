@@ -303,7 +303,7 @@ local function CreateRingBar(self,segment,clockwise)
   local bg2 = s:CreateTexture(nil,"BACKGROUND",nil,-7)
   bg2:SetTexture(L.C.mediapath..segment.."_mask")
   bg2:SetAllPoints(self)
-  bg2:SetVertexColor(0,0,0,0.8)
+  bg2:SetVertexColor(0,0,0,0.6)
   --ring mask
   local mask = s:CreateMaskTexture()
   mask:SetTexture(L.C.mediapath..segment.."_mask")

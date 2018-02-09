@@ -62,33 +62,36 @@ local function SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, n
   end
 end
 
-local function SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, buttonHeight, buttonMargin, numCols, startPoint)
+local function SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, buttonHeight, buttonMargin, numCols, startPoint, rowMargin)
   local numButtons = # buttonList
   numCols = max(min(numButtons, numCols),1)
   local numRows = max(ceil(numButtons/numCols),1)
   local frameWidth = numCols*buttonWidth + (numCols-1)*buttonMargin + 2*framePadding
   local frameHeight = numRows*buttonHeight + (numRows-1)*buttonMargin + 2*framePadding
   frame:SetSize(frameWidth,frameHeight)
+  if not rowMargin then
+    rowMargin = buttonMargin
+  end
   --TOPLEFT
   --1. TL, f, p, -p
   --2. T, rb-1, B, 0, -m
   --3. L, b-1, R, m, 0
   if startPoint == "TOPLEFT" then
-    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, framePadding, -framePadding, "TOP", "BOTTOM", 0, -buttonMargin, "LEFT", "RIGHT", buttonMargin, 0)
+    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, framePadding, -framePadding, "TOP", "BOTTOM", 0, -rowMargin, "LEFT", "RIGHT", buttonMargin, 0)
   --end
   --TOPRIGHT
   --1. TR, f, -p, -p
   --2. T, rb-1, B, 0, -m
   --3. R, b-1, L, -m, 0
   elseif startPoint == "TOPRIGHT" then
-    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, -framePadding, -framePadding, "TOP", "BOTTOM", 0, -buttonMargin, "RIGHT", "LEFT", -buttonMargin, 0)
+    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, -framePadding, -framePadding, "TOP", "BOTTOM", 0, -rowMargin, "RIGHT", "LEFT", -buttonMargin, 0)
   --end
   --BOTTOMRIGHT
   --1. BR, f, -p, p
   --2. B, rb-1, T, 0, m
   --3. R, b-1, L, -m, 0
   elseif startPoint == "BOTTOMRIGHT" then
-    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, -framePadding, framePadding, "BOTTOM", "TOP", 0, buttonMargin, "RIGHT", "LEFT", -buttonMargin, 0)
+    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, -framePadding, framePadding, "BOTTOM", "TOP", 0, rowMargin, "RIGHT", "LEFT", -buttonMargin, 0)
   --end
   --BOTTOMLEFT
   --1. BL, f, p, p
@@ -97,7 +100,7 @@ local function SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, bu
   --elseif startPoint == "BOTTOMLEFT" then
   else
     startPoint = "BOTTOMLEFT"
-    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, framePadding, framePadding, "BOTTOM", "TOP", 0, buttonMargin, "LEFT", "RIGHT", buttonMargin, 0)
+    SetupButtonPoints(frame, buttonList, buttonWidth, buttonHeight, numCols, startPoint, framePadding, framePadding, "BOTTOM", "TOP", 0, rowMargin, "LEFT", "RIGHT", buttonMargin, 0)
   end
 end
 
@@ -115,7 +118,7 @@ function rBuffFrame:CreateBuffFrame(addonName,cfg)
     --add all other buff buttons
     buttonList = GetButtonList("BuffButton",BUFF_MAX_DISPLAY,buttonList)
     --adjust frame by button list
-    SetupButtonFrame(frame, cfg.framePadding, buttonList, cfg.buttonWidth, cfg.buttonHeight, cfg.buttonMargin, cfg.numCols, cfg.startPoint)
+    SetupButtonFrame(frame, cfg.framePadding, buttonList, cfg.buttonWidth, cfg.buttonHeight, cfg.buttonMargin, cfg.numCols, cfg.startPoint, cfg.rowMargin)
   end
   hooksecurefunc("BuffFrame_UpdateAllBuffAnchors", UpdateAllBuffAnchors)
   --add drag functions

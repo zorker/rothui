@@ -66,12 +66,12 @@ local function SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, bu
   local numButtons = # buttonList
   numCols = max(min(numButtons, numCols),1)
   local numRows = max(ceil(numButtons/numCols),1)
-  local frameWidth = numCols*buttonWidth + (numCols-1)*buttonMargin + 2*framePadding
-  local frameHeight = numRows*buttonHeight + (numRows-1)*buttonMargin + 2*framePadding
-  frame:SetSize(frameWidth,frameHeight)
   if not rowMargin then
     rowMargin = buttonMargin
   end
+  local frameWidth = numCols*buttonWidth + (numCols-1)*buttonMargin + 2*framePadding
+  local frameHeight = numRows*buttonHeight + (numRows-1)*rowMargin + 2*framePadding
+  frame:SetSize(frameWidth,frameHeight)
   --TOPLEFT
   --1. TL, f, p, -p
   --2. T, rb-1, B, 0, -m

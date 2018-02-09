@@ -23,6 +23,7 @@ local buffFrameConfig = {
   buttonMargin    = 5,
   numCols         = 10,
   startPoint      = "TOPRIGHT",
+  --rowMargin       = 20,
 }
 --create
 local buffFrame = rBuffFrame:CreateBuffFrame(A, buffFrameConfig)

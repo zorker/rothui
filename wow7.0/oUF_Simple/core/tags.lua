@@ -40,8 +40,8 @@ oUF.Tags.Methods["oUF_Simple:role"] = function(unit)
     return "|TInterface\\LFGFrame\\LFGRole:14:14:0:0:64:16:32:48:0:16|t"
   elseif role == "HEALER" then
     return "|TInterface\\LFGFrame\\LFGRole:14:14:0:0:64:16:48:64:0:16|t"
-  elseif role == "DAMAGER" then
-    return "|TInterface\\LFGFrame\\LFGRole:14:14:0:0:64:16:16:32:0:16|t"
+  --elseif role == "DAMAGER" then
+    --return "|TInterface\\LFGFrame\\LFGRole:14:14:0:0:64:16:16:32:0:16|t"
   end
 end
 --tag event: oUF_Simple:role

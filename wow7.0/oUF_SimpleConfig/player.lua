@@ -39,6 +39,7 @@ L.C.player = {
       size = 16,
       tag = "[oUF_Simple:health]",
     },
+    debuffHighlight = true,
   },
   --powerbar
   powerbar = {

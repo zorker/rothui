@@ -35,6 +35,7 @@ L.C.pet = {
       align = "CENTER",
       tag = "[name]",
     },
+    debuffHighlight = true,
   },
   --raidmark
   raidmark = {

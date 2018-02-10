@@ -35,6 +35,7 @@ L.C.targettarget = {
       align = "CENTER",
       tag = "[name]",
     },
+    debuffHighlight = true,
   },
   --raidmark
   raidmark = {

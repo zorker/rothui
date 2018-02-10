@@ -102,6 +102,8 @@ Healthbar and absorbbar cannot be disabled. Size and position matches the unit f
   * align: type:STRING, text align
   * noshadow: type:BOOLEAN, Disable/enable text drop shadow
   * tag: type:STRING, oUF tag
+* **debuffHighlight**: type: BOOLEAN, Enables/disables debuff highlighting
+* **debuffHighlightFilter**: type: BOOLEAN, Filter debuffs by dispellable class
 
 ### Powerbar attributes
 

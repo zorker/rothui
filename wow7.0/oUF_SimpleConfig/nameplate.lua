@@ -78,6 +78,7 @@ L.C.nameplate = {
       align = "CENTER",
       tag = "[difficulty][name]|r",
     },
+    debuffHighlight = true,
   },
   --raidmark
   raidmark = {

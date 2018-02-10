@@ -75,6 +75,7 @@ local function CreateBackdrop(self,relativeTo)
   bd:SetBackdrop(backdrop)
   bd:SetBackdropColor(unpack(backdrop.bgColor))
   bd:SetBackdropBorderColor(unpack(backdrop.edgeColor))
+  return bd
 end
 
 --CreateIcon
@@ -228,7 +229,13 @@ local function CreateHealthBar(self)
   end
   s.bg = bg
   --backdrop
-  CreateBackdrop(s)
+  s.bd = CreateBackdrop(s)
+  if self.cfg.healthbar.debuffHighlight then
+    self.DebuffHighlight = s.bd
+    self.DebuffHighlightBackdropBorder = true
+    self.DebuffHighlightAlpha = 1
+    self.DebuffHighlightFilter = self.cfg.healthbar.debuffHighlightFilter or false
+  end
   --attributes
   s.colorTapping = self.cfg.healthbar.colorTapping
   s.colorDisconnected = self.cfg.healthbar.colorDisconnected

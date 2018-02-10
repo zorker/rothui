@@ -36,6 +36,7 @@ L.C.focus = {
       align = "CENTER",
       tag = "[name]",
     },
+    debuffHighlight = true,
   },
   --raidmark
   raidmark = {

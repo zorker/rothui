@@ -44,6 +44,7 @@ L.C.raid = {
       align = "CENTER",
       tag = "[name][oUF_Simple:role]",
     },
+    debuffHighlight = true,
   },
   --raidmark
   raidmark = {

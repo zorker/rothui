@@ -34,6 +34,7 @@ L.C.boss = {
       align = "CENTER",
       tag = "[name]",
     },
+    debuffHighlight = true,
   },
   --powerbar
   powerbar = {

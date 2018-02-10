@@ -18,8 +18,8 @@ L.addonShortcut   = "rth"
 -----------------------------
 
 local cfg = {
-  scale = 0.7,
-  point = { "TOP", 0, -200},
+  scale = 1,
+  point = { "TOP", 0, -150},
 }
 
 -----------------------------

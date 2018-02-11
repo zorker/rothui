@@ -19,8 +19,17 @@ L.addonShortcut   = "rot"
 
 local cfg = {
   scale = 0.9,
-  point = { "TOPRIGHT", -120, -220 },
-  size = { 260, 550 }
+  point = { "RIGHT", -220, 0 },
+  size = { 260, 550 },
+  fader = {
+    fadeInAlpha = 1,
+    fadeInDuration = 0.3,
+    fadeInSmooth = "OUT",
+    fadeOutAlpha = 0,
+    fadeOutDuration = 0.9,
+    fadeOutSmooth = "OUT",
+    fadeOutDelay = 0,
+  },
 }
 
 -----------------------------
@@ -35,6 +44,9 @@ ObjectiveTrackerFrame:SetSize(unpack(cfg.size))
 
 --drag frame
 rLib:CreateDragResizeFrame(ObjectiveTrackerFrame, L.dragFrames, -2, true)
+
+--frame fader
+rLib:CreateFrameFader(ObjectiveTrackerFrame, cfg.fader)
 
 --create slash commands
 rLib:CreateSlashCmd(L.addonName, L.addonShortcut, L.dragFrames, L.addonColor)

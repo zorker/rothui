@@ -47,7 +47,7 @@ L.C.mouseover = {
   },
   --castbar
   castbar = {
-    enabled = true,
+    enabled = false,
     size = {500,26},
     point = {"TOP","BOTTOM",0,-5},
     name = {
@@ -66,7 +66,7 @@ L.C.mouseover = {
   },
   --debuffs
   debuffs = {
-    enabled = true,
+    enabled = false,
     point = {"TOPLEFT","BOTTOMLEFT",0,-5},
     num = 5,
     cols = 5,

@@ -67,3 +67,7 @@ L.C.colors.healthbar = {
   threatInversBG = {0,1*L.C.colors.bgMultiplier,0},
   absorb = {0.1,1,1,0.7}
 }
+--fix way to dark mana color
+L.C.colors.power = {
+  mana = {0.1, 0.2, 1}
+}

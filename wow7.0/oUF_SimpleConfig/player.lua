@@ -20,6 +20,7 @@ L.C.player = {
   frameVisibility = "[combat][modifier][@target,exists][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide",
   --healthbar
   healthbar = {
+    --orientation = "VERTICAL",
     --health and absorb bar cannot be disabled, they match the size of the frame
     colorClass = true,
     colorHealth = true,
@@ -65,6 +66,7 @@ L.C.player = {
     enabled = true,
     size = {265,26},
     point = {"BOTTOM","TOP",0,14},
+    --orientation = "VERTICAL",
     name = {
       enabled = true,
       points = {
@@ -100,5 +102,13 @@ L.C.player = {
     enabled = true,
     size = {130,5},
     point = {"BOTTOMLEFT","TOPLEFT",0,4},
+  },
+  --addpowerbar (additional powerbar, like mana if a druid has rage display atm)
+  addpowerbar = {
+    enabled = true,
+    size = {26,35},
+    point = {"TOPRIGHT","TOPLEFT",-4,0},
+    orientation = "VERTICAL",
+    colorPower = true,
   },
 }

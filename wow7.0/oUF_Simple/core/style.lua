@@ -15,6 +15,10 @@ local oUF = L.oUF or oUF
 
 --CreateStyle
 local function CreateStyle(self)
+  --fix mana color
+  if L.C.colors.power and L.C.colors.power.mana then
+    self.colors.power["MANA"] = L.C.colors.power.mana
+  end
   L.F.SetupFrame(self)
   L.F.SetupHeader(self)
   L.F.CreateDragFrame(self)
@@ -27,6 +31,7 @@ local function CreateStyle(self)
   self.Castbar = L.F.CreateCastBar(self)
   self.rClassBar = L.F.CreateClassBar(self)
   self.AlternativePower = L.F.CreateAltPowerBar(self)
+  self.AdditionalPower = L.F.CreateAdditionalPowerBar(self)
   self.Debuffs = L.F.CreateDebuffs(self)
   self.Buffs = L.F.CreateBuffs(self)
   self.RaidTargetIndicator = L.F.CreateRaidMark(self)

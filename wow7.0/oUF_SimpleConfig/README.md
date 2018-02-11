@@ -74,6 +74,7 @@ Any unit can create any of the following elements on unit level.
 
 Healthbar and absorbbar cannot be disabled. Size and position matches the unit frame.
 
+* **orientation**: type: STRING, Specifies the bar orientation, Values: "VERTICAL", "HORIZONTAL" or nil
 * **colorTapping**: type: BOOLEAN, Enables/disables coloring by tapping color.
 * **colorDisconnected**: type: BOOLEAN, Enables/disables coloring by disconnected color.
 * **colorReaction**: type: BOOLEAN, Enables/disables coloring by reaction color.
@@ -110,6 +111,7 @@ Healthbar and absorbbar cannot be disabled. Size and position matches the unit f
 * **enabled**: type:BOOLEAN, enable/disable element
 * **size**: type:TABLE, element size http://wowprogramming.com/docs/widgets/Region/SetSize
 * **point**: type:TABLE, element position http://wowprogramming.com/docs/widgets/Region/SetPoint
+* **orientation**: type: STRING, Specifies the bar orientation, Values: "VERTICAL", "HORIZONTAL" or nil
 * **colorPower**: type: BOOLEAN, Enables/disables coloring by power color.
 * **power**: type: TABLE, configuration for the power text
   * enabled: type:BOOLEAN, enable/disable element
@@ -127,6 +129,7 @@ Healthbar and absorbbar cannot be disabled. Size and position matches the unit f
 * **enabled**: type:BOOLEAN, enable/disable element
 * **size**: type:TABLE, element size http://wowprogramming.com/docs/widgets/Region/SetSize
 * **point**: type:TABLE, element position http://wowprogramming.com/docs/widgets/Region/SetPoint
+* **orientation**: type: STRING, Specifies the bar orientation, Values: "VERTICAL", "HORIZONTAL" or nil
 * **name**: type: TABLE, configuration for the name text
   * enabled: type:BOOLEAN, enable/disable element
   * points: type:TABLE, contains multiple points
@@ -148,6 +151,7 @@ Classbar element for combo points, chi, holy power, etc. Makes sense for the pla
 * **enabled**: type:BOOLEAN, enable/disable element
 * **size**: type:TABLE, element size http://wowprogramming.com/docs/widgets/Region/SetSize
 * **point**: type:TABLE, element position http://wowprogramming.com/docs/widgets/Region/SetPoint
+* **orientation**: type: STRING, Specifies the bar orientation, Values: "VERTICAL", "HORIZONTAL" or nil
 * **splits**: type: TABLE, do you want to seperate your classbar into segments?
   * enabled: type:BOOLEAN, enable/disable element
   * texture: type:STRING, path to split texture
@@ -159,6 +163,7 @@ Classbar element for combo points, chi, holy power, etc. Makes sense for the pla
 * **enabled**: type:BOOLEAN, enable/disable element
 * **size**: type:TABLE, element size http://wowprogramming.com/docs/widgets/Region/SetSize
 * **point**: type:TABLE, element position http://wowprogramming.com/docs/widgets/Region/SetPoint
+* **orientation**: type: STRING, Specifies the bar orientation, Values: "VERTICAL", "HORIZONTAL" or nil
 
 ### Raidmark attributes
 

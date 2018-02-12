@@ -2,8 +2,10 @@ local A, L = ...
 local oUF = L.oUF or oUF
 if not oUF then return end
 
+--config/variables
+
 local playerClass = select(2,UnitClass("player"))
-local CanDispel = {
+local canDispel = {
   PRIEST = { Magic = true, Disease = true, },
   SHAMAN = { Magic = true, Curse = true, },
   PALADIN = { Magic = true, Poison = true, Disease = true, },
@@ -11,24 +13,25 @@ local CanDispel = {
   DRUID = { Magic = true, Curse = true, Poison = true, },
   MONK = { Magic = true, Disease = true, Poison = true, }
 }
-
-local dispellist = CanDispel[playerClass] or {}
+local dispelList = canDispel[playerClass] or {}
 local origColors = {}
 local origBorderColors = {}
-local origPostUpdateAura = {}
+local DebuffTypeColor, UnitAura, unpack = DebuffTypeColor, UnitAura, unpack
 
+--GetDebuffType
 local function GetDebuffType(unit, filter)
   for i = 1, 40 do
     local _, _, texture, _, debuffType = UnitAura(unit, i, "HARMFUL")
     if not texture then
       return
     end
-    if debuffType and not filter or (filter and dispellist[debuffType]) then
+    if debuffType and not filter or (filter and dispelList[debuffType]) then
       return debuffType, texture
     end
   end
 end
 
+--Update
 local function Update(self, event, unit)
   if self.unit ~= unit then return end
   local debuffType, texture  = GetDebuffType(unit, self.DebuffHighlightFilter)
@@ -44,52 +47,44 @@ local function Update(self, event, unit)
     elseif self.DebuffHighlightUseTexture then
       self.DebuffHighlight:SetTexture(texture)
     else
-      self.DebuffHighlight:SetVertexColor(color.r, color.g, color.b, self.DebuffHighlightAlpha or .5)
+      self.DebuffHighlight:SetVertexColor(color.r, color.g, color.b, self.DebuffHighlightAlpha or 1)
     end
   else
     if self.DebuffHighlightBackdrop or self.DebuffHighlightBackdropBorder then
-      local color
       if self.DebuffHighlightBackdrop then
-        color = origColors[self]
-        self.DebuffHighlight:SetBackdropColor(color.r, color.g, color.b, color.a)
+        self.DebuffHighlight:SetBackdropColor(unpack(origColors[self]))
       end
       if self.DebuffHighlightBackdropBorder then
-        color = origBorderColors[self]
-        self.DebuffHighlight:SetBackdropBorderColor(color.r, color.g, color.b, color.a)
+        self.DebuffHighlight:SetBackdropBorderColor(unpack(origBorderColors[self]))
       end
     elseif self.DebuffHighlightUseTexture then
       self.DebuffHighlight:SetTexture(nil)
     else
-      local color = origColors[self]
-      self.DebuffHighlight:SetVertexColor(color.r, color.g, color.b, color.a)
+      self.DebuffHighlight:SetVertexColor(unpack(origColors[self]))
     end
   end
 end
 
+--Enable
 local function Enable(self)
-  if not self.DebuffHighlight then
-    return
-  end
-  if self.DebuffHighlightFilter and not CanDispel[playerClass] then
-    return
+  if not self.DebuffHighlight then return end
+  if self.DebuffHighlightFilter and not canDispel[playerClass] then return end
+  if self.DebuffHighlightBackdrop or self.DebuffHighlightBackdropBorder then
+    origColors[self] = { self.DebuffHighlight:GetBackdropColor() }
+    origBorderColors[self] = { self.DebuffHighlight:GetBackdropBorderColor() }
+  elseif not self.DebuffHighlightUseTexture then
+    origColors[self] = { self.DebuffHighlight:GetVertexColor() }
   end
   self:RegisterEvent("UNIT_AURA", Update)
-  if self.DebuffHighlightBackdrop or self.DebuffHighlightBackdropBorder then
-    local r, g, b, a = self:GetBackdropColor()
-    origColors[self] = { r = r, g = g, b = b, a = a}
-    r, g, b, a = self:GetBackdropBorderColor()
-    origBorderColors[self] = { r = r, g = g, b = b, a = a}
-  elseif not self.DebuffHighlightUseTexture then
-    local r, g, b, a = self.DebuffHighlight:GetVertexColor()
-    origColors[self] = { r = r, g = g, b = b, a = a}
-  end
   return true
 end
 
+--Disable
 local function Disable(self)
-  if self.DebuffHighlightBackdrop or self.DebuffHighlightBackdropBorder or self.DebuffHighlight then
+  if self.DebuffHighlight then
     self:UnregisterEvent("UNIT_AURA", Update)
   end
 end
 
+--oUF:AddElement
 oUF:AddElement("DebuffHighlight", Update, Enable, Disable)

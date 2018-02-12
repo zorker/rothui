@@ -233,9 +233,9 @@ local function CreateHealthBar(self)
   end
   s.bg = bg
   --backdrop
-  s.bd = CreateBackdrop(s)
+  s.bdf = CreateBackdrop(s)
   if self.cfg.healthbar.debuffHighlight then
-    self.DebuffHighlight = s.bd
+    self.DebuffHighlight = s.bdf
     self.DebuffHighlightBackdropBorder = true
     self.DebuffHighlightAlpha = 1
     self.DebuffHighlightFilter = self.cfg.healthbar.debuffHighlightFilter or false

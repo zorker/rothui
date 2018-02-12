@@ -1,0 +1,8 @@
+## Interface: 70300
+## Author: zork
+## Title: rGroupFinder
+## Notes: Adds the group finder button to every quest
+## RequiredDeps: Blizzard_ObjectiveTracker
+## LoadWith: Blizzard_ObjectiveTracker
+
+core.lua

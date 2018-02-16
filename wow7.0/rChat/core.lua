@@ -125,10 +125,10 @@ CHAT_FRAME_TAB_ALERTING_MOUSEOVER_ALPHA = 1
 CHAT_FRAME_TAB_ALERTING_NOMOUSE_ALPHA = 1
 
 --channels
-CHAT_WHISPER_GET              = "<< %s "
-CHAT_WHISPER_INFORM_GET       = ">> %s "
-CHAT_BN_WHISPER_GET           = "<< %s "
-CHAT_BN_WHISPER_INFORM_GET    = ">> %s "
+CHAT_WHISPER_GET              = "From %s "
+CHAT_WHISPER_INFORM_GET       = "To %s "
+CHAT_BN_WHISPER_GET           = "From %s "
+CHAT_BN_WHISPER_INFORM_GET    = "To %s "
 CHAT_YELL_GET                 = "%s "
 CHAT_SAY_GET                  = "%s "
 CHAT_BATTLEGROUND_GET         = "|Hchannel:Battleground|hBG.|h %s: "

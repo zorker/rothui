@@ -215,12 +215,6 @@ auraButtonConfig.duration.alpha = 1
 auraButtonConfig.symbol = copyTable(actionButtonConfig.name)
 auraButtonConfig.symbol.alpha = 1
 
---fix blizzard time abbrev
-HOUR_ONELETTER_ABBR = "%dh"
-DAY_ONELETTER_ABBR = "%dd"
-MINUTE_ONELETTER_ABBR = "%dm"
-SECOND_ONELETTER_ABBR = "%ds"
-
 --rButtonTemplate:StyleBuffButtons + rButtonTemplate:StyleTempEnchants
 rButtonTemplate:StyleBuffButtons(auraButtonConfig)
 rButtonTemplate:StyleTempEnchants(auraButtonConfig)

@@ -17,10 +17,10 @@
   -------------------------------------
 
   C.sound = {}
-  C.sound.select =  "igcreatureaggroselect"
-  C.sound.swap    = "interfacesound_losttargetunit"
-  C.sound.click   = "igmainmenuoption"
-  C.sound.clack   = "igmainmenulogout"
+  C.sound.select =  SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
+  C.sound.swap    = SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF
+  C.sound.click   = SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
+  C.sound.clack   = SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON
 
   C.backdrop = {
     bgFile = "",

@@ -255,11 +255,12 @@
     m.id = id
     --model background (border)
     m.bg = m:CreateTexture(nil,"BACKGROUND",nil,-8)
-    m.bg:SetTexture(0,0,0,.2)
+    m.bg:SetColorTexture(1,1,1)
+    m.bg:SetVertexColor(0,0,0,.2)
     m.bg:SetAllPoints()
     --model background color
     m.color = m:CreateTexture(nil,"BACKGROUND",nil,-7)
-    m.color:SetTexture(1,1,1)
+    m.color:SetColorTexture(1,1,1)
     --color bugfix
     m.color:SetVertexColor(unpack(DB.GLOB["COLOR"]))
     m.color:SetPoint("TOPLEFT", m, "TOPLEFT", 2, -2)
@@ -306,7 +307,7 @@
     --canvas background
     f.bg = f:CreateTexture(nil,"BACKGROUND",nil,-8)
     f.bg:SetAllPoints()
-    f.bg:SetTexture(1,1,1)
+    f.bg:SetColorTexture(1,1,1)
     f.bg:SetVertexColor(0.15,0.15,0.15)
 
     --fade in anim
@@ -563,7 +564,7 @@
       f:SetAlpha(1)
 
       f.bg = f:CreateTexture(nil, "BACKGROUND",nil,-8)
-      f.bg:SetTexture(1,1,1)
+      f.bg:SetColorTexture(1,1,1)
       f.bg:SetVertexColor(0.15,0.15,0.15)
       f.bg:SetAllPoints()
 

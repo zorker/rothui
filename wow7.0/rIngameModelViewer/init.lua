@@ -23,5 +23,5 @@
   -- version stuff
   L.name          = an
   L.version       = GetAddOnMetadata(L.name, "Version")
-  L.versionNumber = tonumber(L.version)
+  L.versionNumber = tonumber(L.version) or 0
   L.locale        = GetLocale()

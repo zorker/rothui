@@ -55,7 +55,7 @@
     b.color = b:CreateTexture(nil,"BACKGROUND",nil,-7)
     b.color:SetPoint("TOPLEFT",4,-4)
     b.color:SetPoint("BOTTOMRIGHT",-4,4)
-    b.color:SetTexture(1,1,1)
+    b.color:SetColorTexture(1,1,1)
     b.color:SetVertexColor(unpack(DB.GLOB["COLOR"]))
 
     --color picker Callback func

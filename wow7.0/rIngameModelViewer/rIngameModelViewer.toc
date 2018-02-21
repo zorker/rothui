@@ -1,7 +1,6 @@
-## Interface: 70000
+## Interface: 70300
 ## Author: zork
-## Version: 700.1
-## Title: IngameModelViewer
+## Title: rIngameModelViewer
 ## Notes: Zork's ingame model viewer
 ## SavedVariables: rIMV_DBGLOB
 ## SavedVariablesPerCharacter: rIMV_DBCHAR

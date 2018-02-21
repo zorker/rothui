@@ -173,7 +173,7 @@
     --GT:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
     GT:AddLine("Model Info", 0, 1, 0.5, 1, 1, 1)
     GT:AddLine(" ")
-    GT:AddDoubleLine("DisplayID", self.displayIndex, 1, 1, 1, 1, 1, 1)
+    GT:AddDoubleLine("DisplayID", self:GetDisplayInfo(), 1, 1, 1, 1, 1, 1)
     GT:AddDoubleLine("SetPosition", "("..pz..","..px..","..px..")", 1, 1, 1, 1, 1, 1)
     GT:AddDoubleLine("SetRotation", self.rotation, 1, 1, 1, 1, 1, 1)
     GT:AddDoubleLine("SetFacing", L:RoundNumber(self:GetFacing()), 1, 1, 1, 1, 1, 1)

@@ -17,7 +17,7 @@ L.C.pet = {
   size = {130,26},
   point = {"TOPLEFT","oUF_SimplePlayer","BOTTOMLEFT",0,-14},
   scale = 1*L.C.globalscale,
-  frameVisibility = "[nocombat,nomodifier,@target,noexists][@pet,noexists] hide; show",
+  frameVisibility = "[nocombat,nomod,@target,noexists][@pet,noexists] hide; show",
   --healthbar
   healthbar = {
     --health and absorb bar cannot be disabled, they match the size of the frame

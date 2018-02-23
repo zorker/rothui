@@ -17,7 +17,7 @@ L.C.player = {
   size = {265,26},
   point = {"RIGHT",UIParent,"CENTER",-120,-120},
   scale = 1*L.C.globalscale,
-  frameVisibility = "[combat][modifier][@target,exists][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide",
+  frameVisibility = "[combat][mod][@target,exists][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide",
   --healthbar
   healthbar = {
     --orientation = "VERTICAL",

@@ -13,7 +13,7 @@ local A, L = ...
 -----------------------------
 
 L.C.mouseover = {
-  enabled = true,
+  enabled = false,
   size = {500,26},
   point = {"TOP",0,-25},
   scale = 1*L.C.globalscale,

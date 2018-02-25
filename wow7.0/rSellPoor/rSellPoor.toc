@@ -1,0 +1,6 @@
+## Interface: 70300
+## Author: zork
+## Title: rSellPoor
+## Notes: Sell items of poor quality automatically
+
+rSellPoor.lua

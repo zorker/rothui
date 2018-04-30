@@ -21,11 +21,7 @@ local function OnVignetteAdded(self,event,id)
   if not filename then return end
   local atlasWidth = width/(txRight-txLeft)
   local atlasHeight = height/(txBottom-txTop)
-  local pxLeft = atlasWidth*txLeft
-  local pxRight = atlasWidth*txRight
-  local pxTop = atlasHeight*txTop
-  local pxBottom = atlasHeight*txBottom
-  local str = string.format("|T%s:%d:%d:0:0:%d:%d:%d:%d:%d:%d|t", filename, size, size, atlasWidth, atlasHeight, pxLeft, pxRight, pxTop, pxBottom)
+  local str = string.format("|T%s:%d:%d:0:0:%d:%d:%d:%d:%d:%d|t", filename, 0, 0, atlasWidth, atlasHeight, atlasWidth*txLeft, atlasWidth*txRight, atlasHeight*txTop, atlasHeight*txBottom)
   PlaySoundFile("Sound\\Interface\\RaidWarning.ogg")
   RaidNotice_AddMessage(RaidWarningFrame, str.." "..vignetteInfo.name.." spotted!", ChatTypeInfo["RAID_WARNING"])
   print(str.." "..vignetteInfo.name,"spotted!")

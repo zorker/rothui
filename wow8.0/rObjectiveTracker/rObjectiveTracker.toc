@@ -1,0 +1,7 @@
+## Interface: 80000
+## Author: zork
+## Title: rObjectiveTracker
+## Notes: Allows moving and resizing of Blizzard objective tracker
+## RequiredDeps: rLib, Blizzard_ObjectiveTracker
+
+core.lua

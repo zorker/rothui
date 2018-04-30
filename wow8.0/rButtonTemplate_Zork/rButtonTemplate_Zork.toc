@@ -1,0 +1,7 @@
+## Interface: 80000
+## Author: zork
+## Title: rButtonTemplate_Zork
+## Notes: Zork's button theme for rButtonTemplate
+## RequiredDeps: rButtonTemplate
+
+theme.lua

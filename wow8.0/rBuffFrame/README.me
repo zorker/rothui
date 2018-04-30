@@ -1,0 +1,29 @@
+#rBuffFrame API
+
+======================================
+-- FUNCTIONS
+======================================
+
+rBuffFrame:CreateBuffFrame(addonName,cfg)
+rBuffFrame:CreateDebuffFrame(addonName,cfg)
+
+======================================
+-- ARGUMENTS
+======================================
+
+Argument definition is the same for all functions.
+
+rBuffFrame:CreateBuffFrame(addonName,cfg)
+|-addonName, type:STRING, description: name of the addon that is creating the bar
+|-cfg, type: TABLE, description: bar configuration
+  |-framePoint, type:TABLE, descripton: frame position http://wowprogramming.com/docs/widgets/Region/SetPoint
+  |-frameScale, type:NUMBER, description: frame scale http://wowprogramming.com/docs/widgets/Frame/SetScale
+  |-framePadding, type:NUMBER, description: frame padding
+  |-frameParent (OPTIONAL), type:FRAMEREF, description: parent of the bar, default: UIParent
+  |-buttonWidth, type:NUMBER, description: button width http://wowprogramming.com/docs/widgets/Region/SetSize
+  |-buttonHeight, type:NUMBER, description: button height http://wowprogramming.com/docs/widgets/Region/SetSize
+  |-buttonMargin, type:NUMBER, description: button margin
+  |-numCols, type:NUMBER, description: number of buttons per column
+  |-startPoint, type:STRING, description: starting point of first button (TOPLEFT, TOPRIGHT, BOTTOMRIGHT, BOTTOMLEFT)
+  |-rowMargin (OPTIONAL), type:NUMBER, description: row margin
+

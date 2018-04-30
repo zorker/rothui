@@ -1,0 +1,6 @@
+## Interface: 80000
+## Author: zork
+## Title: rRaidManager
+## Notes: Simple toolbar for raid management
+
+core.lua

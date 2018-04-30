@@ -1,0 +1,6 @@
+## Interface: 80000
+## Author: zork
+## Title: rScreenSaver
+## Notes: Does not save your screen. Doh!
+
+core.lua

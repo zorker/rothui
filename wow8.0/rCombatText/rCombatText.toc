@@ -1,0 +1,8 @@
+## Interface: 80000
+## Author: zork
+## Title: rCombatText
+## Notes: Small tweaks for the default combat text
+## RequiredDeps: Blizzard_CombatText
+## LoadWith: Blizzard_CombatText
+
+rCombatText.lua

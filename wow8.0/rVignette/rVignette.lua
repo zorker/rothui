@@ -1,6 +1,5 @@
-
 -- rVignette: core
--- zork, 2016
+-- zork, 2018
 
 -----------------------------
 -- Variables
@@ -17,11 +16,19 @@ local function OnVignetteAdded(self,event,id)
   self.vignettes = self.vignettes or {}
   if self.vignettes[id] then return end
   local vignetteInfo = C_VignetteInfo.GetVignetteInfo(id)
-  --local left, right, top, bottom = GetObjectIconTextureCoords(vignetteInfo.vignetteID)
+  if not vignetteInfo then return end
+  local filename, width, height, txLeft, txRight, txTop, txBottom = GetAtlasInfo(vignetteInfo.atlasName)
+  if not filename then return end
+  local atlasWidth = width/(txRight-txLeft)
+  local atlasHeight = height/(txBottom-txTop)
+  local pxLeft = atlasWidth*txLeft
+  local pxRight = atlasWidth*txRight
+  local pxTop = atlasHeight*txTop
+  local pxBottom = atlasHeight*txBottom
+  local str = string.format("|T%s:%d:%d:0:0:%d:%d:%d:%d:%d:%d|t", filename, size, size, atlasWidth, atlasHeight, pxLeft, pxRight, pxTop, pxBottom)
   PlaySoundFile("Sound\\Interface\\RaidWarning.ogg")
-  --local str = "|TInterface\\MINIMAP\\ObjectIconsAtlas:0:0:0:0:256:256:"..(left*256)..":"..(right*256)..":"..(top*256)..":"..(bottom*256).."|t"
-  RaidNotice_AddMessage(RaidWarningFrame, vignetteInfo.name.." spotted!", ChatTypeInfo["RAID_WARNING"])
-  print(vignetteInfo.name,"spotted!")
+  RaidNotice_AddMessage(RaidWarningFrame, str.." "..vignetteInfo.name.." spotted!", ChatTypeInfo["RAID_WARNING"])
+  print(str.." "..vignetteInfo.name,"spotted!")
   self.vignettes[id] = true
 end
 

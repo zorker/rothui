@@ -1,0 +1,27 @@
+## Interface: 80000
+## Title: oUF_Simple
+## Author: zork
+## Notes: Simple oUF layout
+## Dependencies: oUF, rLib, oUF_SimpleConfig
+
+modules\rAbsorbBar.lua
+modules\rClassBar.lua
+modules\oUF_DebuffHighlight.lua
+
+core\init.lua
+core\functions.lua
+core\tags.lua
+core\style.lua
+
+templates\player.lua
+templates\target.lua
+templates\targettarget.lua
+templates\pet.lua
+templates\focus.lua
+templates\mouseover.lua
+templates\party.lua
+templates\boss.lua
+templates\nameplate.lua
+templates\raid.lua
+
+core\spawn.lua

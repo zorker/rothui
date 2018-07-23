@@ -1,0 +1,6 @@
+## Interface: 80000
+## Author: zork
+## Title: rCompassCastbar
+## Notes: A circular compass cursor castbar
+
+rCompassCastbar.lua

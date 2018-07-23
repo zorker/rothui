@@ -14,7 +14,7 @@ local A, L = ...
 
 --shield block
 local aura = {
-  button          = MultiBarBottomLeftButton2,
+  button          = ActionButton8,
   unit            = "player",
   caster          = "player",
   spellid         = 132404,
@@ -30,7 +30,7 @@ rButtonAura:AddAura(aura)
 
 --battle shout
 local aura = {
-  button          = MultiBarLeftButton2,
+  button          = MultiBarBottomLeftButton12,
   unit            = "player",
   caster          = "player",
   spellid         = 6673,
@@ -62,7 +62,7 @@ rButtonAura:AddAura(aura)
 
 --avatar
 local aura = {
-  button          = MultiBarBottomLeftButton4,
+  button          = ActionButton10,
   unit            = "player",
   caster          = "player",
   spellid         = 107574,
@@ -78,7 +78,7 @@ rButtonAura:AddAura(aura)
 
 --last stand
 local aura = {
-  button          = MultiBarBottomLeftButton5,
+  button          = MultiBarBottomLeftButton9,
   unit            = "player",
   caster          = "player",
   spellid         = 12975,
@@ -94,7 +94,7 @@ rButtonAura:AddAura(aura)
 
 --shield wall
 local aura = {
-  button          = MultiBarBottomLeftButton6,
+  button          = MultiBarBottomLeftButton10,
   unit            = "player",
   caster          = "player",
   spellid         = 871,

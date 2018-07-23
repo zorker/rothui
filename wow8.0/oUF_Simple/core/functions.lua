@@ -265,7 +265,6 @@ L.F.CreateHealthBar = CreateHealthBar
 --CreateAdditionalPowerBar
 local function CreateAdditionalPowerBar(self)
   if not self.cfg.addpowerbar or not self.cfg.addpowerbar.enabled then return end
-  print(self.unit,self.settings.template,"CreateAdditionalPowerBar")
   --statusbar
   local s = CreateFrame("StatusBar", nil, self)
   s:SetStatusBarTexture(L.C.textures.statusbar)

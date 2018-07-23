@@ -1,5 +1,5 @@
 ## Interface: 80000
-## Title: rButtonAura
+## Title: rButtonAura_Zork
 ## Author: zork
 ## Notes: Zork's config for rButtonAura
 ## RequiredDeps: rButtonAura

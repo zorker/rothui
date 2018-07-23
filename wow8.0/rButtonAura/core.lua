@@ -26,16 +26,14 @@ rButtonAura.addonName = A
 -----------------------------
 
 --AddAura
-local function AddAura(aura)
+function rButtonAura:AddAura(aura)
   table.insert(auras,aura)
 end
-rButtonAura.AddAura = AddAura
 
 --SetTick
-local function SetTick(newTick)
-  tick = newTick
+function rButtonAura:SetTick(t)
+  tick = t
 end
-rButtonAura.SetTick = SetTick
 
 --UpdateAura
 local function UpdateAura(aura)
@@ -79,32 +77,32 @@ local function Login()
   if numAuras == 0 then return end
   local error = false
   for i, aura in next, auras do
-    local border = _G[aura.button:GetName.."Border"]
-    if not aura.border then
-      print(A,aura.spellId,"border not found")
+    local border = _G[aura.button:GetName().."Border"]
+    if not border then
+      print(A,aura.spellid,"border not found")
       error = true
       break
     else
       aura.border = border
     end
     local spellName = GetSpellInfo(aura.spellid)
-    if not aura.spellName then
+    if not spellName then
       print(A,aura.spellid,"spell id not found")
       error = true
       break
     else
       aura.spellName = spellName
     end
---[[     if aura.useBar then
-      local la, li = aura.border:GetDrawLayer()
-      aura.bar = aura.border:GetParent():CreateTexture(nil,la,nil,li)
+    if aura.useBar then
+      local a, b = aura.border:GetDrawLayer()
+      aura.bar = aura.border:GetParent():CreateTexture(nil,a,nil,b)
       aura.bar:SetColorTexture(unpack(aura.barColor))
       aura.bar:SetBlendMode("ADD")
-      aura.bar:SetPoint("TOPLEFT")
-      aura.bar:SetSize(0,aura.border:GetParent():GetHeight()/10)
+      aura.bar:SetPoint(unpack(aura.barPoint))
+      aura.bar:SetSize(0,aura.barHeight)
       aura.bar:Hide()
       aura.bar.maxwidth = aura.border:GetParent():GetWidth()
-    end ]]
+    end
     if aura.useBorder then
       aura.border:SetVertexColor(unpack(aura.borderColor))
     end

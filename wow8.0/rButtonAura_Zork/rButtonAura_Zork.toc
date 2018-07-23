@@ -1,0 +1,7 @@
+## Interface: 80000
+## Title: rButtonAura
+## Author: zork
+## Notes: Zork's config for rButtonAura
+## RequiredDeps: rButtonAura
+
+config.lua

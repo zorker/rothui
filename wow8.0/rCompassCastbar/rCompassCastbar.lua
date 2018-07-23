@@ -15,7 +15,7 @@
 
   local cfg = {}
 
-  local overallScale = 0.8
+  local overallScale = 1
 
   --player settings
   cfg["player"] = {}
@@ -23,7 +23,7 @@
   cfg["player"].latency         = true
   cfg["player"].scale           = 0.2 * overallScale
   cfg["player"].sparkcolor      = {1,1,1}
-  cfg["player"].bgcolor         = {0.5,0.4,0,0.3}
+  cfg["player"].bgcolor         = {0.5,0.4,0,1}
   cfg["player"].ringcolor       = {1,0.8,0,1}
   cfg["player"].latencycolor    = {1,0,0,0.8}
   cfg["player"].bgblendmode     = "ADD" --"ADD" or "BLEND"
@@ -206,7 +206,7 @@
 
     local rt1 = sc1:CreateTexture(nil,"BACKGROUND",nil,-6)
     rt1:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-ring")
-    rt1:SetSize(sqrt(2)*f.w,sqrt(2)*f.h)
+    rt1:SetSize(f.w,f.h)
     rt1:SetPoint("CENTER")
     rt1:SetVertexColor(unpack(cfg.ringcolor))
     rt1:SetBlendMode(cfg.ringblendmode)
@@ -214,7 +214,7 @@
 
     local rs1 = sc1:CreateTexture(nil,"BACKGROUND",nil,-5)
     rs1:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-spark")
-    rs1:SetSize(sqrt(2)*f.w,sqrt(2)*f.h)
+    rs1:SetSize(f.w,f.h)
     rs1:SetPoint("CENTER")
     rs1:SetVertexColor(unpack(cfg.sparkcolor))
     rs1:SetBlendMode(cfg.sparkblendmode)
@@ -224,7 +224,7 @@
     if unit == "player" and cfg.latency then
       local rl1 = sc1:CreateTexture(nil,"BACKGROUND",nil,-4)
       rl1:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-ring")
-      rl1:SetSize(sqrt(2)*f.w,sqrt(2)*f.h)
+      rl1:SetSize(f.w,f.h)
       rl1:SetPoint("CENTER")
       rl1:SetVertexColor(unpack(cfg.latencycolor))
       rl1:SetBlendMode(cfg.latencyblendmode)
@@ -245,7 +245,7 @@
 
     local rt2 = sc2:CreateTexture(nil,"BACKGROUND",nil,-6)
     rt2:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-ring")
-    rt2:SetSize(sqrt(2)*f.w,sqrt(2)*f.h)
+    rt2:SetSize(f.w,f.h)
     rt2:SetPoint("CENTER")
     rt2:SetVertexColor(unpack(cfg.ringcolor))
     rt2:SetBlendMode(cfg.ringblendmode)
@@ -253,7 +253,7 @@
 
     local rs2 = sc2:CreateTexture(nil,"BACKGROUND",nil,-5)
     rs2:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-spark")
-    rs2:SetSize(sqrt(2)*f.w,sqrt(2)*f.h)
+    rs2:SetSize(f.w,f.h)
     rs2:SetPoint("CENTER")
     rs2:SetVertexColor(unpack(cfg.sparkcolor))
     rs2:SetBlendMode(cfg.sparkblendmode)

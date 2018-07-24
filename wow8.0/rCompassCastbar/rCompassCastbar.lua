@@ -1,87 +1,86 @@
 
-  -- // rCompassCastbar
-  -- // zork - 2018
+  -- rCompassCastbar
+  -- zork, 2018
 
   -----------------------------
-  -- ADDON TABLES
+  -- Variables
   -----------------------------
 
   --addon tables
-  local an, at = ...
+  local A, L = ...
+
+  local mediaPath = "Interface\\AddOns\\"..A.."\\media\\"
+  local UnitCastingInfo,UnitChannelInfo = UnitCastingInfo,UnitChannelInfo
+  local GetTime,GetCursorPosition,math = GetTime,GetCursorPosition,math
+  local uiScale = 1
 
   -----------------------------
-  -- CONFIG
+  -- Config
   -----------------------------
 
+  --cfg
   local cfg = {}
 
-  local overallScale = 1
+  --overall scale
+  cfg.overallScale = 1
 
   --player settings
-  cfg["player"] = {}
-  cfg["player"].enable          = true
-  cfg["player"].latency         = true
-  cfg["player"].scale           = 0.2 * overallScale
-  cfg["player"].sparkcolor      = {1,1,1}
-  cfg["player"].bgcolor         = {0.5,0.4,0,1}
-  cfg["player"].ringcolor       = {1,0.8,0,1}
-  cfg["player"].latencycolor    = {1,0,0,0.8}
-  cfg["player"].bgblendmode     = "ADD" --"ADD" or "BLEND"
-  cfg["player"].ringblendmode   = "ADD" --"ADD" or "BLEND"
-  cfg["player"].sparkblendmode  = "ADD" --"ADD" or "BLEND"
-  cfg["player"].latencyblendmode  = "BLEND" --"ADD" or "BLEND"
-  --cfg["player"].point           = {"CENTER",0,0}
+  cfg["player"] = {
+    enabled         = true,
+    size            = {512,512},
+    scale           = 0.2 * cfg.overallScale,
+    --comment this in if you want the position to be fixed, otherwise position at cursor
+    --point           = {"CENTER",0,0},
+    background = {
+      enabled = true,
+      color = {0.5,0.4,0,1}, --red,green,blue,alpha
+      blendmode = "ADD", --ADD or BLEND
+      texture = mediaPath.."compass-rose",
+    },
+    ring = {
+      color = {1,0.8,0,1},
+      blendmode = "ADD",
+      texture = mediaPath.."compass-ring",
+    },
+    spark = {
+      enabled = true,
+      color = {1,1,1},
+      blendmode = "ADD",
+      texture = mediaPath.."compass-spark",
+    },
+  }
 
-  --target settings
-  cfg["target"] = {}
-  cfg["target"].enable          = true
-  cfg["target"].scale           = 0.15 * overallScale
-  cfg["target"].sparkcolor      = {1,0.5,0.5}
-  cfg["target"].bgcolor         = {0.5,0,0,3}
-  cfg["target"].ringcolor       = {1,0,0,1}
-  cfg["target"].bgblendmode     = "ADD" --"ADD" or "BLEND"
-  cfg["target"].ringblendmode   = "ADD" --"ADD" or "BLEND"
-  cfg["target"].sparkblendmode  = "ADD" --"ADD" or "BLEND"
-
-  --focus settings
-  cfg["focus"] = {}
-  cfg["focus"].enable          = true
-  cfg["focus"].scale           = 0.11 * overallScale
-  cfg["focus"].sparkcolor      = {0.5,0.5,1}
-  cfg["focus"].bgcolor         = {0,0,0.5,3}
-  cfg["focus"].ringcolor       = {0,0.5,1,1}
-  cfg["focus"].bgblendmode     = "ADD" --"ADD" or "BLEND"
-  cfg["focus"].ringblendmode   = "ADD" --"ADD" or "BLEND"
-  cfg["focus"].sparkblendmode  = "ADD" --"ADD" or "BLEND"
-
-  --pet settings
-  cfg["pet"] = {}
-  cfg["pet"].enable          = false
-  cfg["pet"].scale           = 0.08 * overallScale
-  cfg["pet"].sparkcolor      = {0.8,1,0.5}
-  cfg["pet"].bgcolor         = {0,0.5,0,3}
-  cfg["pet"].ringcolor       = {0.5,1,0.3,1}
-  cfg["pet"].bgblendmode     = "ADD" --"ADD" or "BLEND"
-  cfg["pet"].ringblendmode   = "ADD" --"ADD" or "BLEND"
-  cfg["pet"].sparkblendmode  = "ADD" --"ADD" or "BLEND"
-
-  -----------------------------
-  -- VARIABLES
-  -----------------------------
-
-  local UnitCastingInfo,UnitChannelInfo,UIParent = UnitCastingInfo,UnitChannelInfo,UIParent
-  local GetTime,GetCursorPosition,GetNetStats = GetTime,GetCursorPosition,GetNetStats
-  local math,unpack = math,unpack
-
-  local uiscale = 1
+  --gcd settings
+  cfg["gcd"] = {
+    enabled         = true,
+    size            = {512,512},
+    scale           = 0.11 * cfg.overallScale,
+    background = {
+      enabled = false,
+      color = {0.5,0.4,0,1}, --red,green,blue,alpha
+      blendmode = "ADD", --ADD or BLEND
+      texture = mediaPath.."compass-rose",
+    },
+    ring = {
+      color = {1,0.8,0,1},
+      blendmode = "ADD",
+      texture = mediaPath.."compass-ring",
+    },
+    spark = {
+      enabled = true,
+      color = {1,1,1},
+      blendmode = "ADD",
+      texture = mediaPath.."compass-spark",
+    },
+  }
 
   -----------------------------
-  -- FUNCTIONS
+  -- Functions
   -----------------------------
 
   --GetUiScale func
   local function GetUiScale()
-    uiscale = UIParent:GetEffectiveScale()
+    uiScale = UIParent:GetEffectiveScale()
   end
 
   --Disable func
@@ -90,13 +89,14 @@
     self.update, self.isCasting, self.isEnabled = false,false,false
     self.spellName, self.spellText, self.spellTexture, self.startTime, self.endTime = nil,nil,nil,nil,nil,nil
     self.current, self.duration, self.elapsed, self.percent = 0,0,0,0
-    self:SetAlpha(0)
+    self:Hide()
+    --self:SetAlpha(0)
   end
 
   --OnUpdate func
   local function OnUpdate(self,elapsed)
     self.elapsed = self.elapsed + elapsed
-    if self.update then
+    if self.update and self.unit ~= "gcd" then
       self.spellName, self.spellText, self.spellTexture, self.startTime, self.endTime = UnitCastingInfo(self.unit)
       if not self.spellName then
         self.spellName, self.spellText, self.spellTexture, self.startTime, self.endTime = UnitChannelInfo(self.unit)
@@ -105,34 +105,31 @@
         Disable(self)
         return
       end
-      self.isCasting = true
       self.current = GetTime()-self.startTime/1e3
       self.duration = (self.endTime-self.startTime)/1e3
-      if self.leftRingLatency then
-        self.nsDown, self.nsUp, self.nsLagHome, self.nsLagWorld = GetNetStats()
-        if self.nsLagWorld and self.nsLagWorld > 0 then
-          self.latency = math.max(((self.duration-self.nsLagWorld*2/1e3)/self.duration),0)
-          if self.latency < 0.9 then
-            self.leftRingLatency:SetRotation(math.rad(self.leftRingLatency.baseDeg-180*self.latency))
-            self.leftRingLatency:SetAlpha(cfg["player"].latencycolor[3] or 1)
-          else
-            --latency is barely visible, hide it
-            self.leftRingLatency:SetAlpha(0)
-          end
-        end
-      end
       self.elapsed = 0
       self.update = false
     end
-    if not self.isCasting or (self.current+self.elapsed-self.duration > 0.5) then
-      --kill the OnUpdate
+    if self.update and self.unit == "gcd" then
+      --gcd spellid http://www.wowhead.com/spell=61304/global-cooldown
+      self.startTime, self.duration = GetSpellCooldown(61304)
+      if self.duration == 0 then
+        Disable(self)
+        return
+      end
+      self.current = GetTime()-self.startTime
+      self.elapsed = 0
+      self.update = false
+    end
+    --if the calculated duration is overdue kill the OnUpdate
+    if self.current+self.elapsed-self.duration > 0 then
       Disable(self)
       return
     end
     if self.castbarAtCursor then
       self.x, self.y = GetCursorPosition()
-      self.x = (self.x/uiscale/self.scale)-self.w/2
-      self.y = (self.y/uiscale/self.scale)-self.h/2
+      self.x = (self.x/uiScale/self.scale)-self.w/2
+      self.y = (self.y/uiScale/self.scale)-self.h/2
       self:SetPoint("BOTTOMLEFT",self.x,self.y)
     end
     self.percent = math.min(self.current+self.elapsed,self.duration)/self.duration
@@ -143,21 +140,26 @@
       self.leftRingTexture:SetRotation(math.rad(self.leftRingTexture.baseDeg-0))
       self.rightRingTexture:SetRotation(math.rad(self.rightRingTexture.baseDeg-180*(self.percent*2)))
     end
-    self.rightRingSpark:SetRotation(math.rad(self.rightRingSpark.baseDeg-180*(self.percent*2)))
-    self.leftRingSpark:SetRotation(math.rad(self.leftRingSpark.baseDeg-180*(self.percent*2-1)))
+    if self.rightRingSpark then
+      self.rightRingSpark:SetRotation(math.rad(self.rightRingSpark.baseDeg-180*(self.percent*2)))
+    end
+    if self.leftRingSpark then
+      self.leftRingSpark:SetRotation(math.rad(self.leftRingSpark.baseDeg-180*(self.percent*2-1)))
+    end
   end
 
   --Enable func
   local function Enable(self)
     if self.isEnabled then return end
-    self.isEnabled = true
-    self:SetAlpha(1)
+    self:Show()
+    --self:SetAlpha(1)
     self:SetScript("OnUpdate",OnUpdate)
+    self.isEnabled = true
   end
 
   --OnEvent func
   local function OnEvent(self,event)
-    if event == "UNIT_SPELLCAST_CHANNEL_STOP" or event == "UNIT_SPELLCAST_STOP" then
+    if self.unit ~= "gcd" and (event == "UNIT_SPELLCAST_CHANNEL_STOP" or event == "UNIT_SPELLCAST_STOP") then
       Disable(self)
       return
     end
@@ -168,14 +170,17 @@
 
   --CreateCompassCastbar func
   local function CreateCompassCastbar(unit,cfg)
-
+    if not cfg.enabled then return end
+    --frame
     local f = CreateFrame("Frame",nil,UIParent)
-    f:SetSize(512,512)
+    f:SetSize(unpack(cfg.size))
     f:SetScale(cfg.scale)
     f.scale = f:GetScale()
     f.w, f.h = f:GetSize()
     f:SetFrameStrata("DIALOG")
-
+    --unit
+    f.unit = unit
+    --position
     if cfg.point then
       f.castbarAtCursor = false
       f:SetPoint(unpack(cfg.point))
@@ -184,125 +189,120 @@
       f:SetPoint("BOTTOMLEFT",0,0)
       f:SetClampedToScreen(1)
     end
-
-    --attributes
-    f.unit    = unit
-
-    local t = f:CreateTexture(nil, "BACKGROUND", nil, -8)
-    t:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose")
-    t:SetAllPoints()
-    t:SetAlpha(1)
-    t:SetVertexColor(unpack(cfg.bgcolor))
-    t:SetBlendMode(cfg.bgblendmode)
-
-    --left ring
+    --frame background
+    if cfg.background and cfg.background.enabled then
+      local t = f:CreateTexture(nil, "BACKGROUND", nil, -8)
+      t:SetTexture(cfg.background.texture)
+      t:SetAllPoints()
+      t:SetVertexColor(unpack(cfg.background.color))
+      t:SetBlendMode(cfg.background.blendmode)
+      f.bg = t
+    end
+    --left ring scroll frame
     local sf1 = CreateFrame("ScrollFrame",nil,f)
     sf1:SetSize(f.w/2,f.h)
     sf1:SetPoint("LEFT")
-
+    --left ring scroll child
     local sc1 = CreateFrame("Frame")
     sf1:SetScrollChild(sc1)
     sc1:SetSize(f.w,f.h)
-
+    --left ring texture
     local rt1 = sc1:CreateTexture(nil,"BACKGROUND",nil,-6)
-    rt1:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-ring")
+    rt1:SetTexture(cfg.ring.texture)
     rt1:SetSize(f.w,f.h)
     rt1:SetPoint("CENTER")
-    rt1:SetVertexColor(unpack(cfg.ringcolor))
-    rt1:SetBlendMode(cfg.ringblendmode)
+    rt1:SetVertexColor(unpack(cfg.ring.color))
+    rt1:SetBlendMode(cfg.ring.blendmode)
     rt1.baseDeg = -180
-
-    local rs1 = sc1:CreateTexture(nil,"BACKGROUND",nil,-5)
-    rs1:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-spark")
-    rs1:SetSize(f.w,f.h)
-    rs1:SetPoint("CENTER")
-    rs1:SetVertexColor(unpack(cfg.sparkcolor))
-    rs1:SetBlendMode(cfg.sparkblendmode)
-    rs1.baseDeg = -180
-
-    --latency
-    if unit == "player" and cfg.latency then
-      local rl1 = sc1:CreateTexture(nil,"BACKGROUND",nil,-4)
-      rl1:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-ring")
-      rl1:SetSize(f.w,f.h)
-      rl1:SetPoint("CENTER")
-      rl1:SetVertexColor(unpack(cfg.latencycolor))
-      rl1:SetBlendMode(cfg.latencyblendmode)
-      rl1.baseDeg = 0
-      rl1:SetRotation(math.rad(rl1.baseDeg-180*0.8))
-      f.leftRingLatency = rl1
+    f.leftRingTexture = rt1
+    --left ring spark
+    if cfg.spark and cfg.spark.enabled then
+      local rs1 = sc1:CreateTexture(nil,"BACKGROUND",nil,-5)
+      rs1:SetTexture(cfg.spark.texture)
+      rs1:SetSize(f.w,f.h)
+      rs1:SetPoint("CENTER")
+      rs1:SetVertexColor(unpack(cfg.spark.color))
+      rs1:SetBlendMode(cfg.spark.blendmode)
+      rs1.baseDeg = -180
+      f.leftRingSpark = rs1
     end
-
-    --right ring
+    --right ring scroll frame
     local sf2 = CreateFrame("ScrollFrame",nil,f)
     sf2:SetSize(f.w/2,f.h)
     sf2:SetPoint("RIGHT")
-
+    --right ring scroll child
     local sc2 = CreateFrame("Frame")
     sf2:SetScrollChild(sc2)
     sf2:SetHorizontalScroll(f.w/2)
     sc2:SetSize(f.w,f.h)
-
+    --right ring texture
     local rt2 = sc2:CreateTexture(nil,"BACKGROUND",nil,-6)
-    rt2:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-ring")
+    rt2:SetTexture(cfg.ring.texture)
     rt2:SetSize(f.w,f.h)
     rt2:SetPoint("CENTER")
-    rt2:SetVertexColor(unpack(cfg.ringcolor))
-    rt2:SetBlendMode(cfg.ringblendmode)
+    rt2:SetVertexColor(unpack(cfg.ring.color))
+    rt2:SetBlendMode(cfg.ring.blendmode)
     rt2.baseDeg = 0
-
-    local rs2 = sc2:CreateTexture(nil,"BACKGROUND",nil,-5)
-    rs2:SetTexture("Interface\\AddOns\\"..an.."\\media\\compass-rose-spark")
-    rs2:SetSize(f.w,f.h)
-    rs2:SetPoint("CENTER")
-    rs2:SetVertexColor(unpack(cfg.sparkcolor))
-    rs2:SetBlendMode(cfg.sparkblendmode)
-    rs2.baseDeg = 0
-
-    f.leftRingTexture = rt1
     f.rightRingTexture = rt2
-    f.leftRingSpark = rs1
-    f.rightRingSpark = rs2
-
-    f:RegisterUnitEvent("UNIT_SPELLCAST_START", unit)
-    f:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit)
-    f:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit)
-    f:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", unit)
-    --f:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", unit)
-    --f:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", unit)
-    f:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", unit)
-    f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", unit)
-    f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", unit)
-    f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", unit)
-
-    --add special events that may help triggering important updates
+    --right ring spark
+    if cfg.spark and cfg.spark.enabled then
+      local rs2 = sc2:CreateTexture(nil,"BACKGROUND",nil,-5)
+      rs2:SetTexture(cfg.spark.texture)
+      rs2:SetSize(f.w,f.h)
+      rs2:SetPoint("CENTER")
+      rs2:SetVertexColor(unpack(cfg.spark.color))
+      rs2:SetBlendMode(cfg.spark.blendmode)
+      rs2.baseDeg = 0
+      f.rightRingSpark = rs2
+    end
+    --cast events != gcd
+    if unit ~= "gcd" then
+      f:RegisterUnitEvent("UNIT_SPELLCAST_START", unit)
+      f:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit)
+      f:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit)
+      f:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", unit)
+      f:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", unit)
+      --f:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", unit)
+      --f:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", unit)
+      f:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", unit)
+      f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", unit)
+      f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", unit)
+      f:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", unit)
+    end
+    --pet events
     if unit == "pet" then
-      f:RegisterUnitEvent("UNIT_PET","player") --check for pet changes
+      f:RegisterUnitEvent("UNIT_PET","player")
     end
+    --focus events
     if unit == "focus" then
-      f:RegisterEvent("PLAYER_FOCUS_CHANGED") --check for focus changes
+      f:RegisterEvent("PLAYER_FOCUS_CHANGED")
     end
+    --target events
     if unit == "target" then
-      f:RegisterEvent("PLAYER_TARGET_CHANGED") --check for target changes
+      f:RegisterEvent("PLAYER_TARGET_CHANGED")
     end
-
+    --gcd events
+    if unit == "gcd" then
+      --f:RegisterEvent("SPELL_UPDATE_COOLDOWN")
+      --f:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN")
+      f:RegisterUnitEvent("UNIT_SPELLCAST_START", "player")
+      f:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
+      --f:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", "player")
+      --f:RegisterEvent("SPELLS_CHANGED")
+    end
     Disable(f)
-
     f:SetScript("OnEvent",OnEvent)
-
   end
 
   -----------------------------
-  -- CALL
+  -- Init
   -----------------------------
 
-  for k, v in pairs(cfg) do
-    if v.enable then
-      CreateCompassCastbar(k,v)
-    end
+  for k, v in next, cfg do
+    CreateCompassCastbar(k,v)
   end
 
-  --ui scale change check frame
+  --check for ui scale changes
   local f = CreateFrame("Frame")
   f:RegisterEvent("UI_SCALE_CHANGED")
   f:RegisterEvent("PLAYER_LOGIN")

@@ -65,13 +65,13 @@ rActionBar:CreateMicroMenuBar(A, micromenubar)
 -----------------------------
 
 local bar1 = {
-  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 180 },
+  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 150 },
   frameScale      = 1,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
   buttonMargin    = 5,
-  numCols         = 6,
+  numCols         = 12,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
   frameVisibility = "[combat][mod][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide"
@@ -84,13 +84,13 @@ rActionBar:CreateActionBar1(A, bar1)
 -----------------------------
 
 local bar2 = {
-  framePoint      = { "TOP", _G[A.."Bar1"], "BOTTOM", 0, -10 },
+  framePoint      = { "BOTTOM", _G[A.."Bar1"], "TOP", 0, -5 },
   frameScale      = 1,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
   buttonMargin    = 5,
-  numCols         = 6,
+  numCols         = 12,
   startPoint      = "BOTTOMLEFT",
   --fader           = nil,
   frameVisibility = "[combat][mod][@target,exists,nodead] show; hide"
@@ -105,9 +105,8 @@ rActionBar:CreateActionBar2(A, bar2)
 --note. uses a different fader config object
 
 local bar3 = {
-  --framePoint      = { "BOTTOM", _G[A.."Bar2"], "TOP", 0, 0 },
-  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 10 },
-  frameScale      = 0.85,
+  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 5 },
+  frameScale      = 1,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
@@ -143,7 +142,7 @@ rActionBar:CreateActionBar4(A, bar4)
 -----------------------------
 
 local bar5 = {
-  framePoint      = { "RIGHT", _G[A.."Bar4"], "LEFT", 2, 0 },
+  framePoint      = { "RIGHT", _G[A.."Bar4"], "LEFT", 5, 0 },
   frameScale      = 1,
   framePadding    = 5,
   buttonWidth     = 32,

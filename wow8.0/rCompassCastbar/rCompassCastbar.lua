@@ -32,15 +32,39 @@ ringCfg["player"] = {
   --comment this in if you want the position to be fixed, otherwise position at cursor
   --point           = {"CENTER",0,0},
   background = {
-    enabled = true,
+    enabled = false,
     color = {0.4,0.3,0,1}, --red,green,blue,alpha
     blendmode = "ADD", --ADD or BLEND
     texture = mediaPath.."compass-rose",
   },
   ring = {
     color = {1,0.8,0,1},
+    blendmode = "BLEND",
+    texture = mediaPath.."compass-rose-ring",
+  },
+  spark = {
+    enabled = true,
+    color = {1,1,1},
     blendmode = "ADD",
-    texture = mediaPath.."compass-rose-ring-bright",
+    texture = mediaPath.."compass-rose-spark",
+  },
+}
+
+--gcd settings
+ringCfg["gcd"] = {
+  enabled         = true,
+  size            = {512,512},
+  scale           = 0.15 * overallScale,
+  background = {
+    enabled = false,
+    color = {0.5,0.4,0,1}, --red,green,blue,alpha
+    blendmode = "ADD", --ADD or BLEND
+    texture = mediaPath.."compass-rose",
+  },
+  ring = {
+    color = {0.5,0.5,0.5,1},
+    blendmode = "BLEND",
+    texture = mediaPath.."compass-rose-ring",
   },
   spark = {
     enabled = true,
@@ -65,30 +89,6 @@ ringCfg["target"] = {
   },
   ring = {
     color = {1,0,0,1},
-    blendmode = "ADD",
-    texture = mediaPath.."compass-rose-ring-bright",
-  },
-  spark = {
-    enabled = true,
-    color = {1,1,1},
-    blendmode = "ADD",
-    texture = mediaPath.."compass-rose-spark",
-  },
-}
-
---gcd settings
-ringCfg["gcd"] = {
-  enabled         = true,
-  size            = {512,512},
-  scale           = 0.15 * overallScale,
-  background = {
-    enabled = false,
-    color = {0.5,0.4,0,1}, --red,green,blue,alpha
-    blendmode = "ADD", --ADD or BLEND
-    texture = mediaPath.."compass-rose",
-  },
-  ring = {
-    color = {0.5,0.5,0.5,1},
     blendmode = "ADD",
     texture = mediaPath.."compass-rose-ring-bright",
   },

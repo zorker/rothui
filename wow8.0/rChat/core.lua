@@ -164,12 +164,18 @@ LOOT_MONEY_SPLIT_GUILD = LOOT_MONEY_SPLIT
 BNToastFrame:SetClampedToScreen(true)
 BNToastFrame:SetClampRectInsets(-15,15,15,-15)
 
---hide the menu button
+--ChatFrameMenuButton
 ChatFrameMenuButton:HookScript("OnShow", ChatFrameMenuButton.Hide)
 ChatFrameMenuButton:Hide()
-
+--ChatFrameChannelButton
 ChatFrameChannelButton:HookScript("OnShow", ChatFrameChannelButton.Hide)
 ChatFrameChannelButton:Hide()
+--ChatFrameToggleVoiceDeafenButton
+ChatFrameToggleVoiceDeafenButton:HookScript("OnShow", ChatFrameToggleVoiceDeafenButton.Hide)
+ChatFrameToggleVoiceDeafenButton:Hide()
+--ChatFrameToggleVoiceMuteButton
+ChatFrameToggleVoiceMuteButton:HookScript("OnShow", ChatFrameToggleVoiceMuteButton.Hide)
+ChatFrameToggleVoiceMuteButton:Hide()
 
 --hide the friend micro button
 local button = QuickJoinToastButton or FriendsMicroButton

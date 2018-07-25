@@ -13,7 +13,7 @@ local RAID_CLASS_COLORS, FACTION_BAR_COLORS, ICON_LIST = RAID_CLASS_COLORS, FACT
 local GameTooltip, GameTooltipStatusBar = GameTooltip, GameTooltipStatusBar
 local GameTooltipTextRight1, GameTooltipTextRight2, GameTooltipTextRight3, GameTooltipTextRight4, GameTooltipTextRight5, GameTooltipTextRight6, GameTooltipTextRight7, GameTooltipTextRight8 = GameTooltipTextRight1, GameTooltipTextRight2, GameTooltipTextRight3, GameTooltipTextRight4, GameTooltipTextRight5, GameTooltipTextRight6, GameTooltipTextRight7, GameTooltipTextRight8
 local GameTooltipTextLeft1, GameTooltipTextLeft2, GameTooltipTextLeft3, GameTooltipTextLeft4, GameTooltipTextLeft5, GameTooltipTextLeft6, GameTooltipTextLeft7, GameTooltipTextLeft8 = GameTooltipTextLeft1, GameTooltipTextLeft2, GameTooltipTextLeft3, GameTooltipTextLeft4, GameTooltipTextLeft5, GameTooltipTextLeft6, GameTooltipTextLeft7, GameTooltipTextLeft8
-
+local backdrop = nil
 local classColorHex, factionColorHex = {}, {}
 
 -----------------------------
@@ -33,7 +33,15 @@ cfg.guildColor = {1,0,1}
 cfg.afkColor = {0,1,1}
 cfg.scale = 0.95
 cfg.fontFamily = STANDARD_TEXT_FONT
-cfg.backdrop = { bgFile = "Interface\\Buttons\\WHITE8x8", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",  tiled = false, edgeSize = 16, insets = {left=3, right=3, top=3, bottom=3} }
+cfg.backdrop = {
+  bgFile = "Interface\\Buttons\\WHITE8x8",
+  edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+  tile = false,
+  tileEdge = false,
+  tileSize = 16,
+  edgeSize = 16,
+  insets = {left=3, right=3, top=3, bottom=3}
+}
 cfg.backdrop.bgColor = {0.08,0.08,0.1,0.92}
 cfg.backdrop.borderColor = {0.3,0.3,0.33,1}
 
@@ -97,7 +105,6 @@ local function OnTooltipSetUnit(self)
     end
     --color textleft2 by classificationcolor
     local unitClassification = UnitClassification(unit)
-
     local levelLine
     if string.find(GameTooltipTextLeft2:GetText() or "empty", "%a%s%d") then
       levelLine = GameTooltipTextLeft2
@@ -154,34 +161,43 @@ local function OnTooltipSetUnit(self)
   end
 end
 
---TooltipOnShow
-local function TooltipOnShow(self)
-  --print(self:GetName(),"TooltipOnShow")
-  self:SetBackdrop(cfg.backdrop)
-  self:SetBackdropColor(unpack(cfg.backdrop.bgColor))
-  self:SetBackdropBorderColor(unpack(cfg.backdrop.borderColor))
+local function ResetBackdropColor()
+  backdrop.backdropColor:SetRGBA(unpack(backdrop.bgColor))
+  backdrop.backdropBorderColor:SetRGBA(unpack(backdrop.borderColor))
+end
+
+local function SetBackdropColor(self)
+  self:SetBackdropColor(backdrop.backdropColor:GetRGBA())
+  self:SetBackdropBorderColor(backdrop.backdropBorderColor:GetRGBA())
+end
+
+--OnShow
+local function OnShow(self)
+  ResetBackdropColor()
   local itemName, itemLink = self:GetItem()
   if itemLink then
     local _, _, itemRarity = GetItemInfo(itemLink)
     if itemRarity then
-      self:SetBackdropBorderColor(GetItemQualityColor(itemRarity))
+      local r,g,b = GetItemQualityColor(itemRarity)
+      backdrop.backdropBorderColor:SetRGBA(r,g,b,1)
     end
   end
+  SetBackdropColor(self)
 end
 
---TooltipOnHide
-local function TooltipOnHide(self)
-  --print(self:GetName(),"TooltipOnHide")
-  --self:SetBackdrop(cfg.backdrop)
-  self:SetBackdropColor(unpack(cfg.backdrop.bgColor))
-  self:SetBackdropBorderColor(unpack(cfg.backdrop.borderColor))
+--OnHide
+local function OnHide(self)
+  ResetBackdropColor()
 end
 
 --OnTooltipCleared
 local function OnTooltipCleared(self)
-  --fix the blue tooltip background...whatever that is
-  --self:SetBackdrop(cfg.backdrop)
-  self:SetBackdropColor(unpack(cfg.backdrop.bgColor))
+  SetBackdropColor(self)
+end
+
+--OnUpdate
+local function OnUpdate(self)
+  SetBackdropColor(self)
 end
 
 local function FixBarColor(self,r,g,b)
@@ -191,6 +207,7 @@ local function FixBarColor(self,r,g,b)
 end
 
 local function ResetTooltipPosition(self,parent)
+  if not cfg.pos then return end
   if type(cfg.pos) == "string" then
     self:SetOwner(parent, cfg.pos)
   else
@@ -204,10 +221,20 @@ end
 -- Init
 -----------------------------
 
-hooksecurefunc(GameTooltipStatusBar,"SetStatusBarColor", FixBarColor)
-if cfg.pos then
-  hooksecurefunc("GameTooltip_SetDefaultAnchor", ResetTooltipPosition)
-end
+backdrop  = GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT
+backdrop.bgFile = cfg.backdrop.bgFile
+backdrop.edgeFile = cfg.backdrop.edgeFile
+backdrop.tile = cfg.backdrop.tile
+backdrop.tileEdge = cfg.backdrop.tileEdge
+backdrop.tileSize = cfg.backdrop.tileSize
+backdrop.edgeSize = cfg.backdrop.edgeSize
+backdrop.insets = cfg.backdrop.insets
+backdrop.backdropColor = CreateColor(1,1,1)
+backdrop.backdropBorderColor = CreateColor(1,1,1)
+backdrop.backdropColor.GetRGB = ColorMixin.GetRGBA
+backdrop.backdropBorderColor.GetRGB = ColorMixin.GetRGBA
+backdrop.bgColor = cfg.backdrop.bgColor
+backdrop.borderColor = cfg.backdrop.borderColor
 
 --hex class colors
 for class, color in next, RAID_CLASS_COLORS do
@@ -244,18 +271,27 @@ GameTooltipStatusBar.bg:SetAllPoints()
 GameTooltipStatusBar.bg:SetColorTexture(1,1,1)
 GameTooltipStatusBar.bg:SetVertexColor(0,0,0,0.7)
 
+--GameTooltipStatusBar:SetStatusBarColor()
+hooksecurefunc(GameTooltipStatusBar,"SetStatusBarColor", FixBarColor)
+--GameTooltip_SetDefaultAnchor()
+hooksecurefunc("GameTooltip_SetDefaultAnchor", ResetTooltipPosition)
 --OnTooltipSetUnit
 GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
---OnTooltipCleared
---GameTooltip:HookScript("OnTooltipCleared", OnTooltipCleared) --bugged when hovering an item, fires way to often
 
 --loop over tooltips
-local tooltips = { GameTooltip, ItemRefTooltip, ShoppingTooltip1, ShoppingTooltip2, ShoppingTooltip3, WorldMapTooltip, SmallTextTooltip }
-for idx, tooltip in ipairs(tooltips) do
-  tooltip:SetBackdrop(cfg.backdrop)
+local tooltips = { GameTooltip,ShoppingTooltip1,ShoppingTooltip2,ItemRefTooltip,ItemRefShoppingTooltip1,ItemRefShoppingTooltip2,WorldMapTooltip,
+WorldMapCompareTooltip1,WorldMapCompareTooltip2,SmallTextTooltip }
+for i, tooltip in next, tooltips do
+  tooltip:SetBackdrop(backdrop)
   tooltip:SetScale(cfg.scale)
-  tooltip:HookScript("OnShow", TooltipOnShow)
-  tooltip:HookScript("OnHide", TooltipOnHide)
+  tooltip:HookScript("OnShow", OnShow)
+  --tooltip:HookScript("OnHide", OnHide)
+  if tooltip:HasScript("OnTooltipCleared") then
+    tooltip:HookScript("OnTooltipCleared", OnTooltipCleared)
+  end
+  --if tooltip:HasScript("OnUpdate") then
+    --tooltip:HookScript("OnUpdate", OnUpdate)
+  --end
 end
 
 --loop over menues

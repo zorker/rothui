@@ -28,8 +28,9 @@ local framesToHide = {
 
 local framesToDisable = {
   MainMenuBar,
+  --MicroButtonAndBagsBar, MainMenuBarArtFrame
   ActionBarDownButton, ActionBarUpButton, MainMenuBarVehicleLeaveButton, ExhaustionTick,
-  ReputationWatchBar, ArtifactWatchBar, HonorWatchBar, MainMenuExpBar, MainMenuBarMaxLevelBar,
+  --ReputationWatchBar, ArtifactWatchBar, HonorWatchBar, MainMenuExpBar, MainMenuBarMaxLevelBar,
   OverrideActionBar,
   OverrideActionBarExpBar, OverrideActionBarHealthBar, OverrideActionBarPowerBar, OverrideActionBarPitchFrame,
 }
@@ -39,6 +40,7 @@ local framesToDisable = {
 -----------------------------
 
 local function DisableAllScripts(frame)
+  if not frame then return end
   for i, script in next, scripts do
     if frame:HasScript(script) then
       frame:SetScript(script,nil)
@@ -49,11 +51,15 @@ end
 --hide main menu bar
 function L:HideMainMenuBar()
   for i, frame in next, framesToHide do
-    frame:SetParent(hiddenFrame)
+    if frame then
+      frame:SetParent(hiddenFrame)
+    end
   end
   for i, frame in next, framesToDisable do
-    frame:UnregisterAllEvents()
-    DisableAllScripts(frame)
+    if frame then
+      frame:UnregisterAllEvents()
+      DisableAllScripts(frame)
+    end
   end
 end
 

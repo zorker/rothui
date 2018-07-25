@@ -30,7 +30,7 @@ rButtonAura:AddAura(aura)
 
 --battle shout
 local aura = {
-  button          = MultiBarBottomLeftButton12,
+  button          = MultiBarBottomLeftButton10,
   unit            = "player",
   caster          = "player",
   spellid         = 6673,
@@ -46,7 +46,7 @@ rButtonAura:AddAura(aura)
 
 --ignore pain
 local aura = {
-  button          = MultiBarBottomLeftButton8,
+  button          = ActionButton9,
   unit            = "player",
   caster          = "player",
   spellid         = 190456,
@@ -62,7 +62,7 @@ rButtonAura:AddAura(aura)
 
 --avatar
 local aura = {
-  button          = ActionButton10,
+  button          = MultiBarBottomLeftButton9,
   unit            = "player",
   caster          = "player",
   spellid         = 107574,
@@ -78,7 +78,7 @@ rButtonAura:AddAura(aura)
 
 --last stand
 local aura = {
-  button          = MultiBarBottomLeftButton9,
+  button          = MultiBarBottomLeftButton7,
   unit            = "player",
   caster          = "player",
   spellid         = 12975,
@@ -94,7 +94,7 @@ rButtonAura:AddAura(aura)
 
 --shield wall
 local aura = {
-  button          = MultiBarBottomLeftButton10,
+  button          = MultiBarBottomLeftButton12,
   unit            = "player",
   caster          = "player",
   spellid         = 871,

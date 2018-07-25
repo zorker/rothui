@@ -28,19 +28,18 @@ local framesToHide = {
 
 local framesToDisable = {
   MainMenuBar,
-  --MicroButtonAndBagsBar, MainMenuBarArtFrame
-  ActionBarDownButton, ActionBarUpButton, MainMenuBarVehicleLeaveButton, ExhaustionTick,
-  --ReputationWatchBar, ArtifactWatchBar, HonorWatchBar, MainMenuExpBar, MainMenuBarMaxLevelBar,
+  MicroButtonAndBagsBar, MainMenuBarArtFrame, StatusTrackingBarManager,
+  ActionBarDownButton, ActionBarUpButton, MainMenuBarVehicleLeaveButton,
   OverrideActionBar,
   OverrideActionBarExpBar, OverrideActionBarHealthBar, OverrideActionBarPowerBar, OverrideActionBarPitchFrame,
 }
 
 -----------------------------
--- Init
+-- Functions
 -----------------------------
 
+--DisableAllScripts
 local function DisableAllScripts(frame)
-  if not frame then return end
   for i, script in next, scripts do
     if frame:HasScript(script) then
       frame:SetScript(script,nil)
@@ -48,27 +47,32 @@ local function DisableAllScripts(frame)
   end
 end
 
---hide main menu bar
+--L:HideMainMenuBar
 function L:HideMainMenuBar()
+  --bring back the currency
+  local function OnEvent(self,event)
+    TokenFrame_LoadUI()
+    TokenFrame_Update()
+    BackpackTokenFrame_Update()
+  end
+  hiddenFrame:SetScript("OnEvent",OnEvent)
+  hiddenFrame:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
   for i, frame in next, framesToHide do
-    if frame then
-      frame:SetParent(hiddenFrame)
-    end
+    frame:SetParent(hiddenFrame)
   end
   for i, frame in next, framesToDisable do
-    if frame then
-      frame:UnregisterAllEvents()
-      DisableAllScripts(frame)
-    end
+    frame:UnregisterAllEvents()
+    DisableAllScripts(frame)
   end
 end
 
 --fix blizzard cooldown flash
-hooksecurefunc(getmetatable(ActionButton1Cooldown).__index, 'SetCooldown', function(self)
+local function FixCooldownFlash(self)
   if not self then return end
   if self:GetEffectiveAlpha() > 0 then
     self:Show()
   else
     self:Hide()
   end
-end)
+end
+hooksecurefunc(getmetatable(ActionButton1Cooldown).__index, "SetCooldown", FixCooldownFlash)

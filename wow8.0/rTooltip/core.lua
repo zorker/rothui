@@ -1,6 +1,6 @@
 
 -- rTooltip: core
--- zork, 2016
+-- zork, 2018
 
 -----------------------------
 -- Variables
@@ -47,7 +47,7 @@ cfg.backdrop.borderColor = {0.3,0.3,0.33,1}
 
 --pos can be either a point table or a anchor string
 --cfg.pos = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -10, 180 }
-cfg.pos = "ANCHOR_NONE"--"ANCHOR_CURSOR"
+cfg.pos = "ANCHOR_NONE" --"ANCHOR_CURSOR"
 
 -----------------------------
 -- Functions
@@ -337,5 +337,5 @@ end)
 
 --HookScript GameTooltip OnTooltipSetSpell
 GameTooltip:HookScript("OnTooltipSetSpell", function(self)
-  TooltipAddSpellID(self,select(3,self:GetSpell()))
+  TooltipAddSpellID(self,select(2,self:GetSpell()))
 end)

@@ -15,31 +15,15 @@ local A, L = ...
 -----------------------------
 
 local mediapath = "interface\\addons\\"..A.."\\media\\"
-
------------------------------
--- copyTable
------------------------------
-
-local function copyTable(orig)
-  local orig_type = type(orig)
-  local copy
-  if orig_type == 'table' then
-    copy = {}
-    for orig_key, orig_value in next, orig, nil do
-      copy[copyTable(orig_key)] = copyTable(orig_value)
-    end
-    setmetatable(copy, copyTable(getmetatable(orig)))
-  else -- number, string, boolean, etc
-    copy = orig
-  end
-  return copy
-end
+local copyTable = rLib.CopyTable
 
 -----------------------------
 -- actionButtonConfig
 -----------------------------
 
 local actionButtonConfig = {}
+--make the config available for other addons (like rFilter)
+rButtonTemplate_Zork_ActionButtonConfig = actionButtonConfig
 
 --backdrop
 actionButtonConfig.backdrop = {
@@ -141,7 +125,7 @@ actionButtonConfig.name = {
     {"BOTTOMLEFT", 0, 0 },
     {"BOTTOMRIGHT", 0, 0 },
   },
-  alpha = 0,
+  alpha = 1,
 }
 
 --hotkey
@@ -151,7 +135,7 @@ actionButtonConfig.hotkey = {
     {"TOPRIGHT", 0, 0 },
     {"TOPLEFT", 0, 0 },
   },
-  alpha = 0,
+  alpha = 1,
 }
 
 --count

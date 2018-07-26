@@ -13,6 +13,7 @@ local A, L = ...
 -----------------------------
 
 if L.C.playerName == "Zörk" then
-  --local button = rFilter:CreateCooldown(6552,36,{"CENTER"},nil,{0.2,1},true) --pummel
-  --if button then table.insert(L.cooldowns,button) end
+  --demo shout
+  local button = rFilter:CreateCooldown(1160,36,{"CENTER"},"[spec:3,combat]show;hide",{0.2,1},true)
+  if button then table.insert(L.cooldowns,button) end
 end

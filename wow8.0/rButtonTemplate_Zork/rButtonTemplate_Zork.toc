@@ -2,6 +2,6 @@
 ## Author: zork
 ## Title: rButtonTemplate_Zork
 ## Notes: Zork's button theme for rButtonTemplate
-## RequiredDeps: rButtonTemplate
+## RequiredDeps: rLib, rButtonTemplate
 
 theme.lua

@@ -9,14 +9,22 @@
 local A, L = ...
 
 --check if the button template addon and the action button config theme is available
-if not rButtonTemplate or not rButtonTemplate_Zork_ActionButtonConfig then return end
+if not rButtonTemplate_Zork_ActionButtonConfig then
+  print(A,"rButtonTemplate_Zork_ActionButtonConfig not found","styling not possible")
+  return
+else
+  print(A,"styling buttons using rButtonTemplate_Zork_ActionButtonConfig")
+end
+
+local copyTable = rLib.CopyTable
 
 -----------------------------
 -- Actionbutton Config
 -----------------------------
 
 --load the default button theme
-local actionButtonConfig = rLib.CopyTable(rButtonTemplate_Zork_ActionButtonConfig)
+local actionButtonConfig = copyTable(rButtonTemplate_Zork_ActionButtonConfig)
+print(actionButtonConfig.backdrop.bgFile)
 
 --name, we use the default actionbutton.name fontstring and use it as our duration fontstring
 actionButtonConfig.name = {

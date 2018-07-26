@@ -12,12 +12,4 @@ COMBAT_TEXT_HEIGHT = size
 COMBAT_TEXT_CRIT_MAXHEIGHT = size*1
 COMBAT_TEXT_CRIT_MINHEIGHT = size*1
 COMBAT_TEXT_SCROLLSPEED = 2.5
-
-local function UpdateDisplayMessages()
-  if COMBAT_TEXT_FLOAT_MODE == "1" then
-    COMBAT_TEXT_LOCATIONS.startY = 325
-    COMBAT_TEXT_LOCATIONS.endY = 525
-  end
-end
-
-hooksecurefunc("CombatText_UpdateDisplayedMessages", UpdateDisplayMessages)
+COMBAT_TEXT_Y_SCALE = 1.1

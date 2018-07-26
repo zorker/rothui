@@ -65,13 +65,13 @@ rActionBar:CreateMicroMenuBar(A, micromenubar)
 -----------------------------
 
 local bar1 = {
-  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 150 },
-  frameScale      = 1,
+  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 230 },
+  frameScale      = .9,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
   buttonMargin    = 5,
-  numCols         = 12,
+  numCols         = 6,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
   frameVisibility = "[combat][mod][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide"
@@ -84,13 +84,14 @@ rActionBar:CreateActionBar1(A, bar1)
 -----------------------------
 
 local bar2 = {
-  framePoint      = { "BOTTOM", _G[A.."Bar1"], "TOP", 0, -5 },
-  frameScale      = 1,
+  --framePoint      = { "BOTTOM", _G[A.."Bar1"], "TOP", 0, -5 },
+  framePoint      = { "TOP", _G[A.."Bar1"], "BOTTOM", 0, 5 },
+  frameScale      = .9,
   framePadding    = 5,
   buttonWidth     = 32,
   buttonHeight    = 32,
   buttonMargin    = 5,
-  numCols         = 12,
+  numCols         = 6,
   startPoint      = "BOTTOMLEFT",
   --fader           = nil,
   frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [combat][mod][@target,exists,nodead] show; hide"

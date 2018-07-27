@@ -13,7 +13,6 @@ local RAID_CLASS_COLORS, FACTION_BAR_COLORS, ICON_LIST = RAID_CLASS_COLORS, FACT
 local GameTooltip, GameTooltipStatusBar = GameTooltip, GameTooltipStatusBar
 local GameTooltipTextRight1, GameTooltipTextRight2, GameTooltipTextRight3, GameTooltipTextRight4, GameTooltipTextRight5, GameTooltipTextRight6, GameTooltipTextRight7, GameTooltipTextRight8 = GameTooltipTextRight1, GameTooltipTextRight2, GameTooltipTextRight3, GameTooltipTextRight4, GameTooltipTextRight5, GameTooltipTextRight6, GameTooltipTextRight7, GameTooltipTextRight8
 local GameTooltipTextLeft1, GameTooltipTextLeft2, GameTooltipTextLeft3, GameTooltipTextLeft4, GameTooltipTextLeft5, GameTooltipTextLeft6, GameTooltipTextLeft7, GameTooltipTextLeft8 = GameTooltipTextLeft1, GameTooltipTextLeft2, GameTooltipTextLeft3, GameTooltipTextLeft4, GameTooltipTextLeft5, GameTooltipTextLeft6, GameTooltipTextLeft7, GameTooltipTextLeft8
-local backdrop = nil
 local classColorHex, factionColorHex = {}, {}
 
 -----------------------------
@@ -255,6 +254,9 @@ local tooltips = { GameTooltip,ShoppingTooltip1,ShoppingTooltip2,ItemRefTooltip,
 WorldMapCompareTooltip1,WorldMapCompareTooltip2,SmallTextTooltip }
 for i, tooltip in next, tooltips do
   tooltip:SetScale(cfg.scale)
+  if tooltip:HasScript("OnTooltipCleared") then
+    tooltip:HookScript("OnTooltipCleared", SetBackdropStyle)
+  end
 end
 
 --loop over menues

@@ -74,7 +74,7 @@ local bar1 = {
   numCols         = 6,
   startPoint      = "BOTTOMLEFT",
   fader           = nil,
-  frameVisibility = "[combat][mod][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide"
+  frameVisibility = "[petbattle] hide; [combat][mod][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide"
 }
 --create
 rActionBar:CreateActionBar1(A, bar1)

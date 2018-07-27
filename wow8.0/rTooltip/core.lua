@@ -44,6 +44,7 @@ cfg.backdrop = {
 }
 cfg.backdrop.bgColor = {0.08,0.08,0.1,0.92}
 cfg.backdrop.borderColor = {0.3,0.3,0.33,1}
+cfg.backdrop.azeriteBorderColor = {1,0.3,0,1}
 
 --pos can be either a point table or a anchor string
 --cfg.pos = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -10, 180 }
@@ -161,52 +162,36 @@ local function OnTooltipSetUnit(self)
   end
 end
 
-local function ResetBackdropColor()
-  backdrop.backdropColor:SetRGBA(unpack(backdrop.bgColor))
-  backdrop.backdropBorderColor:SetRGBA(unpack(backdrop.borderColor))
-end
-
-local function SetBackdropColor(self)
-  self:SetBackdropColor(backdrop.backdropColor:GetRGBA())
-  self:SetBackdropBorderColor(backdrop.backdropBorderColor:GetRGBA())
-end
-
---OnShow
-local function OnShow(self)
-  ResetBackdropColor()
-  local itemName, itemLink = self:GetItem()
+local function SetBackdropStyle(self,style)
+  if self.TopOverlay then self.TopOverlay:Hide() end
+  if self.BottomOverlay then self.BottomOverlay:Hide() end
+  self:SetBackdrop(cfg.backdrop)
+  self:SetBackdropColor(unpack(cfg.backdrop.bgColor))
+  local _, itemLink = self:GetItem()
   if itemLink then
+    local azerite = C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItemByID(itemLink) or C_AzeriteItem.IsAzeriteItemByID(itemLink) or false
     local _, _, itemRarity = GetItemInfo(itemLink)
-    if itemRarity then
-      local r,g,b = GetItemQualityColor(itemRarity)
-      backdrop.backdropBorderColor:SetRGBA(r,g,b,1)
+    local r,g,b = 1,1,1
+    if itemRarity then r,g,b = GetItemQualityColor(itemRarity) end
+    --use azerite coloring or item rarity
+    if azerite and cfg.backdrop.azeriteBorderColor then
+      self:SetBackdropBorderColor(unpack(cfg.backdrop.azeriteBorderColor))
+    else
+      self:SetBackdropBorderColor(r,g,b,1)
     end
+  else
+    --no item, use default border
+    self:SetBackdropBorderColor(unpack(cfg.backdrop.borderColor))
   end
-  SetBackdropColor(self)
 end
 
---OnHide
-local function OnHide(self)
-  ResetBackdropColor()
-end
-
---OnTooltipCleared
-local function OnTooltipCleared(self)
-  SetBackdropColor(self)
-end
-
---OnUpdate
-local function OnUpdate(self)
-  SetBackdropColor(self)
-end
-
-local function FixBarColor(self,r,g,b)
+local function SetStatusBarColor(self,r,g,b)
   if not cfg.barColor then return end
   if r == cfg.barColor.r and g == cfg.barColor.g and b == cfg.barColor.b then return end
   self:SetStatusBarColor(cfg.barColor.r,cfg.barColor.g,cfg.barColor.b)
 end
 
-local function ResetTooltipPosition(self,parent)
+local function SetDefaultAnchor(self,parent)
   if not cfg.pos then return end
   if type(cfg.pos) == "string" then
     self:SetOwner(parent, cfg.pos)
@@ -220,21 +205,6 @@ end
 -----------------------------
 -- Init
 -----------------------------
-
-backdrop  = GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT
-backdrop.bgFile = cfg.backdrop.bgFile
-backdrop.edgeFile = cfg.backdrop.edgeFile
-backdrop.tile = cfg.backdrop.tile
-backdrop.tileEdge = cfg.backdrop.tileEdge
-backdrop.tileSize = cfg.backdrop.tileSize
-backdrop.edgeSize = cfg.backdrop.edgeSize
-backdrop.insets = cfg.backdrop.insets
-backdrop.backdropColor = CreateColor(1,1,1)
-backdrop.backdropBorderColor = CreateColor(1,1,1)
-backdrop.backdropColor.GetRGB = ColorMixin.GetRGBA
-backdrop.backdropBorderColor.GetRGB = ColorMixin.GetRGBA
-backdrop.bgColor = cfg.backdrop.bgColor
-backdrop.borderColor = cfg.backdrop.borderColor
 
 --hex class colors
 for class, color in next, RAID_CLASS_COLORS do
@@ -272,9 +242,11 @@ GameTooltipStatusBar.bg:SetColorTexture(1,1,1)
 GameTooltipStatusBar.bg:SetVertexColor(0,0,0,0.7)
 
 --GameTooltipStatusBar:SetStatusBarColor()
-hooksecurefunc(GameTooltipStatusBar,"SetStatusBarColor", FixBarColor)
+hooksecurefunc(GameTooltipStatusBar,"SetStatusBarColor", SetStatusBarColor)
 --GameTooltip_SetDefaultAnchor()
-hooksecurefunc("GameTooltip_SetDefaultAnchor", ResetTooltipPosition)
+if cfg.pos then hooksecurefunc("GameTooltip_SetDefaultAnchor", SetDefaultAnchor) end
+--GameTooltip_SetBackdropStyle
+hooksecurefunc("GameTooltip_SetBackdropStyle", SetBackdropStyle)
 --OnTooltipSetUnit
 GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
 
@@ -282,16 +254,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
 local tooltips = { GameTooltip,ShoppingTooltip1,ShoppingTooltip2,ItemRefTooltip,ItemRefShoppingTooltip1,ItemRefShoppingTooltip2,WorldMapTooltip,
 WorldMapCompareTooltip1,WorldMapCompareTooltip2,SmallTextTooltip }
 for i, tooltip in next, tooltips do
-  tooltip:SetBackdrop(backdrop)
   tooltip:SetScale(cfg.scale)
-  tooltip:HookScript("OnShow", OnShow)
-  --tooltip:HookScript("OnHide", OnHide)
-  if tooltip:HasScript("OnTooltipCleared") then
-    tooltip:HookScript("OnTooltipCleared", OnTooltipCleared)
-  end
-  --if tooltip:HasScript("OnUpdate") then
-    --tooltip:HookScript("OnUpdate", OnUpdate)
-  --end
 end
 
 --loop over menues
@@ -299,7 +262,7 @@ local menues = {
   DropDownList1MenuBackdrop,
   DropDownList2MenuBackdrop,
 }
-for idx, menu in ipairs(menues) do
+for i, menu in next, menues do
   menu:SetScale(cfg.scale)
 end
 
@@ -308,7 +271,7 @@ end
 --func TooltipAddSpellID
 local function TooltipAddSpellID(self,spellid)
   if not spellid then return end
-  self:AddDoubleLine("|cff0099ffSpell ID|r",spellid)
+  self:AddDoubleLine("|cff0099ffspellid|r",spellid)
   self:Show()
 end
 

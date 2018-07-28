@@ -13,6 +13,8 @@ local tick = 0.1
 local GetTime, UnitAura = GetTime, UnitAura
 local numAuras = 0
 local auras = {}
+local spec = nil
+local form = 0
 
 -----------------------------
 -- rButtonAura Global
@@ -35,6 +37,24 @@ function rButtonAura:SetTick(t)
   tick = t
 end
 
+local function ShowAura(aura)
+  if aura.bar then
+    aura.bar:Show()
+  end
+  if aura.border then
+    aura.border:Show()
+  end
+end
+
+local function HideAura(aura)
+  if aura.bar then
+    aura.bar:Hide()
+  end
+  if aura.border then
+    aura.border:Hide()
+  end
+end
+
 --UpdateAura
 local function UpdateAura(aura)
   local name, icon, count, debuffType, duration, expires, caster = AuraUtil.FindAuraByName(aura.spellName, aura.unit, aura.filter)
@@ -43,25 +63,27 @@ local function UpdateAura(aura)
       local perc = (duration+GetTime()-expires)/duration
       local w = aura.bar.maxwidth-perc*aura.bar.maxwidth
       aura.bar:SetWidth(w)
-      aura.bar:Show()
     end
-    if aura.border then
-      aura.border:Show()
-    end
+    ShowAura(aura)
   else
-    if aura.bar then
-      aura.bar:Hide()
-    end
-    if aura.border then
-      aura.border:Hide()
-    end
+    HideAura(aura)
   end
 end
 
 --UpdateAuras
 local function UpdateAuras()
   for i, aura in next, auras do
-    UpdateAura(aura)
+    if aura.requireSpell and not IsPlayerSpell(aura.requireSpell) then
+      HideAura(aura)
+    elseif aura.spec and aura.form and (aura.spec ~= spec or aura.form ~= form) then
+      HideAura(aura)
+    elseif aura.spec and aura.spec ~= spec then
+      HideAura(aura)
+    elseif aura.form and aura.form ~= form then
+      HideAura(aura)
+    else
+      UpdateAura(aura)
+    end
   end
 end
 
@@ -69,6 +91,11 @@ end
 local function Tick()
   UpdateAuras()
   C_Timer.After(tick, Tick)
+end
+
+local function UpdateSpells()
+  spec = GetSpecialization()
+  form = GetShapeshiftForm()
 end
 
 --Login
@@ -108,10 +135,14 @@ local function Login()
     end
   end
   if not error then
+    --RegisterCallback SPELLS_CHANGE
+    rLib:RegisterCallback("SPELLS_CHANGED", UpdateSpells)
+    UpdateSpells()
     Tick()
   end
 end
 
 --RegisterCallback PLAYER_LOGIN
 rLib:RegisterCallback("PLAYER_LOGIN", Login)
+
 

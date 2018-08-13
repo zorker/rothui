@@ -33,6 +33,57 @@ if character == "Zörk" then
   }
   rButtonAura:AddAura(aura)
 
+  --arms sweeping strikes
+  local aura = {
+    button          = ActionButton7,
+    unit            = "player",
+    caster          = "player",
+    spellid         = 260708,
+    filter          = "HELPFUL|PLAYER",
+    spec            = 1,
+    useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT",0,0},
+    barHeight       = 4,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
+  --arms colossus smash
+  local aura = {
+    button          = ActionButton8,
+    unit            = "target",
+    caster          = "player",
+    spellid         = 208086,
+    filter          = "HARMFUL|PLAYER",
+    spec            = 1,
+    useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT",0,0},
+    barHeight       = 4,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
+  --spell reflect
+  local aura = {
+    button          = ActionButton10,
+    unit            = "player",
+    caster          = "player",
+    spellid         = 23920,
+    filter          = "HELPFUL|PLAYER",
+    spec            = 3,
+    useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT",0,0},
+    barHeight       = 4,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
   --battle shout
   local aura = {
     button          = MultiBarBottomLeftButton10,
@@ -40,7 +91,7 @@ if character == "Zörk" then
     caster          = "player",
     spellid         = 6673,
     filter          = "HELPFUL|PLAYER",
-    spec            = 3,
+    --spec            = 3,
     useBar          = false,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT",0,0},

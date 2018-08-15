@@ -26,8 +26,8 @@ local cfg = {
   scale = 0.9,
   point = { "TOP", 0, -150 },
   size = { 32, 32 },
-  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [mod] show; hide"
-  frameVisibilityFunc = nil
+  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift][combat] hide; [mod] show; hide",
+  frameVisibilityFunc = nil,
 }
 
 -----------------------------
@@ -36,35 +36,25 @@ local cfg = {
 
 local function OnEnter(self)
   GameTooltip:SetOwner(self, "ANCHOR_TOP")
-  GameTooltip:AddLine(self:GetName(), 0, 1, 0.5, 1, 1, 1)
-  --azerite
-  local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
-  if azeriteItemLocation then
-    local cur, max = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation)
-    local lvl = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
-    GameTooltip:AddLine("Azerite", 0, 1, 0.5, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Level", lvl, 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Cur/Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
-  end
+  GameTooltip:AddLine(self:GetName(), 1, 0.5, 0, 1, 1, 1)
   --experience
   if UnitLevel("player") < MAX_PLAYER_LEVEL and not IsXPUserDisabled() then
     local cur, max = UnitXP("player"), UnitXPMax("player")
-    local level = UnitLevel("player")
+    local lvl = UnitLevel("player")
     local rested = GetXPExhaustion()
     GameTooltip:AddLine("Experience", 0, 1, 0.5, 1, 1, 1)
     GameTooltip:AddDoubleLine("Level", lvl, 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Cur/Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Cur / Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
     GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
     GameTooltip:AddDoubleLine("Rested", rested, 1, 1, 1, 1, 1, 1)
   end
   --honor
   --if InActiveBattlefield() or IsInActiveWorldPVP() then
     local cur, max = UnitHonor("player"), UnitHonorMax("player")
-    local level = UnitHonorLevel("player")
+    local lvl = UnitHonorLevel("player")
     GameTooltip:AddLine("Honor", 0, 1, 0.5, 1, 1, 1)
     GameTooltip:AddDoubleLine("Level", lvl, 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Cur/Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Cur / Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
     GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
   --end
   --reputation
@@ -72,7 +62,17 @@ local function OnEnter(self)
   if name then
     GameTooltip:AddLine(name.."Reputation", 0, 1, 0.5, 1, 1, 1)
     GameTooltip:AddDoubleLine("Level", _G["FACTION_STANDING_LABEL"..standing], 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Cur/Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Cur / Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
+  end
+  --azerite
+  local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
+  if azeriteItemLocation then
+    local cur, max = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation)
+    local lvl = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
+    GameTooltip:AddLine("Azerite", 0, 1, 0.5, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Level", lvl, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Cur / Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
     GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
   end
   GameTooltip:Show()
@@ -85,9 +85,9 @@ end
 local function OnClick(self)
   self.count = self.count+1
   if self.count % 2 == 0 then
-    self.gem:SetTexture(L.mediapath.."chatgem_active")
-  else
     self.gem:SetTexture(L.mediapath.."chatgem_inactive")
+  else
+    self.gem:SetTexture(L.mediapath.."chatgem_active")
   end
 end
 
@@ -112,7 +112,7 @@ button:SetScript("OnLeave", OnLeave)
 button:SetScript("OnClick", OnClick)
 
 --drag frame
-rLib:CreateDragFrame(frame, L.dragFrames, -2, true)
+rLib:CreateDragFrame(button, L.dragFrames, -2, true)
 
 --create slash commands
 rLib:CreateSlashCmd(L.addonName, L.addonShortcut, L.dragFrames, L.addonColor)

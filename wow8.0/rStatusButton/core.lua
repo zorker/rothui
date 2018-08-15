@@ -17,6 +17,7 @@ L.mediapath       = "interface\\addons\\"..A.."\\media\\"
 
 local GameTooltip, C_AzeriteItem = GameTooltip, C_AzeriteItem
 
+
 -----------------------------
 -- Config
 -----------------------------
@@ -34,15 +35,25 @@ local cfg = {
 -----------------------------
 
 local function OnEnter(self)
+  local cur, max, lvl, rested
   GameTooltip:SetOwner(self, "ANCHOR_TOP")
   GameTooltip:AddLine(self:GetName(), 0, 1, 0.5, 1, 1, 1)
   --azeriteItemLocation
   local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
   if azeriteItemLocation then
-    local cur, max = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation)
-    local level = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
-    GameTooltip:AddDoubleLine("AzeriteItemXP", cur.." / "..max, 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("AzeriteItemLvl", level, 1, 1, 1, 1, 1, 1)
+    cur, max = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation)
+    lvl = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
+    GameTooltip:AddLine("Azerite", 0, 1, 0.5, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Level", lvl, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Experience", cur.." / "..max, 1, 1, 1, 1, 1, 1)
+  end
+  if UnitLevel("player") < MAX_PLAYER_LEVEL and not IsXPUserDisabled() then
+    cur, max = UnitXP("player"), UnitXPMax("player")
+    level = UnitLevel("player")
+    rested = GetXPExhaustion()
+    GameTooltip:AddDoubleLine("Level", lvl, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Experience", cur.." / "..max, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Rested Experience", rested, 1, 1, 1, 1, 1, 1)
   end
   GameTooltip:Show()
 end
@@ -60,7 +71,7 @@ button:SetScale(cfg.scale)
 button:SetPoint(unpack(cfg.point))
 button:SetSize(unpack(cfg.size))
 button.frameVisibility = cfg.frameVisibility
-button.frameVisibilityFunc = nil
+button.frameVisibilityFunc = cfg.frameVisibilityFunc
 RegisterStateDriver(button, cfg.frameVisibilityFunc or "visibility", cfg.frameVisibility)
 
 button:SetScript("OnEnter", OnEnter)

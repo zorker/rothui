@@ -35,25 +35,42 @@ local cfg = {
 -----------------------------
 
 local function OnEnter(self)
-  local cur, max, lvl, rested
   GameTooltip:SetOwner(self, "ANCHOR_TOP")
   GameTooltip:AddLine(self:GetName(), 0, 1, 0.5, 1, 1, 1)
   --azeriteItemLocation
   local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
   if azeriteItemLocation then
-    cur, max = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation)
-    lvl = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
+    local cur, max = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation)
+    local lvl = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
     GameTooltip:AddLine("Azerite", 0, 1, 0.5, 1, 1, 1)
     GameTooltip:AddDoubleLine("Level", lvl, 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Experience", cur.." / "..max, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Cur/Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
   end
   if UnitLevel("player") < MAX_PLAYER_LEVEL and not IsXPUserDisabled() then
-    cur, max = UnitXP("player"), UnitXPMax("player")
-    level = UnitLevel("player")
-    rested = GetXPExhaustion()
+    local cur, max = UnitXP("player"), UnitXPMax("player")
+    local level = UnitLevel("player")
+    local rested = GetXPExhaustion()
+    GameTooltip:AddLine("Experience", 0, 1, 0.5, 1, 1, 1)
     GameTooltip:AddDoubleLine("Level", lvl, 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Experience", cur.." / "..max, 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Rested Experience", rested, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Cur/Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Rested", rested, 1, 1, 1, 1, 1, 1)
+  end
+  --if InActiveBattlefield() or IsInActiveWorldPVP() then
+    local cur, max = UnitHonor("player"), UnitHonorMax("player")
+    local level = UnitHonorLevel("player")
+    GameTooltip:AddLine("Honor", 0, 1, 0.5, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Level", lvl, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Cur/Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
+  --end
+  local name, standing, min, max, cur = GetWatchedFactionInfo()
+  if name then
+    GameTooltip:AddLine(name.."Reputation", 0, 1, 0.5, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Level", _G["FACTION_STANDING_LABEL"..standing], 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Cur/Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
   end
   GameTooltip:Show()
 end

@@ -60,7 +60,7 @@ local function OnEnter(self)
   --reputation
   local name, standing, min, max, cur = GetWatchedFactionInfo()
   if name then
-    GameTooltip:AddLine(name.."Reputation", 0, 1, 0.5, 1, 1, 1)
+    GameTooltip:AddLine(name.." Reputation", 0, 1, 0.5, 1, 1, 1)
     GameTooltip:AddDoubleLine("Level", _G["FACTION_STANDING_LABEL"..standing], 1, 1, 1, 1, 1, 1)
     GameTooltip:AddDoubleLine("Cur / Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
     GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)

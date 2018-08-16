@@ -17,13 +17,11 @@ local SpellFlyout = SpellFlyout
 local function FaderOnFinished(self)
   --print("FaderOnFinished",self.__owner:GetName(),self.finAlpha)
   self.__owner:SetAlpha(self.finAlpha)
-  frame.fader:Hide()
 end
 
 local function FaderOnUpdate(self)
   --print("FaderOnUpdate",self.__owner:GetName(),self.__animFrame:GetAlpha())
   self.__owner:SetAlpha(self.__animFrame:GetAlpha())
-  print("FaderOnUpdate",self.__owner:GetName())
 end
 
 local function CreateFaderAnimation(frame)
@@ -36,14 +34,12 @@ local function CreateFaderAnimation(frame)
   frame.fader.direction = nil
   frame.fader.setToFinalAlpha = false
   frame.fader.anim = frame.fader:CreateAnimation("Alpha")
-  frame.fader:Hide()
   frame.fader:HookScript("OnFinished", FaderOnFinished)
   frame.fader:HookScript("OnUpdate", FaderOnUpdate)
 end
 
 function L:StartFadeIn(frame)
   if frame.fader.direction == "in" then return end
-  frame.fader:Show()
   frame.fader:Pause()
   frame.fader.anim:SetFromAlpha(frame.faderConfig.fadeOutAlpha or 0)
   frame.fader.anim:SetToAlpha(frame.faderConfig.fadeInAlpha or 1)
@@ -58,7 +54,6 @@ end
 
 function L:StartFadeOut(frame)
   if frame.fader.direction == "out" then return end
-  frame.fader:Show()
   frame.fader:Pause()
   frame.fader.anim:SetFromAlpha(frame.faderConfig.fadeInAlpha or 1)
   frame.fader.anim:SetToAlpha(frame.faderConfig.fadeOutAlpha or 0)

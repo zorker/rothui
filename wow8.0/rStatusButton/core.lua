@@ -66,10 +66,10 @@ local function OnEnter(self)
     GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
   end
   --azerite
-  local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
-  if azeriteItemLocation then
-    local cur, max = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation)
-    local lvl = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
+  local azeriteItem = C_AzeriteItem.FindActiveAzeriteItem()
+  if azeriteItem then
+    local cur, max = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItem)
+    local lvl = C_AzeriteItem.GetPowerLevel(azeriteItem)
     GameTooltip:AddLine("Azerite", 0, 1, 0.5, 1, 1, 1)
     GameTooltip:AddDoubleLine("Level", lvl, 1, 1, 1, 1, 1, 1)
     GameTooltip:AddDoubleLine("Cur / Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)

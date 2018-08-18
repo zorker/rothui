@@ -28,6 +28,17 @@ local cfg = {
   size = { 32, 32 },
   frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift][combat] hide; [mod] show; hide",
   frameVisibilityFunc = nil,
+  --fader via OnShow
+  fader = {
+    fadeInAlpha = 1,
+    fadeInDuration = 0.3,
+    fadeInSmooth = "OUT",
+    fadeOutAlpha = 0,
+    fadeOutDuration = 0.9,
+    fadeOutSmooth = "OUT",
+    fadeOutDelay = 0,
+    trigger = "OnShow",
+  },
 }
 
 -----------------------------
@@ -110,6 +121,11 @@ RegisterStateDriver(button, cfg.frameVisibilityFunc or "visibility", cfg.frameVi
 button:SetScript("OnEnter", OnEnter)
 button:SetScript("OnLeave", OnLeave)
 button:SetScript("OnClick", OnClick)
+
+--OnShow fader
+if cfg.fader then
+  rLib:CreateFrameFader(button, cfg.fader)
+end
 
 --drag frame
 rLib:CreateDragFrame(button, L.dragFrames, -2, true)

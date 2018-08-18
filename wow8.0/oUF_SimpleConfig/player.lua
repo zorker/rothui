@@ -18,6 +18,17 @@ L.C.player = {
   point = {"RIGHT",UIParent,"CENTER",-120,-120},
   scale = 1*L.C.globalscale,
   frameVisibility = "[combat][mod][@target,exists][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide",
+  --fader via OnShow
+  fader = {
+    fadeInAlpha = 1,
+    fadeInDuration = 0.3,
+    fadeInSmooth = "OUT",
+    fadeOutAlpha = 0,
+    fadeOutDuration = 0.9,
+    fadeOutSmooth = "OUT",
+    fadeOutDelay = 0,
+    trigger = "OnShow",
+  },
   --healthbar
   healthbar = {
     --orientation = "VERTICAL",

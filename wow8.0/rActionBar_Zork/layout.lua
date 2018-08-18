@@ -24,6 +24,17 @@ local fader = {
   fadeOutDelay = 0,
 }
 
+local faderOnShow = {
+  fadeInAlpha = 1,
+  fadeInDuration = 0.3,
+  fadeInSmooth = "OUT",
+  fadeOutAlpha = 0,
+  fadeOutDuration = 0.9,
+  fadeOutSmooth = "OUT",
+  fadeOutDelay = 0,
+  trigger = "OnShow",
+}
+
 -----------------------------
 -- BagBar
 -----------------------------
@@ -73,7 +84,7 @@ local bar1 = {
   buttonMargin    = 5,
   numCols         = 6,
   startPoint      = "BOTTOMLEFT",
-  fader           = nil,
+  fader           = faderOnShow,
   frameVisibility = "[petbattle] hide; [combat][mod][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide"
 }
 --create
@@ -93,7 +104,7 @@ local bar2 = {
   buttonMargin    = 5,
   numCols         = 6,
   startPoint      = "BOTTOMLEFT",
-  --fader           = nil,
+  fader           = faderOnShow,
   frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [combat][mod][@target,exists,nodead] show; hide"
 }
 --create

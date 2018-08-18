@@ -18,6 +18,17 @@ L.C.pet = {
   point = {"TOPLEFT","oUF_SimplePlayer","BOTTOMLEFT",0,-14},
   scale = 1*L.C.globalscale,
   frameVisibility = "[nocombat,nomod,@target,noexists][@pet,noexists] hide; show",
+  --fader via OnShow
+  fader = {
+    fadeInAlpha = 1,
+    fadeInDuration = 0.3,
+    fadeInSmooth = "OUT",
+    fadeOutAlpha = 0,
+    fadeOutDuration = 0.9,
+    fadeOutSmooth = "OUT",
+    fadeOutDelay = 0,
+    trigger = "OnShow",
+  },
   --healthbar
   healthbar = {
     --health and absorb bar cannot be disabled, they match the size of the frame

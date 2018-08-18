@@ -39,12 +39,20 @@ if L.F.CreatePlayerStyle then
     player.frameVisibility = player.cfg.frameVisibility
     RegisterStateDriver(player, "visibility", player.cfg.frameVisibility)
   end
+  --OnShow fader
+  if player.cfg.fader then
+    rLib:CreateFrameFader(player, player.cfg.fader)
+  end
 end
 
 --spawn target
 if L.F.CreateTargetStyle then
   oUF:SetActiveStyle(A.."Target")
-  oUF:Spawn("target", A.."Target")
+  local target = oUF:Spawn("target", A.."Target")
+  --OnShow fader
+  if target.cfg.fader then
+    rLib:CreateFrameFader(target, target.cfg.fader)
+  end
 end
 
 --spawn targettarget
@@ -63,6 +71,10 @@ if L.F.CreatePetStyle then
     --frameVisibility needed for rLib drag and drop
     pet.frameVisibility = pet.cfg.frameVisibility
     RegisterStateDriver(pet, "visibility", pet.cfg.frameVisibility)
+  end
+  --OnShow fader
+  if pet.cfg.fader then
+    rLib:CreateFrameFader(pet, pet.cfg.fader)
   end
 end
 

@@ -17,6 +17,17 @@ L.C.target = {
   size = {265,26},
   point = {"LEFT",UIParent,"CENTER",120,-120},
   scale = 1*L.C.globalscale,
+  --fader via OnShow
+  fader = {
+    fadeInAlpha = 1,
+    fadeInDuration = 0.3,
+    fadeInSmooth = "OUT",
+    fadeOutAlpha = 0,
+    fadeOutDuration = 0.9,
+    fadeOutSmooth = "OUT",
+    fadeOutDelay = 0,
+    trigger = "OnShow",
+  },
   --healthbar
   healthbar = {
     --health and absorb bar cannot be disabled, they match the size of the frame

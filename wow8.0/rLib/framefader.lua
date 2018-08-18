@@ -87,6 +87,18 @@ local function OffFrameHandler(self)
   FrameHandler(self.__faderParent)
 end
 
+local function OnShow(self)
+  if self.fader then
+    L:StartFadeIn(self)
+  end
+end
+
+local function OnHide(self)
+  if self.fader then
+    L:StartFadeOut(self)
+  end
+end
+
 local function SpellFlyoutOnShow(self)
   local frame = self:GetParent():GetParent():GetParent()
   if not frame.fader then return end
@@ -113,15 +125,25 @@ SpellFlyout:HookScript("OnShow", SpellFlyoutOnShow)
 function rLib:CreateFrameFader(frame, faderConfig)
   if frame.faderConfig then return end
   frame.faderConfig = faderConfig
-  frame:EnableMouse(true)
   CreateFaderAnimation(frame)
-  frame:HookScript("OnEnter", FrameHandler)
-  frame:HookScript("OnLeave", FrameHandler)
-  FrameHandler(frame)
+  if faderConfig.trigger and faderConfig.trigger == "OnShow" then
+    frame:HookScript("OnShow", OnShow)
+    --I know setting the alpha on a hidden frame does not really make sense but we need to set the fader to "out"
+    --sadly a delay on the OnHide is impossible. we get the benefit of the fadeIn though.
+    frame:HookScript("OnHide", OnHide)
+  else
+    frame:EnableMouse(true)
+    frame:HookScript("OnEnter", FrameHandler)
+    frame:HookScript("OnLeave", FrameHandler)
+    FrameHandler(frame)
+  end
 end
 
 function rLib:CreateButtonFrameFader(frame, buttonList, faderConfig)
   rLib:CreateFrameFader(frame, faderConfig)
+  if faderConfig.trigger and faderConfig.trigger == "OnShow" then
+    return
+  end
   for i, button in next, buttonList do
     if not button.__faderParent then
       button.__faderParent = frame

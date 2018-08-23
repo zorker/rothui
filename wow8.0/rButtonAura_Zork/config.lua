@@ -86,7 +86,7 @@ if character == "Zörk" then
 
   --battle shout
   local aura = {
-    button          = MultiBarBottomLeftButton10,
+    button          = MultiBarBottomLeftButton9,
     unit            = "player",
     caster          = "player",
     spellid         = 6673,
@@ -120,7 +120,7 @@ if character == "Zörk" then
 
   --avatar
   local aura = {
-    button          = MultiBarBottomLeftButton9,
+    button          = MultiBarBottomLeftButton8,
     unit            = "player",
     caster          = "player",
     spellid         = 107574,

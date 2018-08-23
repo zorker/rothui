@@ -73,15 +73,7 @@ end
 --UpdateAuras
 local function UpdateAuras()
   for i, aura in next, auras do
-    if aura.requireSpell and not IsPlayerSpell(aura.requireSpell) then
-      HideAura(aura)
-    elseif aura.spec and aura.form and (aura.spec ~= spec or aura.form ~= form) then
-      HideAura(aura)
-    elseif aura.spec and aura.spec ~= spec then
-      HideAura(aura)
-    elseif aura.form and aura.form ~= form then
-      HideAura(aura)
-    else
+    if aura.enabled then
       UpdateAura(aura)
     end
   end
@@ -96,6 +88,23 @@ end
 local function UpdateSpells()
   spec = GetSpecialization()
   form = GetShapeshiftForm()
+  for i, aura in next, auras do
+    if aura.requireSpell and not IsPlayerSpell(aura.requireSpell) then
+      HideAura(aura)
+      aura.enabled = false
+    elseif aura.spec and aura.form and (aura.spec ~= spec or aura.form ~= form) then
+      HideAura(aura)
+      aura.enabled = false
+    elseif aura.spec and aura.spec ~= spec then
+      HideAura(aura)
+      aura.enabled = false
+    elseif aura.form and aura.form ~= form then
+      HideAura(aura)
+      aura.enabled = false
+    else
+      aura.enabled = true
+    end
+  end
 end
 
 --Login
@@ -133,6 +142,7 @@ local function Login()
     if aura.useBorder then
       aura.border:SetVertexColor(unpack(aura.borderColor))
     end
+    aura.enabled = false
   end
   if not error then
     --RegisterCallback SPELLS_CHANGE

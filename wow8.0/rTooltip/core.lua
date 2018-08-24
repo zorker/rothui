@@ -118,15 +118,14 @@ local function OnTooltipSetUnit(self)
       levelLine:SetTextColor(color.r,color.g,color.b)
     end
     if unitClassification == "worldboss" or UnitLevel(unit) == -1 then
-      self:AppendText(" |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:14:14|t")
-      --GameTooltipTextLeft1:SetText(("%s%s"):format("|TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:14:14|t", unitName))
+      self:AppendText(" |cffff0000{B}|r")
       GameTooltipTextLeft2:SetTextColor(unpack(cfg.bossColor))
     elseif unitClassification == "rare" then
-      self:AppendText(" |TInterface\\AddOns\\rTooltip\\media\\diablo:14:14:0:0:16:16:0:14:0:14|t")
+      self:AppendText(" |cffff9900{R}|r")
     elseif unitClassification == "rareelite" then
-      self:AppendText(" |TInterface\\AddOns\\rTooltip\\media\\diablo:14:14:0:0:16:16:0:14:0:14|t")
+      self:AppendText(" |cffff0000{R+}|r")
     elseif unitClassification == "elite" then
-      self:AppendText(" |TInterface\\HelpFrame\\HotIssueIcon:14:14|t")
+      self:AppendText(" |cffff6666{E}|r")
     end
   else
     --unit is any player

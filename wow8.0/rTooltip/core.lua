@@ -34,16 +34,17 @@ cfg.scale = 0.95
 cfg.fontFamily = STANDARD_TEXT_FONT
 cfg.backdrop = {
   bgFile = "Interface\\Buttons\\WHITE8x8",
+  bgColor = {0.08,0.08,0.1,0.92},
   edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+  borderColor = {0.1,0.1,0.1,0.6},
+  itemBorderColorAlpha = 0.9,
+  azeriteBorderColor = {1,0.3,0,0.9},
   tile = false,
   tileEdge = false,
   tileSize = 16,
   edgeSize = 16,
   insets = {left=3, right=3, top=3, bottom=3}
 }
-cfg.backdrop.bgColor = {0.08,0.08,0.1,0.92}
-cfg.backdrop.borderColor = {0.3,0.3,0.33,1}
-cfg.backdrop.azeriteBorderColor = {1,0.3,0,1}
 
 --pos can be either a point table or a anchor string
 --cfg.pos = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -10, 180 }
@@ -175,7 +176,7 @@ local function SetBackdropStyle(self,style)
     if azerite and cfg.backdrop.azeriteBorderColor then
       self:SetBackdropBorderColor(unpack(cfg.backdrop.azeriteBorderColor))
     else
-      self:SetBackdropBorderColor(r,g,b,1)
+      self:SetBackdropBorderColor(r,g,b,cfg.backdrop.itemBorderColorAlpha)
     end
   else
     --no item, use default border
@@ -237,7 +238,7 @@ GameTooltipStatusBar:SetHeight(4)
 GameTooltipStatusBar.bg = GameTooltipStatusBar:CreateTexture(nil,"BACKGROUND",nil,-8)
 GameTooltipStatusBar.bg:SetAllPoints()
 GameTooltipStatusBar.bg:SetColorTexture(1,1,1)
-GameTooltipStatusBar.bg:SetVertexColor(0,0,0,0.7)
+GameTooltipStatusBar.bg:SetVertexColor(0,0,0,0.5)
 
 --GameTooltipStatusBar:SetStatusBarColor()
 hooksecurefunc(GameTooltipStatusBar,"SetStatusBarColor", SetStatusBarColor)

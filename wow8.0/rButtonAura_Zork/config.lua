@@ -231,3 +231,28 @@ if character == "Xia" then
   rButtonAura:AddAura(aura)
 
 end
+
+-----------------------------
+-- Aura config for Astone (WL)
+-----------------------------
+
+if character == "Astone" then
+
+  --Corruption
+  local aura = {
+    button          = "BT4Button1",
+    unit            = "target",
+    caster          = "player",
+    spellid         = 146739,
+    filter          = "HARMFUL|PLAYER",
+    spec            = 1,
+    useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 4,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
+end

@@ -113,6 +113,7 @@ local function Login()
   if numAuras == 0 then return end
   local error = false
   for i, aura in next, auras do
+    if type(aura.button) == "string" then aura.button = _G[aura.button] end
     local border = _G[aura.button:GetName().."Border"]
     if not border then
       print(A,aura.spellid,"border not found")

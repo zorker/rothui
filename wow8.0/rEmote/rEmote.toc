@@ -1,0 +1,6 @@
+## Interface: 80000
+## Author: zork
+## Title: rEmote
+## Notes: Boss Emotes and Whispers
+
+core.lua

@@ -24,7 +24,6 @@ local copyTable = rLib.CopyTable
 
 --load the default button theme
 local actionButtonConfig = copyTable(rButtonTemplate_Zork_ActionButtonConfig)
-print(actionButtonConfig.backdrop.bgFile)
 
 --name, we use the default actionbutton.name fontstring and use it as our duration fontstring
 actionButtonConfig.name = {
@@ -67,19 +66,19 @@ actionButtonConfig.count = {
 -----------------------------
 
 --Style every single button we created
-local numBuffs, numDebuffs, numCooldowns = #L.buffs, #L.debuffs, #L.cooldowns
+local numBuffs, numDebuffs, numCooldowns = #rFilter.buffs, #rFilter.debuffs, #rFilter.cooldowns
 if numBuffs > 0 then
-  for i, button in next, L.buffs do
+  for i, button in next, rFilter.buffs do
     rButtonTemplate:StyleActionButton(button,actionButtonConfig)
   end
 end
 if numDebuffs > 0 then
-  for i, button in next, L.debuffs do
+  for i, button in next, rFilter.debuffs do
     rButtonTemplate:StyleActionButton(button,actionButtonConfig)
   end
 end
 if numCooldowns > 0 then
-  for i, button in next, L.cooldowns do
+  for i, button in next, rFilter.cooldowns do
     rButtonTemplate:StyleActionButton(button,actionButtonConfig)
   end
 end

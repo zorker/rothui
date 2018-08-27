@@ -28,6 +28,11 @@ L.cooldowns = {}
 rFilter = {}
 rFilter.addonName = A
 
+--give access to rfilter buffs, debuffs and cooldowns
+rFilter.buffs = L.buffs
+rFilter.debuffs = L.debuffs
+rFilter.cooldowns = L.cooldowns
+
 -----------------------------
 -- rLib slash command
 -----------------------------

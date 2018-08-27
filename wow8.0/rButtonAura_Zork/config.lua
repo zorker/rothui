@@ -240,7 +240,7 @@ if character == "Astone" then
 
   --Corruption
   local aura = {
-    button          = "BT4Button1",
+    button          = "BT4Button63",
     unit            = "target",
     caster          = "player",
     spellid         = 146739,

@@ -40,7 +40,7 @@ local faderOnShow = {
 -----------------------------
 
 local bagbar = {
-  framePoint      = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5 },
+  framePoint      = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -50, 5 },
   frameScale      = 1,
   framePadding    = 5,
   buttonWidth     = 32,
@@ -76,7 +76,7 @@ rActionBar:CreateMicroMenuBar(A, micromenubar)
 -----------------------------
 
 local bar1 = {
-  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 230 },
+  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 180 },
   frameScale      = .9,
   framePadding    = 5,
   buttonWidth     = 32,
@@ -95,7 +95,6 @@ rActionBar:CreateActionBar1(A, bar1)
 -----------------------------
 
 local bar2 = {
-  --framePoint      = { "BOTTOM", _G[A.."Bar1"], "TOP", 0, -5 },
   framePoint      = { "TOP", _G[A.."Bar1"], "BOTTOM", 0, 5 },
   frameScale      = .9,
   framePadding    = 5,
@@ -229,7 +228,8 @@ rActionBar:CreateExtraBar(A, extrabar)
 -----------------------------
 
 local vehicleexitbar = {
-  framePoint      = { "LEFT", A.."Bar1", "RIGHT", 5, 0 },
+  --framePoint      = { "LEFT", A.."Bar1", "RIGHT", 5, 0 },
+  framePoint      = { "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -4, 4 },
   frameScale      = 0.95,
   framePadding    = 5,
   buttonWidth     = 36,

@@ -12,12 +12,12 @@ local DefaultSetItemRef = SetItemRef
 
 local cfg = {}
 cfg.dropshadow = {}
-cfg.dropshadow.offset = {1,-1}
-cfg.dropshadow.color = {0,0,0,0.9}
+cfg.dropshadow.offset = {1,-2}
+cfg.dropshadow.color = {0,0,0,0.25}
 cfg.editbox = {}
-cfg.editbox.font = {STANDARD_TEXT_FONT, 13}
+cfg.editbox.font = {STANDARD_TEXT_FONT, 13, "THINOUTLINE"}
 cfg.chat = {}
-cfg.chat.font = {STANDARD_TEXT_FONT, 13} --{STANDARD_TEXT_FONT, 12, "OUTLINE"}
+cfg.chat.font = {STANDARD_TEXT_FONT, 13, "THINOUTLINE"} --{STANDARD_TEXT_FONT, 12, "OUTLINE"}
 
 -----------------------------
 -- Functions

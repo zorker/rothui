@@ -118,8 +118,8 @@ local function CreateText(self,font,size,outline,align,noshadow)
   text:SetFont(font or STANDARD_TEXT_FONT, size or 14, outline or "OUTLINE")
   text:SetJustifyH(align or "LEFT")
   if not noshadow then
-    text:SetShadowColor(0,0,0,0.6)
-    text:SetShadowOffset(1,-1)
+    text:SetShadowColor(0,0,0,0.25)
+    text:SetShadowOffset(1,-2)
   end
   --fix some wierd bug
   text:SetText("Bugfix")

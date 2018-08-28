@@ -74,6 +74,19 @@ L.C.boss = {
       point = {"RIGHT","LEFT",-6,0},
     },
   },
+  --buffs
+  buffs = {
+    enabled = true,
+    point = {"RIGHT","LEFT",-5,0},
+    num = 2,
+    cols = 2,
+    size = 22,
+    spacing = 5,
+    initialAnchor = "TOPRIGHT",
+    growthX = "LEFT",
+    growthY = "DOWN",
+    disableCooldown = false,
+  },
   --debuffs
   debuffs = {
     enabled = true,

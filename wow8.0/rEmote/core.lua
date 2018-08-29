@@ -34,7 +34,6 @@ end
 
 local function RaidBossEmote(self,event,...)
   --print(A,"RaidBossEmote",event,...)
-  print(A,"RaidBossEmote",event)
   if event == "CLEAR_BOSS_EMOTES" then return end
   local text, playerName, displayTime, playSound = ...
   if not playSound then
@@ -45,7 +44,6 @@ hooksecurefunc("RaidBossEmoteFrame_OnEvent", RaidBossEmote)
 
 local function OnEmote(self,event,...)
   --print(A,"OnEmote",event,...)
-  print(A,"RaidBossEmote",event)
   local text, playerName = ...
   local body = format(text, playerName, playerName)
   --PlaySound(SOUNDKIT.RAID_WARNING)

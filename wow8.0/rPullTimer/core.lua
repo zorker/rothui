@@ -11,7 +11,7 @@ local A, L = ...
 local MacroEditBox = MacroEditBox
 local MacroEditBox_OnEvent = MacroEditBox:GetScript("OnEvent")
 
-local time = 5
+local time = 0
 local shortcut = "pull"
 
 -----------------------------
@@ -34,7 +34,8 @@ local function Pull()
 end
 
 SlashCmdList[shortcut] = function(cmd)
-  time = tonumber(cmd)
+  if time > 0 then return end
+  time = math.min(10,math.floor(tonumber(cmd)))
   Pull()
 end
 _G["SLASH_"..shortcut.."1"] = "/"..shortcut

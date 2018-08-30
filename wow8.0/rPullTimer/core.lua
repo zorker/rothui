@@ -22,9 +22,6 @@ local function Pull()
   local slash = IsInRaid() and "rw" or "y"
   local text = time == 0 and "Pull now!!!" or "Pull in "..time
   local command = "/"..slash.." "..text
-  if time == 0 then
-    command = "/"..slash.." "..text
-  end
   MacroEditBox_OnEvent(MacroEditBox, "EXECUTE_CHAT_LINE", command)
   if not IsInRaid() then
     PlaySound(SOUNDKIT.RAID_WARNING)

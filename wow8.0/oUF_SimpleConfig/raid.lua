@@ -20,7 +20,7 @@ L.C.raid = {
     {"TOP", "oUF_SimpleRaidHeader1", "BOTTOM", 0, -10},
     {"TOP", "oUF_SimpleRaidHeader2", "BOTTOM", 0, -10},
     {"TOP", "oUF_SimpleRaidHeader3", "BOTTOM", 0, -10},
-    {"LEFT", "oUF_SimpleRaidHeader1", "RIGHT", 10, 0},
+    {"TOPLEFT", "oUF_SimpleRaidHeader1", "TOPRIGHT", 10, 0},
     {"TOP", "oUF_SimpleRaidHeader5", "BOTTOM", 0, -10},
     {"TOP", "oUF_SimpleRaidHeader6", "BOTTOM", 0, -10},
     {"TOP", "oUF_SimpleRaidHeader7", "BOTTOM", 0, -10},

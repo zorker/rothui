@@ -155,10 +155,10 @@ leftButton:SetScript("OnClick", ConvertToRaid)
 leftButton:SetPoint("RIGHT", button, "LEFT", 0, 0)
 
 --pull button
-button = manager:CreateButton(A.."ButtonPullCounter", "|TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:14:14:0:0|t", "Boss pull in 10")
+button = manager:CreateButton(A.."ButtonPullCounter", "|TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:14:14:0:0|t", "Boss pull in 5")
 button:SetPoint("TOP", previousButton, "BOTTOM", 0, 0)
 button:SetAttribute("type", "macro")
-button:SetAttribute("macrotext", format("/pull %d", 10))
+button:SetAttribute("macrotext", format("/pull %d", 5))
 previousButton = button
 
 --stopwatch toggle

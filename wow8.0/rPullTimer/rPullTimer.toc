@@ -1,0 +1,6 @@
+## Interface: 80000
+## Author: zork
+## Title: rPullTimer
+## Notes: Pull timer using /rw in raid and /y in party
+
+core.lua

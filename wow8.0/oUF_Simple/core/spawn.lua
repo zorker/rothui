@@ -23,6 +23,7 @@ if L.F.CreatePartyStyle then oUF:RegisterStyle(A.."Party", L.F.CreatePartyStyle)
 if L.F.CreateBossStyle then oUF:RegisterStyle(A.."Boss", L.F.CreateBossStyle) end
 if L.F.CreateNamePlateStyle then oUF:RegisterStyle(A.."Nameplate",L.F.CreateNamePlateStyle) end
 if L.F.CreateRaidStyle then oUF:RegisterStyle(A.."Raid", L.F.CreateRaidStyle) end
+if L.F.CreateArenaStyle then oUF:RegisterStyle(A.."Arena", L.F.CreateArenaStyle) end
 
 -----------------------------
 -- Spawn Units
@@ -158,3 +159,16 @@ if L.F.CreateRaidStyle then
   end
 end
 
+--spawn arena frames
+if L.F.CreateArenaStyle then
+  oUF:SetActiveStyle(A.."Arena")
+  local arena = {}
+  for i = 1, MAX_ARENA_ENEMIES do
+    arena[i] = oUF:Spawn("arena"..i, A.."Arena"..i)
+    if (i == 1) then
+      arena[i]:SetPoint(unpack(L.C.arena.point))
+    else
+      arena[i]:SetPoint(L.C.arena.setup.point, arena[i-1], L.C.arena.setup.relativePoint, L.C.arena.setup.xOffset, L.C.arena.setup.yOffset)
+    end
+  end
+end

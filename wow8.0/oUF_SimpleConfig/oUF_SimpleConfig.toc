@@ -17,3 +17,4 @@ party.lua
 boss.lua
 nameplate.lua
 raid.lua
+arena.lua

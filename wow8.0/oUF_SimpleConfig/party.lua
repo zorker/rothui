@@ -79,4 +79,8 @@ L.C.party = {
     xOffset = 0,
     yOffset = -14,
   },
+  range = {
+    insideAlpha = 1,
+    outsideAlpha = .5,
+  },
 }

@@ -187,6 +187,8 @@ local function CreateAbsorbBar(self)
   s:SetStatusBarTexture(L.C.textures.absorb)
   s:SetStatusBarColor(unpack(L.C.colors.healthbar.absorb))
   s:SetReverseFill(true)
+  s:SetMinMaxValues(0,1)
+  s:SetValue(0)
   return s
 end
 L.F.CreateAbsorbBar = CreateAbsorbBar
@@ -385,6 +387,7 @@ local function CreateNameText(self)
   if not self.cfg.healthbar or not self.cfg.healthbar.name or not self.cfg.healthbar.name.enabled then return end
   local cfg = self.cfg.healthbar.name
   local text = CreateText(self.rAbsorbBar or self.Health,cfg.font,cfg.size,cfg.outline,cfg.align,cfg.noshadow)
+  self.NameText = text --need this for Untag
   if cfg.points then
     SetPoints(text,self.rAbsorbBar or self.Health,cfg.points)
   else

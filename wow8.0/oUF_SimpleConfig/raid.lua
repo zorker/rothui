@@ -63,4 +63,8 @@ L.C.raid = {
     xOffset = 0,
     yOffset = -5,
   },
+  range = {
+    insideAlpha = 1,
+    outsideAlpha = .5,
+  },
 }

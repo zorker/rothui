@@ -23,5 +23,6 @@ templates\party.lua
 templates\boss.lua
 templates\nameplate.lua
 templates\raid.lua
+templates\arena.lua
 
 core\spawn.lua

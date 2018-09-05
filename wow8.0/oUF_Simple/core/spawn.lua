@@ -163,8 +163,21 @@ end
 if L.F.CreateArenaStyle then
   oUF:SetActiveStyle(A.."Arena")
   local arena = {}
-  for i = 1, MAX_ARENA_ENEMIES do
+  --constant MAX_ARENA_ENEMIES is part of the blizzard arena ui addon which is not loaded on init
+  for i = 1, 5 do
     arena[i] = oUF:Spawn("arena"..i, A.."Arena"..i)
+    arena[i].PreUpdate = function(...)
+      local self, event = ...
+      print("PreUpdate",self:GetName(),event)
+    end
+    arena[i].PostUpdate = function(...)
+      local self, event = ...
+      print("PostUpdate",self:GetName(),event)
+    end
+    arena[i]:HookScript("OnShow", function(...)
+      local self, event = ...
+      print("OnShow2",self:GetName(),event)
+    end)
     if (i == 1) then
       arena[i]:SetPoint(unpack(L.C.arena.point))
     else

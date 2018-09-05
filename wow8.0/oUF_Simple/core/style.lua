@@ -35,5 +35,6 @@ local function CreateStyle(self)
   self.Debuffs = L.F.CreateDebuffs(self)
   self.Buffs = L.F.CreateBuffs(self)
   self.RaidTargetIndicator = L.F.CreateRaidMark(self)
+  self.Range = self.cfg.range
 end
 L.F.CreateStyle = CreateStyle

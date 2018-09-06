@@ -50,6 +50,23 @@ if character == "Zörk" then
   }
   rButtonAura:AddAura(aura)
 
+  --arms test of might buff
+  local aura = {
+    button          = ActionButton9,
+    unit            = "player",
+    caster          = "player",
+    spellid         = 275540,
+    filter          = "HELPFUL|PLAYER",
+    spec            = 1,
+    useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 4,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
   --arms colossus smash
   local aura = {
     button          = ActionButton8,

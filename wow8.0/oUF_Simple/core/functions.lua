@@ -187,8 +187,6 @@ local function CreateAbsorbBar(self)
   s:SetStatusBarTexture(L.C.textures.absorb)
   s:SetStatusBarColor(unpack(L.C.colors.healthbar.absorb))
   s:SetReverseFill(true)
-  s:SetMinMaxValues(0,1)
-  s:SetValue(0)
   return s
 end
 L.F.CreateAbsorbBar = CreateAbsorbBar

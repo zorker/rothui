@@ -43,12 +43,6 @@ L.C.arena = {
     point = {"TOP","BOTTOM",0,-4}, --if no relativeTo is given the frame base will be the relativeTo reference
     colorPower = true,
   },
-  --altpowerbar
-  altpowerbar = {
-    enabled = true,
-    size = {130,5},
-    point = {"BOTTOMLEFT","TOPLEFT",0,4},
-  },
   --raidmark
   raidmark = {
     enabled = true,
@@ -85,7 +79,7 @@ L.C.arena = {
     initialAnchor = "TOPRIGHT",
     growthX = "LEFT",
     growthY = "DOWN",
-    disableCooldown = false,
+    disableCooldown = true,
   },
   --debuffs
   debuffs = {

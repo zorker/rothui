@@ -163,16 +163,6 @@ end
 if L.F.CreateArenaStyle then
   oUF:SetActiveStyle(A.."Arena")
   local arena = {}
-  local function PostUpdateArenaPreparation(self,event,specID)
-    self:SetMinMaxValues(0,1)
-    self:SetValue(0)
-    local r,g,b = 0.3,0.3,0.3
-    self:SetStatusBarColor(r,g,b)
-    if self.bg then
-      local m = self.bg.multiplier or 0.3
-      self.bg:SetVertexColor(r*m,g*m,b*m)
-    end
-  end
   local function PostUpdate(self,event)
     if event ~= "ARENA_PREP_OPPONENT_SPECIALIZATIONS" then return end
     self.rAbsorbBar:SetMinMaxValues(0,1)
@@ -184,9 +174,6 @@ if L.F.CreateArenaStyle then
   --constant MAX_ARENA_ENEMIES is part of the blizzard arena ui addon which is not loaded on init
   for i = 1, 5 do
     arena[i] = oUF:Spawn("arena"..i, A.."Arena"..i)
-    if arena[i].Power then
-      arena[i].Power.PostUpdateArenaPreparation = PostUpdateArenaPreparation
-    end
     arena[i].PostUpdate = PostUpdate
     if (i == 1) then
       arena[i]:SetPoint(unpack(L.C.arena.point))

@@ -32,7 +32,7 @@ L.C.arena = {
       },
       size = 16,
       align = "CENTER",
-      tag = "[raidcolor][arenaspec]|r [name]",
+      tag = "[name]", -- "[raidcolor][arenaspec]|r [name]"
     },
     debuffHighlight = true,
   },

@@ -171,10 +171,21 @@ if L.F.CreateArenaStyle then
       self.Health.DebuffHighlight:SetBackdropBorderColor(unpack(L.C.backdrop.edgeColor))
     end
   end
+  local function OverrideArenaPreparation(self,event)
+    if event ~= "ARENA_PREP_OPPONENT_SPECIALIZATIONS" then return end
+    self.Power:SetMinMaxValues(0,1)
+    self.Power:SetValue(0)
+    if self.Power.bg then
+      self.Power.bg:SetVertexColor(0.3,0.3,0.3)
+    end
+  end
   --constant MAX_ARENA_ENEMIES is part of the blizzard arena ui addon which is not loaded on init
   for i = 1, 5 do
     arena[i] = oUF:Spawn("arena"..i, A.."Arena"..i)
     arena[i].PostUpdate = PostUpdate
+    if arena[i].Power then
+      arena[i].Power.OverrideArenaPreparation = OverrideArenaPreparation
+    end
     if (i == 1) then
       arena[i]:SetPoint(unpack(L.C.arena.point))
     else

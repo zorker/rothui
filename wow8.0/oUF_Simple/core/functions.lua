@@ -385,7 +385,6 @@ local function CreateNameText(self)
   if not self.cfg.healthbar or not self.cfg.healthbar.name or not self.cfg.healthbar.name.enabled then return end
   local cfg = self.cfg.healthbar.name
   local text = CreateText(self.rAbsorbBar or self.Health,cfg.font,cfg.size,cfg.outline,cfg.align,cfg.noshadow)
-  self.NameText = text --need this for Untag
   if cfg.points then
     SetPoints(text,self.rAbsorbBar or self.Health,cfg.points)
   else

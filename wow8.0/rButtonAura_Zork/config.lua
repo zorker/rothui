@@ -273,3 +273,28 @@ if character == "Astone" then
   rButtonAura:AddAura(aura)
 
 end
+
+-----------------------------
+-- Aura config for Ziza (Rogue)
+-----------------------------
+
+if character == "Ziza" then
+
+  --Corruption
+  local aura = {
+    button          = "ActionButton4",
+    unit            = "player",
+    caster          = "player",
+    spellid         = 5171,
+    filter          = "HELPFUL|PLAYER",
+    spec            = 2,
+    useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 4,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
+end

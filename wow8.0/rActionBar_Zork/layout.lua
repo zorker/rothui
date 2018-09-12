@@ -199,8 +199,8 @@ local petbar = {
   buttonMargin    = 5,
   numCols         = 12,
   startPoint      = "BOTTOMLEFT",
-  fader           = nil,
-  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [pet,mod] show; hide"
+  fader           = fader,
+  --frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [pet,mod] show; hide"
 }
 --create
 rActionBar:CreatePetBar(A, petbar)

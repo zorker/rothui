@@ -79,6 +79,20 @@ L.C.pet = {
     size = {130,5},
     point = {"BOTTOMLEFT","oUF_SimplePlayer","TOPLEFT",0,4},
   },
+  --buffs
+  buffs = {
+    enabled = true,
+    point = {"RIGHT","LEFT",-5,0},
+    num = 6,
+    cols = 3,
+    size = 22,
+    spacing = 5,
+    initialAnchor = "TOPRIGHT",
+    growthX = "LEFT",
+    growthY = "DOWN",
+    filter = "HELPFUL|PLAYER",
+    disableCooldown = false,
+  },
   --debuffs
   debuffs = {
     enabled = true,

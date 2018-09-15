@@ -280,7 +280,7 @@ end
 
 if character == "Ziza" then
 
-  --Corruption
+  --Speed Buff
   local aura = {
     button          = "ActionButton4",
     unit            = "player",
@@ -288,6 +288,48 @@ if character == "Ziza" then
     spellid         = 5171,
     filter          = "HELPFUL|PLAYER",
     spec            = 2,
+    useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 4,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
+end
+
+-----------------------------
+-- Aura config for Needler (Hunter)
+-----------------------------
+
+if character == "Needler" then
+
+  --Frenzy
+  local aura = {
+    button          = "ActionButton1",
+    unit            = "pet",
+    caster          = "player",
+    spellid         = 272790,
+    filter          = "HELPFUL|PLAYER",
+    spec            = 1,
+    useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 4,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
+  --Beast Cleave
+  local aura = {
+    button          = "ActionButton5",
+    unit            = "pet",
+    caster          = "player",
+    spellid         = 118455,
+    filter          = "HELPFUL|PLAYER",
+    spec            = 1,
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},

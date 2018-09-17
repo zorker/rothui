@@ -162,6 +162,7 @@ local function OnTooltipSetUnit(self)
 end
 
 local function SetBackdropStyle(self,style)
+  if self.IsEmbedded then return end --do nothing on embedded tooltips
   if self.TopOverlay then self.TopOverlay:Hide() end
   if self.BottomOverlay then self.BottomOverlay:Hide() end
   self:SetBackdrop(cfg.backdrop)

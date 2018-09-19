@@ -285,6 +285,28 @@ local function CreateAdditionalPowerBar(self)
 end
 L.F.CreateAdditionalPowerBar = CreateAdditionalPowerBar
 
+--CreateStaggerBar
+local function CreateStaggerBar(self)
+  if not self.cfg.staggerbar or not self.cfg.staggerbar.enabled then return end
+  --statusbar
+  local s = CreateFrame("StatusBar", nil, self)
+  s:SetStatusBarTexture(L.C.textures.statusbar)
+  s:SetSize(unpack(self.cfg.staggerbar.size))
+  s:SetOrientation(self.cfg.staggerbar.orientation or "HORIZONTAL")
+  SetPoint(s,self,self.cfg.staggerbar.point)
+  --bg
+  local bg = s:CreateTexture(nil, "BACKGROUND")
+  bg:SetTexture(L.C.textures.statusbarBG)
+  bg:SetAllPoints()
+  s.bg = bg
+  --backdrop
+  CreateBackdrop(s)
+  --attributes
+  s.bg.multiplier = L.C.colors.bgMultiplier
+  return s
+end
+L.F.CreateStaggerBar = CreateStaggerBar
+
 --CreatePowerBar
 local function CreatePowerBar(self)
   if not self.cfg.powerbar or not self.cfg.powerbar.enabled then return end
@@ -374,11 +396,26 @@ local function CreateCastBar(self)
 end
 L.F.CreateCastBar = CreateCastBar
 
-local function CreateRaidMark(self)
+--RaidTargetIndicator
+local function RaidTargetIndicator(self)
   if not self.cfg.raidmark or not self.cfg.raidmark.enabled then return end
   return CreateIcon(self.Health,"OVERLAY",-8,self.cfg.raidmark.size,self.cfg.raidmark.point)
 end
-L.F.CreateRaidMark = CreateRaidMark
+L.F.RaidTargetIndicator = RaidTargetIndicator
+
+--ReadyCheckIndicator
+local function ReadyCheckIndicator(self)
+  if not self.cfg.readycheck or not self.cfg.readycheck.enabled then return end
+  return CreateIcon(self.Health,"OVERLAY",-8,self.cfg.readycheck.size,self.cfg.readycheck.point)
+end
+L.F.ReadyCheckIndicator = ReadyCheckIndicator
+
+--ResurrectIndicator
+local function ResurrectIndicator (self)
+  if not self.cfg.resurrect or not self.cfg.resurrect.enabled then return end
+  return CreateIcon(self.Health,"OVERLAY",-8,self.cfg.resurrect.size,self.cfg.resurrect.point)
+end
+L.F.ResurrectIndicator  = ResurrectIndicator
 
 --CreateNameText
 local function CreateNameText(self)

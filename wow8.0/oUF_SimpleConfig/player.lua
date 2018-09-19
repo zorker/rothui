@@ -72,6 +72,18 @@ L.C.player = {
     size = {18,18},
     point = {"CENTER","TOP",0,0},
   },
+  --readycheck
+  readycheck = {
+    enabled = true,
+    size = {18,18},
+    point = {"CENTER","CENTER",0,0},
+  },
+  --resurrect
+  resurrect = {
+    enabled = true,
+    size = {18,18},
+    point = {"CENTER","CENTER",0,0},
+  },
   --castbar
   castbar = {
     enabled = true,
@@ -121,5 +133,12 @@ L.C.player = {
     point = {"TOPRIGHT","TOPLEFT",-4,0},
     orientation = "VERTICAL",
     colorPower = true,
+  },
+  --staggerbar for brewmaster monks
+  staggerbar = {
+    enabled = true,
+    size = {26,35},
+    point = {"TOPRIGHT","TOPLEFT",-4,0},
+    orientation = "VERTICAL",
   },
 }

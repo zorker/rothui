@@ -32,9 +32,12 @@ local function CreateStyle(self)
   self.rClassBar = L.F.CreateClassBar(self)
   self.AlternativePower = L.F.CreateAltPowerBar(self)
   self.AdditionalPower = L.F.CreateAdditionalPowerBar(self)
+  self.Stagger = L.F.CreateStaggerBar(self)
   self.Debuffs = L.F.CreateDebuffs(self)
   self.Buffs = L.F.CreateBuffs(self)
-  self.RaidTargetIndicator = L.F.CreateRaidMark(self)
+  self.RaidTargetIndicator = L.F.RaidTargetIndicator(self)
+  self.ReadyCheckIndicator = L.F.ReadyCheckIndicator(self)
+  self.ResurrectIndicator = L.F.ResurrectIndicator(self)
   self.Range = self.cfg.range
 end
 L.F.CreateStyle = CreateStyle

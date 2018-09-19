@@ -52,6 +52,18 @@ L.C.raid = {
     size = {18,18},
     point = {"CENTER","TOP",0,0},
   },
+  --readycheck
+  readycheck = {
+    enabled = true,
+    size = {18,18},
+    point = {"CENTER","CENTER",0,0},
+  },
+  --resurrect
+  resurrect = {
+    enabled = true,
+    size = {18,18},
+    point = {"CENTER","CENTER",0,0},
+  },
   setup = {
     template = nil,
     visibility = "custom [group:raid] show; hide",

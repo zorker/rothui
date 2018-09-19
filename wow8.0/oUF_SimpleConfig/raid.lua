@@ -50,18 +50,18 @@ L.C.raid = {
   raidmark = {
     enabled = true,
     size = {18,18},
-    point = {"CENTER","TOP",0,0},
+    point = {"CENTER","TOP",0,4},
   },
   --readycheck
   readycheck = {
     enabled = true,
-    size = {18,18},
+    size = {26,26},
     point = {"CENTER","CENTER",0,0},
   },
   --resurrect
   resurrect = {
     enabled = true,
-    size = {18,18},
+    size = {26,26},
     point = {"CENTER","CENTER",0,0},
   },
   setup = {

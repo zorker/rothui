@@ -287,6 +287,7 @@ L.F.CreateAdditionalPowerBar = CreateAdditionalPowerBar
 
 --CreateStaggerBar
 local function CreateStaggerBar(self)
+  if(select(2, UnitClass('player')) ~= 'MONK') then return end
   if not self.cfg.staggerbar or not self.cfg.staggerbar.enabled then return end
   --statusbar
   local s = CreateFrame("StatusBar", nil, self)
@@ -399,21 +400,21 @@ L.F.CreateCastBar = CreateCastBar
 --RaidTargetIndicator
 local function RaidTargetIndicator(self)
   if not self.cfg.raidmark or not self.cfg.raidmark.enabled then return end
-  return CreateIcon(self.Health,"OVERLAY",-8,self.cfg.raidmark.size,self.cfg.raidmark.point)
+  return CreateIcon(self.rAbsorbBar or self.Health,"OVERLAY",-8,self.cfg.raidmark.size,self.cfg.raidmark.point)
 end
 L.F.RaidTargetIndicator = RaidTargetIndicator
 
 --ReadyCheckIndicator
 local function ReadyCheckIndicator(self)
   if not self.cfg.readycheck or not self.cfg.readycheck.enabled then return end
-  return CreateIcon(self.Health,"OVERLAY",-8,self.cfg.readycheck.size,self.cfg.readycheck.point)
+  return CreateIcon(self.rAbsorbBar or self.Health,"OVERLAY",-8,self.cfg.readycheck.size,self.cfg.readycheck.point)
 end
 L.F.ReadyCheckIndicator = ReadyCheckIndicator
 
 --ResurrectIndicator
 local function ResurrectIndicator (self)
   if not self.cfg.resurrect or not self.cfg.resurrect.enabled then return end
-  return CreateIcon(self.Health,"OVERLAY",-8,self.cfg.resurrect.size,self.cfg.resurrect.point)
+  return CreateIcon(self.rAbsorbBar or self.Health,"OVERLAY",-8,self.cfg.resurrect.size,self.cfg.resurrect.point)
 end
 L.F.ResurrectIndicator  = ResurrectIndicator
 

@@ -41,7 +41,7 @@ L.C.targettarget = {
   raidmark = {
     enabled = true,
     size = {18,18},
-    point = {"CENTER","TOP",0,0},
+    point = {"CENTER","TOP",0,4},
   },
   --debuffs
   debuffs = {

@@ -81,10 +81,10 @@ L.C.pet = {
   },
   --buffs
   buffs = {
-    enabled = true,
+    enabled = false,
     point = {"RIGHT","LEFT",-5,0},
-    num = 6,
-    cols = 3,
+    num = 2,
+    cols = 2,
     size = 22,
     spacing = 5,
     initialAnchor = "TOPRIGHT",

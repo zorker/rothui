@@ -93,9 +93,11 @@ local function OnEnter(self)
     GameTooltip:AddDoubleLine("Status", "Finished", 1, 1, 1, 1, 1, 1)
   elseif iwqID then
     local _, _, _, cur, max = GetQuestObjectiveInfo(iwqID, 1, false)
-    GameTooltip:AddLine("Island Weekly", 0, 1, 0.5, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Cur / Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
+    if max then
+      GameTooltip:AddLine("Island Weekly", 0, 1, 0.5, 1, 1, 1)
+      GameTooltip:AddDoubleLine("Cur / Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
+    end
   end
   GameTooltip:Show()
 end

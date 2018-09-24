@@ -27,7 +27,7 @@ if character == "Zörk" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -44,7 +44,7 @@ if character == "Zörk" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -61,7 +61,7 @@ if character == "Zörk" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -78,7 +78,7 @@ if character == "Zörk" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -95,7 +95,7 @@ if character == "Zörk" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -112,7 +112,7 @@ if character == "Zörk" then
     useBar          = false,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -129,7 +129,7 @@ if character == "Zörk" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -146,7 +146,7 @@ if character == "Zörk" then
     useBar          = false,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -163,7 +163,7 @@ if character == "Zörk" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -180,7 +180,7 @@ if character == "Zörk" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -197,7 +197,7 @@ if character == "Zörk" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -214,7 +214,7 @@ if character == "Zörk" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -241,7 +241,7 @@ if character == "Xia" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -266,7 +266,7 @@ if character == "Astone" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -291,7 +291,7 @@ if character == "Ziza" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -316,7 +316,7 @@ if character == "Needler" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }
@@ -333,7 +333,57 @@ if character == "Needler" then
     useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 4,
+    barHeight       = 5,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
+end
+
+-----------------------------
+-- Aura config for Amoka (Monk)
+-----------------------------
+
+if character == "Amoka" then
+
+  --Ironbrew
+  local aura = {
+    button          = "ActionButton8",
+    unit            = "player",
+    caster          = "player",
+    spellid         = 215479,
+    filter          = "HELPFUL|PLAYER",
+    spec            = 1,
+    useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 5,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
+end
+
+-----------------------------
+-- Aura config for Luavi (Paladin)
+-----------------------------
+
+if character == "Luavi" then
+
+  --Ironbrew
+  local aura = {
+    button          = "ActionButton8",
+    unit            = "player",
+    caster          = "player",
+    spellid         = 132403,
+    filter          = "HELPFUL|PLAYER",
+    spec            = 2,
+    useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 5,
     useBorder       = true,
     borderColor     = {0,1,0,1},
   }

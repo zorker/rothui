@@ -372,7 +372,7 @@ end
 
 if character == "Luavi" then
 
-  --Ironbrew
+  --Shield of the Righteous
   local aura = {
     button          = "ActionButton8",
     unit            = "player",
@@ -381,6 +381,40 @@ if character == "Luavi" then
     filter          = "HELPFUL|PLAYER",
     spec            = 2,
     useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 5,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
+  --Avengers Shield
+  local aura = {
+    button          = "ActionButton2",
+    unit            = "player",
+    caster          = "player",
+    spellid         = 197561,
+    filter          = "HELPFUL|PLAYER",
+    spec            = 2,
+    useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 5,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
+  --Avengers Shield
+  local aura = {
+    button          = "ActionButton4",
+    unit            = "player",
+    caster          = "player",
+    spellid         = 188370,
+    filter          = "HELPFUL|PLAYER",
+    spec            = 2,
+    useBar          = false,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
     barHeight       = 5,

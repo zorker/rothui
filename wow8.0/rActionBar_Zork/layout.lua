@@ -76,7 +76,7 @@ rActionBar:CreateMicroMenuBar(A, micromenubar)
 -----------------------------
 
 local bar1 = {
-  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 280 },
+  framePoint      = { "BOTTOM", UIParent, "BOTTOM", 0, 265 },
   frameScale      = 0.9,
   framePadding    = 5,
   buttonWidth     = 32,

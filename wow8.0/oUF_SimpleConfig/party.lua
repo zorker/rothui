@@ -8,6 +8,8 @@
 
 local A, L = ...
 
+local character = UnitName("player")
+
 -----------------------------
 -- Party Config
 -----------------------------
@@ -15,7 +17,7 @@ local A, L = ...
 L.C.party = {
   enabled = true,
   size = {180,26},
-  point = {"TOPLEFT",20,-20},
+  point = { "TOPLEFT", "oUF_SimplePlayer", "BOTTOMLEFT", 0, -92 }, --{"TOPLEFT",20,-20},
   scale = 1*L.C.globalscale,
   --healthbar
   healthbar = {
@@ -96,3 +98,8 @@ L.C.party = {
     outsideAlpha = .5,
   },
 }
+
+--change party point for tank paladin
+--if character == "Luavi" then
+--  L.C.party.point = { "TOPLEFT", "oUF_SimplePlayer", "BOTTOMLEFT", 0, -92 }
+--end

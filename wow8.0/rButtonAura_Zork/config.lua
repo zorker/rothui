@@ -33,6 +33,23 @@ if character == "Zörk" then
   }
   rButtonAura:AddAura(aura)
 
+  --demo shout
+  local aura = {
+    button          = ActionButton9,
+    unit            = "target",
+    caster          = "player",
+    spellid         = 1160,
+    filter          = "HARMFUL|PLAYER",
+    spec            = 3,
+    useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 5,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
   --arms sweeping strikes
   local aura = {
     button          = ActionButton7,
@@ -86,7 +103,7 @@ if character == "Zörk" then
 
   --spell reflect
   local aura = {
-    button          = ActionButton10,
+    button          = MultiBarBottomLeftButton3,
     unit            = "player",
     caster          = "player",
     spellid         = 23920,
@@ -103,11 +120,11 @@ if character == "Zörk" then
 
   --battle shout
   local aura = {
-    button          = MultiBarBottomLeftButton9,
+    button          = MultiBarBottomLeftButton10,
     unit            = "player",
-    caster          = "player",
+    caster          = nil, -- do not care about who casted it as long as the buff is there
     spellid         = 6673,
-    filter          = "HELPFUL|PLAYER",
+    filter          = "HELPFUL",
     --spec            = 3,
     useBar          = false,
     barColor        = {1,1,0,1},
@@ -118,9 +135,26 @@ if character == "Zörk" then
   }
   rButtonAura:AddAura(aura)
 
+  --rallying cry
+  local aura = {
+    button          = MultiBarBottomLeftButton9,
+    unit            = "player",
+    caster          = nil, -- do not care about who casted it as long as the buff is there
+    spellid         = 97463,
+    filter          = "HELPFUL",
+    --spec            = 3,
+    useBar          = true,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 5,
+    useBorder       = true,
+    borderColor     = {0,1,0,1},
+  }
+  rButtonAura:AddAura(aura)
+
   --ignore pain
   local aura = {
-    button          = ActionButton9,
+    button          = MultiBarBottomLeftButton2,
     unit            = "player",
     caster          = "player",
     spellid         = 190456,
@@ -137,13 +171,13 @@ if character == "Zörk" then
 
   --avatar
   local aura = {
-    button          = MultiBarBottomLeftButton8,
+    button          = ActionButton10,
     unit            = "player",
     caster          = "player",
     spellid         = 107574,
     filter          = "HELPFUL|PLAYER",
     spec            = 3,
-    useBar          = false,
+    useBar          = true,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
     barHeight       = 5,
@@ -154,7 +188,7 @@ if character == "Zörk" then
 
   --last stand
   local aura = {
-    button          = MultiBarBottomLeftButton7,
+    button          = ActionButton7,
     unit            = "player",
     caster          = "player",
     spellid         = 12975,
@@ -406,7 +440,7 @@ if character == "Luavi" then
   }
   rButtonAura:AddAura(aura)
 
-  --Avengers Shield
+  --Consecration
   local aura = {
     button          = "ActionButton4",
     unit            = "player",

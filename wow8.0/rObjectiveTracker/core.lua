@@ -19,7 +19,7 @@ L.addonShortcut   = "rot"
 
 local cfg = {
   scale = 1,
-  point = { "RIGHT", -110, -30 },
+  point = { "RIGHT", -110, -100 },
   size = { 260, 500 },
   fader = {
     fadeInAlpha = 1,

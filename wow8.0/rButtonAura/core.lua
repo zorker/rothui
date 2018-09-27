@@ -58,7 +58,7 @@ end
 --UpdateAura
 local function UpdateAura(aura)
   local name, icon, count, debuffType, duration, expires, caster = AuraUtil.FindAuraByName(aura.spellName, aura.unit, aura.filter)
-  if name and caster == aura.caster then
+  if name and (not aura.caster or caster == aura.caster) then
     if aura.bar then
       local perc = (duration+GetTime()-expires)/duration
       local w = aura.bar.maxwidth-perc*aura.bar.maxwidth

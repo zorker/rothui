@@ -327,6 +327,7 @@ local function CreatePowerBar(self)
   --attributes
   s.colorPower = self.cfg.powerbar.colorPower
   s.bg.multiplier = L.C.colors.bgMultiplier
+  s.frequentUpdates = self.cfg.powerbar.frequentUpdates
   return s
 end
 L.F.CreatePowerBar = CreatePowerBar

@@ -46,11 +46,19 @@ L.C.NamePlateCVars = cvars
 -- NamePlateConfig
 -----------------------------
 
+local buff_whitelist = {}
+buff_whitelist[277242] = true --infest
+
+--custom filter for nameplate Buffs
+local function CustomFilterBuffs(...)
+  local element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3 = ...
+  return buff_whitelist[spellID] or nameplateShowSelf or nameplateShowAll or (caster == "player" or caster == "pet" or caster == "vehicle")
+end
+
 --custom filter for nameplate debuffs
-local function CustomFilter(...)
-  --icons, unit, icon, name, texture, count, dispelType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll
-  local _, _, _, _, _, _, _, _, _, caster, _, _, _, _, _, _, nameplateShowAll = ...
-  return nameplateShowAll or (caster == "player" or caster == "pet" or caster == "vehicle")
+local function CustomFilterDebuffs(...)
+  local element, unit, button, name, texture, count, debuffType, duration, expiration, caster, isStealable, nameplateShowSelf, spellID, canApply, isBossDebuff, casterIsPlayer, nameplateShowAll, timeMod, effect1, effect2, effect3 = ...
+  return nameplateShowSelf or nameplateShowAll or (caster == "player" or caster == "pet" or caster == "vehicle")
 end
 
 L.C.nameplate = {
@@ -105,6 +113,21 @@ L.C.nameplate = {
       point = {"RIGHT","LEFT",-6,0},
     },
   },
+  --buffs
+  buffs = {
+    enabled = true,
+    point = {"BOTTOM","TOP",0,32},
+    num = 1,
+    cols = 1,
+    size = 32,
+    spacing = 5,
+    initialAnchor = "BOTTOMLEFT",
+    growthX = "RIGHT",
+    growthY = "UP",
+    disableCooldown = true,
+    filter = "HELPFUL|INCLUDE_NAME_PLATE_ONLY",
+    CustomFilter = CustomFilterBuffs
+  },
   --debuffs
   debuffs = {
     enabled = true,
@@ -113,11 +136,11 @@ L.C.nameplate = {
     cols = 5,
     size = 22,
     spacing = 5,
-    initialAnchor = "TOPLEFT",
+    initialAnchor = "BOTTOMLEFT",
     growthX = "RIGHT",
     growthY = "UP",
     disableCooldown = true,
     filter = "HARMFUL|INCLUDE_NAME_PLATE_ONLY",
-    CustomFilter = CustomFilter
+    CustomFilter = CustomFilterDebuffs
   },
 }

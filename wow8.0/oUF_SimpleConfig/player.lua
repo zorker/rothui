@@ -59,7 +59,6 @@ L.C.player = {
     size = {265,5},
     point = {"TOP","BOTTOM",0,-4}, --if no relativeTo is given the frame base will be the relativeTo reference
     colorPower = true,
-    --frequentUpdates = true,
     power = {
       enabled = false,
       point = {"RIGHT",-2,0},

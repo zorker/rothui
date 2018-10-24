@@ -48,6 +48,7 @@ L.C.NamePlateCVars = cvars
 
 local buff_whitelist = {}
 buff_whitelist[277242] = true --infest
+buff_whitelist[209859] = true --bolster
 
 --custom filter for nameplate Buffs
 local function CustomFilterBuffs(...)
@@ -117,8 +118,8 @@ L.C.nameplate = {
   buffs = {
     enabled = true,
     point = {"BOTTOM","TOP",0,32},
-    num = 1,
-    cols = 1,
+    num = 10,
+    cols = 4,
     size = 32,
     spacing = 5,
     initialAnchor = "BOTTOMLEFT",

@@ -1,8 +1,6 @@
 ## Interface: 80000
-## Version: @project-version@
 ## Author: zork
 ## Title: rVignette
 ## Notes: Simple Vignette alert
-## X-WoWI-ID: 23282
 
 rVignette.lua

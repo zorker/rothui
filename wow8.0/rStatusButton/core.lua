@@ -26,7 +26,7 @@ local cfg = {
   scale = 0.9,
   point = { "TOP", 0, -150 },
   size = { 32, 32 },
-  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift][combat] hide; [mod] show; hide",
+  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift][combat] hide; [mod:shift] show; hide",
   frameVisibilityFunc = nil,
   --fader via OnShow
   fader = {

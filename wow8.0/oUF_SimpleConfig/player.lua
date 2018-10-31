@@ -17,7 +17,7 @@ L.C.player = {
   size = {265,26},
   point = {"RIGHT",UIParent,"CENTER",-130,-100},
   scale = 1*L.C.globalscale,
-  frameVisibility = "[combat][mod][@target,exists][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide",
+  frameVisibility = "[combat][mod:shift][@target,exists][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide",
   --fader via OnShow
   fader = {
     fadeInAlpha = 1,

@@ -85,7 +85,7 @@ local bar1 = {
   numCols         = 6,
   startPoint      = "BOTTOMLEFT",
   fader           = faderOnShow,
-  frameVisibility = "[petbattle] hide; [combat][mod][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide"
+  frameVisibility = "[petbattle] hide; [combat][mod:shift][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide"
 }
 --create
 rActionBar:CreateActionBar1(A, bar1)
@@ -104,7 +104,7 @@ local bar2 = {
   numCols         = 6,
   startPoint      = "BOTTOMLEFT",
   fader           = faderOnShow,
-  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [combat][mod][@target,exists,nodead] show; hide"
+  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift] hide; [combat][mod:shift][@target,exists,nodead] show; hide"
 }
 --create
 rActionBar:CreateActionBar2(A, bar2)

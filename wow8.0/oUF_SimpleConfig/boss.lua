@@ -30,7 +30,7 @@ L.C.boss = {
         {"LEFT",2,0},
         {"RIGHT",-2,0},
       },
-      size = 16,
+      size = 15,
       align = "CENTER",
       tag = "[name]",
     },
@@ -66,7 +66,7 @@ L.C.boss = {
         {"LEFT",2,0},
         {"RIGHT",-2,0},
       },
-      size = 16,
+      size = 15,
     },
     icon = {
       enabled = true,

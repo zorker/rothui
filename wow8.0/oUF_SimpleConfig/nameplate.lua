@@ -83,7 +83,7 @@ L.C.nameplate = {
         {"LEFT",2,0},
         {"RIGHT",-2,0},
       },
-      size = 16,
+      size = 15,
       align = "CENTER",
       tag = "[oUF_SimpleConfig:classification][difficulty][name]|r",
     },
@@ -106,7 +106,7 @@ L.C.nameplate = {
         {"LEFT",2,0},
         {"RIGHT",-2,0},
       },
-      size = 16,
+      size = 15,
     },
     icon = {
       enabled = true,

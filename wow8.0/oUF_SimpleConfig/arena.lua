@@ -30,7 +30,7 @@ L.C.arena = {
         {"LEFT",2,0},
         {"RIGHT",-2,0},
       },
-      size = 16,
+      size = 15,
       align = "CENTER",
       tag = "[arenaspec] [name]",
     },
@@ -60,7 +60,7 @@ L.C.arena = {
         {"LEFT",2,0},
         {"RIGHT",-2,0},
       },
-      size = 16,
+      size = 15,
     },
     icon = {
       enabled = true,

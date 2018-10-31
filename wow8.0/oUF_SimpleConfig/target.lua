@@ -50,7 +50,7 @@ L.C.target = {
     health = {
       enabled = true,
       point = {"RIGHT",-2,0},
-      size = 16,
+      size = 15,
       tag = "[oUF_Simple:health]",
     },
     debuffHighlight = true,

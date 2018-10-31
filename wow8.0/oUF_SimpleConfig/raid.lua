@@ -40,7 +40,7 @@ L.C.raid = {
         {"LEFT",2,0},
         {"RIGHT",-2,0},
       },
-      size = 16,
+      size = 15,
       align = "CENTER",
       tag = "[name][oUF_Simple:role]",
     },

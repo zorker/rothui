@@ -1,0 +1,8 @@
+## Interface: 80000
+## Author: zork
+## Title: rNamePlateColor
+## Notes: Color nameplates on threat
+## RequiredDeps: Blizzard_NamePlates
+## LoadWith: Blizzard_NamePlates
+
+core.lua

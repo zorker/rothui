@@ -423,6 +423,19 @@ if character == "Luavi" then
   }
   rButtonAura:AddAura(aura)
 
+  --Shield of the Righteous
+  local charge = {
+    button          = "ActionButton8",
+    spellid         = 53600,
+    spec            = 2,
+    useBar          = true,
+    barColor        = {1,0,0,1},
+    barBlendMode    = "BLEND",
+    barPoint        = {"BOTTOMLEFT"},
+    barHeight       = 5,
+  }
+  rButtonAura:AddCharge(charge)
+
   --Avengers Shield
   local aura = {
     button          = "ActionButton2",

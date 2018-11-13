@@ -33,6 +33,19 @@ if character == "Zörk" then
   }
   rButtonAura:AddAura(aura)
 
+  --shield block
+  local charge = {
+    button          = "ActionButton8",
+    spellid         = 2565,
+    spec            = 3,
+    useBar          = true,
+    barColor        = {1,0,0,1},
+    barBlendMode    = "BLEND",
+    barPoint        = {"BOTTOMLEFT"},
+    barHeight       = 5,
+  }
+  rButtonAura:AddCharge(charge)
+
   --demo shout
   local aura = {
     button          = ActionButton9,

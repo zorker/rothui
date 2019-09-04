@@ -1,6 +1,6 @@
 
 -- rTooltip: core
--- zork, 2018
+-- zork, 2019
 
 -----------------------------
 -- Variables
@@ -38,7 +38,6 @@ cfg.backdrop = {
   edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
   borderColor = {0.1,0.1,0.1,0.6},
   itemBorderColorAlpha = 0.9,
-  azeriteBorderColor = {1,0.3,0,0.9},
   tile = false,
   tileEdge = false,
   tileSize = 16,
@@ -162,23 +161,16 @@ local function OnTooltipSetUnit(self)
 end
 
 local function SetBackdropStyle(self,style)
-  if self.IsEmbedded then return end --do nothing on embedded tooltips
   if self.TopOverlay then self.TopOverlay:Hide() end
   if self.BottomOverlay then self.BottomOverlay:Hide() end
   self:SetBackdrop(cfg.backdrop)
   self:SetBackdropColor(unpack(cfg.backdrop.bgColor))
   local _, itemLink = self:GetItem()
   if itemLink then
-    local azerite = C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItemByID(itemLink) or C_AzeriteItem.IsAzeriteItemByID(itemLink) or false
     local _, _, itemRarity = GetItemInfo(itemLink)
     local r,g,b = 1,1,1
     if itemRarity then r,g,b = GetItemQualityColor(itemRarity) end
-    --use azerite coloring or item rarity
-    if azerite and cfg.backdrop.azeriteBorderColor then
-      self:SetBackdropBorderColor(unpack(cfg.backdrop.azeriteBorderColor))
-    else
-      self:SetBackdropBorderColor(r,g,b,cfg.backdrop.itemBorderColorAlpha)
-    end
+    self:SetBackdropBorderColor(r,g,b,cfg.backdrop.itemBorderColorAlpha)
   else
     --no item, use default border
     self:SetBackdropBorderColor(unpack(cfg.backdrop.borderColor))

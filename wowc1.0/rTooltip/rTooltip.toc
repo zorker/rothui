@@ -1,6 +1,6 @@
-## Interface: 80000
+## Interface: 11302
 ## Author: zork
-## Title: rTooltip
+## Title: rTooltip |cffffb400Classic|r
 ## Notes: Tooltip enhancements
 
 core.lua

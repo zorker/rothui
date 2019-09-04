@@ -280,7 +280,9 @@ function rButtonTemplate:StyleItemButton(button,cfg)
   local normalTexture = button:GetNormalTexture()
   local pushedTexture = button:GetPushedTexture()
   local highlightTexture = button:GetHighlightTexture()
-  local checkedTexture = button:GetCheckedTexture()
+  --the new ItemButton frame type introduced in 8.1.5 does not have a checked texture
+  local checkedTexture = nil
+  if button.GetCheckedTexture then checkedTexture = button:GetCheckedTexture() end
 
   --backdrop
   SetupBackdrop(button,cfg.backdrop)

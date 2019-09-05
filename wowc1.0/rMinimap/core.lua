@@ -18,7 +18,7 @@ MinimapCluster:ClearAllPoints()
 MinimapCluster:SetPoint(unpack(L.C.point))
 
 --Minimap
-Minimap:SetMaskTexture(L.mediapath.."mask2")
+Minimap:SetMaskTexture(L.mediapath..L.C.maskTexture)
 Minimap:ClearAllPoints()
 Minimap:SetPoint("CENTER")
 Minimap:SetSize(190,190) --correct the cluster offset
@@ -31,38 +31,28 @@ MinimapZoomOut:Hide()
 MinimapBorderTop:Hide()
 MiniMapWorldMapButton:Hide()
 MinimapZoneText:Hide()
-
---dungeon info
-MiniMapInstanceDifficulty:ClearAllPoints()
-MiniMapInstanceDifficulty:SetPoint("TOP",Minimap,"TOP",0,-5)
-MiniMapInstanceDifficulty:SetScale(0.8)
-GuildInstanceDifficulty:ClearAllPoints()
-GuildInstanceDifficulty:SetPoint("TOP",Minimap,"TOP",0,-5)
-GuildInstanceDifficulty:SetScale(0.7)
-MiniMapChallengeMode:ClearAllPoints()
-MiniMapChallengeMode:SetPoint("TOP",Minimap,"TOP",0,-10)
-MiniMapChallengeMode:SetScale(0.6)
+MinimapToggleButton:Hide()
+GameTimeFrame:Hide()
 
 --mail
 MiniMapMailFrame:ClearAllPoints()
-MiniMapMailFrame:SetPoint("BOTTOMRIGHT",Minimap,-0,0)
+MiniMapMailFrame:SetPoint("BOTTOMRIGHT",Minimap,-5,5)
 MiniMapMailIcon:SetTexture(L.mediapath.."mail")
 MiniMapMailBorder:SetTexture("Interface\\Calendar\\EventNotificationGlow")
 MiniMapMailBorder:SetBlendMode("ADD")
 MiniMapMailBorder:ClearAllPoints()
-MiniMapMailBorder:SetPoint("CENTER",MiniMapMailFrame,0.5,1.5)
-MiniMapMailBorder:SetSize(27,27)
-MiniMapMailBorder:SetAlpha(0.5)
+MiniMapMailBorder:SetPoint("CENTER",MiniMapMailFrame,-0.5,1.5)
+MiniMapMailBorder:SetSize(25,25)
+MiniMapMailBorder:SetAlpha(0.4)
 
 --MiniMapTracking
-MiniMapTracking:SetParent(Minimap)
-MiniMapTracking:SetScale(1)
-MiniMapTracking:ClearAllPoints()
-MiniMapTracking:SetPoint("TOPLEFT",Minimap,5,-5)
-MiniMapTrackingButton:SetHighlightTexture (nil)
-MiniMapTrackingButton:SetPushedTexture(nil)
-MiniMapTrackingBackground:Hide()
-MiniMapTrackingButtonBorder:Hide()
+MiniMapTrackingFrame:SetParent(Minimap)
+MiniMapTrackingFrame:SetScale(1)
+MiniMapTrackingFrame:ClearAllPoints()
+MiniMapTrackingFrame:SetPoint("TOPRIGHT",Minimap,-5,-5)
+MiniMapTrackingBorder:Hide()
+--MiniMapTrackingIcon:SetTexCoord(0.1,0.9,0.1,0.9)
+MiniMapTrackingIcon:SetMask("Interface\\DialogFrame\\DialogAlertIcon")
 
 --MiniMapNorthTag
 MinimapNorthTag:ClearAllPoints()
@@ -77,22 +67,6 @@ TimeManagerClockButton:SetPoint("BOTTOM",0,5)
 TimeManagerClockTicker:SetFont(STANDARD_TEXT_FONT,12,"OUTLINE")
 TimeManagerClockTicker:SetTextColor(0.8,0.8,0.6,1)
 
---GameTimeFrame
-GameTimeFrame:SetParent(Minimap)
-GameTimeFrame:SetScale(0.6)
-GameTimeFrame:ClearAllPoints()
-GameTimeFrame:SetPoint("TOPRIGHT",Minimap,-18,-18)
-GameTimeFrame:SetHitRectInsets(0, 0, 0, 0)
-GameTimeFrame:GetNormalTexture():SetTexCoord(0,1,0,1)
-GameTimeFrame:SetNormalTexture(L.mediapath.."calendar")
-GameTimeFrame:SetPushedTexture(nil)
-GameTimeFrame:SetHighlightTexture (nil)
-local fs = GameTimeFrame:GetFontString()
-fs:ClearAllPoints()
-fs:SetPoint("CENTER",0,-5)
-fs:SetFont(STANDARD_TEXT_FONT,20)
-fs:SetTextColor(0.2,0.2,0.1,0.9)
-
 --zoom
 Minimap:EnableMouseWheel()
 local function Zoom(self, direction)
@@ -103,12 +77,7 @@ Minimap:SetScript("OnMouseWheel", Zoom)
 
 --onenter/show
 local function Show()
-  GameTimeFrame:SetAlpha(0.9)
   TimeManagerClockButton:SetAlpha(0.9)
-  MiniMapTracking:SetAlpha(0.9)
-  MiniMapChallengeMode:SetAlpha(0.9)
-  MiniMapInstanceDifficulty:SetAlpha(0.9)
-  GuildInstanceDifficulty:SetAlpha(0.9)
 end
 Minimap:SetScript("OnEnter", Show)
 
@@ -117,12 +86,7 @@ local lasttime = 0
 local function Hide()
   if Minimap:IsMouseOver() then return end
   if time() == lasttime then return end
-  GameTimeFrame:SetAlpha(0)
   TimeManagerClockButton:SetAlpha(0)
-  MiniMapTracking:SetAlpha(0)
-  MiniMapChallengeMode:SetAlpha(0)
-  MiniMapInstanceDifficulty:SetAlpha(0)
-  GuildInstanceDifficulty:SetAlpha(0)
 end
 local function SetTimer()
   lasttime = time()

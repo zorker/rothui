@@ -13,12 +13,10 @@ local A, L = ...
 -----------------------------
 
 local function FaderOnFinished(self)
-  --print("FaderOnFinished",self.__owner:GetName(),self.finAlpha)
   self.__owner:SetAlpha(self.finAlpha)
 end
 
 local function FaderOnUpdate(self)
-  --print("FaderOnUpdate",self.__owner:GetName(),self.__animFrame:GetAlpha())
   self.__owner:SetAlpha(self.__animFrame:GetAlpha())
 end
 
@@ -43,7 +41,6 @@ function L:StartFadeIn(frame)
   frame.fader.anim:SetToAlpha(frame.faderConfig.fadeInAlpha or 1)
   frame.fader.anim:SetDuration(frame.faderConfig.fadeInDuration or 0.3)
   frame.fader.anim:SetSmoothing(frame.faderConfig.fadeInSmooth or "OUT")
-  --start right away
   frame.fader.anim:SetStartDelay(frame.faderConfig.fadeInDelay or 0)
   frame.fader.finAlpha = frame.faderConfig.fadeInAlpha
   frame.fader.direction = "in"
@@ -57,7 +54,6 @@ function L:StartFadeOut(frame)
   frame.fader.anim:SetToAlpha(frame.faderConfig.fadeOutAlpha or 0)
   frame.fader.anim:SetDuration(frame.faderConfig.fadeOutDuration or 0.3)
   frame.fader.anim:SetSmoothing(frame.faderConfig.fadeOutSmooth or "OUT")
-  --wait for some time before starting the fadeout
   frame.fader.anim:SetStartDelay(frame.faderConfig.fadeOutDelay or 0)
   frame.fader.finAlpha = frame.faderConfig.fadeOutAlpha
   frame.fader.direction = "out"

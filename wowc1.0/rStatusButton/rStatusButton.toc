@@ -4,4 +4,6 @@
 ## Notes: A little gem with a tip
 ## RequiredDeps: rLib
 
+variables.lua
+config.lua
 core.lua

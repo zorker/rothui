@@ -3,4 +3,5 @@
 ## Title: rTooltip |cffff6600Classic|r
 ## Notes: Tooltip enhancements
 
+config.lua
 core.lua

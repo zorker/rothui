@@ -8,36 +8,7 @@
 
 local A, L = ...
 
-L.addonName       = A
-L.dragFrames      = {}
-L.addonColor      = "00FF00AA"
-L.addonShortcut   = "rsb"
-L.mediapath       = "interface\\addons\\"..A.."\\media\\"
-
 local GameTooltip = GameTooltip
-
------------------------------
--- Config
------------------------------
-
-local cfg = {
-  scale = 0.9,
-  point = { "TOP", 0, -150 },
-  size = { 32, 32 },
-  frameVisibility = "[petbattle][overridebar][vehicleui][possessbar][shapeshift][combat] hide; [mod:shift] show; hide",
-  frameVisibilityFunc = nil,
-  --fader via OnShow
-  fader = {
-    fadeInAlpha = 1,
-    fadeInDuration = 0.3,
-    fadeInSmooth = "OUT",
-    fadeOutAlpha = 0,
-    fadeOutDuration = 0.9,
-    fadeOutSmooth = "OUT",
-    fadeOutDelay = 0,
-    trigger = "OnShow",
-  },
-}
 
 -----------------------------
 -- Functions
@@ -98,24 +69,24 @@ end
 -----------------------------
 
 local button = CreateFrame("Button", A, UIParent, SecureHandlerStateTemplate)
-button:SetScale(cfg.scale)
-button:SetPoint(unpack(cfg.point))
-button:SetSize(unpack(cfg.size))
-button.frameVisibility = cfg.frameVisibility
-button.frameVisibilityFunc = cfg.frameVisibilityFunc
+button:SetScale(L.C.scale)
+button:SetPoint(unpack(L.C.point))
+button:SetSize(unpack(L.C.size))
+button.frameVisibility = L.C.frameVisibility
+button.frameVisibilityFunc = L.C.frameVisibilityFunc
 local gem = button:CreateTexture(nil, "BACKGROUND",nil,-8)
 gem:SetTexture(L.mediapath.."chatgem_active")
 gem:SetAllPoints()
 button.gem = gem
 button.count = 1
-RegisterStateDriver(button, cfg.frameVisibilityFunc or "visibility", cfg.frameVisibility)
+RegisterStateDriver(button, L.C.frameVisibilityFunc or "visibility", L.C.frameVisibility)
 button:SetScript("OnEnter", OnEnter)
 button:SetScript("OnLeave", OnLeave)
 button:SetScript("OnClick", OnClick)
 
 --OnShow fader
-if cfg.fader then
-  rLib:CreateFrameFader(button, cfg.fader)
+if L.C.fader then
+  rLib:CreateFrameFader(button, L.C.fader)
 end
 
 --drag frame

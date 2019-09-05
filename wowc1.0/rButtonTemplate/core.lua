@@ -1,6 +1,6 @@
 
 -- rButtonTemplate: core
--- zork, 2016
+-- zork, 2019
 
 -----------------------------
 -- Variables
@@ -29,7 +29,6 @@ local function ResetAlpha(self,a)
   if not self.__alpha then return end
   if a == self.__alpha then return end
   self:SetAlpha(self.__alpha)
-  print(self:GetName(),a)
 end
 
 local function ResetNormalTexture(self, file)

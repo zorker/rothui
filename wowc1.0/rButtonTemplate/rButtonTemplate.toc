@@ -1,6 +1,6 @@
 ## Interface: 11302
 ## Author: zork
 ## Title: rButtonTemplate |cffff6600Classic|r
-## Notes: Blizzard button template style framework
+## Notes: Style framework for Blizzard button templates
 
 core.lua

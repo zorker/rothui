@@ -1,6 +1,6 @@
 
 -- rButtonTemplate_Zork: theme
--- zork, 2016
+-- zork, 2019
 
 -- Zork's Button Theme for rButtonTemplate
 
@@ -15,15 +15,13 @@ local A, L = ...
 -----------------------------
 
 local mediapath = "interface\\addons\\"..A.."\\media\\"
-local copyTable = rLib.CopyTable
+local CopyTable = rLib.CopyTable
 
 -----------------------------
 -- actionButtonConfig
 -----------------------------
 
 local actionButtonConfig = {}
---make the config available for other addons (like rFilter)
-rButtonTemplate_Zork_ActionButtonConfig = actionButtonConfig
 
 --backdrop
 actionButtonConfig.backdrop = {
@@ -157,13 +155,13 @@ rButtonTemplate:StyleActionButton(_G["rActionBarVehicleExitButton"],actionButton
 
 local itemButtonConfig = {}
 
-itemButtonConfig.backdrop = copyTable(actionButtonConfig.backdrop)
-itemButtonConfig.icon = copyTable(actionButtonConfig.icon)
-itemButtonConfig.count = copyTable(actionButtonConfig.count)
-itemButtonConfig.stock = copyTable(actionButtonConfig.name)
+itemButtonConfig.backdrop = CopyTable(actionButtonConfig.backdrop)
+itemButtonConfig.icon = CopyTable(actionButtonConfig.icon)
+itemButtonConfig.count = CopyTable(actionButtonConfig.count)
+itemButtonConfig.stock = CopyTable(actionButtonConfig.name)
 itemButtonConfig.stock.alpha = 1
-itemButtonConfig.border = copyTable(actionButtonConfig.border)
-itemButtonConfig.normalTexture = copyTable(actionButtonConfig.normalTexture)
+itemButtonConfig.border = CopyTable(actionButtonConfig.border)
+itemButtonConfig.normalTexture = CopyTable(actionButtonConfig.normalTexture)
 
 --rButtonTemplate:StyleItemButton
 local itemButtons = { MainMenuBarBackpackButton, CharacterBag0Slot, CharacterBag1Slot, CharacterBag2Slot, CharacterBag3Slot }
@@ -175,7 +173,7 @@ end
 -- extraButtonConfig
 -----------------------------
 
-local extraButtonConfig = copyTable(actionButtonConfig)
+local extraButtonConfig = CopyTable(actionButtonConfig)
 extraButtonConfig.buttonstyle = { file = "" }
 
 --rButtonTemplate:StyleExtraActionButton
@@ -187,14 +185,14 @@ rButtonTemplate:StyleExtraActionButton(extraButtonConfig)
 
 local auraButtonConfig = {}
 
-auraButtonConfig.backdrop = copyTable(actionButtonConfig.backdrop)
-auraButtonConfig.icon = copyTable(actionButtonConfig.icon)
-auraButtonConfig.border = copyTable(actionButtonConfig.border)
-auraButtonConfig.normalTexture = copyTable(actionButtonConfig.normalTexture)
-auraButtonConfig.count = copyTable(actionButtonConfig.count)
-auraButtonConfig.duration = copyTable(actionButtonConfig.hotkey)
+auraButtonConfig.backdrop = CopyTable(actionButtonConfig.backdrop)
+auraButtonConfig.icon = CopyTable(actionButtonConfig.icon)
+auraButtonConfig.border = CopyTable(actionButtonConfig.border)
+auraButtonConfig.normalTexture = CopyTable(actionButtonConfig.normalTexture)
+auraButtonConfig.count = CopyTable(actionButtonConfig.count)
+auraButtonConfig.duration = CopyTable(actionButtonConfig.hotkey)
 auraButtonConfig.duration.alpha = 1
-auraButtonConfig.symbol = copyTable(actionButtonConfig.name)
+auraButtonConfig.symbol = CopyTable(actionButtonConfig.name)
 auraButtonConfig.symbol.alpha = 1
 
 --rButtonTemplate:StyleBuffButtons + rButtonTemplate:StyleTempEnchants
@@ -205,7 +203,7 @@ rButtonTemplate:StyleTempEnchants(auraButtonConfig)
 -- debuffButtonConfig
 -----------------------------
 
-local debuffButtonConfig = copyTable(auraButtonConfig)
+local debuffButtonConfig = CopyTable(auraButtonConfig)
 --change the font sizes a bit
 debuffButtonConfig.count.font = { STANDARD_TEXT_FONT, 12.5, "OUTLINE"}
 debuffButtonConfig.duration.font = { STANDARD_TEXT_FONT, 12.5, "OUTLINE"}

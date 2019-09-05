@@ -1,7 +1,7 @@
-## Interface: 80000
+## Interface: 11302
 ## Author: zork
-## Title: rButtonTemplate_Zork
-## Notes: Zork's button theme for rButtonTemplate
+## Title: rButtonTemplate_Zork |cffff6600Classic|r
+## Notes: Zork's theme for rButtonTemplate
 ## RequiredDeps: rLib, rButtonTemplate
 
 theme.lua

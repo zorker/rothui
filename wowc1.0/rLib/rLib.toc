@@ -1,6 +1,6 @@
-## Interface: 80000
+## Interface: 11302
 ## Author: zork
-## Title: rLib
+## Title: rLib |cffff6600Classic|r
 ## Notes: Zork's addon library.
 
 core.lua

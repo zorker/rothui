@@ -1,6 +1,6 @@
 
 -- rLib: slashcmd
--- zork, 2016
+-- zork, 2019
 
 -----------------------------
 -- Variables

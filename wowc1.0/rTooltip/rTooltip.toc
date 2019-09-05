@@ -1,6 +1,6 @@
 ## Interface: 11302
 ## Author: zork
-## Title: rTooltip |cffffb400Classic|r
+## Title: rTooltip |cffff6600Classic|r
 ## Notes: Tooltip enhancements
 
 core.lua

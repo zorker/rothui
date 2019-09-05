@@ -368,7 +368,7 @@ end
 --style player BuffFrame debuff buttons
 function rButtonTemplate:StyleDebuffButtons(cfg)
   local function UpdateDebuffButton(buttonName, i)
-    rButtonTemplate:StyleAuraButton(buttonName, cfg)
+    rButtonTemplate:StyleAuraButton("DebuffButton"..i, cfg)
   end
   hooksecurefunc("DebuffButton_UpdateAnchors", UpdateDebuffButton)
 end

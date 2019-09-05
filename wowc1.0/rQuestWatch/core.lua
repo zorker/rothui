@@ -41,6 +41,7 @@ QuestWatchFrame:SetScale(cfg.scale)
 QuestWatchFrame:ClearAllPoints()
 QuestWatchFrame:SetPoint(unpack(cfg.point))
 QuestWatchFrame:SetSize(unpack(cfg.size))
+QuestWatchFrame.ignoreFramePositionManager = true
 
 --drag frame
 rLib:CreateDragResizeFrame(QuestWatchFrame, L.dragFrames, -2, true)

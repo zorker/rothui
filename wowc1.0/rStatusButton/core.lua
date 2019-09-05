@@ -19,7 +19,7 @@ local function OnEnter(self)
   GameTooltip:SetOwner(self, "ANCHOR_TOP")
   GameTooltip:AddLine(self:GetName(), 1, 0.5, 0, 1, 1, 1)
   --experience
-  if UnitLevel("player") < MAX_PLAYER_LEVEL and not IsXPUserDisabled() then
+  if UnitLevel("player") < MAX_PLAYER_LEVEL then
     local cur, max = UnitXP("player"), UnitXPMax("player")
     local lvl = UnitLevel("player")
     local rested = GetXPExhaustion()
@@ -29,15 +29,12 @@ local function OnEnter(self)
     GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
     GameTooltip:AddDoubleLine("Rested", rested, 1, 1, 1, 1, 1, 1)
   end
-  --honor
-  --if InActiveBattlefield() or IsInActiveWorldPVP() then
-    local cur, max = UnitHonor("player"), UnitHonorMax("player")
-    local lvl = UnitHonorLevel("player")
-    GameTooltip:AddLine("Honor", 0, 1, 0.5, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Level", lvl, 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Cur / Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
-  --end
+  --pvp
+  local pvpRankName = GetPVPRankInfo(UnitPVPRank("player"), "player")
+  if pvpRankName then
+    GameTooltip:AddLine("PvP", 0, 1, 0.5, 1, 1, 1)
+    GameTooltip:AddDoubleLine("Rank", pvpRankName, 1, 1, 1, 1, 1, 1)
+  end
   --reputation
   local name, standing, min, max, cur = GetWatchedFactionInfo()
   if name then

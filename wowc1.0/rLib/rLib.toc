@@ -1,7 +1,7 @@
 ## Interface: 11302
 ## Author: zork
 ## Title: rLib |cffff6600Classic|r
-## Notes: Zork's addon library.
+## Notes: Zork's addon library
 
 core.lua
 dragframe.lua

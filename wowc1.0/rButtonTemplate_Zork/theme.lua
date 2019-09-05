@@ -168,16 +168,6 @@ for i, buttonName in next, itemButtons do
 end
 
 -----------------------------
--- extraButtonConfig
------------------------------
-
-local extraButtonConfig = CopyTable(actionButtonConfig)
-extraButtonConfig.buttonstyle = { file = "" }
-
---rButtonTemplate:StyleExtraActionButton
-rButtonTemplate:StyleExtraActionButton("ExtraActionButton1",extraButtonConfig)
-
------------------------------
 -- auraButtonConfig
 -----------------------------
 

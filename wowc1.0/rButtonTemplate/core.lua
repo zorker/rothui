@@ -168,7 +168,7 @@ end
 function rButtonTemplate:StyleActionButton(buttonName, cfg)
 
   --test if first argument is a string
-  if type(buttonName) != "string" then
+  if type(buttonName) ~= "string" then
     print("rButtonTemplate:StyleAuraButton", "buttonName not a string")
     return
   end
@@ -198,13 +198,10 @@ function rButtonTemplate:StyleActionButton(buttonName, cfg)
   --test for GetCheckedTexture
   local checkedTexture = nil
   if button.GetCheckedTexture then checkedTexture = button:GetCheckedTexture() end
+  --wierd background be gone
   local floatingBG = _G[buttonName.."FloatingBG"]
-
   --hide stuff
-  if floatingBG then
-    print("Found FloatingBG on button",buttonName)
-    floatingBG:Hide()
-  end
+  if floatingBG then floatingBG:Hide() end
 
   --backdrop
   SetupBackdrop(button,cfg.backdrop)
@@ -238,58 +235,9 @@ function rButtonTemplate:StyleActionButton(buttonName, cfg)
   button.__styled = true
 end
 
-function rButtonTemplate:StyleExtraActionButton(buttonName,cfg)
-
-  --test if first argument is a string
-  if type(buttonName) != "string" then
-    print("rButtonTemplate:StyleExtraActionButton", "buttonName not a string")
-    return
-  end
-  --test if button exists
-  local button = _G[buttonName]
-  if not button then
-    print("rButtonTemplate:StyleExtraActionButton", "button not found", buttonName)
-    return
-  end
-  --test if button is already styled
-  if button.__styled then return end
-
-  local icon = _G[buttonName.."Icon"]
-  --local flash = _G[buttonName.."Flash"] --wierd the template has two textures of the same name
-  local hotkey = _G[buttonName.."HotKey"]
-  local count = _G[buttonName.."Count"]
-  local buttonstyle = button.style --artwork around the button
-  local cooldown = _G[buttonName.."Cooldown"]
-
-  local normalTexture = button:GetNormalTexture()
-  local pushedTexture = button:GetPushedTexture()
-  local highlightTexture = button:GetHighlightTexture()
-  local checkedTexture = button:GetCheckedTexture()
-
-  --backdrop
-  SetupBackdrop(button,cfg.backdrop)
-
-  --textures
-  SetupTexture(icon,cfg.icon,"SetTexture",icon)
-  SetupTexture(buttonstyle,cfg.buttonstyle,"SetTexture",buttonstyle)
-  SetupTexture(normalTexture,cfg.normalTexture,"SetNormalTexture",button)
-  SetupTexture(pushedTexture,cfg.pushedTexture,"SetPushedTexture",button)
-  SetupTexture(highlightTexture,cfg.highlightTexture,"SetHighlightTexture",button)
-  SetupTexture(checkedTexture,cfg.checkedTexture,"SetCheckedTexture",button)
-
-  --cooldown
-  SetupCooldown(cooldown,cfg.cooldown)
-
-  --hotkey, count
-  SetupFontString(hotkey,cfg.hotkey)
-  SetupFontString(count,cfg.count)
-
-  button.__styled = true
-end
-
 function rButtonTemplate:StyleItemButton(buttonName,cfg)
   --test if first argument is a string
-  if type(buttonName) != "string" then
+  if type(buttonName) ~= "string" then
     print("rButtonTemplate:StyleItemButton", "buttonName not a string")
     return
   end
@@ -342,9 +290,6 @@ function rButtonTemplate:StyleAllActionButtons(cfg)
     rButtonTemplate:StyleActionButton("MultiBarRightButton"..i,cfg)
     rButtonTemplate:StyleActionButton("MultiBarLeftButton"..i,cfg)
   end
-  for i = 1, 6 do
-    rButtonTemplate:StyleActionButton("OverrideActionBarButton"..i,cfg)
-  end
   --petbar buttons
   for i=1, NUM_PET_ACTION_SLOTS do
     rButtonTemplate:StyleActionButton("PetActionButton"..i,cfg)
@@ -353,16 +298,12 @@ function rButtonTemplate:StyleAllActionButtons(cfg)
   for i=1, NUM_STANCE_SLOTS do
     rButtonTemplate:StyleActionButton("StanceButton"..i,cfg)
   end
-  --possess buttons
-  for i=1, NUM_POSSESS_SLOTS do
-    rButtonTemplate:StyleActionButton("PossessButton"..i,cfg)
-  end
 end
 
 function rButtonTemplate:StyleAuraButton(buttonName, cfg)
 
   --test if first argument is a string
-  if type(buttonName) != "string" then
+  if type(buttonName) ~= "string" then
     print("rButtonTemplate:StyleAuraButton", "buttonName not a string")
     return
   end

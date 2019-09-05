@@ -165,11 +165,22 @@ local function SetupBackdrop(button,backdrop)
   end
 end
 
-function rButtonTemplate:StyleActionButton(button, cfg)
-  if not button then return end
+function rButtonTemplate:StyleActionButton(buttonName, cfg)
+
+  --test if first argument is a string
+  if type(buttonName) != "string" then
+    print("rButtonTemplate:StyleAuraButton", "buttonName not a string")
+    return
+  end
+  --test if button exists
+  local button = _G[buttonName]
+  if not button then
+    print("rButtonTemplate:StyleAuraButton", "button not found", buttonName)
+    return
+  end
+  --test if button is already styled
   if button.__styled then return end
 
-  local buttonName = button:GetName()
   local icon = _G[buttonName.."Icon"]
   local flash = _G[buttonName.."Flash"]
   local flyoutBorder = _G[buttonName.."FlyoutBorder"]
@@ -184,13 +195,16 @@ function rButtonTemplate:StyleActionButton(button, cfg)
   local normalTexture = button:GetNormalTexture()
   local pushedTexture = button:GetPushedTexture()
   local highlightTexture = button:GetHighlightTexture()
-  --normal buttons do not have a checked texture, but checkbuttons do and normal actionbuttons are checkbuttons
+  --test for GetCheckedTexture
   local checkedTexture = nil
   if button.GetCheckedTexture then checkedTexture = button:GetCheckedTexture() end
   local floatingBG = _G[buttonName.."FloatingBG"]
 
   --hide stuff
-  if floatingBG then floatingBG:Hide() end
+  if floatingBG then
+    print("Found FloatingBG on button",buttonName)
+    floatingBG:Hide()
+  end
 
   --backdrop
   SetupBackdrop(button,cfg.backdrop)
@@ -224,13 +238,21 @@ function rButtonTemplate:StyleActionButton(button, cfg)
   button.__styled = true
 end
 
-function rButtonTemplate:StyleExtraActionButton(cfg)
+function rButtonTemplate:StyleExtraActionButton(buttonName,cfg)
 
-  local button = ExtraActionButton1
-
+  --test if first argument is a string
+  if type(buttonName) != "string" then
+    print("rButtonTemplate:StyleExtraActionButton", "buttonName not a string")
+    return
+  end
+  --test if button exists
+  local button = _G[buttonName]
+  if not button then
+    print("rButtonTemplate:StyleExtraActionButton", "button not found", buttonName)
+    return
+  end
+  --test if button is already styled
   if button.__styled then return end
-
-  local buttonName = button:GetName()
 
   local icon = _G[buttonName.."Icon"]
   --local flash = _G[buttonName.."Flash"] --wierd the template has two textures of the same name
@@ -265,12 +287,21 @@ function rButtonTemplate:StyleExtraActionButton(cfg)
   button.__styled = true
 end
 
-function rButtonTemplate:StyleItemButton(button,cfg)
-
-  if not button then return end
+function rButtonTemplate:StyleItemButton(buttonName,cfg)
+  --test if first argument is a string
+  if type(buttonName) != "string" then
+    print("rButtonTemplate:StyleItemButton", "buttonName not a string")
+    return
+  end
+  --test if button exists
+  local button = _G[buttonName]
+  if not button then
+    print("rButtonTemplate:StyleItemButton", "button not found", buttonName)
+    return
+  end
+  --test if button is already styled
   if button.__styled then return end
 
-  local buttonName = button:GetName()
   local icon = _G[buttonName.."IconTexture"]
   local count = _G[buttonName.."Count"]
   local stock = _G[buttonName.."Stock"]
@@ -279,7 +310,7 @@ function rButtonTemplate:StyleItemButton(button,cfg)
   local normalTexture = button:GetNormalTexture()
   local pushedTexture = button:GetPushedTexture()
   local highlightTexture = button:GetHighlightTexture()
-  --the new ItemButton frame type introduced in 8.1.5 does not have a checked texture
+  --test for GetCheckedTexture
   local checkedTexture = nil
   if button.GetCheckedTexture then checkedTexture = button:GetCheckedTexture() end
 
@@ -305,34 +336,45 @@ end
 
 function rButtonTemplate:StyleAllActionButtons(cfg)
   for i = 1, NUM_ACTIONBAR_BUTTONS do
-    rButtonTemplate:StyleActionButton(_G["ActionButton"..i],cfg)
-    rButtonTemplate:StyleActionButton(_G["MultiBarBottomLeftButton"..i],cfg)
-    rButtonTemplate:StyleActionButton(_G["MultiBarBottomRightButton"..i],cfg)
-    rButtonTemplate:StyleActionButton(_G["MultiBarRightButton"..i],cfg)
-    rButtonTemplate:StyleActionButton(_G["MultiBarLeftButton"..i],cfg)
+    rButtonTemplate:StyleActionButton("ActionButton"..i,cfg)
+    rButtonTemplate:StyleActionButton("MultiBarBottomLeftButton"..i,cfg)
+    rButtonTemplate:StyleActionButton("MultiBarBottomRightButton"..i,cfg)
+    rButtonTemplate:StyleActionButton("MultiBarRightButton"..i,cfg)
+    rButtonTemplate:StyleActionButton("MultiBarLeftButton"..i,cfg)
   end
   for i = 1, 6 do
-    rButtonTemplate:StyleActionButton(_G["OverrideActionBarButton"..i],cfg)
+    rButtonTemplate:StyleActionButton("OverrideActionBarButton"..i,cfg)
   end
   --petbar buttons
   for i=1, NUM_PET_ACTION_SLOTS do
-    rButtonTemplate:StyleActionButton(_G["PetActionButton"..i],cfg)
+    rButtonTemplate:StyleActionButton("PetActionButton"..i,cfg)
   end
   --stancebar buttons
   for i=1, NUM_STANCE_SLOTS do
-    rButtonTemplate:StyleActionButton(_G["StanceButton"..i],cfg)
+    rButtonTemplate:StyleActionButton("StanceButton"..i,cfg)
   end
   --possess buttons
   for i=1, NUM_POSSESS_SLOTS do
-    rButtonTemplate:StyleActionButton(_G["PossessButton"..i],cfg)
+    rButtonTemplate:StyleActionButton("PossessButton"..i,cfg)
   end
 end
 
-function rButtonTemplate:StyleAuraButton(button, cfg)
-  if not button then return end
+function rButtonTemplate:StyleAuraButton(buttonName, cfg)
+
+  --test if first argument is a string
+  if type(buttonName) != "string" then
+    print("rButtonTemplate:StyleAuraButton", "buttonName not a string")
+    return
+  end
+  --test if button exists
+  local button = _G[buttonName]
+  if not button then
+    print("rButtonTemplate:StyleAuraButton", "button not found", buttonName)
+    return
+  end
+  --test if button is already styled
   if button.__styled then return end
 
-  local buttonName = button:GetName()
   local icon = _G[buttonName.."Icon"]
   local count = _G[buttonName.."Count"]
   local duration = _G[buttonName.."Duration"]
@@ -375,7 +417,7 @@ function rButtonTemplate:StyleBuffButtons(cfg)
     for i = buffButtonIndex, BUFF_MAX_DISPLAY do
       local button = _G["BuffButton"..i]
       if not button then break end
-      rButtonTemplate:StyleAuraButton(button, cfg)
+      rButtonTemplate:StyleAuraButton("BuffButton"..i, cfg)
       if button.__styled then buffButtonIndex = i+1 end
     end
   end
@@ -385,17 +427,16 @@ end
 --style player BuffFrame debuff buttons
 function rButtonTemplate:StyleDebuffButtons(cfg)
   local function UpdateDebuffButton(buttonName, i)
-    local button = _G["DebuffButton"..i]
-    rButtonTemplate:StyleAuraButton(button, cfg)
+    rButtonTemplate:StyleAuraButton(buttonName, cfg)
   end
   hooksecurefunc("DebuffButton_UpdateAnchors", UpdateDebuffButton)
 end
 
 --style player TempEnchant buttons
 function rButtonTemplate:StyleTempEnchants(cfg)
-  rButtonTemplate:StyleAuraButton(TempEnchant1, cfg)
-  rButtonTemplate:StyleAuraButton(TempEnchant2, cfg)
-  rButtonTemplate:StyleAuraButton(TempEnchant3, cfg)
+  rButtonTemplate:StyleAuraButton("TempEnchant1", cfg)
+  rButtonTemplate:StyleAuraButton("TempEnchant2", cfg)
+  rButtonTemplate:StyleAuraButton("TempEnchant3", cfg)
 end
 
 --style all aura buttons

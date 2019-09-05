@@ -146,8 +146,6 @@ actionButtonConfig.count = {
 
 --rButtonTemplate:StyleAllActionButtons
 rButtonTemplate:StyleAllActionButtons(actionButtonConfig)
---style rActionBar vehicle exit button
-rButtonTemplate:StyleActionButton(_G["rActionBarVehicleExitButton"],actionButtonConfig)
 
 -----------------------------
 -- itemButtonConfig
@@ -164,9 +162,9 @@ itemButtonConfig.border = CopyTable(actionButtonConfig.border)
 itemButtonConfig.normalTexture = CopyTable(actionButtonConfig.normalTexture)
 
 --rButtonTemplate:StyleItemButton
-local itemButtons = { MainMenuBarBackpackButton, CharacterBag0Slot, CharacterBag1Slot, CharacterBag2Slot, CharacterBag3Slot }
-for i, button in next, itemButtons do
-  rButtonTemplate:StyleItemButton(button, itemButtonConfig)
+local itemButtons = { "MainMenuBarBackpackButton", "CharacterBag0Slot", "CharacterBag1Slot", "CharacterBag2Slot", "CharacterBag3Slot" }
+for i, buttonName in next, itemButtons do
+  rButtonTemplate:StyleItemButton(buttonName, itemButtonConfig)
 end
 
 -----------------------------
@@ -177,7 +175,7 @@ local extraButtonConfig = CopyTable(actionButtonConfig)
 extraButtonConfig.buttonstyle = { file = "" }
 
 --rButtonTemplate:StyleExtraActionButton
-rButtonTemplate:StyleExtraActionButton(extraButtonConfig)
+rButtonTemplate:StyleExtraActionButton("ExtraActionButton1",extraButtonConfig)
 
 -----------------------------
 -- auraButtonConfig

@@ -1,7 +1,7 @@
-## Interface: 80000
+## Interface: 11302
 ## Author: zork
-## Title: rStatusButton
-## Notes: Hover me for all dem statuses mon!
+## Title: rStatusButton |cffff6600Classic|r
+## Notes: A little gem with a tip
 ## RequiredDeps: rLib
 
 core.lua

@@ -1,6 +1,6 @@
 
 -- rStatusButton: core
--- zork, 2018
+-- zork, 2019
 
 -----------------------------
 -- Variables
@@ -12,11 +12,9 @@ L.addonName       = A
 L.dragFrames      = {}
 L.addonColor      = "00FF00AA"
 L.addonShortcut   = "rsb"
-
 L.mediapath       = "interface\\addons\\"..A.."\\media\\"
 
-local GameTooltip, C_AzeriteItem = GameTooltip, C_AzeriteItem
-
+local GameTooltip = GameTooltip
 
 -----------------------------
 -- Config
@@ -45,6 +43,7 @@ local cfg = {
 -- Functions
 -----------------------------
 
+--OnEnter
 local function OnEnter(self)
   GameTooltip:SetOwner(self, "ANCHOR_TOP")
   GameTooltip:AddLine(self:GetName(), 1, 0.5, 0, 1, 1, 1)
@@ -76,36 +75,15 @@ local function OnEnter(self)
     GameTooltip:AddDoubleLine("Cur / Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
     GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
   end
-  --azerite
-  local azeriteItem = C_AzeriteItem.FindActiveAzeriteItem()
-  if azeriteItem then
-    local cur, max = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItem)
-    local lvl = C_AzeriteItem.GetPowerLevel(azeriteItem)
-    GameTooltip:AddLine("Azerite", 0, 1, 0.5, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Level", lvl, 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Cur / Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
-  end
-  --islandweekly
-  local iwqID = C_IslandsQueue.GetIslandsWeeklyQuestID()
-  if iwqID and IsQuestFlaggedCompleted(iwqID) then
-    GameTooltip:AddLine("Island Weekly", 0, 1, 0.5, 1, 1, 1)
-    GameTooltip:AddDoubleLine("Status", "Finished", 1, 1, 1, 1, 1, 1)
-  elseif iwqID then
-    local _, _, _, cur, max = GetQuestObjectiveInfo(iwqID, 1, false)
-    if max then
-      GameTooltip:AddLine("Island Weekly", 0, 1, 0.5, 1, 1, 1)
-      GameTooltip:AddDoubleLine("Cur / Max", cur.." / "..max, 1, 1, 1, 1, 1, 1)
-      GameTooltip:AddDoubleLine("Needed", (max-cur), 1, 1, 1, 1, 1, 1)
-    end
-  end
   GameTooltip:Show()
 end
 
+--OnLeave
 local function OnLeave(self)
   GameTooltip:Hide()
 end
 
+--OnClick
 local function OnClick(self)
   self.count = self.count+1
   if self.count % 2 == 0 then

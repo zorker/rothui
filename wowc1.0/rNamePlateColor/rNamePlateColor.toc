@@ -1,0 +1,8 @@
+## Interface: 11302
+## Author: zork
+## Title: rNamePlateColor |cffff6600Classic|r
+## Notes: Color nameplates on threat
+## RequiredDeps: Blizzard_NamePlates
+## LoadWith: Blizzard_NamePlates
+
+core.lua

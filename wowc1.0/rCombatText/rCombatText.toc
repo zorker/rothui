@@ -1,0 +1,8 @@
+## Interface: 11302
+## Author: zork
+## Title: rCombatText |cffff6600Classic|r
+## Notes: Small tweaks for the default combat text
+## RequiredDeps: Blizzard_CombatText
+## LoadWith: Blizzard_CombatText
+
+rCombatText.lua

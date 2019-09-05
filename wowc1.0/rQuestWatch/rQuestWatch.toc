@@ -1,0 +1,6 @@
+## Interface: 11302
+## Author: zork
+## Title: rQuestWatch |cffff6600Classic|r
+## Notes: QuestWatchFrame enhancements
+
+core.lua

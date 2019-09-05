@@ -1,6 +1,6 @@
 
 -- rMinimap: core
--- zork, 2016
+-- zork, 2019
 
 -----------------------------
 -- Variables
@@ -8,32 +8,17 @@
 
 local A, L = ...
 
-L.addonName       = A
-L.dragFrames      = {}
-L.addonColor      = "00FFAA00"
-L.addonShortcut   = "rmm"
-
------------------------------
--- Config
------------------------------
-
-local cfg = {
-  scale = 1,
-  point = { "TOPRIGHT", 0, 0},
-}
-
 -----------------------------
 -- Init
 -----------------------------
 
 --MinimapCluster
-MinimapCluster:SetScale(cfg.scale)
+MinimapCluster:SetScale(L.C.scale)
 MinimapCluster:ClearAllPoints()
-MinimapCluster:SetPoint(unpack(cfg.point))
+MinimapCluster:SetPoint(unpack(L.C.point))
 
 --Minimap
-local mediapath = "interface\\addons\\"..A.."\\media\\"
-Minimap:SetMaskTexture(mediapath.."mask2")
+Minimap:SetMaskTexture(L.mediapath.."mask2")
 Minimap:ClearAllPoints()
 Minimap:SetPoint("CENTER")
 Minimap:SetSize(190,190) --correct the cluster offset
@@ -58,22 +43,10 @@ MiniMapChallengeMode:ClearAllPoints()
 MiniMapChallengeMode:SetPoint("TOP",Minimap,"TOP",0,-10)
 MiniMapChallengeMode:SetScale(0.6)
 
---QueueStatusMinimapButton (lfi)
-QueueStatusMinimapButton:SetParent(Minimap)
-QueueStatusMinimapButton:SetScale(1)
-QueueStatusMinimapButton:ClearAllPoints()
-QueueStatusMinimapButton:SetPoint("BOTTOMLEFT",Minimap,0,0)
-QueueStatusMinimapButtonBorder:Hide()
-QueueStatusMinimapButton:SetHighlightTexture (nil)
-QueueStatusMinimapButton:SetPushedTexture(nil)
-
---garrison (DIEEEEEE!!!)
---GarrisonLandingPageMinimapButton
-
 --mail
 MiniMapMailFrame:ClearAllPoints()
 MiniMapMailFrame:SetPoint("BOTTOMRIGHT",Minimap,-0,0)
-MiniMapMailIcon:SetTexture(mediapath.."mail")
+MiniMapMailIcon:SetTexture(L.mediapath.."mail")
 MiniMapMailBorder:SetTexture("Interface\\Calendar\\EventNotificationGlow")
 MiniMapMailBorder:SetBlendMode("ADD")
 MiniMapMailBorder:ClearAllPoints()
@@ -111,7 +84,7 @@ GameTimeFrame:ClearAllPoints()
 GameTimeFrame:SetPoint("TOPRIGHT",Minimap,-18,-18)
 GameTimeFrame:SetHitRectInsets(0, 0, 0, 0)
 GameTimeFrame:GetNormalTexture():SetTexCoord(0,1,0,1)
-GameTimeFrame:SetNormalTexture(mediapath.."calendar")
+GameTimeFrame:SetNormalTexture(L.mediapath.."calendar")
 GameTimeFrame:SetPushedTexture(nil)
 GameTimeFrame:SetHighlightTexture (nil)
 local fs = GameTimeFrame:GetFontString()

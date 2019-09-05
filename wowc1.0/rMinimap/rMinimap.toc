@@ -1,7 +1,9 @@
-## Interface: 80000
+## Interface: 11302
 ## Author: zork
-## Title: rMinimap
-## Notes: Zork's Minimap adjustments
+## Title: rMinimap |cffff6600Classic|r
+## Notes: Minimap enhancements
 ## RequiredDeps: rLib
 
+variables.lua
+config.lua
 core.lua

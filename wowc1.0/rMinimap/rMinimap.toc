@@ -1,0 +1,7 @@
+## Interface: 80000
+## Author: zork
+## Title: rMinimap
+## Notes: Zork's Minimap adjustments
+## RequiredDeps: rLib
+
+core.lua

@@ -232,7 +232,7 @@ function rActionBar:CreateVehicleExitBar(addonName,cfg)
     if UnitOnTaxi("player") then
       self:Show()
     else
-      self:Show()
+      self:Hide()
     end
   end
   frame:HookScript("OnEvent", HandleEvent)

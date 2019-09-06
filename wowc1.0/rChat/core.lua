@@ -1,6 +1,6 @@
 
 -- rChat: core
--- zork, 2016
+-- zork, 2019
 
 -----------------------------
 -- Variables
@@ -170,17 +170,6 @@ ChatFrameMenuButton:Hide()
 --ChatFrameChannelButton
 ChatFrameChannelButton:HookScript("OnShow", ChatFrameChannelButton.Hide)
 ChatFrameChannelButton:Hide()
---ChatFrameToggleVoiceDeafenButton
-ChatFrameToggleVoiceDeafenButton:HookScript("OnShow", ChatFrameToggleVoiceDeafenButton.Hide)
-ChatFrameToggleVoiceDeafenButton:Hide()
---ChatFrameToggleVoiceMuteButton
-ChatFrameToggleVoiceMuteButton:HookScript("OnShow", ChatFrameToggleVoiceMuteButton.Hide)
-ChatFrameToggleVoiceMuteButton:Hide()
-
---hide the friend micro button
-local button = QuickJoinToastButton or FriendsMicroButton
-button:HookScript("OnShow", button.Hide)
-button:Hide()
 
 --skin chat
 for i = 1, NUM_CHAT_WINDOWS do

@@ -219,7 +219,7 @@ function rActionBar:CreateVehicleExitBar(addonName,cfg)
   cfg.frameVisibility = nil
   cfg.frameVisibilityFunc = nil
   --create vehicle exit button
-  local button = CreateFrame("BUTTON", A.."VehicleExitButton", nil, "ActionButtonTemplate, SecureHandlerClickTemplate")
+  local button = CreateFrame("BUTTON", A.."VehicleExitButton", nil, "ActionButtonTemplate")
   button.icon:SetTexture("interface\\addons\\"..A.."\\media\\vehicleexit")
   button:RegisterForClicks("AnyUp")
   button:SetScript("OnClick", TaxiRequestEarlyLanding)

@@ -1,6 +1,6 @@
-## Interface: 80000
+## Interface: 11302
 ## Author: zork
-## Title: rActionBar_Zork
+## Title: rActionBar_Zork |cffff6600Classic|r
 ## Notes: Zork's bar layout for rActionBar
 ## RequiredDeps: rActionBar
 

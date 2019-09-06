@@ -1,6 +1,6 @@
 
 -- rActionBar_Default: layout
--- zork, 2016
+-- zork, 2019
 
 -- Zork's Bar Layout for rActionBar
 
@@ -206,24 +206,6 @@ local petbar = {
 rActionBar:CreatePetBar(A, petbar)
 
 -----------------------------
--- ExtraBar
------------------------------
-
-local extrabar = {
-  framePoint      = { "BOTTOM", A.."Bar1", "TOP", 0, 10 },
-  frameScale      = 0.95,
-  framePadding    = 5,
-  buttonWidth     = 36,
-  buttonHeight    = 36,
-  buttonMargin    = 5,
-  numCols         = 1,
-  startPoint      = "BOTTOMLEFT",
-  fader           = nil,
-}
---create
-rActionBar:CreateExtraBar(A, extrabar)
-
------------------------------
 -- VehicleExitBar
 -----------------------------
 
@@ -240,21 +222,3 @@ local vehicleexitbar = {
 }
 --create
 rActionBar:CreateVehicleExitBar(A, vehicleexitbar)
-
------------------------------
--- PossessExitBar
------------------------------
-
-local possessexitbar = {
-  framePoint      = { "BOTTOM", A.."VehicleExitBar", "TOP", 0, 5 },
-  frameScale      = 0.95,
-  framePadding    = 5,
-  buttonWidth     = 32,
-  buttonHeight    = 32,
-  buttonMargin    = 5,
-  numCols         = 1,
-  startPoint      = "BOTTOMLEFT",
-  fader           = nil,
-}
---create
-rActionBar:CreatePossessExitBar(A, possessexitbar)

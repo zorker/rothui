@@ -21,16 +21,6 @@ local scripts = {
   "OnShow", "OnHide", "OnEvent", "OnEnter", "OnLeave", "OnUpdate", "OnValueChanged", "OnClick", "OnMouseDown", "OnMouseUp",
 }
 
-local framesToHide = {
-  MainMenuBar,
-}
-
-local framesToDisable = {
-  MainMenuBar,
-  MicroButtonAndBagsBar, MainMenuBarArtFrame, StatusTrackingBarManager,
-  ActionBarDownButton, ActionBarUpButton, MainMenuBarVehicleLeaveButton,
-}
-
 -----------------------------
 -- Functions
 -----------------------------
@@ -44,14 +34,18 @@ local function DisableAllScripts(frame)
   end
 end
 
---L:HideMainMenuBar
-function L:HideMainMenuBar()
-  for i, frame in next, framesToHide do
-    frame:SetParent(hiddenFrame)
+--L:HideBlizzardBar
+function L:HideBlizzardBar(framesToHide, framesToDisable)
+  if framesToHide and type(framesToHide == "table") then
+    for i, frame in next, framesToHide do
+      frame:SetParent(hiddenFrame)
+    end
   end
-  for i, frame in next, framesToDisable do
-    frame:UnregisterAllEvents()
-    DisableAllScripts(frame)
+  if framesToDisable and type(framesToDisable == "table") then
+    for i, frame in next, framesToDisable do
+      frame:UnregisterAllEvents()
+      DisableAllScripts(frame)
+    end
   end
 end
 

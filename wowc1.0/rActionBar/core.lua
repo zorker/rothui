@@ -1,6 +1,6 @@
 
 -- rActionBar: core
--- zork, 2016
+-- zork, 2019
 
 -----------------------------
 -- Variables
@@ -94,20 +94,13 @@ local function SetupButtonFrame(frame, framePadding, buttonList, buttonWidth, bu
   end
 end
 
-function L:CreateButtonFrame(cfg,buttonList,delaySetup)
+function L:CreateButtonFrame(cfg,buttonList)
   --create new parent frame for buttons
   local frame = CreateFrame("Frame", cfg.frameName, cfg.frameParent, cfg.frameTemplate)
   frame:SetPoint(unpack(cfg.framePoint))
   frame:SetScale(cfg.frameScale)
   frame.__blizzardBar = cfg.blizzardBar
-  if delaySetup then
-    local function OnLogin(...)
-      SetupButtonFrame(frame, cfg.framePadding, buttonList, cfg.buttonWidth, cfg.buttonHeight, cfg.buttonMargin, cfg.numCols, cfg.startPoint)
-    end
-    rLib:RegisterCallback("PLAYER_LOGIN", OnLogin)
-  else
-    SetupButtonFrame(frame, cfg.framePadding, buttonList, cfg.buttonWidth, cfg.buttonHeight, cfg.buttonMargin, cfg.numCols, cfg.startPoint)
-  end
+  SetupButtonFrame(frame, cfg.framePadding, buttonList, cfg.buttonWidth, cfg.buttonHeight, cfg.buttonMargin, cfg.numCols, cfg.startPoint)
   --reparent the Blizzard bar
   if cfg.blizzardBar then
     cfg.blizzardBar:SetParent(frame)

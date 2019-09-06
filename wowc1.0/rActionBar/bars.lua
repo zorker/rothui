@@ -1,6 +1,6 @@
 
 -- rActionBar: bars
--- zork, 2016
+-- zork, 2019
 
 -----------------------------
 -- Variables
@@ -38,10 +38,6 @@ function rActionBar:CreateMicroMenuBar(addonName,cfg)
     end
   end
   local frame = L:CreateButtonFrame(cfg,buttonList)
-  --special
-  PetBattleFrame.BottomFrame.MicroButtonFrame:SetScript("OnShow", nil)
-  OverrideActionBar:SetScript("OnShow", nil)
-  MainMenuBar:SetScript("OnShow", nil)
 end
 
 --Bar1
@@ -52,41 +48,10 @@ function rActionBar:CreateActionBar1(addonName,cfg)
   cfg.frameParent = cfg.frameParent or UIParent
   cfg.frameTemplate = "SecureHandlerStateTemplate"
   cfg.frameVisibility = cfg.frameVisibility or "[petbattle] hide; show"
-  cfg.actionPage = cfg.actionPage or "[bar:6]6;[bar:5]5;[bar:4]4;[bar:3]3;[bar:2]2;[overridebar]14;[shapeshift]13;[vehicleui]12;[possessbar]12;[bonusbar:5]11;[bonusbar:4]10;[bonusbar:3]9;[bonusbar:2]8;[bonusbar:1]7;1"
   local buttonName = "ActionButton"
   local numButtons = NUM_ACTIONBAR_BUTTONS
   local buttonList = L:GetButtonList(buttonName, numButtons)
   local frame = L:CreateButtonFrame(cfg,buttonList)
-  --fix the button grid for actionbar1
-  local function ToggleButtonGrid()
-    if InCombatLockdown() then
-      print("Grid toggle for actionbar1 is not possible in combat.")
-      return
-    end
-    local showgrid = tonumber(GetCVar("alwaysShowActionBars"))
-    for i, button in next, buttonList do
-      button:SetAttribute("showgrid", showgrid)
-      ActionButton_ShowGrid(button,ACTION_BUTTON_SHOW_GRID_REASON_EVENT)
-    end
-  end
-  hooksecurefunc("MultiActionBar_UpdateGridVisibility", ToggleButtonGrid)
-  --_onstate-page state driver
-  for i, button in next, buttonList do
-    frame:SetFrameRef(buttonName..i, button)
-  end
-  frame:Execute(([[
-    buttons = table.new()
-    for i=1, %d do
-      table.insert(buttons, self:GetFrameRef("%s"..i))
-    end
-  ]]):format(numButtons, buttonName))
-  frame:SetAttribute("_onstate-page", [[
-    --print("_onstate-page","index",newstate)
-    for i, button in next, buttons do
-      button:SetAttribute("actionpage", newstate)
-    end
-  ]])
-  RegisterStateDriver(frame, "page", cfg.actionPage)
 end
 
 --Bar2
@@ -174,21 +139,6 @@ function rActionBar:CreatePetBar(addonName,cfg)
   SlidingActionBarTexture1:SetTexture(nil)
 end
 
---ExtraBar
-function rActionBar:CreateExtraBar(addonName,cfg)
-  cfg.blizzardBar = ExtraActionBarFrame
-  cfg.frameName = addonName.."ExtraBar"
-  cfg.frameParent = cfg.frameParent or UIParent
-  cfg.frameTemplate = "SecureHandlerStateTemplate"
-  cfg.frameVisibility = cfg.frameVisibility or "[extrabar] show; hide"
-  local buttonName = "ExtraActionButton"
-  local numButtons = NUM_ACTIONBAR_BUTTONS
-  local buttonList = L:GetButtonList(buttonName, numButtons)
-  local frame = L:CreateButtonFrame(cfg,buttonList)
-  --special
-  ExtraActionBarFrame.ignoreFramePositionManager = true
-end
-
 --VehicleExitBar
 function rActionBar:CreateVehicleExitBar(addonName,cfg)
   cfg.blizzardBar = nil
@@ -210,20 +160,4 @@ function rActionBar:CreateVehicleExitBar(addonName,cfg)
   --[canexitvehicle] is not triggered on taxi, exit workaround
   frame:SetAttribute("_onstate-exit", [[ if CanExitVehicle() then self:Show() else self:Hide() end ]])
   if not CanExitVehicle() then frame:Hide() end
-end
-
---PossessExitBar, this is the two button bar to cancel a possess in progress
-function rActionBar:CreatePossessExitBar(addonName,cfg)
-  cfg.blizzardBar = PossessBarFrame
-  cfg.frameName = addonName.."PossessExitBar"
-  cfg.frameParent = cfg.frameParent or UIParent
-  cfg.frameTemplate = "SecureHandlerStateTemplate"
-  cfg.frameVisibility = cfg.frameVisibility or "[possessbar] show; hide"
-  local buttonName = "PossessButton"
-  local numButtons = NUM_POSSESS_SLOTS
-  local buttonList = L:GetButtonList(buttonName, numButtons)
-  local frame = L:CreateButtonFrame(cfg,buttonList)
-  --special
-  PossessBackground1:SetTexture(nil)
-  PossessBackground2:SetTexture(nil)
 end

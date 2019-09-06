@@ -1,6 +1,6 @@
 
 -- rActionBar: blizzard
--- zork, 2016
+-- zork, 2019
 
 -----------------------------
 -- Config
@@ -23,15 +23,12 @@ local scripts = {
 
 local framesToHide = {
   MainMenuBar,
-  OverrideActionBar,
 }
 
 local framesToDisable = {
   MainMenuBar,
   MicroButtonAndBagsBar, MainMenuBarArtFrame, StatusTrackingBarManager,
   ActionBarDownButton, ActionBarUpButton, MainMenuBarVehicleLeaveButton,
-  OverrideActionBar,
-  OverrideActionBarExpBar, OverrideActionBarHealthBar, OverrideActionBarPowerBar, OverrideActionBarPitchFrame,
 }
 
 -----------------------------
@@ -49,14 +46,6 @@ end
 
 --L:HideMainMenuBar
 function L:HideMainMenuBar()
-  --bring back the currency
-  local function OnEvent(self,event)
-    TokenFrame_LoadUI()
-    TokenFrame_Update()
-    BackpackTokenFrame_Update()
-  end
-  hiddenFrame:SetScript("OnEvent",OnEvent)
-  hiddenFrame:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
   for i, frame in next, framesToHide do
     frame:SetParent(hiddenFrame)
   end

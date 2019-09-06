@@ -19,7 +19,7 @@ L.addonShortcut   = "rqw"
 
 local cfg = {
   scale = 1,
-  point = { "RIGHT", -110, -100 },
+  point = { "RIGHT", -110, 100 },
   size = { 260, 500 },
   fader = {
     fadeInAlpha = 1,
@@ -43,7 +43,7 @@ QuestWatchFrame:SetPoint(unpack(cfg.point))
 QuestWatchFrame:SetSize(unpack(cfg.size))
 
 --drag frame
-rLib:CreateDragResizeFrame(QuestWatchFrame, L.dragFrames, -2, true)
+rLib:CreateDragFrame(QuestWatchFrame, L.dragFrames, -2, true)
 
 --FramePositionDelegate.UIParentManageFramePositions is interfering with the position try to fix it
 local EnableSetPoint = QuestWatchFrame.SetPoint

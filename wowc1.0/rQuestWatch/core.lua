@@ -41,10 +41,16 @@ QuestWatchFrame:SetScale(cfg.scale)
 QuestWatchFrame:ClearAllPoints()
 QuestWatchFrame:SetPoint(unpack(cfg.point))
 QuestWatchFrame:SetSize(unpack(cfg.size))
-QuestWatchFrame.ignoreFramePositionManager = true
 
 --drag frame
 rLib:CreateDragResizeFrame(QuestWatchFrame, L.dragFrames, -2, true)
+
+--FramePositionDelegate.UIParentManageFramePositions is interfering with the position try to fix it
+local EnableSetPoint = QuestWatchFrame.SetPoint
+local DisableSetPoint = function() end
+QuestWatchFrame.SetPoint = DisableSetPoint
+QuestWatchFrame.dragFrame:HookScript("OnDragStart", function() QuestWatchFrame.SetPoint = EnableSetPoint end)
+QuestWatchFrame.dragFrame:HookScript("OnDragStop", function() QuestWatchFrame.SetPoint = DisableSetPoint end)
 
 --frame fader
 rLib:CreateFrameFader(QuestWatchFrame, cfg.fader)

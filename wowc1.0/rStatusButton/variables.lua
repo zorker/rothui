@@ -10,6 +10,6 @@ local A, L = ...
 
 L.addonName       = A
 L.dragFrames      = {}
-L.addonColor      = "00FF00AA"
+L.addonColor      = "00FF33FF"
 L.addonShortcut   = "rsb"
 L.mediapath       = "interface\\addons\\"..A.."\\media\\"

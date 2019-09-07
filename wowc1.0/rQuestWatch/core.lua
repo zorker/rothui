@@ -10,7 +10,7 @@ local A, L = ...
 
 L.addonName       = A
 L.dragFrames      = {}
-L.addonColor      = "00FF00AA"
+L.addonColor      = "00FFCC00"
 L.addonShortcut   = "rqw"
 
 -----------------------------

@@ -1,6 +1,6 @@
-## Interface: 80000
+## Interface: 11302
 ## Author: zork
-## Title: rBuffFrame_Zork
+## Title: rBuffFrame_Zork |cffff6600Classic|r
 ## Notes: Zork's buff frame layout for rBuffFrame
 ## RequiredDeps: rLib, rBuffFrame
 

@@ -1,6 +1,6 @@
-## Interface: 80000
+## Interface: 11302
 ## Author: zork
-## Title: rBuffFrame
+## Title: rBuffFrame |cffff6600Classic|r
 ## Notes: Blizzard buffframe framework
 ## RequiredDeps: rLib
 

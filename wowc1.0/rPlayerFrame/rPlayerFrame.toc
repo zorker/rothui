@@ -1,0 +1,8 @@
+## Interface: 11302
+## Author: zork
+## Title: rPlayerFrame |cffff6600Classic|r
+## Notes: Show/Hide the player frame via state driver
+## RequiredDeps: rLib
+
+config.lua
+core.lua

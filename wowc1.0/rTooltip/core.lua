@@ -103,14 +103,17 @@ local function OnTooltipSetUnit(self)
     GameTooltipTextLeft1:SetTextColor(color.r,color.g,color.b)
     --color textleft2 by guildcolor
     local unitGuild = GetGuildInfo(unit)
-    if unitGuild then
-      GameTooltipTextLeft2:SetText("<"..unitGuild..">")
-      GameTooltipTextLeft2:SetTextColor(unpack(L.C.guildColor))
-    end
-    local levelLine = unitGuild and GameTooltipTextLeft3 or GameTooltipTextLeft2
     local l = UnitLevel(unit)
     local color = GetCreatureDifficultyColor((l > 0) and l or 999)
-    levelLine:SetTextColor(color.r,color.g,color.b)
+    if unitGuild then
+      --move level line to a new one
+      GameTooltip:AddLine(GameTooltipTextLeft2:GetText(), color.r,color.g,color.b)
+      --add guild info
+      GameTooltipTextLeft2:SetText("<"..unitGuild..">")
+      GameTooltipTextLeft2:SetTextColor(unpack(L.C.guildColor))
+    else
+      GameTooltipTextLeft2:SetTextColor(color.r,color.g,color.b)
+    end
     --afk?
     if UnitIsAFK(unit) then
       self:AppendText((" |cff%s<AFK>|r"):format(L.C.afkColorHex))

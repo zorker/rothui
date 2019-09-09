@@ -32,9 +32,9 @@ if character == "Rothâr" then
     filter          = "HELPFUL|PLAYER",
     form            = 2,
     useBar          = false,
-    barColor        = {1,1,0,0.5},
+    barColor        = {1,1,0,0.8},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 5,
+    barHeight       = 3,
     useBorder       = true,
     borderColor     = {0,1,1,0.8},
   }
@@ -48,10 +48,10 @@ if character == "Rothâr" then
     spellid         = 5242,
     filter          = "HELPFUL|PLAYER",
     --form            = 2,
-    useBar          = false,
-    barColor        = {1,1,0,1},
+    useBar          = true,
+    barColor        = {1,1,0,0.8},
     barPoint        = {"TOPLEFT"},
-    barHeight       = 5,
+    barHeight       = 3,
     useBorder       = true,
     borderColor     = {0,1,1,0.8},
   }
@@ -59,7 +59,7 @@ if character == "Rothâr" then
 
   --rend
   local aura = {
-    button          = MultiBarBottomLeftButton2,
+    button          = MultiBarBottomLeftButton3,
     unit            = "target",
     caster          = "player",
     spellid         = 6547,

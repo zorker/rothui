@@ -1,7 +1,7 @@
 ## Interface: 11302
 ## Author: zork
 ## Title: rNamePlateColor |cffff6600Classic|r
-## Notes: Color nameplates on threat
+## Notes: Color nameplates on threat, tapped, faction and class color
 ## RequiredDeps: Blizzard_NamePlates
 ## LoadWith: Blizzard_NamePlates
 

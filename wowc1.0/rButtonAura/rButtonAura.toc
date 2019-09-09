@@ -1,7 +1,7 @@
 ## Interface: 11302
 ## Title: rButtonAura |cffff6600Classic|r
 ## Author: zork
-## Notes: Highlights action buttons when a matching unit aura is present
+## Notes: Framework to enhance the actionbutton appearance (border, bar) on unit aura or spell charge
 ## RequiredDeps: rLib
 
 core.lua

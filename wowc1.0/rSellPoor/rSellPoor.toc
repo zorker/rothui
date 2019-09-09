@@ -1,6 +1,6 @@
 ## Interface: 11302
 ## Author: zork
 ## Title: rSellPoor |cffff6600Classic|r
-## Notes: Sell items of poor quality automatically
+## Notes: Sell items of poor quality automatically upon vendor visit
 
 rSellPoor.lua

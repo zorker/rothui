@@ -1,4 +1,4 @@
-# Addons
+# Addons for WoW Clasic 1.13.02
 
 - **rActionBar** Blizzard actionbar framework
 - **rActionBar_Zork** Zork's bar layout for rActionBar

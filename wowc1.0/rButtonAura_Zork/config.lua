@@ -28,19 +28,88 @@ if character == "Rothâr" then
     button          = ActionButton8,
     unit            = "player",
     caster          = "player",
-    spellid         = 132404,
+    spellid         = 2565,
     filter          = "HELPFUL|PLAYER",
     form            = 2,
-    useBar          = true,
+    useBar          = false,
+    barColor        = {1,1,0,0.5},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 5,
+    useBorder       = true,
+    borderColor     = {0,1,1,0.8},
+  }
+  rButtonAura:AddAura(aura)
+
+  --battle shout
+  local aura = {
+    button          = MultiBarBottomLeftButton8,
+    unit            = "player",
+    caster          = "player",
+    spellid         = 5242,
+    filter          = "HELPFUL|PLAYER",
+    --form            = 2,
+    useBar          = false,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
     barHeight       = 5,
     useBorder       = true,
-    borderColor     = {0,1,0,1},
+    borderColor     = {0,1,1,0.8},
+  }
+  rButtonAura:AddAura(aura)
+
+  --rend
+  local aura = {
+    button          = MultiBarBottomLeftButton2,
+    unit            = "target",
+    caster          = "player",
+    spellid         = 6547,
+    filter          = "HARMFUL|PLAYER",
+    --form            = 2,
+    useBar          = false,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 5,
+    useBorder       = true,
+    borderColor     = {1,0,0,0.8},
+  }
+  rButtonAura:AddAura(aura)
+
+  --demo shout
+  local aura = {
+    button          = ActionButton9,
+    unit            = "target",
+    caster          = "player",
+    spellid         = 1160,
+    filter          = "HARMFUL|PLAYER",
+    --form            = 2,
+    useBar          = false,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 5,
+    useBorder       = true,
+    borderColor     = {1,0,0,0.8},
+  }
+  rButtonAura:AddAura(aura)
+
+  --sunder armor
+  local aura = {
+    button          = ActionButton3,
+    unit            = "target",
+    caster          = "player",
+    spellid         = 7386,
+    filter          = "HARMFUL|PLAYER",
+    --form            = 2,
+    useBar          = false,
+    barColor        = {1,1,0,1},
+    barPoint        = {"TOPLEFT"},
+    barHeight       = 5,
+    useBorder       = true,
+    borderColor     = {1,0,0,0.8},
   }
   rButtonAura:AddAura(aura)
 
   --shield block
+  --[[
   local charge = {
     button          = "ActionButton8",
     spellid         = 2565,
@@ -52,8 +121,10 @@ if character == "Rothâr" then
     barHeight       = 5,
   }
   rButtonAura:AddCharge(charge)
+  ]]--
 
   --demo shout
+  --[[
   local aura = {
     button          = ActionButton9,
     unit            = "target",
@@ -68,5 +139,6 @@ if character == "Rothâr" then
     borderColor     = {0,1,0,1},
   }
   rButtonAura:AddAura(aura)
+  ]]--
 
 end

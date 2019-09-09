@@ -15,7 +15,6 @@ local numAuras = 0
 local auras = {}
 local numCharges = 0
 local charges = {}
-local spec = nil
 local form = 0
 
 -----------------------------
@@ -80,6 +79,7 @@ end
 
 --UpdateAura
 local function UpdateAura(aura)
+  --duration is 0 for any other unit but player, aura.bar only exists for player
   local name, icon, count, debuffType, duration, expires, caster = AuraUtil.FindAuraByName(aura.spellName, aura.unit, aura.filter)
   if name and (not aura.caster or caster == aura.caster) then
     if aura.bar then
@@ -131,17 +131,10 @@ local function Tick()
 end
 
 local function UpdateSpells()
-  spec = GetSpecialization()
   form = GetShapeshiftForm()
   --auras
   for i, aura in next, auras do
     if aura.requireSpell and not IsPlayerSpell(aura.requireSpell) then
-      HideAura(aura)
-      aura.enabled = false
-    elseif aura.spec and aura.form and (aura.spec ~= spec or aura.form ~= form) then
-      HideAura(aura)
-      aura.enabled = false
-    elseif aura.spec and aura.spec ~= spec then
       HideAura(aura)
       aura.enabled = false
     elseif aura.form and aura.form ~= form then
@@ -154,12 +147,6 @@ local function UpdateSpells()
   --charges
   for i, charge in next, charges do
     if charge.requireSpell and not IsPlayerSpell(charge.requireSpell) then
-      HideCharge(charge)
-      charge.enabled = false
-    elseif charge.spec and charge.form and (charge.spec ~= spec or charge.form ~= form) then
-      HideCharge(charge)
-      charge.enabled = false
-    elseif charge.spec and charge.spec ~= spec then
       HideCharge(charge)
       charge.enabled = false
     elseif charge.form and charge.form ~= form then
@@ -196,7 +183,8 @@ local function Login()
     else
       aura.spellName = spellName
     end
-    if aura.useBar then
+    --in classic the duration is only available to the player, the bar cannot be shown for other units
+    if aura.useBar and aura.unit == "player" then
       local a, b = aura.border:GetDrawLayer()
       aura.bar = aura.border:GetParent():CreateTexture(nil,a,nil,b+1)
       aura.bar:SetColorTexture(unpack(aura.barColor))

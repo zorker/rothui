@@ -1,5 +1,5 @@
-## Interface: 80000
-## Title: rButtonAura
+## Interface: 11302
+## Title: rButtonAura |cffff6600Classic|r
 ## Author: zork
 ## Notes: Highlights action buttons when a matching unit aura is present
 ## RequiredDeps: rLib

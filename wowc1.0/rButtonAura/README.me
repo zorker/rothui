@@ -1,0 +1,51 @@
+#rButtonAura API
+
+======================================
+-- FUNCTIONS
+======================================
+
+rButtonAura:AddAura(auraConfig)
+rButtonAura:AddCharge(chargeConfig)
+rButtonAura:SetTick(tickRate)
+
+======================================
+-- rButtonAura:AddAura
+======================================
+
+rButtonAura:AddAura(auraConfig)
+|-auraConfig, type: TABLE, description: bar configuration
+  |-button, type:[STRING,FRAMEREF], description: actionbar button name or reference to apply the aura bar and/or border to, example: "ActionButton1"
+  |-unit, type:STRING, description: unit affected by the aura, example: "player"
+  |-caster (OPTIONAL), type:STRING, description: caster unit of the aura, example: "player"
+  |-spellid, type:INTEGER, description: spellid of the aura to track
+  |-filter, type:STRING, description: aura filter, example: "HELPFUL|PLAYER" or "HARMFUL|PLAYER"
+  |-form (OPTIONAL), type:INTEGER, description: shapeshift form id https://wow.gamepedia.com/API_GetShapeshiftForm, default: 0
+  |-useBar, type:BOOLEAN, description: show the remaining duration as a bar texture (only available for player unit)
+  |-barColor, type:TABLE, description: color in RGBA, example: {1,0,0,1}
+  |-barBlendMode (OPTIONAL), type:STRING, description: texture blendmode, example: "BLEND", default: "ADD"
+  |-barPoint, type:TABLE, descripton: texture position http://wowprogramming.com/docs/widgets/Region/SetPoint
+  |-barHeight, type:NUMBER, description: bar texture height
+  |-useBorder, type:BOOLEAN, description: highlight the action button border if the aura is found
+  |-borderColor, type:TABLE, description: color in RGBA, example: {1,0,0,1}
+
+======================================
+-- rButtonAura:AddCharge
+======================================
+
+rButtonAura:AddCharge(chargeConfig)
+|-chargeConfig, type: TABLE, description: bar configuration
+  |-button, type:[STRING,FRAMEREF], description: actionbar button name or reference to apply the bar to, example: "ActionButton1"
+  |-spellid, type:INTEGER, description: spellid of the action button spell to track
+  |-form (OPTIONAL), type:INTEGER, description: shapeshift form id https://wow.gamepedia.com/API_GetShapeshiftForm
+  |-useBar, type:BOOLEAN, description: show the remaining duration as a bar texture (only available for player unit)
+  |-barColor, type:TABLE, description: color in RGBA, example: {1,0,0,1}
+  |-barBlendMode (OPTIONAL), type:STRING, description: texture blendmode, example: "BLEND", default: "ADD"
+  |-barPoint, type:TABLE, descripton: texture position http://wowprogramming.com/docs/widgets/Region/SetPoint
+  |-barHeight, type:NUMBER, description: bar texture height
+
+======================================
+-- rButtonAura:SetTick
+======================================
+
+rButtonAura:SetTick(tickRate)
+|-tickRate, type:NUMBER, description: function call can be used to alter the tick rate if needed. default tick rate is 0.1 (10 times a second)

@@ -13,7 +13,7 @@ rButtonAura:SetTick(tickRate)
 ======================================
 
 rButtonAura:AddAura(auraConfig)
-|-auraConfig, type: TABLE, description: bar configuration
+|-auraConfig, type: TABLE, description: aura configuration
   |-button, type:[STRING,FRAMEREF], description: actionbar button name or reference to apply the aura bar and/or border to, example: "ActionButton1"
   |-unit, type:STRING, description: unit affected by the aura, example: "player"
   |-caster (OPTIONAL), type:STRING, description: caster unit of the aura, example: "player"
@@ -33,7 +33,7 @@ rButtonAura:AddAura(auraConfig)
 ======================================
 
 rButtonAura:AddCharge(chargeConfig)
-|-chargeConfig, type: TABLE, description: bar configuration
+|-chargeConfig, type: TABLE, description: charge configuration
   |-button, type:[STRING,FRAMEREF], description: actionbar button name or reference to apply the bar to, example: "ActionButton1"
   |-spellid, type:INTEGER, description: spellid of the action button spell to track
   |-form (OPTIONAL), type:INTEGER, description: shapeshift form id https://wow.gamepedia.com/API_GetShapeshiftForm
@@ -48,4 +48,4 @@ rButtonAura:AddCharge(chargeConfig)
 ======================================
 
 rButtonAura:SetTick(tickRate)
-|-tickRate, type:NUMBER, description: function call can be used to alter the tick rate if needed. default tick rate is 0.1 (10 times a second)
+|-tickRate, type:FLOAT, description: tick rate in seconds. function can be used to alter the tick rate if needed. default tick rate is 0.1 (10 times a second)

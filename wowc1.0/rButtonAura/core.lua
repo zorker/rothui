@@ -233,7 +233,7 @@ local function Login()
   --init
   if not error then
     --RegisterCallback SPELLS_CHANGE
-    rLib:RegisterCallback("SPELLS_CHANGED", UpdateSpells)
+    rLib:RegisterCallback("UPDATE_SHAPESHIFT_FORM", UpdateSpells)
     UpdateSpells()
     Tick()
   end

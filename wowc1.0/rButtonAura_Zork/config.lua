@@ -31,8 +31,9 @@ if character == "Rothâr" then
     spellid         = 2565,
     filter          = "HELPFUL|PLAYER",
     form            = 2,
-    useBar          = false,
+    useBar          = true,
     barColor        = {1,1,0,0.8},
+    barBlendMode    = "ADD",
     barPoint        = {"TOPLEFT"},
     barHeight       = 3,
     useBorder       = true,
@@ -64,7 +65,6 @@ if character == "Rothâr" then
     caster          = "player",
     spellid         = 6547,
     filter          = "HARMFUL|PLAYER",
-    --form            = 2,
     useBar          = false,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
@@ -81,7 +81,6 @@ if character == "Rothâr" then
     caster          = "player",
     spellid         = 1160,
     filter          = "HARMFUL|PLAYER",
-    --form            = 2,
     useBar          = false,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
@@ -98,7 +97,6 @@ if character == "Rothâr" then
     caster          = "player",
     spellid         = 7386,
     filter          = "HARMFUL|PLAYER",
-    --form            = 2,
     useBar          = false,
     barColor        = {1,1,0,1},
     barPoint        = {"TOPLEFT"},
@@ -107,38 +105,5 @@ if character == "Rothâr" then
     borderColor     = {1,0,0,0.8},
   }
   rButtonAura:AddAura(aura)
-
-  --shield block
-  --[[
-  local charge = {
-    button          = "ActionButton8",
-    spellid         = 2565,
-    form            = 2,
-    useBar          = true,
-    barColor        = {1,0,0,1},
-    barBlendMode    = "BLEND",
-    barPoint        = {"BOTTOMLEFT"},
-    barHeight       = 5,
-  }
-  rButtonAura:AddCharge(charge)
-  ]]--
-
-  --demo shout
-  --[[
-  local aura = {
-    button          = ActionButton9,
-    unit            = "target",
-    caster          = "player",
-    spellid         = 1160,
-    filter          = "HARMFUL|PLAYER",
-    useBar          = true,
-    barColor        = {1,1,0,1},
-    barPoint        = {"TOPLEFT"},
-    barHeight       = 5,
-    useBorder       = true,
-    borderColor     = {0,1,0,1},
-  }
-  rButtonAura:AddAura(aura)
-  ]]--
 
 end

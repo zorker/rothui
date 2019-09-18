@@ -13,6 +13,7 @@ local A, L = ...
 -----------------------------
 
 L.C = {
+  textureAlpha = 0.5,
   frameVisibility = "[mod:shift][combat][@target,exists] show; hide",
   --fader via OnShow trigger
   fader = {

@@ -24,6 +24,11 @@ frame:SetAttribute("_onstate-display", [[
 ]])
 RegisterStateDriver(frame, "display", L.C.frameVisibility)
 
+--PlayerFrameTexture
+PlayerFrameTexture:SetAlpha(L.C.textureAlpha)
+TargetFrameTextureFrameTexture:SetAlpha(L.C.textureAlpha)
+TargetFrameToTTextureFrameTexture:SetAlpha(L.C.textureAlpha)
+
 --OnShow fader
 if L.C.fader then
   rLib:CreateFrameFader(PlayerFrame, L.C.fader)

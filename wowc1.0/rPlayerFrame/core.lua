@@ -24,10 +24,10 @@ frame:SetAttribute("_onstate-display", [[
 ]])
 RegisterStateDriver(frame, "display", L.C.frameVisibility)
 
---PlayerFrameTexture
-PlayerFrameTexture:SetAlpha(L.C.textureAlpha)
-TargetFrameTextureFrameTexture:SetAlpha(L.C.textureAlpha)
-TargetFrameToTTextureFrameTexture:SetAlpha(L.C.textureAlpha)
+--player, target, tot texture color
+PlayerFrameTexture:SetVertexColor(unpack(L.C.textureColor))
+TargetFrameTextureFrameTexture:SetVertexColor(unpack(L.C.textureColor))
+TargetFrameToTTextureFrameTexture:SetVertexColor(unpack(L.C.textureColor))
 
 --OnShow fader
 if L.C.fader then

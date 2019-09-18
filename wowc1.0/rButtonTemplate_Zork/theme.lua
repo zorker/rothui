@@ -36,7 +36,7 @@ actionButtonConfig.backdrop = {
     top = 5,
     bottom = 5,
   },
-  backgroundColor = {0.1,0.1,0.1,0.8},
+  backgroundColor = {0.1,0.1,0.1,0.7},
   borderColor = {0,0,0,1},
   points = {
     {"TOPLEFT", -3, 3 },

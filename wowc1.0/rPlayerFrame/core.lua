@@ -78,6 +78,13 @@ TargetFrame:HookScript("OnEvent", OnEvent)
 TargetFrameTextureFrameName:SetTextColor(1,1,1)
 TargetFrameTextureFrameDeadText:SetTextColor(0.4,0.4,0.4)
 
+local function HideTexture(self)
+  self:Hide()
+end
+hooksecurefunc(PlayerStatusTexture, "Show", HideTexture)
+hooksecurefunc(PlayerStatusGlow, "Show", HideTexture)
+
+--make the compact raidframe manager border more appealing
 CompactRaidFrameManagerBorderTopRight:SetAlpha(0.2)
 CompactRaidFrameManagerBorderBottomRight:SetAlpha(0.2)
 CompactRaidFrameManagerBorderBottomLeft:SetAlpha(0.2)

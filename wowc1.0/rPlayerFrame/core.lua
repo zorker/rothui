@@ -78,6 +78,14 @@ TargetFrame:HookScript("OnEvent", OnEvent)
 TargetFrameTextureFrameName:SetTextColor(1,1,1)
 TargetFrameTextureFrameDeadText:SetTextColor(0.4,0.4,0.4)
 
+CompactRaidFrameManagerBorderTopRight:SetAlpha(0.2)
+CompactRaidFrameManagerBorderBottomRight:SetAlpha(0.2)
+CompactRaidFrameManagerBorderBottomLeft:SetAlpha(0.2)
+CompactRaidFrameManagerBorderTopLeft:SetAlpha(0.2)
+CompactRaidFrameManagerBorderRight:SetAlpha(0.2)
+CompactRaidFrameManagerBorderBottom:SetAlpha(0.2)
+CompactRaidFrameManagerBorderTop:SetAlpha(0.2)
+
 --OnShow fader
 if L.C.fader then
   rLib:CreateFrameFader(PlayerFrame, L.C.fader)

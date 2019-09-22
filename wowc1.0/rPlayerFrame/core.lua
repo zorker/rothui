@@ -76,6 +76,7 @@ local function OnEvent(self,event,unit)
 end
 TargetFrame:HookScript("OnEvent", OnEvent)
 TargetFrameTextureFrameName:SetTextColor(1,1,1)
+TargetFrameTextureFrameDeadText:SetTextColor(0.4,0.4,0.4)
 
 --OnShow fader
 if L.C.fader then

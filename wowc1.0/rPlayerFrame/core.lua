@@ -38,6 +38,15 @@ playerFrameNameBackground:SetPoint("TOPLEFT",PlayerFrameBackground)
 playerFrameNameBackground:SetPoint("BOTTOMRIGHT",PlayerFrameBackground,0,22)
 playerFrameNameBackground:SetTexture(TargetFrameNameBackground:GetTexture())
 playerFrameNameBackground:SetVertexColor(playerColor.r,playerColor.g,playerColor.b,1)
+local function UpdateStatus()
+  if PlayerFrame.inCombat then
+    playerFrameNameBackground:SetVertexColor(1,0,0,1)
+  else
+    playerFrameNameBackground:SetVertexColor(playerColor.r,playerColor.g,playerColor.b,1)
+  end
+end
+hooksecurefunc("PlayerFrame_UpdateStatus",UpdateStatus)
+
 PlayerName:SetTextColor(1,1,1)
 
 --check for target events to listen for

@@ -94,13 +94,16 @@ hooksecurefunc(PlayerStatusTexture, "Show", HideTexture)
 hooksecurefunc(PlayerStatusGlow, "Show", HideTexture)
 
 --make the compact raidframe manager border more appealing
-CompactRaidFrameManagerBorderTopRight:SetAlpha(0.2)
-CompactRaidFrameManagerBorderBottomRight:SetAlpha(0.2)
-CompactRaidFrameManagerBorderBottomLeft:SetAlpha(0.2)
-CompactRaidFrameManagerBorderTopLeft:SetAlpha(0.2)
-CompactRaidFrameManagerBorderRight:SetAlpha(0.2)
-CompactRaidFrameManagerBorderBottom:SetAlpha(0.2)
-CompactRaidFrameManagerBorderTop:SetAlpha(0.2)
+CompactRaidFrameManagerBorderTopRight:SetVertexColor(unpack(L.C.textureColor))
+CompactRaidFrameManagerBorderBottomRight:SetVertexColor(unpack(L.C.textureColor))
+CompactRaidFrameManagerBorderBottomLeft:SetVertexColor(unpack(L.C.textureColor))
+CompactRaidFrameManagerBorderTopLeft:SetVertexColor(unpack(L.C.textureColor))
+CompactRaidFrameManagerBorderRight:SetVertexColor(unpack(L.C.textureColor))
+CompactRaidFrameManagerBorderBottom:SetVertexColor(unpack(L.C.textureColor))
+CompactRaidFrameManagerBorderTop:SetVertexColor(unpack(L.C.textureColor))
+CompactRaidFrameManagerToggleButton:SetAlpha(0.7)
+CompactRaidFrameManagerToggleButton:ClearAllPoints()
+CompactRaidFrameManagerToggleButton:SetPoint("RIGHT",-8,0)
 
 --OnShow fader
 if L.C.fader then

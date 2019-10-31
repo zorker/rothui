@@ -76,7 +76,7 @@ if character == "Rothâr" then
 
   --demo shout
   local aura = {
-    button          = ActionButton9,
+    button          = ActionButton10,
     unit            = "target",
     caster          = "player",
     spellid         = 1160,

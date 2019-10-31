@@ -30,6 +30,7 @@ RegisterStateDriver(frame, "display", L.C.frameVisibility)
 PlayerFrameTexture:SetVertexColor(unpack(L.C.textureColor))
 TargetFrameTextureFrameTexture:SetVertexColor(unpack(L.C.textureColor))
 TargetFrameToTTextureFrameTexture:SetVertexColor(unpack(L.C.textureColor))
+PlayerFrameGroupIndicator:SetAlpha(0)
 
 --add a bar texture to the player frame
 local playerColor = RAID_CLASS_COLORS[select(2, UnitClass("player"))]

@@ -1,5 +1,5 @@
 ## Interface: 100002
-## Title: rButtonAura
+## Title: rButtonAura |cffff6600Dragonflight|r
 ## Author: zork
 ## Notes: Highlights action buttons when a matching unit aura is present
 

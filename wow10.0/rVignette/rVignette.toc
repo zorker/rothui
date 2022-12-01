@@ -1,6 +1,6 @@
 ## Interface: 100002
 ## Author: zork
-## Title: rVignette
+## Title: rVignette |cffff6600Dragonflight|r
 ## Notes: Simple Vignette alert
 
 rVignette.lua

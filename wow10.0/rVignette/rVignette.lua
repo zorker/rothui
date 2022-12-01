@@ -17,12 +17,13 @@ local function OnVignetteAdded(self,event,id)
   if self.vignettes[id] then return end
   local vignetteInfo = C_VignetteInfo.GetVignetteInfo(id)
   if not vignetteInfo then return end
-  local filename, width, height, txLeft, txRight, txTop, txBottom = GetAtlasInfo(vignetteInfo.atlasName)
-  if not filename then return end
-  local atlasWidth = width/(txRight-txLeft)
-  local atlasHeight = height/(txBottom-txTop)
-  local str = string.format("|T%s:%d:%d:0:0:%d:%d:%d:%d:%d:%d|t", filename, 0, 0, atlasWidth, atlasHeight, atlasWidth*txLeft, atlasWidth*txRight, atlasHeight*txTop, atlasHeight*txBottom)
-  PlaySoundFile("Sound\\Interface\\RaidWarning.ogg")
+  local atlasInfo = C_Texture.GetAtlasInfo(vignetteInfo.atlasName)
+  local left = atlasInfo.leftTexCoord * 256
+  local right = atlasInfo.rightTexCoord * 256
+  local top = atlasInfo.topTexCoord * 256
+  local bottom = atlasInfo.bottomTexCoord * 256
+  local str = "|TInterface\\MINIMAP\\ObjectIconsAtlas:0:0:0:0:256:256:"..(left)..":"..(right)..":"..(top)..":"..(bottom).."|t"
+  PlaySound(SOUNDKIT.RAID_WARNING)
   RaidNotice_AddMessage(RaidWarningFrame, str.." "..vignetteInfo.name.." spotted!", ChatTypeInfo["RAID_WARNING"])
   print(str.." "..vignetteInfo.name,"spotted!")
   self.vignettes[id] = true

@@ -1,6 +1,6 @@
 ## Interface: 100002
 ## Author: zork
-## Title: rSellPoor
+## Title: rSellPoor |cffff6600Dragonflight|r
 ## Notes: Sell items of poor quality automatically
 
 rSellPoor.lua

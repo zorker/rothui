@@ -1,6 +1,6 @@
 ## Interface: 100002
 ## Author: zork
-## Title: rTooltip
+## Title: rTooltip |cffff6600Dragonflight|r
 ## Notes: Tooltip enhancements
 
 core.lua

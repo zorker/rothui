@@ -35,12 +35,14 @@ local function UpdateColor(self)
   self.healthBar:SetStatusBarColor(r,g,b)
 end
 hooksecurefunc("CompactUnitFrame_UpdateHealthColor", UpdateColor)
+hooksecurefunc("CompactUnitFrame_UpdateHealth", UpdateColor)
 hooksecurefunc("CompactUnitFrame_UpdateAggroFlash", UpdateColor)
 
 --register some variables
 local function SetVariables()
   SetCVar("ShowNamePlateLoseAggroFlash", 0)
-  SetCVar("NamePlateVerticalScale", 2.0)
+  SetCVar("NamePlateVerticalScale", 2.5)
+  SetCVar("NamePlateHorizontalScale", 1.1)
 end
 
 --eventHandler

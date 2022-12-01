@@ -40,6 +40,7 @@ hooksecurefunc("CompactUnitFrame_UpdateAggroFlash", UpdateColor)
 --register some variables
 local function SetVariables()
   SetCVar('ShowNamePlateLoseAggroFlash', 0)
+  SetCVar('NamePlateVerticalScale', 2.0)
 end
 
 --eventHandler

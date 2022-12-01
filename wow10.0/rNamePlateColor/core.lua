@@ -17,7 +17,7 @@ local function UpdateColor(self)
   local unit = self.unit
   if not unit then return end
   if not unit:match('nameplate%d?$') then return end
-  local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
+  local nameplate = C_NamePlate.GetNamePlateForUnit(unit, issecure())
   if not nameplate then return end
   local r,g,b
   if UnitIsUnit(unit.."target", "player") then

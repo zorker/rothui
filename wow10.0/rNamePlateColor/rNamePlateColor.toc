@@ -1,0 +1,8 @@
+## Interface: 100002
+## Author: zork
+## Title: rNamePlateColor |cffff6600Dragonflight|r
+## Notes: Color nameplates on threat, tapped, faction and class color
+## RequiredDeps: Blizzard_NamePlates
+## LoadWith: Blizzard_NamePlates
+
+core.lua

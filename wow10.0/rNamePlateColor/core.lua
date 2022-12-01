@@ -16,7 +16,7 @@ local RAID_CLASS_COLORS, FACTION_BAR_COLORS = RAID_CLASS_COLORS, FACTION_BAR_COL
 local function UpdateColor(self)
   local unit = self.unit
   if not unit then return end
-  if not unit:match('nameplate%d?$') then return end
+  if not unit:match("nameplate%d?$") then return end
   local nameplate = C_NamePlate.GetNamePlateForUnit(unit, issecure())
   if not nameplate then return end
   local r,g,b
@@ -39,23 +39,23 @@ hooksecurefunc("CompactUnitFrame_UpdateAggroFlash", UpdateColor)
 
 --register some variables
 local function SetVariables()
-  SetCVar('ShowNamePlateLoseAggroFlash', 0)
-  SetCVar('NamePlateVerticalScale', 2.0)
+  SetCVar("ShowNamePlateLoseAggroFlash", 0)
+  SetCVar("NamePlateVerticalScale", 2.0)
 end
 
 --eventHandler
-local eventHandler = CreateFrame('Frame')
+local eventHandler = CreateFrame("Frame")
 
 --already logged in?
 if(IsLoggedIn()) then
   SetVariables()
 else
-  eventHandler:RegisterEvent('PLAYER_LOGIN')
+  eventHandler:RegisterEvent("PLAYER_LOGIN")
 end
 
 --OnEvent
-eventHandler:SetScript('OnEvent', function(_, event, unit)
-  if(event == 'PLAYER_LOGIN') then
+eventHandler:SetScript("OnEvent", function(_, event, unit)
+  if(event == "PLAYER_LOGIN") then
     SetVariables()
   end
 end)

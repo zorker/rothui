@@ -14,13 +14,13 @@ local RAID_CLASS_COLORS, FACTION_BAR_COLORS = RAID_CLASS_COLORS, FACTION_BAR_COL
 -----------------------------
 
 local function UpdateColor(self)
-  local unit = self.unit
+  local unit = self.displayedUnit
   if not unit then return end
   if not unit:match("nameplate%d?$") then return end
   local nameplate = C_NamePlate.GetNamePlateForUnit(unit, issecure())
   if not nameplate then return end
   local r,g,b
-  if UnitIsUnit(unit.."target", "player") then
+  if UnitDetailedThreatSituation("player", unit) then
     r,g,b = 0,1,0
   elseif UnitIsPlayer(unit) then
     local _, class = UnitClass(unit)

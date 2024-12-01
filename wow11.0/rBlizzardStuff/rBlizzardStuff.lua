@@ -157,11 +157,13 @@ local function SetBorderColor(frame, colorConfig)
 end
 
 local function SetupNamePlateCastbar(frame)
+  local nameplate = C_NamePlate.GetNamePlateForUnit(frame.displayedUnit)
+  if not nameplate then return end
   frame.castBar:SetHeight(frame.HealthBarsContainer:GetHeight()*1)
   frame.castBar.Icon:SetScale(frame.HealthBarsContainer:GetScale()*1.75)
   frame.castBar.Icon:SetTexCoord(unpack(iconTexCoord))
   frame.castBar.Icon:ClearAllPoints()
-	PixelUtil.SetPoint(frame.castBar.Icon, "BOTTOMRIGHT", frame.castBar, "BOTTOMLEFT", -1, -1)
+  PixelUtil.SetPoint(frame.castBar.Icon, "BOTTOMRIGHT", frame.castBar, "BOTTOMLEFT", -1, -1)
   frame.castBar.Text:ClearAllPoints()
   PixelUtil.SetPoint(frame.castBar.Text, "TOP", frame.castBar, "BOTTOM", 0, 0)
 end

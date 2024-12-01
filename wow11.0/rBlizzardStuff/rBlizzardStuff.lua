@@ -59,6 +59,8 @@ local iconTexCoord = {0.12,0.92,0.12,0.92}
 
 local vignettesDB = {}
 
+local helper = CreateFrame("Frame")
+
 -----------------------------
 -- Functions
 -----------------------------
@@ -84,12 +86,21 @@ local function AddActionButtonFader()
   rLib:CreateButtonFrameFader(MultiBarLeft, buttonList, faderConfig)
 end
 
+local function ApplyClamp(chatframe)
+  helper.SetClampRectInsets(chatframe,0,0,0,0)
+  if chatframe == ChatFrame1 then
+    ChatFrame1:ClearAllPoints()
+    ChatFrame1:SetPoint("BOTTOMLEFT", 10, 10)
+  end
+end
+
 --SkinChat
 local function SkinChat()
   for i = 1, NUM_CHAT_WINDOWS do
     local chatframe = _G["ChatFrame"..i]
     if not chatframe then return end
-    chatframe:SetClampRectInsets(0, 0, 0, 0)
+    chatframe:SetClampRectInsets(0,0,0,0)
+    hooksecurefunc(chatframe, "SetClampRectInsets", ApplyClamp)
     local name = chatframe:GetName()
     --RegisterStateDriver(_G[name.."ButtonFrame"], "visibility", "[mod:ctrl] show; hide")
     _G[name.."ButtonFrame"]:Hide()

@@ -1,0 +1,42 @@
+#rLib API
+
+--rLib:CreateDragFrame
+rLib:CreateDragFrame(frame, frames, inset, clamp)
+|-frame, type:FRAME/BUTTON, description: frame that should be added to rLib drag functions
+|-frames, type:TABLE, description: list of dragable frames the frame should be added to
+|-inset, type:NUMBER, description: http://wowprogramming.com/docs/widgets/Frame/SetClampRectInsets
+|-clamp, type:BOOLEAN, description: http://wowprogramming.com/docs/widgets/Frame/SetClampedToScreen
+
+--rLib:CreateDragResizeFrame
+rLib:CreateDragResizeFrame(frame, frames, inset, clamp)
+--Attributes are the same as for rLib:CreateDragFrame
+
+--rLib:CreateFrameFader
+rLib:CreateFrameFader(frame, faderConfig)
+|-frame, type:FRAME/BUTTON, description: frame that should get a frame fader (fadein/out on mouseover or the other way around)
+|-faderConfig, type:TABLE, description: configuration of the fader
+  |-fadeInAlpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/Alpha/SetToAlpha
+  |-fadeInDuration, type:NUMBER, description: http://wowprogramming.com/docs/widgets/Animation/SetDuration
+  |-fadeInSmooth, type:STRING, description: http://wowprogramming.com/docs/widgets/Animation/SetSmoothing
+  |-fadeOutAlpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/Alpha/SetToAlpha
+  |-fadeOutDuration, type:NUMBER, description: http://wowprogramming.com/docs/widgets/Animation/SetDuration
+  |-fadeOutSmooth, type:STRING, description: http://wowprogramming.com/docs/widgets/Animation/SetSmoothing
+
+--rLib:CreateButtonFrameFader
+rLib:CreateButtonFrameFader(frame, buttonList, faderConfig)
+|-frame, type:FRAME/BUTTON, description: frame that should get a frame fader (fadein/out on mouseover or the other way around)
+|-buttonList, type:TABLE, description: if the frame has mouse enabled children list them here. http://wowprogramming.com/docs/widgets/Region/IsMouseOver
+|-faderConfig, type:TABLE, description: configuration of the fader
+  |-fadeInAlpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/Alpha/SetToAlpha
+  |-fadeInDuration, type:NUMBER, description: http://wowprogramming.com/docs/widgets/Animation/SetDuration
+  |-fadeInSmooth, type:STRING, description: http://wowprogramming.com/docs/widgets/Animation/SetSmoothing
+  |-fadeOutAlpha, type:NUMBER, description: http://wowprogramming.com/docs/widgets/Alpha/SetToAlpha
+  |-fadeOutDuration, type:NUMBER, description: http://wowprogramming.com/docs/widgets/Animation/SetDuration
+  |-fadeOutSmooth, type:STRING, description: http://wowprogramming.com/docs/widgets/Animation/SetSmoothing
+
+--rLib:CreateSlashCmd
+rLib:CreateSlashCmd(addonName, shortcut, frames, color)
+|-addonName, type:STRING, description: addon name for chat display
+|-shortcut, type:STRING, description: slash command shortcut for chat display
+|-frames, type:TABLE, description: list of dragable frames that should trigger on lock/unlock/reset
+|-color, type:STRING, description: color in hex. example: "00FFFFFF". first two characters are ignored.

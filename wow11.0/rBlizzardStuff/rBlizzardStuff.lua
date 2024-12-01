@@ -157,8 +157,6 @@ local function SetBorderColor(frame, colorConfig)
 end
 
 local function SetupNamePlateCastbar(frame)
-  local nameplate = C_NamePlate.GetNamePlateForUnit(frame.displayedUnit)
-  if not nameplate then return end
   frame.castBar:SetHeight(frame.HealthBarsContainer:GetHeight()*1)
   frame.castBar.Icon:SetScale(frame.HealthBarsContainer:GetScale()*1.75)
   frame.castBar.Icon:SetTexCoord(unpack(iconTexCoord))

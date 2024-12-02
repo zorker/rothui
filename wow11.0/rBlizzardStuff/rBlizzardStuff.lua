@@ -38,19 +38,19 @@ CHAT_FRAME_TAB_ALERTING_NOMOUSE_ALPHA = 1
 --gradient nameplate colors horizontally
 local nameplateBorderColors = {
   tankwarning = {
-    color = CreateColor(1, 1, 0, 1),
-    alphaLeft = .9,
-    alphaRight = .5
+    color = CreateColor(1, 0.8, 0, 1),
+    alphaLeft = 1,
+    alphaRight = .7
   },
   default = {
     color = CreateColor(0, 0, 0, 1),
     alphaLeft = .9,
-    alphaRight = .3
+    alphaRight = .4
   },
   selected = {
     color = CreateColor(1, 1, 1, 1),
-    alphaLeft = .6,
-    alphaRight = .2
+    alphaLeft = .9,
+    alphaRight = .5
   }
 }
 local nameplateBackgroundColor = CreateColor(0, 0, 0, .5)
@@ -191,8 +191,13 @@ local function IsOnThreatList(threatStatus)
 end
 
 local function UpdateNamePlateBorder(frame)
+  if not frame.HealthBarsContainer then return end
   local nameplate = C_NamePlate.GetNamePlateForUnit(frame.displayedUnit)
   if not nameplate then return end
+  if UnitIsUnit(frame.displayedUnit, "target") then
+    SetBorderColor(frame, nameplateBorderColors.selected)
+    return
+  end
   if IsInGroup() and IsPlayerEffectivelyTank() then
     local isTanking, threatStatus = UnitDetailedThreatSituation("player", frame.displayedUnit)
     if not isTanking and IsOnThreatList(threatStatus) then
@@ -200,20 +205,18 @@ local function UpdateNamePlateBorder(frame)
       return
     end
   end
-  if UnitIsUnit(frame.displayedUnit, "target") then
-    SetBorderColor(frame, nameplateBorderColors.selected)
-    return
-  end
   SetBorderColor(frame, nameplateBorderColors.default)
 end
 
 local function UpdateNamePlateClassificationIndicator(frame)
+  if not frame.classificationIndicator then return end
   local nameplate = C_NamePlate.GetNamePlateForUnit(frame.displayedUnit)
   if not nameplate then return end
   frame.classificationIndicator:Hide()
 end
 
 local function UpdateNamePlateSelectionHighlight(frame)
+  if not frame.selectionHighlight then return end
   local nameplate = C_NamePlate.GetNamePlateForUnit(frame.displayedUnit)
   if not nameplate then return end
   frame.selectionHighlight:Hide()

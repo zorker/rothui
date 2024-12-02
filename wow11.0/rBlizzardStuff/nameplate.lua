@@ -20,9 +20,9 @@ local nameplateBorderColors = {
     alphaRight = .4
   },
   selected = {
-    color = CreateColor(1, 1, 1, 1),
+    color = CreateColor(0, 1, 1, 1),
     alphaLeft = .9,
-    alphaRight = .5
+    alphaRight = 0.1
   }
 }
 local nameplateBackgroundColor = CreateColor(0, 0, 0, .5)
@@ -65,10 +65,19 @@ local function IsOnThreatList(threatStatus)
   return threatStatus ~= nil
 end
 
-local function UpdateNamePlateBorder(frame)
-  if not frame.HealthBarsContainer then return end
+local function IsNameplateFrame(frame)
+  if not frame.HealthBarsContainer then return false end
+  if not frame.classificationIndicator then return false end
+  if not frame.selectionHighlight then return false end
+  if not frame.displayedUnit then return false end
+  if not frame.displayedUnit:match('nameplate%d?$') then return false end
   local nameplate = C_NamePlate.GetNamePlateForUnit(frame.displayedUnit)
-  if not nameplate then return end
+  if not nameplate then return false end
+  return true
+end
+
+local function UpdateNamePlateBorder(frame)
+  if not IsNameplateFrame(frame) then return end
   if UnitIsUnit(frame.displayedUnit, "target") then
     SetBorderColor(frame, nameplateBorderColors.selected)
     return
@@ -84,16 +93,12 @@ local function UpdateNamePlateBorder(frame)
 end
 
 local function UpdateNamePlateClassificationIndicator(frame)
-  if not frame.classificationIndicator then return end
-  local nameplate = C_NamePlate.GetNamePlateForUnit(frame.displayedUnit)
-  if not nameplate then return end
+  if not IsNameplateFrame(frame) then return end
   frame.classificationIndicator:Hide()
 end
 
 local function UpdateNamePlateSelectionHighlight(frame)
-  if not frame.selectionHighlight then return end
-  local nameplate = C_NamePlate.GetNamePlateForUnit(frame.displayedUnit)
-  if not nameplate then return end
+  if not IsNameplateFrame(frame) then return end
   frame.selectionHighlight:Hide()
 end
 

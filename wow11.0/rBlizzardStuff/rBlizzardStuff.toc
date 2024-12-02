@@ -6,4 +6,8 @@
 ## IconTexture: Interface\AddOns\rLib\assets\logo-64
 ## RequiredDeps: rLib
 
-rBlizzardStuff.lua
+blizzardui.lua
+chat.lua
+nameplate.lua
+junk.lua
+vignette.lua

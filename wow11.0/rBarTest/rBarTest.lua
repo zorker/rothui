@@ -32,10 +32,13 @@ local function GetButtonList(buttonName,numButtons)
   return buttonList
 end
 
---AddActionButtonFader
-local function AddActionButtonFader(bar)
+--AddButtonFrameFader
+local function AddButtonFrameFader(bar)
   local buttonList = GetButtonList(bar:GetName().."Button", NUM_ACTIONBAR_BUTTONS)
   rLib:CreateButtonFrameFader(bar, buttonList, faderConfig)
+  --hook LABFlyout after login (not loaded before)
+  --works only after first init of LibActionButton Bar
+  LABFlyoutHandlerFrame:HookScript("OnShow", rLib.LABFlyoutHandlerFrameOnShow)
 end
 
 --CreateTestBar
@@ -67,12 +70,8 @@ local function CreateTestBar()
   button1:SetState(1, "action", 1)
   button1:SetState(2, "action", 2)
 
-  --AddActionButtonFader for MyTestBar
-  AddActionButtonFader(MyTestBar)
-
-  --hook LABFlyout after login (not loaded before)
-  --works only after first init of LibActionButton Bar
-  LABFlyoutHandlerFrame:HookScript("OnShow", rLib.LABFlyoutHandlerFrameOnShow)
+  --AddButtonFrameFader for MyTestBar
+  AddButtonFrameFader(MyTestBar)
 
 end
 

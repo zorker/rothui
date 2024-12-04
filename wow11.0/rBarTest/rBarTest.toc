@@ -1,0 +1,9 @@
+## Interface: 110005
+## Author: zork
+## Version: 110005.01
+## Title: rBarTest
+## Notes: action bar and button test for rLib framefader for LibActionButton
+## IconTexture: Interface\AddOns\rLib\assets\logo-64
+## RequiredDeps:LibActionButton-1.0, rLib
+
+rBarTest.lua

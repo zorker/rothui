@@ -99,6 +99,50 @@ local function SpellFlyoutOnShow(self)
 end
 SpellFlyout:HookScript("OnShow", SpellFlyoutOnShow)
 
+local function LABFlyoutIsMouseOverFrame(frame)
+  if MouseIsOver(frame) then return true end
+  if not LABFlyoutHandlerFrame:IsShown() then return false end
+  if not LABFlyoutHandlerFrame.__faderParent then return false end
+  if LABFlyoutHandlerFrame.__faderParent == frame and MouseIsOver(LABFlyoutHandlerFrame) then return true end
+  return false
+end
+
+local function LABFlyoutFrameHandler(frame)
+  if LABFlyoutIsMouseOverFrame(frame) then
+    StartFadeIn(frame)
+  else
+    StartFadeOut(frame)
+  end
+end
+
+local function LABFlyoutOffFrameHandler(self)
+  if not self.__faderParent then return end
+  LABFlyoutFrameHandler(self.__faderParent)
+end
+
+local function LABFlyoutHandlerFrameOnShow(self)
+  local frame = self:GetParent():GetParent()
+  if not frame.__fader then return end
+  --set new frame parent
+  self.__faderParent = frame
+  if not self.__faderHook then
+    LABFlyoutHandlerFrame:HookScript("OnEnter", LABFlyoutOffFrameHandler)
+    LABFlyoutHandlerFrame:HookScript("OnLeave", LABFlyoutOffFrameHandler)
+    self.__faderHook = true
+  end
+  for i=1, NUM_ACTIONBAR_BUTTONS do --hopefully 12 is enough
+    local button = _G["LABFlyoutButton"..i]
+    if not button then break end
+    button.__faderParent = frame
+    if not button.__faderHook then
+      button:HookScript("OnEnter", LABFlyoutOffFrameHandler)
+      button:HookScript("OnLeave", LABFlyoutOffFrameHandler)
+      button.__faderHook = true
+    end
+  end
+end
+rLib.LABFlyoutHandlerFrameOnShow = LABFlyoutHandlerFrameOnShow
+
 function rLib:CreateFrameFader(frame, faderConfig)
   if frame.__faderConfig then return end
   frame.__faderConfig = faderConfig

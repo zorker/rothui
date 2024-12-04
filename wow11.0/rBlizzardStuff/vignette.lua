@@ -25,10 +25,10 @@ local function VignetteAdded(event,id)
   local top = atlasInfo.topTexCoord * 256
   local bottom = atlasInfo.bottomTexCoord * 256
   local str = "|TInterface\\MINIMAP\\ObjectIconsAtlas:0:0:0:0:256:256:"..(left)..":"..(right)..":"..(top)..":"..(bottom).."|t"
-  PlaySoundFile(567397)
   if vignetteInfo.name ~= "Garrison Cache" and vignetteInfo.name ~= "Full Garrison Cache" then
     RaidNotice_AddMessage(RaidWarningFrame, str.." "..vignetteInfo.name.." spotted!", ChatTypeInfo["RAID_WARNING"])
     print(str.." "..vignetteInfo.name,"spotted!")
+    PlaySoundFile(567397)
     vignettesDB[id] = true
   end
 end

@@ -16,8 +16,8 @@ local nameplateBorderColors = {
   },
   default = {
     color = CreateColor(0, 0, 0, 1),
-    alphaLeft = .9,
-    alphaRight = .4
+    alphaLeft = .5,
+    alphaRight = .1
   },
   selected = {
     color = CreateColor(0, 1, 1, 1),

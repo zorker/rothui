@@ -1,734 +1,735 @@
+-- rIngameModelViewer - canvas
+-- zork 2024
+-----------------------------
+-- Variables
+-----------------------------
+local A, L = ...
 
-  -------------------------------------
-  -- ADDON TABLES
-  -------------------------------------
+local GT = GameTooltip
+local math = math
+local pi, halfpi = math.pi, math.pi / 2
 
-  local an, at = ...
+L.canvas = CreateFrame("Frame", nil, UIParent)
+L.canvas.overlay = CreateFrame("Frame", nil, L.canvas)
 
-  -------------------------------------
-  -- VARIABLES
-  -------------------------------------
+-------------------------------------
+-- FUNCTIONS
+-------------------------------------
 
-  -- local variables
-  local G, L, C, DB = at.G, at.L, at.C, at.DB
-
-  --stuff from global scope
-  local math, unpack, format  = math, unpack, format
-  local PlaySound     = PlaySound
-  local GT            = GameTooltip
-  local pi, halfpi    = math.pi, math.pi / 2
-
-  -------------------------------------
-  -- FUNCTIONS
-  -------------------------------------
-
-  local function SetModelOrientation(self, distance, yaw, pitch)
-    if not self:HasCustomCamera() then return end
-    self.distance, self.yaw, self.pitch = distance, yaw, pitch
-    local x = distance * math.cos(yaw) * math.cos(pitch)
-    local y = distance * math.sin(- yaw) * math.cos(pitch)
-    local z = (distance * math.sin(- pitch))
-    self:SetCameraPosition(x, y, z)
+local function SetModelOrientation(model, distance, yaw, pitch)
+  if not model:HasCustomCamera() then
+    return
   end
+  model.distance, model.yaw, model.pitch = distance, yaw, pitch
+  local x = distance * math.cos(yaw) * math.cos(pitch)
+  local y = distance * math.sin(-yaw) * math.cos(pitch)
+  local z = (distance * math.sin(-pitch))
+  model:SetCameraPosition(x, y, z)
+end
 
-  local function LeftButtonOnUpdate(self, elapsed)
-    if not self:HasCustomCamera() then return end
-    if not self.pitch then return end
-    local x, y = GetCursorPosition()
-    local pitch = self.pitch + (y - self.cursorY) * pi / 256
-    local limit = false
-    if pitch > halfpi - 0.05 or pitch < - halfpi + 0.05 then
-      limit = true
-    end
-    if limit then
-      local rotation = format("%.0f", math.abs(math.deg(((x - self.cursorX) / 64 + self:GetFacing())) % 360))
-      if rotation ~= format("%.0f", math.abs(math.deg(self:GetFacing()) % 360)) then
-        self:SetRotation(math.rad(rotation))
-        self.rotation = rotation
-      end
-    else
-      local yaw = self.yaw + (x - self.cursorX) * pi / 256
-      SetModelOrientation(self, self.distance, yaw, pitch)
-    end
-    self.cursorX, self.cursorY = x, y
+local function CustomCamperaOnUpdate(model, elapsed)
+  if not model:HasCustomCamera() then
+    return
   end
-
-  local function RightButtonOnUpdate(self, elapsed)
-    local x, y = GetCursorPosition()
-    local px, py, pz = self:GetPosition()
-    if IsShiftKeyDown() then
-      local mx = format("%.2f", (px + (y - self.cursorY) / 100))
-      if format("%.2f", px) ~= mx then
-        self:SetPosition(mx, py, pz)
-        self.posX, self.posY = py, pz
-      end
-    else
-      local my = format("%.2f", (py + (x - self.cursorX) / 84))
-      local mz = format("%.2f", (pz + (y - self.cursorY) / 84))
-      if format("%.2f", py) ~= my or format("%.2f", pz) ~= mz then
-        self:SetPosition(px, my, mz)
-        self.posX, self.posY = my, mz
-      end
-    end
-    self.cursorX, self.cursorY = x, y
+  if not model.pitch then
+    return
   end
-
-  local function MiddleButtonOnUpdate(self, elapsed)
-    local x, y = GetCursorPosition()
-    local rotation = format("%.0f", math.abs(math.deg(((x - self.cursorX) / 84 + self:GetFacing())) % 360))
-    if rotation ~= format("%.0f", math.abs(math.deg(self:GetFacing()) % 360)) then
-      self:SetRotation(math.rad(rotation))
-      self.rotation = rotation
-    end
-    self.cursorX, self.cursorY = x, y
+  local x, y = GetCursorPosition()
+  local pitch = model.pitch + (y - model.cursorY) * pi / 256
+  local limit = false
+  if pitch > halfpi - 0.05 or pitch < -halfpi + 0.05 then
+    limit = true
   end
+  if limit then
+    local rotation = format("%.0f", math.abs(math.deg(((x - model.cursorX) / 64 + model:GetFacing())) % 360))
+    if rotation ~= format("%.0f", math.abs(math.deg(model:GetFacing()) % 360)) then
+      model:SetRotation(math.rad(rotation))
+      model.rotation = rotation
+    end
+  else
+    local yaw = model.yaw + (x - model.cursorX) * pi / 256
+    SetModelOrientation(model, model.distance, yaw, pitch)
+  end
+  model.cursorX, model.cursorY = x, y
+end
 
-  local function ResetModelValues(self)
-    self.camDistanceScale = 1
-    self.portraitZoom = 0
-    self.posX = 0
-    self.posY = 0
-    self.rotation = 0
-    self:SetPortraitZoom(self.portraitZoom)
-    self:SetCamDistanceScale(self.camDistanceScale)
-    self:SetPosition(0,self.posX,self.posY)
-    self:SetRotation(self.rotation)
-    self:RefreshCamera()
-    self:SetCustomCamera(1)
-    if self:HasCustomCamera() then
-      local x, y, z = self:GetCameraPosition()
-      local tx, ty, tz = self:GetCameraTarget()
-      self:SetCameraTarget(0, ty, tz)
-      if x == 0 then return end
-      SetModelOrientation(self, math.sqrt(x * x + y * y + z * z), - math.atan(y / x), - math.atan(z / x))
+local function PositionOnUpdate(model, elapsed)
+  local x, y = GetCursorPosition()
+  local px, py, pz = model:GetPosition()
+  if IsShiftKeyDown() then
+    local mx = format("%.2f", (px + (y - model.cursorY) / 100))
+    if format("%.2f", px) ~= mx then
+      model:SetPosition(mx, py, pz)
+      model.posX, model.posY = py, pz
+    end
+  else
+    local my = format("%.2f", (py + (x - model.cursorX) / 84))
+    local mz = format("%.2f", (pz + (y - model.cursorY) / 84))
+    if format("%.2f", py) ~= my or format("%.2f", pz) ~= mz then
+      model:SetPosition(px, my, mz)
+      model.posX, model.posY = my, mz
     end
   end
+  model.cursorX, model.cursorY = x, y
+end
 
-  local function ModelOnMouseDown(self,button)
-    if button == "LeftButton" then
-      local canvas = self:GetParent()
-      if canvas.isCanvas then
-        if IsShiftKeyDown() then
-          if self:HasCustomCamera() then
-            self.cursorX, self.cursorY = GetCursorPosition()
-            self:SetScript("OnUpdate", LeftButtonOnUpdate)
-          end
-        else
-          if not canvas.overlay then canvas.overlay = canvas:CreateOverlay() end
-          canvas.overlay:Enable(self.displayIndex)
-        end
-      else
-        if self:HasCustomCamera() then
-          self.cursorX, self.cursorY = GetCursorPosition()
-          self:SetScript("OnUpdate", LeftButtonOnUpdate)
-        end
-      end
-    elseif button == "RightButton" then
-      if IsControlKeyDown() then
-        ResetModelValues(self)
-      else
-        self.cursorX, self.cursorY = GetCursorPosition()
-        self:SetScript("OnUpdate", RightButtonOnUpdate)
-      end
-    elseif button == "MiddleButton" then
-      if IsControlKeyDown() then
-        ResetModelValues(self)
-      else
-        self.cursorX, self.cursorY = GetCursorPosition()
-        self:SetScript("OnUpdate", MiddleButtonOnUpdate)
-      end
-    end
+local function RotationOnUpdate(model, elapsed)
+  local x, y = GetCursorPosition()
+  local rotation = format("%.0f", math.abs(math.deg(((x - model.cursorX) / 84 + model:GetFacing())) % 360))
+  if rotation ~= format("%.0f", math.abs(math.deg(model:GetFacing()) % 360)) then
+    model:SetRotation(math.rad(rotation))
+    model.rotation = rotation
   end
+  model.cursorX, model.cursorY = x, y
+end
 
-  local function ModelOnMouseUp(self, button)
-    self:SetScript("OnUpdate", nil)
-  end
-
-  local function ModelOnMouseWheel(self,delta)
-    if self:HasCustomCamera() then
-      local max = 40
-      local min = 0.1
-      self.distance = math.min(math.max(self.distance-delta*0.15,min),max)
-      SetModelOrientation(self, self.distance, self.yaw, self.pitch)
-    else
-      if IsShiftKeyDown() then
-        local max = 1
-        local min = 0
-        self.portraitZoom = math.min(math.max(self.portraitZoom+delta*0.15,min),max)
-        self:SetPortraitZoom(self.portraitZoom)
-      else
-        local max = 10
-        local min = 0.1
-        self.camDistanceScale = math.min(math.max(self.camDistanceScale-delta*0.15,min),max)
-        self:SetCamDistanceScale(self.camDistanceScale)
-      end
-    end
-  end
-
-  local function ModelOnEnter(self)
-    if not IsAltKeyDown() then return end
-    local pz, px, py = self:GetPosition()
-    pz, px, py = L:RoundNumber(pz), L:RoundNumber(px), L:RoundNumber(py)
-    GT:SetOwner(self, "ANCHOR_CURSOR")
-    --GT:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
-    GT:AddLine("Model Info", 0, 1, 0.5, 1, 1, 1)
-    GT:AddLine(" ")
-    GT:AddDoubleLine("DisplayID", self:GetDisplayInfo(), 1, 1, 1, 1, 1, 1)
-    GT:AddDoubleLine("SetPosition", "("..pz..","..px..","..px..")", 1, 1, 1, 1, 1, 1)
-    GT:AddDoubleLine("SetRotation", self.rotation, 1, 1, 1, 1, 1, 1)
-    GT:AddDoubleLine("SetFacing", L:RoundNumber(self:GetFacing()), 1, 1, 1, 1, 1, 1)
-    GT:AddDoubleLine("DisplayIndex", self.model, 1, 1, 1, 1, 1, 1)
-    GT:AddDoubleLine("GetModelFileID", self.modelFileID, 1, 1, 1, 1, 1, 1)
-    if self:HasCustomCamera() then
-      local x, y, z = self:GetCameraPosition()
-      local tx, ty, tz = self:GetCameraTarget()
-      x, y, z = L:RoundNumber(x), L:RoundNumber(y), L:RoundNumber(z)
-      tx, ty, tz = L:RoundNumber(tx), L:RoundNumber(ty), L:RoundNumber(tz)
-      GT:AddDoubleLine("CustomCamera", "true", 1, 1, 1, 1, 1, 1)
-      GT:AddDoubleLine("SetCameraPosition", "("..x..","..y..","..z..")", 1, 1, 1, 1, 1, 1)
-      GT:AddDoubleLine("SetCameraTarget", "("..tx..","..ty..","..tz..")", 1, 1, 1, 1, 1, 1)
-    else
-      GT:AddDoubleLine("CustomCamera", "false", 1, 1, 1, 1, 1, 1)
-      GT:AddDoubleLine("SetCamDistanceScale", self.camDistanceScale, 1, 1, 1, 1, 1, 1)
-      GT:AddDoubleLine("SetPortraitZoom", self.portraitZoom, 1, 1, 1, 1, 1, 1)
-    end
-    GT:AddLine(" ")
-    if self.isOverlayModel then
-      if self:HasCustomCamera() then
-        GT:AddLine("Hold LEFT and drag mouse to move model camera.")
-      else
-        GT:AddLine("Model has no custom camera, cannot be moved freely with LEFT mouse.")
-      end
-    else
-      GT:AddLine("Click LEFT for big overlay.")
-      if self:HasCustomCamera() then
-        GT:AddLine("Hold SHIFT + LEFT and drag mouse to move model camera.")
-      end
-    end
-    GT:AddLine("Hold RIGHT and drag mouse to move model.")
-    GT:AddLine("Hold MIDDLE and drag mouse to rotate model.")
-    if self:HasCustomCamera() then
-      GT:AddLine("Use MWHEEL to scale camera.")
-    else
-      GT:AddLine("Use MWHEEL to scale camera.")
-      GT:AddLine("Use SHIFT + MWHEEL to zoom to portrait.")
-    end
-    GT:AddLine("Click CONTROL + RIGHT to reset.")
-    GT:Show()
-  end
-
-  local function ModelOnLeave(self)
-    GT:Hide()
-  end
-
-  local function UpdateModelPosition(self,row,col,size)
-    self.title:SetFont(STANDARD_TEXT_FONT, math.max(size*10/100,8), "OUTLINE")
-    self:SetSize(size,size)
-    self:SetPoint("TOPLEFT",size*row,size*col*(-1))
-    self:Show()
-  end
-
-  local function UpdateDisplayIndex(self,displayIndex)
-    self.displayIndex = displayIndex
-    self:ClearModel()
-    self:EnableMouse(false)
-    self:SetAlpha(0.3)
-    if C.canvasMode == 'displayIndexList' then
-      if DB.displayIndexList and DB.displayIndexList[displayIndex] then
-        self.displayInfo = DB.displayIndexList[displayIndex]
-      else
-        self.displayInfo = 1
-      end
-      self.title:SetText(self.displayInfo.." - "..self.displayIndex)
-    else
-      self.displayInfo = displayIndex
-      self.title:SetText(self.displayInfo)
-    end
-
-    if self.displayInfo == 74632 then
-      --skip memory leak id
-    else
-      self:SetDisplayInfo(self.displayInfo)
-      --self:SetCreature(self.displayIndex)
-      --self.model = self:GetModel()
-      self.model = self.displayInfo
-      self.modelFileID = self:GetModelFileID() or ""
-      --if self.modelFileID and not DB.GLOB["MODEL_LIST"][self.modelFileID] then
-      --  DB.GLOB["MODEL_LIST"][self.modelFileID] = self.displayIndex
-      --  print('adding new entry to model list for fileID',self.modelFileID,'displayID',self.displayIndex)
-      --end
-      --self:SetModelByFileID(self.modelFileID)
-      --self.modelUnitGUID = self:GetModelUnitGUID() or ""
-      --self.modelPath = self:GetModelPath() or ""
-    end
-    if self.model == "" then
-      --self.e404:Show()
+local function ResetModelValues(model)
+  model.camDistanceScale = 1
+  model.portraitZoom = 0
+  model.posX = 0
+  model.posY = 0
+  model.rotation = 0
+  model:SetPortraitZoom(model.portraitZoom)
+  model:SetCamDistanceScale(model.camDistanceScale)
+  model:SetPosition(0, model.posX, model.posY)
+  model:SetRotation(model.rotation)
+  model:RefreshCamera()
+  model:SetCustomCamera(1)
+  if model:HasCustomCamera() then
+    local x, y, z = model:GetCameraPosition()
+    local tx, ty, tz = model:GetCameraTarget()
+    model:SetCameraTarget(0, ty, tz)
+    if x == 0 then
       return
     end
-    --self.e404:Hide()
-    self:EnableMouse(true)
-    self:SetAlpha(1)
+    SetModelOrientation(model, math.sqrt(x * x + y * y + z * z), -math.atan(y / x), -math.atan(z / x))
+  end
+end
+
+local function ModelOnMouseDown(model, button)
+  if button == "LeftButton" then
+    if model:GetParent().isCanvas then
+      if IsShiftKeyDown() then
+        if model:HasCustomCamera() then
+          model.cursorX, model.cursorY = GetCursorPosition()
+          model:SetScript("OnUpdate", CustomCamperaOnUpdate)
+        end
+      else
+        if not L.canvas.overlay.isOverlay then
+          L.canvas.overlay:Init()
+        end
+        L.canvas.overlay:Enable(model.displayIndex)
+      end
+    else
+      if model:HasCustomCamera() then
+        model.cursorX, model.cursorY = GetCursorPosition()
+        model:SetScript("OnUpdate", CustomCamperaOnUpdate)
+      end
+    end
+  elseif button == "RightButton" then
+    if IsControlKeyDown() then
+      ResetModelValues(model)
+    else
+      model.cursorX, model.cursorY = GetCursorPosition()
+      model:SetScript("OnUpdate", RotationOnUpdate)
+    end
+  elseif button == "MiddleButton" or button == "Button4" or button == "Button5" then
+    model.cursorX, model.cursorY = GetCursorPosition()
+    model:SetScript("OnUpdate", PositionOnUpdate)
+  end
+end
+
+local function ModelOnMouseUp(model, button)
+  model:SetScript("OnUpdate", nil)
+end
+
+local function ModelOnMouseWheel(model, delta)
+  if model:HasCustomCamera() then
+    local max = 40
+    local min = 0.1
+    model.distance = math.min(math.max(model.distance - delta * 0.15, min), max)
+    SetModelOrientation(model, model.distance, model.yaw, model.pitch)
+  else
+    if IsShiftKeyDown() then
+      local max = 1
+      local min = 0
+      model.portraitZoom = math.min(math.max(model.portraitZoom + delta * 0.15, min), max)
+      model:SetPortraitZoom(model.portraitZoom)
+    else
+      local max = 10
+      local min = 0.1
+      model.camDistanceScale = math.min(math.max(model.camDistanceScale - delta * 0.15, min), max)
+      model:SetCamDistanceScale(model.camDistanceScale)
+    end
+  end
+end
+
+local function ModelOnEnter(model)
+  if not IsAltKeyDown() then
+    return
+  end
+  local pz, px, py = model:GetPosition()
+  pz, px, py = L.F:RoundNumber(pz), L.F:RoundNumber(px), L.F:RoundNumber(py)
+  GT:SetOwner(model, "ANCHOR_CURSOR")
+  -- GT:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
+  GT:AddLine("Model Info", 0, 1, 0.5, 1, 1, 1)
+  GT:AddLine(" ")
+  GT:AddDoubleLine("DisplayID", model:GetDisplayInfo(), 1, 1, 1, 1, 1, 1)
+  GT:AddDoubleLine("SetPosition", "(" .. pz .. "," .. px .. "," .. px .. ")", 1, 1, 1, 1, 1, 1)
+  GT:AddDoubleLine("SetRotation", model.rotation, 1, 1, 1, 1, 1, 1)
+  GT:AddDoubleLine("SetFacing", L.F:RoundNumber(model:GetFacing()), 1, 1, 1, 1, 1, 1)
+  GT:AddDoubleLine("DisplayIndex", model.model, 1, 1, 1, 1, 1, 1)
+  GT:AddDoubleLine("GetModelFileID", model.modelFileID, 1, 1, 1, 1, 1, 1)
+  if model:HasCustomCamera() then
+    local x, y, z = model:GetCameraPosition()
+    local tx, ty, tz = model:GetCameraTarget()
+    x, y, z = L.F:RoundNumber(x), L.F:RoundNumber(y), L.F:RoundNumber(z)
+    tx, ty, tz = L.F:RoundNumber(tx), L.F:RoundNumber(ty), L.F:RoundNumber(tz)
+    GT:AddDoubleLine("CustomCamera", "true", 1, 1, 1, 1, 1, 1)
+    GT:AddDoubleLine("SetCameraPosition", "(" .. x .. "," .. y .. "," .. z .. ")", 1, 1, 1, 1, 1, 1)
+    GT:AddDoubleLine("SetCameraTarget", "(" .. tx .. "," .. ty .. "," .. tz .. ")", 1, 1, 1, 1, 1, 1)
+  else
+    GT:AddDoubleLine("CustomCamera", "false", 1, 1, 1, 1, 1, 1)
+    GT:AddDoubleLine("SetCamDistanceScale", model.camDistanceScale, 1, 1, 1, 1, 1, 1)
+    GT:AddDoubleLine("SetPortraitZoom", model.portraitZoom, 1, 1, 1, 1, 1, 1)
+  end
+  GT:AddLine(" ")
+  if model.isOverlayModel then
+    if model:HasCustomCamera() then
+      GT:AddLine("Hold LEFT and drag mouse to move model camera.")
+    else
+      GT:AddLine("Model has no custom camera, cannot be moved freely with LEFT mouse.")
+    end
+  else
+    GT:AddLine("Click LEFT for big overlay.")
+    if model:HasCustomCamera() then
+      GT:AddLine("Hold SHIFT + LEFT and drag mouse to move model camera.")
+    end
+  end
+  GT:AddLine("Hold RIGHT and drag mouse to rotate model.")
+  GT:AddLine("Hold MIDDLE or MOUSE4 and drag mouse to move model.")
+  if model:HasCustomCamera() then
+    GT:AddLine("Use MWHEEL to scale camera.")
+  else
+    GT:AddLine("Use MWHEEL to scale camera.")
+    GT:AddLine("Use SHIFT + MWHEEL to zoom to portrait.")
+  end
+  GT:AddLine("Click CONTROL + RIGHT to reset.")
+  GT:Show()
+end
+
+local function ModelOnLeave(model)
+  GT:Hide()
+end
+
+local function UpdateModelPosition(model, row, col, size)
+  model.title:SetFont(STANDARD_TEXT_FONT, math.max(size * 10 / 100, 8), "OUTLINE")
+  model:SetSize(size, size)
+  model:SetPoint("TOPLEFT", size * row, size * col * (-1))
+  model:Show()
+end
+
+local function UpdateDisplayIndex(model, displayIndex)
+  model.displayIndex = displayIndex
+  if L.C.canvasMode == 'displayIndexList' then
+    if L.DB.displayIndexList and L.DB.displayIndexList[displayIndex] then
+      model.displayInfo = L.DB.displayIndexList[displayIndex]
+    else
+      model.displayInfo = 1
+    end
+    model.title:SetText(model.displayInfo .. " - " .. model.displayIndex)
+  else
+    model.displayInfo = displayIndex
+    model.title:SetText(model.displayInfo)
+  end
+  model:ClearModel()
+  if model.displayInfo == 74632 then
+    -- skip memory leak id
+    model.model = model.displayInfo
+    model.modelFileID = ""
+  else
+    model:SetDisplayInfo(model.displayInfo)
+    -- model:SetCreature(model.displayIndex)
+    -- model.model = model:GetModel()
+    model.model = model.displayInfo
+    model.modelFileID = model:GetModelFileID() or ""
+    -- if model.modelFileID and not DB.GLOB["MODEL_LIST"][model.modelFileID] then
+    --  DB.GLOB["MODEL_LIST"][model.modelFileID] = model.displayIndex
+    --  print(L.name,'adding new entry to model list for fileID',model.modelFileID,'displayID',model.displayIndex)
+    -- end
+    -- model:SetModelByFileID(model.modelFileID)
+    -- model.modelUnitGUID = model:GetModelUnitGUID() or ""
+    -- model.modelPath = model:GetModelPath() or ""
+  end
+  if not model.modelFileID or model.modelFileID == "" then
+    model.e404:Show()
+    model:EnableMouse(false)
+    model:SetAlpha(0.1)
+  else
+    model.e404:Hide()
+    model:EnableMouse(true)
+    model:SetAlpha(1)
+  end
+end
+
+-- create model func
+local function CreateModel(parent, id)
+  -- model frame
+  local m = CreateFrame("PlayerModel", nil, parent)
+  -- model attributes
+  m.name = "model" .. id
+  m.id = id
+  -- model background (border)
+  m.bg = m:CreateTexture(nil, "BACKGROUND", nil, -8)
+  m.bg:SetColorTexture(1, 1, 1)
+  m.bg:SetVertexColor(0, 0, 0, .2)
+  m.bg:SetAllPoints()
+  -- model background color
+  m.color = m:CreateTexture(nil, "BACKGROUND", nil, -7)
+  m.color:SetColorTexture(1, 1, 1)
+  -- color bugfix
+  m.color:SetVertexColor(unpack(L.DB.GLOB["COLOR"]))
+  m.color:SetPoint("TOPLEFT", m, "TOPLEFT", 2, -2)
+  m.color:SetPoint("BOTTOMRIGHT", m, "BOTTOMRIGHT", -2, 2)
+  -- model title
+  m.title = m:CreateFontString(nil, "BACKGROUND")
+  m.title:SetFont(STANDARD_TEXT_FONT, 32, "OUTLINE")
+  m.title:SetPoint("TOP", 0, -2)
+  m.title:SetAlpha(.5)
+  -- no model found
+  m.e404 = m:CreateTexture(nil, "BACKGROUND", nil, -6)
+  m.e404:SetAtlas("128-Store-Main")
+  m.e404:SetAllPoints()
+  m.e404:Hide()
+  -- scripts
+  m:SetScript("OnMouseWheel", ModelOnMouseWheel)
+  m:SetScript("OnMouseDown", ModelOnMouseDown)
+  m:SetScript("OnMouseUp", ModelOnMouseUp)
+  m:SetScript("OnEnter", ModelOnEnter)
+  m:SetScript("OnLeave", ModelOnLeave)
+  return m
+end
+
+-- canvas UpdateModelSize func
+function L.canvas:UpdateModelSize(value)
+  if (self.modelSize + value) < 50 and value < 0 then
+    return
+  end
+  if (self.modelSize + value) > 400 and value > 0 then
+    return
+  end
+  self.modelSize = self.modelSize + value
+  L.DB.GLOB["MODELSIZE"] = self.modelSize
+  self:UpdateAllModels()
+end
+
+-- canvas UpdatePage func
+function L.canvas:UpdatePage(value)
+  if self.canvasPage == 1 and value < 0 then
+    return
+  end
+  self.canvasPage = self.canvasPage + value
+  L.DB.GLOB["PAGE"] = self.canvasPage
+  self.pageEditBox:SetText(self.canvasPage)
+  self:UpdateAllModels()
+end
+
+-- canvas GetPageForDisplayID func
+function L.canvas:UpdatePageForDisplayID(displayId)
+  self.canvasPage = math.max(math.ceil(displayId / self.modelCount), 1)
+  L.DB.GLOB["PAGE"] = self.canvasPage
+  self.pageEditBox:SetText(self.canvasPage)
+  self:UpdateAllModels()
+end
+
+-- canvas GetFirstDisplayIdOfPage func
+function L.canvas:GetFirstDisplayIdOfPage()
+  return ((self.canvasPage * self.modelCount) + 1) - self.modelCount
+end
+
+-- canvas UpdateAllColors func
+function L.canvas:UpdateAllColors(r, g, b)
+  for i, model in pairs(self.M) do
+    model.color:SetVertexColor(r, g, b)
+  end
+  if self.overlay and self.overlay.isOverlay then
+    self.overlay.model.color:SetVertexColor(r, g, b)
+    self.overlay.colorPickerButton.bg:SetVertexColor(r, g, b)
+  end
+  self.colorPickerButton.bg:SetVertexColor(r, g, b)
+  -- model.bg:SetVertexColor(r*0.1,g*0.1,b*0.1)
+end
+
+-- canvas HideAllModels func
+function L.canvas:HideAllModels()
+  for i, model in pairs(self.M) do
+    model:ClearAllPoints()
+    model:Hide()
+  end
+end
+
+-- canvas UpdateAllModels func
+function L.canvas:UpdateAllModels()
+  self:HideAllModels()
+  self.modelRows = math.floor(self.canvasHeight / self.modelSize)
+  self.modelCols = math.floor(self.canvasWidth / self.modelSize)
+  self.modelCount = self.modelRows * self.modelCols
+  self.displayIdEditBox:SetText(self:GetFirstDisplayIdOfPage())
+  local id = 1
+  for i = 1, self.modelRows do
+    for k = 1, self.modelCols do
+      if not self.M[id] then
+        self.M[id] = CreateModel(self, id)
+      end
+      UpdateModelPosition(self.M[id], k - 1, i - 1, self.modelSize)
+      UpdateDisplayIndex(self.M[id], self.M[id].id + self.modelCount * (self.canvasPage - 1))
+      ResetModelValues(self.M[id])
+      id = id + 1
+    end -- for cols
+  end -- for rows
+end
+
+-- init canvas
+function L.canvas:Init()
+
+  -- canvas frame
+  self:SetFrameStrata("FULLSCREEN")
+  self:SetAlpha(0)
+  self:SetAllPoints()
+  self:EnableMouse(true)
+
+  -- canvas attributes
+  self.canvasWidth, self.canvasHeight = self:GetSize()
+  self.canvasHeight = self.canvasHeight - 60 -- remove 70px for the bottom bar
+  self.modelSize = L.DB.GLOB["MODELSIZE"]
+  self.canvasPage = L.DB.GLOB["PAGE"]
+  self.M = {}
+  self.isCanvas = true
+
+  -- canvas background
+  self.bg = self:CreateTexture(nil, "BACKGROUND", nil, -8)
+  self.bg:SetAllPoints()
+  self.bg:SetColorTexture(1, 1, 1)
+  self.bg:SetVertexColor(0.15, 0.15, 0.15)
+
+  -- fade in anim
+  self.fadeIn = self:CreateAnimationGroup()
+  self.fadeIn.anim = self.fadeIn:CreateAnimation("Alpha")
+  self.fadeIn.anim:SetDuration(0.8)
+  self.fadeIn.anim:SetSmoothing("IN")
+  self.fadeIn.anim:SetFromAlpha(0)
+  self.fadeIn.anim:SetToAlpha(1)
+  self.fadeIn:SetScript("OnFinished", function(self)
+    L.canvas:SetAlpha(1)
+  end)
+
+  -- fade out anim
+  self.fadeOut = self:CreateAnimationGroup()
+  self.fadeOut.anim = self.fadeOut:CreateAnimation("Alpha")
+  self.fadeOut.anim:SetDuration(0.8)
+  self.fadeOut.anim:SetSmoothing("OUT")
+  self.fadeOut.anim:SetFromAlpha(1)
+  self.fadeOut.anim:SetToAlpha(0)
+  self.fadeOut:SetScript("OnFinished", function(self)
+    L.canvas:SetAlpha(0)
+    -- hide canvas
+    L.canvas:Hide()
+    -- reset the color picker frame strata to the default value
+    if ColorPickerFrame:GetFrameStrata() ~= L.defaultColorPickerFrameStrata then
+      ColorPickerFrame:SetFrameStrata(L.defaultColorPickerFrameStrata)
+    end
+  end)
+
+  -- canvas close button
+  self.closeButton = L.F:CreateButton(self, L.name .. "CanvasCloseButton", "Close")
+  self.closeButton:SetPoint("BOTTOMRIGHT", -10, 10)
+  self.closeButton:SetScript("OnClick", function(self)
+    L.F:PlaySound(L.C.sound.click)
+    L.canvas:Disable()
+  end)
+  self.closeButton:SetScript("OnEnter", function(self)
+    -- L.F:PlaySound(L.C.sound.select)
+    GT:SetOwner(self, "ANCHOR_TOPRIGHT", 0, 5)
+    GT:AddLine("Click to close.", 1, 1, 1, 1, 1, 1)
+    GT:Show()
+  end)
+  self.closeButton:SetScript("OnLeave", function(self)
+    -- L.F:PlaySound(L.C.sound.swap)
+    GT:Hide()
+  end)
+
+  -- canvas page editbox
+  self.pageEditBox = L.F:CreateEditBox(self, L.name .. "CanvasPageEditbox", "Page", self.canvasPage)
+  self.pageEditBox:SetPoint("BOTTOM", self, "BOTTOM", 0, 10)
+  self.pageEditBox:SetScript("OnEnterPressed", function(self)
+    L.F:PlaySound(L.C.sound.swap)
+    local value = math.max(math.floor(self:GetNumber()), 1)
+    self:SetText(value)
+    L.canvas.canvasPage = value
+    L.DB.GLOB["PAGE"] = L.canvas.canvasPage
+    L.canvas:UpdateAllModels()
+  end)
+
+  -- canvas next page button
+  self.nextPageButton = L.F:CreateButton(self, L.name .. "CanvasNextPageButton", "next >")
+  self.nextPageButton:SetPoint("LEFT", self.pageEditBox, "RIGHT", 5, 0)
+  self.nextPageButton:SetScript("OnClick", function(self)
+    L.F:PlaySound(L.C.sound.click)
+    L.canvas:UpdatePage(1)
+  end)
+  self.nextPageButton:SetScript("OnEnter", function(self)
+    -- L.F:PlaySound(L.C.sound.select)
+    GT:SetOwner(self, "ANCHOR_TOP", 0, 5)
+    GT:AddLine("Click for next page.", 1, 1, 1, 1, 1, 1)
+    GT:Show()
+  end)
+  self.nextPageButton:SetScript("OnLeave", function(self)
+    -- L.F:PlaySound(L.C.sound.swap)
+    GT:Hide()
+  end)
+
+  -- canvas previous page button
+  self.previousPageButton = L.F:CreateButton(self, L.name .. "CanvasPreviousPageButton", "< prev")
+  self.previousPageButton:SetPoint("RIGHT", self.pageEditBox, "LEFT", -10, 0)
+  self.previousPageButton:SetScript("OnClick", function(self)
+    L.F:PlaySound(L.C.sound.click)
+    L.canvas:UpdatePage(-1)
+  end)
+  self.previousPageButton:SetScript("OnEnter", function(self)
+    -- L.F:PlaySound(L.C.sound.select)
+    GT:SetOwner(self, "ANCHOR_TOP", 0, 5)
+    GT:AddLine("Click for previous page.", 1, 1, 1, 1, 1, 1)
+    GT:Show()
+  end)
+  self.previousPageButton:SetScript("OnLeave", function(self)
+    -- L.F:PlaySound(L.C.sound.swap)
+    GT:Hide()
+  end)
+
+  -- canvas color picker button
+  self.colorPickerButton = L.F:CreateColorPickerButton(self, L.name .. "CanvasColorPickerButton")
+  self.colorPickerButton:SetPoint("BOTTOMLEFT", 10, 10)
+  self.colorPickerButton:SetScript("OnEnter", function(self)
+    -- L.F:PlaySound(L.C.sound.select)
+    GT:SetOwner(self, "ANCHOR_TOPLEFT", 0, 5)
+    GT:AddLine("Click for color picker.", 1, 1, 1, 1, 1, 1)
+    GT:Show()
+  end)
+  self.colorPickerButton:SetScript("OnLeave", function(self)
+    -- L.F:PlaySound(L.C.sound.swap)
+    GT:Hide()
+  end)
+  -- canvas color picker button update color func
+  function self.colorPickerButton:UpdateColor(r, g, b)
+    L.DB.GLOB["COLOR"] = {r, g, b}
+    L.canvas:UpdateAllColors(r, g, b)
   end
 
-  --create model func
-  local function CreateModel(self,id)
-    --model frame
-    local m = CreateFrame("PlayerModel",nil,self)
-    --model attributes
-    m.name = "model"..id
-    m.__parent = self
-    m.id = id
-    --model background (border)
-    m.bg = m:CreateTexture(nil,"BACKGROUND",nil,-8)
-    m.bg:SetColorTexture(1,1,1)
-    m.bg:SetVertexColor(0,0,0,.2)
-    m.bg:SetAllPoints()
-    --model background color
-    m.color = m:CreateTexture(nil,"BACKGROUND",nil,-7)
-    m.color:SetColorTexture(1,1,1)
-    --color bugfix
-    m.color:SetVertexColor(unpack(DB.GLOB["COLOR"]))
-    m.color:SetPoint("TOPLEFT", m, "TOPLEFT", 2, -2)
-    m.color:SetPoint("BOTTOMRIGHT", m, "BOTTOMRIGHT", -2, 2)
-    --model title
-    m.title = m:CreateFontString(nil, "BACKGROUND")
-    m.title:SetFont(STANDARD_TEXT_FONT, 32, "OUTLINE")
-    m.title:SetPoint("TOP", 0, -2)
-    m.title:SetAlpha(.5)
-    --no model found
-    --m.e404 = m:CreateTexture(nil,"BACKGROUND",nil,-6)
-    --m.e404:SetTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
-    --m.e404:SetPoint("CENTER")
-    --m.e404:SetSize(40,40)
-    --m.e404:SetAlpha(.5)
-    --scripts
-    m:SetScript("OnMouseWheel",ModelOnMouseWheel)
-    m:SetScript("OnMouseDown",ModelOnMouseDown)
-    m:SetScript("OnMouseUp",ModelOnMouseUp)
-    m:SetScript("OnEnter",ModelOnEnter)
-    m:SetScript("OnLeave",ModelOnLeave)
+  -- canvas minus size button
+  self.minusSizeButton = L.F:CreateButton(self, L.name .. "CanvasMinusSizeButton", "- size")
+  self.minusSizeButton:SetPoint("LEFT", self.colorPickerButton, "RIGHT", 10, 0)
+  self.minusSizeButton:SetScript("OnClick", function(self)
+    L.F:PlaySound(L.C.sound.click)
+    L.canvas:UpdateModelSize(-20)
+  end)
+  self.minusSizeButton:SetScript("OnEnter", function(self)
+    -- L.F:PlaySound(L.C.sound.select)
+    GT:SetOwner(self, "ANCHOR_TOP", 0, 5)
+    GT:AddLine("Click for decreased model size.", 1, 1, 1, 1, 1, 1)
+    GT:Show()
+  end)
+  self.minusSizeButton:SetScript("OnLeave", function(self)
+    -- L.F:PlaySound(L.C.sound.swap)
+    GT:Hide()
+  end)
 
-    return m
+  -- canvas plus size button
+  self.plusSizeButton = L.F:CreateButton(self, L.name .. "CanvasPlusSizeButton", "+ size")
+  self.plusSizeButton:SetPoint("LEFT", self.minusSizeButton, "RIGHT", 5, 0)
+  self.plusSizeButton:SetScript("OnClick", function(self)
+    L.F:PlaySound(L.C.sound.click)
+    L.canvas:UpdateModelSize(20)
+  end)
+  self.plusSizeButton:SetScript("OnEnter", function(self)
+    -- L.F:PlaySound(L.C.sound.select)
+    GT:SetOwner(self, "ANCHOR_TOP", 0, 5)
+    GT:AddLine("Click for increased model size.", 1, 1, 1, 1, 1, 1)
+    GT:Show()
+  end)
+  self.plusSizeButton:SetScript("OnLeave", function(self)
+    -- L.F:PlaySound(L.C.sound.swap)
+    GT:Hide()
+  end)
+
+  -- canvas displayid editbox
+  self.displayIdEditBox = L.F:CreateEditBox(self, L.name .. "CanvasDisplayIdEditbox", "DisplayId", 1)
+  self.displayIdEditBox:SetPoint("LEFT", self.plusSizeButton, "RIGHT", 20, 0)
+  self.displayIdEditBox:SetScript("OnEnterPressed", function(self)
+    L.F:PlaySound(L.C.sound.swap)
+    local value = math.max(math.floor(self:GetNumber()), 1)
+    self:SetText(value)
+    L.canvas:UpdatePageForDisplayID(value)
+  end)
+
+end
+
+-- canvas enable func
+function L.canvas:Enable()
+  self:Show()
+  self:UpdateAllModels()
+  self.fadeIn:Play()
+end
+
+-- canvas disable func
+function L.canvas:Disable()
+  self.fadeOut:Play()
+end
+
+-- create overlay
+function L.canvas.overlay:Init()
+
+  self.isOverlay = true
+
+  self:SetFrameStrata("FULLSCREEN_DIALOG")
+  self:SetAllPoints()
+  self:EnableMouse(true)
+  self:SetAlpha(0)
+
+  self.bg = self:CreateTexture(nil, "BACKGROUND", nil, -8)
+  self.bg:SetColorTexture(1, 1, 1)
+  self.bg:SetVertexColor(0.15, 0.15, 0.15)
+  self.bg:SetAllPoints()
+
+  -- overlay model
+  self.model = CreateModel(self, 1)
+  self.model:SetPoint("TOPLEFT", 100, -10)
+  self.model:SetPoint("BOTTOMLEFT", 100, 10)
+  self.model:SetPoint("TOPRIGHT", -100, -10)
+  self.model:SetPoint("BOTTOMRIGHT", -100, 10)
+  self.model.isOverlayModel = true
+
+  -- overlay color picker button
+  self.colorPickerButton = L.F:CreateColorPickerButton(self, L.name .. "CanvasOverlayColorPickerButton")
+  self.colorPickerButton:SetPoint("BOTTOMLEFT", 10, 10)
+  self.colorPickerButton:SetScript("OnEnter", function(self)
+    -- L.F:PlaySound(L.C.sound.select)
+    GT:SetOwner(self, "ANCHOR_TOPLEFT", 0, 5)
+    GT:AddLine("Click for color picker.", 1, 1, 1, 1, 1, 1)
+    GT:Show()
+  end)
+  self.colorPickerButton:SetScript("OnLeave", function(self)
+    -- L.F:PlaySound(L.C.sound.swap)
+    GT:Hide()
+  end)
+  -- canvas color picker button update color func
+  function self.colorPickerButton:UpdateColor(r, g, b)
+    L.DB.GLOB["COLOR"] = {r, g, b}
+    L.canvas:UpdateAllColors(r, g, b)
   end
 
-  --create canvas func
-  function L:CreateCanvas()
+  -- canvas next button
+  self.nextButton = L.F:CreateButton(self, L.name .. "CanvasOverlayNextButton", "next >")
+  self.nextButton:SetPoint("LEFT", self.model, "RIGHT", 10, 0)
+  self.nextButton.text:SetFont(STANDARD_TEXT_FONT, 20, "OUTLINE")
+  self.nextButton:SetHeight(50)
+  self.nextButton:SetWidth(self.nextButton.text:GetStringWidth() + 20)
+  self.nextButton:SetScript("OnClick", function(self)
+    L.F:PlaySound(L.C.sound.click)
+    L.canvas.overlay:Next()
+  end)
+  self.nextButton:SetScript("OnEnter", function(self)
+    -- L.F:PlaySound(L.C.sound.select)
+    GT:SetOwner(self, "ANCHOR_TOP", 0, 5)
+    GT:AddLine("Click for next model.", 1, 1, 1, 1, 1, 1)
+    GT:Show()
+  end)
+  self.nextButton:SetScript("OnLeave", function(self)
+    -- L.F:PlaySound(L.C.sound.swap)
+    GT:Hide()
+  end)
 
-    --canvas frame
-    local f = CreateFrame("Frame",nil,UIParent)
-    f:SetFrameStrata("FULLSCREEN")
-    f:SetAlpha(1)
-    f:SetAllPoints()
-    f:EnableMouse(true)
+  -- canvas previous button
+  self.previousButton = L.F:CreateButton(self, L.name .. "CanvasOverlayPreviousButton", "< prev")
+  self.previousButton:SetPoint("RIGHT", self.model, "LEFT", -10, 0)
+  self.previousButton.text:SetFont(STANDARD_TEXT_FONT, 20, "OUTLINE")
+  self.previousButton:SetHeight(50)
+  self.previousButton:SetWidth(self.previousButton.text:GetStringWidth() + 20)
+  self.previousButton:SetScript("OnClick", function(self)
+    L.F:PlaySound(L.C.sound.click)
+    L.canvas.overlay:Previous()
+  end)
+  self.previousButton:SetScript("OnEnter", function(self)
+    -- L.F:PlaySound(L.C.sound.select)
+    GT:SetOwner(self, "ANCHOR_TOP", 0, 5)
+    GT:AddLine("Click for previous model.", 1, 1, 1, 1, 1, 1)
+    GT:Show()
+  end)
+  self.previousButton:SetScript("OnLeave", function(self)
+    -- L.F:PlaySound(L.C.sound.swap)
+    GT:Hide()
+  end)
 
-    --canvas attributes
-    f.canvasWidth, f.canvasHeight = f:GetSize()
-    f.canvasHeight  = f.canvasHeight-60 --remove 70px for the bottom bar
-    f.modelSize     = DB.GLOB["MODELSIZE"]
-    f.canvasPage    = DB.GLOB["PAGE"]
-    f.M             = {}
-    f.isCanvas      = true
+  -- fade in anim
+  self.fadeIn = self:CreateAnimationGroup()
+  self.fadeIn.anim = self.fadeIn:CreateAnimation("Alpha")
+  self.fadeIn.anim:SetDuration(0.8)
+  self.fadeIn.anim:SetSmoothing("IN")
+  self.fadeIn.anim:SetFromAlpha(0)
+  self.fadeIn.anim:SetToAlpha(1)
+  self.fadeIn:SetScript("OnFinished", function(self)
+    L.canvas.overlay:SetAlpha(1)
+  end)
 
-    --canvas background
-    f.bg = f:CreateTexture(nil,"BACKGROUND",nil,-8)
-    f.bg:SetAllPoints()
-    f.bg:SetColorTexture(1,1,1)
-    f.bg:SetVertexColor(0.15,0.15,0.15)
+  -- fade out anim
+  self.fadeOut = self:CreateAnimationGroup()
+  self.fadeOut.anim = self.fadeOut:CreateAnimation("Alpha")
+  self.fadeOut.anim:SetDuration(0.8)
+  self.fadeOut.anim:SetSmoothing("OUT")
+  self.fadeOut.anim:SetFromAlpha(1)
+  self.fadeOut.anim:SetToAlpha(0)
+  self.fadeOut:SetScript("OnFinished", function(self)
+    L.canvas.overlay:SetAlpha(0)
+    L.canvas.overlay:Hide()
+  end)
 
-    --fade in anim
-    f.fadeIn = f:CreateAnimationGroup()
-    f.fadeIn.anim = f.fadeIn:CreateAnimation("Alpha")
-    f.fadeIn.anim:SetDuration(0.8)
-    f.fadeIn.anim:SetSmoothing("IN")
-    f.fadeIn.anim:SetFromAlpha(0)
-    f.fadeIn.anim:SetToAlpha(1)
-    f.fadeIn:HookScript("OnFinished", function(self)
-      self:GetParent():SetAlpha(1)
-    end)
+end
 
-    --fade out anim
-    f.fadeOut = f:CreateAnimationGroup()
-    f.fadeOut.anim = f.fadeOut:CreateAnimation("Alpha")
-    f.fadeOut.anim:SetDuration(0.8)
-    f.fadeOut.anim:SetSmoothing("OUT")
-    f.fadeOut.anim:SetFromAlpha(1)
-    f.fadeOut.anim:SetToAlpha(0)
-    f.fadeOut:HookScript("OnFinished", function(self)
-      self:GetParent():SetAlpha(0)
-      --hide canvas
-      self:GetParent():Hide()
-      --reset the color picker frame strata to the default value
-      if ColorPickerFrame:GetFrameStrata() ~= L.defaultColorPickerFrameStrata then
-        ColorPickerFrame:SetFrameStrata(L.defaultColorPickerFrameStrata)
-      end
-    end)
+-- previous model
+function L.canvas.overlay:Previous()
+  UpdateDisplayIndex(self.model, math.max(self.model.displayIndex - 1, 1))
+  ResetModelValues(self.model)
+end
 
-    -- canvas enable func
-    function f:Enable(mode)
-      self.canvasMode = mode
-      self:Show()
-      self:UpdateAllModels() --model update has to be run, otherwise certain models stay hidden
-      self.fadeIn:Play()
-    end
+-- next model
+function L.canvas.overlay:Next()
+  UpdateDisplayIndex(self.model, self.model.displayIndex + 1)
+  ResetModelValues(self.model)
+end
 
-    -- canvas disable func
-    function f:Disable()
-      self.fadeOut:Play()
-    end
+-- canvas enable func
+function L.canvas.overlay:Enable(displayIndex)
+  self:Show()
+  UpdateDisplayIndex(self.model, displayIndex)
+  ResetModelValues(self.model)
+  self.fadeIn:Play()
+end
 
-    --canvas close button
-    f.closeButton = L:CreateButton(f,L.name.."CanvasCloseButton","Close")
-    f.closeButton:SetPoint("BOTTOMRIGHT",-10,10)
-    f.closeButton:HookScript("OnClick", function(self)
-      PlaySound(C.sound.click)
-      self:GetParent():Disable()
-    end)
-    f.closeButton:HookScript("OnEnter", function(self)
-      --PlaySound(C.sound.select)
-      GT:SetOwner(self, "ANCHOR_TOPRIGHT",0,5)
-      GT:AddLine("Click to close.", 1, 1, 1, 1, 1, 1)
-      GT:Show()
-    end)
-    f.closeButton:HookScript("OnLeave", function(self)
-      --PlaySound(C.sound.swap)
-      GT:Hide()
-    end)
+-- canvas disable func
+function L.canvas.overlay:Disable()
+  self.fadeOut:Play()
+end
 
-    --canvas page editbox
-    f.pageEditBox = L:CreateEditBox(f,L.name.."CanvasPageEditbox","Page",f.canvasPage)
-    f.pageEditBox:SetPoint("BOTTOM",f,"BOTTOM",0,10)
-    f.pageEditBox:SetScript("OnEnterPressed", function(self)
-      PlaySound(C.sound.swap)
-      local value = math.max(math.floor(self:GetNumber()),1)
-      self:SetText(value)
-      self:GetParent().canvasPage = value
-      DB.GLOB["PAGE"] = self:GetParent().canvasPage
-      self:GetParent():UpdateAllModels()
-    end)
+L.canvas.overlay:SetScript("OnMouseDown", function(self)
+  L.F:PlaySound(L.C.sound.click)
+  self:Disable()
+end)
 
-    --canvas next page button
-    f.nextPageButton = L:CreateButton(f,L.name.."CanvasNextPageButton","next >")
-    f.nextPageButton:SetPoint("LEFT",f.pageEditBox,"RIGHT",5,0)
-    f.nextPageButton:HookScript("OnClick", function(self)
-      PlaySound(C.sound.click)
-      self:GetParent():UpdatePage(1)
-    end)
-    f.nextPageButton:HookScript("OnEnter", function(self)
-      --PlaySound(C.sound.select)
-      GT:SetOwner(self, "ANCHOR_TOP",0,5)
-      GT:AddLine("Click for next page.", 1, 1, 1, 1, 1, 1)
-      GT:Show()
-    end)
-    f.nextPageButton:HookScript("OnLeave", function(self)
-      --PlaySound(C.sound.swap)
-      GT:Hide()
-    end)
+L.canvas.overlay:SetScript("OnEnter", function(self)
+  GT:SetOwner(self, "ANCHOR_CURSOR")
+  GT:AddLine("Click for close the overlay.", 1, 1, 1, 1, 1, 1)
+  GT:Show()
+end)
 
-    --canvas previous page button
-    f.previousPageButton = L:CreateButton(f,L.name.."CanvasPreviousPageButton","< prev")
-    f.previousPageButton:SetPoint("RIGHT",f.pageEditBox,"LEFT",-10,0)
-    f.previousPageButton:HookScript("OnClick", function(self)
-      PlaySound(C.sound.click)
-      self:GetParent():UpdatePage(-1)
-    end)
-    f.previousPageButton:HookScript("OnEnter", function(self)
-      --PlaySound(C.sound.select)
-      GT:SetOwner(self, "ANCHOR_TOP",0,5)
-      GT:AddLine("Click for previous page.", 1, 1, 1, 1, 1, 1)
-      GT:Show()
-    end)
-    f.previousPageButton:HookScript("OnLeave", function(self)
-      --PlaySound(C.sound.swap)
-      GT:Hide()
-    end)
-
-    --canvas color picker button
-    f.colorPickerButton = L:CreateColorPickerButton(f,L.name.."CanvasColorPickerButton")
-    f.colorPickerButton:SetPoint("BOTTOMLEFT",10,10)
-    f.colorPickerButton:HookScript("OnEnter", function(self)
-      --PlaySound(C.sound.select)
-      GT:SetOwner(self, "ANCHOR_TOPLEFT",0,5)
-      GT:AddLine("Click for color picker.", 1, 1, 1, 1, 1, 1)
-      GT:Show()
-    end)
-    f.colorPickerButton:HookScript("OnLeave", function(self)
-      --PlaySound(C.sound.swap)
-      GT:Hide()
-    end)
-    --canvas color picker button update color func
-    function f.colorPickerButton:UpdateColor(r,g,b)
-      DB.GLOB["COLOR"] = {r,g,b}
-      self:GetParent():UpdateAllColors(r,g,b)
-    end
-
-    --canvas minus size button
-    f.minusSizeButton = L:CreateButton(f,L.name.."CanvasMinusSizeButton","- size")
-    f.minusSizeButton:SetPoint("LEFT",f.colorPickerButton,"RIGHT",10,0)
-    f.minusSizeButton:HookScript("OnClick", function(self)
-      PlaySound(C.sound.click)
-      self:GetParent():UpdateModelSize(-20)
-    end)
-    f.minusSizeButton:HookScript("OnEnter", function(self)
-      --PlaySound(C.sound.select)
-      GT:SetOwner(self, "ANCHOR_TOP",0,5)
-      GT:AddLine("Click for decreased model size.", 1, 1, 1, 1, 1, 1)
-      GT:Show()
-    end)
-    f.minusSizeButton:HookScript("OnLeave", function(self)
-      --PlaySound(C.sound.swap)
-      GT:Hide()
-    end)
-
-    --canvas plus size button
-    f.plusSizeButton = L:CreateButton(f,L.name.."CanvasPlusSizeButton","+ size")
-    f.plusSizeButton:SetPoint("LEFT",f.minusSizeButton,"RIGHT",5,0)
-    f.plusSizeButton:HookScript("OnClick", function(self)
-      PlaySound(C.sound.click)
-      self:GetParent():UpdateModelSize(20)
-    end)
-    f.plusSizeButton:HookScript("OnEnter", function(self)
-      --PlaySound(C.sound.select)
-      GT:SetOwner(self, "ANCHOR_TOP",0,5)
-      GT:AddLine("Click for increased model size.", 1, 1, 1, 1, 1, 1)
-      GT:Show()
-    end)
-    f.plusSizeButton:HookScript("OnLeave", function(self)
-      --PlaySound(C.sound.swap)
-      GT:Hide()
-    end)
-
-    --canvas displayid editbox
-    f.displayIdEditBox = L:CreateEditBox(f,L.name.."CanvasDisplayIdEditbox","DisplayId",1)
-    f.displayIdEditBox:SetPoint("LEFT",f.plusSizeButton,"RIGHT",20,0)
-    f.displayIdEditBox:SetScript("OnEnterPressed", function(self)
-      PlaySound(C.sound.swap)
-      local value = math.max(math.floor(self:GetNumber()),1)
-      self:SetText(value)
-      self:GetParent():UpdatePageForDisplayID(value)
-    end)
-
-    --canvas UpdateModelSize func
-    function f:UpdateModelSize(value)
-      if (self.modelSize+value) < 50 and value < 0 then return end
-      if (self.modelSize+value) > 400 and value > 0 then return end
-      self.modelSize = self.modelSize+value
-      DB.GLOB["MODELSIZE"] = self.modelSize
-      self:UpdateAllModels()
-    end
-
-    --canvas UpdatePage func
-    function f:UpdatePage(value)
-      if self.canvasPage == 1 and value < 0 then return end
-      self.canvasPage = self.canvasPage+value
-      DB.GLOB["PAGE"] = self.canvasPage
-      self.pageEditBox:SetText(self.canvasPage)
-      self:UpdateAllModels()
-    end
-
-    --canvas GetPageForDisplayID func
-    function f:UpdatePageForDisplayID(displayId)
-      self.canvasPage = math.max(math.ceil(displayId/self.modelCount),1)
-      DB.GLOB["PAGE"] = self.canvasPage
-      self.pageEditBox:SetText(self.canvasPage)
-      self:UpdateAllModels()
-    end
-
-    --canvas GetFirstDisplayIdOfPage func
-    function f:GetFirstDisplayIdOfPage()
-      return ((self.canvasPage*self.modelCount)+1)-self.modelCount
-    end
-
-    --canvas UpdateAllColors func
-    function f:UpdateAllColors(r,g,b)
-      for i, model in pairs(self.M) do
-        model.color:SetVertexColor(r,g,b)
-      end
-      if self.overlay then
-        self.overlay.model.color:SetVertexColor(r,g,b)
-        self.overlay.colorPickerButton.color:SetVertexColor(r,g,b)
-      end
-      self.colorPickerButton.color:SetVertexColor(r,g,b)
-      --self.bg:SetVertexColor(r*0.1,g*0.1,b*0.1)
-    end
-
-    --canvas HideAllModels func
-    function f:HideAllModels()
-      for i, model in pairs(self.M) do
-        model:ClearAllPoints()
-        model:Hide()
-      end
-    end
-
-    --canvas UpdateAllModels func
-    function f:UpdateAllModels()
-      self:HideAllModels()
-      self.modelRows = math.floor(self.canvasHeight/self.modelSize)
-      self.modelCols = math.floor(self.canvasWidth/self.modelSize)
-      self.modelCount = self.modelRows*self.modelCols
-      self.displayIdEditBox:SetText(self:GetFirstDisplayIdOfPage())
-      local id = 1
-      for i=1, self.modelRows do
-        for k=1, self.modelCols do
-          if not self.M[id] then
-            self.M[id] = CreateModel(self,id)
-          end
-          UpdateModelPosition(self.M[id],k-1,i-1,self.modelSize)
-          UpdateDisplayIndex(self.M[id],self.M[id].id+self.modelCount*(self.canvasPage-1))
-          ResetModelValues(self.M[id])
-          id = id+1
-        end--for cols
-      end--for rows
-    end
-
-    --create overlay
-    function f:CreateOverlay()
-
-      local f = CreateFrame("Frame",nil,self)
-      f:SetFrameStrata("FULLSCREEN_DIALOG")
-      f:SetAllPoints()
-      f:EnableMouse(true)
-      f:SetAlpha(1)
-
-      f.bg = f:CreateTexture(nil, "BACKGROUND",nil,-8)
-      f.bg:SetColorTexture(1,1,1)
-      f.bg:SetVertexColor(0.15,0.15,0.15)
-      f.bg:SetAllPoints()
-
-      --overlay model
-      f.model = CreateModel(f,1)
-      f.model:SetPoint("TOPLEFT",100,-10)
-      f.model:SetPoint("BOTTOMLEFT",100,10)
-      f.model:SetPoint("TOPRIGHT",-100,-10)
-      f.model:SetPoint("BOTTOMRIGHT",-100,10)
-      f.model.isOverlayModel = true
-
-      --overlay color picker button
-      f.colorPickerButton = L:CreateColorPickerButton(f,L.name.."CanvasOverlayColorPickerButton")
-      f.colorPickerButton:SetPoint("BOTTOMLEFT",10,10)
-      f.colorPickerButton:HookScript("OnEnter", function(self)
-        --PlaySound(C.sound.select)
-        GT:SetOwner(self, "ANCHOR_TOPLEFT",0,5)
-        GT:AddLine("Click for color picker.", 1, 1, 1, 1, 1, 1)
-        GT:Show()
-      end)
-      f.colorPickerButton:HookScript("OnLeave", function(self)
-        --PlaySound(C.sound.swap)
-        GT:Hide()
-      end)
-      --canvas color picker button update color func
-      function f.colorPickerButton:UpdateColor(r,g,b)
-        DB.GLOB["COLOR"] = {r,g,b}
-        self:GetParent():GetParent():UpdateAllColors(r,g,b)
-      end
-
-      --canvas next button
-      f.nextButton = L:CreateButton(f,L.name.."CanvasOverlayNextButton","next >")
-      f.nextButton:SetPoint("LEFT",f.model,"RIGHT",10,0)
-      f.nextButton.text:SetFont(STANDARD_TEXT_FONT, 20, "OUTLINE")
-      f.nextButton:SetHeight(50)
-      f.nextButton:SetWidth(f.nextButton.text:GetStringWidth()+20)
-      f.nextButton:HookScript("OnClick", function(self)
-        PlaySound(C.sound.click)
-        self:GetParent():Next()
-      end)
-      f.nextButton:HookScript("OnEnter", function(self)
-        --PlaySound(C.sound.select)
-        GT:SetOwner(self, "ANCHOR_TOP",0,5)
-        GT:AddLine("Click for next model.", 1, 1, 1, 1, 1, 1)
-        GT:Show()
-      end)
-      f.nextButton:HookScript("OnLeave", function(self)
-        --PlaySound(C.sound.swap)
-        GT:Hide()
-      end)
-
-      --canvas previous button
-      f.previousButton = L:CreateButton(f,L.name.."CanvasOverlayPreviousButton","< prev")
-      f.previousButton:SetPoint("RIGHT",f.model,"LEFT",-10,0)
-      f.previousButton.text:SetFont(STANDARD_TEXT_FONT, 20, "OUTLINE")
-      f.previousButton:SetHeight(50)
-      f.previousButton:SetWidth(f.previousButton.text:GetStringWidth()+20)
-      f.previousButton:HookScript("OnClick", function(self)
-        PlaySound(C.sound.click)
-        self:GetParent():Previous()
-      end)
-      f.previousButton:HookScript("OnEnter", function(self)
-        --PlaySound(C.sound.select)
-        GT:SetOwner(self, "ANCHOR_TOP",0,5)
-        GT:AddLine("Click for previous model.", 1, 1, 1, 1, 1, 1)
-        GT:Show()
-      end)
-      f.previousButton:HookScript("OnLeave", function(self)
-        --PlaySound(C.sound.swap)
-        GT:Hide()
-      end)
-
-      --fade in anim
-      f.fadeIn = f:CreateAnimationGroup()
-      f.fadeIn.anim = f.fadeIn:CreateAnimation("Alpha")
-      f.fadeIn.anim:SetDuration(0.8)
-      f.fadeIn.anim:SetSmoothing("IN")
-      f.fadeIn.anim:SetFromAlpha(0)
-      f.fadeIn.anim:SetToAlpha(1)
-      f.fadeIn:HookScript("OnFinished", function(self)
-        self:GetParent():SetAlpha(1)
-      end)
-
-      --fade out anim
-      f.fadeOut = f:CreateAnimationGroup()
-      f.fadeOut.anim = f.fadeOut:CreateAnimation("Alpha")
-      f.fadeOut.anim:SetDuration(0.8)
-      f.fadeOut.anim:SetSmoothing("OUT")
-      f.fadeOut.anim:SetFromAlpha(1)
-      f.fadeOut.anim:SetToAlpha(0)
-      f.fadeOut:HookScript("OnFinished", function(self)
-        self:GetParent():SetAlpha(0)
-        self:GetParent():Hide()
-      end)
-
-      -- previous model
-      function f:Previous()
-        UpdateDisplayIndex(self.model,math.max(self.model.displayIndex-1,1))
-        ResetModelValues(self.model)
-      end
-
-      -- next model
-      function f:Next()
-        UpdateDisplayIndex(self.model,self.model.displayIndex+1)
-        ResetModelValues(self.model)
-      end
-
-      -- canvas enable func
-      function f:Enable(displayIndex)
-        self:Show()
-        UpdateDisplayIndex(self.model,displayIndex)
-        ResetModelValues(self.model)
-        self.fadeIn:Play()
-      end
-
-      -- canvas disable func
-      function f:Disable()
-        self.fadeOut:Play()
-      end
-
-      f:SetScript("OnMouseDown", function(self)
-        PlaySound(C.sound.click)
-        self:Disable()
-      end)
-
-      f:HookScript("OnEnter", function(self)
-        GT:SetOwner(self, "ANCHOR_CURSOR")
-        GT:AddLine("Click for close the overlay.", 1, 1, 1, 1, 1, 1)
-        GT:Show()
-      end)
-      f:HookScript("OnLeave", function(self)
-        GT:Hide()
-      end)
-
-      return f
-
-    end
-
-    return f
-
-  end
+L.canvas.overlay:SetScript("OnLeave", function(self)
+  GT:Hide()
+end)

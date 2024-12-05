@@ -8051,7 +8051,7 @@ local function LoadDatabase()
   end
   L.DB.GLOB = rIMV_DBGLOB
   L.DB.CHAR = rIMV_DBCHAR
-  L.F:SetDisplayIndexList()
+  L.F:SetDisplayInfoModelList()
 end
 
 rLib:RegisterCallback("VARIABLES_LOADED", LoadDatabase)

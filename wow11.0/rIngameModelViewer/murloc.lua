@@ -28,9 +28,9 @@ L.murloc:SetScript("OnMouseDown", function(self, button)
     L.canvas:Init()
   end
   if button == "Button4" then
-    L.C.canvasMode = 'displayIds'
+    L.C.canvasMode = 'displayIndex'
   else
-    L.C.canvasMode = 'displayIndexList'
+    L.C.canvasMode = 'displayInfoList'
   end
   L.F:PlaySound(L.C.sound.swap)
   L.canvas:Enable()

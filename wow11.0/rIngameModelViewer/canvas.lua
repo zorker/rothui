@@ -175,12 +175,12 @@ local function ModelOnEnter(model)
   -- GT:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -90, 90)
   GT:AddLine("Model Info", 0, 1, 0.5, 1, 1, 1)
   GT:AddLine(" ")
-  GT:AddDoubleLine("DisplayID", model:GetDisplayInfo(), 1, 1, 1, 1, 1, 1)
+  GT:AddDoubleLine("DisplayInfo", model:GetDisplayInfo(), 1, 1, 1, 1, 1, 1)
+  GT:AddDoubleLine("DisplayIndex", model.displayIndex, 1, 1, 1, 1, 1, 1)
+  GT:AddDoubleLine("ModelFileID", model.modelFileID, 1, 1, 1, 1, 1, 1)
   GT:AddDoubleLine("SetPosition", "(" .. pz .. "," .. px .. "," .. px .. ")", 1, 1, 1, 1, 1, 1)
   GT:AddDoubleLine("SetRotation", model.rotation, 1, 1, 1, 1, 1, 1)
   GT:AddDoubleLine("SetFacing", L.F:RoundNumber(model:GetFacing()), 1, 1, 1, 1, 1, 1)
-  GT:AddDoubleLine("DisplayIndex", model.model, 1, 1, 1, 1, 1, 1)
-  GT:AddDoubleLine("GetModelFileID", model.modelFileID, 1, 1, 1, 1, 1, 1)
   if model:HasCustomCamera() then
     local x, y, z = model:GetCameraPosition()
     local tx, ty, tz = model:GetCameraTarget()
@@ -232,37 +232,26 @@ end
 
 local function UpdateDisplayIndex(model, displayIndex)
   model.displayIndex = displayIndex
-  if L.C.canvasMode == 'displayIndexList' then
-    if L.DB.displayIndexList and L.DB.displayIndexList[displayIndex] then
-      model.displayInfo = L.DB.displayIndexList[displayIndex]
+  if L.C.canvasMode == 'displayInfoList' then
+    if L.DB.displayInfoModelList and L.DB.displayInfoModelList[displayIndex] then
+      model.displayInfo = L.DB.displayInfoModelList[displayIndex]
+      model.title:SetText(model.displayInfo .. " - " .. model.displayIndex)
     else
-      model.displayInfo = 1
+      model.displayInfo = 0
+      model.title:SetText(model.displayIndex)
     end
-    model.title:SetText(model.displayInfo .. " - " .. model.displayIndex)
   else
     model.displayInfo = displayIndex
     model.title:SetText(model.displayInfo)
   end
   model:ClearModel()
+  -- skip memory leak id
   if model.displayInfo == 74632 then
-    -- skip memory leak id
-    model.model = model.displayInfo
     model.modelFileID = ""
   else
     model:SetDisplayInfo(model.displayInfo)
-    --model:SetModel(model.displayInfo)
-    --model:SetUnit(model.displayInfo)
     --model:SetCreature(model.displayIndex)
-    -- model.model = model:GetModel()
-    model.model = model.displayInfo
     model.modelFileID = model:GetModelFileID() or ""
-    -- if model.modelFileID and not DB.GLOB["MODEL_LIST"][model.modelFileID] then
-    --  DB.GLOB["MODEL_LIST"][model.modelFileID] = model.displayIndex
-    --  print(L.name,'adding new entry to model list for fileID',model.modelFileID,'displayID',model.displayIndex)
-    -- end
-    -- model:SetModelByFileID(model.modelFileID)
-    -- model.modelUnitGUID = model:GetModelUnitGUID() or ""
-    -- model.modelPath = model:GetModelPath() or ""
   end
   if not model.modelFileID or model.modelFileID == "" then
     model.e404:Show()
@@ -338,15 +327,15 @@ function L.canvas:UpdatePage(value)
 end
 
 -- canvas GetPageForDisplayID func
-function L.canvas:UpdatePageForDisplayID(displayId)
-  self.canvasPage = math.max(math.ceil(displayId / self.modelCount), 1)
+function L.canvas:UpdatePageForDisplayID(displayIndex)
+  self.canvasPage = math.max(math.ceil(displayIndex / self.modelCount), 1)
   L.DB.GLOB["PAGE"] = self.canvasPage
   self.pageEditBox:SetText(self.canvasPage)
   self:UpdateAllModels()
 end
 
--- canvas GetFirstDisplayIdOfPage func
-function L.canvas:GetFirstDisplayIdOfPage()
+-- canvas GetFirstDisplayIndexOfPage func
+function L.canvas:GetFirstDisplayIndexOfPage()
   return ((self.canvasPage * self.modelCount) + 1) - self.modelCount
 end
 
@@ -377,7 +366,7 @@ function L.canvas:UpdateAllModels()
   self.modelRows = math.floor(self.canvasHeight / self.modelSize)
   self.modelCols = math.floor(self.canvasWidth / self.modelSize)
   self.modelCount = self.modelRows * self.modelCols
-  self.displayIdEditBox:SetText(self:GetFirstDisplayIdOfPage())
+  self.displayIndexEditBox:SetText(self:GetFirstDisplayIndexOfPage())
   local id = 1
   for i = 1, self.modelRows do
     for k = 1, self.modelCols do
@@ -564,10 +553,10 @@ function L.canvas:Init()
     GT:Hide()
   end)
 
-  -- canvas displayid editbox
-  self.displayIdEditBox = L.F:CreateEditBox(self, L.name .. "CanvasDisplayIdEditbox", "DisplayId", 1)
-  self.displayIdEditBox:SetPoint("LEFT", self.plusSizeButton, "RIGHT", 20, 0)
-  self.displayIdEditBox:SetScript("OnEnterPressed", function(self)
+  -- canvas displayIndex editbox
+  self.displayIndexEditBox = L.F:CreateEditBox(self, L.name .. "CanvasDisplayIndexEditbox", "Index", 1)
+  self.displayIndexEditBox:SetPoint("LEFT", self.plusSizeButton, "RIGHT", 20, 0)
+  self.displayIndexEditBox:SetScript("OnEnterPressed", function(self)
     L.F:PlaySound(L.C.sound.swap)
     local value = math.max(math.floor(self:GetNumber()), 1)
     self:SetText(value)

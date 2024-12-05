@@ -22,7 +22,7 @@ local function GetTableLength(t)
   return l
 end
 
-local function SortTableIndexDesc(a, b)
+local function SortByTableIndexDesc(a, b)
   return a > b
 end
 
@@ -31,16 +31,16 @@ function L.F:PlaySound(sound)
   PlaySound(sound)
 end
 
-function L.F:SetDisplayIndexList()
+function L.F:SetDisplayInfoModelList()
   -- build premade model list sorted by dispayInfo ID desc
-  L.DB.displayIndexList = {}
+  L.DB.displayInfoModelList = {}
   for k, v in pairs(L.DB.GLOB["MODEL_LIST"]) do
-    table.insert(L.DB.displayIndexList, v)
+    table.insert(L.DB.displayInfoModelList, v)
   end
-  table.sort(L.DB.displayIndexList, SortTableIndexDesc)
-  print(L.name, 'length of displayIndexList table:', table.getn(L.DB.displayIndexList))
+  table.sort(L.DB.displayInfoModelList, SortByTableIndexDesc)
+  print(L.name, 'length of displayIndexList table:', table.getn(L.DB.displayInfoModelList))
   -- set last index id after sort
-  L.DB.GLOB["LAST_DISPLAY_ID"] = L.DB.displayIndexList[1] or 1
+  L.DB.GLOB["LAST_DISPLAY_ID"] = L.DB.displayInfoModelList[1] or 1
   print(L.name, 'last found displayInfoID:', L.DB.GLOB["LAST_DISPLAY_ID"])
 end
 
@@ -48,7 +48,7 @@ function L.F:BuildModelList(loopCounter)
   if loopCounter > 10 then
     print(L.name, 'loop-counter exceeded. stopping script.')
     L.murloc:ResetModelToMurloc()
-    L.F:SetDisplayIndexList()
+    L.F:SetDisplayInfoModelList()
     return
   end
   local ml = L.DB.GLOB["MODEL_LIST"]
@@ -58,7 +58,7 @@ function L.F:BuildModelList(loopCounter)
   local counter = 0
   for i = last_id, new_id, 1 do
     if i == 74632 then
-      print(L.name, 'skip displayid (causes memory-leak)', i)
+      print(L.name, 'skip displayInfoID (causes memory-leak)', i)
     else
       L.murloc:ClearModel()
       L.murloc:SetDisplayInfo(i)
@@ -74,7 +74,7 @@ function L.F:BuildModelList(loopCounter)
   if counter == 0 then
     print(L.name, 'no new entry for model list found. stopping script.')
     L.murloc:ResetModelToMurloc()
-    L.F:SetDisplayIndexList()
+    L.F:SetDisplayInfoModelList()
     return
   end
   L.DB.GLOB["MODEL_LIST"] = ml

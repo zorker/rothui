@@ -32,6 +32,7 @@ L.murloc:SetScript("OnMouseDown", function(self, button)
   else
     L.C.canvasMode = 'displayIndexList'
   end
+  L.F:PlaySound(L.C.sound.swap)
   L.canvas:Enable()
 end)
 
@@ -57,7 +58,7 @@ end)
 
 -- murloc OnEnter func
 L.murloc:SetScript("OnEnter", function(self)
-  L.F:PlaySound(L.C.sound.select)
+  --L.F:PlaySound(L.C.sound.select)
   GT:SetOwner(self, "ANCHOR_TOP", 0, 5)
   GT:AddLine(L.name, 0, 1, 0.5, 1, 1, 1)
   GT:AddLine("To show any tooltip on the following canvas hold down |cff00ffffALT|r while hovering over models. Left-click to open the canvas.", 1, 1, 1, 1, 1, 1)
@@ -71,7 +72,7 @@ end)
 
 -- murloc OnLeave func
 L.murloc:SetScript("OnLeave", function(self)
-  L.F:PlaySound(L.C.sound.swap)
+  --L.F:PlaySound(L.C.sound.swap)
   GT:Hide()
 end)
 

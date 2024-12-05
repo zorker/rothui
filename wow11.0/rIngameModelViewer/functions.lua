@@ -28,6 +28,7 @@ end
 
 function L.F:PlaySound(sound)
   -- do sth
+  PlaySound(sound)
 end
 
 function L.F:SetDisplayIndexList()

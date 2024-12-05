@@ -326,8 +326,8 @@ function L.canvas:UpdatePage(value)
   self:UpdateAllModels()
 end
 
--- canvas GetPageForDisplayID func
-function L.canvas:UpdatePageForDisplayID(displayIndex)
+-- canvas GetPageForDisplayIndex func
+function L.canvas:UpdatePageForDisplayIndex(displayIndex)
   self.canvasPage = math.max(math.ceil(displayIndex / self.modelCount), 1)
   L.DB.GLOB["PAGE"] = self.canvasPage
   self.pageEditBox:SetText(self.canvasPage)
@@ -560,7 +560,7 @@ function L.canvas:Init()
     L.F:PlaySound(L.C.sound.swap)
     local value = math.max(math.floor(self:GetNumber()), 1)
     self:SetText(value)
-    L.canvas:UpdatePageForDisplayID(value)
+    L.canvas:UpdatePageForDisplayIndex(value)
   end)
 
 end

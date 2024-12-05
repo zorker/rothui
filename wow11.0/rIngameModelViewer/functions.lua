@@ -58,7 +58,7 @@ function L.F:BuildModelList(loopCounter)
   local counter = 0
   for i = last_id, new_id, 1 do
     if i == 74632 then
-      print(L.name, 'skip displayInfoID (causes memory-leak)', i)
+      print(L.name, 'skip id, caused memory crash on SetDisplayInfo', i)
     else
       L.murloc:ClearModel()
       L.murloc:SetDisplayInfo(i)

@@ -249,7 +249,9 @@ local function UpdateDisplayIndex(model, displayIndex)
     model.modelFileID = ""
   else
     model:SetDisplayInfo(model.displayInfo)
-    -- model:SetCreature(model.displayIndex)
+    --model:SetModel(model.displayInfo)
+    --model:SetUnit(model.displayInfo)
+    --model:SetCreature(model.displayIndex)
     -- model.model = model:GetModel()
     model.model = model.displayInfo
     model.modelFileID = model:GetModelFileID() or ""

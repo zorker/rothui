@@ -1,13 +1,13 @@
 ## Interface: 110005
 ## Author: zork
 ## Title: rIngameModelViewer
-## Version: 110005.02
-## DBVersion: 2
+## Version: 110005.03
 ## Notes: Zork's ingame model viewer
 ## SavedVariables: rIMV_DBGLOB
 ## SavedVariablesPerCharacter: rIMV_DBCHAR
 ## RequiredDeps: rLib
 ## IconTexture: Interface\AddOns\rLib\assets\logo-64
+## X-DB-Version: 2
 
 init.lua
 config.lua

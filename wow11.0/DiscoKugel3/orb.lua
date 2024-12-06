@@ -9,8 +9,8 @@ local cfg = {}
 cfg.orbSize = 200
 cfg.orbDebuffGlowColor = {0, 1, 1, 0}
 cfg.orbBackgroundColor = {0, 0, 0, 1}
-cfg.orbFillingColor = {1, 0, 0, 1}
-cfg.orbFillingTexture = 7
+cfg.orbFillingColor = {1, .2, 0, 1}
+cfg.orbFillingTexture = 6
 cfg.orbModelAlpha = 1
 cfg.orbHighlightAlpha = 1
 
@@ -264,11 +264,12 @@ local function UpdateOrbValue(bar, value)
   --print(offset,orb.size)
   orb.clipFrame:SetPoint("TOP", 0, -offset)
   orb.clipFrame:SetHeight(per * orb.size / 100)
-  if (per * orb.size / 100) == 0 then
+  if per == 0 then
     orb.clipFrame:Hide()
   else
     orb.clipFrame:Show()
   end
+  orb.model:SetAlpha((per / 100))
   -- adjust the orb spark in width/height matching the current scrollframe state
   if not orb.spark then
     return
@@ -381,14 +382,14 @@ local function CreateOrb()
   orb.spark = spark
 
   local clipFrame = CreateFrame("Frame", "$parentClip", orb.fill)
-  clipFrame:SetSize(orb.size,orb.size/3)
-  clipFrame:SetPoint("CENTER")
+  clipFrame:SetSize(orb.size,orb.size)
+  clipFrame:SetPoint("TOP")
   Mixin(clipFrame, BackdropTemplateMixin)
   clipFrame.backdropInfo = BACKDROP_TOAST_12_12
   clipFrame:ApplyBackdrop()
   clipFrame.Center:SetColorTexture(1, 1, 1)
   clipFrame.Center:SetVertexColor(0,0,0,0)
-  clipFrame:SetClipsChildren(true)
+  clipFrame:SetClipsChildren(false)
   orb.clipFrame = clipFrame
 
   -- orb model
@@ -463,7 +464,7 @@ local function CreateOrb()
     orb.spark:SetVertexColor(r, g, b, a)
   end
 
-  local fillingTextureSlider = CreateSliderWithEditbox(orb, "OrbFillingTexture", 1, 7, 7)
+  local fillingTextureSlider = CreateSliderWithEditbox(orb, "OrbFillingTexture", 1, 7, cfg.orbFillingTexture)
   fillingTextureSlider:ClearAllPoints()
   fillingTextureSlider:SetPoint("TOP", debuffGlowColorPicker, "BOTTOM", 30, -30)
   fillingTextureSlider.text:SetText("FillingTexture")
@@ -480,3 +481,4 @@ local function CreateOrb()
 end
 
 CreateOrb()
+

@@ -9,17 +9,148 @@ local cfg = {}
 cfg.orbSize = 200
 cfg.orbDebuffGlowColor = {0, 1, 1, 0}
 cfg.orbBackgroundColor = {0, 0, 0, 1}
-cfg.orbFillingColor = {1, .2, 0, 1}
+cfg.orbFillingColor = {.7, 0, .7, 1}
 cfg.orbFillingTexture = 6
+cfg.orbSparkColor = {1, 0, 1, 1}
 cfg.orbModelAlpha = 1
 cfg.orbHighlightAlpha = 1
 
-cfg.model = {
-  displayInfo = 38699,
-}
+cfg.modelList = {}
+
+table.insert(cfg.modelList, 113764)
+table.insert(cfg.modelList, 65947)
+table.insert(cfg.modelList, 38699)
+table.insert(cfg.modelList, 118685)
+table.insert(cfg.modelList, 112778)
+table.insert(cfg.modelList, 111460)
+table.insert(cfg.modelList, 110863)
+table.insert(cfg.modelList, 110092)
+table.insert(cfg.modelList, 108191)
+table.insert(cfg.modelList, 108187)
+table.insert(cfg.modelList, 108172)
+table.insert(cfg.modelList, 107088)
+table.insert(cfg.modelList, 107039)
+table.insert(cfg.modelList, 101968)
+table.insert(cfg.modelList, 101672)
+table.insert(cfg.modelList, 101641)
+table.insert(cfg.modelList, 101554)
+table.insert(cfg.modelList, 101479)
+table.insert(cfg.modelList, 101302)
+table.insert(cfg.modelList, 101272)
+table.insert(cfg.modelList, 101046)
+table.insert(cfg.modelList, 100007)
+table.insert(cfg.modelList, 99641)
+table.insert(cfg.modelList, 98573)
+table.insert(cfg.modelList, 97774)
+table.insert(cfg.modelList, 97296)
+table.insert(cfg.modelList, 96197)
+table.insert(cfg.modelList, 95410)
+table.insert(cfg.modelList, 94997)
+table.insert(cfg.modelList, 94705)
+table.insert(cfg.modelList, 94681)
+table.insert(cfg.modelList, 94285)
+table.insert(cfg.modelList, 94249)
+table.insert(cfg.modelList, 93158)
+table.insert(cfg.modelList, 92626)
+table.insert(cfg.modelList, 92612)
+table.insert(cfg.modelList, 92613)
+table.insert(cfg.modelList, 92614)
+table.insert(cfg.modelList, 91803)
+table.insert(cfg.modelList, 90499)
+table.insert(cfg.modelList, 89047)
+table.insert(cfg.modelList, 88991)
+table.insert(cfg.modelList, 87843)
+table.insert(cfg.modelList, 85455)
+table.insert(cfg.modelList, 84936)
+table.insert(cfg.modelList, 83176)
+table.insert(cfg.modelList, 82009)
+table.insert(cfg.modelList, 81399)
+table.insert(cfg.modelList, 81327)
+table.insert(cfg.modelList, 81077)
+table.insert(cfg.modelList, 80318)
+table.insert(cfg.modelList, 78816)
+table.insert(cfg.modelList, 76935)
+table.insert(cfg.modelList, 77177)
+table.insert(cfg.modelList, 76276)
+table.insert(cfg.modelList, 76104)
+table.insert(cfg.modelList, 75294)
+table.insert(cfg.modelList, 75298)
+table.insert(cfg.modelList, 74840)
+table.insert(cfg.modelList, 74564)
+table.insert(cfg.modelList, 72125)
+table.insert(cfg.modelList, 72116)
+table.insert(cfg.modelList, 71960)
+table.insert(cfg.modelList, 71558)
+table.insert(cfg.modelList, 71643)
+table.insert(cfg.modelList, 70769)
+table.insert(cfg.modelList, 66123)
+table.insert(cfg.modelList, 66092)
+table.insert(cfg.modelList, 66202)
+table.insert(cfg.modelList, 64697)
+table.insert(cfg.modelList, 64562)
+table.insert(cfg.modelList, 64352)
+table.insert(cfg.modelList, 63167)
+table.insert(cfg.modelList, 62253)
+table.insert(cfg.modelList, 60361)
+table.insert(cfg.modelList, 58948)
+table.insert(cfg.modelList, 58836)
+table.insert(cfg.modelList, 57891)
+table.insert(cfg.modelList, 57012)
+table.insert(cfg.modelList, 56959)
+table.insert(cfg.modelList, 55948)
+table.insert(cfg.modelList, 55752)
+table.insert(cfg.modelList, 56632)
+table.insert(cfg.modelList, 55036)
+table.insert(cfg.modelList, 50772)
+table.insert(cfg.modelList, 48109)
+table.insert(cfg.modelList, 48106)
+table.insert(cfg.modelList, 47882)
+table.insert(cfg.modelList, 44652)
+table.insert(cfg.modelList, 42938)
+table.insert(cfg.modelList, 42486)
+table.insert(cfg.modelList, 41110)
+table.insert(cfg.modelList, 39581)
+table.insert(cfg.modelList, 39316)
+table.insert(cfg.modelList, 39108)
+table.insert(cfg.modelList, 38475)
+table.insert(cfg.modelList, 38327)
+table.insert(cfg.modelList, 34404)
+table.insert(cfg.modelList, 34645)
+table.insert(cfg.modelList, 34319)
+table.insert(cfg.modelList, 33853)
+table.insert(cfg.modelList, 32368)
+table.insert(cfg.modelList, 29286)
+table.insert(cfg.modelList, 29074)
+table.insert(cfg.modelList, 28460)
+table.insert(cfg.modelList, 27393)
+table.insert(cfg.modelList, 24939)
+table.insert(cfg.modelList, 18877)
+table.insert(cfg.modelList, 9510)
+
+cfg.modelSettings = {}
+cfg.modelSettings[113764] = { camDistanceScale = 0.85 }
+cfg.modelSettings[65947] = { camDistanceScale = 0.85 }
+cfg.modelSettings[38699] = { camDistanceScale = 0.5 }
+cfg.modelSettings[107088] = { camDistanceScale = 11 }
+cfg.modelSettings[107039] = { camDistanceScale = 15 }
+cfg.modelSettings[96197] = { camDistanceScale = 1.5 }
+cfg.modelSettings[94249] = { camDistanceScale = 7.5 }
+cfg.modelSettings[92626] = { camDistanceScale = 1.75 }
+cfg.modelSettings[88991] = { camDistanceScale = 5 }
+cfg.modelSettings[84936] = { camDistanceScale = 0.4 }
+cfg.modelSettings[80318] = { camDistanceScale = 0.75 }
+cfg.modelSettings[76935] = { camDistanceScale = 0.6 }
+cfg.modelSettings[77177] = { camDistanceScale = 5.65 }
+cfg.modelSettings[75294] = { camDistanceScale = 3.85 }
+cfg.modelSettings[75298] = { camDistanceScale = 0.6 }
+cfg.modelSettings[74564] = { camDistanceScale = 2 }
+cfg.modelSettings[66092] = { camDistanceScale = 2.35 }
+cfg.modelSettings[66202] = { camDistanceScale = 2.35 }
+cfg.modelSettings[64697] = { camDistanceScale = 2.35 }
+cfg.modelSettings[64562] = { camDistanceScale = 2.35 }
 
 local function RoundNumber(n)
-  return math.floor((n) * 10) / 10
+  return math.floor((n) * 1000) / 1000
 end
 
 local function SetModelOrientation(model, distance, yaw, pitch)
@@ -252,6 +383,17 @@ local function ResetModelValues(model)
   end
 end
 
+local function OffsetOrbModelY(model, y)
+  local x = 0
+  local px, py, pz = model:GetPosition()
+  -- z-axis has to be adjusted if model frame shrinks in height on statusbar value change
+  local mx = (px + (y - model.posY) / 84)
+  local mx = px
+  local mz = (pz + (y - model.posY) / 84)
+  model:SetPosition(mx, py, mz)
+  model.posY = y
+end
+
 -- update orb func
 local function UpdateOrbValue(bar, value)
   local orb = bar:GetParent()
@@ -261,15 +403,15 @@ local function UpdateOrbValue(bar, value)
     per = value / max * 100
   end
   local offset = orb.size - per * orb.size / 100
-  --print(offset,orb.size)
-  orb.clipFrame:SetPoint("TOP", 0, -offset)
-  orb.clipFrame:SetHeight(per * orb.size / 100)
+  OffsetOrbModelY(orb.model, offset / 2)
+  -- model z-axis has to be adjusted if model frame shrinks in height on statusbar value change
+  orb.model:SetHeight(per * orb.size / 100)
   if per == 0 then
-    orb.clipFrame:Hide()
+    orb.model:Hide()
   else
-    orb.clipFrame:Show()
+    orb.model:Show()
   end
-  orb.model:SetAlpha((per / 100))
+  -- orb.model:SetAlpha((per / 100))
   -- adjust the orb spark in width/height matching the current scrollframe state
   if not orb.spark then
     return
@@ -371,38 +513,37 @@ local function CreateOrb()
   -- spark frame
   local spark = orb.fill:CreateTexture()
   local sparkLayer, sparkSublayer = orb.fill:GetStatusBarTexture():GetDrawLayer()
-  spark:SetDrawLayer(sparkLayer,sparkSublayer+1)
+  spark:SetDrawLayer(sparkLayer, sparkSublayer + 1)
   spark:SetTexture("Interface\\AddOns\\DiscoKugel3\\media\\orb_spark")
   -- the spark should fit the filling color otherwise it will stand out too much
-  spark:SetVertexColor(unpack(cfg.orbFillingColor))
+  spark:SetVertexColor(unpack(cfg.orbSparkColor))
   -- texture will be blended by blendmode, http://wowprogramming.com/docs/widgets/Texture/SetBlendMode
   -- spark:SetAlpha(1)
   spark:SetBlendMode("ADD")
   spark:Hide()
   orb.spark = spark
 
-  local clipFrame = CreateFrame("Frame", "$parentClip", orb.fill)
-  clipFrame:SetSize(orb.size,orb.size)
-  clipFrame:SetPoint("TOP")
-  Mixin(clipFrame, BackdropTemplateMixin)
-  clipFrame.backdropInfo = BACKDROP_TOAST_12_12
-  clipFrame:ApplyBackdrop()
-  clipFrame.Center:SetColorTexture(1, 1, 1)
-  clipFrame.Center:SetVertexColor(0,0,0,0)
-  clipFrame:SetClipsChildren(false)
-  orb.clipFrame = clipFrame
-
   -- orb model
-  local model = CreateFrame("PlayerModel", "$parentModel", orb.clipFrame)
-  model:SetSize(orb.size,orb.size)
-  model:SetPoint("CENTER",orb)
+  local model = CreateFrame("PlayerModel", "$parentModel", orb.fill)
+  model:SetSize(orb.size, orb.size)
+  model:SetPoint("TOP", orb.fill:GetStatusBarTexture())
   model:SetAlpha(cfg.orbModelAlpha)
+  model.displayInfo = cfg.modelList[1]
   function model:Update()
     ResetModelValues(self)
+    if cfg.modelSettings[self.displayInfo] and cfg.modelSettings[self.displayInfo].camDistanceScale then
+      self:SetCamDistanceScale(cfg.modelSettings[self.displayInfo].camDistanceScale)
+    end
     self:ClearModel()
-    self:SetDisplayInfo(cfg.model.displayInfo)
+    self:SetDisplayInfo(self.displayInfo)
   end
   model:Update()
+  model.posX, model.posY = 0, 0
+  -- Mixin(model, BackdropTemplateMixin)
+  -- model.backdropInfo = BACKDROP_TOAST_12_12
+  -- model:ApplyBackdrop()
+  -- model.Center:SetColorTexture(1, 1, 1)
+  -- model.Center:SetVertexColor(0,0,0,0)
   model:SetScript("OnMouseWheel", ModelOnMouseWheel)
   model:SetScript("OnMouseDown", ModelOnMouseDown)
   model:SetScript("OnMouseUp", ModelOnMouseUp)
@@ -412,7 +553,7 @@ local function CreateOrb()
 
   -- overlay frame
   local overlay = CreateFrame("Frame", "$parentOverlay", orb.fill)
-  overlay:SetFrameLevel(orb.model:GetFrameLevel()+1)
+  overlay:SetFrameLevel(orb.model:GetFrameLevel() + 1)
   overlay:SetAllPoints(orb)
   orb.overlay = orb
 
@@ -437,7 +578,7 @@ local function CreateOrb()
 
   local healthSlider = CreateSliderWithEditbox(orb, "OrbHealthValue", 0, 100, 100)
   healthSlider:ClearAllPoints()
-  healthSlider:SetPoint("TOP", orb, "BOTTOM", 0, -30)
+  healthSlider:SetPoint("TOPLEFT", orb, "TOPRIGHT", 30, 0)
   healthSlider.text:SetText("Health")
   healthSlider:SetScript("OnValueChanged", function(self, value)
     value = math.floor(value + 0.5)
@@ -449,24 +590,31 @@ local function CreateOrb()
     self:ClearFocus()
   end)
 
+  local fillingColorPicker = CreateColorPickerButton(orb, A .. 'FillingColorPicker', cfg.orbFillingColor)
+  fillingColorPicker:SetSize(40, 40)
+  fillingColorPicker:SetPoint("TOP", healthSlider, "BOTTOM", 0, -20)
+  function fillingColorPicker:UpdateColor(r, g, b, a)
+    orb.fill:SetStatusBarColor(r, g, b, a)
+    -- orb.spark:SetVertexColor(r, g, b, a)
+  end
+
   local debuffGlowColorPicker = CreateColorPickerButton(orb, A .. 'DebuffGlowColorPicker', cfg.orbDebuffGlowColor)
   debuffGlowColorPicker:SetSize(40, 40)
-  debuffGlowColorPicker:SetPoint("TOP", healthSlider, "BOTTOM", -30, -20)
+  debuffGlowColorPicker:SetPoint("LEFT", fillingColorPicker, "RIGHT", 20, 0)
   function debuffGlowColorPicker:UpdateColor(r, g, b, a)
     orb.glow:SetVertexColor(r, g, b, a)
   end
 
-  local fillingColorPicker = CreateColorPickerButton(orb, A .. 'FillingColorPicker', cfg.orbFillingColor)
-  fillingColorPicker:SetSize(40, 40)
-  fillingColorPicker:SetPoint("LEFT", debuffGlowColorPicker, "RIGHT", 30, 0)
-  function fillingColorPicker:UpdateColor(r, g, b, a)
-    orb.fill:SetStatusBarColor(r, g, b, a)
+  local sparkColorPicker = CreateColorPickerButton(orb, A .. 'SparkColorPicker', cfg.orbSparkColor)
+  sparkColorPicker:SetSize(40, 40)
+  sparkColorPicker:SetPoint("RIGHT", fillingColorPicker, "LEFT", -20, 0)
+  function sparkColorPicker:UpdateColor(r, g, b, a)
     orb.spark:SetVertexColor(r, g, b, a)
   end
 
   local fillingTextureSlider = CreateSliderWithEditbox(orb, "OrbFillingTexture", 1, 7, cfg.orbFillingTexture)
   fillingTextureSlider:ClearAllPoints()
-  fillingTextureSlider:SetPoint("TOP", debuffGlowColorPicker, "BOTTOM", 30, -30)
+  fillingTextureSlider:SetPoint("TOP", fillingColorPicker, "BOTTOM", 0, -30)
   fillingTextureSlider.text:SetText("FillingTexture")
   fillingTextureSlider:SetScript("OnValueChanged", function(self, value)
     value = math.floor(value + 0.5)
@@ -474,6 +622,36 @@ local function CreateOrb()
     self.__orb.fill:SetStatusBarTexture("Interface\\AddOns\\DiscoKugel3\\media\\orb_filling" .. value)
   end)
   fillingTextureSlider.editbox:SetScript("OnEnterPressed", function(self)
+    self:GetParent():SetValue(self:GetText())
+    self:ClearFocus()
+  end)
+
+  local modelAlphaSlider = CreateSliderWithEditbox(orb, "OrbModelAlpha", 0, 100, cfg.orbModelAlpha * 100)
+  modelAlphaSlider:ClearAllPoints()
+  modelAlphaSlider:SetPoint("TOP", fillingTextureSlider, "BOTTOM", 0, -30)
+  modelAlphaSlider.text:SetText("ModelAlpha")
+  modelAlphaSlider:SetScript("OnValueChanged", function(self, value)
+    value = math.floor(value + 0.5)
+    self.editbox:SetText(value)
+    self.__orb.model:SetAlpha(value / 100)
+  end)
+  modelAlphaSlider.editbox:SetScript("OnEnterPressed", function(self)
+    self:GetParent():SetValue(self:GetText())
+    self:ClearFocus()
+  end)
+
+  local modelSelector = CreateSliderWithEditbox(orb, "OrbModelSelector", 1, table.getn(cfg.modelList), 1)
+  modelSelector:ClearAllPoints()
+  modelSelector:SetPoint("TOPLEFT", modelAlphaSlider, "BOTTOMLEFT", 0, -30)
+  modelSelector:SetWidth(400)
+  modelSelector.text:SetText("ModelSelector")
+  modelSelector:SetScript("OnValueChanged", function(self, value)
+    value = math.floor(value + 0.5)
+    self.editbox:SetText(value)
+    self.__orb.model.displayInfo = cfg.modelList[value]
+    self.__orb.model:Update()
+  end)
+  modelSelector.editbox:SetScript("OnEnterPressed", function(self)
     self:GetParent():SetValue(self:GetText())
     self:ClearFocus()
   end)

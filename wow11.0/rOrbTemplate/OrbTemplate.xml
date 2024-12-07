@@ -7,7 +7,7 @@
     <Frames>
       <StatusBar parentKey="FillingStatusBar" mixin="OrbFillingStatusBarMixin">
         <BarTexture file="Interface\AddOns\rOrbTemplate\media\orb_filling" />
-        <BarColor r=".6" g="0" b=".6" a="1" />
+        <BarColor r="1" g="1" b="1" a="1" />
         <Anchors>
           <Anchor point="TOPLEFT" />
           <Anchor point="BOTTOMRIGHT" />
@@ -27,7 +27,7 @@
         <Layers>
           <Layer level="BACKGROUND">
             <Texture parentKey="BackgroundTexture">
-              <Color r="0" g="0" b="1" a="0" />
+              <Color r="0" g="1" b="0" a="0" />
               <Anchors>
                 <Anchor point="TOPLEFT" />
                 <Anchor point="BOTTOMRIGHT" />
@@ -44,6 +44,45 @@
           <OnSizeChanged method="OrbModelOnSizeChanged" />
         </Scripts>
       </PlayerModel>
+      <Frame parentKey="OverlayFrame" mixin="OrbOverlayFrameMixin">
+        <Anchors>
+          <Anchor point="TOPLEFT" />
+          <Anchor point="BOTTOMRIGHT" />
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND" textureSubLevel="-3">
+            <Texture parentKey="SparkTexture" file="Interface\AddOns\rOrbTemplate\media\orb_spark" hidden="true">
+              <Color r="1" g="1" b="1" a="1" />
+              <Anchors>
+                <Anchor point="TOP" />
+              </Anchors>
+            </Texture>
+          </Layer>
+          <Layer level="BACKGROUND" textureSubLevel="-2">
+            <Texture parentKey="GlowTexture" file="Interface\AddOns\rOrbTemplate\media\orb_glow">
+              <Color r="1" g="1" b="1" a="0" />
+              <Anchors>
+                <Anchor point="TOPLEFT" x="-5" y="5" />
+                <Anchor point="BOTTOMRIGHT" x="5" y="-5" />
+              </Anchors>
+            </Texture>
+          </Layer>
+          <Layer level="BACKGROUND" textureSubLevel="-1">
+            <Texture parentKey="GlossTexture" file="Interface\AddOns\rOrbTemplate\media\orb_gloss">
+              <Color r="1" g="1" b="1" a="1" />
+              <Anchors>
+                <Anchor point="TOPLEFT" />
+                <Anchor point="BOTTOMRIGHT" />
+              </Anchors>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad method="OnLoad" />
+          <OnShow method="OnShow" />
+          <OnHide method="OnHide" />
+        </Scripts>
+      </Frame>
     </Frames>
     <Layers>
       <Layer level="BACKGROUND">

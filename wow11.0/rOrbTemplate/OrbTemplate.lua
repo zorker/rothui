@@ -3,7 +3,8 @@
 -------------------------------------------------
 local A, L = ...
 
-local math
+local math = math
+local pi, halfpi = math.pi, math.pi / 2
 
 local ORB_MODELFRAME_DRAG_ROTATION_CONSTANT = 0.010;
 local ORB_MODELFRAME_MAX_ZOOM = 0.7;
@@ -18,6 +19,7 @@ local ORB_MODELFRAME_MAX_PLAYER_ZOOM = 0.8;
 OrbTemplateMixin = {}
 OrbFillingStatusBarMixin = {}
 OrbModelFrameMixin = {}
+OrbOverlayFrameMixin = {}
 
 -------------------------------------------------
 -- Functions
@@ -50,6 +52,7 @@ function OrbFillingStatusBarMixin:OnValueChanged(value)
   -- print(A, 'OrbFillingStatusBarMixin:OnValueChanged()')
   local orb = self:GetParent()
   orb.ModelFrame:OrbModelAdjustPositionByValue(value)
+  orb.OverlayFrame:UpdateOrbSpark(value)
 end
 
 function OrbFillingStatusBarMixin:OnShow()
@@ -96,7 +99,7 @@ function OrbModelFrameMixin:OrbModelAdjustPositionByValue(value)
   local orbScale = orb:GetScale()
   local scale = UIParent:GetEffectiveScale()
   local camScale = self.orbSettings.camScale or 1
-  scale = scale * 1/camScale * orbScale
+  scale = scale * 1 / camScale * orbScale
   local orbHeight = orb.height
   local dy = orbHeight - orbHeight * value
   local dys = dy * scale
@@ -121,7 +124,7 @@ function OrbModelFrameMixin:OrbModelOnModelLoaded()
   local orbScale = orb:GetScale()
   local scale = UIParent:GetEffectiveScale()
   local camScale = self.orbSettings.camScale or 1
-  scale = scale * 1/camScale * orbScale
+  scale = scale * 1 / camScale * orbScale
   -- model position
   local px, py, pz = self:GetPosition()
   -- model postion but UI scale added on top
@@ -136,16 +139,61 @@ function OrbModelFrameMixin:OrbModelOnModelLoaded()
   -- calc new pos values
   local npx, npy, npz = dcpx - dpx, dcpy - dpy, dcpz - dpz
 
-  self.origPosX = npx
-  self.origPosY = npy
-  self.origPosZ = npz
+  self.origPosX = npx + self.orbSettings.posAdjustX * scale
+  self.origPosY = npy + self.orbSettings.posAdjustY * scale
+  self.origPosZ = npz + self.orbSettings.posAdjustZ * scale
 
-  self:SetPosition(npx, npy, npz)
+  self:SetPosition(self.origPosX, self.origPosY, self.origPosZ)
 
   self:RefreshCamera()
 
 end
 
+function OrbModelFrameMixin:CreateOrbModel(displayInfoId, panAdjustY, camScale, posAdjustX, posAdjustY, posAdjustZ)
+  -- print(A, 'OrbModelFrameMixin:CreateOrbModel()')
+  self.orbSettings = {}
+  self.orbSettings.camScale = camScale or 1
+  self.orbSettings.panAdjustY = panAdjustY or 84
+  self.orbSettings.posAdjustX = posAdjustX or 0
+  self.orbSettings.posAdjustY = posAdjustY or 0
+  self.orbSettings.posAdjustZ = posAdjustZ or 0
+
+  self:SetDisplayInfo(displayInfoId)
+
+end
+
 function OrbModelFrameMixin:OrbModelOnSizeChanged(event)
   -- print(A, 'OrbModelFrameMixin:OnSizeChanged()')
+end
+
+-- OrbOverlayFrameMixin
+function OrbOverlayFrameMixin:OnLoad()
+  -- print(A, 'OrbOverlayFrameMixin:OnLoad()')
+  self.SparkTexture:SetBlendMode("BLEND")
+  self.GlowTexture:SetBlendMode("BLEND")
+  local orb = self:GetParent()
+  self:SetFrameLevel(orb.ModelFrame:GetFrameLevel()+1)
+end
+
+-- OrbOverlayFrameMixin
+function OrbOverlayFrameMixin:UpdateOrbSpark(value)
+  -- print(A, 'OrbOverlayFrameMixin:UpdateOrbSpark()')
+  local orb = self:GetParent()
+  local multiplier = floor(math.sin(value * pi) * 100) / 100
+  if multiplier <= 0.25 then
+    self.SparkTexture:Hide()
+  else
+    self.SparkTexture:SetWidth(256 * orb.height / 256 * multiplier)
+    self.SparkTexture:SetHeight(32 * orb.height / 256 * multiplier)
+    self.SparkTexture:SetPoint("TOP", orb.FillingStatusBar.statusBarTexture, 0, 16 * orb.height / 256 * multiplier)
+    self.SparkTexture:Show()
+  end
+end
+
+function OrbOverlayFrameMixin:OnShow()
+  -- print(A, 'OrbOverlayFrameMixin:OnShow()')
+end
+
+function OrbOverlayFrameMixin:OnHide()
+  -- print(A, 'OrbOverlayFrameMixin:OnHide()')
 end

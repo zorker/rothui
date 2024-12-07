@@ -1,0 +1,8 @@
+## Interface: 110005
+## Author: zork
+## Title: rOrb
+## Notes: Orb facory using rOrbTemplate
+## IconTexture: Interface\AddOns\rLib\assets\logo-64
+## RequiredDeps: rOrbTemplate, rLib
+
+rOrb.lua

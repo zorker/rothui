@@ -169,7 +169,7 @@ end
 -- OrbOverlayFrameMixin
 function OrbOverlayFrameMixin:OnLoad()
   -- print(A, 'OrbOverlayFrameMixin:OnLoad()')
-  self.SparkTexture:SetBlendMode("BLEND")
+  self.SparkTexture:SetBlendMode("ADD")
   self.GlowTexture:SetBlendMode("BLEND")
   local orb = self:GetParent()
   self:SetFrameLevel(orb.ModelFrame:GetFrameLevel()+1)

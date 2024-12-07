@@ -1,0 +1,22 @@
+New addon that allows creation of finished orbs by template ID each matching a fully fleshed out displayInfoID
+
+generate the full orb by template.xml
+
+clipChildren
+  PlayerModel
+
+BaseFrame
+  BackgroundTexture
+  FillStatusBarFrame
+    HealPredictionTexture
+    AbsorbTextre
+  ClipFrame(ChilpChildren)
+    PlayerModelFrame
+  OverlayFrame
+    SparkTexture
+    GlowTexture
+    HighlightTexture
+
+Do not ever change sizes on the template
+
+Do everything with SetScale on the BaseFrame

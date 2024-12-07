@@ -7,62 +7,21 @@
     <Frames>
       <StatusBar parentKey="FillingStatusBar" mixin="OrbFillingStatusBarMixin">
         <BarTexture file="Interface\AddOns\rOrbTemplate\media\orb_filling19" />
-        <BarColor r="1" g="1" b="1" a="1" />
+        <BarColor r=".6" g="0" b=".6" a="1" />
         <Anchors>
           <Anchor point="TOPLEFT" />
           <Anchor point="BOTTOMRIGHT" />
         </Anchors>
-        <Scripts>
-          <OnLoad method="OnLoad" />
-          <OnValueChanged method="OnValueChanged" />
-          <OnShow method="OnShow" />
-          <OnHide method="OnHide" />
-        </Scripts>
-      </StatusBar>
-      <Frame parentKey="ClipFrame" clipChildren="false" mixin="OrbClipFrameMixin">
-        <Size x="256" y="256" />
-        <Anchors>
-          <Anchor point="TOP" />
-        </Anchors>
         <Frames>
-          <Frame parentKey="ModelContainer" mixin="OrbModelContainerMixin">
+          <PlayerModel parentKey="ModelFrame" mixin="OrbModelFrameMixin">
             <Size x="256" y="256" />
             <Anchors>
-              <Anchor point="BOTTOM" />
+              <Anchor point="TOP" />
             </Anchors>
-            <Frames>
-              <PlayerModel parentKey="ModelFrame" mixin="OrbModelFrameMixin">
-                <Anchors>
-                  <Anchor point="TOPLEFT" />
-                  <Anchor point="BOTTOMRIGHT" />
-                </Anchors>
-                <Layers>
-                  <Layer level="BACKGROUND">
-                    <Texture parentKey="BackgroundTexture">
-                      <Color r="0" g="0" b="1" a=".3" />
-                      <Anchors>
-                        <Anchor point="TOPLEFT" />
-                        <Anchor point="BOTTOMRIGHT" />
-                      </Anchors>
-                    </Texture>
-                  </Layer>
-                </Layers>
-                <Scripts>
-                  <OnLoad method="OrbModelOnLoad" />
-                  <OnShow method="OrbModelOnShow" />
-                  <OnHide method="OrbModelOnHide" />
-                  <OnEvent method="OrbModelOnEvent" />
-                  <OnModelLoaded method="OrbModelOnModelLoaded" />
-                  <OnSizeChanged method="OrbModelOnSizeChanged" />
-                </Scripts>
-                <ViewInsets left="0" right="0" top="0" bottom="0" />
-              </PlayerModel>
-            </Frames>
             <Layers>
               <Layer level="BACKGROUND">
-                <Texture parentKey="BackgroundTexture"
-                  file="Interface\AddOns\rOrbTemplate\media\orb_glow">
-                  <Color r="1" g="0" b="0" a="1" />
+                <Texture parentKey="BackgroundTexture">
+                  <Color r="0" g="0" b="1" a=".1" />
                   <Anchors>
                     <Anchor point="TOPLEFT" />
                     <Anchor point="BOTTOMRIGHT" />
@@ -71,29 +30,22 @@
               </Layer>
             </Layers>
             <Scripts>
-              <OnLoad method="OnLoad" />
-              <OnShow method="OnShow" />
-              <OnHide method="OnHide" />
+              <OnLoad method="OrbModelOnLoad" />
+              <OnShow method="OrbModelOnShow" />
+              <OnHide method="OrbModelOnHide" />
+              <OnEvent method="OrbModelOnEvent" />
+              <OnModelLoaded method="OrbModelOnModelLoaded" />
+              <OnSizeChanged method="OrbModelOnSizeChanged" />
             </Scripts>
-          </Frame>
+          </PlayerModel>
         </Frames>
-        <Layers>
-          <Layer level="BACKGROUND">
-            <Texture parentKey="BackgroundTexture">
-              <Color r="0" g="1" b="0" a=".2" />
-              <Anchors>
-                <Anchor point="TOPLEFT" />
-                <Anchor point="BOTTOMRIGHT" />
-              </Anchors>
-            </Texture>
-          </Layer>
-        </Layers>
         <Scripts>
           <OnLoad method="OnLoad" />
+          <OnValueChanged method="OnValueChanged" />
           <OnShow method="OnShow" />
           <OnHide method="OnHide" />
         </Scripts>
-      </Frame>
+      </StatusBar>
     </Frames>
     <Layers>
       <Layer level="BACKGROUND">

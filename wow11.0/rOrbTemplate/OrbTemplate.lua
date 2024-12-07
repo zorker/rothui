@@ -17,8 +17,6 @@ local ORB_MODELFRAME_MAX_PLAYER_ZOOM = 0.8;
 
 OrbTemplateMixin = {}
 OrbFillingStatusBarMixin = {}
-OrbClipFrameMixin = {}
-OrbModelContainerMixin = {}
 OrbModelFrameMixin = {}
 
 -------------------------------------------------
@@ -50,11 +48,8 @@ end
 
 function OrbFillingStatusBarMixin:OnValueChanged(value)
   print(A, 'OrbFillingStatusBarMixin:OnValueChanged()')
-  local orb = self:GetParent()
-  local clip = orb.ClipFrame
-  local container = orb.ClipFrame.ModelContainer
-  clip:SetPoint("TOP", 0, -(orb.height - orb.height * value))
-  container:SetPoint("BOTTOM", 0, (orb.height - orb.height * value))
+  local model = self.ModelFrame
+  model:OrbModelAdjustPositionByValue(value)
 end
 
 function OrbFillingStatusBarMixin:OnShow()
@@ -63,34 +58,6 @@ end
 
 function OrbFillingStatusBarMixin:OnHide()
   print(A, 'OrbFillingStatusBarMixin:OnHide()')
-end
-
--- OrbClipFrameMixin
-function OrbClipFrameMixin:OnLoad()
-  print(A, 'OrbClipFrameMixin:OnLoad()')
-  local orb = self:GetParent()
-  self:SetFrameLevel(orb.FillingStatusBar:GetFrameLevel() + 1)
-end
-
-function OrbClipFrameMixin:OnShow()
-  print(A, 'OrbClipFrameMixin:OnShow()')
-end
-
-function OrbClipFrameMixin:OnHide()
-  print(A, 'OrbClipFrameMixin:OnHide()')
-end
-
--- OrbModelContainerMixin
-function OrbModelContainerMixin:OnLoad()
-  print(A, 'OrbModelContainerMixin:OnLoad()')
-end
-
-function OrbModelContainerMixin:OnShow()
-  print(A, 'OrbModelContainerMixin:OnShow()')
-end
-
-function OrbModelContainerMixin:OnHide()
-  print(A, 'OrbModelContainerMixin:OnHide()')
 end
 
 -- OrbModelFrameMixin
@@ -120,39 +87,63 @@ function OrbModelFrameMixin:OrbModelOnEvent(event)
   -- self:RefreshUnit()
 end
 
-function OrbModelFrameMixin:AdjustPosition()
-  local px, py, pz = self:GetPosition()
+-- the filling bar ranges from 0 .. 1
+-- calculate the y position offset and apply it to the mode
+function OrbModelFrameMixin:OrbModelAdjustPositionByValue(value)
+  print(A, 'OrbModelFrameMixin:OrbModelAdjustPositionByValue()')
+
+  local scale = UIParent:GetEffectiveScale()
+  local dy = self:GetHeight() - self:GetHeight() * value
+  local dys = dy * scale
+
+  local px, py, pz = self.origPosX, self.origPosY, self.origPosZ
+
+  local pay = self.orbSettings.panAdjustY or 1
+  local pays = pay * scale
+
+  local nz = (pz + dys / pays)
+  self:SetPosition(px, py, nz)
+
 end
 
 function OrbModelFrameMixin:OrbModelOnModelLoaded()
   print(A, 'OrbModelFrameMixin:OnModelLoaded()')
 
-  --reset model
+  local fill = self:GetParent()
+  self:SetPoint("TOP", fill.statusBarTexture)
+
+  -- reset model
   self:ResetModel()
 
-  --ui scale
-  local uiscale = UIParent:GetEffectiveScale()
+  -- ui scale
+  local scale = UIParent:GetEffectiveScale()
 
-  --model position
+  print(self:GetViewInsets())
+
+  -- model position
   local px, py, pz = self:GetPosition()
-  --model postion but UI scale added on top
-  local pxs, pys, pzs = px * uiscale, py * uiscale, pz * uiscale
+  -- model postion but UI scale added on top
+  local pxs, pys, pzs = px * scale, py * scale, pz * scale
 
-  --camera position
+  -- camera position
   local cpx, cpy, cpz = self:GetCameraPosition()
-  --camera postion but UI scale added on top
-  local cpxs, cpys, cpzs = cpx * uiscale, cpy * uiscale, cpz * uiscale
+  -- camera postion but UI scale added on top
+  local cpxs, cpys, cpzs = cpx * scale, cpy * scale, cpz * scale
 
-  --calc diff
-  local dcpx, dcpy, dcpz = cpx-cpxs, cpy-cpys, cpz-cpzs
-  local dpx, dpy, dpz = px-pxs, py-pys, pz-pzs
+  -- calc diff
+  local dcpx, dcpy, dcpz = cpx - cpxs, cpy - cpys, cpz - cpzs
+  local dpx, dpy, dpz = px - pxs, py - pys, pz - pzs
 
-  --calc new pos values
-  local npx, npy, npz = dcpx-dpx, dcpy-dpy, dcpz-dpz
+  -- calc new pos values
+  local npx, npy, npz = dcpx - dpx, dcpy - dpy, dcpz - dpz
 
-  self:SetPosition(npx,npy,npz)
+  self.origPosX = npx
+  self.origPosY = npy
+  self.origPosZ = npz
 
-  self:SetAlpha(0.5)
+  self:SetPosition(npx, npy, npz)
+
+  print(self:GetPosition())
 
   self:RefreshCamera()
 

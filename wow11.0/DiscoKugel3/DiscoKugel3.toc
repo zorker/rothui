@@ -1,8 +1,0 @@
-## Interface: 110005
-## Author: zork
-## Title: DiscoKugel3
-## Notes: Orb test environment.
-## RequiredDeps: rLib
-## IconTexture: Interface\AddOns\rLib\assets\logo-64
-
-orb.lua

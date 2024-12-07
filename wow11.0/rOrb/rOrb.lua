@@ -55,6 +55,22 @@ table.insert(orbList, {
   posAdjustZ = -0.1
 })
 
+table.insert(orbList, {
+  statusBarTexture = mediaFolder.."orb_filling16",
+  statusBarColor = {.6, 0, .6, 1},
+  sparkColor = {.5, 0, 1, 1},
+  glowColor = {0, 1, 0, 0}, --for low hp or debuffs etc
+  modelOpacity = 1,
+  point = {"CENTER", -300, 400},
+  scale = .8,
+  displayInfoID = 65947,
+  panAdjustY = 126,
+  camScale = 0.75,
+  posAdjustX = 0,
+  posAdjustY = 0,
+  posAdjustZ = -0.05
+})
+
 --cool displainfo list for the factory
 
 --113764

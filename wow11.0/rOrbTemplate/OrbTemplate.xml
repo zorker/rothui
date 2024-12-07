@@ -6,39 +6,12 @@
     <Size x="256" y="256" />
     <Frames>
       <StatusBar parentKey="FillingStatusBar" mixin="OrbFillingStatusBarMixin">
-        <BarTexture file="Interface\AddOns\rOrbTemplate\media\orb_filling19" />
+        <BarTexture file="Interface\AddOns\rOrbTemplate\media\orb_filling" />
         <BarColor r=".6" g="0" b=".6" a="1" />
         <Anchors>
           <Anchor point="TOPLEFT" />
           <Anchor point="BOTTOMRIGHT" />
         </Anchors>
-        <Frames>
-          <PlayerModel parentKey="ModelFrame" mixin="OrbModelFrameMixin">
-            <Size x="256" y="256" />
-            <Anchors>
-              <Anchor point="TOP" />
-            </Anchors>
-            <Layers>
-              <Layer level="BACKGROUND">
-                <Texture parentKey="BackgroundTexture">
-                  <Color r="0" g="0" b="1" a=".1" />
-                  <Anchors>
-                    <Anchor point="TOPLEFT" />
-                    <Anchor point="BOTTOMRIGHT" />
-                  </Anchors>
-                </Texture>
-              </Layer>
-            </Layers>
-            <Scripts>
-              <OnLoad method="OrbModelOnLoad" />
-              <OnShow method="OrbModelOnShow" />
-              <OnHide method="OrbModelOnHide" />
-              <OnEvent method="OrbModelOnEvent" />
-              <OnModelLoaded method="OrbModelOnModelLoaded" />
-              <OnSizeChanged method="OrbModelOnSizeChanged" />
-            </Scripts>
-          </PlayerModel>
-        </Frames>
         <Scripts>
           <OnLoad method="OnLoad" />
           <OnValueChanged method="OnValueChanged" />
@@ -46,6 +19,31 @@
           <OnHide method="OnHide" />
         </Scripts>
       </StatusBar>
+      <PlayerModel parentKey="ModelFrame" mixin="OrbModelFrameMixin">
+        <Size x="256" y="256" />
+        <Anchors>
+          <Anchor point="TOP" />
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <Texture parentKey="BackgroundTexture">
+              <Color r="0" g="0" b="1" a="0" />
+              <Anchors>
+                <Anchor point="TOPLEFT" />
+                <Anchor point="BOTTOMRIGHT" />
+              </Anchors>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad method="OrbModelOnLoad" />
+          <OnShow method="OrbModelOnShow" />
+          <OnHide method="OrbModelOnHide" />
+          <OnEvent method="OrbModelOnEvent" />
+          <OnModelLoaded method="OrbModelOnModelLoaded" />
+          <OnSizeChanged method="OrbModelOnSizeChanged" />
+        </Scripts>
+      </PlayerModel>
     </Frames>
     <Layers>
       <Layer level="BACKGROUND">

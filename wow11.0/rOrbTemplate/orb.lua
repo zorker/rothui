@@ -49,13 +49,14 @@ local function CreateOrb()
 
   local orb = CreateFrame("Frame", "rOrbPlayerHealth", UIParent, "OrbTemplate")
   local healthBar = orb.FillingStatusBar
-  local model = healthBar.ModelFrame
+  local model = orb.ModelFrame
 
   orb:SetPoint("CENTER",-300,0)
-  --orb:SetScale(.75)
+  orb:SetScale(1)
 
   model.orbSettings = {}
-  model.orbSettings.panAdjustY = 128
+  model.orbSettings.camScale = 1.2
+  model.orbSettings.panAdjustY = 145
   model:SetDisplayInfo(113764)
 
   --EnableDrag(orb)

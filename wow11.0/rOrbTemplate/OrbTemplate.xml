@@ -19,7 +19,7 @@
           <OnHide method="OnHide" />
         </Scripts>
       </StatusBar>
-      <Frame parentKey="ClipFrame" clipChildren="true" mixin="OrbClipFrameMixin">
+      <Frame parentKey="ClipFrame" clipChildren="false" mixin="OrbClipFrameMixin">
         <Size x="256" y="256" />
         <Anchors>
           <Anchor point="TOP" />

@@ -1,6 +1,19 @@
+-------------------------------------------------
+-- Variables
+-------------------------------------------------
 local A, L = ...
 
-print(A, 'OrbTemplate.lua file init')
+local math
+
+local ORB_MODELFRAME_DRAG_ROTATION_CONSTANT = 0.010;
+local ORB_MODELFRAME_MAX_ZOOM = 0.7;
+local ORB_MODELFRAME_MIN_ZOOM = 0.0;
+local ORB_MODELFRAME_ZOOM_STEP = 0.15;
+local ORB_MODELFRAME_DEFAULT_ROTATION = 0;
+local ORB_ROTATIONS_PER_SECOND = .5;
+local ORB_MODELFRAME_MAX_PLAYER_ZOOM = 0.8;
+
+-- print(A, 'OrbTemplate.lua file init')
 
 OrbTemplateMixin = {}
 OrbFillingStatusBarMixin = {}
@@ -8,7 +21,11 @@ OrbClipFrameMixin = {}
 OrbModelContainerMixin = {}
 OrbModelFrameMixin = {}
 
---OrbTemplateMixin
+-------------------------------------------------
+-- Functions
+-------------------------------------------------
+
+-- OrbTemplateMixin
 function OrbTemplateMixin:OnLoad()
   print(A, 'OrbTemplateMixin:OnLoad()')
   self.height = self:GetHeight()
@@ -22,12 +39,12 @@ function OrbTemplateMixin:OnHide()
   print(A, 'OrbTemplateMixin:OnHide()')
 end
 
---OrbFillingStatusBarMixin
+-- OrbFillingStatusBarMixin
 function OrbFillingStatusBarMixin:OnLoad()
   print(A, 'OrbFillingStatusBarMixin:OnLoad()')
   self:SetOrientation("VERTICAL")
   self:SetReverseFill(false)
-  self:SetMinMaxValues(0,1)
+  self:SetMinMaxValues(0, 1)
   self.statusBarTexture = self:GetStatusBarTexture()
 end
 
@@ -36,8 +53,8 @@ function OrbFillingStatusBarMixin:OnValueChanged(value)
   local orb = self:GetParent()
   local clip = orb.ClipFrame
   local container = orb.ClipFrame.ModelContainer
-  clip:SetPoint("TOP",0,-orb.height*value)
-  container:SetPoint("BOTTOM",0,orb.height*value)
+  clip:SetPoint("TOP", 0, -(orb.height - orb.height * value))
+  container:SetPoint("BOTTOM", 0, (orb.height - orb.height * value))
 end
 
 function OrbFillingStatusBarMixin:OnShow()
@@ -48,11 +65,11 @@ function OrbFillingStatusBarMixin:OnHide()
   print(A, 'OrbFillingStatusBarMixin:OnHide()')
 end
 
---OrbClipFrameMixin
+-- OrbClipFrameMixin
 function OrbClipFrameMixin:OnLoad()
   print(A, 'OrbClipFrameMixin:OnLoad()')
   local orb = self:GetParent()
-  self:SetFrameLevel(orb.FillingStatusBar:GetFrameLevel()+1)
+  self:SetFrameLevel(orb.FillingStatusBar:GetFrameLevel() + 1)
 end
 
 function OrbClipFrameMixin:OnShow()
@@ -63,7 +80,7 @@ function OrbClipFrameMixin:OnHide()
   print(A, 'OrbClipFrameMixin:OnHide()')
 end
 
---OrbModelContainerMixin
+-- OrbModelContainerMixin
 function OrbModelContainerMixin:OnLoad()
   print(A, 'OrbModelContainerMixin:OnLoad()')
 end
@@ -76,13 +93,13 @@ function OrbModelContainerMixin:OnHide()
   print(A, 'OrbModelContainerMixin:OnHide()')
 end
 
---OrbModelFrameMixin
+-- OrbModelFrameMixin
 function OrbModelFrameMixin:OrbModelOnLoad()
   print(A, 'OrbModelFrameMixin:OnLoad()')
-  --mix in the blizzard model frame functions
+  -- mix in the blizzard model frame functions
   Mixin(self, ModelFrameMixin)
-  self:RegisterEvent("UI_SCALE_CHANGED")
-  self:RegisterEvent("DISPLAY_SIZE_CHANGED")
+  -- load the OnLoad from the ModelFrameMixin
+  self:OnLoad(ORB_MODELFRAME_MAX_ZOOM, ORB_MODELFRAME_MIN_ZOOM, ORB_MODELFRAME_DEFAULT_ROTATION)
 end
 
 function OrbModelFrameMixin:OrbModelOnShow()
@@ -98,13 +115,47 @@ function OrbModelFrameMixin:OrbModelUpdate()
 end
 
 function OrbModelFrameMixin:OrbModelOnEvent(event)
-  print(A, 'OrbModelFrameMixin:OnEvent()',event)
-  --self:RefreshCamera()
-  --self:RefreshUnit()
+  print(A, 'OrbModelFrameMixin:OnEvent()', event)
+  -- self:RefreshCamera()
+  -- self:RefreshUnit()
+end
+
+function OrbModelFrameMixin:AdjustPosition()
+  local px, py, pz = self:GetPosition()
 end
 
 function OrbModelFrameMixin:OrbModelOnModelLoaded()
   print(A, 'OrbModelFrameMixin:OnModelLoaded()')
+
+  --reset model
+  self:ResetModel()
+
+  --ui scale
+  local uiscale = UIParent:GetEffectiveScale()
+
+  --model position
+  local px, py, pz = self:GetPosition()
+  --model postion but UI scale added on top
+  local pxs, pys, pzs = px * uiscale, py * uiscale, pz * uiscale
+
+  --camera position
+  local cpx, cpy, cpz = self:GetCameraPosition()
+  --camera postion but UI scale added on top
+  local cpxs, cpys, cpzs = cpx * uiscale, cpy * uiscale, cpz * uiscale
+
+  --calc diff
+  local dcpx, dcpy, dcpz = cpx-cpxs, cpy-cpys, cpz-cpzs
+  local dpx, dpy, dpz = px-pxs, py-pys, pz-pzs
+
+  --calc new pos values
+  local npx, npy, npz = dcpx-dpx, dcpy-dpy, dcpz-dpz
+
+  self:SetPosition(npx,npy,npz)
+
+  self:SetAlpha(0.5)
+
+  self:RefreshCamera()
+
 end
 
 function OrbModelFrameMixin:OrbModelOnSizeChanged(event)

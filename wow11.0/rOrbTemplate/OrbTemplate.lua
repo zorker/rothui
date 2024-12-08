@@ -94,7 +94,6 @@ end
 -- calculate the y position offset and apply it to the mode
 function OrbModelFrameMixin:OrbModelAdjustPositionByValue(value)
   -- print(A, 'OrbModelFrameMixin:OrbModelAdjustPositionByValue()')
-
   local orb = self:GetParent()
   local orbScale = orb:GetScale()
   local scale = UIParent:GetEffectiveScale()
@@ -107,20 +106,15 @@ function OrbModelFrameMixin:OrbModelAdjustPositionByValue(value)
   local pay = self.orbSettings.panAdjustY or orbHeight / 2
   local pays = pay * scale
   local nz = (pz + dys / pays)
-
   self:SetPosition(px, py, nz)
-
 end
 
 function OrbModelFrameMixin:OrbModelOnModelLoaded()
-  -- print(A, 'OrbModelFrameMixin:OnModelLoaded()')
-
+  --print(A, 'OrbModelFrameMixin:OnModelLoaded()')
   local orb = self:GetParent()
   self:SetPoint("TOP", orb.FillingStatusBar.statusBarTexture)
-
   -- reset model
   self:ResetModel()
-
   local orbScale = orb:GetScale()
   local scale = UIParent:GetEffectiveScale()
   local camScale = self.orbSettings.camScale or 1
@@ -138,28 +132,24 @@ function OrbModelFrameMixin:OrbModelOnModelLoaded()
   local dpx, dpy, dpz = px - pxs, py - pys, pz - pzs
   -- calc new pos values
   local npx, npy, npz = dcpx - dpx, dcpy - dpy, dcpz - dpz
-
   self.origPosX = npx + self.orbSettings.posAdjustX * scale
   self.origPosY = npy + self.orbSettings.posAdjustY * scale
   self.origPosZ = npz + self.orbSettings.posAdjustZ * scale
-
   self:SetPosition(self.origPosX, self.origPosY, self.origPosZ)
-
   self:RefreshCamera()
-
 end
 
-function OrbModelFrameMixin:CreateOrbModel(displayInfoId, panAdjustY, camScale, posAdjustX, posAdjustY, posAdjustZ)
+function OrbModelFrameMixin:SetOrbModel(displayInfoId, panAdjustY, camScale, posAdjustX, posAdjustY, posAdjustZ)
   -- print(A, 'OrbModelFrameMixin:CreateOrbModel()')
-  self.orbSettings = {}
+  self.orbSettings = self.orbSettings or {}
   self.orbSettings.camScale = camScale or 1
   self.orbSettings.panAdjustY = panAdjustY or 84
   self.orbSettings.posAdjustX = posAdjustX or 0
   self.orbSettings.posAdjustY = posAdjustY or 0
   self.orbSettings.posAdjustZ = posAdjustZ or 0
-
+  self:ClearModel()
+  self:RefreshCamera()
   self:SetDisplayInfo(displayInfoId)
-
 end
 
 function OrbModelFrameMixin:OrbModelOnSizeChanged(event)
@@ -196,4 +186,17 @@ end
 
 function OrbOverlayFrameMixin:OnHide()
   -- print(A, 'OrbOverlayFrameMixin:OnHide()')
+end
+
+function OrbTemplateMixin:SetOrbTemplate(templateName)
+  -- print(A, 'OrbTemplateMixin:ChangeOrbTemplate()')
+  local cfg = L.orbLayouts[templateName]
+  self.templateName = templateName
+  self.FillingStatusBar:SetStatusBarTexture(cfg.statusBarTexture)
+  self.FillingStatusBar:SetStatusBarColor(unpack(cfg.statusBarColor))
+  self.OverlayFrame.SparkTexture:SetVertexColor(unpack(cfg.sparkColor))
+  self.OverlayFrame.GlowTexture:SetVertexColor(unpack(cfg.glowColor))
+  -- displayInfoID, panAdjustY, camScale, posAdjustX, posAdjustY, posAdjustZ
+  self.ModelFrame:SetOrbModel(cfg.displayInfoID, cfg.panAdjustY, cfg.camScale, cfg.posAdjustX, cfg.posAdjustY, cfg.posAdjustZ)
+  self.ModelFrame:SetAlpha(cfg.modelOpacity)
 end

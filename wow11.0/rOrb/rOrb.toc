@@ -2,7 +2,7 @@
 ## Author: zork
 ## Title: rOrb
 ## Notes: Orb facory using rOrbTemplate
-## IconTexture: Interface\AddOns\rLib\assets\logo-64
-## RequiredDeps: rOrbTemplate, rLib
+## IconTexture: Interface\AddOns\rOrbTemplate\assets\logo-64
+## RequiredDeps: rOrbTemplate
 
 rOrb.lua

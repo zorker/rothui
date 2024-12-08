@@ -6,7 +6,7 @@
     <Size x="256" y="256" />
     <Frames>
       <StatusBar parentKey="FillingStatusBar" mixin="OrbFillingStatusBarMixin">
-        <BarTexture file="Interface\AddOns\rOrbTemplate\media\orb_filling" />
+        <BarTexture file="Interface\AddOns\rOrbTemplate\media\orb_filling16" />
         <BarColor r="1" g="1" b="1" a="1" />
         <Anchors>
           <Anchor point="TOPLEFT" />
@@ -51,7 +51,8 @@
         </Anchors>
         <Layers>
           <Layer level="BACKGROUND" textureSubLevel="-3">
-            <Texture parentKey="SparkTexture" file="Interface\AddOns\rOrbTemplate\media\orb_spark" hidden="true">
+            <Texture parentKey="SparkTexture" file="Interface\AddOns\rOrbTemplate\media\orb_spark"
+              hidden="true">
               <Color r="1" g="1" b="1" a="1" />
               <Anchors>
                 <Anchor point="TOP" />
@@ -62,8 +63,8 @@
             <Texture parentKey="GlowTexture" file="Interface\AddOns\rOrbTemplate\media\orb_glow">
               <Color r="1" g="1" b="1" a="0" />
               <Anchors>
-                <Anchor point="TOPLEFT" x="-5" y="5" />
-                <Anchor point="BOTTOMRIGHT" x="5" y="-5" />
+                <Anchor point="TOPLEFT" />
+                <Anchor point="BOTTOMRIGHT" />
               </Anchors>
             </Texture>
           </Layer>

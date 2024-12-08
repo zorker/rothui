@@ -4,4 +4,6 @@
 ## Notes: Orb template engine
 ## IconTexture: Interface\AddOns\rOrbTemplate\assets\logo-64
 
+orb_layouts.lua
+
 OrbTemplate.xml

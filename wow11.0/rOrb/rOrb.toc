@@ -3,6 +3,6 @@
 ## Title: rOrb
 ## Notes: Orb facory using rOrbTemplate
 ## IconTexture: Interface\AddOns\rOrbTemplate\assets\logo-64
-## RequiredDeps: rOrbTemplate
+## RequiredDeps: rOrbTemplate, rLib
 
 rOrb.lua

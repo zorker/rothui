@@ -22,12 +22,12 @@
       <PlayerModel parentKey="ModelFrame" mixin="OrbModelFrameMixin">
         <Size x="256" y="256" />
         <Anchors>
-          <Anchor point="TOP" />
+          <Anchor point="BOTTOM" />
         </Anchors>
         <Layers>
           <Layer level="BACKGROUND">
             <Texture parentKey="BackgroundTexture">
-              <Color r="0" g="1" b="0" a="0" />
+              <Color r="0" g="0" b="1" a="0" />
               <Anchors>
                 <Anchor point="TOPLEFT" />
                 <Anchor point="BOTTOMRIGHT" />

@@ -14,8 +14,10 @@ L.orbLayouts["magenta-matrix"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 113764,
-  panAdjustY = 145,
-  camScale = 1,
+  panAdjustX = 1.4,
+  panAdjustY = 0,
+  panAdjustZ = 1.6,
+  camScale = .8,
   posAdjustX = 0,
   posAdjustY = 0,
   posAdjustZ = 0
@@ -28,8 +30,10 @@ L.orbLayouts["chtun-eye"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 94285,
-  panAdjustY = 150,
-  camScale = 1.3,
+  panAdjustX = 1.35,
+  panAdjustY = 0,
+  panAdjustZ = 1.45,
+  camScale = 0.73,
   posAdjustX = 0,
   posAdjustY = 0,
   posAdjustZ = 0
@@ -42,11 +46,13 @@ L.orbLayouts["magenta-swirly"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 88991,
-  panAdjustY = 19,
-  camScale = 0.055,
-  posAdjustX = 0.1,
+  panAdjustX = 8,
+  panAdjustY = 0,
+  panAdjustZ = 10.5,
+  camScale = 6,
+  posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = -0.1
+  posAdjustZ = 0
 }
 
 L.orbLayouts["deep-purple-starly"] = {
@@ -56,11 +62,13 @@ L.orbLayouts["deep-purple-starly"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 65947,
-  panAdjustY = 126,
-  camScale = 0.75,
+  panAdjustX = 1.5,
+  panAdjustY = 0,
+  panAdjustZ = 1.7,
+  camScale = 0.9,
   posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = -0.05
+  posAdjustZ = 0
 }
 
 L.orbLayouts["purble-wobbly"] = {
@@ -70,11 +78,13 @@ L.orbLayouts["purble-wobbly"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 83176,
-  panAdjustY = 82,
-  camScale = 0.25,
-  posAdjustX = 0.83,
-  posAdjustY = 0.15,
-  posAdjustZ = 0
+  panAdjustX = 2.4,
+  panAdjustY = 0,
+  panAdjustZ = 2.9,
+  camScale = 1.18,
+  posAdjustX = 0,
+  posAdjustY = 0.02,
+  posAdjustZ = -0.27
 }
 
 L.orbLayouts["red-slob-x1"] = {
@@ -84,11 +94,13 @@ L.orbLayouts["red-slob-x1"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 82009,
-  panAdjustY = 82,
-  camScale = 1.2,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = -2.3
+  posAdjustZ = 0
 }
 
 L.orbLayouts["red-planet"] = {
@@ -98,11 +110,13 @@ L.orbLayouts["red-planet"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = .5,
   displayInfoID = 81399,
-  panAdjustY = 60,
-  camScale = .175,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = .8
+  posAdjustZ = 0
 }
 
 L.orbLayouts["blue-planet"] = {
@@ -112,11 +126,13 @@ L.orbLayouts["blue-planet"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = .5,
   displayInfoID = 81327,
-  panAdjustY = 60,
-  camScale = .175,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = .8
+  posAdjustZ = 0
 }
 
 L.orbLayouts["red-slob-x2"] = {
@@ -126,11 +142,13 @@ L.orbLayouts["red-slob-x2"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 81077,
-  panAdjustY = 60,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
   camScale = 1,
-  posAdjustX = 1,
+  posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = -1.8
+  posAdjustZ = 0
 }
 
 L.orbLayouts["deep-purple-magic"] = {
@@ -140,8 +158,10 @@ L.orbLayouts["deep-purple-magic"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 80318,
-  panAdjustY = 149,
-  camScale = 1.3,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
   posAdjustY = 0,
   posAdjustZ = 0
@@ -154,11 +174,13 @@ L.orbLayouts["sandy-blitz"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 76935,
-  panAdjustY = 185,
-  camScale = 3,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = -0.7
+  posAdjustZ = 0
 }
 
 L.orbLayouts["aqua-swirl"] = {
@@ -168,11 +190,13 @@ L.orbLayouts["aqua-swirl"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 75294,
-  panAdjustY = 25,
-  camScale = 0.06,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
-  posAdjustY = -0.025,
-  posAdjustZ = 1.1
+  posAdjustY = 0,
+  posAdjustZ = 0
 }
 
 L.orbLayouts["green-buzz"] = {
@@ -182,11 +206,13 @@ L.orbLayouts["green-buzz"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 75298,
-  panAdjustY = 56.5,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
   camScale = 1,
   posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = -0.025
+  posAdjustZ = 0
 }
 
 L.orbLayouts["orange-marble"] = {
@@ -196,11 +222,13 @@ L.orbLayouts["orange-marble"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 74840,
-  panAdjustY = 120,
-  camScale = 0.65,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
-  posAdjustY = -0.05,
-  posAdjustZ = 0.3
+  posAdjustY = 0,
+  posAdjustZ = 0
 }
 
 L.orbLayouts["wierd-eye"] = {
@@ -210,11 +238,13 @@ L.orbLayouts["wierd-eye"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 69879,
-  panAdjustY = 8.5,
-  camScale = .82,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = -1.7
+  posAdjustZ = 0
 }
 
 L.orbLayouts["dark-green-claw"] = {
@@ -224,11 +254,13 @@ L.orbLayouts["dark-green-claw"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 66808,
-  panAdjustY = 60,
-  camScale = 0.16,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
-  posAdjustY = -0.025,
-  posAdjustZ = 0.81
+  posAdjustY = 0,
+  posAdjustZ = 0
 }
 
 L.orbLayouts["pink-portal"] = {
@@ -238,11 +270,13 @@ L.orbLayouts["pink-portal"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 66092,
-  panAdjustY = 50,
-  camScale = .14,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = .67
+  posAdjustZ = 0
 }
 
 L.orbLayouts["green-portal"] = {
@@ -252,11 +286,13 @@ L.orbLayouts["green-portal"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 66202,
-  panAdjustY = 50,
-  camScale = .14,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = .67
+  posAdjustZ = 0
 }
 
 L.orbLayouts["blue-portal"] = {
@@ -266,11 +302,13 @@ L.orbLayouts["blue-portal"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 64697,
-  panAdjustY = 50,
-  camScale = .14,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = .67
+  posAdjustZ = 0
 }
 
 L.orbLayouts["red-portal"] = {
@@ -280,11 +318,13 @@ L.orbLayouts["red-portal"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 64562,
-  panAdjustY = 50,
-  camScale = .14,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = .67
+  posAdjustZ = 0
 }
 
 L.orbLayouts["red-slob"] = {
@@ -294,11 +334,13 @@ L.orbLayouts["red-slob"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 60225,
-  panAdjustY = 86,
-  camScale = .32,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
-  posAdjustY = 0.1,
-  posAdjustZ = 0.1
+  posAdjustY = 0,
+  posAdjustZ = 0
 }
 
 L.orbLayouts["purple-portal"] = {
@@ -308,11 +350,13 @@ L.orbLayouts["purple-portal"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 58948,
-  panAdjustY = 60,
-  camScale = .18,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = .585
+  posAdjustZ = 0
 }
 
 L.orbLayouts["red-orange-blob"] = {
@@ -322,11 +366,13 @@ L.orbLayouts["red-orange-blob"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 56632,
-  panAdjustY = 172,
-  camScale = 4,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
-  posAdjustY = -0.525,
-  posAdjustZ = -5.4
+  posAdjustY = 0,
+  posAdjustZ = 0
 }
 
 L.orbLayouts["blue-purple-buzz"] = {
@@ -336,11 +382,13 @@ L.orbLayouts["blue-purple-buzz"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 48109,
-  panAdjustY = 56.5,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
   camScale = 1,
   posAdjustX = 0,
   posAdjustY = 0,
-  posAdjustZ = -0.025
+  posAdjustZ = 0
 }
 
 L.orbLayouts["purple-blob"] = {
@@ -350,11 +398,13 @@ L.orbLayouts["purple-blob"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 48254,
-  panAdjustY = 87,
-  camScale = .9,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
-  posAdjustY = -0.025,
-  posAdjustZ = -1.62
+  posAdjustY = 0,
+  posAdjustZ = 0
 }
 
 L.orbLayouts["red-orange-wobbly"] = {
@@ -364,11 +414,13 @@ L.orbLayouts["red-orange-wobbly"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 47882,
-  panAdjustY = 88,
-  camScale = .9,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
-  posAdjustY = -0.025,
-  posAdjustZ = -1.62
+  posAdjustY = 0,
+  posAdjustZ = 0
 }
 
 L.orbLayouts["azeroth"] = {
@@ -378,11 +430,13 @@ L.orbLayouts["azeroth"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 44652,
-  panAdjustY = 110,
-  camScale = .54,
+  panAdjustX = 1.8,
+  panAdjustY = 0,
+  panAdjustZ = 1.95,
+  camScale = 1,
   posAdjustX = 0,
-  posAdjustY = 0.01,
-  posAdjustZ = -0.01
+  posAdjustY = -0.02,
+  posAdjustZ = 0
 }
 
 L.orbLayouts["white-cloud"] = {
@@ -392,10 +446,12 @@ L.orbLayouts["white-cloud"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 42938,
-  panAdjustY = 33,
-  camScale = 0.085,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
   posAdjustX = 0,
-  posAdjustY = .15,
+  posAdjustY = 0,
   posAdjustZ = 0
 }
 

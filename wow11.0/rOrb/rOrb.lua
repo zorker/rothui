@@ -12,10 +12,12 @@ local function AddTemplateToList(templateName)
 end
 
 AddTemplateToList("magenta-matrix")
+AddTemplateToList("azeroth")
+AddTemplateToList("deep-purple-starly")
 AddTemplateToList("chtun-eye")
 AddTemplateToList("magenta-swirly")
-AddTemplateToList("deep-purple-starly")
 AddTemplateToList("purble-wobbly")
+--[[
 AddTemplateToList("red-planet")
 AddTemplateToList("blue-planet")
 AddTemplateToList("deep-purple-magic")
@@ -33,8 +35,8 @@ AddTemplateToList("red-slob")
 AddTemplateToList("purple-portal")
 AddTemplateToList("red-orange-blob")
 AddTemplateToList("blue-purple-buzz")
-AddTemplateToList("azeroth")
 AddTemplateToList("white-cloud")
+]]
 
 
 
@@ -122,8 +124,8 @@ end
 local function CreateOrb(templateName)
   local orb = CreateFrame("Frame", "rOrbPlayerHealth", UIParent, "OrbTemplate")
   orb:SetOrbTemplate(templateName)
-  orb:SetPoint("CENTER", 0, 0)
-  orb:SetScale(0.8)
+  orb:SetPoint("CENTER", 0, 100)
+  orb:SetScale(1.2)
   EnableDrag(orb)
   local healthSlider = CreateSliderWithEditbox(orb, A .. "HealthSlider", 0, 100, 100)
   healthSlider:ClearAllPoints()
@@ -172,4 +174,8 @@ end
 -- Load
 -------------------------------------------------
 
-CreateOrb(orbTemplates[#orbTemplates])
+local function OrbFactory()
+  CreateOrb(orbTemplates[#orbTemplates])
+end
+
+rLib:RegisterCallback("PLAYER_LOGIN", OrbFactory)

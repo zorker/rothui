@@ -12,20 +12,17 @@ local function AddTemplateToList(templateName)
 end
 
 AddTemplateToList("magenta-matrix")
-AddTemplateToList("azeroth")
 AddTemplateToList("deep-purple-starly")
 AddTemplateToList("chtun-eye")
 AddTemplateToList("magenta-swirly")
-AddTemplateToList("purble-wobbly")
---[[
-AddTemplateToList("red-planet")
-AddTemplateToList("blue-planet")
+AddTemplateToList("azeroth")
 AddTemplateToList("deep-purple-magic")
 AddTemplateToList("sandy-blitz")
 AddTemplateToList("aqua-swirl")
 AddTemplateToList("green-buzz")
 AddTemplateToList("orange-marble")
 AddTemplateToList("wierd-eye")
+--[[
 AddTemplateToList("dark-green-claw")
 AddTemplateToList("pink-portal")
 AddTemplateToList("green-portal")

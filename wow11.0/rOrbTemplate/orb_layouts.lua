@@ -14,45 +14,7 @@ L.orbLayouts["magenta-matrix"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 113764,
-  panAdjustX = 1.4,
-  panAdjustY = 0,
-  panAdjustZ = 1.6,
-  camScale = .8,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
-}
-
-L.orbLayouts["chtun-eye"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {.6, 0.3, 0, 1},
-  sparkColor = {.6, .3, 0, 1},
-  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
-  modelOpacity = 1,
-  displayInfoID = 94285,
-  panAdjustX = 1.35,
-  panAdjustY = 0,
-  panAdjustZ = 1.45,
-  camScale = 0.73,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
-}
-
-L.orbLayouts["magenta-swirly"] = {
-  statusBarTexture = mediaFolder .. "orb_filling19",
-  statusBarColor = {.6, 0, .6, 1},
-  sparkColor = {.8, 0, .8, 1},
-  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
-  modelOpacity = 1,
-  displayInfoID = 88991,
-  panAdjustX = 8,
-  panAdjustY = 0,
-  panAdjustZ = 10.5,
-  camScale = 6,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
+  camScale = 0.8
 }
 
 L.orbLayouts["deep-purple-starly"] = {
@@ -62,93 +24,38 @@ L.orbLayouts["deep-purple-starly"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 65947,
-  panAdjustX = 1.5,
-  panAdjustY = 0,
-  panAdjustZ = 1.7,
-  camScale = 0.9,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
+  camScale = 0.9
 }
 
-L.orbLayouts["purble-wobbly"] = {
+L.orbLayouts["chtun-eye"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {1, 0.3, .5, 1},
-  sparkColor = {1, 0.3, .5, 1},
+  statusBarColor = {.6, 0.3, 0, 1},
+  sparkColor = {.6, .3, 0, 1},
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
-  displayInfoID = 83176,
-  panAdjustX = 2.4,
-  panAdjustY = 0,
-  panAdjustZ = 2.9,
-  camScale = 1.18,
-  posAdjustX = 0,
-  posAdjustY = 0.02,
-  posAdjustZ = -0.27
+  displayInfoID = 94285,
+  camScale = 0.73
 }
 
-L.orbLayouts["red-slob-x1"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {.6, 0, 0, 1},
-  sparkColor = {.8, 0, 0, 1},
+L.orbLayouts["magenta-swirly"] = {
+  statusBarTexture = mediaFolder .. "orb_filling19",
+  statusBarColor = {.6, 0, .6, 1},
+  sparkColor = {.8, 0, .8, 1},
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
-  displayInfoID = 82009,
-  panAdjustX = 0,
-  panAdjustY = 0,
-  panAdjustZ = 1,
-  camScale = 1,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
+  displayInfoID = 88991,
+  camScale = 6
 }
 
-L.orbLayouts["red-planet"] = {
+L.orbLayouts["azeroth"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {.6, 0, 0, 1},
-  sparkColor = {.9, 0, 0, 1},
-  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
-  modelOpacity = .5,
-  displayInfoID = 81399,
-  panAdjustX = 0,
-  panAdjustY = 0,
-  panAdjustZ = 1,
-  camScale = 1,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
-}
-
-L.orbLayouts["blue-planet"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {0, 0.6, 0.8, 1},
-  sparkColor = {0, .8, 1, 1},
-  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
-  modelOpacity = .5,
-  displayInfoID = 81327,
-  panAdjustX = 0,
-  panAdjustY = 0,
-  panAdjustZ = 1,
-  camScale = 1,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
-}
-
-L.orbLayouts["red-slob-x2"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {.6, 0, 0, 1},
-  sparkColor = {.8, 0, 0, 1},
+  statusBarColor = {1, 1, 1, 1},
+  sparkColor = {0.8, 1, 0.9, 1},
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
-  displayInfoID = 81077,
-  panAdjustX = 0,
-  panAdjustY = 0,
-  panAdjustZ = 1,
+  displayInfoID = 44652,
   camScale = 1,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
+  posAdjustY = -0.03
 }
 
 L.orbLayouts["deep-purple-magic"] = {
@@ -158,13 +65,7 @@ L.orbLayouts["deep-purple-magic"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 80318,
-  panAdjustX = 0,
-  panAdjustY = 0,
-  panAdjustZ = 1,
-  camScale = 1,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
+  camScale = 0.8
 }
 
 L.orbLayouts["sandy-blitz"] = {
@@ -174,13 +75,9 @@ L.orbLayouts["sandy-blitz"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 76935,
-  panAdjustX = 0,
-  panAdjustY = 0,
-  panAdjustZ = 1,
-  camScale = 1,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
+  camScale = 0.625,
+  posAdjustZ = -0.18,
+  panAdjustZ = 1.25
 }
 
 L.orbLayouts["aqua-swirl"] = {
@@ -190,13 +87,9 @@ L.orbLayouts["aqua-swirl"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 75294,
-  panAdjustX = 0,
-  panAdjustY = 0,
-  panAdjustZ = 1,
-  camScale = 1,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
+  camScale = 5,
+  posAdjustZ = -1.5,
+  panAdjustZ = 1.5
 }
 
 L.orbLayouts["green-buzz"] = {
@@ -206,13 +99,9 @@ L.orbLayouts["green-buzz"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 75298,
-  panAdjustX = 0,
-  panAdjustY = 0,
-  panAdjustZ = 1,
-  camScale = 1,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
+  camScale = .6,
+  panAdjustX = 1.3,
+  panAdjustZ = 1.55
 }
 
 L.orbLayouts["orange-marble"] = {
@@ -222,13 +111,7 @@ L.orbLayouts["orange-marble"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 74840,
-  panAdjustX = 0,
-  panAdjustY = 0,
-  panAdjustZ = 1,
-  camScale = 1,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
+  camScale = 1
 }
 
 L.orbLayouts["wierd-eye"] = {
@@ -238,13 +121,9 @@ L.orbLayouts["wierd-eye"] = {
   glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
   modelOpacity = 1,
   displayInfoID = 69879,
-  panAdjustX = 0,
-  panAdjustY = 0,
-  panAdjustZ = 1,
-  camScale = 1,
-  posAdjustX = 0,
-  posAdjustY = 0,
-  posAdjustZ = 0
+  camScale = 0.69,
+  posAdjustZ = -6.9,
+  panByPosAdjustZ = true
 }
 
 L.orbLayouts["dark-green-claw"] = {
@@ -423,22 +302,6 @@ L.orbLayouts["red-orange-wobbly"] = {
   posAdjustZ = 0
 }
 
-L.orbLayouts["azeroth"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {1, 1, 1, 1},
-  sparkColor = {0.8, 1, 0.9, 1},
-  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
-  modelOpacity = 1,
-  displayInfoID = 44652,
-  panAdjustX = 1.8,
-  panAdjustY = 0,
-  panAdjustZ = 1.95,
-  camScale = 1,
-  posAdjustX = 0,
-  posAdjustY = -0.02,
-  posAdjustZ = 0
-}
-
 L.orbLayouts["white-cloud"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
   statusBarColor = {.4, .4, .4, 1},
@@ -526,3 +389,83 @@ L.orbLayouts["white-cloud"] = {
 -- 56959
 -- 55752
 -- 48106
+
+L.orbLayouts["purble-wobbly-xxx1"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {1, 0.3, .5, 1},
+  sparkColor = {1, 0.3, .5, 1},
+  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
+  modelOpacity = 1,
+  displayInfoID = 83176,
+  panAdjustX = 2.4,
+  panAdjustY = 0,
+  panAdjustZ = 2.9,
+  camScale = 1.18,
+  posAdjustX = 0,
+  posAdjustY = 0.02,
+  posAdjustZ = -0.27
+}
+
+L.orbLayouts["red-slob-xxx1"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {.6, 0, 0, 1},
+  sparkColor = {.8, 0, 0, 1},
+  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
+  modelOpacity = 1,
+  displayInfoID = 82009,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
+  posAdjustX = 0,
+  posAdjustY = 0,
+  posAdjustZ = 0
+}
+
+L.orbLayouts["red-planet-xxx1"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {.6, 0, 0, 1},
+  sparkColor = {.9, 0, 0, 1},
+  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
+  modelOpacity = .5,
+  displayInfoID = 81399,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
+  posAdjustX = 0,
+  posAdjustY = 0,
+  posAdjustZ = 0
+}
+
+L.orbLayouts["blue-planet-xxx1"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {0, 0.6, 0.8, 1},
+  sparkColor = {0, .8, 1, 1},
+  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
+  modelOpacity = .5,
+  displayInfoID = 81327,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
+  posAdjustX = 0,
+  posAdjustY = 0,
+  posAdjustZ = 0
+}
+
+L.orbLayouts["red-slob-xxx2"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {.6, 0, 0, 1},
+  sparkColor = {.8, 0, 0, 1},
+  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
+  modelOpacity = 1,
+  displayInfoID = 81077,
+  panAdjustX = 0,
+  panAdjustY = 0,
+  panAdjustZ = 1,
+  camScale = 1,
+  posAdjustX = 0,
+  posAdjustY = 0,
+  posAdjustZ = 0
+}

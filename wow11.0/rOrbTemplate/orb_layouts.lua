@@ -343,6 +343,57 @@ L.orbLayouts["el-machina"] = {
   camScale = 2.5
 }
 
+L.orbLayouts["red-blue-knot"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {.7, 0, 0, 1},
+  sparkColor = {1, 0.1, 0, 1},
+  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
+  modelOpacity = 1,
+  displayInfoID = 93977,
+  camScale = 2.2,
+  posAdjustZ = -1.7,
+  panAdjustZ = 2
+}
+
+L.orbLayouts["blue-ring-disco"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {0, 0, 0.6, 1},
+  sparkColor = {0, 0.1, 1, 1},
+  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
+  modelOpacity = 1,
+  displayInfoID = 91994,
+  camScale = .9
+}
+
+L.orbLayouts["dwarf-machina"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {0.6, 0.2, 0, 1},
+  sparkColor = {1, 0.5, 0, 1},
+  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
+  modelOpacity = 1,
+  displayInfoID = 38699,
+  camScale = 0.45
+}
+
+L.orbLayouts["circle-rune"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {0.4, 0.2, .6, 1},
+  sparkColor = {0.8, 0.5, 1, 1},
+  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
+  modelOpacity = 1,
+  displayInfoID = 120816,
+  camScale = .48
+}
+
+L.orbLayouts["purple-storm"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {0.5, 0.15, 1, 1},
+  sparkColor = {0.5, 0.15, 1, 1},
+  glowColor = {0, 1, 0, 0}, -- for low hp or debuffs etc
+  modelOpacity = 1,
+  displayInfoID = 118264,
+  camScale = 4.4
+}
 
 
 -- cool displainfo list for the factory

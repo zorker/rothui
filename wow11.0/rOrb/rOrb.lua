@@ -41,6 +41,11 @@ AddTemplateToList("purple-hole")
 AddTemplateToList("blue-swirly")
 AddTemplateToList("sand-storm")
 AddTemplateToList("el-machina")
+AddTemplateToList("red-blue-knot")
+AddTemplateToList("blue-ring-disco")
+AddTemplateToList("dwarf-machina")
+
+AddTemplateToList("purple-storm")
 
 
 -------------------------------------------------

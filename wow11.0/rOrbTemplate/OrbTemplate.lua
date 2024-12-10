@@ -190,9 +190,13 @@ function OrbOverlayFrameMixin:OnHide()
   -- print(A, 'OrbOverlayFrameMixin:OnHide()')
 end
 
-function OrbTemplateMixin:SetOrbTemplate(templateName)
+function OrbTemplateMixin:SetOrbTemplate(templateName, templateConfig)
   -- print(A, 'OrbTemplateMixin:ChangeOrbTemplate()')
-  self.orbConfig = L.orbLayouts[templateName]
+  if templateConfig and type(templateConfig) == "table" then
+    self.orbConfig = templateConfig
+  else
+    self.orbConfig = L.orbLayouts[templateName]
+  end
   self.ModelFrame.orbConfig = self.orbConfig
   self.templateName = templateName
   self.FillingStatusBar:SetStatusBarTexture(self.orbConfig.statusBarTexture)

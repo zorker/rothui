@@ -44,8 +44,25 @@ AddTemplateToList("el-machina")
 AddTemplateToList("red-blue-knot")
 AddTemplateToList("blue-ring-disco")
 AddTemplateToList("dwarf-machina")
-
 AddTemplateToList("purple-storm")
+AddTemplateToList("white-boulder")
+AddTemplateToList("white-snowstorm")
+AddTemplateToList("fire-dot")
+AddTemplateToList("purple-discoball")
+AddTemplateToList("white-tornado")
+AddTemplateToList("white-snowglobe")
+AddTemplateToList("white-zebra")
+AddTemplateToList("white-spark")
+AddTemplateToList("aqua-spark")
+AddTemplateToList("purple-growup")
+AddTemplateToList("aqua-suck-in")
+AddTemplateToList("pink-portal-swirl")
+AddTemplateToList("purple-earth")
+AddTemplateToList("golden-earth")
+AddTemplateToList("green-earth")
+AddTemplateToList("pink-earth")
+
+AddTemplateToList("golden-tornado")
 
 
 -------------------------------------------------
@@ -67,6 +84,15 @@ local function EnableDrag(self)
   self:EnableMouse(true)
   self:SetClampedToScreen(true)
   self:SetMovable(true)
+  self:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_TOP", 0, 5)
+    GameTooltip:AddLine(self:GetName(), 0, 1, 0.5, 1, 1, 1)
+    GameTooltip:AddLine("Orb-Template: "..self.templateName)
+    GameTooltip:Show()
+  end)
+  self:SetScript("OnLeave", function(self)
+    GameTooltip:Hide()
+  end)
 end
 
 local function CreateColorPickerButton(parent, name, color)
@@ -174,19 +200,23 @@ local function CreateOrb(templateName)
     self:ClearFocus()
   end)
 
-  local orbScaleSlider = CreateSliderWithEditbox(orb, A .. "ScaleSlider", 70, 130, 100)
+  local orbScaleSlider = CreateSliderWithEditbox(orb, A .. "ScaleSlider", 80, 130, 100)
   orbScaleSlider:ClearAllPoints()
-  orbScaleSlider:SetPoint("TOP", templateSelector, "BOTTOM", 0, -30)
+  orbScaleSlider:SetPoint("RIGHT", healthSlider, "LEFT", -70, 0)
   orbScaleSlider.text:SetText("Scale")
   orbScaleSlider:SetScript("OnValueChanged", function(self, value)
     value = math.floor(value + 0.5)
     self.editbox:SetText(value)
+    healthSlider:SetValue(100)
     self.__parent:SetScale(value / 100)
+    self.__parent.ModelFrame:ResetOrbModel()
   end)
   orbScaleSlider.editbox:SetScript("OnEnterPressed", function(self)
     self:GetParent():SetValue(self:GetText())
     self:ClearFocus()
   end)
+
+  return orb
 
 end
 
@@ -194,8 +224,10 @@ end
 -- Load
 -------------------------------------------------
 
-local function OrbFactory()
-  CreateOrb(orbTemplates[#orbTemplates])
+local orb = CreateOrb(orbTemplates[#orbTemplates])
+
+local function ResetOrbModel()
+  orb.ModelFrame:ResetOrbModel()
 end
 
-rLib:RegisterCallback("PLAYER_LOGIN", OrbFactory)
+rLib:RegisterCallback("PLAYER_LOGIN", ResetOrbModel)

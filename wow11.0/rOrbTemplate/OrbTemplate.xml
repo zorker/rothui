@@ -61,7 +61,7 @@
           </Layer>
           <Layer level="BACKGROUND" textureSubLevel="-2">
             <Texture parentKey="GlowTexture" file="Interface\AddOns\rOrbTemplate\media\orb_glow">
-              <Color r="1" g="1" b="1" a="0" />
+              <Color r="0" g="1" b="0" a="0" />
               <Anchors>
                 <Anchor point="TOPLEFT" />
                 <Anchor point="BOTTOMRIGHT" />

@@ -50,7 +50,9 @@ end
 function OrbFillingStatusBarMixin:OnValueChanged(value)
   -- print(A, 'OrbFillingStatusBarMixin:OnValueChanged()')
   local orb = self:GetParent()
-  orb.ModelFrame:OrbModelAdjustPositionByValue(value)
+  if orb.ModelFrame.templateConfig then
+    orb.ModelFrame:OrbModelAdjustPositionByValue(value)
+  end
   orb.OverlayFrame:UpdateOrbSpark(value)
 end
 
@@ -116,7 +118,7 @@ function OrbModelFrameMixin:OrbModelAdjustPositionByValue(value)
   end
   self:SetPosition(newPosX, newPosY, newPosZ)
   if self.templateConfig.adjustRotationByValue then
-    self:SetRotation(1-value)
+    self:SetRotation(1 - value)
   end
   -- self:PrintPositionData()
 end
@@ -143,15 +145,9 @@ function OrbModelFrameMixin:OrbModelOnModelLoaded()
   -- on top we can adjust the distance scale with SetCamDistanceScale
   self:ResetModel()
   local ctx, cty, ctz = self:GetCameraTarget()
-  if self.templateConfig.posAdjustX then
-    ctx = ctx + self.templateConfig.posAdjustX * orb:GetScale()
-  end
-  if self.templateConfig.posAdjustY then
-    cty = cty + self.templateConfig.posAdjustY * orb:GetScale()
-  end
-  if self.templateConfig.posAdjustZ then
-    ctz = ctz + self.templateConfig.posAdjustZ * orb:GetScale()
-  end
+  ctx = ctx + (self.templateConfig.posAdjustX or 0) * orb:GetScale()
+  cty = cty + (self.templateConfig.posAdjustY or 0) * orb:GetScale()
+  ctz = ctz + (self.templateConfig.posAdjustZ or 0) * orb:GetScale()
   self.origPosX = ctx
   self.origPosY = cty
   self.origPosZ = ctz
@@ -176,6 +172,7 @@ function OrbOverlayFrameMixin:OnLoad()
   -- print(A, 'OrbOverlayFrameMixin:OnLoad()')
   self.SparkTexture:SetBlendMode("ADD")
   self.GlowTexture:SetBlendMode("BLEND")
+  self.LowHealthTexture:SetBlendMode("BLEND")
   self:SetFrameLevel(self:GetParent().ModelFrame:GetFrameLevel() + 1)
 end
 

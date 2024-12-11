@@ -5,4 +5,7 @@
 ## IconTexture: Interface\AddOns\rOrbTemplate\assets\logo-64
 ## RequiredDeps: rOrbTemplate, rLib
 
+templates.lua
+functions.lua
+canvas.lua
 rOrb.lua

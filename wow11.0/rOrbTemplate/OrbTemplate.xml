@@ -50,7 +50,7 @@
           <Anchor point="BOTTOMRIGHT" />
         </Anchors>
         <Layers>
-          <Layer level="BACKGROUND" textureSubLevel="-3">
+          <Layer level="BACKGROUND" textureSubLevel="-4">
             <Texture parentKey="SparkTexture" file="Interface\AddOns\rOrbTemplate\media\orb_spark"
               hidden="true">
               <Color r="1" g="1" b="1" a="1" />
@@ -59,9 +59,18 @@
               </Anchors>
             </Texture>
           </Layer>
-          <Layer level="BACKGROUND" textureSubLevel="-2">
+          <Layer level="BACKGROUND" textureSubLevel="-3">
             <Texture parentKey="GlowTexture" file="Interface\AddOns\rOrbTemplate\media\orb_glow">
               <Color r="0" g="1" b="0" a="0" />
+              <Anchors>
+                <Anchor point="TOPLEFT" />
+                <Anchor point="BOTTOMRIGHT" />
+              </Anchors>
+            </Texture>
+          </Layer>
+          <Layer level="BACKGROUND" textureSubLevel="-2">
+            <Texture parentKey="LowHealthTexture" file="Interface\AddOns\rOrbTemplate\media\orb_glow2">
+              <Color r="1" g="0" b="0" a="0" />
               <Anchors>
                 <Anchor point="TOPLEFT" />
                 <Anchor point="BOTTOMRIGHT" />

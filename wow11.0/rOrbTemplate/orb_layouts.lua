@@ -196,13 +196,25 @@ L.orbLayouts["green-buzz"] = {
   panAdjustZ = 1.55
 }
 
-L.orbLayouts["blue-purple-buzz"] = {
+L.orbLayouts["purple-buzz"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
   statusBarColor = {0.6, 0, 0.6, 1},
   sparkColor = {.8, 0, 1, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
   displayInfoID = 48109,
+  camScale = .6,
+  panAdjustX = 1.3,
+  panAdjustZ = 1.55
+}
+
+L.orbLayouts["blue-buzz"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {0.6, 0, 0.6, 1},
+  sparkColor = {.8, 0, 1, 1},
+  glowColor = {0, 1, 0, 0},
+  modelOpacity = 1,
+  displayInfoID = 48106,
   camScale = .6,
   panAdjustX = 1.3,
   panAdjustZ = 1.55
@@ -498,7 +510,7 @@ L.orbLayouts["purple-growup"] = {
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
   displayInfoID = 95410,
-  camScale = 7,
+  camScale = 7
 }
 
 L.orbLayouts["aqua-suck-in"] = {
@@ -582,20 +594,70 @@ L.orbLayouts["golden-tornado"] = {
   panAdjustZ = 1.5
 }
 
---
---
---
---
---
+L.orbLayouts["blue-electric"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {0.4, 1, 1, 1},
+  sparkColor = {0.4, 1, 1, 1},
+  glowColor = {0, 1, 0, 0},
+  modelOpacity = 1,
+  displayInfoID = 90127,
+  camScale = 0.7
+}
 
--- 90127
--- 89106
--- 84936
--- 70769
--- 57012
--- 56959
--- 55752
--- 48106
+L.orbLayouts["blue-splash"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {0.3, 0.5, .8, 1},
+  sparkColor = {0.3, 0.5, 1, 1},
+  glowColor = {0, 1, 0, 0},
+  modelOpacity = 1,
+  displayInfoID = 84936,
+  camScale = 0.6
+}
+
+L.orbLayouts["elvish-object"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {0.3, 0.5, .8, 1},
+  sparkColor = {0.3, 0.5, 1, 1},
+  glowColor = {0, 1, 0, 0},
+  modelOpacity = 1,
+  displayInfoID = 70769,
+  camScale = 0.41,
+  adjustRotationByValue = true
+}
+
+L.orbLayouts["magic-tornado"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {0.3, 0.5, .8, 1},
+  sparkColor = {0.3, 0.5, 1, 1},
+  glowColor = {0, 1, 0, 0},
+  modelOpacity = 1,
+  displayInfoID = 56959,
+  camScale = 4,
+  posAdjustZ = -0.5,
+  posAdjustY = 0.25,
+  panAdjustY = -0.5,
+  panAdjustZ = -1
+}
+
+L.orbLayouts["snow-flake"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {0.5, 0.6, 0.6, 1},
+  sparkColor = {0.6, 1, 1, 1},
+  glowColor = {0, 1, 0, 0},
+  modelOpacity = 1,
+  displayInfoID = 55752,
+  camScale = 0.65,
+  posAdjustZ = -0.15
+}
+
+
+
+--
+--
+--
+--
+--
+--
 
 -- cool displainfo list for the factory
 
@@ -662,6 +724,7 @@ L.orbLayouts["golden-tornado"] = {
 -- 92614
 -- 90499
 -- 89106
+-- 90127
 -- 84936
 -- 70769
 -- 57012
@@ -818,4 +881,14 @@ L.orbLayouts["black-widow-xxx1"] = {
   posAdjustZ = -0.5,
   panAdjustZ = 1.5,
   adjustCamScaleByOrbScale = true
+}
+
+L.orbLayouts["blue-splash2-xxx1"] = {
+  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarColor = {0.3, 0.5, .8, 1},
+  sparkColor = {0.3, 0.5, 1, 1},
+  glowColor = {0, 1, 0, 0},
+  modelOpacity = 1,
+  displayInfoID = 57012,
+  camScale = 1
 }

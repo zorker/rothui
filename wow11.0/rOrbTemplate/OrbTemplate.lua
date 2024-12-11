@@ -115,6 +115,9 @@ function OrbModelFrameMixin:OrbModelAdjustPositionByValue(value)
     newPosY = newPosY + heightDiffPx * self.templateConfig.panAdjustY / orb.height
   end
   self:SetPosition(newPosX, newPosY, newPosZ)
+  if self.templateConfig.adjustRotationByValue then
+    self:SetRotation(1-value)
+  end
   -- self:PrintPositionData()
 end
 

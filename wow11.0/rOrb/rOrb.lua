@@ -28,7 +28,8 @@ AddTemplateToList("red-portal")
 AddTemplateToList("purple-portal")
 AddTemplateToList("red-slob")
 AddTemplateToList("green-buzz")
-AddTemplateToList("blue-purple-buzz")
+AddTemplateToList("purple-buzz")
+AddTemplateToList("blue-buzz")
 AddTemplateToList("white-cloud")
 AddTemplateToList("magic-swirly")
 AddTemplateToList("green-beam")
@@ -61,9 +62,12 @@ AddTemplateToList("purple-earth")
 AddTemplateToList("golden-earth")
 AddTemplateToList("green-earth")
 AddTemplateToList("pink-earth")
-
 AddTemplateToList("golden-tornado")
-
+AddTemplateToList("blue-electric")
+AddTemplateToList("blue-splash")
+AddTemplateToList("elvish-object")
+AddTemplateToList("magic-tornado")
+AddTemplateToList("snow-flake")
 
 -------------------------------------------------
 -- Function

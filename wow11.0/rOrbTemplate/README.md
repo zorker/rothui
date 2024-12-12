@@ -69,6 +69,12 @@ rOrbTemplate provides a bunch of preset orb templates. Here is the list of the c
 
 ![Imgur](https://i.imgur.com/VyMTRSD.jpeg)
 
+## rOrbTemplateViewer
+
+To check all templates in detail and to experiment with some settings you can download the viewer addon I provided.
+
+https://github.com/zorker/rothui/tree/master/wow11.0/rOrbTemplateViewer
+
 ## TOC-file
 
 Make sure that your addon lists rOrbTemplate as a required dependency in the toc-file.

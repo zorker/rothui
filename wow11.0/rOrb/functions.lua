@@ -79,12 +79,13 @@ function L.F:CreateColorPickerButton(parent, name, color, tooltipText)
   return button
 end
 
-function L.F:CreateSliderWithEditbox(parent, name, minValue, maxValue, curValue)
+function L.F:CreateSliderWithEditbox(parent, name, title, minValue, maxValue, curValue)
   local slider = CreateFrame("Slider", name, parent, "OptionsSliderTemplate")
   local editbox = CreateFrame("EditBox", "$parentEditBox", slider, "InputBoxTemplate")
   slider.__parent = parent
   slider:SetMinMaxValues(minValue, maxValue)
   slider:SetValue(curValue)
+  slider.lastValue = curValue
   slider:SetValueStep(1)
   slider.text = _G[slider:GetName() .. "Text"]
   editbox:SetSize(30, 30)
@@ -92,8 +93,23 @@ function L.F:CreateSliderWithEditbox(parent, name, minValue, maxValue, curValue)
   editbox:SetPoint("LEFT", slider, "RIGHT", 15, 0)
   editbox:SetText(slider:GetValue())
   editbox:SetAutoFocus(false)
+  slider.text:SetText(title)
   editbox.slider = slider
   slider.editbox = editbox
+  slider:SetScript("OnValueChanged", function(self, value)
+    value = math.floor(value + 0.5)
+    print(self:GetName(),"OnValueChanged", value, self.lastValue)
+    if value == self.lastValue then
+      return
+    end
+    self.editbox:SetText(value)
+    self.lastValue = value
+    self:UpdateValue(value)
+  end)
+  editbox:SetScript("OnEnterPressed", function(self)
+    self.slider:SetValue(self:GetText())
+    self:ClearFocus()
+  end)
   return slider
 end
 
@@ -112,6 +128,11 @@ function L.F:CreateEditBox(parent, name, title, value)
   e:SetAutoFocus(false)
   e:SetText(value)
   e:SetJustifyH("CENTER")
+  e:SetScript("OnEnterPressed", function(self)
+    local value = math.max(math.floor(self:GetNumber()), 1)
+    self:SetText(value)
+    self:UpdateValue(value)
+  end)
   if title then
     e.title = e:CreateFontString(nil, "BACKGROUND")
     e.title:SetPoint("BOTTOM", e, "TOP", 0, 0)

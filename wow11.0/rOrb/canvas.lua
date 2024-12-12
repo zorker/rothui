@@ -23,14 +23,9 @@ local function UpdateModelPosition(orb, row, col, size)
 end
 
 local function UpdateDisplayIndex(orb, displayIndex)
-  orb.FillingStatusBar:SetValue(1) -- make sure the bar is filled before reseting the template
   if L.orbTemplates[displayIndex] then
     orb:SetOrbTemplate(L.orbTemplates[displayIndex])
     orb.title:SetText(orb.templateName)
-    C_Timer.After(0.1, function()
-      orb.FillingStatusBar:SetValue(orb:GetParent().healthSlider:GetValue() / 100)
-
-    end)
     orb:Show()
   else
     orb.templateName = nil
@@ -89,10 +84,23 @@ function L.canvas:UpdateAllLowHealthColors()
   end
 end
 
-function L.canvas:UpdateAllModelOpacities()
-  local a = self.modelOpacitySlider:GetValue()/100
+function L.canvas:UpdateAllFillingStatusBarValues()
+  local v = self.healthSlider:GetValue() / 100
   for i, orb in pairs(self.M) do
-    orb.ModelFrame:SetAlpha(a)
+    orb.FillingStatusBar:SetValue(v)
+  end
+end
+
+function L.canvas:UpdateAllModelOpacities()
+  local a = self.modelOpacitySlider:GetValue() / 100
+  for i, orb in pairs(self.M) do
+    if a <= 1 then
+      orb.ModelFrame:SetAlpha(a)
+    else
+      if orb.templateConfig then
+        orb.ModelFrame:SetAlpha(orb.templateConfig.modelOpacity)
+      end
+    end
   end
 end
 
@@ -111,15 +119,15 @@ end
 
 function L.canvas:UpdateAllFillingStatusBarTextures()
   local value = self.fillingStatusBarTextureSlider:GetValue()
-  local textureFile = L.mediaFolder.."orb_filling"..value
+  local textureFile = L.mediaFolder .. "orb_filling" .. value
   for i, orb in pairs(self.M) do
-      if value > 0 then
-        orb.FillingStatusBar:SetStatusBarTexture(textureFile)
-      else
-        if orb.templateConfig then
-          orb.FillingStatusBar:SetStatusBarTexture(orb.templateConfig.statusBarTexture)
-        end
+    if value > 0 then
+      orb.FillingStatusBar:SetStatusBarTexture(textureFile)
+    else
+      if orb.templateConfig then
+        orb.FillingStatusBar:SetStatusBarTexture(orb.templateConfig.statusBarTexture)
       end
+    end
   end
 end
 
@@ -240,12 +248,10 @@ function L.canvas:Init()
   -- canvas page editbox
   self.pageEditBox = L.F:CreateEditBox(self, L.name .. "CanvasPageEditbox", "Page", self.canvasPage)
   self.pageEditBox:SetPoint("BOTTOM", self, "BOTTOM", 0, 10)
-  self.pageEditBox:SetScript("OnEnterPressed", function(self)
-    local value = math.max(math.floor(self:GetNumber()), 1)
-    self:SetText(value)
+  function self.pageEditBox:UpdateValue(value)
     L.canvas.canvasPage = value
     L.canvas:UpdateAllModels()
-  end)
+  end
 
   -- canvas next page button
   self.nextPageButton = L.F:CreateButton(self, L.name .. "CanvasNextPageButton", "next >")
@@ -280,87 +286,68 @@ function L.canvas:Init()
   -- canvas displayIndex editbox
   self.displayIndexEditBox = L.F:CreateEditBox(self, L.name .. "CanvasDisplayIndexEditbox", "Index", 1)
   self.displayIndexEditBox:SetPoint("BOTTOMLEFT", 10, 10)
-  self.displayIndexEditBox:SetScript("OnEnterPressed", function(self)
-    local value = math.max(math.floor(self:GetNumber()), 1)
-    self:SetText(value)
+  function self.displayIndexEditBox:UpdateValue(value)
     L.canvas:UpdatePageForDisplayIndex(value)
-  end)
+  end
 
-  self.healthSlider = L.F:CreateSliderWithEditbox(self, L.name .. "CanvasHealthSlider", 0, 100, 100)
-  self.healthSlider:ClearAllPoints()
+  self.healthSlider = L.F:CreateSliderWithEditbox(self, L.name .. "CanvasHealthSlider", "Health", 0, 100, 100)
   self.healthSlider:SetPoint("LEFT", self.displayIndexEditBox, "RIGHT", 20, 0)
-  self.healthSlider.text:SetText("Health")
-  self.healthSlider:SetScript("OnValueChanged", function(self, value)
-    value = math.floor(value + 0.5)
-    self.editbox:SetText(value)
-    L.canvas:UpdateAllModels()
-  end)
-  self.healthSlider.editbox:SetScript("OnEnterPressed", function(self)
-    self:GetParent():SetValue(self:GetText())
-    self:ClearFocus()
-  end)
+  function self.healthSlider:UpdateValue(value)
+    L.canvas:UpdateAllFillingStatusBarValues()
+  end
 
-  self.fillingStatusBarTextureSlider = L.F:CreateSliderWithEditbox(self, L.name .. "CanvasFillingStatusBarTextureSlider", 0, 21, 0)
-  self.fillingStatusBarTextureSlider:ClearAllPoints()
+  self.fillingStatusBarTextureSlider = L.F:CreateSliderWithEditbox(self,
+    L.name .. "CanvasFillingStatusBarTextureSlider", "FillingStatusBarTexture", 0, 21, 0)
   self.fillingStatusBarTextureSlider:SetPoint("BOTTOM", self.healthSlider, "TOP", 0, 30)
-  self.fillingStatusBarTextureSlider.text:SetText("FillingStatusBarTexture")
-  self.fillingStatusBarTextureSlider:SetScript("OnValueChanged", function(self, value)
-    value = math.floor(value + 0.5)
-    self.editbox:SetText(value)
+  function self.fillingStatusBarTextureSlider:UpdateValue(value)
     L.canvas:UpdateAllFillingStatusBarTextures()
-  end)
-  self.fillingStatusBarTextureSlider.editbox:SetScript("OnEnterPressed", function(self)
-    self:GetParent():SetValue(self:GetText())
-    self:ClearFocus()
-  end)
+  end
 
-  self.modelOpacitySlider = L.F:CreateSliderWithEditbox(self, L.name .. "CanvasModelOpacitySlider", 0, 100, 100)
-  self.modelOpacitySlider:ClearAllPoints()
+  self.modelOpacitySlider = L.F:CreateSliderWithEditbox(self, L.name .. "CanvasModelOpacitySlider", "ModelOpacity", 0,
+    101, 101)
   self.modelOpacitySlider:SetPoint("LEFT", self.fillingStatusBarTextureSlider, "RIGHT", 70, 0)
-  self.modelOpacitySlider.text:SetText("ModelOpacity")
-  self.modelOpacitySlider:SetScript("OnValueChanged", function(self, value)
-    value = math.floor(value + 0.5)
-    self.editbox:SetText(value)
+  function self.modelOpacitySlider:UpdateValue(value)
     L.canvas:UpdateAllModelOpacities()
-  end)
-  self.modelOpacitySlider.editbox:SetScript("OnEnterPressed", function(self)
-    self:GetParent():SetValue(self:GetText())
-    self:ClearFocus()
-  end)
+  end
 
-  self.glowColorPicker = L.F:CreateColorPickerButton(self, A .. 'CanvasGlowColorPicker', {0, 1, 0, 0}, "Change the color of the debuff glow")
+  self.glowColorPicker = L.F:CreateColorPickerButton(self, A .. 'CanvasGlowColorPicker', {0, 1, 0, 0},
+    "Change the color of the debuff glow")
   self.glowColorPicker:SetSize(40, 40)
   self.glowColorPicker:SetPoint("LEFT", self.healthSlider, "RIGHT", 70, 0)
   function self.glowColorPicker:UpdateColor(r, g, b, a)
     L.canvas:UpdateAllGlowColors()
   end
 
-  self.lowHealthColorPicker = L.F:CreateColorPickerButton(self, A .. 'CanvasLowHealthColorPicker', {1, 0, 0, 0},"Change the color of the low health warning")
+  self.lowHealthColorPicker = L.F:CreateColorPickerButton(self, A .. 'CanvasLowHealthColorPicker', {1, 0, 0, 0},
+    "Change the color of the low health warning")
   self.lowHealthColorPicker:SetSize(40, 40)
   self.lowHealthColorPicker:SetPoint("LEFT", self.glowColorPicker, "RIGHT", 20, 0)
   function self.lowHealthColorPicker:UpdateColor(r, g, b, a)
     L.canvas:UpdateAllLowHealthColors()
   end
 
-  self.fillingColorPicker = L.F:CreateColorPickerButton(self, A .. 'CanvasFillingColorPicker', {1, 0, 0, 0},"When the alpha value is zero the original template filling colors will be used")
+  self.fillingColorPicker = L.F:CreateColorPickerButton(self, A .. 'CanvasFillingColorPicker', {1, 0, 0, 0},
+    "When the alpha value is zero the original template filling colors will be used")
   self.fillingColorPicker:SetSize(40, 40)
   self.fillingColorPicker:SetPoint("LEFT", self.lowHealthColorPicker, "RIGHT", 20, 0)
   function self.fillingColorPicker:UpdateColor(r, g, b, a)
     L.canvas:UpdateAllFillingColors()
   end
 
-  self.splitColorPicker = L.F:CreateColorPickerButton(self, A .. 'CanvasSplitColorPicker', {0, 1, 1, 0},"When the alpha value is zero the original template split colors will be used. For the split you want a very light color. Do not pick darker colors.")
+  self.splitColorPicker = L.F:CreateColorPickerButton(self, A .. 'CanvasSplitColorPicker', {0, 1, 1, 0},
+    "When the alpha value is zero the original template split colors will be used. For the split you want a very light color. Do not pick darker colors.")
   self.splitColorPicker:SetSize(40, 40)
   self.splitColorPicker:SetPoint("LEFT", self.fillingColorPicker, "RIGHT", 20, 0)
   function self.splitColorPicker:UpdateColor(r, g, b, a)
     L.canvas:UpdateAllSplitColors()
   end
 
-  self.canvasBgColorPicker = L.F:CreateColorPickerButton(self, A .. 'CanvasBackgroundColorPicker', {self.bg:GetVertexColor()})
+  self.canvasBgColorPicker = L.F:CreateColorPickerButton(self, A .. 'CanvasBackgroundColorPicker',
+    {self.bg:GetVertexColor()})
   self.canvasBgColorPicker:SetSize(40, 40)
   self.canvasBgColorPicker:SetPoint("LEFT", self.splitColorPicker, "RIGHT", 20, 0)
   function self.canvasBgColorPicker:UpdateColor(r, g, b, a)
-    L.canvas.bg:SetVertexColor(r,g,b,a)
+    L.canvas.bg:SetVertexColor(r, g, b, a)
   end
 
 end

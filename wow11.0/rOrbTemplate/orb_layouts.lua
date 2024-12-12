@@ -30,7 +30,7 @@ L.orbLayouts["deep-purple-starly"] = {
 L.orbLayouts["art-chtun-eye"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
   statusBarColor = {.6, 0.3, 0, 1},
-  sparkColor = {.6, .3, 0, 1},
+  sparkColor = {0.7, .2, 0, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
   displayInfoID = 94285,
@@ -38,7 +38,7 @@ L.orbLayouts["art-chtun-eye"] = {
 }
 
 L.orbLayouts["magenta-swirly"] = {
-  statusBarTexture = mediaFolder .. "orb_filling19",
+  statusBarTexture = mediaFolder .. "orb_filling21",
   statusBarColor = {.6, 0, .6, 1},
   sparkColor = {.8, 0, .8, 1},
   glowColor = {0, 1, 0, 0},
@@ -69,9 +69,9 @@ L.orbLayouts["deep-purple-magic"] = {
 }
 
 L.orbLayouts["sandy-blitz"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {1, 0.6, .2, 1},
-  sparkColor = {0.8, 0.5, .2, 1},
+  statusBarTexture = mediaFolder .. "orb_filling4",
+  statusBarColor = {0.4, 0, .6, 1},
+  sparkColor = {0.5, 0, 1, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
   displayInfoID = 76935,
@@ -82,8 +82,8 @@ L.orbLayouts["sandy-blitz"] = {
 
 L.orbLayouts["blue-aqua-swirly"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {0.3, 0.4, .6, 1},
-  sparkColor = {0.5, 0.8, 1, 1},
+  statusBarColor = {0.2, 0, 1, 1},
+  sparkColor = {0, 0.4, 1, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
   displayInfoID = 75294,
@@ -116,8 +116,8 @@ L.orbLayouts["art-wierd-eye"] = {
 
 L.orbLayouts["pink-portal"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {0.6, 0.3, 0.5, 1},
-  sparkColor = {1, 0, .8, 1},
+  statusBarColor = {0.4, 0, 0.6, 1},
+  sparkColor = {0.7, 0, 1, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
   displayInfoID = 66092,
@@ -127,9 +127,9 @@ L.orbLayouts["pink-portal"] = {
 }
 
 L.orbLayouts["green-portal"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling10",
   statusBarColor = {0, 0.6, 0, 1},
-  sparkColor = {0, 1, 0, 1},
+  sparkColor = {0.8, 1, 0, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
   displayInfoID = 66202,
@@ -139,7 +139,7 @@ L.orbLayouts["green-portal"] = {
 }
 
 L.orbLayouts["blue-portal"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling6",
   statusBarColor = {0, 0.4, 0.6, 1},
   sparkColor = {0, .8, 1, 1},
   glowColor = {0, 1, 0, 0},
@@ -151,7 +151,7 @@ L.orbLayouts["blue-portal"] = {
 }
 
 L.orbLayouts["red-portal"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling6",
   statusBarColor = {1, 0.1, 0.1, 1},
   sparkColor = {1, 0, 0, 1},
   glowColor = {0, 1, 0, 0},
@@ -163,7 +163,7 @@ L.orbLayouts["red-portal"] = {
 }
 
 L.orbLayouts["purple-portal"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling10",
   statusBarColor = {0.6, 0, 0.6, 1},
   sparkColor = {.8, 0, 1, 1},
   glowColor = {0, 1, 0, 0},
@@ -175,7 +175,7 @@ L.orbLayouts["purple-portal"] = {
 }
 
 L.orbLayouts["red-slob"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling12",
   statusBarColor = {1, 0.1, 0.1, 1},
   sparkColor = {1, 0, 0, 1},
   glowColor = {0, 1, 0, 0},
@@ -221,7 +221,7 @@ L.orbLayouts["blue-buzz"] = {
 }
 
 L.orbLayouts["white-cloud"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling4",
   statusBarColor = {.4, .4, .4, 1},
   sparkColor = {1, 1, 1, 1},
   glowColor = {0, 1, 0, 0},
@@ -244,18 +244,18 @@ L.orbLayouts["blue-magic-swirly"] = {
 }
 
 L.orbLayouts["green-beam"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling10",
   statusBarColor = {0.3, 0.7, 0, 1},
   sparkColor = {0.8, 1, 0, 1},
   glowColor = {0, 1, 0, 0},
-  modelOpacity = 1,
+  modelOpacity = 0.8,
   displayInfoID = 39316,
   camScale = 4
 }
 
 L.orbLayouts["white-heal"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {0.1, 0.4, 0.4, 1},
+  statusBarColor = {0.1, 0.1, 0.1, 1},
   sparkColor = {0.8, 1, 1, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
@@ -264,7 +264,7 @@ L.orbLayouts["white-heal"] = {
 }
 
 L.orbLayouts["red-heal"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling1",
   statusBarColor = {0.6, 0.1, 0.1, 1},
   sparkColor = {1, 0, 0, 1},
   glowColor = {0, 1, 0, 0},
@@ -274,7 +274,7 @@ L.orbLayouts["red-heal"] = {
 }
 
 L.orbLayouts["white-pearl"] = {
-  statusBarTexture = mediaFolder .. "orb_filling3",
+  statusBarTexture = mediaFolder .. "orb_filling15",
   statusBarColor = {1, 1, 1, 1},
   sparkColor = {1, 1, 1, 1},
   glowColor = {0, 1, 0, 0},
@@ -287,7 +287,7 @@ L.orbLayouts["white-pearl"] = {
 
 L.orbLayouts["white-swirly"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {0.6, 0.6, 0.6, 1},
+  statusBarColor = {0.1, 0.1, 0.1, 1},
   sparkColor = {1, 1, 1, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
@@ -298,7 +298,7 @@ L.orbLayouts["white-swirly"] = {
 }
 
 L.orbLayouts["purple-warlock-portal"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling6",
   statusBarColor = {0.5, 0.5, 1, 1},
   sparkColor = {0.5, 0.5, 1, 1},
   glowColor = {0, 1, 0, 0},
@@ -311,8 +311,8 @@ L.orbLayouts["purple-warlock-portal"] = {
 
 L.orbLayouts["purple-hole"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {0.5, 0.5, 1, 1},
-  sparkColor = {0.5, 0.5, 1, 1},
+  statusBarColor = {0.4, 0, 0.6, 1},
+  sparkColor = {0.7, 0, 1, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
   displayInfoID = 28460,
@@ -323,8 +323,8 @@ L.orbLayouts["purple-hole"] = {
 
 L.orbLayouts["blue-swirly"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {0.5, 0.5, 1, 1},
-  sparkColor = {0.5, 0.5, 1, 1},
+  statusBarColor = {0, 0, 0.4, 1},
+  sparkColor = {0.2, 0.8, 1, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
   displayInfoID = 27393,
@@ -334,7 +334,7 @@ L.orbLayouts["blue-swirly"] = {
 }
 
 L.orbLayouts["sand-storm"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling6",
   statusBarColor = {0.6, 0.5, 0, 1},
   sparkColor = {1, 0.9, 0, 1},
   glowColor = {0, 1, 0, 0},
@@ -346,7 +346,7 @@ L.orbLayouts["sand-storm"] = {
 }
 
 L.orbLayouts["art-el-machina"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling17",
   statusBarColor = {0.6, 0.3, 0, 1},
   sparkColor = {0.7, 0.3, 0, 1},
   glowColor = {0, 1, 0, 0},
@@ -356,7 +356,7 @@ L.orbLayouts["art-el-machina"] = {
 }
 
 L.orbLayouts["red-blue-knot"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling21",
   statusBarColor = {.7, 0, 0, 1},
   sparkColor = {1, 0.1, 0, 1},
   glowColor = {0, 1, 0, 0},
@@ -412,7 +412,7 @@ L.orbLayouts["white-boulder"] = {
   statusBarColor = {0.6, 0.6, 0.6, 1},
   sparkColor = {1, 1, 1, 1},
   glowColor = {0, 1, 0, 0},
-  modelOpacity = 1,
+  modelOpacity = 0.7,
   displayInfoID = 109622,
   camScale = 1.05,
   posAdjustZ = -0.5,
@@ -453,7 +453,7 @@ L.orbLayouts["purple-discoball"] = {
 
 L.orbLayouts["white-tornado"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {0.4, 0.6, 0.6, 1},
+  statusBarColor = {0.1, 0.1, 0.1, 1},
   sparkColor = {.5, 1, 1, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
@@ -485,7 +485,7 @@ L.orbLayouts["white-zebra"] = {
 
 L.orbLayouts["white-spark"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {0.5, 0.5, 0.5, 1},
+  statusBarColor = {0, 0, 0, 1},
   sparkColor = {1, 1, 1, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
@@ -495,8 +495,8 @@ L.orbLayouts["white-spark"] = {
 
 L.orbLayouts["blue-aqua-spark"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {0, 0.8, 0.8, 1},
-  sparkColor = {0.2, 1, 1, 1},
+  statusBarColor = {0, 0.1, 0.2, 1},
+  sparkColor = {0.3, 0.9, 1, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
   displayInfoID = 98573,
@@ -504,7 +504,7 @@ L.orbLayouts["blue-aqua-spark"] = {
 }
 
 L.orbLayouts["purple-growup"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling6",
   statusBarColor = {0.5, 0.2, 0.6, 1},
   sparkColor = {.8, 0.3, 1, 1},
   glowColor = {0, 1, 0, 0},
@@ -515,7 +515,7 @@ L.orbLayouts["purple-growup"] = {
 
 L.orbLayouts["blue-aqua-sink"] = {
   statusBarTexture = mediaFolder .. "orb_filling15",
-  statusBarColor = {0.3, 0.9, 1, 1},
+  statusBarColor = {0, 0.1, 0.2, 1},
   sparkColor = {0.3, 0.9, 1, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
@@ -524,7 +524,7 @@ L.orbLayouts["blue-aqua-sink"] = {
 }
 
 L.orbLayouts["pink-portal-swirl"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling21",
   statusBarColor = {0.3, 0.1, 0.6, 1},
   sparkColor = {1, 0.4, 1, 1},
   glowColor = {0, 1, 0, 0},
@@ -536,44 +536,44 @@ L.orbLayouts["pink-portal-swirl"] = {
 }
 
 L.orbLayouts["purple-earth"] = {
-  statusBarTexture = mediaFolder .. "orb_filling14",
+  statusBarTexture = mediaFolder .. "orb_filling21",
   statusBarColor = {0.3, 0.1, 0.6, 1},
   sparkColor = {1, 0.4, 1, 1},
   glowColor = {0, 1, 0, 0},
-  modelOpacity = 1,
+  modelOpacity = 0.8,
   displayInfoID = 92612,
   camScale = 1.05,
   posAdjustZ = -0.06
 }
 
 L.orbLayouts["golden-earth"] = {
-  statusBarTexture = mediaFolder .. "orb_filling14",
+  statusBarTexture = mediaFolder .. "orb_filling21",
   statusBarColor = {0.7, 0.5, 0, 1},
   sparkColor = {1, 0.75, 0, 1},
   glowColor = {0, 1, 0, 0},
-  modelOpacity = 1,
+  modelOpacity = 0.8,
   displayInfoID = 92613,
   camScale = 1.05,
   posAdjustZ = -0.06
 }
 
 L.orbLayouts["green-earth"] = {
-  statusBarTexture = mediaFolder .. "orb_filling14",
+  statusBarTexture = mediaFolder .. "orb_filling21",
   statusBarColor = {0.3, 0.7, 0, 1},
   sparkColor = {0.8, 1, 0, 1},
   glowColor = {0, 1, 0, 0},
-  modelOpacity = 1,
+  modelOpacity = 0.8,
   displayInfoID = 92614,
   camScale = 1.05,
   posAdjustZ = -0.06
 }
 
 L.orbLayouts["pink-earth"] = {
-  statusBarTexture = mediaFolder .. "orb_filling16",
+  statusBarTexture = mediaFolder .. "orb_filling21",
   statusBarColor = {0.3, 0.1, 0.6, 1},
   sparkColor = {1, 0.4, 1, 1},
   glowColor = {0, 1, 0, 0},
-  modelOpacity = 1,
+  modelOpacity = 0.8,
   displayInfoID = 90499,
   camScale = 1.05,
   posAdjustZ = -0.06
@@ -627,8 +627,8 @@ L.orbLayouts["art-elvish-object"] = {
 
 L.orbLayouts["blue-magic-tornado"] = {
   statusBarTexture = mediaFolder .. "orb_filling16",
-  statusBarColor = {0.3, 0.5, .8, 1},
-  sparkColor = {0.3, 0.5, 1, 1},
+  statusBarColor = {0.2, 0, 1, 1},
+  sparkColor = {0, 0.4, 1, 1},
   glowColor = {0, 1, 0, 0},
   modelOpacity = 1,
   displayInfoID = 56959,

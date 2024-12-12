@@ -44,16 +44,19 @@ function OrbFillingStatusBarMixin:OnLoad()
   self:SetOrientation("VERTICAL")
   self:SetReverseFill(false)
   self:SetMinMaxValues(0, 1)
+  self:SetValue(1)
   self.statusBarTexture = self:GetStatusBarTexture()
 end
 
 function OrbFillingStatusBarMixin:OnValueChanged(value)
   -- print(A, 'OrbFillingStatusBarMixin:OnValueChanged()')
   local orb = self:GetParent()
-  if orb.ModelFrame.templateConfig then
+  if orb.ModelFrame and orb.ModelFrame.templateConfig then
     orb.ModelFrame:OrbModelAdjustPositionByValue(value)
   end
-  orb.OverlayFrame:UpdateOrbSpark(value)
+  if orb.OverlayFrame then
+    orb.OverlayFrame:UpdateOrbSpark(value)
+  end
 end
 
 function OrbFillingStatusBarMixin:OnShow()
@@ -93,6 +96,9 @@ end
 
 function OrbModelFrameMixin:OrbModelAdjustPositionByValue(value)
   -- print(A, 'OrbModelFrameMixin:OrbModelAdjustPositionByValue()')
+
+  if self.preventUpdate then return end
+
   local orb = self:GetParent()
 
   local heightDiffPx = orb.height - orb.height * value
@@ -154,13 +160,18 @@ function OrbModelFrameMixin:OrbModelOnModelLoaded()
   self:SetPosition(self.origPosX, self.origPosY, self.origPosZ)
   self:SetCamDistanceScale(self.templateConfig.camScale or 1)
   self:SetRotation(self.templateConfig.rotation or 0)
+  self.preventUpdate = false
+  self:OrbModelAdjustPositionByValue(orb.FillingStatusBar:GetValue())
+  orb.OverlayFrame:UpdateOrbSpark(orb.FillingStatusBar:GetValue())
+  self:SetAlpha(self.templateConfig.modelOpacity)
 end
 
 function OrbModelFrameMixin:ResetOrbModel()
   -- print(A, 'OrbModelFrameMixin:CreateOrbModel()')
+  self:SetAlpha(0)
+  self.preventUpdate = true
   self:ClearModel()
   self:SetDisplayInfo(self.templateConfig.displayInfoID)
-  self:SetAlpha(self.templateConfig.modelOpacity)
 end
 
 function OrbModelFrameMixin:OrbModelOnSizeChanged(event)

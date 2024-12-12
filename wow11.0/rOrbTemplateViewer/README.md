@@ -1,6 +1,6 @@
 ## rOrbTemplateViewer
 
-rOrbTemplateViewer required rLib and rOrbTemplate.
+rOrbTemplateViewer requires rLib and rOrbTemplate.
 
 https://github.com/zorker/rothui/tree/master/wow11.0/rLib
 

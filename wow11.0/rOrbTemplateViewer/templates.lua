@@ -5,7 +5,7 @@ local A, L = ...
 
 L.orbTemplates = {}
 
-L.mediaFolder = "Interface\\AddOns\\rOrb\\media\\"
+L.mediaFolder = "Interface\\AddOns\\rOrbTemplate\\media\\"
 
 local function AddTemplateToList(templateName)
   table.insert(L.orbTemplates, templateName)

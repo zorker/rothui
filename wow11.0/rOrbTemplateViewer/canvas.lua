@@ -35,7 +35,7 @@ end
 
 -- create model func
 local function CreateModel(parent, id)
-  local orb = CreateFrame("Frame", nil, parent, "OrbTemplate")
+  local orb = CreateFrame("Frame", A.."CanvasOrb"..id, parent, "OrbTemplate")
   orb.frameId = id
   -- model title
   orb.title = orb.OverlayFrame:CreateFontString(nil, "OVERLAY")
@@ -117,8 +117,8 @@ function L.canvas:UpdateAllFillingColors()
   end
 end
 
-function L.canvas:UpdateAllFillingStatusBarTextures()
-  local value = self.fillingStatusBarTextureSlider:GetValue()
+function L.canvas:UpdateAllFillingStatusBarTextures(value)
+  value = value or self.fillingStatusBarTextureSlider:GetValue()
   local textureFile = L.mediaFolder .. "orb_filling" .. value
   for i, orb in pairs(self.M) do
     if value > 0 then
@@ -290,21 +290,22 @@ function L.canvas:Init()
     L.canvas:UpdatePageForDisplayIndex(value)
   end
 
-  self.healthSlider = L.F:CreateSliderWithEditbox(self, L.name .. "CanvasHealthSlider", "Health", 0, 100, 100)
+  self.healthSlider = L.F:CreateSliderWithEditbox(self, L.name .. "CanvasHealthSlider", "Health", 0, 100, 100, "Change this value to simulate player loosing health or the like.")
   self.healthSlider:SetPoint("LEFT", self.displayIndexEditBox, "RIGHT", 20, 0)
   function self.healthSlider:UpdateValue(value)
     L.canvas:UpdateAllFillingStatusBarValues()
   end
 
   self.fillingStatusBarTextureSlider = L.F:CreateSliderWithEditbox(self,
-    L.name .. "CanvasFillingStatusBarTextureSlider", "FillingStatusBarTexture", 0, 21, 0)
-  self.fillingStatusBarTextureSlider:SetPoint("BOTTOM", self.healthSlider, "TOP", 0, 30)
+    L.name .. "CanvasFillingStatusBarTextureSlider", "FillingStatusBarTexture", 0, 21, 0, "Pick between 21 filling textures. Setting this value to 0 will reset the filling texture to the templateConfig value.")
+  self.fillingStatusBarTextureSlider:SetPoint("BOTTOMLEFT", self.displayIndexEditBox, "TOPLEFT", 5, 20)
+  self.fillingStatusBarTextureSlider:SetWidth(325)
   function self.fillingStatusBarTextureSlider:UpdateValue(value)
-    L.canvas:UpdateAllFillingStatusBarTextures()
+    L.canvas:UpdateAllFillingStatusBarTextures(value)
   end
 
   self.modelOpacitySlider = L.F:CreateSliderWithEditbox(self, L.name .. "CanvasModelOpacitySlider", "ModelOpacity", 0,
-    101, 101)
+    101, 101, "Adjust the model opacity with this slider. Setting the opacity to 101 will reset the model opacity to the templateConfig value.")
   self.modelOpacitySlider:SetPoint("LEFT", self.fillingStatusBarTextureSlider, "RIGHT", 70, 0)
   function self.modelOpacitySlider:UpdateValue(value)
     L.canvas:UpdateAllModelOpacities()

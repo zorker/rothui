@@ -3,7 +3,7 @@
 -------------------------------------------------
 local A, L = ...
 
-local mediaFolder = "Interface\\AddOns\\rOrb\\media\\"
+local mediaFolder = "Interface\\AddOns\\rOrbTemplate\\media\\"
 
 L.orbLayouts = {}
 

@@ -1,11 +1,11 @@
 ## Interface: 110005
 ## Author: zork
-## Title: rOrb
-## Notes: Orb facory using rOrbTemplate
+## Title: rOrbTemplateViewer
+## Notes: Orb template viewer for rOrbTemplate, shows all the available templates
 ## IconTexture: Interface\AddOns\rOrbTemplate\assets\logo-64
 ## RequiredDeps: rOrbTemplate, rLib
 
 templates.lua
 functions.lua
 canvas.lua
-rOrb.lua
+orb.lua

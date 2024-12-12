@@ -13,7 +13,7 @@ local ORB_MODELFRAME_DEFAULT_ROTATION = 0
 local ORB_PAN_X_CONSTANT = 1.75
 local ORB_PAN_Z_CONSTANT = 1.95
 
--- -- print(A, 'OrbTemplate.lua file init')
+-- print(A, 'OrbTemplate.lua file init')
 
 OrbTemplateMixin = {}
 OrbFillingStatusBarMixin = {}
@@ -183,7 +183,7 @@ function OrbOverlayFrameMixin:OnLoad()
   -- print(A, 'OrbOverlayFrameMixin:OnLoad()')
   self.SparkTexture:SetBlendMode("ADD")
   self.GlowTexture:SetBlendMode("BLEND")
-  self.LowHealthTexture:SetBlendMode("BLEND")
+  self.LowHealthTexture:SetBlendMode("ADD")
   self:SetFrameLevel(self:GetParent().ModelFrame:GetFrameLevel() + 1)
 end
 
@@ -224,6 +224,9 @@ function OrbTemplateMixin:SetOrbTemplate(templateName, templateConfig)
   self.OverlayFrame.SparkTexture:SetVertexColor(unpack(self.templateConfig.sparkColor))
   if self.templateConfig.glowColor then
     self.OverlayFrame.GlowTexture:SetVertexColor(unpack(self.templateConfig.glowColor))
+  end
+  if self.templateConfig.lowHealthColor then
+    self.OverlayFrame.LowHealthTexture:SetVertexColor(unpack(self.templateConfig.lowHealthColor))
   end
   self.ModelFrame:ResetOrbModel()
 end

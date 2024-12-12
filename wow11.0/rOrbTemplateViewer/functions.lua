@@ -19,22 +19,12 @@ local function OnDragStop(self)
 end
 
 function L.F:EnableDrag(parent)
-  parent:RegisterForDrag("LeftButton")
+  parent:RegisterForDrag("RightButton")
   parent:SetScript("OnDragStart", OnDragStart)
   parent:SetScript("OnDragStop", OnDragStop)
   parent:EnableMouse(true)
   parent:SetClampedToScreen(true)
   parent:SetMovable(true)
-  parent:SetScript("OnEnter", function(self)
-    GameTooltip:SetOwner(self, "ANCHOR_TOP", 0, 5)
-    GameTooltip:AddLine(self:GetName(), 0, 1, 0.5, 1, 1, 1)
-    GameTooltip:AddLine("Orb-Template: " .. self.templateName)
-    GameTooltip:AddLine("Drag me!", 1, 1, 1, 1, 1, 1)
-    GameTooltip:Show()
-  end)
-  parent:SetScript("OnLeave", function(self)
-    GameTooltip:Hide()
-  end)
 end
 
 function L.F:CreateColorPickerButton(parent, name, color, tooltipText)
@@ -79,7 +69,7 @@ function L.F:CreateColorPickerButton(parent, name, color, tooltipText)
   return button
 end
 
-function L.F:CreateSliderWithEditbox(parent, name, title, minValue, maxValue, curValue)
+function L.F:CreateSliderWithEditbox(parent, name, title, minValue, maxValue, curValue, tooltipText)
   local slider = CreateFrame("Slider", name, parent, "OptionsSliderTemplate")
   local editbox = CreateFrame("EditBox", "$parentEditBox", slider, "InputBoxTemplate")
   slider.__parent = parent
@@ -97,8 +87,7 @@ function L.F:CreateSliderWithEditbox(parent, name, title, minValue, maxValue, cu
   editbox.slider = slider
   slider.editbox = editbox
   slider:SetScript("OnValueChanged", function(self, value)
-    value = math.floor(value + 0.5)
-    print(self:GetName(),"OnValueChanged", value, self.lastValue)
+    value = math.max(math.floor(tonumber(value)), 0)
     if value == self.lastValue then
       return
     end
@@ -109,6 +98,17 @@ function L.F:CreateSliderWithEditbox(parent, name, title, minValue, maxValue, cu
   editbox:SetScript("OnEnterPressed", function(self)
     self.slider:SetValue(self:GetText())
     self:ClearFocus()
+  end)
+  slider:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_TOP", 0, 15)
+    GameTooltip:AddLine(self:GetName(), 0, 1, 0.5, 1, 1, 1)
+    if tooltipText then
+      GameTooltip:AddLine(tooltipText)
+    end
+    GameTooltip:Show()
+  end)
+  slider:SetScript("OnLeave", function(self)
+    GameTooltip:Hide()
   end)
   return slider
 end

@@ -63,11 +63,11 @@ rOrbTemplate provides a bunch of preset orb templates. Here is the list of the c
 
 ## Orb template preview (check the template names above the orbs)
 
-![Imgur](https://imgur.com/35EQN9O)
+![Imgur](https://i.imgur.com/35EQN9O.jpeg)
 
-![Imgur](https://imgur.com/0sJ1wbp)
+![Imgur](https://i.imgur.com/0sJ1wbp.jpeg)
 
-![Imgur](https://imgur.com/VyMTRSD)
+![Imgur](https://i.imgur.com/VyMTRSD.jpeg)
 
 ## TOC-file
 
@@ -86,12 +86,12 @@ This will automatically setup all textures/layers and load all mixins.
 local orb = CreateFrame("Frame", "YourOrbName", UIParent, "OrbTemplate")
 ```
 
+After the frame is created you can load any model template config into the orb.
+That can be done by picking any of the given preset template names above or by providing a template config of your own.
+
+You can set a new template at any given time. This is no one time action. (For example if the unit power changes)
+
 ## Loading an orb model by preset template name
-
-After the frame is created you can load a model templateConfig into the orb.
-That can be done by picking any of the above preset template names or by providing a templateConfig of your own.
-
-You can set a new template at any given time. This is no one time action.
 
 ```lua
 orb:SetOrbTemplate("art-azeroth")
@@ -156,7 +156,7 @@ orb.OverlayFrame.GlossTexture
 
 If you initialize your orb frames before PLAYER_LOGIN it is highly advised to reset the orb model after login.
 
-Can be easily done by calling orb.ModelFrame:ResetOrbModel()
+This can be easily done by calling "orb.ModelFrame:ResetOrbModel()"
 
 ```lua
 local function ResetOrbModel()
@@ -168,10 +168,10 @@ rLib:RegisterCallback("PLAYER_LOGIN", ResetOrbModel)
 
 ## Adjusting colors, textures and values
 
-You can adjust statusbar or textures like so.
+You can adjust statusbar or textures like so. If your config has all the data already you probably only ever need the "SetValue" call.
 
 ```lua
---Important! The fillingstatusbar has min/max values of 0-1. Adjst your value calls accordingly
+--Important! The orb.FillingStatusBar has min/max values of 0-1. Adjst your value calls accordingly
 orb.FillingStatusBar:SetValue(1)
 orb.FillingStatusBar:SetStatusBarTexture(textureFile)
 orb.FillingStatusBar:SetStatusBarColor(r,g,b,a)

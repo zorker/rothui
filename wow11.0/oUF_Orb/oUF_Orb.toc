@@ -1,0 +1,8 @@
+## Interface: 110005
+## Author: zork
+## Title: oUF_Orb
+## Notes: Orb unitframes with oUF
+## IconTexture: Interface\AddOns\rLib\assets\logo-64
+
+functions.lua
+colors.lua

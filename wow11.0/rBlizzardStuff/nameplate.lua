@@ -1,13 +1,11 @@
 -- rBlizzardStuff/nameplate: nameplate adjustments
 -- zork, 2024
-
 -----------------------------
 -- Variables
 -----------------------------
-
 local A, L = ...
 
---gradient nameplate colors horizontally
+-- gradient nameplate colors horizontally
 local nameplateBorderColors = {
   tankwarning = {
     color = CreateColor(1, 0.8, 0, 1),
@@ -27,7 +25,37 @@ local nameplateBorderColors = {
 }
 local nameplateBackgroundColor = CreateColor(0, 0, 0, .5)
 
-local iconTexCoord = {0.12,0.92,0.12,0.92}
+local iconTexCoord = {0.12, 0.92, 0.12, 0.92}
+
+local classificationColors = {}
+classificationColors["worldboss"] = {
+  from = {1, 0, 0, 0.5},
+  to = {0, 0, 0, 0}
+}
+classificationColors["rareelite"] = {
+  from = {1, 0.4, 0, 0.5},
+  to = {0, 0, 0, 0}
+}
+classificationColors["elite"] = {
+  from = {1, 0, 0, 0},
+  to = {0, 0, 0, 0}
+}
+classificationColors["rare"] = {
+  from = {1, 0.4, 0, 0.5},
+  to = {0, 0, 0, 0}
+}
+classificationColors["normal"] = {
+  from = {1, 0, 0, 0},
+  to = {0, 0, 0, 0}
+}
+classificationColors["trivial"] = {
+  from = {1, 0, 0, 0},
+  to = {0, 0, 0, 0}
+}
+classificationColors["minus"] = {
+  from = {1, 0, 0, 0},
+  to = {0, 0, 0, 0}
+}
 
 -----------------------------
 -- Functions
@@ -35,16 +63,18 @@ local iconTexCoord = {0.12,0.92,0.12,0.92}
 
 local function SetBorderColor(frame, colorConfig)
   frame.HealthBarsContainer.background:SetVertexColor(nameplateBackgroundColor:GetRGBA())
-  local r,g,b,a = colorConfig.color:GetRGBA()
-  frame.HealthBarsContainer.border.Top:SetGradient("HORIZONTAL", CreateColor(r, g, b, colorConfig.alphaLeft), CreateColor(r, g, b, colorConfig.alphaRight))
+  local r, g, b, a = colorConfig.color:GetRGBA()
+  frame.HealthBarsContainer.border.Top:SetGradient("HORIZONTAL", CreateColor(r, g, b, colorConfig.alphaLeft),
+    CreateColor(r, g, b, colorConfig.alphaRight))
   frame.HealthBarsContainer.border.Left:SetVertexColor(r, g, b, colorConfig.alphaLeft)
   frame.HealthBarsContainer.border.Right:SetVertexColor(r, g, b, colorConfig.alphaRight)
-  frame.HealthBarsContainer.border.Bottom:SetGradient("HORIZONTAL", CreateColor(r, g, b, colorConfig.alphaLeft), CreateColor(r, g, b, colorConfig.alphaRight))
+  frame.HealthBarsContainer.border.Bottom:SetGradient("HORIZONTAL", CreateColor(r, g, b, colorConfig.alphaLeft),
+    CreateColor(r, g, b, colorConfig.alphaRight))
 end
 
 local function SetupNamePlateCastbar(frame)
-  frame.castBar:SetHeight(frame.HealthBarsContainer:GetHeight()*1)
-  frame.castBar.Icon:SetScale(frame.HealthBarsContainer:GetScale()*1.75)
+  frame.castBar:SetHeight(frame.HealthBarsContainer:GetHeight() * 1)
+  frame.castBar.Icon:SetScale(frame.HealthBarsContainer:GetScale() * 1.75)
   frame.castBar.Icon:SetTexCoord(unpack(iconTexCoord))
   frame.castBar.Icon:ClearAllPoints()
   PixelUtil.SetPoint(frame.castBar.Icon, "BOTTOMRIGHT", frame.castBar, "BOTTOMLEFT", -1, -1)
@@ -54,7 +84,7 @@ end
 
 local function IsPlayerEffectivelyTank()
   local assignedRole = UnitGroupRolesAssigned("player")
-  if ( assignedRole == "NONE" ) then
+  if (assignedRole == "NONE") then
     local spec = GetSpecialization();
     return spec and GetSpecializationRole(spec) == "TANK"
   end
@@ -66,18 +96,32 @@ local function IsOnThreatList(threatStatus)
 end
 
 local function IsNameplateFrame(frame)
-  if not frame.HealthBarsContainer then return false end
-  if not frame.classificationIndicator then return false end
-  if not frame.selectionHighlight then return false end
-  if not frame.displayedUnit then return false end
-  if not frame.displayedUnit:match('nameplate%d?$') then return false end
+  if not frame.HealthBarsContainer then
+    return false
+  end
+  if not frame.classificationIndicator then
+    return false
+  end
+  if not frame.selectionHighlight then
+    return false
+  end
+  if not frame.displayedUnit then
+    return false
+  end
+  if not frame.displayedUnit:match('nameplate%d?$') then
+    return false
+  end
   local nameplate = C_NamePlate.GetNamePlateForUnit(frame.displayedUnit)
-  if not nameplate then return false end
+  if not nameplate then
+    return false
+  end
   return true
 end
 
 local function UpdateNamePlateBorder(frame)
-  if not IsNameplateFrame(frame) then return end
+  if not IsNameplateFrame(frame) then
+    return
+  end
   if UnitIsUnit(frame.displayedUnit, "target") then
     SetBorderColor(frame, nameplateBorderColors.selected)
     return
@@ -93,12 +137,28 @@ local function UpdateNamePlateBorder(frame)
 end
 
 local function UpdateNamePlateClassificationIndicator(frame)
-  if not IsNameplateFrame(frame) then return end
-  frame.classificationIndicator:Hide()
+  if not IsNameplateFrame(frame) then
+    return
+  end
+  local classification = UnitClassification(frame.displayedUnit)
+  if classification ~= "worldboss" or classification ~= "rareelite" or classification ~= "rare" then
+    frame.classificationIndicator:Hide()
+    return
+  end
+  frame.classificationIndicator:Show()
+  frame.classificationIndicator:ClearAllPoints()
+  frame.classificationIndicator:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP")
+  frame.classificationIndicator:SetWidth(frame.HealthBarsContainer:GetWidth())
+  frame.classificationIndicator:SetHeight(15)
+  frame.classificationIndicator:SetColorTexture(1, 1, 1)
+  frame.classificationIndicator:SetGradient("VERTICAL", CreateColor(unpack(classificationColors[classification].from)),
+    CreateColor(unpack(classificationColors[classification].to)))
 end
 
 local function UpdateNamePlateSelectionHighlight(frame)
-  if not IsNameplateFrame(frame) then return end
+  if not IsNameplateFrame(frame) then
+    return
+  end
   frame.selectionHighlight:Hide()
 end
 

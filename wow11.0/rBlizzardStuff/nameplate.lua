@@ -29,32 +29,36 @@ local iconTexCoord = {0.12, 0.92, 0.12, 0.92}
 
 local classificationColors = {}
 classificationColors["worldboss"] = {
-  from = {1, 0, 0, 0.5},
-  to = {0, 0, 0, 0}
+  color = {1, 0, 0, 1},
+  desaturated = false
+}
+classificationColors["boss"] = {
+  color = {1, 0, 0, 1},
+  desaturated = false
 }
 classificationColors["rareelite"] = {
-  from = {1, 0.4, 0, 0.5},
-  to = {0, 0, 0, 0}
+  color = {1, 1, 1, 1},
+  desaturated = true
 }
 classificationColors["elite"] = {
-  from = {1, 0, 0, 0},
-  to = {0, 0, 0, 0}
+  color = {1, 1, 0, 0.75},
+  desaturated = false
 }
 classificationColors["rare"] = {
-  from = {1, 0.4, 0, 0.5},
-  to = {0, 0, 0, 0}
+  color = {1, 1, 1, 1},
+  desaturated = true
 }
 classificationColors["normal"] = {
-  from = {1, 0, 0, 0},
-  to = {0, 0, 0, 0}
+  color = {0, 0, 0, 0.4},
+  desaturated = false
 }
 classificationColors["trivial"] = {
-  from = {1, 0, 0, 0},
-  to = {0, 0, 0, 0}
+  color = {0, 0, 0, 0.4},
+  desaturated = false
 }
 classificationColors["minus"] = {
-  from = {1, 0, 0, 0},
-  to = {0, 0, 0, 0}
+  color = {0, 0, 0, 0.2},
+  desaturated = false
 }
 
 -----------------------------
@@ -141,18 +145,17 @@ local function UpdateNamePlateClassificationIndicator(frame)
     return
   end
   local classification = UnitClassification(frame.displayedUnit)
-  if classification ~= "worldboss" or classification ~= "rareelite" or classification ~= "rare" then
-    frame.classificationIndicator:Hide()
-    return
-  end
   frame.classificationIndicator:Show()
   frame.classificationIndicator:ClearAllPoints()
-  frame.classificationIndicator:SetPoint("BOTTOM", frame.HealthBarsContainer, "TOP")
-  frame.classificationIndicator:SetWidth(frame.HealthBarsContainer:GetWidth())
-  frame.classificationIndicator:SetHeight(15)
-  frame.classificationIndicator:SetColorTexture(1, 1, 1)
-  frame.classificationIndicator:SetGradient("VERTICAL", CreateColor(unpack(classificationColors[classification].from)),
-    CreateColor(unpack(classificationColors[classification].to)))
+  frame.classificationIndicator:SetPoint("BOTTOMLEFT", frame.HealthBarsContainer.border.Top, "TOPLEFT", -20, 0)
+  frame.classificationIndicator:SetPoint("BOTTOMRIGHT", frame.HealthBarsContainer.border.Top, "TOPRIGHT", 20, 0)
+  frame.classificationIndicator:SetHeight(16)
+  frame.classificationIndicator:SetAtlas("glues-characterSelect-TopHUD-BG")
+  frame.classificationIndicator:SetParent(frame)
+  local layer, sublayer = frame.name:GetDrawLayer()
+  frame.classificationIndicator:SetDrawLayer(layer, (sublayer - 1))
+  frame.classificationIndicator:SetVertexColor(unpack(classificationColors[classification].color))
+  frame.classificationIndicator:SetDesaturated(classificationColors[classification].desaturated)
 end
 
 local function UpdateNamePlateSelectionHighlight(frame)

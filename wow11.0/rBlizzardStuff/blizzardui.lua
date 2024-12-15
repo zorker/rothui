@@ -40,9 +40,12 @@ end
 
 --AdjustBlizzardFrames
 local function AdjustBlizzardFrames()
+  --MainMenuBar
   RegisterStateDriver(MainMenuBar, "visibility", "[petbattle][vehicleui] hide; [combat][mod:shift][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide")
   --state driver for PlayerFrame
   RegisterStateDriver(PlayerFrame, "visibility", "[petbattle] hide; [combat][mod:shift][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide")
+  --state driver for StanceBar
+  RegisterStateDriver(StanceBar, "visibility", "hide")
   --state driver for BagsBar
   RegisterStateDriver(BagsBar, "visibility", "[mod:ctrl] show; hide")
   --state driver for MicroMenuContainer

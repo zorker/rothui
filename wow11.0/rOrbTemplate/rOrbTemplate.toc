@@ -1,6 +1,7 @@
 ## Interface: 110005
-## Author: zork
 ## Title: rOrbTemplate
+## Author: zork
+## Version: 110005.01
 ## Notes: Orb template engine
 ## IconTexture: Interface\AddOns\rOrbTemplate\assets\logo-64
 

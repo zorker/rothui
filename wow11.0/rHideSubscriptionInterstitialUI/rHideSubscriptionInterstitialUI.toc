@@ -1,0 +1,12 @@
+## Interface: 110005
+## Title: rHideSubscriptionInterstitialUI
+## Author: zork
+## Version: 110005.01
+## Notes: Hide the subscription window after login on f2p accounts
+## IconTexture: Interface\AddOns\rLib\assets\logo-64
+
+## DefaultState: disabled
+## LoadOnDemand: 1
+## LoadWith: Blizzard_SubscriptionInterstitialUI
+
+rHideSubscriptionInterstitialUI.lua

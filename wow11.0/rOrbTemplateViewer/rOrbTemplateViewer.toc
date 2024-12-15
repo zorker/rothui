@@ -1,6 +1,7 @@
 ## Interface: 110005
-## Author: zork
 ## Title: rOrbTemplateViewer
+## Author: zork
+## Version: 110005.01
 ## Notes: Orb template viewer for rOrbTemplate, shows all the available templates
 ## IconTexture: Interface\AddOns\rOrbTemplate\assets\logo-64
 ## RequiredDeps: rOrbTemplate, rLib

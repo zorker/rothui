@@ -37,16 +37,16 @@ classificationColors["boss"] = {
   desaturated = false
 }
 classificationColors["rareelite"] = {
-  color = {1, 1, 1, 1},
-  desaturated = true
+  color = {1, 0, 0, 1},
+  desaturated = false
 }
 classificationColors["elite"] = {
-  color = {1, 1, 0, 0.75},
+  color = {0, 0, 0, 0.4},
   desaturated = false
 }
 classificationColors["rare"] = {
-  color = {1, 1, 1, 1},
-  desaturated = true
+  color = {1, 0, 0, 1},
+  desaturated = false
 }
 classificationColors["normal"] = {
   color = {0, 0, 0, 0.4},
@@ -140,22 +140,30 @@ local function UpdateNamePlateBorder(frame)
   SetBorderColor(frame, nameplateBorderColors.default)
 end
 
+local function AddNameBackground(frame)
+  local layer, sublayer = frame.name:GetDrawLayer()
+  local bg = frame:CreateTexture(nil, layer)
+  bg:SetDrawLayer(layer, sublayer - 1)
+  bg:SetPoint("BOTTOMLEFT", frame.HealthBarsContainer.border.Top, "TOPLEFT", -20, 0)
+  bg:SetPoint("BOTTOMRIGHT", frame.HealthBarsContainer.border.Top, "TOPRIGHT", 20, 0)
+  bg:SetHeight(16)
+  bg:SetAtlas("glues-characterSelect-TopHUD-BG")
+  frame.name.__bg = bg
+  return bg
+end
+
 local function UpdateNamePlateClassificationIndicator(frame)
   if not IsNameplateFrame(frame) then
     return
   end
+  frame.classificationIndicator:Hide()
   local classification = UnitClassification(frame.displayedUnit)
-  frame.classificationIndicator:Show()
-  frame.classificationIndicator:ClearAllPoints()
-  frame.classificationIndicator:SetPoint("BOTTOMLEFT", frame.HealthBarsContainer.border.Top, "TOPLEFT", -20, 0)
-  frame.classificationIndicator:SetPoint("BOTTOMRIGHT", frame.HealthBarsContainer.border.Top, "TOPRIGHT", 20, 0)
-  frame.classificationIndicator:SetHeight(16)
-  frame.classificationIndicator:SetAtlas("glues-characterSelect-TopHUD-BG")
-  frame.classificationIndicator:SetParent(frame)
-  local layer, sublayer = frame.name:GetDrawLayer()
-  frame.classificationIndicator:SetDrawLayer(layer, (sublayer - 1))
-  frame.classificationIndicator:SetVertexColor(unpack(classificationColors[classification].color))
-  frame.classificationIndicator:SetDesaturated(classificationColors[classification].desaturated)
+  if not classification then
+    return
+  end
+  local bg = frame.name.__bg or AddNameBackground(frame)
+  bg:SetVertexColor(unpack(classificationColors[classification].color))
+  bg:SetDesaturated(classificationColors[classification].desaturated)
 end
 
 local function UpdateNamePlateSelectionHighlight(frame)

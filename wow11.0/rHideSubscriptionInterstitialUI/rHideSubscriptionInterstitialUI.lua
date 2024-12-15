@@ -1,0 +1,3 @@
+local A, L = ...
+
+SubscriptionInterstitialFrame.CloseButton:SetScript("OnShow", function(self)  self:Click() end)

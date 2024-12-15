@@ -1,7 +1,7 @@
 ## Interface: 110005
+## Title: rBlizzardStuff
 ## Author: zork
 ## Version: 110005.01
-## Title: rBlizzardStuff
 ## Notes: Blizzard frame adjustments
 ## IconTexture: Interface\AddOns\rLib\assets\logo-64
 ## RequiredDeps: rLib

@@ -1,7 +1,7 @@
 ## Interface: 110005
+## Title: rLib
 ## Author: zork
 ## Version: 110005.01
-## Title: rLib
 ## Notes: Zork's addon library.
 ## IconTexture: Interface\AddOns\rLib\assets\logo-64
 

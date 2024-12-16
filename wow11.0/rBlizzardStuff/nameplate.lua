@@ -65,25 +65,25 @@ classificationColors["minus"] = {
 -- Functions
 -----------------------------
 
-local function SetBorderColor(frame, colorConfig)
-  frame.HealthBarsContainer.background:SetVertexColor(nameplateBackgroundColor:GetRGBA())
+local function SetBorderColor(self, colorConfig)
+  self.HealthBarsContainer.background:SetVertexColor(nameplateBackgroundColor:GetRGBA())
   local r, g, b, a = colorConfig.color:GetRGBA()
-  frame.HealthBarsContainer.border.Top:SetGradient("HORIZONTAL", CreateColor(r, g, b, colorConfig.alphaLeft),
+  self.HealthBarsContainer.border.Top:SetGradient("HORIZONTAL", CreateColor(r, g, b, colorConfig.alphaLeft),
     CreateColor(r, g, b, colorConfig.alphaRight))
-  frame.HealthBarsContainer.border.Left:SetVertexColor(r, g, b, colorConfig.alphaLeft)
-  frame.HealthBarsContainer.border.Right:SetVertexColor(r, g, b, colorConfig.alphaRight)
-  frame.HealthBarsContainer.border.Bottom:SetGradient("HORIZONTAL", CreateColor(r, g, b, colorConfig.alphaLeft),
+  self.HealthBarsContainer.border.Left:SetVertexColor(r, g, b, colorConfig.alphaLeft)
+  self.HealthBarsContainer.border.Right:SetVertexColor(r, g, b, colorConfig.alphaRight)
+  self.HealthBarsContainer.border.Bottom:SetGradient("HORIZONTAL", CreateColor(r, g, b, colorConfig.alphaLeft),
     CreateColor(r, g, b, colorConfig.alphaRight))
 end
 
-local function SetupNamePlateCastbar(frame)
-  frame.castBar:SetHeight(frame.HealthBarsContainer:GetHeight() * 1)
-  frame.castBar.Icon:SetScale(frame.HealthBarsContainer:GetScale() * 1.75)
-  frame.castBar.Icon:SetTexCoord(unpack(iconTexCoord))
-  frame.castBar.Icon:ClearAllPoints()
-  PixelUtil.SetPoint(frame.castBar.Icon, "BOTTOMRIGHT", frame.castBar, "BOTTOMLEFT", -1, -1)
-  frame.castBar.Text:ClearAllPoints()
-  PixelUtil.SetPoint(frame.castBar.Text, "TOP", frame.castBar, "BOTTOM", 0, 0)
+local function SetupNamePlateCastbar(self)
+  self.castBar:SetHeight(self.HealthBarsContainer:GetHeight() * 1)
+  self.castBar.Icon:SetScale(self.HealthBarsContainer:GetScale() * 1.75)
+  self.castBar.Icon:SetTexCoord(unpack(iconTexCoord))
+  self.castBar.Icon:ClearAllPoints()
+  PixelUtil.SetPoint(self.castBar.Icon, "BOTTOMRIGHT", self.castBar, "BOTTOMLEFT", -1, -1)
+  self.castBar.Text:ClearAllPoints()
+  PixelUtil.SetPoint(self.castBar.Text, "TOP", self.castBar, "BOTTOM", 0, 0)
 end
 
 local function IsPlayerEffectivelyTank()
@@ -99,78 +99,81 @@ local function IsOnThreatList(threatStatus)
   return threatStatus ~= nil
 end
 
-local function IsNameplateFrame(frame)
-  if not frame.HealthBarsContainer then
+local function IsNameplateFrame(self)
+  if self:IsForbidden() then
     return false
   end
-  if not frame.classificationIndicator then
+  if not self.HealthBarsContainer then
     return false
   end
-  if not frame.selectionHighlight then
+  if not self.classificationIndicator then
     return false
   end
-  if not frame.displayedUnit then
+  if not self.selectionHighlight then
     return false
   end
-  if not frame.displayedUnit:match('nameplate%d?$') then
+  if not self.displayedUnit then
     return false
   end
-  local nameplate = C_NamePlate.GetNamePlateForUnit(frame.displayedUnit)
+  if not self.displayedUnit:match('nameplate%d?$') then
+    return false
+  end
+  local nameplate = C_NamePlate.GetNamePlateForUnit(self.displayedUnit)
   if not nameplate then
     return false
   end
   return true
 end
 
-local function UpdateNamePlateBorder(frame)
-  if not IsNameplateFrame(frame) then
+local function UpdateNamePlateBorder(self)
+  if not IsNameplateFrame(self) then
     return
   end
-  if UnitIsUnit(frame.displayedUnit, "target") then
-    SetBorderColor(frame, nameplateBorderColors.selected)
+  if UnitIsUnit(self.displayedUnit, "target") then
+    SetBorderColor(self, nameplateBorderColors.selected)
     return
   end
   if IsInGroup() and IsPlayerEffectivelyTank() then
-    local isTanking, threatStatus = UnitDetailedThreatSituation("player", frame.displayedUnit)
+    local isTanking, threatStatus = UnitDetailedThreatSituation("player", self.displayedUnit)
     if not isTanking and IsOnThreatList(threatStatus) then
-      SetBorderColor(frame, nameplateBorderColors.tankwarning)
+      SetBorderColor(self, nameplateBorderColors.tankwarning)
       return
     end
   end
-  SetBorderColor(frame, nameplateBorderColors.default)
+  SetBorderColor(self, nameplateBorderColors.default)
 end
 
-local function AddNameBackground(frame)
-  local layer, sublayer = frame.name:GetDrawLayer()
-  local bg = frame:CreateTexture(nil, layer)
+local function AddNameBackground(self)
+  local layer, sublayer = self.name:GetDrawLayer()
+  local bg = self:CreateTexture(nil, layer)
   bg:SetDrawLayer(layer, sublayer - 1)
-  bg:SetPoint("BOTTOMLEFT", frame.HealthBarsContainer.border.Top, "TOPLEFT", -20, 0)
-  bg:SetPoint("BOTTOMRIGHT", frame.HealthBarsContainer.border.Top, "TOPRIGHT", 20, 0)
+  bg:SetPoint("BOTTOMLEFT", self.HealthBarsContainer.border.Top, "TOPLEFT", -20, 0)
+  bg:SetPoint("BOTTOMRIGHT", self.HealthBarsContainer.border.Top, "TOPRIGHT", 20, 0)
   bg:SetHeight(16)
   bg:SetAtlas("glues-characterSelect-TopHUD-BG")
-  frame.name.__bg = bg
+  self.name.__bg = bg
   return bg
 end
 
-local function UpdateNamePlateClassificationIndicator(frame)
-  if not IsNameplateFrame(frame) then
+local function UpdateNamePlateClassificationIndicator(self)
+  if not IsNameplateFrame(self) then
     return
   end
-  frame.classificationIndicator:Hide()
-  local classification = UnitClassification(frame.displayedUnit)
+  self.classificationIndicator:Hide()
+  local classification = UnitClassification(self.displayedUnit)
   if not classification then
     return
   end
-  local bg = frame.name.__bg or AddNameBackground(frame)
+  local bg = self.name.__bg or AddNameBackground(self)
   bg:SetVertexColor(unpack(classificationColors[classification].color))
   bg:SetDesaturated(classificationColors[classification].desaturated)
 end
 
-local function UpdateNamePlateSelectionHighlight(frame)
-  if not IsNameplateFrame(frame) then
+local function UpdateNamePlateSelectionHighlight(self)
+  if not IsNameplateFrame(self) then
     return
   end
-  frame.selectionHighlight:Hide()
+  self.selectionHighlight:Hide()
 end
 
 hooksecurefunc("CompactUnitFrame_UpdateHealthBorder", UpdateNamePlateBorder)

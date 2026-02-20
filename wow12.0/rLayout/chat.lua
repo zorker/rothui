@@ -7,6 +7,11 @@ local function ApplyClamp(cf)
   ns.eventFrame.SetClampRectInsets(cf,0,0,0,0)
 end
 
+local function ApplyPoint(cf)
+  ns.eventFrame.ClearAllPoints(cf)
+  ns.eventFrame.SetPoint(cf, "BOTTOMLEFT", 10, 10)
+end
+
 --SkinChat
 local function SkinChat()
   for i = 1, NUM_CHAT_WINDOWS do
@@ -36,16 +41,11 @@ local function SkinChat()
     hooksecurefunc(cf, "SetClampRectInsets", ApplyClamp)
   end
   TextToSpeechButtonFrame:Hide()
-  ChatFrame1:ClearAllPoints()
-  ChatFrame1:SetPoint("BOTTOMLEFT", 10, 10)
   QuickJoinToastButton:SetClampedToScreen(true)
   QuickJoinToastButton:SetClampRectInsets(-10,-10,-10,-10)
-end
-
-local function MoveChat()
   ChatFrame1:ClearAllPoints()
   ChatFrame1:SetPoint("BOTTOMLEFT", 10, 10)
+  hooksecurefunc(ChatFrame1, "SetPoint", ApplyPoint)
 end
 
 ns.SkinChat = SkinChat
-ns.MoveChat = MoveChat

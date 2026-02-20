@@ -1,0 +1,10 @@
+## Interface: 120001
+## Title: rLayout
+## Notes: Adjustments for the Blizzard default UI
+## Author: zork
+## Version: 1.0.1
+
+init.lua
+statedriver.lua
+chat.lua
+combatfeedback.lua

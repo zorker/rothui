@@ -20,8 +20,9 @@ local function SetStateDriver()
   --RegisterStateDriver(ObjectiveTrackerFrame, "visibility", "[mod:alt] show; hide")
   --MultiBarBottomLeft - Multibar 2
   RegisterStateDriver(MultiBarBottomLeft, "visibility", "[petbattle][vehicleui] hide; [combat][mod:shift][@target,exists,nodead] show; hide")
-  --AddActionButtonFader for Multibar 4 and 5
-  RegisterStateDriver(MultiBarRight, "visibility", "[petbattle][vehicleui] hide; [combat][mod:shift][@target,exists,nodead] show; hide")
+  --AddActionButtonFader for Multibar 4
+  --RegisterStateDriver(MultiBarRight, "visibility", "[petbattle][vehicleui] hide; [combat][mod:shift][@target,exists,nodead] show; hide")
+  RegisterStateDriver(MultiBarRight, "visibility", "[mod:shift] show; hide")
 end
 
 ns.SetStateDriver = SetStateDriver

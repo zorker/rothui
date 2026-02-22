@@ -1,7 +1,12 @@
 local addonName, ns = ...
 
+--config
+
+local chatPosition = { "BOTTOMLEFT", 10, 10 }
 local editBoxFocusAlpha = 1
 local editBoxAlpha = 0
+
+--functions
 
 local function ApplyClamp(cf)
   ns.eventFrame.SetClampRectInsets(cf,0,0,0,0)
@@ -9,7 +14,7 @@ end
 
 local function ApplyPoint(cf)
   ns.eventFrame.ClearAllPoints(cf)
-  ns.eventFrame.SetPoint(cf, "BOTTOMLEFT", 10, 10)
+  ns.eventFrame.SetPoint(cf, unpack(chatPosition))
 end
 
 --SkinChat
@@ -44,7 +49,7 @@ local function SkinChat()
   QuickJoinToastButton:SetClampedToScreen(true)
   QuickJoinToastButton:SetClampRectInsets(-10,-10,-10,-10)
   ChatFrame1:ClearAllPoints()
-  ChatFrame1:SetPoint("BOTTOMLEFT", 10, 10)
+  ChatFrame1:SetPoint(unpack(chatPosition))
   hooksecurefunc(ChatFrame1, "SetPoint", ApplyPoint)
 end
 

@@ -8,3 +8,4 @@ init.lua
 statedriver.lua
 chat.lua
 combatfeedback.lua
+vignette.lua

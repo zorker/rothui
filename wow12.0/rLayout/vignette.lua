@@ -1,16 +1,24 @@
 local addonName, ns = ...
 
 local vignettesDB = {}
-local vignettesBlackList = { "Garrison Cache", "Full Garrison Cache", "Expedition Scout's Pack", "Valeera Sanguinar" }
+local blacklistedVignette = {}
+local blacklistNames = { 
+  "Garrison Cache", 
+  "Full Garrison Cache", 
+  "Expedition Scout's Pack", 
+  "Valeera Sanguinar", 
+  "Decor Specialist", 
+  "Altar of Blessings",
+  "Rostrum of Transformation"
+}
 
-local function IsBlackListedVignette(name)
-	for i = 1, #vignettesBlackList do  
-		if vignettesBlackList[i] == name then  
-			return true  
-		end  
+--SetBlackListedVignettes
+local function SetBlackListedVignettes()
+	for i = 1, #blacklistNames do
+    blacklistedVignette[blacklistNames[i]] = true
 	end  
-	return false  
 end
+SetBlackListedVignettes()
 
 --AlertVignette
 local function AlertVignette(id)
@@ -19,7 +27,7 @@ local function AlertVignette(id)
   local vignetteInfo = C_VignetteInfo.GetVignetteInfo(id)
   if not vignetteInfo then return end
   if not vignetteInfo.onMinimap then return end
-  if IsBlackListedVignette(vignetteInfo.name) then return end
+  if blacklistedVignette[vignetteInfo.name] then return end
   local atlasInfo = C_Texture.GetAtlasInfo(vignetteInfo.atlasName)
   local left = atlasInfo.leftTexCoord * 256
   local right = atlasInfo.rightTexCoord * 256

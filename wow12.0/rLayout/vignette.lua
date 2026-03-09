@@ -9,7 +9,9 @@ local blacklistNames = {
   "Valeera Sanguinar", 
   "Decor Specialist", 
   "Altar of Blessings",
-  "Rostrum of Transformation"
+  "Rostrum of Transformation",
+  "Witherbark Prisoner",
+  "Glowing Moth"
 }
 
 --SetBlackListedVignettes

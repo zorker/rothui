@@ -1,4 +1,4 @@
-local addonName, ns = ...
+local A, L = ...
 
 --SetStateDriver
 local function SetStateDriver()
@@ -16,13 +16,10 @@ local function SetStateDriver()
   RegisterStateDriver(MicroButtonAndBagsBar, "visibility", "[mod:ctrl] show; hide")
   --state driver for MainStatusTrackingBarContainer
   RegisterStateDriver(MainStatusTrackingBarContainer, "visibility", "[mod:alt] show; hide")
-  --state driver for ObjectiveTrackerFrame
-  --RegisterStateDriver(ObjectiveTrackerFrame, "visibility", "[mod:alt] show; hide")
   --MultiBarBottomLeft - Multibar 2
   RegisterStateDriver(MultiBarBottomLeft, "visibility", "[petbattle][vehicleui] hide; [combat][mod:shift] show; hide")
   --AddActionButtonFader for Multibar 4
-  --RegisterStateDriver(MultiBarRight, "visibility", "[petbattle][vehicleui] hide; [combat][mod:shift][@target,exists,nodead] show; hide")
   RegisterStateDriver(MultiBarRight, "visibility", "[mod:shift] show; hide")
 end
 
-ns.SetStateDriver = SetStateDriver
+L.F.SetStateDriver = SetStateDriver

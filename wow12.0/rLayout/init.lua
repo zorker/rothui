@@ -1,24 +1,12 @@
-local addonName, ns = ...
+local A, L = ...
 
-local function OnPlayerLogin()
-  ns.SetStateDriver()
-  ns.SkinChats()
-  ns.DisableCombatFeedback()
-end
+L.name = A
+L.version = C_AddOns.GetAddOnMetadata(L.name, "Version")
+L.versionNumber = tonumber(L.version) or 0
+L.dbversion = tonumber(C_AddOns.GetAddOnMetadata(L.name, "X-DB-Version")) or 1
+L.locale = GetLocale()
 
-local function OnVignetteAdded(...)
-  ns.AlertVignette(...)
-end
-
-local eventFrame = CreateFrame("Frame")
-eventFrame:RegisterEvent("PLAYER_LOGIN")
-eventFrame:RegisterEvent("VIGNETTE_MINIMAP_UPDATED")
-eventFrame:SetScript("OnEvent", function(_, event, ...)
-  if event == "PLAYER_LOGIN" then
-    OnPlayerLogin()
-  elseif event == "VIGNETTE_MINIMAP_UPDATED" then
-    OnVignetteAdded(...)
-  end
-end)
-
-ns.eventFrame = eventFrame
+L.DB = {}
+L.C = {}
+L.F = {}
+L.eventFrame = CreateFrame("Frame")

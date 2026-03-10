@@ -2,9 +2,10 @@
 ## Title: rLayout
 ## Notes: Adjustments for the Blizzard default UI
 ## Author: zork
-## Version: 1.0.1
+## Version: 1.2
 
 init.lua
+events.lua
 statedriver.lua
 chat.lua
 combatfeedback.lua

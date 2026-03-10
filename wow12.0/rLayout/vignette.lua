@@ -1,26 +1,23 @@
-local addonName, ns = ...
+local A, L = ...
 
 local vignettesDB = {}
 local blacklistedVignette = {}
-local blacklistNames = { 
-  "Garrison Cache", 
-  "Full Garrison Cache", 
-  "Expedition Scout's Pack", 
-  "Valeera Sanguinar", 
-  "Decor Specialist", 
+local blacklistNames = {
+  "Garrison Cache",
+  "Full Garrison Cache",
+  "Expedition Scout's Pack",
+  "Valeera Sanguinar",
+  "Decor Specialist",
   "Altar of Blessings",
   "Rostrum of Transformation",
   "Witherbark Prisoner",
   "Glowing Moth"
 }
 
---SetBlackListedVignettes
-local function SetBlackListedVignettes()
-	for i = 1, #blacklistNames do
-    blacklistedVignette[blacklistNames[i]] = true
-	end  
+--blacklistedVignette
+for i = 1, #blacklistNames do
+  blacklistedVignette[blacklistNames[i]] = true
 end
-SetBlackListedVignettes()
 
 --AlertVignette
 local function AlertVignette(id)
@@ -42,4 +39,4 @@ local function AlertVignette(id)
   vignettesDB[id] = true
 end
 
-ns.AlertVignette = AlertVignette
+L.F.AlertVignette = AlertVignette

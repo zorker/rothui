@@ -1,4 +1,4 @@
-local addonName, ns = ...
+local A, L = ...
 
 --DisableCombatFeedback
 local function DisableCombatFeedback()
@@ -6,4 +6,4 @@ local function DisableCombatFeedback()
   PlayerFrame:UnregisterEvent("UNIT_COMBAT")
 end
 
-ns.DisableCombatFeedback = DisableCombatFeedback
+L.F.DisableCombatFeedback = DisableCombatFeedback

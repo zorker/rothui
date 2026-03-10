@@ -6,7 +6,7 @@ local counter = 0
 local modelList = nil
 local lastID = nil
 local buildList = false
-local modelFrame = CreateFrame("PlayerModel")
+local modelFrame = nil
 
 local function BuildModelList(newID)
   if not buildList then return end
@@ -58,6 +58,9 @@ local function ButtonOnClick()
 end
 
 local function CreateBuildDBButton()
+
+  --modelFrame
+  modelFrame = CreateFrame("PlayerModel")
 
   --button
   button = CreateFrame("Button", L.name.."Button", UIParent, "UIPanelButtonTemplate")

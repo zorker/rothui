@@ -1,0 +1,12 @@
+## Interface: 120001
+## Title: rIngameModelViewer
+## Author: zork
+## Version: 1.0
+## Notes: Zork's ingame model viewer
+## RequiredDeps: rModelDB
+
+init.lua
+config.lua
+functions.lua
+murloc.lua
+canvas.lua

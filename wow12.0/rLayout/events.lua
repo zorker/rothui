@@ -4,6 +4,7 @@ local function OnPlayerLogin(...)
   L.F.SetStateDriver()
   L.F.SkinChats()
   L.F.DisableCombatFeedback()
+  --L.F.DisableObjectiveTracker()
 end
 
 local function OnVignetteAdded(...)

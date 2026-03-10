@@ -10,3 +10,4 @@ statedriver.lua
 chat.lua
 combatfeedback.lua
 vignette.lua
+objectivetracker.lua

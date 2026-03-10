@@ -1,22 +1,6 @@
 local A, L = ...
 
-L.name = A
-L.version = C_AddOns.GetAddOnMetadata(L.name, "Version")
-L.versionNumber = tonumber(L.version) or 0
-L.dbversion = tonumber(C_AddOns.GetAddOnMetadata(L.name, "X-DB-Version")) or 1
-L.locale = GetLocale()
-
-L.DB = {}
-
-local eventFrame = nil
-
--- SetDBDefaults
-local function SetDBDefaults()
-  return {
-    ["COLOR"] = {1, 1, 1},
-    ["MODELSIZE"] = 200,
-    ["PAGE"] = 1,
-    ["MODEL_LIST"] = {
+local cachedModels = {
 [433893] = 34823,
 [4093301] = 113916,
 [196476] = 25874,
@@ -9021,7 +9005,15 @@ local function SetDBDefaults()
 [6365505] = 128518,
 [202619] = 38355,
 [1366047] = 69881,
-},
+}
+
+-- SetDBDefaults
+local function SetDBDefaults()
+  return {
+    ["COLOR"] = {1, 1, 1},
+    ["MODELSIZE"] = 200,
+    ["PAGE"] = 1,
+    ["MODEL_LIST"] = cachedModels,
     ["LAST_DISPLAY_ID"] = 301737,
     ["DB_VERSION"] = L.dbversion
   }
@@ -9038,88 +9030,4 @@ local function LoadDatabase()
   L.DB.G = rModelDB_G
   print(L.name, 'loading db version', L.DB.G["DB_VERSION"])
 end
-
-local function RegisterCallback(event, callback, ...)
-  if not eventFrame then
-    eventFrame = CreateFrame("Frame")
-    function eventFrame:OnEvent(event, ...)
-      for callback, args in next, self.callbacks[event] do
-        callback(args, ...)
-      end
-    end
-    eventFrame:SetScript("OnEvent", eventFrame.OnEvent)
-  end
-  if not eventFrame.callbacks then eventFrame.callbacks = {} end
-  if not eventFrame.callbacks[event] then eventFrame.callbacks[event] = {} end
-  eventFrame.callbacks[event][callback] = {...}
-  eventFrame:RegisterEvent(event)
-end
-
-RegisterCallback("VARIABLES_LOADED", LoadDatabase)
-
--- Create the main button
-local button = CreateFrame("Button", "MySimpleSpinnerButton", UIParent, "UIPanelButtonTemplate")
-button:SetSize(250, 30)
-button:SetPoint("CENTER", UIParent, "CENTER")
-button:SetText("Build rModelDB")
-button:Hide()
-
--- Create the Spinner frame using the official LoadingSpinnerTemplate
-local spinner = CreateFrame("Frame", nil, button, "LoadingSpinnerTemplate")
-spinner:SetPoint("BOTTOM", button, "TOP", 0, 10) -- Positioned 10px above the button
-spinner:SetScale(2) -- Makes it a bit easier to see
-spinner:Hide()
-
-local counter = 0
-local ml = nil
-local last_id = nil
-local buildList = false
-local modelFrame = CreateFrame("PlayerModel")
-
-local function BuildModelList(new_id)
-  if not buildList then return end
-  --local i = new_id
-  for i = new_id, new_id+20, 1 do
-    if i == 74632 then --skip bad memory access
-      i = i + 1
-    end
-    if i == 136225 then --skip bad memory access
-      i = i + 1
-    end
-    if i == 143081 then --skip bad memory access
-      i = i + 1
-    end
-    last_id = i
-    modelFrame:ClearModel()
-    modelFrame:SetDisplayInfo(last_id)
-    local modelFileID = modelFrame:GetModelFileID()
-    if modelFileID and not ml[modelFileID] then
-      ml[modelFileID] = last_id
-      counter = counter + 1
-    end
-    button:SetText("Models found: "..counter.." last-id: "..last_id)
-  end
-  C_Timer.After(0.01, function()
-    BuildModelList(last_id + 1)
-  end)
-end
-
--- Click handler to toggle visibility and animation
-button:SetScript("OnClick", function(self)
-  if spinner:IsShown() then
-    buildList = false
-    L.DB.G["MODEL_LIST"] = ml
-    L.DB.G["LAST_DISPLAY_ID"] = last_id
-    print(L.name, 'searched up until id: [', last_id, '] and found this many new models: [', counter, ']')
-    if spinner.Anim then spinner.Anim:Stop() end
-    spinner:Hide()
-  else
-    spinner:Show()
-    buildList = true
-    counter = 0
-    ml = L.DB.G["MODEL_LIST"]
-    last_id = L.DB.G["LAST_DISPLAY_ID"]
-    BuildModelList(last_id)
-    if spinner.Anim then spinner.Anim:Play() end
-  end
-end)
+L.F.LoadDatabase = LoadDatabase

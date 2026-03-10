@@ -6,4 +6,7 @@
 ## Version: 1.0
 ## X-DB-Version: 2
 
-rModelDB.lua
+init.lua
+events.lua
+db.lua
+builddb.lua

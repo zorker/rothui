@@ -1,6 +1,6 @@
 local A, L = ...
 
-local function OnPlayerLogin()
+local function OnPlayerLogin(...)
   L.F.SetStateDriver()
   L.F.SkinChats()
   L.F.DisableCombatFeedback()
@@ -14,7 +14,7 @@ L.eventFrame:RegisterEvent("PLAYER_LOGIN")
 L.eventFrame:RegisterEvent("VIGNETTE_MINIMAP_UPDATED")
 L.eventFrame:SetScript("OnEvent", function(_, event, ...)
   if event == "PLAYER_LOGIN" then
-    OnPlayerLogin()
+    OnPlayerLogin(...)
   elseif event == "VIGNETTE_MINIMAP_UPDATED" then
     OnVignetteAdded(...)
   end

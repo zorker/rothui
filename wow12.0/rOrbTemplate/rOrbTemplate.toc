@@ -1,0 +1,8 @@
+## Interface: 120001
+## Title: rOrbTemplate
+## Author: zork
+## Version: 12.01
+## Notes: Orb template engine
+## IconTexture: Interface\AddOns\rOrbTemplate\assets\logo-64
+
+OrbTemplate.xml

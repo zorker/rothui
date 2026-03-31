@@ -1,4 +1,4 @@
-## Interface: 120001
+## Interface: 120001, 120005
 ## Title: rLayout
 ## Notes: Adjustments for the Blizzard default UI
 ## Author: zork
@@ -11,3 +11,4 @@ chat.lua
 combatfeedback.lua
 vignette.lua
 objectivetracker.lua
+spellalert.lua

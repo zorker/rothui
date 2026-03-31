@@ -11,7 +11,9 @@ local blacklistNames = {
   "Altar of Blessings",
   "Rostrum of Transformation",
   "Witherbark Prisoner",
-  "Glowing Moth"
+  "Glowing Moth",
+  "Misplaced Tome",
+  "Leaf-wrapped Package"
 }
 
 --blacklistedVignette

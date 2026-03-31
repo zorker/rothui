@@ -16,6 +16,8 @@ local function SetStateDriver()
   RegisterStateDriver(MicroButtonAndBagsBar, "visibility", "[mod:ctrl] show; hide")
   --state driver for MainStatusTrackingBarContainer
   RegisterStateDriver(MainStatusTrackingBarContainer, "visibility", "[mod:alt] show; hide")
+  --PetActionBar
+  RegisterStateDriver(PetActionBar, "visibility", "[petbattle][vehicleui] hide; [mod:shift] show; hide")
   --MultiBarBottomLeft - Multibar 2
   RegisterStateDriver(MultiBarBottomLeft, "visibility", "[petbattle][vehicleui] hide; [combat][mod:shift] show; hide")
   --AddActionButtonFader for Multibar 4

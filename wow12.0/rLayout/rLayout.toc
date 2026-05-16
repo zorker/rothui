@@ -3,6 +3,7 @@
 ## Notes: Adjustments for the Blizzard default UI
 ## Author: zork
 ## Version: 1.2
+## Category: rMods
 
 init.lua
 events.lua

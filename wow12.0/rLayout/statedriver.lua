@@ -4,6 +4,7 @@ local A, L = ...
 local function SetStateDriver()
   --MainMenuBar
   RegisterStateDriver(MainActionBar, "visibility", "[petbattle][vehicleui] hide; [combat][mod:shift][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][possessbar] show; hide")
+  MainActionBar.EndCaps:SetAlpha(0)
   --state driver for PlayerFrame
   RegisterStateDriver(PlayerFrame, "visibility", "[petbattle] hide; [combat][mod:shift][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide")
   --state driver for StanceBar

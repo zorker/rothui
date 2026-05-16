@@ -89,7 +89,7 @@
       </Frame>
     </Frames>
     <Layers>
-      <Layer level="BACKGROUND">
+      <Layer level="BACKGROUND" textureSubLevel="-6">
         <Texture parentKey="BackgroundTexture"
           file="Interface\AddOns\rModelOrbTemplate\media\orb_background">
           <Color r="1" g="1" b="1" a="1" />

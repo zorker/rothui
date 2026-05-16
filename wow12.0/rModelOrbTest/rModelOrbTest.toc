@@ -1,0 +1,11 @@
+## Interface: 120005
+## Title: rModelOrbTest
+## Notes: rModelOrbTemplate test
+## Author: zork
+## Version: 12.1
+## Category: rMods
+## IconTexture: Interface\AddOns\rModelOrbTemplate\assets\logo-64
+## RequiredDeps: rModelOrbTemplate
+
+init.lua
+events.lua

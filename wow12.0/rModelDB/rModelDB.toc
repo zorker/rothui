@@ -1,10 +1,11 @@
-## Interface: 120001
+## Interface: 120001, 120005
 ## Title: rModelDB
-## Notes: Addon to create the model db for rIngameModelViewer
+## Notes: Addon to create the model db for rModelViewer
 ## SavedVariables: rModelDB_G
 ## Author: zork
 ## Version: 1.0
-## X-DB-Version: 2
+## Category: rMods
+## X-DB-Version: 3
 
 init.lua
 events.lua

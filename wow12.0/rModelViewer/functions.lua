@@ -23,14 +23,19 @@ function L.F:PlaySound(sound)
   PlaySound(sound)
 end
 
-function L.F:SetDisplayInfoModelList()
+function L.F:SetDisplayInfoModelList(useFavs)
   -- build premade model list sorted by dispayInfo ID desc
+  L.DB = rModelViewer_GLOBAL_DB
   L.DB.GLOB = rModelDB_G
-  L.DB.displayInfoModelList = L.DB.displayInfoModelList or {}
-  for k, v in pairs(L.DB.GLOB["MODEL_LIST"]) do
-    table.insert(L.DB.displayInfoModelList, v)
+  local model_list = L.DB.GLOB["MODEL_LIST"]
+  if useFavs and L.DB["FAVORITES"] then
+    model_list = L.DB["FAVORITES"]
   end
-  table.sort(L.DB.displayInfoModelList, SortByTableIndexDesc)
+  L.C.displayInfoModelList = {}
+  for k, v in pairs(model_list) do
+    table.insert(L.C.displayInfoModelList, v)
+  end
+  table.sort(L.C.displayInfoModelList, SortByTableIndexDesc)
 end
 
 function L.F:RoundNumber(n)

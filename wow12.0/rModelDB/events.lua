@@ -1,7 +1,7 @@
 local A, L = ...
 
 local function OnPlayerLogin(...)
-  L.F.CreateBuildDBButton()
+  --L.F.CreateBuildDBButton()
 end
 
 local function OnVariablesLoaded(...)

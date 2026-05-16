@@ -19,12 +19,13 @@ L.murloc:SetScript("OnMouseDown", function(self, button)
   if button == "RightButton" then
     return
   end
+  L.F:SetDisplayInfoModelList(IsControlKeyDown())
   -- on first call create the canvas
   if not L.canvas.isCanvas then
-    L.F:SetDisplayInfoModelList()
     L.canvas:Init()
   end
   L.C.canvasMode = 'displayInfoList'
+  L.canvas.showFavs = IsControlKeyDown()
   L.F:PlaySound(L.C.sound.swap)
   L.canvas:Enable()
 end)
@@ -54,10 +55,8 @@ L.murloc:SetScript("OnEnter", function(self)
   --L.F:PlaySound(L.C.sound.select)
   GT:SetOwner(self, "ANCHOR_TOP", 0, 5)
   GT:AddLine(L.name, 0, 1, 0.5, 1, 1, 1)
-  GT:AddLine("To show any tooltip on the following canvas hold down |cff00ffffALT|r while hovering over models. Left-click to open the canvas.", 1, 1, 1, 1, 1, 1)
+  GT:AddLine("To show any tooltip on the following canvas hold down |cff00ffffALT|r while hovering over models.", 1, 1, 1, 1, 1, 1)
   GT:AddDoubleLine("|cff00ffffLeft-Click|r", "open canvas showing data from built model database", 1, 1, 1, 1, 1, 1)
-  GT:AddDoubleLine("|cff00ffffMouse4|r", "open canvas without a filtered list", 1, 1, 1, 1, 1, 1)
-  GT:AddDoubleLine("|cff00ffffMouse5|r", "build model database", 1, 1, 1, 1, 1, 1)
   GT:AddDoubleLine("|cff00ffffRight-Click|r", "drag to move", 1, 1, 1, 1, 1, 1)
   GT:AddDoubleLine("|cff00ffffRight-Click|r + |cff00ffffSHIFT|r", "drag to resize", 1, 1, 1, 1, 1, 1)
   GT:Show()

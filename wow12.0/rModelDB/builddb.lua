@@ -7,34 +7,33 @@ local modelList = nil
 local lastID = nil
 local buildList = false
 local modelFrame = nil
+local numModelsEachFrame = 20
 
-local function BuildModelList(newID)
+local function TestModel(id)
+  if id == 74632 or id == 136225 or id == 143081 then --skip bad memory access
+    return
+  end
+  modelFrame:ClearModel()
+  modelFrame:SetDisplayInfo(id)
+  local modelFileID = modelFrame:GetModelFileID()
+  if modelFileID and not modelList[modelFileID] then
+    modelList[modelFileID] = id
+    lastID = id
+    counter = counter + 1
+  end
+  button:SetText("Models found: "..counter.." last-id: "..id)
+end
+
+local function BuildModelList(id)
   if not buildList then return end
-  --local i = newID
-  --try 20 models each 10ms
-  for i = newID, newID+20, 1 do
-    if i == 74632 then --skip bad memory access
-      i = i + 1
-    end
-    if i == 136225 then --skip bad memory access
-      i = i + 1
-    end
-    if i == 143081 then --skip bad memory access
-      i = i + 1
-    end
-    lastID = i
-    modelFrame:ClearModel()
-    modelFrame:SetDisplayInfo(lastID)
-    local modelFileID = modelFrame:GetModelFileID()
-    if modelFileID and not modelList[modelFileID] then
-      modelList[modelFileID] = lastID
-      counter = counter + 1
-    end
-    button:SetText("Models found: "..counter.." last-id: "..lastID)
+  local latestID = id
+  for i = id, id+numModelsEachFrame, 1 do
+    TestModel(i)
+    latestID = i
   end
   --recursive call after 10ms
   C_Timer.After(0.01, function()
-    BuildModelList(lastID + 1)
+    BuildModelList(latestID + 1)
   end)
 end
 
@@ -43,7 +42,7 @@ local function ButtonOnClick()
     buildList = false
     L.DB.G["MODEL_LIST"] = modelList
     L.DB.G["LAST_DISPLAY_ID"] = lastID
-    print(L.name, 'searched up until id: [', lastID, '] and found this many new models: [', counter, ']')
+    print(L.name, 'found models up until id: [', lastID, '], count: [', counter, ']')
     if spinner.Anim then spinner.Anim:Stop() end
     spinner:Hide()
   else
@@ -67,7 +66,6 @@ local function CreateBuildDBButton()
   button:SetSize(250, 30)
   button:SetPoint("CENTER", UIParent, "CENTER")
   button:SetText("Build rModelDB")
-  button:Hide()
 
   --spinner
   spinner = CreateFrame("Frame", nil, button, "LoadingSpinnerTemplate")

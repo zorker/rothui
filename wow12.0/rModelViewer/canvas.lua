@@ -63,11 +63,14 @@ local function PositionOnUpdate(model, elapsed)
       model.posX, model.posY = py, pz
     end
   else
-    local my = format("%.2f", (py + (x - model.cursorX) / 84))
+    --local my = format("%.2f", (py + (x - model.cursorX) / 84))
     local mz = format("%.2f", (pz + (y - model.cursorY) / 84))
-    if format("%.2f", py) ~= my or format("%.2f", pz) ~= mz then
-      model:SetPosition(px, my, mz)
-      model.posX, model.posY = my, mz
+    --if format("%.2f", py) ~= my or format("%.2f", pz) ~= mz then
+    if format("%.2f", pz) ~= mz then
+      --model:SetPosition(px, my, mz)
+      model:SetPosition(px, py, mz)
+      --model.posX, model.posY = my, mz
+      model.posY = mz
     end
   end
   model.cursorX, model.cursorY = x, y
@@ -109,7 +112,24 @@ end
 local function ModelOnMouseDown(model, button)
   if button == "LeftButton" then
     if model:GetParent().isCanvas then
-      if IsShiftKeyDown() then
+      if IsControlKeyDown() and model.modelFileID then
+        L.DB["FAVORITES"] = L.DB["FAVORITES"] or {}
+        if L.canvas.showFavs and  L.DB["FAVORITES"][model.modelFileID] then
+          print(model.modelFileID, "removed")
+          L.DB["FAVORITES"][model.modelFileID] = nil
+          model.title:SetTextColor(1, 1, 1)
+        elseif L.DB["FAVORITES"][model.modelFileID] then
+          print(model.modelFileID, "removed")
+          L.DB["FAVORITES"][model.modelFileID] = nil
+          model.title:SetTextColor(1, 1, 1)
+        else
+          print(model.modelFileID, "saved")
+          L.DB["FAVORITES"][model.modelFileID] = model.displayInfo
+          model.title:SetText("|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:0|t "..model.title:GetText())
+          model.title:SetTextColor(1, 1, 0)
+        end
+      end
+      if not IsShiftKeyDown() then
         if model:HasCustomCamera() then
           model.cursorX, model.cursorY = GetCursorPosition()
           model:SetScript("OnUpdate", CustomCamperaOnUpdate)
@@ -181,6 +201,7 @@ local function ModelOnEnter(model)
   GT:AddDoubleLine("SetPosition", "(" .. pz .. "," .. px .. "," .. px .. ")", 1, 1, 1, 1, 1, 1)
   GT:AddDoubleLine("SetRotation", model.rotation, 1, 1, 1, 1, 1, 1)
   GT:AddDoubleLine("SetFacing", L.F:RoundNumber(model:GetFacing()), 1, 1, 1, 1, 1, 1)
+  GT:AddDoubleLine("GetModelScale", L.F:RoundNumber(model:GetModelScale()), 1, 1, 1, 1, 1, 1)
   if model:HasCustomCamera() then
     local x, y, z = model:GetCameraPosition()
     local tx, ty, tz = model:GetCameraTarget()
@@ -232,9 +253,10 @@ end
 
 local function UpdateDisplayIndex(model, displayIndex)
   model.displayIndex = displayIndex
+  model.title:SetTextColor(1, 1, 1)
   if L.C.canvasMode == 'displayInfoList' then
-    if L.DB.displayInfoModelList and L.DB.displayInfoModelList[displayIndex] then
-      model.displayInfo = L.DB.displayInfoModelList[displayIndex]
+    if L.C.displayInfoModelList and L.C.displayInfoModelList[displayIndex] then
+      model.displayInfo = L.C.displayInfoModelList[displayIndex]
       model.title:SetText(model.displayInfo .. " - " .. model.displayIndex)
     else
       model.displayInfo = 0
@@ -261,6 +283,10 @@ local function UpdateDisplayIndex(model, displayIndex)
     model.e404:Hide()
     model:EnableMouse(true)
     model:SetAlpha(1)
+    if L.DB["FAVORITES"] and L.DB["FAVORITES"][model.modelFileID] then
+      model.title:SetText("|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:0|t "..model.title:GetText())
+      model.title:SetTextColor(1, 1, 0)
+    end
   end
 end
 

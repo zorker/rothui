@@ -1,9 +1,11 @@
-## Interface: 120001
-## Title: rIngameModelViewer
+## Interface: 120001, 120005
+## Title: rModelViewer
 ## Author: zork
 ## Version: 1.0
 ## Notes: Zork's ingame model viewer
 ## RequiredDeps: rModelDB
+## Category: rMods
+## SavedVariables: rModelViewer_GLOBAL_DB
 
 init.lua
 config.lua

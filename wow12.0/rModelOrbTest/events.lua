@@ -21,7 +21,7 @@ local function OnPlayerLogin(...)
   orb:SetPoint("CENTER")
   --orb:SetScale(1)
 
-  orb:LoadModelDataByID(394985)
+  orb:LoadModelDataByID(2030216)
   orb.FillingStatusBar:SetValue(1)
   
   --make slider
@@ -35,7 +35,7 @@ local function OnPlayerLogin(...)
   -- scroll frame
   local scrollFrame = CreateFrame("scrollFrame", nil, UIParent, "UIPanelscrollFrameTemplate")
   scrollFrame:SetPoint("LEFT", orb, "RIGHT", 50, 0)
-  scrollFrame:SetSize(200,500)
+  scrollFrame:SetSize(300,500)
 
   -- scroll frame child
   local scrollFrameChild = CreateFrame("Frame", nil, scrollFrame)
@@ -45,15 +45,29 @@ local function OnPlayerLogin(...)
 
   local listButtons = {}
   local count = 0
-  for modelID, data in pairs(allModelData) do
-    count = count + 1
-    local btn = listButtons[count] or CreateFrame("Button", nil, scrollFrameChild, "UIPanelButtonTemplate")
-    btn:SetSize(scrollFrame:GetWidth() - 10, 24)
-    btn:SetPoint("TOPLEFT", 5, -((count-1) * 26))
-    btn:SetText(data["name"] or modelID)
-    btn:SetScript("OnClick", function() orb:LoadModelDataByID(modelID) end)
-    btn:Show()
-    listButtons[count] = btn
+
+  local sortedModels = {}
+
+  for id, data in pairs(orb:GetAllModelData()) do
+      data.id = id
+      table.insert(sortedModels, data)
+  end
+
+  table.sort(sortedModels, function(a, b)
+      return a.name:lower() < b.name:lower() -- :lower() ensures it handles any unexpected casing gracefully
+  end)
+
+  for _, data in pairs(sortedModels) do
+    if data.status == 3 then
+      count = count + 1
+      local btn = listButtons[count] or CreateFrame("Button", nil, scrollFrameChild, "UIPanelButtonTemplate")
+      btn:SetSize(scrollFrame:GetWidth() - 10, 24)
+      btn:SetPoint("TOPLEFT", 5, -((count-1) * 26))
+      btn:SetText(data.id.." - "..data.name)
+      btn:SetScript("OnClick", function() orb:LoadModelDataByID(data.id) end)
+      btn:Show()
+      listButtons[count] = btn
+    end
   end
   scrollFrameChild:SetHeight(count * 26)
 

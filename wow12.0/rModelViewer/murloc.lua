@@ -24,7 +24,7 @@ L.murloc:SetScript("OnMouseDown", function(self, button)
   if not L.canvas.isCanvas then
     L.canvas:Init()
   end
-  L.C.canvasMode = 'displayInfoList'
+  L.C.canvasMode = "displayInfoList"
   L.canvas.showFavs = IsControlKeyDown()
   L.F:PlaySound(L.C.sound.swap)
   L.canvas:Enable()

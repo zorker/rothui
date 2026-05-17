@@ -2,7 +2,7 @@
 ## Title: rModelViewer
 ## Author: zork
 ## Version: 1.0
-## Notes: Zork's ingame model viewer
+## Notes: Zorks ingame model viewer
 ## RequiredDeps: rModelDB
 ## Category: rMods
 ## SavedVariables: rModelViewer_GLOBAL_DB

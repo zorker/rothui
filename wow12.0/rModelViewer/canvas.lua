@@ -254,7 +254,7 @@ end
 local function UpdateDisplayIndex(model, displayIndex)
   model.displayIndex = displayIndex
   model.title:SetTextColor(1, 1, 1)
-  if L.C.canvasMode == 'displayInfoList' then
+  if L.C.canvasMode == "displayInfoList" then
     if L.C.displayInfoModelList and L.C.displayInfoModelList[displayIndex] then
       model.displayInfo = L.C.displayInfoModelList[displayIndex]
       model.title:SetText(model.displayInfo .. " - " .. model.displayIndex)

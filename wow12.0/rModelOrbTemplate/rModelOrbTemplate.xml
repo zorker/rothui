@@ -6,7 +6,7 @@
     <Size x="256" y="256" />
     <Frames>
       <StatusBar parentKey="FillingStatusBar" mixin="rModelOrbFillingMixin" frameLevel="1">
-        <BarTexture file="Interface\AddOns\rModelOrbTemplate\media\orb_filling15" />
+        <BarTexture file="Interface\AddOns\rModelOrbTemplate\media\orb_filling16" />
         <BarColor r="1" g="1" b="1" a="1" />
         <Size x="256" y="256" />
         <Anchors>

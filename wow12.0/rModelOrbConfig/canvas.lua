@@ -142,7 +142,7 @@ function L.canvas:Init()
   end)
 
   -- canvas close button
-  self.closeButton = L.F.CreateButton(self, L.name .. "CanvasCloseButton", "Close")
+  self.closeButton = L.F.CreateButton(self, "Close")
   self.closeButton:SetPoint("BOTTOMRIGHT", -10, 10)
   self.closeButton:SetScript("OnClick", function(self)
     L.canvas:Close()
@@ -157,7 +157,7 @@ function L.canvas:Init()
   end)
 
   -- canvas next page button
-  self.nextPageButton = L.F.CreateButton(self, L.name .. "CanvasNextPageButton", "next >")
+  self.nextPageButton = L.F.CreateButton(self, "next >")
   self.nextPageButton:SetPoint("BOTTOM", self, "BOTTOM", self.nextPageButton:GetWidth()/2+5, 10)
   self.nextPageButton:SetScript("OnClick", function(self)
     L.canvas:UpdatePage(1)
@@ -172,7 +172,7 @@ function L.canvas:Init()
   end)
 
   -- canvas previous page button
-  self.previousPageButton = L.F.CreateButton(self, L.name .. "CanvasPreviousPageButton", "< prev")
+  self.previousPageButton = L.F.CreateButton(self, "< prev")
   self.previousPageButton:SetPoint("RIGHT", self.nextPageButton, "LEFT", -10, 0)
   self.previousPageButton:SetScript("OnClick", function(self)
     L.canvas:UpdatePage(-1)

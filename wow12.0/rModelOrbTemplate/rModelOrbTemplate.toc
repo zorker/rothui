@@ -1,6 +1,6 @@
 ## Interface: 120005
 ## Title: rModelOrbTemplate
-## Notes: Orb Model Template Engine
+## Notes: Orb Model XML Template
 ## Author: zork
 ## Version: 12.1
 ## Category: rMods

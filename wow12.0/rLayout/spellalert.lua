@@ -1,7 +1,5 @@
 local A, L = ...
 
-local strfind, FocusFrameSpellBar = strfind, FocusFrameSpellBar
-
 --PlaySpellAlertSound
 local function PlaySpellAlertSound(unit, spellID, isChanneled)
   --PlaySoundFile(7466102) --riff

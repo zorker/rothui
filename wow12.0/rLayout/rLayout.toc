@@ -1,8 +1,8 @@
-## Interface: 120001, 120005
+## Interface: 120005
 ## Title: rLayout
 ## Notes: Adjustments for the Blizzard default UI
 ## Author: zork
-## Version: 1.2
+## Version: 12.1
 ## Category: rMods
 
 init.lua

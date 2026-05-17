@@ -1,12 +1,17 @@
 ## Interface: 120005
 ## Title: rModelOrbConfig
-## Notes: Orb model configurator based on rModelOrbTemplate, shows all the available models and allows setting up templates by name
+## Notes: Orb model template configurator based on rModelOrbTemplate
 ## Author: zork
 ## Version: 12.1
 ## Category: rMods
+## SavedVariables: rModelOrbConfig_DB
 ## IconTexture: Interface\AddOns\rModelOrbConfig\assets\logo-64
 ## RequiredDeps: rModelOrbTemplate
+## X-DB-Version: 2
 
 init.lua
+uihelper.lua
+optionspanel.lua
+db.lua
 canvas.lua
-orb.lua
+events.lua

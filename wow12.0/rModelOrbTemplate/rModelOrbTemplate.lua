@@ -1,10 +1,10 @@
--------------------------------------------------
--- Variables
--------------------------------------------------
 local A, L = ...
 
-local TRANS_SCALE, ZOOM_SCALE, ROT_SCALE = 0.02, 0.02, 0.0174
+-------------------------------------------------
+-- var
+-------------------------------------------------
 
+local TRANS_SCALE, ZOOM_SCALE, ROT_SCALE = 0.02, 0.02, 0.0174
 local mpi, msin, mcos = math.pi, math.sin, math.cos
 
 rModelOrbTemplateMixin = {}
@@ -14,44 +14,39 @@ rModelOrbSceneMixin = {}
 rModelOrbOverlayMixin = {}
 
 -------------------------------------------------
--- Functions
+-- func
 -------------------------------------------------
 
--- rModelOrbTemplateMixin
-function rModelOrbTemplateMixin:OnLoad()
-  --print('rModelOrbTemplateMixin:OnLoad()')
-  --print(self:GetName(), self:GetParent():GetName())
-end
+function rModelOrbTemplateMixin:OnLoad() end
+function rModelOrbTemplateMixin:OnShow() end
+function rModelOrbTemplateMixin:OnHide() end
 
-function rModelOrbTemplateMixin:OnShow()
-  --print(A, 'rModelOrbTemplateMixin:OnShow()')
-end
-
-function rModelOrbTemplateMixin:OnHide()
-  --print(A, 'rModelOrbTemplateMixin:OnHide()')
-end
-
+--orb:GetAllModelData()
 function rModelOrbTemplateMixin:GetAllModelData()
   return L.modelData
 end
 
+--orb:LoadModelDataByID(id)
 function rModelOrbTemplateMixin:LoadModelDataByID(id)
 
   local modelData = L.modelData[id]
 
   if not modelData then return end
 
+  --init and load scene and actor
   local scene = self.ClipFrame.ModelFrame
   local actor = scene:GetActorAtIndex(1) or scene:CreateActor()
   scene:SetFromModelSceneID(290)
   actor:SetModelByFileID(id)
   scene:EnableMouse(false)
+  scene:EnableMouseWheel(false)
 
-  --fill color
+  --filling and spark coloring color
   local r, g, b = (modelData and modelData.fR) or 1, (modelData and modelData.fG) or 0, (modelData and modelData.fB) or 0
   self.FillingStatusBar:SetStatusBarColor(r, g, b)
   self.OverlayFrame.SparkTexture:SetVertexColor(r, g, b)
 
+  --setup actor and camera
   local camera = scene:GetActiveCamera()
   if not actor or not camera then return end
   --calculate position and yaw/pitch values from slider
@@ -69,70 +64,47 @@ function rModelOrbTemplateMixin:LoadModelDataByID(id)
   
 end
 
--- rModelOrbFillingMixin
+-- rModelOrbFillingMixin:OnLoad
 function rModelOrbFillingMixin:OnLoad()
-  --print('rModelOrbFillingMixin:OnLoad()')
-  --print(self, self:GetParent():GetName())
-  --local orb = self:GetParent()
   self:SetOrientation("VERTICAL")
   self:SetRotatesTexture(false)
   self:SetMinMaxValues(0, 1)
 end
 
+-- rModelOrbFillingMixin:OnValueChanged
 function rModelOrbFillingMixin:OnValueChanged(value)
-  --print(A, 'rModelOrbFillingMixin:OnValueChanged()')
   local orb = self:GetParent()
   orb.ClipFrame:SetHeight(value * 256)
-  local multiplier = floor(msin(value * mpi) * 100) / 100
-  if multiplier <= 0.25 then
+  local m = floor(msin(value * mpi) * 100) / 100
+  if m <= 0.25 then
     orb.OverlayFrame.SparkTexture:Hide()
   else
-    orb.OverlayFrame.SparkTexture:SetWidth(256 * multiplier)
-    orb.OverlayFrame.SparkTexture:SetHeight(32 * multiplier)
-    orb.OverlayFrame.SparkTexture:SetPoint("TOP", orb.FillingStatusBar:GetStatusBarTexture(), 0, 16 * multiplier)
+    orb.OverlayFrame.SparkTexture:SetWidth(256 * m)
+    orb.OverlayFrame.SparkTexture:SetHeight(32 * m)
+    orb.OverlayFrame.SparkTexture:SetPoint("TOP", orb.FillingStatusBar:GetStatusBarTexture(), 0, 16 * m)
     orb.OverlayFrame.SparkTexture:Show()
   end
 end
 
-function rModelOrbFillingMixin:OnShow()
-  --print(A, 'rModelOrbFillingMixin:OnShow()')
-end
+function rModelOrbFillingMixin:OnShow() end
+function rModelOrbFillingMixin:OnHide() end
 
-function rModelOrbFillingMixin:OnHide()
-  --print(A, 'rModelOrbFillingMixin:OnHide()')
-end
-
--- rModelOrbClipMixin
+-- rModelOrbClipMixin:OnLoad
 function rModelOrbClipMixin:OnLoad()
-  --print('rModelOrbClipMixin:OnLoad()')
-  --print(self, self:GetParent():GetName())
-  --print('enabling child clipping')
   self:SetClipsChildren(true)
-  --local orb = self:GetParent()
 end
 
-function rModelOrbClipMixin:OnShow()
-  --print(A, 'rModelOrbClipMixin:OnShow()')
-end
+function rModelOrbClipMixin:OnShow() end
 
-function rModelOrbClipMixin:OnHide()
-  --print(A, 'rModelOrbClipMixin:OnHide()')
-end
+function rModelOrbClipMixin:OnHide() end
 
--- rModelOrbOverlayMixin
+-- rModelOrbOverlayMixin:OnLoad
 function rModelOrbOverlayMixin:OnLoad()
-  --print(A, 'rModelOrbOverlayMixin:OnLoad()')
-  --print(self:GetName(), self:GetParent():GetName())
-  --local orb = self:GetParent()
   self.SparkTexture:SetBlendMode("ADD")
   self.GlowTexture:SetBlendMode("BLEND")
   self.LowHealthTexture:SetBlendMode("ADD")
 end
 
-function rModelOrbOverlayMixin:OnShow()
-  --print(A, 'rModelOrbOverlayMixin:OnShow()')
-end
+function rModelOrbOverlayMixin:OnShow() end
 
-function rModelOrbOverlayMixin:OnHide()
-  --print(A, 'rModelOrbOverlayMixin:OnHide()')
-end
+function rModelOrbOverlayMixin:OnHide() end

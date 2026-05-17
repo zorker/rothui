@@ -1,27 +1,10 @@
--- rOrb - canvas
--- zork 2024
------------------------------
--- Variables
------------------------------
 local A, L = ...
-
-local GT = GameTooltip
 
 L.canvas = CreateFrame("Frame", nil, UIParent)
 
 -------------------------------------
 -- FUNCTIONS
 -------------------------------------
-
--- create button func
-function L.F:CreateButton(parent, name, text, adjustWidth, adjustHeight)
-  local b = CreateFrame("Button", name, parent, "UIPanelButtonTemplate")
-  b.text = _G[b:GetName() .. "Text"]
-  b.text:SetText(text)
-  b:SetWidth(b.text:GetStringWidth() + (adjustWidth or 20))
-  b:SetHeight(b.text:GetStringHeight() + (adjustHeight or 12))
-  return b
-end
 
 local function UpdateModelPosition(orb, row, col, size)
   orb.title:SetFont(STANDARD_TEXT_FONT, math.max(size * 8 / 100, 8), "OUTLINE")
@@ -30,20 +13,43 @@ local function UpdateModelPosition(orb, row, col, size)
 end
 
 local function UpdateDisplayIndex(orb, displayIndex)
-  if L.sortedModels[displayIndex] then
+  if L.optionsPanel.sortedModels[displayIndex] then
     orb:Show()
-    orb:LoadModelDataByID(L.sortedModels[displayIndex].id)
-    orb.title:SetText(L.sortedModels[displayIndex].name)
+    orb:LoadModelDataByID(L.optionsPanel.sortedModels[displayIndex].id)
+    orb.modelID = L.optionsPanel.sortedModels[displayIndex].id
+    orb.title:SetText(L.optionsPanel.sortedModels[displayIndex].name)
+    orb:EnableMouse(true)
   else
     orb.templateName = nil
     orb.title:SetText("")
+    orb.modelID = nil
+    orb:EnableMouse(false)
   end
 end
 
 -- create model func
 local function CreateModel(parent, id)
-  --local orb = CreateFrame("Frame", A.."CanvasOrb"..id, parent, "OrbTemplate")
+
   local orb = CreateFrame("Frame", nil, parent, "rModelOrbTemplate")
+
+  orb:SetScript("OnMouseUp", function(self, button)
+    if button == "LeftButton" then
+      L.previewOrb:LoadModelDataByID(orb.modelID)
+      parent:Close()
+    else
+      return
+    end
+  end)
+
+  orb:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_CURSOR", 0, 5)
+    GameTooltip:AddLine("Click to use this model.", 1, 1, 1, 1, 1, 1)
+    GameTooltip:Show()
+  end)
+  orb:SetScript("OnLeave", function(self)
+    GameTooltip:Hide()
+  end)
+
   orb.frameId = id
   -- model title
   orb.title = orb.OverlayFrame:CreateFontString(nil, "OVERLAY")
@@ -91,7 +97,6 @@ end
 
 -- init canvas
 function L.canvas:Init()
-  print('init')
 
   -- canvas frame
   self:SetFrameStrata("FULLSCREEN")
@@ -101,11 +106,11 @@ function L.canvas:Init()
 
   -- canvas attributes
   self.canvasWidth, self.canvasHeight = self:GetSize()
-  self.canvasHeight = self.canvasHeight - 60 -- remove 70px for the bottom bar
+  self.canvasHeight = self.canvasHeight - 30 
   self.modelSize = 256
   self.canvasPage = 1
   self.M = {}
-  self.isCanvas = true
+  self.initialized = true
 
   -- canvas background
   self.bg = self:CreateTexture(nil, "BACKGROUND", nil, -8)
@@ -137,62 +142,63 @@ function L.canvas:Init()
   end)
 
   -- canvas close button
-  self.closeButton = L.F:CreateButton(self, L.name .. "CanvasCloseButton", "Close")
+  self.closeButton = L.F.CreateButton(self, L.name .. "CanvasCloseButton", "Close")
   self.closeButton:SetPoint("BOTTOMRIGHT", -10, 10)
   self.closeButton:SetScript("OnClick", function(self)
-    L.canvas:Disable()
+    L.canvas:Close()
   end)
   self.closeButton:SetScript("OnEnter", function(self)
-    GT:SetOwner(self, "ANCHOR_TOPRIGHT", 0, 5)
-    GT:AddLine("Click to close.", 1, 1, 1, 1, 1, 1)
-    GT:Show()
+    GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT", 0, 5)
+    GameTooltip:AddLine("Click to close.", 1, 1, 1, 1, 1, 1)
+    GameTooltip:Show()
   end)
   self.closeButton:SetScript("OnLeave", function(self)
-    GT:Hide()
+    GameTooltip:Hide()
   end)
 
   -- canvas next page button
-  self.nextPageButton = L.F:CreateButton(self, L.name .. "CanvasNextPageButton", "next >")
-  self.nextPageButton:SetPoint("BOTTOM", self, "BOTTOM", 0, 10)
+  self.nextPageButton = L.F.CreateButton(self, L.name .. "CanvasNextPageButton", "next >")
+  self.nextPageButton:SetPoint("BOTTOM", self, "BOTTOM", self.nextPageButton:GetWidth()/2+5, 10)
   self.nextPageButton:SetScript("OnClick", function(self)
     L.canvas:UpdatePage(1)
   end)
   self.nextPageButton:SetScript("OnEnter", function(self)
-    GT:SetOwner(self, "ANCHOR_TOP", 0, 5)
-    GT:AddLine("Click for next page.", 1, 1, 1, 1, 1, 1)
-    GT:Show()
+    GameTooltip:SetOwner(self, "ANCHOR_TOP", 0, 5)
+    GameTooltip:AddLine("Click for next page.", 1, 1, 1, 1, 1, 1)
+    GameTooltip:Show()
   end)
   self.nextPageButton:SetScript("OnLeave", function(self)
-    GT:Hide()
+    GameTooltip:Hide()
   end)
 
   -- canvas previous page button
-  self.previousPageButton = L.F:CreateButton(self, L.name .. "CanvasPreviousPageButton", "< prev")
+  self.previousPageButton = L.F.CreateButton(self, L.name .. "CanvasPreviousPageButton", "< prev")
   self.previousPageButton:SetPoint("RIGHT", self.nextPageButton, "LEFT", -10, 0)
   self.previousPageButton:SetScript("OnClick", function(self)
     L.canvas:UpdatePage(-1)
   end)
   self.previousPageButton:SetScript("OnEnter", function(self)
-    GT:SetOwner(self, "ANCHOR_TOP", 0, 5)
-    GT:AddLine("Click for previous page.", 1, 1, 1, 1, 1, 1)
-    GT:Show()
+    GameTooltip:SetOwner(self, "ANCHOR_TOP", 0, 5)
+    GameTooltip:AddLine("Click for previous page.", 1, 1, 1, 1, 1, 1)
+    GameTooltip:Show()
   end)
   self.previousPageButton:SetScript("OnLeave", function(self)
-    GT:Hide()
+    GameTooltip:Hide()
   end)
 
 end
 
--- canvas enable func
-function L.canvas:Enable()
-  print('enable')
+-- canvas Open func
+function L.canvas:Open()
+  if not self.initialized then
+    self:Init()
+  end
   self:Show()
   self:UpdateAllModels()
   self.fadeIn:Play()
 end
 
--- canvas disable func
-function L.canvas:Disable()
-  print('disable')
+-- canvas Close func
+function L.canvas:Close()
   self.fadeOut:Play()
 end

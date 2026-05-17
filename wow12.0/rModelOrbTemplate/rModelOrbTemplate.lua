@@ -45,6 +45,7 @@ function rModelOrbTemplateMixin:LoadModelDataByID(id)
   local actor = scene:GetActorAtIndex(1) or scene:CreateActor()
   scene:SetFromModelSceneID(290)
   actor:SetModelByFileID(id)
+  scene:EnableMouse(false)
 
   --fill color
   local r, g, b = (modelData and modelData.fR) or 1, (modelData and modelData.fG) or 0, (modelData and modelData.fB) or 0

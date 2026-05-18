@@ -3,7 +3,17 @@ local A, L = ...
 -- LoadDBDefaults
 local function LoadDBDefaults()
   return {
-    ["DB_VERSION"] = L.dbversion
+    settings = {
+      modelID = 2030216,
+      fillValue = 1,
+      modelAlpha = 1,
+      splitAlpha = 1,
+      fillTexture = "orb_filling16",
+      fillColor = "ffffffff",
+      showLowHealth = false,
+      showDebuffGlow = false,
+    },
+    ["DB_VERSION"] = L.dbversion,
   }
 end
 

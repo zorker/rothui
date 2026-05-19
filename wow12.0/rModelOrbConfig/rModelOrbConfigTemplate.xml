@@ -6,7 +6,7 @@
     <Frames>
       <Frame parentKey="OrbFrame" inherits="rModelOrbTemplate">
         <Anchors>
-          <Anchor point="LEFT" x="225" />
+          <Anchor point="CENTER" />
         </Anchors>
       </Frame>
     </Frames>

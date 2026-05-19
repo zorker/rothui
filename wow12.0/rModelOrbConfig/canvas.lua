@@ -2,9 +2,19 @@ local A, L = ...
 
 L.canvas = CreateFrame("Frame", nil, UIParent)
 
+local sortedModels = {}
+
 -------------------------------------
 -- FUNCTIONS
 -------------------------------------
+
+local function CreateButton(parent, text, adjustWidth, adjustHeight)
+  local b = CreateFrame("Button", name, parent, "UIPanelButtonTemplate")
+  b:SetText(text)
+  b:SetWidth(b:GetFontString():GetStringWidth() + (adjustWidth or 20))
+  b:SetHeight(b:GetFontString():GetStringHeight() + (adjustHeight or 12))
+  return b
+end
 
 local function UpdateModelPosition(orb, row, col, size)
   orb.title:SetFont(STANDARD_TEXT_FONT, math.max(size * 8 / 100, 8), "OUTLINE")
@@ -13,11 +23,11 @@ local function UpdateModelPosition(orb, row, col, size)
 end
 
 local function UpdateDisplayIndex(orb, displayIndex)
-  if L.optionsPanel.sortedModels[displayIndex] then
+  if sortedModels[displayIndex] then
     orb:Show()
-    orb:LoadModelDataByID(L.optionsPanel.sortedModels[displayIndex].id)
-    orb.modelID = L.optionsPanel.sortedModels[displayIndex].id
-    orb.title:SetText(L.optionsPanel.sortedModels[displayIndex].name)
+    orb:LoadModelDataByID(sortedModels[displayIndex].id)
+    orb.modelID = sortedModels[displayIndex].id
+    orb.title:SetText(sortedModels[displayIndex].name)
     orb:EnableMouse(true)
   else
     orb.templateName = nil
@@ -34,7 +44,7 @@ local function CreateModel(parent, id)
 
   orb:SetScript("OnMouseUp", function(self, button)
     if button == "LeftButton" then
-      L.previewOrb:LoadModelDataByID(orb.modelID)
+      L.S.modelIDSetting:SetValue(orb.modelID)
       parent:Close()
     else
       return
@@ -142,7 +152,7 @@ function L.canvas:Init()
   end)
 
   -- canvas close button
-  self.closeButton = L.F.CreateButton(self, "Close")
+  self.closeButton = CreateButton(self, "Close")
   self.closeButton:SetPoint("BOTTOMRIGHT", -10, 10)
   self.closeButton:SetScript("OnClick", function(self)
     L.canvas:Close()
@@ -157,7 +167,7 @@ function L.canvas:Init()
   end)
 
   -- canvas next page button
-  self.nextPageButton = L.F.CreateButton(self, "next >")
+  self.nextPageButton = CreateButton(self, "next >")
   self.nextPageButton:SetPoint("BOTTOM", self, "BOTTOM", self.nextPageButton:GetWidth()/2+5, 10)
   self.nextPageButton:SetScript("OnClick", function(self)
     L.canvas:UpdatePage(1)
@@ -172,7 +182,7 @@ function L.canvas:Init()
   end)
 
   -- canvas previous page button
-  self.previousPageButton = L.F.CreateButton(self, "< prev")
+  self.previousPageButton = CreateButton(self, "< prev")
   self.previousPageButton:SetPoint("RIGHT", self.nextPageButton, "LEFT", -10, 0)
   self.previousPageButton:SetScript("OnClick", function(self)
     L.canvas:UpdatePage(-1)
@@ -192,6 +202,13 @@ end
 function L.canvas:Open()
   if not self.initialized then
     self:Init()
+    for id, data in pairs(L.previewOrb:GetAllModelData()) do
+      data.id = id
+      table.insert(sortedModels, data)
+    end
+    table.sort(sortedModels, function(a, b)
+      return a.name:lower() < b.name:lower()
+    end)
   end
   self:Show()
   self:UpdateAllModels()

@@ -8,15 +8,31 @@ local function RegisterOptionsPanel()
   local category, layout = Settings.RegisterVerticalLayoutCategory(L.name)
   Settings.RegisterAddOnCategory(category)
 
-	rModelOrbConfigTemplateMixin = {}
-	
+  rModelOrbConfigTemplateMixin = {}
+  
   function rModelOrbConfigTemplateMixin:OnLoad()
     if self.OrbFrame then
       L.previewOrb = self.OrbFrame
       --fix the framelevels on the options panel
-      self.OrbFrame.FillingStatusBar:SetFrameLevel(self.OrbFrame:GetFrameLevel()+1)
-      self.OrbFrame.ClipFrame:SetFrameLevel(self.OrbFrame:GetFrameLevel()+2)
-      self.OrbFrame.OverlayFrame:SetFrameLevel(self.OrbFrame:GetFrameLevel()+3)
+      L.previewOrb.FillingStatusBar:SetFrameLevel(L.previewOrb:GetFrameLevel()+1)
+      L.previewOrb.ClipFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+2)
+      L.previewOrb.OverlayFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+3)
+      L.previewOrb:EnableMouse(true)
+      L.previewOrb:SetScript("OnMouseUp", function(self, button)
+        if button == "LeftButton" then
+          L.canvas:Open()
+        else
+          return
+        end
+      end)
+      L.previewOrb:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_CURSOR", 0, 5)
+        GameTooltip:AddLine("Click to select a different model.", 1, 1, 1, 1, 1, 1)
+        GameTooltip:Show()
+      end)
+      L.previewOrb:SetScript("OnLeave", function(self)
+        GameTooltip:Hide()
+      end)
     end
   end
 
@@ -27,7 +43,7 @@ local function RegisterOptionsPanel()
   end
   
   function rModelOrbConfigTemplateMixin:Init(initializer)
-		local data = initializer:GetData()
+    local data = initializer:GetData()
     --LoadModelDataByID
     L.previewOrb:LoadModelDataByID(data.setting:GetValue())
     --filling texture
@@ -35,7 +51,7 @@ local function RegisterOptionsPanel()
     --set fill value
     L.previewOrb.FillingStatusBar:SetValue(L.S.fillValueSetting:GetValue())
     --load the setting colors into the orb
-    local color = CreateColorFromHexString(L.S.fillColorSetting:GetValue())
+    local color = CreateColorFromHexString(L.S.fillColorSetting:GetValue() or "ff0000ff")
     local r,g,b = color:GetRGB()
     L.previewOrb.FillingStatusBar:SetStatusBarColor(r,g,b)
     L.previewOrb.OverlayFrame.SparkTexture:SetVertexColor(r,g,b,L.S.splitAlphaSetting:GetValue())
@@ -45,11 +61,11 @@ local function RegisterOptionsPanel()
     L.S.showLowHealthSetting:SetValue(false)
     L.S.showDebuffGlowSetting:SetValue(false)
     L.S.fillValueSetting:SetValue(1)
-	end
+  end
 
   function rModelOrbConfigTemplateMixin:GetExtent()
-		return 256
-	end
+    return 256
+  end
 
   --modelIDSetting
   local modelIDSetting = Settings.RegisterAddOnSetting(
@@ -65,6 +81,10 @@ local function RegisterOptionsPanel()
 
   modelIDSetting:SetValueChangedCallback(function(setting, value)
     L.previewOrb:LoadModelDataByID(value)
+    --change the color swatch to the filling color that is preset by model id
+    local r,g,b = L.previewOrb.FillingStatusBar:GetStatusBarColor()
+    local color = CreateColor(r,g,b)
+    L.S.fillColorSetting:SetValue(color:GenerateHexColor())
   end)
 
   --modelOrbData
@@ -75,7 +95,7 @@ local function RegisterOptionsPanel()
   }
 
   local initializer = Settings.CreateElementInitializer("rModelOrbConfigTemplate", modelOrbData)
-	layout:AddInitializer(initializer)
+  layout:AddInitializer(initializer)
 
   --fillValueSetting
   local fillValueSetting = Settings.RegisterAddOnSetting(
@@ -214,7 +234,7 @@ local function RegisterOptionsPanel()
 
   showDebuffGlowSetting:SetValueChangedCallback(function(setting, value)
     if value == true then
-      L.previewOrb.OverlayFrame.GlowTexture:SetVertexColor(0,1,0,0.7)
+      L.previewOrb.OverlayFrame.GlowTexture:SetVertexColor(1,0,1,0.7)
     else
       L.previewOrb.OverlayFrame.GlowTexture:SetVertexColor(0,1,0,0)
     end

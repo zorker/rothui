@@ -2,11 +2,11 @@
   xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 
   <Frame name="rModelOrbConfigTemplate" mixin="rModelOrbConfigTemplateMixin" virtual="true">
-    <Size x="300" y="300" />
+    <Size x="256" y="256" />
     <Frames>
       <Frame parentKey="OrbFrame" inherits="rModelOrbTemplate">
         <Anchors>
-          <Anchor point="CENTER" />
+          <Anchor point="LEFT" x="225" />
         </Anchors>
       </Frame>
     </Frames>

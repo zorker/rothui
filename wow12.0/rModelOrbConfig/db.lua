@@ -9,7 +9,7 @@ local function LoadDBDefaults()
       modelAlpha = 1,
       splitAlpha = 1,
       fillTexture = "orb_filling16",
-      fillColor = "ffffffff",
+      fillColor = "ff0000ff",
       showLowHealth = false,
       showDebuffGlow = false,
     },

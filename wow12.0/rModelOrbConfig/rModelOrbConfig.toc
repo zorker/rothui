@@ -7,7 +7,7 @@
 ## SavedVariables: rModelOrbConfig_DB
 ## IconTexture: Interface\AddOns\rModelOrbConfig\assets\logo-64
 ## RequiredDeps: rModelOrbTemplate
-## X-DB-Version: 12
+## X-DB-Version: 13
 
 rModelOrbConfigTemplate.xml
 init.lua

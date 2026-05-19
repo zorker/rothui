@@ -1,9 +1,74 @@
 local A, L = ...
 
+L.previewOrb = nil
+
 -- RegisterOptionsPanel
 local function RegisterOptionsPanel()
 
-  local category = Settings.RegisterVerticalLayoutCategory(L.name)
+  local category, layout = Settings.RegisterVerticalLayoutCategory(L.name)
+  Settings.RegisterAddOnCategory(category)
+
+	rModelOrbConfigTemplateMixin = {}
+	
+  function rModelOrbConfigTemplateMixin:OnLoad()
+    if self.OrbFrame then
+      print(self.OrbFrame:GetFrameStrata(),self.OrbFrame:GetFrameLevel())
+      self.OrbFrame.FillingStatusBar:SetFrameLevel(self.OrbFrame:GetFrameLevel()+1)
+      self.OrbFrame.ClipFrame:SetFrameLevel(self.OrbFrame:GetFrameLevel()+2)
+      self.OrbFrame.OverlayFrame:SetFrameLevel(self.OrbFrame:GetFrameLevel()+3)
+      print(self.OrbFrame.FillingStatusBar:GetFrameStrata(),self.OrbFrame.FillingStatusBar:GetFrameLevel())
+      print(self.OrbFrame.ClipFrame:GetFrameStrata(),self.OrbFrame.ClipFrame:GetFrameLevel())
+      print(self.OrbFrame.OverlayFrame:GetFrameStrata(),self.OrbFrame.OverlayFrame:GetFrameLevel())
+    end
+  end
+
+  function rModelOrbConfigTemplateMixin:OnShow() 
+    if self.OrbFrame then
+      L.previewOrb = self.OrbFrame
+    end
+  end
+
+  function rModelOrbConfigTemplateMixin:OnHide() 
+    L.previewOrb = nil
+  end
+  
+  function rModelOrbConfigTemplateMixin:Init(initializer)
+		local data = initializer:GetData()
+    print(L.previewOrb:GetFrameStrata(),L.previewOrb:GetFrameLevel())
+    L.previewOrb:LoadModelDataByID(data.setting:GetValue())
+    L.previewOrb.FillingStatusBar:SetValue(L.S.fillValueSetting:GetValue())
+    L.previewOrb.ClipFrame:SetAlpha(L.S.modelAlphaSetting:GetValue())    
+	end
+
+  function rModelOrbConfigTemplateMixin:GetExtent()
+		return 300
+	end
+
+  --modelIDSetting
+  local modelIDSetting = Settings.RegisterAddOnSetting(
+      category, 
+      L.name.."SettingsModelID", 
+      "modelID",
+      L.DB.settings,
+      Settings.VarType.Number, 
+      "Model ID",
+      2030216
+  )
+  L.S.modelIDSetting = modelIDSetting
+
+  modelIDSetting:SetValueChangedCallback(function(setting, value)
+    print("modelIDSetting:SetValueChangedCallback", value)
+  end)
+
+  --modelOrbData
+  local modelOrbData = {
+    setting = modelIDSetting,
+    hello = "world",
+    tooltip = "My tooltip here"
+  }
+
+  local initializer = Settings.CreateElementInitializer("rModelOrbConfigTemplate", modelOrbData)
+	layout:AddInitializer(initializer)
 
   --fillValueSetting
   local fillValueSetting = Settings.RegisterAddOnSetting(
@@ -15,8 +80,12 @@ local function RegisterOptionsPanel()
       "Fill Value",
       1
   )
-  fillValueSetting:SetValueChangedCallback(function(setting, newValue)
-    print(newValue)
+  L.S.fillValueSetting = fillValueSetting
+
+  fillValueSetting:SetValueChangedCallback(function(setting, value)
+    if L.previewOrb then
+      L.previewOrb.FillingStatusBar:SetValue(value)
+    end
   end)
   local fillValueOptions = Settings.CreateSliderOptions(0, 1, 0.01)
   Settings.CreateSlider(category, fillValueSetting, fillValueOptions, "Move the slider to test how the orb will fill.")
@@ -31,8 +100,10 @@ local function RegisterOptionsPanel()
       "Model opacity",
       1
   )
-  modelAlphaSetting:SetValueChangedCallback(function(setting, newValue)
-    print(newValue)
+  L.S.modelAlphaSetting = modelAlphaSetting
+
+  modelAlphaSetting:SetValueChangedCallback(function(setting, value)
+    L.previewOrb.ClipFrame:SetAlpha(value)
     if fillValueSetting:GetValue() ~= 1 then
       fillValueSetting:SetValue(1, false)
     end
@@ -50,8 +121,11 @@ local function RegisterOptionsPanel()
       "Split opacity",
       1
   )
-  splitAlphaSetting:SetValueChangedCallback(function(setting, newValue)
-    print(newValue)
+  L.S.splitAlphaSetting = splitAlphaSetting
+
+  splitAlphaSetting:SetValueChangedCallback(function(setting, value)
+    local r,g,b,a = L.previewOrb.OverlayFrame.SparkTexture:GetVertexColor()
+    L.previewOrb.OverlayFrame.SparkTexture:SetVertexColor(r,g,b,value)
     if fillValueSetting:GetValue() ~= 0.5 then
       fillValueSetting:SetValue(0.5, false)
     end
@@ -69,6 +143,8 @@ local function RegisterOptionsPanel()
       "Fill color",
       "ffffffff"
   )
+  L.S.fillColorSetting = fillColorSetting
+
   fillColorSetting:SetValueChangedCallback(function(setting, hexColor)
     local color = CreateColorFromHexString(hexColor)
     local r,g,b = color:GetRGB()
@@ -86,6 +162,8 @@ local function RegisterOptionsPanel()
       "Fill Texture",
       "orb_filling16"
   )
+  L.S.fillTextureSetting = fillTextureSetting
+
   fillTextureSetting:SetValueChangedCallback(function(setting, newValue)
     print(newValue)
   end)
@@ -126,6 +204,8 @@ local function RegisterOptionsPanel()
       "Show Debuff Glow",
       false
   )
+  L.S.showDebuffGlowSetting = showDebuffGlowSetting
+
   showDebuffGlowSetting:SetValueChangedCallback(function(setting, newValue)
     print(newValue)
   end)
@@ -141,12 +221,12 @@ local function RegisterOptionsPanel()
       "Show Low Health",
       false
   )
+  L.S.showLowHealthSetting = showLowHealthSetting
+
   showLowHealthSetting:SetValueChangedCallback(function(setting, newValue)
     print(newValue)
   end)
   Settings.CreateCheckbox(category, showLowHealthSetting, "Enable/Disable the low health glow")
-
-  Settings.RegisterAddOnCategory(category)
 
 end
 L.F.RegisterOptionsPanel = RegisterOptionsPanel

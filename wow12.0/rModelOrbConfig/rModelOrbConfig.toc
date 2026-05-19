@@ -9,6 +9,7 @@
 ## RequiredDeps: rModelOrbTemplate
 ## X-DB-Version: 12
 
+rModelOrbConfigTemplate.xml
 init.lua
 db.lua
 optionspanel.lua

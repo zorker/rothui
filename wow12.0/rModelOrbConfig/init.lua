@@ -3,6 +3,7 @@ local A, L = ...
 L.DB = {}
 L.C = {}
 L.F = {}
+L.S = {}
 
 L.name = A
 L.version = C_AddOns.GetAddOnMetadata(L.name, "Version")

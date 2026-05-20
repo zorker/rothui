@@ -5,59 +5,70 @@ L.previewOrb = nil
 -- RegisterOptionsPanel
 local function RegisterOptionsPanel()
 
+  ---------------------------------------------------------------------
+  -- Register Settings Category
+  ---------------------------------------------------------------------
+
   local category, layout = Settings.RegisterVerticalLayoutCategory(L.name)
   Settings.RegisterAddOnCategory(category)
+
+  ---------------------------------------------------------------------
+  -- rModelOrbConfigTemplateMixin
+  ---------------------------------------------------------------------
 
   rModelOrbConfigTemplateMixin = {}
   
   function rModelOrbConfigTemplateMixin:OnLoad()
-    if self.OrbFrame then
-      L.previewOrb = self.OrbFrame
-      --fix the framelevels on the options panel
-      L.previewOrb.FillingStatusBar:SetFrameLevel(L.previewOrb:GetFrameLevel()+1)
-      L.previewOrb.ClipFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+2)
-      L.previewOrb.OverlayFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+3)
-      L.previewOrb:EnableMouse(true)
-      L.previewOrb:SetScript("OnMouseUp", function(self, button)
-        if button == "LeftButton" then
-          L.canvas:Open()
-        else
-          return
-        end
-      end)
-      L.previewOrb:SetScript("OnEnter", function(self)
-        GameTooltip:SetOwner(self, "ANCHOR_CURSOR", 0, 5)
-        GameTooltip:AddLine("Click to select a different model.", 1, 1, 1, 1, 1, 1)
-        GameTooltip:Show()
-      end)
-      L.previewOrb:SetScript("OnLeave", function(self)
-        GameTooltip:Hide()
-      end)
-    end
+    if self.OrbFrame then return end
+    --save frame reference
+    L.previewOrb = self.OrbFrame
+    --fix the framelevels on the options panel
+    L.previewOrb.FillingStatusBar:SetFrameLevel(L.previewOrb:GetFrameLevel()+1)
+    L.previewOrb.ClipFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+2)
+    L.previewOrb.OverlayFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+3)
+    --mouse actions
+    L.previewOrb:EnableMouse(true)
+    --OnMouseUp
+    L.previewOrb:SetScript("OnMouseUp", function(self, button)
+      if button == "LeftButton" then
+        L.canvas:Open()
+      else
+        return
+      end
+    end)
+    --OnEnter
+    L.previewOrb:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_CURSOR", 0, 5)
+      GameTooltip:AddLine("Click to select a different model.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    --OnLeave
+    L.previewOrb:SetScript("OnLeave", function(self)
+      GameTooltip:Hide()
+    end)    
   end
 
-  function rModelOrbConfigTemplateMixin:OnShow() 
-  end
+  function rModelOrbConfigTemplateMixin:OnShow() end
 
-  function rModelOrbConfigTemplateMixin:OnHide() 
-  end
+  function rModelOrbConfigTemplateMixin:OnHide() end
   
   function rModelOrbConfigTemplateMixin:Init(initializer)
+    --get initializer data object
     local data = initializer:GetData()
     --LoadModelDataByID
     L.previewOrb:LoadModelDataByID(data.setting:GetValue())
-    --filling texture
+    --set statusbar texture
     L.previewOrb.FillingStatusBar:SetStatusBarTexture(L.mediaFolder..L.S.fillTextureSetting:GetValue())
     --set fill value
     L.previewOrb.FillingStatusBar:SetValue(L.S.fillValueSetting:GetValue())
-    --load the setting colors into the orb
+    --set statusbar and split texture colors + split texture opacity
     local color = CreateColorFromHexString(L.S.fillColorSetting:GetValue() or "ff0000ff")
     local r,g,b = color:GetRGB()
     L.previewOrb.FillingStatusBar:SetStatusBarColor(r,g,b)
     L.previewOrb.OverlayFrame.SparkTexture:SetVertexColor(r,g,b,L.S.splitAlphaSetting:GetValue())
-    --set clip frame alpha
+    --set model opacity
     L.previewOrb.ClipFrame:SetAlpha(L.S.modelAlphaSetting:GetValue())
-    --
+    --reset some settings
     L.S.showLowHealthSetting:SetValue(false)
     L.S.showDebuffGlowSetting:SetValue(false)
     L.S.fillValueSetting:SetValue(1)
@@ -67,7 +78,10 @@ local function RegisterOptionsPanel()
     return 256
   end
 
-  --modelIDSetting
+  ---------------------------------------------------------------------
+  -- modelIDSetting + ElementInitializer
+  ---------------------------------------------------------------------
+
   local modelIDSetting = Settings.RegisterAddOnSetting(
       category, 
       L.name.."SettingsModelID", 
@@ -81,7 +95,7 @@ local function RegisterOptionsPanel()
 
   modelIDSetting:SetValueChangedCallback(function(setting, value)
     L.previewOrb:LoadModelDataByID(value)
-    --change the color swatch to the filling color that is preset by model id
+    --change the fillColorSetting to the filling color that is preset by model id
     local r,g,b = L.previewOrb.FillingStatusBar:GetStatusBarColor()
     local color = CreateColor(r,g,b)
     L.S.fillColorSetting:SetValue(color:GenerateHexColor())
@@ -95,9 +109,13 @@ local function RegisterOptionsPanel()
   }
 
   local initializer = Settings.CreateElementInitializer("rModelOrbConfigTemplate", modelOrbData)
+
   layout:AddInitializer(initializer)
 
-  --fillValueSetting
+  ---------------------------------------------------------------------
+  -- fillValueSetting + Slider
+  ---------------------------------------------------------------------
+
   local fillValueSetting = Settings.RegisterAddOnSetting(
       category, 
       L.name.."SettingsFillValue", 
@@ -112,10 +130,15 @@ local function RegisterOptionsPanel()
   fillValueSetting:SetValueChangedCallback(function(setting, value)
     L.previewOrb.FillingStatusBar:SetValue(value)
   end)
+
   local fillValueOptions = Settings.CreateSliderOptions(0, 1, 0.01)
+
   Settings.CreateSlider(category, fillValueSetting, fillValueOptions, "Move the slider to test how the orb will fill.")
 
-  --modelAlphaSetting
+  ---------------------------------------------------------------------
+  -- modelAlphaSetting + Slider
+  ---------------------------------------------------------------------
+
   local modelAlphaSetting = Settings.RegisterAddOnSetting(
       category, 
       L.name.."SettingsModelAlhpa", 
@@ -129,14 +152,19 @@ local function RegisterOptionsPanel()
 
   modelAlphaSetting:SetValueChangedCallback(function(setting, value)
     L.previewOrb.ClipFrame:SetAlpha(value)
-    if fillValueSetting:GetValue() ~= 1 then
-      fillValueSetting:SetValue(1, false)
+    if L.S.fillValueSetting:GetValue() ~= 1 then
+      L.S.fillValueSetting:SetValue(1, false)
     end
   end)
+
   local modelAlphaOptions = Settings.CreateSliderOptions(0, 1, 0.01)
+
   Settings.CreateSlider(category, modelAlphaSetting, modelAlphaOptions, "Move the slider to change the model opacity. Will set the filling to full.")
 
-  --splitAlphaSetting
+  ---------------------------------------------------------------------
+  -- splitAlphaSetting + Slider
+  ---------------------------------------------------------------------
+
   local splitAlphaSetting = Settings.RegisterAddOnSetting(
       category, 
       L.name.."SettingsSplitAlhpa", 
@@ -145,20 +173,25 @@ local function RegisterOptionsPanel()
       Settings.VarType.Number, 
       "Split opacity",
       1
-  )
+  )  
   L.S.splitAlphaSetting = splitAlphaSetting
 
   splitAlphaSetting:SetValueChangedCallback(function(setting, value)
     local r,g,b,a = L.previewOrb.OverlayFrame.SparkTexture:GetVertexColor()
     L.previewOrb.OverlayFrame.SparkTexture:SetVertexColor(r,g,b,value)
-    if fillValueSetting:GetValue() ~= 0.5 then
-      fillValueSetting:SetValue(0.5, false)
+    if L.S.fillValueSetting:GetValue() ~= 0.5 then
+      L.S.fillValueSetting:SetValue(0.5, false)
     end
   end)
+
   local splitAlphaOptions = Settings.CreateSliderOptions(0, 1, 0.01)
+
   Settings.CreateSlider(category, splitAlphaSetting, splitAlphaOptions, "Move the slider to change the split texture opacity. Will set the filling to 50%.")
 
-  --fillColorSetting
+  ---------------------------------------------------------------------
+  -- fillColorSetting + ColorSwatch
+  ---------------------------------------------------------------------
+
   local fillColorSetting = Settings.RegisterAddOnSetting(
       category, 
       L.name.."SettingsFillColor", 
@@ -176,9 +209,13 @@ local function RegisterOptionsPanel()
     L.previewOrb.FillingStatusBar:SetStatusBarColor(r,g,b)
     L.previewOrb.OverlayFrame.SparkTexture:SetVertexColor(r,g,b,L.S.splitAlphaSetting:GetValue())
   end)
+
   Settings.CreateColorSwatch(category, fillColorSetting, "Change the color of filling and split texture.")
 
-  --fillTextureSetting
+  ---------------------------------------------------------------------
+  -- fillTextureSetting + Drowndown
+  ---------------------------------------------------------------------
+
   local fillTextureSetting = Settings.RegisterAddOnSetting(
       category, 
       L.name.."SettingsFillTexture", 
@@ -193,6 +230,7 @@ local function RegisterOptionsPanel()
   fillTextureSetting:SetValueChangedCallback(function(setting, value)
     L.previewOrb.FillingStatusBar:SetStatusBarTexture(L.mediaFolder..value)
   end)
+
   local fillTextureOptions = function()
     local container = Settings.CreateControlTextContainer()
     container:Add("orb_filling1", "moon")
@@ -218,9 +256,13 @@ local function RegisterOptionsPanel()
     container:Add("orb_filling21", "obsidian")
     return container:GetData()
   end
+
   Settings.CreateDropdown(category, fillTextureSetting, fillTextureOptions, "Pick a filling texture you like.")
 
-  --showDebuffGlowSetting
+  ---------------------------------------------------------------------
+  -- showDebuffGlowSetting + Checkbox
+  ---------------------------------------------------------------------
+
   local showDebuffGlowSetting = Settings.RegisterAddOnSetting(
       category, 
       L.name.."SettingsShowDebuffGlow", 
@@ -239,9 +281,13 @@ local function RegisterOptionsPanel()
       L.previewOrb.OverlayFrame.GlowTexture:SetVertexColor(0,1,0,0)
     end
   end)
+
   Settings.CreateCheckbox(category, showDebuffGlowSetting, "Enable/Disable the orb debuff glow.")
 
-  --showLowHealthSetting
+  ---------------------------------------------------------------------
+  -- showLowHealthSetting + Checkbox
+  ---------------------------------------------------------------------
+
   local showLowHealthSetting = Settings.RegisterAddOnSetting(
       category, 
       L.name.."SettingsShowLowHealth", 
@@ -255,13 +301,18 @@ local function RegisterOptionsPanel()
 
   showLowHealthSetting:SetValueChangedCallback(function(setting, value)
     if value == true then
-      fillValueSetting:SetValue(0.25, false)
+      L.S.fillValueSetting:SetValue(0.25, false)
       L.previewOrb.OverlayFrame.LowHealthTexture:SetVertexColor(1,0,0,0.7)
     else
       L.previewOrb.OverlayFrame.LowHealthTexture:SetVertexColor(1,0,0,0)
     end
   end)
+
   Settings.CreateCheckbox(category, showLowHealthSetting, "Enable/Disable the low health glow. Will set the filling to 25%.")
+
+  ---------------------------------------------------------------------
+  -- Setting Panel End
+  ---------------------------------------------------------------------
 
 end
 L.F.RegisterOptionsPanel = RegisterOptionsPanel

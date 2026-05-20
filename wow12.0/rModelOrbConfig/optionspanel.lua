@@ -19,7 +19,7 @@ local function RegisterOptionsPanel()
   rModelOrbConfigTemplateMixin = {}
   
   function rModelOrbConfigTemplateMixin:OnLoad()
-    if self.OrbFrame then return end
+    if not self.OrbFrame then return end
     --save frame reference
     L.previewOrb = self.OrbFrame
     --fix the framelevels on the options panel
@@ -48,9 +48,16 @@ local function RegisterOptionsPanel()
     end)    
   end
 
-  function rModelOrbConfigTemplateMixin:OnShow() end
+  function rModelOrbConfigTemplateMixin:OnShow() 
+    L.F.UpdateTemplateList()
+    L.templateManager:SetHeight(SettingsPanel:GetHeight())
+    L.templateManager:SetPoint("LEFT", SettingsPanel, "RIGHT", 0, 0)
+    L.templateManager:Show()
+  end
 
-  function rModelOrbConfigTemplateMixin:OnHide() end
+  function rModelOrbConfigTemplateMixin:OnHide()
+    L.templateManager:Hide()
+  end
   
   function rModelOrbConfigTemplateMixin:Init(initializer)
     --get initializer data object

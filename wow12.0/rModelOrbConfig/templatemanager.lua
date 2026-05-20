@@ -24,7 +24,7 @@ frame.title:SetText("Template Manager")
 ---------------------------------------------------------------------
 
 local function IsPresetTemplate(name)
-  if type(name) ~= "string" or str == "" then
+  if type(name) ~= "string" or name == "" then
     return false
   end
   return string.sub(name, 1, 1) == "_"
@@ -65,6 +65,12 @@ local function CreateRow(row, data)
     row.nameText:SetAllPoints(row.nameButton)
     row.nameText:SetJustifyH("LEFT")
 
+  end
+
+  if IsPresetTemplate(data.name) then
+    row.deleteButton:SetAlpha(0.2)
+  else
+    row.deleteButton:SetAlpha(1)
   end
 
   row.nameText:SetText(data.name)

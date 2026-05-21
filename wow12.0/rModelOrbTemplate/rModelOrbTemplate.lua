@@ -35,8 +35,9 @@ function rModelOrbTemplateMixin:LoadModelDataByID(id)
 
   --init and load scene and actor
   local scene = self.ClipFrame.ModelFrame
+  scene:SetFromModelSceneIDZork(290)
+  scene:SetScript("OnUpdate", nil)
   local actor = scene:GetActorAtIndex(1) or scene:CreateActor()
-  scene:SetFromModelSceneID(290)
   actor:SetModelByFileID(id)
   scene:EnableMouse(false)
   scene:EnableMouseWheel(false)
@@ -48,6 +49,7 @@ function rModelOrbTemplateMixin:LoadModelDataByID(id)
 
   --setup actor and camera
   local camera = scene:GetActiveCamera()
+  
   if not actor or not camera then return end
   --calculate position and yaw/pitch values from slider
   local slideX        = ((modelData and modelData.sX) or 0) * TRANS_SCALE
@@ -61,6 +63,8 @@ function rModelOrbTemplateMixin:LoadModelDataByID(id)
   -- yaw and pitch
   camera:SetYaw(slideYaw)
   camera:SetPitch(slidePitch)
+
+  camera:UpdateCameraOrientationAndPositionZork()
   
 end
 
@@ -73,11 +77,16 @@ end
 
 -- rModelOrbFillingMixin:OnValueChanged
 function rModelOrbFillingMixin:OnValueChanged(value)
+  local orb = self:GetParent()
   --arithmetic is not allowed on secrets, the function which made the call needs to use curves to do artihmethic via curves
   if issecretvalue(value) then
+    --print('a',issecretvalue(orb.ClipFrame:GetWidth()))
+    --print('b',issecretvalue(orb.ClipFrame.ModelFrame:GetWidth()))
+    orb.ClipFrame:SetPoint("TOPRIGHT", orb.FillingStatusBar:GetStatusBarTexture(), "TOPRIGHT")
+    --print('c',issecretvalue(orb.ClipFrame:GetWidth()))
+    --print('d',issecretvalue(orb.ClipFrame.ModelFrame:GetWidth()))
     return
   end
-  local orb = self:GetParent()
   orb.ClipFrame:SetHeight(value * 256)
   local m = floor(msin(value * mpi) * 100) / 100
   if m <= 0.25 then

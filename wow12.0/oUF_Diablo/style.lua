@@ -4,28 +4,6 @@ local mpi, msin, mcos, floor = math.pi, math.sin, math.cos, floor
 
 local playerFrameScaleFactor = 0.9
 
---[[
-local curveClipFrameHeight = C_CurveUtil.CreateCurve()
-local curvesplitTextureMult = C_CurveUtil.CreateCurve()
-local curvesplitTextureWidth = C_CurveUtil.CreateCurve()
-local curvesplitTextureHeight = C_CurveUtil.CreateCurve()
-local curvesplitTexturePoint = C_CurveUtil.CreateCurve()
-
-for i = 0, 100 do 
-  local value = i/100
-  local cfh = value * 256
-  local stm = floor(msin(value * mpi) * 100) / 100
-  local stw = 256 * stm
-  local sth = 32 * stm
-  local stp = 16 * stm
-  curveClipFrameHeight:AddPoint(value, cfh)
-  curvesplitTextureMult:AddPoint(value, stm)
-  curvesplitTextureWidth:AddPoint(value, stw)
-  curvesplitTextureHeight:AddPoint(value, sth)
-  curvesplitTexturePoint:AddPoint(value, stp)
-end
-]]
-
 local function UpdateOrbTemplate(orb, templateName)
 
   local template = L.ORB_CONFIG_DB.presetTemplates[templateName] or L.ORB_CONFIG_DB.userTemplates[templateName] or L.ORB_CONFIG_DB.presetTemplates['_OTHER'] or nil
@@ -95,67 +73,21 @@ local function StylePlayer(self)
   end
 
   function health:PostUpdate(unit, cur, max, lossPerc)
-
-    --secret value
-    local uhp = UnitHealthPercent(unit,true)
-
-    --need to do secure texture/frame size manipulation
-    self.orbFrame.FillingStatusBar:SetValue(uhp)
-
-    --self.orbFrame.ClipFrame:SetPoint("TOP", self.orbFrame.FillingStatusBar:GetStatusBarTexture(), 0, 0)
-    --[[
-    local cfh = UnitHealthPercent(unit, true, curveClipFrameHeight)
-    local stm = UnitHealthPercent(unit, true, curvesplitTextureMult)
-    self.orbFrame.ClipFrame:SetHeight(cfh)
-    if stm <= 0.25 then
-      self.orbFrame.OverlayFrame.SparkTexture:Hide()
-    else
-      local stw = UnitHealthPercent(unit, true, curvesplitTextureWidth)
-      local sth = UnitHealthPercent(unit, true, curvesplitTextureHeight)
-      local stp = UnitHealthPercent(unit, true, curvesplitTexturePoint)
-      self.orbFrame.OverlayFrame.SparkTexture:SetWidth(stw)
-      self.orbFrame.OverlayFrame.SparkTexture:SetHeight(sth)
-      self.orbFrame.OverlayFrame.SparkTexture:SetPoint("TOP", self.orbFrame.FillingStatusBar:GetStatusBarTexture(), 0, stp)
-      self.orbFrame.OverlayFrame.SparkTexture:Show()
-    end
-    ]]
+    self.orbFrame.FillingStatusBar:SetValue(UnitHealthPercent(unit,true))
   end
 
   function power:UpdateColor(event, unit)
 	  if(not unit or self.unit ~= unit) then return end
-    print(self.elementType)
 	  local element = self.Power
-    print(element.elementType)
     local powerID, powerType = UnitPowerType(unit)
     local template = element.displayType or powerType or nil
     UpdateOrbTemplate(element.orbFrame, '_POWER_'..template)
   end
 
   function power:PostUpdate(unit, cur, min, max)
-
-    --secret value
-    local upp = UnitPowerPercent(unit, self.displayType, true)
-
-    --need to do secure texture/frame size manipulation
-    self.orbFrame.FillingStatusBar:SetValue(upp)
-
-    --self.orbFrame.ClipFrame:SetPoint("TOP", self.orbFrame.FillingStatusBar:GetStatusBarTexture(), 0, 0)
-    --[[
-    local cfh = UnitPowerPercent(unit, self.displayType, true, curveClipFrameHeight)
-    local stm = UnitPowerPercent(unit, self.displayType, true, curvesplitTextureMult)
-    self.orbFrame.ClipFrame:SetHeight(cfh)
-    if stm <= 0.25 then
-      self.orbFrame.OverlayFrame.SparkTexture:Hide()
-    else
-      local stw = UnitPowerPercent(unit, self.displayType, true, curvesplitTextureWidth)
-      local sth = UnitPowerPercent(unit, self.displayType, true, curvesplitTextureHeight)
-      local stp = UnitPowerPercent(unit, self.displayType, true, curvesplitTexturePoint)
-      self.orbFrame.OverlayFrame.SparkTexture:SetWidth(stw)
-      self.orbFrame.OverlayFrame.SparkTexture:SetHeight(sth)
-      self.orbFrame.OverlayFrame.SparkTexture:SetPoint("TOP", self.orbFrame.FillingStatusBar:GetStatusBarTexture(), 0, stp)
-      self.orbFrame.OverlayFrame.SparkTexture:Show()
-    end
-    ]]
+    local powerID, powerType = UnitPowerType(unit)
+    local displayType = self.displayType or powerID
+    self.orbFrame.FillingStatusBar:SetValue(UnitPowerPercent(unit, displayType, true))
   end
 
   --textures

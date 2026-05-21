@@ -78,25 +78,8 @@ end
 -- rModelOrbFillingMixin:OnValueChanged
 function rModelOrbFillingMixin:OnValueChanged(value)
   local orb = self:GetParent()
-  --arithmetic is not allowed on secrets, the function which made the call needs to use curves to do artihmethic via curves
-  if issecretvalue(value) then
-    --print('a',issecretvalue(orb.ClipFrame:GetWidth()))
-    --print('b',issecretvalue(orb.ClipFrame.ModelFrame:GetWidth()))
-    orb.ClipFrame:SetPoint("TOPRIGHT", orb.FillingStatusBar:GetStatusBarTexture(), "TOPRIGHT")
-    --print('c',issecretvalue(orb.ClipFrame:GetWidth()))
-    --print('d',issecretvalue(orb.ClipFrame.ModelFrame:GetWidth()))
-    return
-  end
-  orb.ClipFrame:SetHeight(value * 256)
-  local m = floor(msin(value * mpi) * 100) / 100
-  if m <= 0.25 then
-    orb.OverlayFrame.SparkTexture:Hide()
-  else
-    orb.OverlayFrame.SparkTexture:SetWidth(256 * m)
-    orb.OverlayFrame.SparkTexture:SetHeight(32 * m)
-    orb.OverlayFrame.SparkTexture:SetPoint("TOP", orb.FillingStatusBar:GetStatusBarTexture(), 0, 16 * m)
-    orb.OverlayFrame.SparkTexture:Show()
-  end
+  orb.ClipFrame:SetPoint("TOPRIGHT", orb.FillingStatusBar:GetStatusBarTexture(), "TOPRIGHT")
+  orb.OverlayFrame.SparkTexture:SetPoint("TOP", orb.FillingStatusBar:GetStatusBarTexture(), 0, 16)
 end
 
 function rModelOrbFillingMixin:OnShow() end
@@ -116,6 +99,12 @@ function rModelOrbOverlayMixin:OnLoad()
   self.SparkTexture:SetBlendMode("ADD")
   self.GlowTexture:SetBlendMode("BLEND")
   self.LowHealthTexture:SetBlendMode("ADD")
+
+  local mask = self:CreateMaskTexture()
+  mask:SetAllPoints()
+  mask:SetTexture("Interface\\AddOns\\"..A.."\\media\\orb_spark_mask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+  self.SparkTexture:AddMaskTexture(mask)
+
 end
 
 function rModelOrbOverlayMixin:OnShow() end

@@ -45,8 +45,7 @@
         </Anchors>
         <Layers>
           <Layer level="BACKGROUND" textureSubLevel="-4">
-            <Texture parentKey="SparkTexture" file="Interface\AddOns\rModelOrbTemplate\media\orb_spark"
-              hidden="true">
+            <Texture parentKey="SparkTexture" file="Interface\AddOns\rModelOrbTemplate\media\orb_spark">
               <Color r="1" g="1" b="1" a="1" />
               <Anchors>
                 <Anchor point="TOP" />

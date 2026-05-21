@@ -1,9 +1,51 @@
 local A, L = ...
 
+local mpi, msin, mcos, floor = math.pi, math.sin, math.cos, floor
+
+--[[
+local curveClipFrameHeight = C_CurveUtil.CreateCurve()
+local curvesplitTextureMult = C_CurveUtil.CreateCurve()
+local curvesplitTextureWidth = C_CurveUtil.CreateCurve()
+local curvesplitTextureHeight = C_CurveUtil.CreateCurve()
+local curvesplitTexturePoint = C_CurveUtil.CreateCurve()
+
+for i = 0, 100 do 
+  local value = i/100
+  local cfh = value * 256
+  local stm = floor(msin(value * mpi) * 100) / 100
+  local stw = 256 * stm
+  local sth = 32 * stm
+  local stp = 16 * stm
+  curveClipFrameHeight:AddPoint(value, cfh)
+  curvesplitTextureMult:AddPoint(value, stm)
+  curvesplitTextureWidth:AddPoint(value, stw)
+  curvesplitTextureHeight:AddPoint(value, sth)
+  curvesplitTexturePoint:AddPoint(value, stp)
+end
+]]
+
+local function UpdateOrbTemplate(orb, templateName)
+
+  local template = L.ORB_CONFIG_DB.presetTemplates[templateName] or L.ORB_CONFIG_DB.userTemplates[templateName] or L.ORB_CONFIG_DB.presetTemplates['_OTHER'] or nil
+  if not template then return end
+
+  local color = CreateColorFromHexString(template.fillColor)
+  local r,g,b = color:GetRGB()
+
+  orb:LoadModelDataByID(template.modelID)
+  orb.FillingStatusBar:SetStatusBarTexture(template.fillTexture)
+  orb.FillingStatusBar:SetStatusBarColor(r,g,b)
+  orb.OverlayFrame.SparkTexture:SetVertexColor(r,g,b,template.splitAlpha)
+  orb.ClipFrame:SetAlpha(template.modelAlpha)
+
+end
+
 local function StylePlayer(self)
 
   self:SetSize(256, 256)
-  self:SetPoint("CENTER")
+  local scaleFactor = 0.9
+  self:SetScale(scaleFactor)
+  self:SetPoint("BOTTOM",-400/scaleFactor,-15/scaleFactor)
   self.elementType = "base"
 
   local healthOrb = CreateFrame("Frame", nil, self, "rModelOrbTemplate")
@@ -12,11 +54,11 @@ local function StylePlayer(self)
   local health = CreateFrame("StatusBar", nil, self)
   self.Health = health
   self.Health.elementType = "health"
+  self.Health.orbFrame = healthOrb
 
   function health:UpdateColor(event, unit)
 	  if(not unit or self.unit ~= unit) then return end
 	  local element = self.Health
-    print('UpdateColor',self.elementType,event,unit)
     local templateName = nil
     if(element.colorClass and (UnitIsPlayer(unit) or UnitInPartyIsAI(unit)))
       or (element.colorClassNPC and not (UnitIsPlayer(unit) or UnitInPartyIsAI(unit)))
@@ -35,8 +77,32 @@ local function StylePlayer(self)
     else
       templateName = "_OTHER"
     end
-    print(templateName)
+    UpdateOrbTemplate(element.orbFrame, templateName)
   end
+
+  function health:PostUpdate(unit, cur, max, lossPerc)
+
+    --need to do secure texture/frame size manipulation
+    self.orbFrame.FillingStatusBar:SetValue(UnitHealthPercent(unit,true))
+    --self.orbFrame.ClipFrame:SetPoint("TOP", self.orbFrame.FillingStatusBar:GetStatusBarTexture(), 0, 0)
+    --[[
+    local cfh = UnitHealthPercent(unit, true, curveClipFrameHeight)
+    local stm = UnitHealthPercent(unit, true, curvesplitTextureMult)
+    self.orbFrame.ClipFrame:SetHeight(cfh)
+    if stm <= 0.25 then
+      self.orbFrame.OverlayFrame.SparkTexture:Hide()
+    else
+      local stw = UnitHealthPercent(unit, true, curvesplitTextureWidth)
+      local sth = UnitHealthPercent(unit, true, curvesplitTextureHeight)
+      local stp = UnitHealthPercent(unit, true, curvesplitTexturePoint)
+      self.orbFrame.OverlayFrame.SparkTexture:SetWidth(stw)
+      self.orbFrame.OverlayFrame.SparkTexture:SetHeight(sth)
+      self.orbFrame.OverlayFrame.SparkTexture:SetPoint("TOP", self.orbFrame.FillingStatusBar:GetStatusBarTexture(), 0, stp)
+      self.orbFrame.OverlayFrame.SparkTexture:Show()
+    end
+    ]]
+  end
+
 
   health.colorClass = true
   health.colorReaction = true

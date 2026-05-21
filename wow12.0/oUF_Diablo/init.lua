@@ -4,6 +4,7 @@ L.DB = {}
 L.C = {}
 L.F = {}
 L.S = {}
+L.ORB_CONFIG_DB = {}
 
 L.name = A
 L.version = C_AddOns.GetAddOnMetadata(L.name, "Version")

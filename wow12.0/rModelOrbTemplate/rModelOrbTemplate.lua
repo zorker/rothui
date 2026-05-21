@@ -73,6 +73,10 @@ end
 
 -- rModelOrbFillingMixin:OnValueChanged
 function rModelOrbFillingMixin:OnValueChanged(value)
+  --arithmetic is not allowed on secrets, the function which made the call needs to use curves to do artihmethic via curves
+  if issecretvalue(value) then
+    return
+  end
   local orb = self:GetParent()
   orb.ClipFrame:SetHeight(value * 256)
   local m = floor(msin(value * mpi) * 100) / 100

@@ -7,6 +7,7 @@ L.eventFrame:SetScript("OnEvent", function(_, event, ...)
     if name == L.name then
       L.F.LoadDB() --db data aleardy loaded if ADDON_LOADED fires for the addon
       --L.F.RegisterOptionsPanel()
+      L.ORB_CONFIG_DB = rModelOrbConfig_DB --load the orb config db
       L.F.SpawnUnits()
     end
   end

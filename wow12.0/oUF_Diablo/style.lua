@@ -2,6 +2,8 @@ local A, L = ...
 
 local mpi, msin, mcos, floor = math.pi, math.sin, math.cos, floor
 
+local playerFrameScaleFactor = 0.9
+
 --[[
 local curveClipFrameHeight = C_CurveUtil.CreateCurve()
 local curvesplitTextureMult = C_CurveUtil.CreateCurve()
@@ -43,9 +45,9 @@ end
 local function StylePlayer(self)
 
   self:SetSize(256, 256)
-  local scaleFactor = 0.9
-  self:SetScale(scaleFactor)
-  self:SetPoint("BOTTOM",-400/scaleFactor,-15/scaleFactor)
+
+  self:SetScale(playerFrameScaleFactor)
+  self:SetPoint("BOTTOM", -400/playerFrameScaleFactor, -15/playerFrameScaleFactor)
   self.elementType = "base"
 
   local healthOrb = CreateFrame("Frame", nil, self, "rModelOrbTemplate")
@@ -53,8 +55,20 @@ local function StylePlayer(self)
 
   local health = CreateFrame("StatusBar", nil, self)
   self.Health = health
-  self.Health.elementType = "health"
-  self.Health.orbFrame = healthOrb
+  health.elementType = "health"
+  health.orbFrame = healthOrb
+  health.colorClass = true
+  health.colorReaction = true
+  health.colorHealth = true
+
+  local powerOrb = CreateFrame("Frame", nil, self, "rModelOrbTemplate")
+  powerOrb:SetPoint("BOTTOM", UIParent, 400/playerFrameScaleFactor, -15/playerFrameScaleFactor)
+
+  local power = CreateFrame("StatusBar", nil, self)
+  self.Power = power
+  power.elementType = "power"
+  power.orbFrame = powerOrb
+  power.colorPower = true
 
   function health:UpdateColor(event, unit)
 	  if(not unit or self.unit ~= unit) then return end
@@ -82,8 +96,12 @@ local function StylePlayer(self)
 
   function health:PostUpdate(unit, cur, max, lossPerc)
 
+    --secret value
+    local uhp = UnitHealthPercent(unit,true)
+
     --need to do secure texture/frame size manipulation
-    self.orbFrame.FillingStatusBar:SetValue(UnitHealthPercent(unit,true))
+    self.orbFrame.FillingStatusBar:SetValue(uhp)
+
     --self.orbFrame.ClipFrame:SetPoint("TOP", self.orbFrame.FillingStatusBar:GetStatusBarTexture(), 0, 0)
     --[[
     local cfh = UnitHealthPercent(unit, true, curveClipFrameHeight)
@@ -103,10 +121,64 @@ local function StylePlayer(self)
     ]]
   end
 
+  function power:UpdateColor(event, unit)
+	  if(not unit or self.unit ~= unit) then return end
+    print(self.elementType)
+	  local element = self.Power
+    print(element.elementType)
+    local powerID, powerType = UnitPowerType(unit)
+    local template = element.displayType or powerType or nil
+    UpdateOrbTemplate(element.orbFrame, '_POWER_'..template)
+  end
 
-  health.colorClass = true
-  health.colorReaction = true
-  health.colorHealth = true
+  function power:PostUpdate(unit, cur, min, max)
+
+    --secret value
+    local upp = UnitPowerPercent(unit, self.displayType, true)
+
+    --need to do secure texture/frame size manipulation
+    self.orbFrame.FillingStatusBar:SetValue(upp)
+
+    --self.orbFrame.ClipFrame:SetPoint("TOP", self.orbFrame.FillingStatusBar:GetStatusBarTexture(), 0, 0)
+    --[[
+    local cfh = UnitPowerPercent(unit, self.displayType, true, curveClipFrameHeight)
+    local stm = UnitPowerPercent(unit, self.displayType, true, curvesplitTextureMult)
+    self.orbFrame.ClipFrame:SetHeight(cfh)
+    if stm <= 0.25 then
+      self.orbFrame.OverlayFrame.SparkTexture:Hide()
+    else
+      local stw = UnitPowerPercent(unit, self.displayType, true, curvesplitTextureWidth)
+      local sth = UnitPowerPercent(unit, self.displayType, true, curvesplitTextureHeight)
+      local stp = UnitPowerPercent(unit, self.displayType, true, curvesplitTexturePoint)
+      self.orbFrame.OverlayFrame.SparkTexture:SetWidth(stw)
+      self.orbFrame.OverlayFrame.SparkTexture:SetHeight(sth)
+      self.orbFrame.OverlayFrame.SparkTexture:SetPoint("TOP", self.orbFrame.FillingStatusBar:GetStatusBarTexture(), 0, stp)
+      self.orbFrame.OverlayFrame.SparkTexture:Show()
+    end
+    ]]
+  end
+
+  --textures
+  local texDemon = health.orbFrame.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
+  texDemon:SetSize(512,256)
+  texDemon:SetPoint("BOTTOMRIGHT", health.orbFrame.OverlayFrame, "BOTTOMLEFT", 380, 0)
+  texDemon:SetTexture(L.mediaFolder.."d3_demon")
+
+  local texLeftEdge = health.orbFrame.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
+  texLeftEdge:SetSize(128,64)
+  texLeftEdge:SetPoint("BOTTOMLEFT", health.orbFrame.OverlayFrame, "BOTTOMRIGHT", -100, 15)
+  texLeftEdge:SetTexture(L.mediaFolder.."d3_left")
+
+  local texAngel = power.orbFrame.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
+  texAngel:SetSize(512,256)
+  texAngel:SetPoint("BOTTOMLEFT", power.orbFrame.OverlayFrame, "BOTTOMRIGHT", -380, 0)
+  texAngel:SetTexture(L.mediaFolder.."d3_angel")
+
+  local texRightEdge = power.orbFrame.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
+  texRightEdge:SetSize(128,64)
+  texRightEdge:SetPoint("BOTTOMRIGHT", power.orbFrame.OverlayFrame, "BOTTOMLEFT", 100, 15)
+  texRightEdge:SetTexture(L.mediaFolder.."d3_right")
+
 
 end
 

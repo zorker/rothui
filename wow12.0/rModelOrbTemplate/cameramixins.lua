@@ -1,5 +1,3 @@
-
-
 local function TryCreateZoomSpline(x, y, z, existingSpline)
 	if x and y and z and (x ~= 0 or y ~= 0 or z ~= 0) then
 		local spline = existingSpline or CreateCatmullRomSpline(3);

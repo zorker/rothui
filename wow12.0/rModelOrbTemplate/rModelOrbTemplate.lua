@@ -28,9 +28,7 @@ end
 
 --orb:LoadModelDataByID(id)
 function rModelOrbTemplateMixin:LoadModelDataByID(id)
-
   local modelData = L.modelData[id]
-
   if not modelData then return end
 
   --init and load scene and actor
@@ -76,12 +74,7 @@ function rModelOrbFillingMixin:OnLoad()
 end
 
 -- rModelOrbFillingMixin:OnValueChanged
-function rModelOrbFillingMixin:OnValueChanged(value)
-  local orb = self:GetParent()
-  orb.ClipFrame:SetPoint("TOPRIGHT", orb.FillingStatusBar:GetStatusBarTexture(), "TOPRIGHT")
-  orb.OverlayFrame.SparkTexture:SetPoint("TOP", orb.FillingStatusBar:GetStatusBarTexture(), 0, 16)
-end
-
+function rModelOrbFillingMixin:OnValueChanged(value) end
 function rModelOrbFillingMixin:OnShow() end
 function rModelOrbFillingMixin:OnHide() end
 
@@ -91,7 +84,6 @@ function rModelOrbClipMixin:OnLoad()
 end
 
 function rModelOrbClipMixin:OnShow() end
-
 function rModelOrbClipMixin:OnHide() end
 
 -- rModelOrbOverlayMixin:OnLoad
@@ -99,14 +91,14 @@ function rModelOrbOverlayMixin:OnLoad()
   self.SparkTexture:SetBlendMode("ADD")
   self.GlowTexture:SetBlendMode("BLEND")
   self.LowHealthTexture:SetBlendMode("ADD")
-
   local mask = self:CreateMaskTexture()
   mask:SetAllPoints()
   mask:SetTexture("Interface\\AddOns\\"..A.."\\media\\orb_spark_mask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
   self.SparkTexture:AddMaskTexture(mask)
-
+  local orb = self:GetParent()
+  orb.ClipFrame:SetPoint("TOPRIGHT", orb.FillingStatusBar:GetStatusBarTexture(), "TOPRIGHT")
+  self.SparkTexture:SetPoint("TOP", orb.FillingStatusBar:GetStatusBarTexture(), 0, 16)
 end
 
 function rModelOrbOverlayMixin:OnShow() end
-
 function rModelOrbOverlayMixin:OnHide() end

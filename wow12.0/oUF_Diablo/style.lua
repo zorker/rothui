@@ -80,14 +80,17 @@ local function StylePlayer(self)
 	  if(not unit or self.unit ~= unit) then return end
 	  local element = self.Power
     local powerID, powerType = UnitPowerType(unit)
-    local template = element.displayType or powerType or nil
-    UpdateOrbTemplate(element.orbFrame, '_POWER_'..template)
+    local template = element.displayType or powerType
+    if template then
+      template = "_POWER_"..template
+    else
+      template = "_OTHER"
+    end
+    UpdateOrbTemplate(element.orbFrame, template)
   end
 
   function power:PostUpdate(unit, cur, min, max)
-    local powerID, powerType = UnitPowerType(unit)
-    local displayType = self.displayType or powerID
-    self.orbFrame.FillingStatusBar:SetValue(UnitPowerPercent(unit, displayType, true))
+    self.orbFrame.FillingStatusBar:SetValue(UnitPowerPercent(unit, UnitPowerType(unit), true))
   end
 
   --textures

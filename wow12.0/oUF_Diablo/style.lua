@@ -80,9 +80,9 @@ local function StylePlayer(self)
 	  if(not unit or self.unit ~= unit) then return end
 	  local element = self.Power
     local powerID, powerType = UnitPowerType(unit)
-    local template = element.displayType or powerType
-    if template then
-      template = "_POWER_"..template
+    local template = nil
+    if powerType then
+      template = "_POWER_"..powerType
     else
       template = "_OTHER"
     end

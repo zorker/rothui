@@ -1,0 +1,12 @@
+## Interface: 120005
+## Title: rSettingsExample
+## Notes: Example on how to work with the Settings API
+## Author: zork
+## Version: 12.1
+## SavedVariables: rSettingsExample_DB
+## X-DB-Version: 1
+
+init.lua
+db.lua
+optionspanel.lua
+events.lua

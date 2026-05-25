@@ -1,14 +1,21 @@
 local A, L = ...
 
+---------------------------------------------------------------------
+-- InitCap(str)
+---------------------------------------------------------------------
+
 local function InitCap(str)
   return (str:gsub("^%a", string.upper))
 end
 
+---------------------------------------------------------------------
 -- RegisterOptionsPanel
+---------------------------------------------------------------------
+
 local function RegisterOptionsPanel()
 
   ---------------------------------------------------------------------
-  -- Register Settings Category
+  -- Settings.RegisterVerticalLayoutCategory(L.name)
   ---------------------------------------------------------------------
 
   local category, layout = Settings.RegisterVerticalLayoutCategory(L.name)
@@ -107,12 +114,17 @@ local function RegisterOptionsPanel()
   local subCategoryOrbTemplate, subLayoutOrbTemplate = Settings.RegisterVerticalLayoutSubcategory(category, L.name.."OrbTemplates")
   subCategoryOrbTemplate:SetName("Orb templates")
 
----------------------------------------------------------------------
-  -- Dropdowns
+  ---------------------------------------------------------------------
+  -- AddOrbTemplateDropdown(name, callback, options)
   ---------------------------------------------------------------------
 
   local function AddOrbTemplateDropdown(name, callback, options)
-    
+
+    local defaultString = "_OTHER"
+    if L.DB_DEFAULTS.settings.orbModelTemplates and L.DB_DEFAULTS.settings.orbModelTemplates[name] then
+      defaultString = tostring(L.DB_DEFAULTS.settings.orbModelTemplates[name])
+    end
+
     local setting = Settings.RegisterAddOnSetting(
       category, 
       L.name.."SettingsOrbTemplate"..name, 
@@ -120,17 +132,18 @@ local function RegisterOptionsPanel()
       L.DB.settings.orbModelTemplates,
       Settings.VarType.String, 
       name,
-      L.DB_DEFAULTS.settings.orbModelTemplates.name or "_OTHER"
+      defaultString
     )
     setting:SetValueChangedCallback(function(setting, value)
       callback(name, setting, value)
     end)
-
     Settings.CreateDropdown(subCategoryOrbTemplate, setting, options, "Pick a orb template for: "..name)
-
     return setting
-
   end
+
+  ---------------------------------------------------------------------
+  -- dropdown options
+  ---------------------------------------------------------------------
 
   local options = function()    
     local container = Settings.CreateControlTextContainer()
@@ -147,6 +160,10 @@ local function RegisterOptionsPanel()
     end    
     return container:GetData()
   end
+
+  ---------------------------------------------------------------------
+  -- L.S.orbModelTemplateDropdowns
+  ---------------------------------------------------------------------
 
   L.S.orbModelTemplateDropdowns = {}
 

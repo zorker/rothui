@@ -244,13 +244,16 @@ end
 --orb:LoadModelDataByID(id)
 function rModelOrbTemplateMixin:LoadModelDataByID(id, enableMouse)
 
-  -- load the model view settings
-  local modelData = self:GetModelDataByID(id)
-  if not modelData then return end
-
   -- set reference
   local scene = self.ClipFrame.ModelFrame
   scene.orbFrame = self
+
+  -- no new modelFileID found. 
+  if scene.modelFileID == id then return end
+
+  -- load the model view settings
+  local modelData = self:GetModelDataByID(id)
+  if not modelData then return end
 
   InitScene(scene, enableMouse)
 

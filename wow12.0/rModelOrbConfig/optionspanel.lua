@@ -46,6 +46,8 @@ local function RegisterOptionsPanel()
   function rModelOrbConfigTemplateMixin:Init(initializer)
     --get initializer data object
     local data = initializer:GetData()
+    --scale the orb
+    L.previewOrb:SetScale(L.S.scaleValueSetting:GetValue())
     -- load model into scene with mouse enabled
     L.previewOrb:LoadModelDataByID(data.setting:GetValue(), true)
     --set statusbar texture
@@ -114,7 +116,7 @@ local function RegisterOptionsPanel()
       "fillValue",
       L.DB.settings,
       Settings.VarType.Number, 
-      "Fill Value",
+      "Fill Percent",
       1
   )
   L.S.fillValueSetting = fillValueSetting
@@ -124,6 +126,13 @@ local function RegisterOptionsPanel()
   end)
 
   local fillValueOptions = Settings.CreateSliderOptions(0, 1, 0.01)
+
+  fillValueOptions:SetLabelFormatter(
+    MinimalSliderWithSteppersMixin.Label.Right, 
+    function(value)
+      return string.format("%.0f%%", value*100)
+    end
+  )
 
   Settings.CreateSlider(category, fillValueSetting, fillValueOptions, "Move the slider to test how the orb will fill.")
 
@@ -137,7 +146,7 @@ local function RegisterOptionsPanel()
       "modelAlpha",
       L.DB.settings,
       Settings.VarType.Number, 
-      "Model opacity",
+      "Model Opacity",
       1
   )
   L.S.modelAlphaSetting = modelAlphaSetting
@@ -151,6 +160,13 @@ local function RegisterOptionsPanel()
 
   local modelAlphaOptions = Settings.CreateSliderOptions(0, 1, 0.01)
 
+  modelAlphaOptions:SetLabelFormatter(
+    MinimalSliderWithSteppersMixin.Label.Right, 
+    function(value)
+      return string.format("%.0f%%", value*100)
+    end
+  )
+
   Settings.CreateSlider(category, modelAlphaSetting, modelAlphaOptions, "Move the slider to change the model opacity. Will set the filling to full.")
 
   ---------------------------------------------------------------------
@@ -163,7 +179,7 @@ local function RegisterOptionsPanel()
       "splitAlpha",
       L.DB.settings,
       Settings.VarType.Number, 
-      "Split opacity",
+      "Split Opacity",
       1
   )  
   L.S.splitAlphaSetting = splitAlphaSetting
@@ -178,6 +194,13 @@ local function RegisterOptionsPanel()
 
   local splitAlphaOptions = Settings.CreateSliderOptions(0, 1, 0.01)
 
+  splitAlphaOptions:SetLabelFormatter(
+    MinimalSliderWithSteppersMixin.Label.Right, 
+    function(value)
+      return string.format("%.0f%%", value*100)
+    end
+  )
+
   Settings.CreateSlider(category, splitAlphaSetting, splitAlphaOptions, "Move the slider to change the split texture opacity. Will set the filling to 50%.")
 
   ---------------------------------------------------------------------
@@ -190,7 +213,7 @@ local function RegisterOptionsPanel()
       "fillColor",
       L.DB.settings,
       Settings.VarType.String, 
-      "Fill color",
+      "Fill Color",
       "ff0000ff"
   )
   L.S.fillColorSetting = fillColorSetting
@@ -250,6 +273,36 @@ local function RegisterOptionsPanel()
   end
 
   Settings.CreateDropdown(category, fillTextureSetting, fillTextureOptions, "Pick a filling texture you like.")
+
+  ---------------------------------------------------------------------
+  -- fillValueSetting + Slider
+  ---------------------------------------------------------------------
+
+  local scaleValueSetting = Settings.RegisterAddOnSetting(
+      category, 
+      L.name.."SettingsScaleValue", 
+      "scaleValue",
+      L.DB.settings,
+      Settings.VarType.Number, 
+      "Orb Scale",
+      1
+  )
+  L.S.scaleValueSetting = scaleValueSetting
+
+  scaleValueSetting:SetValueChangedCallback(function(setting, value)
+    L.previewOrb:SetScale(value)
+  end)
+
+  local scaleValueOptions = Settings.CreateSliderOptions(0.3, 2, 0.01)
+
+  scaleValueOptions:SetLabelFormatter(
+    MinimalSliderWithSteppersMixin.Label.Right, 
+    function(value)
+      return string.format("%.0f%%", value*100)
+    end
+  )
+
+  Settings.CreateSlider(category, scaleValueSetting, scaleValueOptions, "Move the slider to scale the orb.")
 
   ---------------------------------------------------------------------
   -- showDebuffGlowSetting + Checkbox

@@ -18,7 +18,7 @@ local function UpdateOrbTemplate(orb, templateKeyName)
 
   -- load model into scene WITHOUT mouse enabled
   orb:LoadModelDataByID(template.modelID, false)
-  orb.FillingStatusBar:SetStatusBarTexture(template.fillTexture)
+  orb.FillingStatusBar:SetStatusBarTexture(L.DB_ORB_CONFIG.mediaFolder..template.fillTexture)
   orb.FillingStatusBar:SetStatusBarColor(r,g,b)
   orb.OverlayFrame.SparkTexture:SetVertexColor(r,g,b,template.splitAlpha)
   orb.ClipFrame:SetAlpha(template.modelAlpha)
@@ -37,6 +37,9 @@ local function StylePlayer(self)
 
   local healthOrb = CreateFrame("Frame", nil, self, "rModelOrbTemplate")
   healthOrb:SetPoint("CENTER")
+  healthOrb.FillingStatusBar:SetFrameLevel(healthOrb:GetFrameLevel()+1)
+  healthOrb.ClipFrame:SetFrameLevel(healthOrb:GetFrameLevel()+2)
+  healthOrb.OverlayFrame:SetFrameLevel(healthOrb:GetFrameLevel()+3)
 
   local health = CreateFrame("StatusBar", nil, self)
   --Mixin(health, SmoothStatusBarMixin)
@@ -49,6 +52,9 @@ local function StylePlayer(self)
   health.colorHealth = true
 
   local powerOrb = CreateFrame("Frame", self:GetName().."PowerOrb", self, "rModelOrbTemplate")
+  powerOrb.FillingStatusBar:SetFrameLevel(powerOrb:GetFrameLevel()+1)
+  powerOrb.ClipFrame:SetFrameLevel(powerOrb:GetFrameLevel()+2)
+  powerOrb.OverlayFrame:SetFrameLevel(powerOrb:GetFrameLevel()+3)
   
   local power = CreateFrame("StatusBar", nil, self)
   --Mixin(power, SmoothStatusBarMixin)

@@ -35,9 +35,16 @@ local function RegisterOptionsPanel()
     L.movePlayerPowerFrame:SetScale(value)
   end)
 
-  local fillValueOptions = Settings.CreateSliderOptions(0.5, 2, 0.01)
+  local playerScaleOptions = Settings.CreateSliderOptions(0.3, 2, 0.01)
 
-  Settings.CreateSlider(category, playerScaleSetting, fillValueOptions, "Scale the health and power orb.")
+  playerScaleOptions:SetLabelFormatter(
+    MinimalSliderWithSteppersMixin.Label.Right, 
+    function(value)
+      return string.format("%.0f%%", value*100)
+    end
+  )
+
+  Settings.CreateSlider(category, playerScaleSetting, playerScaleOptions, "Scale the health and power orb.")
 
   ---------------------------------------------------------------------
   -- lockPlayerFrameSetting + Checkbox

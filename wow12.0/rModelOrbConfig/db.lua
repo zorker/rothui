@@ -3,8 +3,10 @@ local A, L = ...
 -- LoadDBDefaults
 local function LoadDBDefaults()
   return {
+    mediaFolder = L.mediaFolder,
     settings = {
       modelID = 2030216,
+      scaleValue = 1,
       fillValue = 1,
       modelAlpha = 1,
       splitAlpha = 1,
@@ -14,14 +16,7 @@ local function LoadDBDefaults()
       showDebuffGlow = false,
     },
     presetTemplates = {
-      ["_OTHER3"] = {
-      ["modelID"] = 530079,
-      ["modelAlpha"] = 1,
-      ["splitAlpha"] = 1,
-      ["fillColor"] = "ffed9f00",
-      ["fillTexture"] = "orb_filling16",
-      },
-      ["_OTHER2"] = {
+      ["_OTHER"] = {
       ["modelID"] = 4544400,
       ["modelAlpha"] = 1,
       ["splitAlpha"] = 1,
@@ -77,13 +72,6 @@ local function LoadDBDefaults()
       ["fillTexture"] = "orb_filling15",
       ["fillColor"] = "ff132f41",
       },
-      ["_OTHER"] = {
-      ["modelID"] = 2175907,
-      ["modelAlpha"] = 1,
-      ["splitAlpha"] = 1,
-      ["fillColor"] = "ff9f7d34",
-      ["fillTexture"] = "orb_filling16",
-      },
       ["_REACTION_NEUTRAL"] = {
       ["modelID"] = 5705388,
       ["modelAlpha"] = 1,
@@ -120,10 +108,10 @@ local function LoadDBDefaults()
       ["fillTexture"] = "orb_filling16",
       },
       ["_CLASS_ROGUE"] = {
-      ["modelID"] = 1630836,
+      ["modelID"] = 4556625,
       ["modelAlpha"] = 1,
       ["splitAlpha"] = 1,
-      ["fillColor"] = "ffcfb500",
+      ["fillColor"] = "ffffae00",
       ["fillTexture"] = "orb_filling16",
       },
       ["_POWER_RAGE"] = {
@@ -134,11 +122,11 @@ local function LoadDBDefaults()
       ["fillColor"] = "ff760000",
       },
       ["_POWER_ENERGY"] = {
-      ["modelID"] = 4556625,
+      ["modelID"] = 244276,
       ["modelAlpha"] = 1,
       ["splitAlpha"] = 1,
-      ["fillTexture"] = "orb_filling16",
-      ["fillColor"] = "ffffae00",
+      ["fillTexture"] = "orb_filling6",
+      ["fillColor"] = "ffffdc00",
       },
       ["_CLASS_DEMONHUNTER"] = {
       ["modelID"] = 1713776,

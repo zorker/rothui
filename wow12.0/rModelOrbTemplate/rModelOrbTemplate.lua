@@ -80,6 +80,7 @@ local function InitScene(scene, enableMouse)
   end
 
   function scene:UpdateDebugText()
+    if not self.debugText then return end
     local yt = string.format("Y %.1f°", mdeg(self.activeCamera:GetYaw() or 0))
     local pt = string.format("P %.1f°", mdeg(self.activeCamera:GetPitch() or 0))
     local rt = string.format("R %.1f°", mdeg(self.activeCamera:GetRoll() or 0))
@@ -171,9 +172,14 @@ local function InitScene(scene, enableMouse)
 
   -- by default do not activate mouse handling
   if enableMouse == true then
-    scene.debugText = scene:CreateFontString(nil, "OVERLAY", "SystemFont_Tiny")
+    scene.debugText = scene.orbFrame:CreateFontString(nil, "OVERLAY", "SystemFont_Tiny")
     scene.debugText:SetPoint("TOP")
     scene.debugText:SetAlpha(0.5)
+
+    scene.modelInfoText = scene.orbFrame:CreateFontString(nil, "OVERLAY", "SystemFont_Tiny")
+    scene.modelInfoText:SetPoint("BOTTOM")
+    scene.modelInfoText:SetAlpha(0.5)
+
     scene:EnableMouse(true)
     scene:EnableMouseWheel(true)
     scene:SetScript("OnMouseDown", scene.OnMouseDown)
@@ -248,6 +254,10 @@ function rModelOrbTemplateMixin:LoadModelDataByID(id, enableMouse)
   --print("loading", scene.modelFileID, modelData.name, string.format("%.3f", modelData.panX), string.format("%.3f", modelData.panY), string.format("%.3f", modelData.zoomDist), string.format("%.3f", modelData.yaw), string.format("%.3f", modelData.pitch), string.format("%.3f", modelData.roll))
 
   scene.activeCamera:SetAndRefreshValues(modelData.panX, modelData.panY, modelData.zoomDist, modelData.yaw, modelData.pitch, modelData.roll)
+  scene:UpdateDebugText()
+  if scene.modelInfoText then
+    scene.modelInfoText:SetText("model-id: "..scene.modelFileID.." | name: "..modelData.name)
+  end
 
   --filling and spark coloring color
   local r,g,b = 1,0,0

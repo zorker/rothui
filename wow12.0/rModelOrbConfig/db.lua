@@ -39,7 +39,7 @@ local function LoadDBDefaults()
       ["modelID"] = 450902,
       ["modelAlpha"] = 1,
       ["splitAlpha"] = 1,
-      ["fillColor"] = "ff4b0000",
+      ["fillColor"] = "ffa50000",
       ["fillTexture"] = "orb_filling16",
       },
       ["_POWER_INSANITY"] = {
@@ -172,8 +172,8 @@ local function LoadDBDefaults()
       ["modelID"] = 1696965,
       ["modelAlpha"] = 1,
       ["splitAlpha"] = 1,
-      ["fillTexture"] = "orb_filling15",
       ["fillColor"] = "ff6f009c",
+      ["fillTexture"] = "orb_filling21",
       },
       ["_POWER_FURY"] = {
       ["modelID"] = 293986,

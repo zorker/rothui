@@ -1,6 +1,5 @@
 local A, L = ...
 
---maybe?
 --EventUtil.ContinueOnAddOnLoaded(L.name, function()
 
 L.eventFrame:RegisterEvent("ADDON_LOADED")

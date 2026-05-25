@@ -14,26 +14,41 @@ rModelOrbSceneMixin = {}
 rModelOrbOverlayMixin = {}
 
 -------------------------------------------------
--- func
+-- orb:OnLoad etc
 -------------------------------------------------
 
 function rModelOrbTemplateMixin:OnLoad() end
 function rModelOrbTemplateMixin:OnShow() end
 function rModelOrbTemplateMixin:OnHide() end
 
---orb:GetAllModelData()
+-------------------------------------------------------------
+-- orb:GetAllModelData()
+-------------------------------------------------------------
+
 function rModelOrbTemplateMixin:GetAllModelData()
   return L.DB.modelData
 end
+
+-------------------------------------------------------------
+-- orb:GetModelDataByID(id)
+-------------------------------------------------------------
 
 function rModelOrbTemplateMixin:GetModelDataByID(id)
   return L.DB.modelData[id]
 end
 
+-------------------------------------------------------------
+-- orb:SaveModelDataByID(id, data)
+-------------------------------------------------------------
+
 function rModelOrbTemplateMixin:SaveModelDataByID(id, data)
   --print(L.name, "Saving data for id: "..id)
   L.DB.modelData[id] = data
 end
+
+-------------------------------------------------------------
+-- SaveSceneData(scene)
+-------------------------------------------------------------
 
 local function SaveSceneData(scene)
 
@@ -67,6 +82,10 @@ local function SaveSceneData(scene)
   scene:UpdateDebugText()
 
 end
+
+-------------------------------------------------------------
+-- InitScene(scene, enableMouse)
+-------------------------------------------------------------
 
 local function InitScene(scene, enableMouse)
 
@@ -241,9 +260,12 @@ local function InitScene(scene, enableMouse)
 
 end
 
---orb:LoadModelDataByID(id)
-function rModelOrbTemplateMixin:LoadModelDataByID(id, enableMouse)
+-------------------------------------------------------------
+-- orb:LoadModelDataByID(id, enableMouse)
+-------------------------------------------------------------
 
+function rModelOrbTemplateMixin:LoadModelDataByID(id, enableMouse)
+  
   -- set reference
   local scene = self.ClipFrame.ModelFrame
   scene.orbFrame = self
@@ -263,7 +285,9 @@ function rModelOrbTemplateMixin:LoadModelDataByID(id, enableMouse)
   --print("loading", scene.modelFileID, modelData.name, string.format("%.3f", modelData.panX), string.format("%.3f", modelData.panY), string.format("%.3f", modelData.zoomDist), string.format("%.3f", modelData.yaw), string.format("%.3f", modelData.pitch), string.format("%.3f", modelData.roll))
 
   scene.activeCamera:SetAndRefreshValues(modelData.panX, modelData.panY, modelData.zoomDist, modelData.yaw, modelData.pitch, modelData.roll)
+  
   scene:UpdateDebugText()
+  
   if scene.modelInfoText then
     scene.modelInfoText:SetText("model-id: "..scene.modelFileID.." | name: "..modelData.name)
   end
@@ -299,14 +323,17 @@ end
 function rModelOrbClipMixin:OnShow() end
 function rModelOrbClipMixin:OnHide() end
 
--- rModelOrbOverlayMixin:OnLoad
+-------------------------------------------------------------
+-- OverlayFrame:OnLoad()
+-------------------------------------------------------------
+
 function rModelOrbOverlayMixin:OnLoad()
   self.SparkTexture:SetBlendMode("ADD")
   self.GlowTexture:SetBlendMode("BLEND")
   self.LowHealthTexture:SetBlendMode("ADD")
   local mask = self:CreateMaskTexture()
   mask:SetAllPoints()
-  mask:SetTexture("Interface\\AddOns\\"..A.."\\media\\orb_spark_mask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+  mask:SetTexture("Interface\\AddOns\\"..L.name.."\\media\\orb_spark_mask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
   self.SparkTexture:AddMaskTexture(mask)
   local orb = self:GetParent()
   orb.ClipFrame:SetPoint("TOPRIGHT", orb.FillingStatusBar:GetStatusBarTexture(), "TOPRIGHT")

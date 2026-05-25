@@ -1,10 +1,16 @@
 local A, L = ...
 
-local mpi, msin, mcos, floor = math.pi, math.sin, math.cos, floor
+---------------------------------------------------------------------
+-- vars
+---------------------------------------------------------------------
 
 L.playerFrame = nil
 L.movePlayerFrame = nil
 L.movePlayerPowerFrame = nil
+
+---------------------------------------------------------------------
+-- UpdateOrbTemplate(orb, templateKeyName)
+---------------------------------------------------------------------
 
 local function UpdateOrbTemplate(orb, templateKeyName)
 
@@ -25,15 +31,20 @@ local function UpdateOrbTemplate(orb, templateKeyName)
 
 end
 
+---------------------------------------------------------------------
+-- StylePlayer(self)
+---------------------------------------------------------------------
+
 local function StylePlayer(self)
 
   self:SetSize(256, 256)
-
   L.playerFrame = self
-
-  self:SetScale(L.S.playerScaleSetting:GetValue())
-  
+  self:SetScale(L.S.playerScaleSetting:GetValue())  
   self.elementType = "base"
+
+  ---------------------------------------------------------------------
+  -- healthOrb + self.Health
+  ---------------------------------------------------------------------
 
   local healthOrb = CreateFrame("Frame", nil, self, "rModelOrbTemplate")
   healthOrb:SetPoint("CENTER")
@@ -51,6 +62,10 @@ local function StylePlayer(self)
   health.colorReaction = true
   health.colorHealth = true
 
+  ---------------------------------------------------------------------
+  -- powerOrb + self.Power
+  ---------------------------------------------------------------------
+
   local powerOrb = CreateFrame("Frame", self:GetName().."PowerOrb", self, "rModelOrbTemplate")
   powerOrb.FillingStatusBar:SetFrameLevel(powerOrb:GetFrameLevel()+1)
   powerOrb.ClipFrame:SetFrameLevel(powerOrb:GetFrameLevel()+2)
@@ -63,6 +78,10 @@ local function StylePlayer(self)
   power.elementType = "power"
   power.orbFrame = powerOrb
   power.colorPower = true
+
+  ---------------------------------------------------------------------
+  -- health:UpdateColor(event, unit)
+  ---------------------------------------------------------------------
 
   function health:UpdateColor(event, unit)
 	  if(not unit or self.unit ~= unit) then return end
@@ -88,10 +107,18 @@ local function StylePlayer(self)
     UpdateOrbTemplate(element.orbFrame, templateKeyName)
   end
 
+  ---------------------------------------------------------------------
+  -- health:PostUpdate(unit, cur, max, lossPerc)
+  ---------------------------------------------------------------------
+
   function health:PostUpdate(unit, cur, max, lossPerc)
     --self.orbFrame.FillingStatusBar:SetSmoothedValue(UnitHealthPercent(unit,true))
     self.orbFrame.FillingStatusBar:SetValue(UnitHealthPercent(unit,true), Enum.StatusBarInterpolation.ExponentialEaseOut)
   end
+
+  ---------------------------------------------------------------------
+  -- power:UpdateColor(event, unit)
+  ---------------------------------------------------------------------
 
   function power:UpdateColor(event, unit)
 	  if(not unit or self.unit ~= unit) then return end
@@ -106,12 +133,19 @@ local function StylePlayer(self)
     UpdateOrbTemplate(element.orbFrame, templateKeyName)
   end
 
+  ---------------------------------------------------------------------
+  -- power:PostUpdate(unit, cur, min, max)
+  ---------------------------------------------------------------------
+
   function power:PostUpdate(unit, cur, min, max)
     --self.orbFrame.FillingStatusBar:SetSmoothedValue(UnitPowerPercent(unit, UnitPowerType(unit), true))
     self.orbFrame.FillingStatusBar:SetValue(UnitPowerPercent(unit, UnitPowerType(unit), true), Enum.StatusBarInterpolation.ExponentialEaseOut)
   end
 
-  --menu
+  ---------------------------------------------------------------------
+  -- right click menu
+  ---------------------------------------------------------------------
+
   self:RegisterForClicks("AnyUp")
   self.Menu = function(self)
     if OpenContextMenu then
@@ -122,7 +156,10 @@ local function StylePlayer(self)
   end
   self:SetAttribute("*type2", "togglemenu")
 
-  --textures
+  ---------------------------------------------------------------------
+  -- angel + demon
+  ---------------------------------------------------------------------
+
   local texDemon = healthOrb.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
   texDemon:SetSize(512,256)
   texDemon:SetPoint("BOTTOMRIGHT", healthOrb.OverlayFrame, "BOTTOMLEFT", 370, 10)
@@ -235,6 +272,10 @@ local function StylePlayer(self)
 
 end
 
+---------------------------------------------------------------------
+-- UnitSpecific
+---------------------------------------------------------------------
+
 local UnitSpecific = {
   player = StylePlayer,
   --[[
@@ -244,13 +285,25 @@ local UnitSpecific = {
   ]]
 }
 
+---------------------------------------------------------------------
+-- Shared
+---------------------------------------------------------------------
+
 local Shared = function(self, unit)
 	if(UnitSpecific[unit]) then
 		return UnitSpecific[unit](self)
 	end
 end
 
+---------------------------------------------------------------------
+-- RegisterStyle
+---------------------------------------------------------------------
+
 oUF:RegisterStyle("oUF_Diablo", Shared)
+
+---------------------------------------------------------------------
+-- SpawnUnits
+---------------------------------------------------------------------
 
 local function SpawnUnits()
   oUF:Factory(function(self)

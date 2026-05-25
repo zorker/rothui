@@ -1,5 +1,9 @@
 local A, L = ...
 
+---------------------------------------------------------------------
+-- vars
+---------------------------------------------------------------------
+
 local ROW_HEIGHT = 22
 
 ---------------------------------------------------------------------
@@ -20,7 +24,7 @@ frame.title:SetPoint("TOP", 0, -5)
 frame.title:SetText("Template Manager")
 
 ---------------------------------------------------------------------
--- IsPresetTemplate
+-- IsPresetTemplate(name)
 ---------------------------------------------------------------------
 
 local function IsPresetTemplate(name)
@@ -31,7 +35,7 @@ local function IsPresetTemplate(name)
 end
 
 ---------------------------------------------------------------------
--- CreateRow
+-- CreateRow(row, data)
 ---------------------------------------------------------------------
 
 local function CreateRow(row, data)
@@ -122,7 +126,7 @@ scrollView:SetDataProvider(scrollDataProvider)
 ScrollUtil.InitScrollBoxListWithScrollBar(scrollBox, scrollBar, scrollView)
 
 ---------------------------------------------------------------------
--- UpdateTemplateList
+-- UpdateTemplateList()
 ---------------------------------------------------------------------
 
 local function UpdateTemplateList()

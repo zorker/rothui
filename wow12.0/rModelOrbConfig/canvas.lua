@@ -1,12 +1,16 @@
 local A, L = ...
 
+---------------------------------------------------------------------
+-- vars
+---------------------------------------------------------------------
+
 L.canvas = CreateFrame("Frame", nil, UIParent)
 
 local sortedModels = {}
 
--------------------------------------
--- FUNCTIONS
--------------------------------------
+---------------------------------------------------------------------
+-- CreateButton(parent, text, adjustWidth, adjustHeight)
+---------------------------------------------------------------------
 
 local function CreateButton(parent, text, adjustWidth, adjustHeight)
   local b = CreateFrame("Button", name, parent, "UIPanelButtonTemplate")
@@ -16,11 +20,19 @@ local function CreateButton(parent, text, adjustWidth, adjustHeight)
   return b
 end
 
+---------------------------------------------------------------------
+-- UpdateModelPosition(orb, row, col, size)
+---------------------------------------------------------------------
+
 local function UpdateModelPosition(orb, row, col, size)
   orb.title:SetFont(STANDARD_TEXT_FONT, math.max(size * 8 / 100, 8), "OUTLINE")
   orb:SetSize(size, size)
   orb:SetPoint("TOPLEFT", size * row, size * col * (-1))
 end
+
+---------------------------------------------------------------------
+-- UpdateDisplayIndex(orb, displayIndex)
+---------------------------------------------------------------------
 
 local function UpdateDisplayIndex(orb, displayIndex)
   if sortedModels[displayIndex] then
@@ -39,7 +51,10 @@ local function UpdateDisplayIndex(orb, displayIndex)
   end
 end
 
--- create model func
+---------------------------------------------------------------------
+-- CreateModel(parent, id)
+---------------------------------------------------------------------
+
 local function CreateModel(parent, id)
 
   local orb = CreateFrame("Frame", nil, parent, "rModelOrbTemplate")
@@ -71,7 +86,10 @@ local function CreateModel(parent, id)
   return orb
 end
 
--- canvas UpdatePage func
+---------------------------------------------------------------------
+-- L.canvas:UpdatePage(value)
+---------------------------------------------------------------------
+
 function L.canvas:UpdatePage(value)
   if self.canvasPage == 1 and value < 0 then
     return
@@ -80,7 +98,10 @@ function L.canvas:UpdatePage(value)
   self:UpdateAllModels()
 end
 
--- canvas HideAllModels func
+---------------------------------------------------------------------
+-- L.canvas:HideAllModels()
+---------------------------------------------------------------------
+
 function L.canvas:HideAllModels()
   for i, orb in pairs(self.M) do
     orb:ClearAllPoints()
@@ -88,7 +109,10 @@ function L.canvas:HideAllModels()
   end
 end
 
--- canvas UpdateAllModels func
+---------------------------------------------------------------------
+-- L.canvas:UpdateAllModels()
+---------------------------------------------------------------------
+
 function L.canvas:UpdateAllModels()
   self:HideAllModels()
   self.modelRows = math.floor(self.canvasHeight / self.modelSize)
@@ -107,7 +131,10 @@ function L.canvas:UpdateAllModels()
   end -- for rows
 end
 
--- init canvas
+---------------------------------------------------------------------
+-- L.canvas:Init()
+---------------------------------------------------------------------
+
 function L.canvas:Init()
 
   -- canvas frame
@@ -200,7 +227,10 @@ function L.canvas:Init()
 
 end
 
--- canvas Open func
+---------------------------------------------------------------------
+-- L.canvas:Open()
+---------------------------------------------------------------------
+
 function L.canvas:Open()
   if not self.initialized then
     self:Init()
@@ -217,7 +247,10 @@ function L.canvas:Open()
   self.fadeIn:Play()
 end
 
--- canvas Close func
+---------------------------------------------------------------------
+-- L.canvas:Close()
+---------------------------------------------------------------------
+
 function L.canvas:Close()
   self.fadeOut:Play()
 end

@@ -264,8 +264,6 @@ function rModelOrbTemplateMixin:LoadModelDataByID(id, enableMouse)
   if modelData.fillColor then    
     local color = CreateColorFromHexString(modelData.fillColor)
     r,g,b = color:GetRGB()
-  else
-    r,g,b = modelData.fR or 1, modelData.fG or 0, modelData.fB or 0
   end
   self.FillingStatusBar:SetStatusBarColor(r, g, b)
   self.OverlayFrame.SparkTexture:SetVertexColor(r, g, b)

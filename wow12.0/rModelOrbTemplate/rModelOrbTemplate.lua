@@ -23,47 +23,198 @@ function rModelOrbTemplateMixin:OnHide() end
 
 --orb:GetAllModelData()
 function rModelOrbTemplateMixin:GetAllModelData()
-  return L.modelData
+  return L.DB.modelData
+end
+
+function rModelOrbTemplateMixin:GetModelDataByID(id)
+  return L.DB.modelData[id]
+end
+
+function rModelOrbTemplateMixin:SaveModelDataByID(id, data)
+  print(L.name, "Saving data for id: "..id)
+  L.DB.modelData[id] = data
+end
+
+local function SaveSceneData(scene)
+
+  local orb = scene.orbFrame
+  local actor = scene.zorkActor
+  local id = scene.modelFileID
+
+  local modelData = orb:GetModelDataByID(id)
+
+  local data = {}
+
+  --camera target will always stay at 0,0,0
+  --actor position will always stay at 0,0,0
+  data.panX = scene.activeCamera.panningXOffset
+  data.panY = scene.activeCamera.panningYOffset
+  data.zoomDist = scene.activeCamera:GetZoomDistance()
+  data.yaw = scene.activeCamera:GetYaw()
+  data.pitch = scene.activeCamera:GetPitch()
+  data.roll = scene.activeCamera:GetRoll()
+
+  local r,g,b = orb.FillingStatusBar:GetStatusBarColor()
+  local color = CreateColor(r,g,b)
+  data.fillColor = color:GenerateHexColor()
+
+  data.name = modelData.name
+  data.status = modelData.status
+  data.tag = modelData.tag
+
+  orb:SaveModelDataByID(id, data)
+
+end
+
+local function InitScene(scene, enableMouse)
+
+  if scene.isInitialized then return end
+
+  scene.isInitialized = true
+
+  -- make sure the active OnUpdate gets removed asap. we change that to OnMouseDown -> OnUpdate which gets removed again OnMouseUp
+  if scene:HasScript("OnUpdate") then
+    scene:SetScript("OnUpdate", nil)
+  end
+
+  -- overload scene OnUpdate
+  function scene:OnUpdate(elapsed)
+    if self.activeCamera then
+      -- calls ZorkCameraMixin:OnUpdate
+      self.activeCamera:OnUpdate(elapsed)
+    end
+  end
+
+  function scene:IsLeftMouseButtonDown()
+    return self.isLeftButtonDown
+  end
+
+  function scene:IsRightMouseButtonDown()
+    return self.isRightButtonDown
+  end
+
+  --NEW: m4
+  function scene:IsMouse4ButtonDown()
+    return self.isButton4Down
+  end
+
+  --NEW: m5
+  function scene:IsMouse5ButtonDown()
+    return self.isButton5Down
+  end
+
+  -- overload scene OnMouseDown
+  function scene:OnMouseDown(button)
+    if button == "LeftButton" then
+      self.isLeftButtonDown = true
+    elseif button == "RightButton" then
+      self.isRightButtonDown = true
+    elseif button == "Button4" then
+      self.isButton4Down = true
+    elseif button == "Button5" then
+      self.isButton5Down = true
+    end
+    if self.activeCamera then
+      --current no overload on ZorkCameraMixin for OnMouseDown
+      --will trigger CameraBaseMixin:OnMouseDown
+      self.activeCamera:OnMouseDown(button)
+      self:SetScript("OnUpdate", self.OnUpdate)
+      --self:SetScript("OnUpdate", self.activeCamera.OnUpdate)
+    end
+  end
+
+  -- overload scene OnMouseUp
+  function scene:OnMouseUp(button)
+    --remove the OnUpdate asap
+    self:SetScript("OnUpdate", nil)
+    if button == "LeftButton" then
+      self.isLeftButtonDown = false
+    elseif button == "RightButton" then
+      self.isRightButtonDown = false
+    elseif button == "Button4" then
+      self.isButton4Down = false
+    elseif button == "Button5" then
+      self.isButton5Down = false
+    end
+    if self.activeCamera then
+      --current no overload on ZorkCameraMixin for OnMouseUp
+      --will trigger CameraBaseMixin:OnMouseUp
+      --will reset model values if CTRL key is down while OnMouseUp
+      if IsControlKeyDown() then
+        self.activeCamera:SetAndRefreshValues()
+        print(L.name, "Reseting data for id: "..self.modelFileID)
+      end
+    end
+    SaveSceneData(scene)
+  end
+
+  -- overload scene OnMouseWheel
+  function scene:OnMouseWheel(delta)
+    if self.activeCamera then
+      --calls ZorkCameraMixin:OnMouseWheel
+      self.activeCamera:OnMouseWheel(delta)
+    end
+    SaveSceneData(scene)
+  end
+
+  -- by default do not activate mouse handling
+  if enableMouse == true then
+    scene:EnableMouse(true)
+    scene:EnableMouseWheel(true)
+    scene:SetScript("OnMouseDown", scene.OnMouseDown)
+    scene:SetScript("OnMouseUp", scene.OnMouseUp)
+    scene:SetScript("OnMouseWheel", scene.OnMouseWheel)
+  else
+    scene:EnableMouse(false)
+    scene:EnableMouseWheel(false)
+    scene:SetScript("OnMouseDown", nil)
+    scene:SetScript("OnMouseUp", nil)
+    scene:SetScript("OnMouseWheel", nil)
+  end
+
+  --actor
+  scene.zorkActor = scene:CreateActor()
+  scene.zorkActor:SetPosition(0,0,0)
+
+  --camera
+  scene.zorkCamera = CameraRegistry:CreateCameraByType("ZorkCamera")
+  --calls CameraBaseMixin:SetOwningScene -> ZorkCameraMixin:OnAdded
+  --calls scene:SetActivCamera -> CameraBaseMixin:OnActivated
+  --initializes the camera and positions it to look at taget 0,0,0
+  scene:AddCamera(scene.zorkCamera) 
+
 end
 
 --orb:LoadModelDataByID(id)
-function rModelOrbTemplateMixin:LoadModelDataByID(id)
-  local modelData = L.modelData[id]
+function rModelOrbTemplateMixin:LoadModelDataByID(id, enableMouse)
+
+  print("LoadModelDataByID", id, enableMouse)
+  
+  -- load the model view settings
+  local modelData = self:GetModelDataByID(id)
   if not modelData then return end
 
-  --init and load scene and actor
+  -- set reference
   local scene = self.ClipFrame.ModelFrame
-  scene:SetFromModelSceneIDZork(290)
-  scene:SetScript("OnUpdate", nil)
-  local actor = scene:GetActorAtIndex(1) or scene:CreateActor()
-  actor:SetModelByFileID(id)
-  scene:EnableMouse(false)
-  scene:EnableMouseWheel(false)
+  scene.orbFrame = self
+
+  InitScene(scene, enableMouse)
+
+  scene.zorkActor:SetModelByFileID(id)
+  scene.modelFileID = id
+  scene.activeCamera:SetAndRefreshValues(modelData.panX, modelData.panY, modelData.zoomDist, modelData.yaw, modelData.pitch, modelData.roll)
 
   --filling and spark coloring color
-  local r, g, b = (modelData and modelData.fR) or 1, (modelData and modelData.fG) or 0, (modelData and modelData.fB) or 0
+  local r,g,b = 1,0,0
+  if modelData.fillColor then    
+    local color = CreateColorFromHexString(modelData.fillColor)
+    r,g,b = color:GetRGB()
+  else
+    r,g,b = modelData.fR or 1, modelData.fG or 0, modelData.fB or 0
+  end
   self.FillingStatusBar:SetStatusBarColor(r, g, b)
   self.OverlayFrame.SparkTexture:SetVertexColor(r, g, b)
 
-  --setup actor and camera
-  local camera = scene:GetActiveCamera()
-  
-  if not actor or not camera then return end
-  --calculate position and yaw/pitch values from slider
-  local slideX        = ((modelData and modelData.sX) or 0) * TRANS_SCALE
-  local slideY        = ((modelData and modelData.sY) or 0) * ZOOM_SCALE
-  local slideZ        = ((modelData and modelData.sZ) or 0) * TRANS_SCALE
-  local slideYaw      = ((modelData and modelData.sYaw) or 0) * ROT_SCALE
-  local slidePitch    = ((modelData and modelData.sPitch) or 0) * ROT_SCALE
-  local cosYaw, sinYaw = mcos(slideYaw), msin(slideYaw)
-  -- x, y, z
-  actor:SetPosition((slideY * cosYaw) - (slideX * sinYaw), (slideY * sinYaw) + (slideX * cosYaw), slideZ)
-  -- yaw and pitch
-  camera:SetYaw(slideYaw)
-  camera:SetPitch(slidePitch)
-
-  camera:UpdateCameraOrientationAndPositionZork()
-  
 end
 
 -- rModelOrbFillingMixin:OnLoad

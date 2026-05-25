@@ -1,6 +1,8 @@
 local A, L = ...
 
-L.modelData = {
+local function LoadDBDefaults()
+  return {
+modelData = {
 [5975158] = {
 ["sZ"] = -20.531982421875,
 ["sY"] = 0,
@@ -2601,4 +2603,21 @@ L.modelData = {
 ["fR"] = 0.09019608050584793,
 ["tag"] = "lightning,orb",
 },
+},
+["DB_VERSION"] = L.dbversion,
 }
+
+end
+
+-- LoadDB
+local function LoadDB()
+  -- set saved variables
+  rModelOrbTemplate_DB = rModelOrbTemplate_DB or LoadDBDefaults()
+  if not rModelOrbTemplate_DB["DB_VERSION"] or rModelOrbTemplate_DB["DB_VERSION"] < L.dbversion then
+    rModelOrbTemplate_DB = LoadDBDefaults()
+    print(L.name, "loading new db defaults")
+  end
+  L.DB = rModelOrbTemplate_DB
+  print(L.name, "loading db version", L.DB["DB_VERSION"])
+end
+L.F.LoadDB = LoadDB

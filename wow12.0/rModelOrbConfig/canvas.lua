@@ -25,15 +25,14 @@ end
 local function UpdateDisplayIndex(orb, displayIndex)
   if sortedModels[displayIndex] then
     orb:Show()
-    orb:LoadModelDataByID(sortedModels[displayIndex].id)
+    --load model into scene with mouse enabled
+    orb:LoadModelDataByID(sortedModels[displayIndex].id, true)
     orb.modelID = sortedModels[displayIndex].id
     orb.title:SetText(sortedModels[displayIndex].name)
-    orb:EnableMouse(true)
   else
     orb.templateName = nil
     orb.title:SetText("")
     orb.modelID = nil
-    orb:EnableMouse(false)
   end
 end
 
@@ -42,12 +41,11 @@ local function CreateModel(parent, id)
 
   local orb = CreateFrame("Frame", nil, parent, "rModelOrbTemplate")
 
+  --[[
   orb:SetScript("OnMouseUp", function(self, button)
     if button == "LeftButton" then
       L.S.modelIDSetting:SetValue(orb.modelID)
       parent:Close()
-    else
-      return
     end
   end)
 
@@ -59,6 +57,7 @@ local function CreateModel(parent, id)
   orb:SetScript("OnLeave", function(self)
     GameTooltip:Hide()
   end)
+  ]]
 
   orb.frameId = id
   -- model title

@@ -4,8 +4,12 @@
 ## Author: zork
 ## Version: 12.1
 ## Category: rMods
+## SavedVariables: rModelOrbTemplate_DB
 ## IconTexture: Interface\AddOns\rModelOrbTemplate\assets\logo-64
+## X-DB-Version: 2
 
-modelData.lua
-cameramixins.lua
+init.lua
+db.lua
+ZorkCameraMixin.lua
 rModelOrbTemplate.xml
+events.lua

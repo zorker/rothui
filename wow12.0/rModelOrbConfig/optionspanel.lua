@@ -26,6 +26,7 @@ local function RegisterOptionsPanel()
     L.previewOrb.FillingStatusBar:SetFrameLevel(L.previewOrb:GetFrameLevel()+1)
     L.previewOrb.ClipFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+2)
     L.previewOrb.OverlayFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+3)
+    --[[
     --mouse actions
     L.previewOrb:EnableMouse(true)
     --OnMouseUp
@@ -45,7 +46,8 @@ local function RegisterOptionsPanel()
     --OnLeave
     L.previewOrb:SetScript("OnLeave", function(self)
       GameTooltip:Hide()
-    end)    
+    end)
+    ]]    
   end
 
   function rModelOrbConfigTemplateMixin:OnShow() 
@@ -62,8 +64,8 @@ local function RegisterOptionsPanel()
   function rModelOrbConfigTemplateMixin:Init(initializer)
     --get initializer data object
     local data = initializer:GetData()
-    --LoadModelDataByID
-    L.previewOrb:LoadModelDataByID(data.setting:GetValue())
+    -- load model into scene with mouse enabled
+    L.previewOrb:LoadModelDataByID(data.setting:GetValue(), true)
     --set statusbar texture
     L.previewOrb.FillingStatusBar:SetStatusBarTexture(L.mediaFolder..L.S.fillTextureSetting:GetValue())
     --set fill value
@@ -101,7 +103,8 @@ local function RegisterOptionsPanel()
   L.S.modelIDSetting = modelIDSetting
 
   modelIDSetting:SetValueChangedCallback(function(setting, value)
-    L.previewOrb:LoadModelDataByID(value)
+    -- load model into scene with mouse enabled
+    L.previewOrb:LoadModelDataByID(value, true)
     --change the fillColorSetting to the filling color that is preset by model id
     local r,g,b = L.previewOrb.FillingStatusBar:GetStatusBarColor()
     local color = CreateColor(r,g,b)

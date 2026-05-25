@@ -12,7 +12,8 @@ local function UpdateOrbTemplate(orb, templateName)
   local color = CreateColorFromHexString(template.fillColor)
   local r,g,b = color:GetRGB()
 
-  orb:LoadModelDataByID(template.modelID)
+  -- load model into scene WITHOUT mouse enabled
+  orb:LoadModelDataByID(template.modelID, false)
   orb.FillingStatusBar:SetStatusBarTexture(template.fillTexture)
   orb.FillingStatusBar:SetStatusBarColor(r,g,b)
   orb.OverlayFrame.SparkTexture:SetVertexColor(r,g,b,template.splitAlpha)

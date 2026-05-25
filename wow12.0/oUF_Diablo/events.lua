@@ -1,5 +1,8 @@
 local A, L = ...
 
+--maybe?
+--EventUtil.ContinueOnAddOnLoaded(L.name, function()
+
 L.eventFrame:RegisterEvent("ADDON_LOADED")
 L.eventFrame:SetScript("OnEvent", function(_, event, ...)
   if event == "ADDON_LOADED" then

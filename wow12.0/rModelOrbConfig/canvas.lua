@@ -27,9 +27,12 @@ local function UpdateDisplayIndex(orb, displayIndex)
     orb:Show()
     --load model into scene with mouse enabled
     orb:LoadModelDataByID(sortedModels[displayIndex].id, true)
+    orb.ClipFrame.ModelFrame:SetScript("OnEnter", nil)
+    orb.ClipFrame.ModelFrame:SetScript("OnLeave", nil)
     orb.modelID = sortedModels[displayIndex].id
     orb.title:SetText(sortedModels[displayIndex].name)
   else
+    orb:Hide()
     orb.templateName = nil
     orb.title:SetText("")
     orb.modelID = nil
@@ -41,23 +44,23 @@ local function CreateModel(parent, id)
 
   local orb = CreateFrame("Frame", nil, parent, "rModelOrbTemplate")
 
-  --[[
-  orb:SetScript("OnMouseUp", function(self, button)
-    if button == "LeftButton" then
-      L.S.modelIDSetting:SetValue(orb.modelID)
-      parent:Close()
-    end
+  --copyButton
+  orb.copyButton = CreateFrame("Button", nil, orb, "UIPanelButtonTemplate")
+  orb.copyButton:SetSize(24, 24)
+  orb.copyButton:SetPoint("TOPLEFT", 20, -20)
+  orb.copyButton:SetText("|TInterface\\Buttons\\UI-GuildButton-PublicNote-Up:14:14:0:0|t")
+  orb.copyButton:SetScript("OnClick", function(self)
+    L.S.modelIDSetting:SetValue(self:GetParent().modelID)
+    self:GetParent():GetParent():Close()
   end)
-
-  orb:SetScript("OnEnter", function(self)
-    GameTooltip:SetOwner(self, "ANCHOR_CURSOR", 0, 5)
-    GameTooltip:AddLine("Click to use this model.", 1, 1, 1, 1, 1, 1)
+  orb.copyButton:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_BOTTOM", 0, -5)
+    GameTooltip:AddLine("Click to use this model.", 1, 1, 0, 1, 1, 1)
     GameTooltip:Show()
   end)
-  orb:SetScript("OnLeave", function(self)
+  orb.copyButton:SetScript("OnLeave", function(self)
     GameTooltip:Hide()
   end)
-  ]]
 
   orb.frameId = id
   -- model title

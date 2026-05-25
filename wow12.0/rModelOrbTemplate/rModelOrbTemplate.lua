@@ -187,7 +187,7 @@ local function InitScene(scene, enableMouse)
     scene:SetScript("OnMouseWheel", scene.OnMouseWheel)
     --OnEnter
     scene:SetScript("OnEnter", function(self)
-      GameTooltip:SetOwner(self, "ANCHOR_BOTTOM", 0, 5)
+      GameTooltip:SetOwner(self, "ANCHOR_BOTTOM", 0, -5)
       GameTooltip:AddLine("Model adjustments.", 1, 1, 0, 1, 1, 1)
       GameTooltip:AddLine(" ")
       GameTooltip:AddLine("CTRL + any mousebutton to reset to model db defaults.", 1, 1, 1, 1, 1, 1)

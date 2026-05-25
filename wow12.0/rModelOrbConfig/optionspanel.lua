@@ -26,6 +26,10 @@ local function RegisterOptionsPanel()
     L.previewOrb.FillingStatusBar:SetFrameLevel(L.previewOrb:GetFrameLevel()+1)
     L.previewOrb.ClipFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+2)
     L.previewOrb.OverlayFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+3)
+    self.CanvasButton:SetText("Show all models")
+    self.CanvasButton:SetScript("OnClick", function(self)
+      L.canvas:Open()
+    end)
   end
 
   function rModelOrbConfigTemplateMixin:OnShow() 

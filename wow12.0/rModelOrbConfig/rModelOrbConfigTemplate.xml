@@ -9,6 +9,12 @@
           <Anchor point="CENTER" />
         </Anchors>
       </Frame>
+      <Button parentKey="CanvasButton" inherits="UIPanelButtonTemplate" text="Click Me">
+        <Size x="120" y="26" />
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeKey="$parent.OrbFrame" relativePoint="TOPLEFT" x="-30" y="0" />
+        </Anchors>
+      </Button>
     </Frames>
     <Scripts>
       <OnLoad method="OnLoad" />

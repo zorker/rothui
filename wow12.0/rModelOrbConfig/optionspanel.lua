@@ -26,28 +26,6 @@ local function RegisterOptionsPanel()
     L.previewOrb.FillingStatusBar:SetFrameLevel(L.previewOrb:GetFrameLevel()+1)
     L.previewOrb.ClipFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+2)
     L.previewOrb.OverlayFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+3)
-    --[[
-    --mouse actions
-    L.previewOrb:EnableMouse(true)
-    --OnMouseUp
-    L.previewOrb:SetScript("OnMouseUp", function(self, button)
-      if button == "LeftButton" then
-        L.canvas:Open()
-      else
-        return
-      end
-    end)
-    --OnEnter
-    L.previewOrb:SetScript("OnEnter", function(self)
-      GameTooltip:SetOwner(self, "ANCHOR_CURSOR", 0, 5)
-      GameTooltip:AddLine("Click to select a different model.", 1, 1, 1, 1, 1, 1)
-      GameTooltip:Show()
-    end)
-    --OnLeave
-    L.previewOrb:SetScript("OnLeave", function(self)
-      GameTooltip:Hide()
-    end)
-    ]]    
   end
 
   function rModelOrbConfigTemplateMixin:OnShow() 

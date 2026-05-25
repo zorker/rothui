@@ -18,7 +18,13 @@ local ZORK_CAMERA_MOUSE_MODE_ZOOM = 6
 local ZORK_CAMERA_MOUSE_PAN_HORIZONTAL = 7
 local ZORK_CAMERA_MOUSE_PAN_VERTICAL = 8
 
-local mpi = math.pi
+local ZORK_CAMERA_MIN_ZOOM_DISTANCE = 0.1
+local ZORK_CAMERA_MAX_ZOOM_DISTANCE = 100
+local ZORK_CAMERA_DEFAULT_ZOOM_DISTANCE = 15
+
+local mpi = math.pi --180°
+local mpi2 = mpi/2  --90°
+local msqrt = math.sqrt
 
 ZorkCameraMixin = CreateFromMixins(CameraBaseMixin)
 
@@ -380,7 +386,7 @@ function ZorkCameraMixin:HandleMouseMovement(mode, delta, snapToValue)
       self:SnapToTargetInterpolationYaw()
     end
   elseif mode == ZORK_CAMERA_MOUSE_MODE_PITCH_ROTATION then
-    self:SetPitch(Clamp(self:GetPitch() - delta, -mpi, mpi))
+    self:SetPitch(Clamp(self:GetPitch() - delta, -mpi2, mpi2))
     if snapToValue then
       self:SnapToTargetInterpolationPitch()
     end
@@ -414,18 +420,22 @@ function ZorkCameraMixin:HandleMouseMovement(mode, delta, snapToValue)
 end
 
 function ZorkCameraMixin:ResetDefaultInputModes()
+  --SetTarget adjustments not used, do all with panX and panY
+  --ZORK_CAMERA_MOUSE_MODE_TARGET_HORIZONTAL
+  --ZORK_CAMERA_MOUSE_MODE_TARGET_VERTICAL
+
   --left
   self:SetLeftMouseButtonXMode(ZORK_CAMERA_MOUSE_MODE_YAW_ROTATION, true)
-  self:SetLeftMouseButtonYMode(ZORK_CAMERA_MOUSE_MODE_NOTHING, true)
+  self:SetLeftMouseButtonYMode(ZORK_CAMERA_MOUSE_MODE_PITCH_ROTATION, true)
   --right 
-  self:SetRightMouseButtonXMode(ZORK_CAMERA_MOUSE_MODE_PITCH_ROTATION, true)
-  self:SetRightMouseButtonYMode(ZORK_CAMERA_MOUSE_MODE_NOTHING, true)
+  self:SetRightMouseButtonXMode(ZORK_CAMERA_MOUSE_PAN_HORIZONTAL, true)
+  self:SetRightMouseButtonYMode(ZORK_CAMERA_MOUSE_PAN_VERTICAL, true)
   --NEW: m4
-  self:SetMouse4ButtonXMode(ZORK_CAMERA_MOUSE_MODE_ROLL_ROTATION, true) --ZORK_CAMERA_MOUSE_MODE_TARGET_HORIZONTAL
-  self:SetMouse4ButtonYMode(ZORK_CAMERA_MOUSE_MODE_NOTHING, true) --ZORK_CAMERA_MOUSE_MODE_TARGET_VERTICAL
+  self:SetMouse4ButtonXMode(ZORK_CAMERA_MOUSE_MODE_NOTHING, true) 
+  self:SetMouse4ButtonYMode(ZORK_CAMERA_MOUSE_MODE_ROLL_ROTATION, true)
   --NEW: m5
-  self:SetMouse5ButtonXMode(ZORK_CAMERA_MOUSE_PAN_HORIZONTAL, true)
-  self:SetMouse5ButtonYMode(ZORK_CAMERA_MOUSE_PAN_VERTICAL)
+  self:SetMouse5ButtonXMode(ZORK_CAMERA_MOUSE_MODE_NOTHING, true)
+  self:SetMouse5ButtonYMode(ZORK_CAMERA_MOUSE_MODE_ROLL_ROTATION, true)
   --wheel
   self:SetMouseWheelMode(ZORK_CAMERA_MOUSE_MODE_ZOOM, true)
 end
@@ -438,7 +448,7 @@ function ZorkCameraMixin:SetAndRefreshValues(panX, panY, zoomDist, yaw, pitch, r
   self:SetTarget(0, 0, 0)
   self.panningXOffset = panX or 0
   self.panningYOffset = panY or 0
-  self:SetZoomDistance(zoomDist or 15)
+  self:SetZoomDistance(zoomDist or ZORK_CAMERA_DEFAULT_ZOOM_DISTANCE)
   self:SetYaw(yaw or 0)
   self:SetPitch(pitch or 0)
   self:SetRoll(roll or 0)
@@ -452,8 +462,8 @@ function ZorkCameraMixin:OnAdded() -- override
 
   self.buttonModes = {}
 
-  self:SetMinZoomDistance(1)
-  self:SetMaxZoomDistance(60)
+  self:SetMinZoomDistance(ZORK_CAMERA_MIN_ZOOM_DISTANCE)
+  self:SetMaxZoomDistance(ZORK_CAMERA_MAX_ZOOM_DISTANCE)
 
   self:SetZoomInterpolationAmount(.15)
   self:SetYawInterpolationAmount(.15)
@@ -492,15 +502,27 @@ function ZorkCameraMixin:OnUpdate(elapsed) -- override
   --left
   if self:IsLeftMouseButtonDown() then
     local deltaX, deltaY = GetScaledCursorDelta()
-    self:HandleMouseMovement(self.buttonModes.leftX,  deltaX * self:GetDeltaModifierForCameraMode(self.buttonModes.leftX), not self.buttonModes.leftXinterpolate)
-    self:HandleMouseMovement(self.buttonModes.leftY, -deltaY * self:GetDeltaModifierForCameraMode(self.buttonModes.leftY), not self.buttonModes.leftYinterpolate)
+    if IsShiftKeyDown() then
+      self:HandleMouseMovement(self.buttonModes.leftX,  deltaX * self:GetDeltaModifierForCameraMode(self.buttonModes.leftX), not self.buttonModes.leftXinterpolate)
+    elseif IsAltKeyDown() then
+      self:HandleMouseMovement(self.buttonModes.leftY, -deltaY * self:GetDeltaModifierForCameraMode(self.buttonModes.leftY), not self.buttonModes.leftYinterpolate)
+    else
+      self:HandleMouseMovement(self.buttonModes.leftX,  deltaX * self:GetDeltaModifierForCameraMode(self.buttonModes.leftX), not self.buttonModes.leftXinterpolate)
+      self:HandleMouseMovement(self.buttonModes.leftY, -deltaY * self:GetDeltaModifierForCameraMode(self.buttonModes.leftY), not self.buttonModes.leftYinterpolate)
+    end
   end
 
   --right
   if self:IsRightMouseButtonDown() then
     local deltaX, deltaY = GetScaledCursorDelta()
-    self:HandleMouseMovement(self.buttonModes.rightX,  deltaX * self:GetDeltaModifierForCameraMode(self.buttonModes.rightX), not self.buttonModes.rightXinterpolate)
-    self:HandleMouseMovement(self.buttonModes.rightY, -deltaY * self:GetDeltaModifierForCameraMode(self.buttonModes.rightY), not self.buttonModes.rightYinterpolate)
+    if IsShiftKeyDown() then
+      self:HandleMouseMovement(self.buttonModes.rightX,  deltaX * self:GetDeltaModifierForCameraMode(self.buttonModes.rightX), not self.buttonModes.rightXinterpolate)
+    elseif IsAltKeyDown() then
+      self:HandleMouseMovement(self.buttonModes.rightY, -deltaY * self:GetDeltaModifierForCameraMode(self.buttonModes.rightY), not self.buttonModes.rightYinterpolate)
+    else
+      self:HandleMouseMovement(self.buttonModes.rightX,  deltaX * self:GetDeltaModifierForCameraMode(self.buttonModes.rightX), not self.buttonModes.rightXinterpolate)
+      self:HandleMouseMovement(self.buttonModes.rightY, -deltaY * self:GetDeltaModifierForCameraMode(self.buttonModes.rightY), not self.buttonModes.rightYinterpolate)
+    end
   end
 
   --NEW: m4
@@ -558,7 +580,7 @@ function ZorkCameraMixin:UpdateCameraOrientationAndPosition()
 
   local width = 256
   local height = 256
-  local scaleFactor = (width ~= 0 and height ~= 0) and math.sqrt(width * width + height * height) or 1
+  local scaleFactor = (width ~= 0 and height ~= 0) and msqrt(width * width + height * height) or 1
   local zoomFactor = 1
   if zoomDistance > 1 then
     zoomFactor = zoomDistance - (1 / (zoomDistance * zoomDistance * zoomDistance))
@@ -593,6 +615,12 @@ function ZorkCameraMixin:CalculatePositionByDistanceFromTarget(targetX, targetY,
 end
 
 function ZorkCameraMixin:OnMouseWheel(delta) -- override
+  if IsShiftKeyDown() then
+    delta = delta * 10
+  end
+  if IsAltKeyDown() then
+    delta = delta / 10
+  end
   self:HandleMouseMovement(self.buttonModes.wheel, delta * self:GetDeltaModifierForCameraMode(self.buttonModes.wheel), not self.buttonModes.wheelInterpolate)
   self:SnapAllInterpolatedValues()
   self:UpdateCameraOrientationAndPosition()

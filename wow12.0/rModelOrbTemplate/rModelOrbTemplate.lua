@@ -5,7 +5,7 @@ local A, L = ...
 -------------------------------------------------
 
 local TRANS_SCALE, ZOOM_SCALE, ROT_SCALE = 0.02, 0.02, 0.0174
-local mpi, msin, mcos = math.pi, math.sin, math.cos
+local mpi, msin, mcos, mdeg = math.pi, math.sin, math.cos, math.deg
 
 rModelOrbTemplateMixin = {}
 rModelOrbFillingMixin = {}
@@ -64,6 +64,8 @@ local function SaveSceneData(scene)
 
   orb:SaveModelDataByID(id, data)
 
+  scene:UpdateDebugText()
+
 end
 
 local function InitScene(scene, enableMouse)
@@ -77,12 +79,23 @@ local function InitScene(scene, enableMouse)
     scene:SetScript("OnUpdate", nil)
   end
 
+  function scene:UpdateDebugText()
+    local yt = string.format("Y %.1f°", mdeg(self.activeCamera:GetYaw() or 0))
+    local pt = string.format("P %.1f°", mdeg(self.activeCamera:GetPitch() or 0))
+    local rt = string.format("R %.1f°", mdeg(self.activeCamera:GetRoll() or 0))
+    local zt = string.format("Z %.2f", self.activeCamera:GetZoomDistance() or 15)
+    local x = string.format("x %.1f", self.activeCamera.panningXOffset or 0)
+    local y = string.format("y %.1f", self.activeCamera.panningYOffset or 0)
+    self.debugText:SetText(yt.." "..pt.." "..rt.." "..zt.." "..x.." "..y)
+  end
+
   -- overload scene OnUpdate
   function scene:OnUpdate(elapsed)
     if self.activeCamera then
       -- calls ZorkCameraMixin:OnUpdate
       self.activeCamera:OnUpdate(elapsed)
     end
+    self:UpdateDebugText()
   end
 
   function scene:IsLeftMouseButtonDown()
@@ -119,7 +132,6 @@ local function InitScene(scene, enableMouse)
       --will trigger CameraBaseMixin:OnMouseDown
       self.activeCamera:OnMouseDown(button)
       self:SetScript("OnUpdate", self.OnUpdate)
-      --self:SetScript("OnUpdate", self.activeCamera.OnUpdate)
     end
   end
 
@@ -159,11 +171,43 @@ local function InitScene(scene, enableMouse)
 
   -- by default do not activate mouse handling
   if enableMouse == true then
+    scene.debugText = scene:CreateFontString(nil, "OVERLAY", "SystemFont_Tiny")
+    scene.debugText:SetPoint("TOP")
+    scene.debugText:SetAlpha(0.5)
     scene:EnableMouse(true)
     scene:EnableMouseWheel(true)
     scene:SetScript("OnMouseDown", scene.OnMouseDown)
     scene:SetScript("OnMouseUp", scene.OnMouseUp)
     scene:SetScript("OnMouseWheel", scene.OnMouseWheel)
+    --OnEnter
+    scene:SetScript("OnEnter", function(self)
+      GameTooltip:SetOwner(self, "ANCHOR_BOTTOM", 0, 5)
+      GameTooltip:AddLine("Model adjustments.", 1, 1, 0, 1, 1, 1)
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine("CTRL + any mousebutton to reset to model db defaults.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine("CTRL+SHIFT+ALT + any mousebutton to reset to camera zero defaults.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine("Left Mouse and drag x-axis for camera yaw -180° to 180°.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine("Left Mouse and drag y-axis for camera pitch -90° to 90°.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine("+ SHIFT to only use x-axis values.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine("+ ALT to only use y-axis values.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine("Right Mouse and drag to move target.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine("+ SHIFT to only use x-axis values.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine("+ ALT to only use y-axis values.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine("Mouse 4 or Mouse 5 and drag for camera roll.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine("Mousewheel for zoom.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine("+ SHIFT to increase zoom speed.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:AddLine("+ ALT to decrease zoom speed.", 1, 1, 1, 1, 1, 1)
+      GameTooltip:Show()
+    end)
+    --OnLeave
+    scene:SetScript("OnLeave", function(self)
+      GameTooltip:Hide()
+    end)
   else
     scene:EnableMouse(false)
     scene:EnableMouseWheel(false)

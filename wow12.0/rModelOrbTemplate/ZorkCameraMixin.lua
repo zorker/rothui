@@ -441,7 +441,7 @@ function ZorkCameraMixin:ResetDefaultInputModes()
 end
 
 function ZorkCameraMixin:OnRemoved()
-  print("OnRemoved")
+  --print("OnRemoved")
 end
 
 function ZorkCameraMixin:SetAndRefreshValues(panX, panY, zoomDist, yaw, pitch, roll)

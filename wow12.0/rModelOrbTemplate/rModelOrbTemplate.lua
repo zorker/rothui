@@ -31,7 +31,7 @@ function rModelOrbTemplateMixin:GetModelDataByID(id)
 end
 
 function rModelOrbTemplateMixin:SaveModelDataByID(id, data)
-  print(L.name, "Saving data for id: "..id)
+  --print(L.name, "Saving data for id: "..id)
   L.DB.modelData[id] = data
 end
 
@@ -153,9 +153,15 @@ local function InitScene(scene, enableMouse)
       --current no overload on ZorkCameraMixin for OnMouseUp
       --will trigger CameraBaseMixin:OnMouseUp
       --will reset model values if CTRL key is down while OnMouseUp
-      if IsControlKeyDown() then
+      if IsControlKeyDown() and IsShiftKeyDown() and IsAltKeyDown() then
         self.activeCamera:SetAndRefreshValues()
-        print(L.name, "Reseting data for id: "..self.modelFileID)
+        print(L.name, "Reseting data for id: "..self.modelFileID.." to camera zero values.")
+      elseif IsControlKeyDown() then
+        local fullDefaultData = L.F.LoadDBDefaults()
+        local modelData = fullDefaultData["modelData"][scene.modelFileID]
+        if not modelData then return end
+        self.activeCamera:SetAndRefreshValues(modelData.panX, modelData.panY, modelData.zoomDist, modelData.yaw, modelData.pitch, modelData.roll)
+        print(L.name, "Reseting data for id: "..self.modelFileID.." to model db default values.")
       end
     end
     SaveSceneData(scene)

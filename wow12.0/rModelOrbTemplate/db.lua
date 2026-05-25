@@ -2432,8 +2432,8 @@ local function LoadDBDefaults()
 },
 ["DB_VERSION"] = L.dbversion,
 }
-
 end
+L.F.LoadDBDefaults = LoadDBDefaults
 
 -- LoadDB
 local function LoadDB()

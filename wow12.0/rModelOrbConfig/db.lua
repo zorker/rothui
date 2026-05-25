@@ -14,6 +14,20 @@ local function LoadDBDefaults()
       showDebuffGlow = false,
     },
     presetTemplates = {
+      ["_OTHER3"] = {
+      ["modelID"] = 530079,
+      ["modelAlpha"] = 1,
+      ["splitAlpha"] = 1,
+      ["fillColor"] = "ffed9f00",
+      ["fillTexture"] = "orb_filling16",
+      },
+      ["_OTHER2"] = {
+      ["modelID"] = 4544400,
+      ["modelAlpha"] = 1,
+      ["splitAlpha"] = 1,
+      ["fillColor"] = "ffd74200",
+      ["fillTexture"] = "orb_filling16",
+      },
       ["_CLASS_WARRIOR"] = {
       ["modelID"] = 524767,
       ["modelAlpha"] = 1,

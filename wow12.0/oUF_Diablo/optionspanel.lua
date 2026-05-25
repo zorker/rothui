@@ -19,13 +19,13 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local playerScaleSetting = Settings.RegisterAddOnSetting(
-      category, 
-      L.name.."SettingsPlayerScale", 
-      "scale",
-      L.DB.settings.player,
-      Settings.VarType.Number, 
-      "Scale",
-      1
+    category, 
+    L.name.."SettingsPlayerScale", 
+    "scale",
+    L.DB.settings.player,
+    Settings.VarType.Number, 
+    "Scale",
+    1
   )
   L.S.playerScaleSetting = playerScaleSetting
 
@@ -44,13 +44,13 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local lockPlayerFrameSetting = Settings.RegisterAddOnSetting(
-      category, 
-      L.name.."SettingsLockPlayerFrame", 
-      "lockPlayerFrame",
-      L.DB.settings.player,
-      Settings.VarType.Boolean, 
-      "Lock health orb",
-      true
+    category, 
+    L.name.."SettingsLockPlayerFrame", 
+    "lockPlayerFrame",
+    L.DB.settings.player,
+    Settings.VarType.Boolean, 
+    "Lock health orb",
+    true
   )
   L.S.lockPlayerFrameSetting = lockPlayerFrameSetting
 
@@ -71,13 +71,13 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local lockPlayerPowerFrameSetting = Settings.RegisterAddOnSetting(
-      category, 
-      L.name.."SettingsLockPlayerPowerFrame", 
-      "lockPlayerPowerFrame",
-      L.DB.settings.player,
-      Settings.VarType.Boolean, 
-      "Lock power orb",
-      true
+    category, 
+    L.name.."SettingsLockPlayerPowerFrame", 
+    "lockPlayerPowerFrame",
+    L.DB.settings.player,
+    Settings.VarType.Boolean, 
+    "Lock power orb",
+    true
   )
   L.S.lockPlayerPowerFrameSetting = lockPlayerPowerFrameSetting
 
@@ -100,22 +100,21 @@ local function RegisterOptionsPanel()
   local subCategoryOrbTemplate, subLayoutOrbTemplate = Settings.RegisterVerticalLayoutSubcategory(category, L.name.."OrbTemplates")
   subCategoryOrbTemplate:SetName("Orb templates")
 
-  ---------------------------------------------------------------------
-  -- Drowndowns
+---------------------------------------------------------------------
+  -- Dropdowns
   ---------------------------------------------------------------------
 
   local function AddOrbTemplateDropdown(name, callback, options)
-
+    
     local setting = Settings.RegisterAddOnSetting(
-        category, 
-        L.name.."SettingsOrbTemplate"..name, 
-        name,
-        L.DB.settings.orbModelTemplates,
-        Settings.VarType.String, 
-        name,
-        L.DB_DEFAULTS.settings.orbModelTemplates.name or "_OTHER"
+      category, 
+      L.name.."SettingsOrbTemplate"..name, 
+      name,
+      L.DB.settings.orbModelTemplates,
+      Settings.VarType.String, 
+      name,
+      L.DB_DEFAULTS.settings.orbModelTemplates.name or "_OTHER"
     )
-
     setting:SetValueChangedCallback(function(setting, value)
       callback(name, setting, value)
     end)
@@ -126,18 +125,17 @@ local function RegisterOptionsPanel()
 
   end
 
-  local sortedOrbModelConfigTemplateKeys = {}
-  for key in pairs(L.DB_ORB_CONFIG.presetTemplates) do
-    table.insert(sortedOrbModelConfigTemplateKeys, key)
-  end
-  for key in pairs(L.DB_ORB_CONFIG.userTemplates) do
-    table.insert(sortedOrbModelConfigTemplateKeys, key)
-  end
-  table.sort(sortedOrbModelConfigTemplateKeys)
-
-  local options = function()
+  local options = function()    
     local container = Settings.CreateControlTextContainer()
-    for _, key in pairs(sortedOrbModelConfigTemplateKeys) do
+    local sortedOrbModelConfigTemplateKeys = {}
+    for key in pairs(L.DB_ORB_CONFIG.presetTemplates) do
+      table.insert(sortedOrbModelConfigTemplateKeys, key)
+    end
+    for key in pairs(L.DB_ORB_CONFIG.userTemplates) do
+      table.insert(sortedOrbModelConfigTemplateKeys, key)
+    end
+    table.sort(sortedOrbModelConfigTemplateKeys)
+    for _, key in ipairs(sortedOrbModelConfigTemplateKeys) do
       container:Add(key, key)
     end    
     return container:GetData()
@@ -147,12 +145,8 @@ local function RegisterOptionsPanel()
 
   local callback = function(name, setting, value)
     --print("callback", name, setting, value)
-    if L.playerFrame and L.playerFrame.Health and L.playerFrame.Health.ForceUpdate then
-      L.playerFrame.Health:ForceUpdate()
-    end
-    if L.playerFrame and L.playerFrame.Power and L.playerFrame.Power.ForceUpdate then
-      L.playerFrame.Power:ForceUpdate()
-    end
+    L.playerFrame.Health:ForceUpdate()
+    L.playerFrame.Power:ForceUpdate()
   end
 
   local sortedOrbModelTemplateKeys = {}
@@ -164,6 +158,18 @@ local function RegisterOptionsPanel()
   for _, key in pairs(sortedOrbModelTemplateKeys) do
     L.S.orbModelTemplateDropdowns[key] = AddOrbTemplateDropdown(key, callback, options)
   end
+
+  ---------------------------------------------------------------------
+  -- force ui refresh on dropdowns
+  ---------------------------------------------------------------------
+
+  hooksecurefunc(SettingsPanel, "SelectCategory", function(self, categoryID)
+    if (subCategoryOrbTemplate and categoryID == subCategoryOrbTemplate:GetID()) or (category and categoryID == category:GetID()) then         
+      if SettingsPanel.Layout then
+        SettingsPanel:Layout()
+      end
+    end
+  end)
 
   ---------------------------------------------------------------------
   -- Setting Panel End

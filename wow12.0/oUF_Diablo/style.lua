@@ -39,6 +39,8 @@ local function StylePlayer(self)
   healthOrb:SetPoint("CENTER")
 
   local health = CreateFrame("StatusBar", nil, self)
+  --Mixin(health, SmoothStatusBarMixin)
+  --Mixin(healthOrb.FillingStatusBar, SmoothStatusBarMixin)
   self.Health = health
   health.elementType = "health"
   health.orbFrame = healthOrb
@@ -49,6 +51,8 @@ local function StylePlayer(self)
   local powerOrb = CreateFrame("Frame", self:GetName().."PowerOrb", self, "rModelOrbTemplate")
   
   local power = CreateFrame("StatusBar", nil, self)
+  --Mixin(power, SmoothStatusBarMixin)
+  --Mixin(powerOrb.FillingStatusBar, SmoothStatusBarMixin)
   self.Power = power
   power.elementType = "power"
   power.orbFrame = powerOrb
@@ -79,7 +83,8 @@ local function StylePlayer(self)
   end
 
   function health:PostUpdate(unit, cur, max, lossPerc)
-    self.orbFrame.FillingStatusBar:SetValue(UnitHealthPercent(unit,true))
+    --self.orbFrame.FillingStatusBar:SetSmoothedValue(UnitHealthPercent(unit,true))
+    self.orbFrame.FillingStatusBar:SetValue(UnitHealthPercent(unit,true), Enum.StatusBarInterpolation.ExponentialEaseOut)
   end
 
   function power:UpdateColor(event, unit)
@@ -96,8 +101,20 @@ local function StylePlayer(self)
   end
 
   function power:PostUpdate(unit, cur, min, max)
-    self.orbFrame.FillingStatusBar:SetValue(UnitPowerPercent(unit, UnitPowerType(unit), true))
+    --self.orbFrame.FillingStatusBar:SetSmoothedValue(UnitPowerPercent(unit, UnitPowerType(unit), true))
+    self.orbFrame.FillingStatusBar:SetValue(UnitPowerPercent(unit, UnitPowerType(unit), true), Enum.StatusBarInterpolation.ExponentialEaseOut)
   end
+
+  --menu
+  self:RegisterForClicks("AnyUp")
+  self.Menu = function(self)
+    if OpenContextMenu then
+      OpenContextMenu(self, { unit = self.unit, name = self.name, })
+    else
+      UnitPopup_OpenMenu(self.unit)
+    end
+  end
+  self:SetAttribute("*type2", "togglemenu")
 
   --textures
   local texDemon = healthOrb.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)

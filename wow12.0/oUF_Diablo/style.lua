@@ -2,11 +2,15 @@ local A, L = ...
 
 local mpi, msin, mcos, floor = math.pi, math.sin, math.cos, floor
 
-local playerFrameScaleFactor = 0.9
+L.playerFrame = nil
+L.movePlayerFrame = nil
+L.movePlayerPowerFrame = nil
 
-local function UpdateOrbTemplate(orb, templateName)
+local function UpdateOrbTemplate(orb, templateKeyName)
 
-  local template = L.ORB_CONFIG_DB.presetTemplates[templateName] or L.ORB_CONFIG_DB.userTemplates[templateName] or L.ORB_CONFIG_DB.presetTemplates['_OTHER'] or nil
+  local templateName = L.S.orbModelTemplateDropdowns[templateKeyName]:GetValue()
+
+  local template = L.DB_ORB_CONFIG.presetTemplates[templateName] or L.DB_ORB_CONFIG.userTemplates[templateName] or L.DB_ORB_CONFIG.presetTemplates['_OTHER'] or nil
   if not template then return end
 
   local color = CreateColorFromHexString(template.fillColor)
@@ -25,8 +29,10 @@ local function StylePlayer(self)
 
   self:SetSize(256, 256)
 
-  self:SetScale(playerFrameScaleFactor)
-  self:SetPoint("BOTTOM", -400/playerFrameScaleFactor, -15/playerFrameScaleFactor)
+  L.playerFrame = self
+
+  self:SetScale(L.S.playerScaleSetting:GetValue())
+  
   self.elementType = "base"
 
   local healthOrb = CreateFrame("Frame", nil, self, "rModelOrbTemplate")
@@ -40,9 +46,8 @@ local function StylePlayer(self)
   health.colorReaction = true
   health.colorHealth = true
 
-  local powerOrb = CreateFrame("Frame", nil, self, "rModelOrbTemplate")
-  powerOrb:SetPoint("BOTTOM", UIParent, 400/playerFrameScaleFactor, -15/playerFrameScaleFactor)
-
+  local powerOrb = CreateFrame("Frame", self:GetName().."PowerOrb", self, "rModelOrbTemplate")
+  
   local power = CreateFrame("StatusBar", nil, self)
   self.Power = power
   power.elementType = "power"
@@ -52,25 +57,25 @@ local function StylePlayer(self)
   function health:UpdateColor(event, unit)
 	  if(not unit or self.unit ~= unit) then return end
 	  local element = self.Health
-    local templateName = nil
+    local templateKeyName = nil
     if(element.colorClass and (UnitIsPlayer(unit) or UnitInPartyIsAI(unit)))
       or (element.colorClassNPC and not (UnitIsPlayer(unit) or UnitInPartyIsAI(unit)))
       or (element.colorClassPet and UnitPlayerControlled(unit) and not UnitIsPlayer(unit)) then
       local _, class = UnitClass(unit)
-      templateName = "_CLASS_"..class
+      templateKeyName = "CLASS_"..class
     elseif(element.colorReaction and UnitReaction(unit, 'player')) then
       local reaction = UnitReaction(unit, 'player')
       if reaction >= 5 then
-        templateName = "_REACTION_FRIENDLY"
+        templateKeyName = "REACTION_FRIENDLY"
       elseif reaction >= 3 then
-        templateName = "_REACTION_NEUTRAL"
+        templateKeyName = "REACTION_NEUTRAL"
       else
-        templateName = "_REACTION_HOSTILE"
+        templateKeyName = "REACTION_HOSTILE"
       end
     else
-      templateName = "_OTHER"
+      templateKeyName = "OTHER"
     end
-    UpdateOrbTemplate(element.orbFrame, templateName)
+    UpdateOrbTemplate(element.orbFrame, templateKeyName)
   end
 
   function health:PostUpdate(unit, cur, max, lossPerc)
@@ -81,13 +86,13 @@ local function StylePlayer(self)
 	  if(not unit or self.unit ~= unit) then return end
 	  local element = self.Power
     local powerID, powerType = UnitPowerType(unit)
-    local template = nil
+    local templateKeyName = nil
     if powerType then
-      template = "_POWER_"..powerType
+      templateKeyName = "POWER_"..powerType
     else
-      template = "_OTHER"
+      templateKeyName = "OTHER"
     end
-    UpdateOrbTemplate(element.orbFrame, template)
+    UpdateOrbTemplate(element.orbFrame, templateKeyName)
   end
 
   function power:PostUpdate(unit, cur, min, max)
@@ -95,19 +100,19 @@ local function StylePlayer(self)
   end
 
   --textures
-  local texDemon = health.orbFrame.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
+  local texDemon = healthOrb.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
   texDemon:SetSize(512,256)
-  texDemon:SetPoint("BOTTOMRIGHT", health.orbFrame.OverlayFrame, "BOTTOMLEFT", 380, 0)
+  texDemon:SetPoint("BOTTOMRIGHT", healthOrb.OverlayFrame, "BOTTOMLEFT", 370, 10)
   texDemon:SetTexture(L.mediaFolder.."d3_demon")
 
-  local texLeftEdge = health.orbFrame.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
+  local texLeftEdge = healthOrb.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
   texLeftEdge:SetSize(128,64)
-  texLeftEdge:SetPoint("BOTTOMLEFT", health.orbFrame.OverlayFrame, "BOTTOMRIGHT", -100, 15)
+  texLeftEdge:SetPoint("BOTTOMLEFT", healthOrb.OverlayFrame, "BOTTOMRIGHT", -100, 15)
   texLeftEdge:SetTexture(L.mediaFolder.."d3_left")
 
   local texAngel = power.orbFrame.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
   texAngel:SetSize(512,256)
-  texAngel:SetPoint("BOTTOMLEFT", power.orbFrame.OverlayFrame, "BOTTOMRIGHT", -380, 0)
+  texAngel:SetPoint("BOTTOMLEFT", power.orbFrame.OverlayFrame, "BOTTOMRIGHT", -370, 10)
   texAngel:SetTexture(L.mediaFolder.."d3_angel")
 
   local texRightEdge = power.orbFrame.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
@@ -115,6 +120,95 @@ local function StylePlayer(self)
   texRightEdge:SetPoint("BOTTOMRIGHT", power.orbFrame.OverlayFrame, "BOTTOMLEFT", 100, 15)
   texRightEdge:SetTexture(L.mediaFolder.."d3_right")
 
+  -------------------------------------------
+  -- movePlayerFrame
+  -------------------------------------------
+
+  local movePlayerFrame = CreateFrame("Frame", nil, UIParent)
+  L.movePlayerFrame = movePlayerFrame
+  movePlayerFrame:SetFrameLevel(healthOrb.OverlayFrame:GetFrameLevel()+1)
+  movePlayerFrame:SetSize(256, 256)
+  movePlayerFrame:SetScale(L.S.playerScaleSetting:GetValue())
+  movePlayerFrame:ClearAllPoints()
+  movePlayerFrame:SetPoint(L.DB.playerPosition.point, UIParent, L.DB.playerPosition.relativePoint, L.DB.playerPosition.xOfs, L.DB.playerPosition.yOfs)
+  
+  --move the player frame to center of the mover
+  self:SetPoint("CENTER", movePlayerFrame, "CENTER", 0, 0)
+
+  movePlayerFrame.bg = movePlayerFrame:CreateTexture(nil, "BACKGROUND")
+  movePlayerFrame.bg:SetAllPoints()
+  movePlayerFrame.bg:SetColorTexture(0, 1, 1, 0.5)
+
+  if L.S.lockPlayerFrameSetting:GetValue() == true then
+    movePlayerFrame:EnableMouse(false)
+    movePlayerFrame.bg:Hide()
+  else
+    movePlayerFrame:EnableMouse(true)
+    movePlayerFrame.bg:Show()
+  end
+
+  movePlayerFrame:SetMovable(true)
+  movePlayerFrame:SetClampedToScreen(true)
+  movePlayerFrame:SetClampRectInsets(50, -50, -50, 50)
+  movePlayerFrame:RegisterForDrag("LeftButton")
+  movePlayerFrame:SetScript("OnDragStart", function(self)
+    self:StartMoving()
+  end)
+  movePlayerFrame:SetScript("OnDragStop", function(self)
+    self:StopMovingOrSizing()
+    local point, relativeTo, relativePoint, xOfs, yOfs = self:GetPoint()
+    L.DB.playerPosition = {
+      point = point, 
+      relativePoint  = relativePoint, 
+      xOfs = xOfs,
+      yOfs = yOfs
+    }
+  end)
+
+  -------------------------------------------
+  -- movePlayerPowerFrame
+  -------------------------------------------
+
+  local movePlayerPowerFrame = CreateFrame("Frame", nil, UIParent)
+  L.movePlayerPowerFrame = movePlayerPowerFrame
+  movePlayerPowerFrame:SetFrameLevel(powerOrb.OverlayFrame:GetFrameLevel()+1)
+  movePlayerPowerFrame:SetSize(256, 256)
+  movePlayerPowerFrame:SetScale(L.S.playerScaleSetting:GetValue())
+  movePlayerPowerFrame:ClearAllPoints()
+  movePlayerPowerFrame:SetPoint(L.DB.playerPowerPosition.point, UIParent, L.DB.playerPowerPosition.relativePoint, L.DB.playerPowerPosition.xOfs, L.DB.playerPowerPosition.yOfs)
+  
+  --move the player frame to center of the mover
+  powerOrb:SetPoint("CENTER", movePlayerPowerFrame, "CENTER", 0, 0)
+
+  movePlayerPowerFrame.bg = movePlayerPowerFrame:CreateTexture(nil, "BACKGROUND")
+  movePlayerPowerFrame.bg:SetAllPoints()
+  movePlayerPowerFrame.bg:SetColorTexture(0, 1, 1, 0.5)
+
+  if L.S.lockPlayerPowerFrameSetting:GetValue() == true then
+    movePlayerPowerFrame:EnableMouse(false)
+    movePlayerPowerFrame.bg:Hide()
+  else
+    movePlayerPowerFrame:EnableMouse(true)
+    movePlayerPowerFrame.bg:Show()
+  end  
+
+  movePlayerPowerFrame:SetMovable(true)
+  movePlayerPowerFrame:SetClampedToScreen(true)
+  movePlayerPowerFrame:SetClampRectInsets(50, -50, -50, 50)
+  movePlayerPowerFrame:RegisterForDrag("LeftButton")
+  movePlayerPowerFrame:SetScript("OnDragStart", function(self)
+    self:StartMoving()
+  end)
+  movePlayerPowerFrame:SetScript("OnDragStop", function(self)
+    self:StopMovingOrSizing()
+    local point, relativeTo, relativePoint, xOfs, yOfs = self:GetPoint()
+    L.DB.playerPowerPosition = {
+      point = point, 
+      relativePoint  = relativePoint, 
+      xOfs = xOfs,
+      yOfs = yOfs
+    }
+  end)
 
 end
 

@@ -7,9 +7,10 @@
 ## SavedVariables: oUF_Diablo_DB
 ## IconTexture: Interface\AddOns\oUF_Diablo\assets\logo-64
 ## RequiredDeps: oUF, rModelOrbConfig
-## X-DB-Version: 1
+## X-DB-Version: 13
 
 init.lua
 db.lua
+optionspanel.lua
 style.lua
 events.lua

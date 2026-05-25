@@ -442,6 +442,7 @@ function ZorkCameraMixin:SetAndRefreshValues(panX, panY, zoomDist, yaw, pitch, r
   self:SetYaw(yaw or 0)
   self:SetPitch(pitch or 0)
   self:SetRoll(roll or 0)
+  self:GetOwningScene():SetCameraOrientationByYawPitchRoll(yaw or 0, pitch or 0, roll or 0)
   self:SnapAllInterpolatedValues()
   self:UpdateCameraOrientationAndPosition()
 end
@@ -449,17 +450,10 @@ end
 -- "private" function
 function ZorkCameraMixin:OnAdded() -- override
 
-  print("ZorkCameraMixin2","OnAdded")
-
   self.buttonModes = {}
 
-  --local targetSpline = CreateCatmullRomSpline(3)
-  --targetSpline:AddPoint(0, 0, 0)
-  --targetSpline:AddPoint(0, 0, .5)
-  --self:SetTargetSpline(targetSpline)
-
   self:SetMinZoomDistance(1)
-  self:SetMaxZoomDistance(30)
+  self:SetMaxZoomDistance(60)
 
   self:SetZoomInterpolationAmount(.15)
   self:SetYawInterpolationAmount(.15)
@@ -480,7 +474,7 @@ function ZorkCameraMixin:GetDeltaModifierForCameraMode(mode)
   elseif mode == ZORK_CAMERA_MOUSE_MODE_ROLL_ROTATION then
     return .008
   elseif mode == ZORK_CAMERA_MOUSE_MODE_ZOOM then
-    return .008
+    return .001
   elseif mode == ZORK_CAMERA_MOUSE_MODE_TARGET_HORIZONTAL then
     return .05
   elseif mode == ZORK_CAMERA_MOUSE_MODE_TARGET_VERTICAL then

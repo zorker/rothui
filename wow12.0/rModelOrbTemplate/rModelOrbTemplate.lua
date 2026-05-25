@@ -188,8 +188,6 @@ end
 --orb:LoadModelDataByID(id)
 function rModelOrbTemplateMixin:LoadModelDataByID(id, enableMouse)
 
-  print("LoadModelDataByID", id, enableMouse)
-  
   -- load the model view settings
   local modelData = self:GetModelDataByID(id)
   if not modelData then return end
@@ -202,6 +200,9 @@ function rModelOrbTemplateMixin:LoadModelDataByID(id, enableMouse)
 
   scene.zorkActor:SetModelByFileID(id)
   scene.modelFileID = id
+
+  --print("loading", scene.modelFileID, modelData.name, string.format("%.3f", modelData.panX), string.format("%.3f", modelData.panY), string.format("%.3f", modelData.zoomDist), string.format("%.3f", modelData.yaw), string.format("%.3f", modelData.pitch), string.format("%.3f", modelData.roll))
+
   scene.activeCamera:SetAndRefreshValues(modelData.panX, modelData.panY, modelData.zoomDist, modelData.yaw, modelData.pitch, modelData.roll)
 
   --filling and spark coloring color

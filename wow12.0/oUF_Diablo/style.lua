@@ -53,8 +53,6 @@ local function StylePlayer(self)
   healthOrb.OverlayFrame:SetFrameLevel(healthOrb:GetFrameLevel()+3)
 
   local health = CreateFrame("StatusBar", nil, self)
-  --Mixin(health, SmoothStatusBarMixin)
-  --Mixin(healthOrb.FillingStatusBar, SmoothStatusBarMixin)
   self.Health = health
   health.elementType = "health"
   health.orbFrame = healthOrb
@@ -72,8 +70,6 @@ local function StylePlayer(self)
   powerOrb.OverlayFrame:SetFrameLevel(powerOrb:GetFrameLevel()+3)
 
   local power = CreateFrame("StatusBar", nil, self)
-  --Mixin(power, SmoothStatusBarMixin)
-  --Mixin(powerOrb.FillingStatusBar, SmoothStatusBarMixin)
   self.Power = power
   power.elementType = "power"
   power.orbFrame = powerOrb
@@ -112,7 +108,6 @@ local function StylePlayer(self)
   ---------------------------------------------------------------------
 
   function health:PostUpdate(unit, cur, max, lossPerc)
-    --self.orbFrame.FillingStatusBar:SetSmoothedValue(UnitHealthPercent(unit,true))
     self.orbFrame.FillingStatusBar:SetValue(UnitHealthPercent(unit,true), Enum.StatusBarInterpolation.ExponentialEaseOut)
   end
 
@@ -138,7 +133,6 @@ local function StylePlayer(self)
   ---------------------------------------------------------------------
 
   function power:PostUpdate(unit, cur, min, max)
-    --self.orbFrame.FillingStatusBar:SetSmoothedValue(UnitPowerPercent(unit, UnitPowerType(unit), true))
     self.orbFrame.FillingStatusBar:SetValue(UnitPowerPercent(unit, UnitPowerType(unit), true), Enum.StatusBarInterpolation.ExponentialEaseOut)
   end
 

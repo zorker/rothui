@@ -213,6 +213,6 @@ local function LoadDB()
     print(L.name, "loading new db defaults")
   end
   L.DB = rModelOrbConfig_DB
-  print(L.name, "loading db version", L.DB["DB_VERSION"])
+  print(L.name, L.version, "loading db version", L.DB["DB_VERSION"])
 end
 L.F.LoadDB = LoadDB

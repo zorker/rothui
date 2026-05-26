@@ -2,7 +2,7 @@
 ## Title: rModelOrbTemplate
 ## Notes: Orb Model XML Template
 ## Author: zork
-## Version: 12.1
+## Version: 12.02
 ## Category: rMods
 ## SavedVariables: rModelOrbTemplate_DB
 ## IconTexture: Interface\AddOns\rModelOrbTemplate\assets\logo-64

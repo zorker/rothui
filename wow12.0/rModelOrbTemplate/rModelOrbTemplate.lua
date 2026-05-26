@@ -4,17 +4,15 @@ local A, L = ...
 -- var
 -------------------------------------------------
 
-local TRANS_SCALE, ZOOM_SCALE, ROT_SCALE = 0.02, 0.02, 0.0174
-local mpi, msin, mcos, mdeg = math.pi, math.sin, math.cos, math.deg
+local mdeg = math.deg
 
 rModelOrbTemplateMixin = {}
 rModelOrbFillingMixin = {}
 rModelOrbClipMixin = {}
-rModelOrbSceneMixin = {}
 rModelOrbOverlayMixin = {}
 
 -------------------------------------------------
--- orb:OnLoad etc
+-- rModelOrbTemplate:OnLoad etc
 -------------------------------------------------
 
 function rModelOrbTemplateMixin:OnLoad() end
@@ -22,7 +20,7 @@ function rModelOrbTemplateMixin:OnShow() end
 function rModelOrbTemplateMixin:OnHide() end
 
 -------------------------------------------------------------
--- orb:GetAllModelData()
+-- rModelOrbTemplate:GetAllModelData()
 -------------------------------------------------------------
 
 function rModelOrbTemplateMixin:GetAllModelData()
@@ -30,7 +28,7 @@ function rModelOrbTemplateMixin:GetAllModelData()
 end
 
 -------------------------------------------------------------
--- orb:GetModelDataByID(id)
+-- rModelOrbTemplate:GetModelDataByID(id)
 -------------------------------------------------------------
 
 function rModelOrbTemplateMixin:GetModelDataByID(id)
@@ -38,7 +36,7 @@ function rModelOrbTemplateMixin:GetModelDataByID(id)
 end
 
 -------------------------------------------------------------
--- orb:SaveModelDataByID(id, data)
+-- rModelOrbTemplate:SaveModelDataByID(id, data)
 -------------------------------------------------------------
 
 function rModelOrbTemplateMixin:SaveModelDataByID(id, data)
@@ -256,21 +254,21 @@ local function InitScene(scene, enableMouse)
   --calls CameraBaseMixin:SetOwningScene -> ZorkCameraMixin:OnAdded
   --calls scene:SetActivCamera -> CameraBaseMixin:OnActivated
   --initializes the camera and positions it to look at taget 0,0,0
-  scene:AddCamera(scene.zorkCamera) 
+  scene:AddCamera(scene.zorkCamera)
 
 end
 
 -------------------------------------------------------------
--- orb:LoadModelDataByID(id, enableMouse)
+-- rModelOrbTemplate:LoadModelDataByID(id, enableMouse)
 -------------------------------------------------------------
 
 function rModelOrbTemplateMixin:LoadModelDataByID(id, enableMouse)
-  
+
   -- set reference
   local scene = self.ClipFrame.ModelFrame
   scene.orbFrame = self
 
-  -- no new modelFileID found. 
+  -- no new modelFileID found.
   if scene.modelFileID == id then return end
 
   -- load the model view settings
@@ -285,16 +283,16 @@ function rModelOrbTemplateMixin:LoadModelDataByID(id, enableMouse)
   --print("loading", scene.modelFileID, modelData.name, string.format("%.3f", modelData.panX), string.format("%.3f", modelData.panY), string.format("%.3f", modelData.zoomDist), string.format("%.3f", modelData.yaw), string.format("%.3f", modelData.pitch), string.format("%.3f", modelData.roll))
 
   scene.activeCamera:SetAndRefreshValues(modelData.panX, modelData.panY, modelData.zoomDist, modelData.yaw, modelData.pitch, modelData.roll)
-  
+
   scene:UpdateDebugText()
-  
+
   if scene.modelInfoText then
     scene.modelInfoText:SetText("model-id: "..scene.modelFileID.." | name: "..modelData.name)
   end
 
   --filling and spark coloring color
   local r,g,b = 1,0,0
-  if modelData.fillColor then    
+  if modelData.fillColor then
     local color = CreateColorFromHexString(modelData.fillColor)
     r,g,b = color:GetRGB()
   end
@@ -303,19 +301,24 @@ function rModelOrbTemplateMixin:LoadModelDataByID(id, enableMouse)
 
 end
 
--- rModelOrbFillingMixin:OnLoad
+-------------------------------------------------------------
+-- FillingStatusBar:OnLoad()
+-------------------------------------------------------------
+
 function rModelOrbFillingMixin:OnLoad()
   self:SetOrientation("VERTICAL")
   self:SetRotatesTexture(false)
   self:SetMinMaxValues(0, 1)
 end
 
--- rModelOrbFillingMixin:OnValueChanged
 function rModelOrbFillingMixin:OnValueChanged(value) end
 function rModelOrbFillingMixin:OnShow() end
 function rModelOrbFillingMixin:OnHide() end
 
--- rModelOrbClipMixin:OnLoad
+-------------------------------------------------------------
+-- ClipFrame:OnLoad()
+-------------------------------------------------------------
+
 function rModelOrbClipMixin:OnLoad()
   self:SetClipsChildren(true)
 end

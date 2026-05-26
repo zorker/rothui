@@ -2,7 +2,7 @@
 ## Title: oUF_Diablo
 ## Notes: Diablo orb player unitframes
 ## Author: zork
-## Version: 12.02
+## Version: 12.03
 ## Category: oUF
 ## SavedVariables: oUF_Diablo_DB
 ## IconTexture: Interface\AddOns\oUF_Diablo\assets\logo-64

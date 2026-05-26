@@ -8,6 +8,11 @@ L.playerFrame = nil
 L.movePlayerFrame = nil
 L.movePlayerPowerFrame = nil
 
+local curveLowHealth = C_CurveUtil.CreateColorCurve()
+curveLowHealth:SetType(Enum.LuaCurveType.Step)
+curveLowHealth:AddPoint(0.0, CreateColor(1, 0, 0, 0.85))
+curveLowHealth:AddPoint(0.31, CreateColor(1, 0, 0, 0))
+
 ---------------------------------------------------------------------
 -- UpdateOrbTemplate(orb, templateKeyName)
 ---------------------------------------------------------------------
@@ -108,7 +113,9 @@ local function StylePlayer(self)
   ---------------------------------------------------------------------
 
   function health:PostUpdate(unit, cur, max, lossPerc)
-    self.orbFrame.FillingStatusBar:SetValue(UnitHealthPercent(unit,true), Enum.StatusBarInterpolation.ExponentialEaseOut)
+    self.orbFrame.FillingStatusBar:SetValue(UnitHealthPercent(unit, true), Enum.StatusBarInterpolation.ExponentialEaseOut)
+    local color = UnitHealthPercent(unit, true, curveLowHealth)
+    self.orbFrame.OverlayFrame.LowHealthTexture:SetVertexColor(color:GetRGBA())
   end
 
   ---------------------------------------------------------------------
@@ -135,6 +142,37 @@ local function StylePlayer(self)
   function power:PostUpdate(unit, cur, min, max)
     self.orbFrame.FillingStatusBar:SetValue(UnitPowerPercent(unit, UnitPowerType(unit), true), Enum.StatusBarInterpolation.ExponentialEaseOut)
   end
+
+  ---------------------------------------------------------------------
+  -- Debuff Type Coloring
+  ---------------------------------------------------------------------
+
+  local function GetDebuffTypeColor(element, unit, data, position)
+    if data and data.dispelName then
+      return C_UnitAuras.GetAuraDispelTypeColor(unit, data.auraInstanceID, element.dispelColorCurve)
+    else
+      return nil
+    end
+  end
+
+  local function PostUpdateDebuffs(debuffs, unit)
+    local color = nil
+    for i = 1, math.min(40, #debuffs.sorted) do
+      color = GetDebuffTypeColor(debuffs, unit, debuffs.sorted[i], i)
+      if color then
+        debuffs.orbFrame.OverlayFrame.GlowTexture:SetVertexColor(color:GetRGBA())
+        break
+      end
+    end
+    if not color then
+      debuffs.orbFrame.OverlayFrame.GlowTexture:SetVertexColor(0.8, 0, 0, 0)
+    end
+  end
+
+  local debuffs = CreateFrame("Frame", nil, self)
+  debuffs.orbFrame = healthOrb
+  debuffs.PostUpdate = PostUpdateDebuffs
+  self.Debuffs = debuffs
 
   ---------------------------------------------------------------------
   -- right click menu

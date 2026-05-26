@@ -20,12 +20,14 @@ local function RegisterOptionsPanel()
 
   function rModelOrbConfigTemplateMixin:OnLoad()
     if not self.OrbFrame then return end
+    self:SetClipsChildren(true)
     --save frame reference
     L.previewOrb = self.OrbFrame
     --fix the framelevels on the options panel
     L.previewOrb.FillingStatusBar:SetFrameLevel(L.previewOrb:GetFrameLevel()+1)
     L.previewOrb.ClipFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+2)
     L.previewOrb.OverlayFrame:SetFrameLevel(L.previewOrb:GetFrameLevel()+3)
+    self.CanvasButton:SetFrameLevel(L.previewOrb:GetFrameLevel()+4)
     self.CanvasButton:SetText("Show all models")
     self.CanvasButton:SetScript("OnClick", function(self)
       L.canvas:Open()
@@ -65,10 +67,6 @@ local function RegisterOptionsPanel()
     L.S.showLowHealthSetting:SetValue(false)
     L.S.showDebuffGlowSetting:SetValue(false)
     L.S.fillValueSetting:SetValue(1)
-  end
-
-  function rModelOrbConfigTemplateMixin:GetExtent()
-    return 256
   end
 
   ---------------------------------------------------------------------

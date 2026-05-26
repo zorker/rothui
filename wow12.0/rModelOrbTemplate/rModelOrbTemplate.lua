@@ -11,9 +11,21 @@ rModelOrbFillingMixin = {}
 rModelOrbClipMixin = {}
 rModelOrbOverlayMixin = {}
 
--------------------------------------------------
+-------------------------------------------------------------
+-- rModelOrbTemplate Layout
+-------------------------------------------------------------
+
+--  |> rModelOrbTemplate(rModelOrbTemplateMixin)
+--    |> FillingStatusBar(rModelOrbFillingMixin)
+--    |> ClipFrame(rModelOrbClipMixin)
+--      |> ModelFrame(ModelSceneMixinTemplate)
+--    |> OverlayFrame(rModelOrbOverlayMixin)
+
+-- Info: ModelSceneMixinTemplate is the ModelScene Mixin from Blizzard API
+
+-------------------------------------------------------------
 -- rModelOrbTemplate:OnLoad etc
--------------------------------------------------
+-------------------------------------------------------------
 
 function rModelOrbTemplateMixin:OnLoad() end
 function rModelOrbTemplateMixin:OnShow() end

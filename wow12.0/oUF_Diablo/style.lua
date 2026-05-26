@@ -16,7 +16,7 @@ local function UpdateOrbTemplate(orb, templateKeyName)
 
   local templateName = L.S.orbModelTemplateDropdowns[templateKeyName]:GetValue()
 
-  local template = L.DB_ORB_CONFIG.presetTemplates[templateName] or L.DB_ORB_CONFIG.userTemplates[templateName] or L.DB_ORB_CONFIG.presetTemplates['_OTHER'] or nil
+  local template = L.DB_ORB_CONFIG.presetTemplates[templateName] or L.DB_ORB_CONFIG.userTemplates[templateName] or L.DB_ORB_CONFIG.presetTemplates["_OTHER"] or nil
   if not template then return end
 
   local color = CreateColorFromHexString(template.fillColor)
@@ -39,7 +39,7 @@ local function StylePlayer(self)
 
   self:SetSize(256, 256)
   L.playerFrame = self
-  self:SetScale(L.S.playerScaleSetting:GetValue())  
+  self:SetScale(L.S.playerScaleSetting:GetValue())
   self.elementType = "base"
 
   ---------------------------------------------------------------------
@@ -70,7 +70,7 @@ local function StylePlayer(self)
   powerOrb.FillingStatusBar:SetFrameLevel(powerOrb:GetFrameLevel()+1)
   powerOrb.ClipFrame:SetFrameLevel(powerOrb:GetFrameLevel()+2)
   powerOrb.OverlayFrame:SetFrameLevel(powerOrb:GetFrameLevel()+3)
-  
+
   local power = CreateFrame("StatusBar", nil, self)
   --Mixin(power, SmoothStatusBarMixin)
   --Mixin(powerOrb.FillingStatusBar, SmoothStatusBarMixin)
@@ -92,8 +92,8 @@ local function StylePlayer(self)
       or (element.colorClassPet and UnitPlayerControlled(unit) and not UnitIsPlayer(unit)) then
       local _, class = UnitClass(unit)
       templateKeyName = "CLASS_"..class
-    elseif(element.colorReaction and UnitReaction(unit, 'player')) then
-      local reaction = UnitReaction(unit, 'player')
+    elseif(element.colorReaction and UnitReaction(unit, "player")) then
+      local reaction = UnitReaction(unit, "player")
       if reaction >= 5 then
         templateKeyName = "REACTION_FRIENDLY"
       elseif reaction >= 3 then
@@ -191,7 +191,7 @@ local function StylePlayer(self)
   movePlayerFrame:SetScale(L.S.playerScaleSetting:GetValue())
   movePlayerFrame:ClearAllPoints()
   movePlayerFrame:SetPoint(L.DB.playerPosition.point, UIParent, L.DB.playerPosition.relativePoint, L.DB.playerPosition.xOfs, L.DB.playerPosition.yOfs)
-  
+
   --move the player frame to center of the mover
   self:SetPoint("CENTER", movePlayerFrame, "CENTER", 0, 0)
 
@@ -218,8 +218,8 @@ local function StylePlayer(self)
     self:StopMovingOrSizing()
     local point, relativeTo, relativePoint, xOfs, yOfs = self:GetPoint()
     L.DB.playerPosition = {
-      point = point, 
-      relativePoint  = relativePoint, 
+      point = point,
+      relativePoint  = relativePoint,
       xOfs = xOfs,
       yOfs = yOfs
     }
@@ -236,7 +236,7 @@ local function StylePlayer(self)
   movePlayerPowerFrame:SetScale(L.S.playerScaleSetting:GetValue())
   movePlayerPowerFrame:ClearAllPoints()
   movePlayerPowerFrame:SetPoint(L.DB.playerPowerPosition.point, UIParent, L.DB.playerPowerPosition.relativePoint, L.DB.playerPowerPosition.xOfs, L.DB.playerPowerPosition.yOfs)
-  
+
   --move the player frame to center of the mover
   powerOrb:SetPoint("CENTER", movePlayerPowerFrame, "CENTER", 0, 0)
 
@@ -250,7 +250,7 @@ local function StylePlayer(self)
   else
     movePlayerPowerFrame:EnableMouse(true)
     movePlayerPowerFrame.bg:Show()
-  end  
+  end
 
   movePlayerPowerFrame:SetMovable(true)
   movePlayerPowerFrame:SetClampedToScreen(true)
@@ -263,8 +263,8 @@ local function StylePlayer(self)
     self:StopMovingOrSizing()
     local point, relativeTo, relativePoint, xOfs, yOfs = self:GetPoint()
     L.DB.playerPowerPosition = {
-      point = point, 
-      relativePoint  = relativePoint, 
+      point = point,
+      relativePoint  = relativePoint,
       xOfs = xOfs,
       yOfs = yOfs
     }
@@ -280,7 +280,7 @@ local UnitSpecific = {
   player = StylePlayer,
   --[[
   party = function(self)
-    -- Party specific layout code.         
+    -- Party specific layout code.
   end,
   ]]
 }
@@ -311,12 +311,12 @@ local function SpawnUnits()
     self:Spawn("player")
     --[[
     -- oUF:SpawnHeader(overrideName, overrideTemplate, visibility, attributes ...)
-    local party = self:SpawnHeader(nil, nil, 'raid,party,solo',
+    local party = self:SpawnHeader(nil, nil, "raid,party,solo",
         -- http://wowprogramming.com/docs/secure_template/Group_Headers
         -- Set header attributes
-        'showParty', true, 
-        'showPlayer', true, 
-        'yOffset', -20
+        "showParty", true,
+        "showPlayer", true,
+        "yOffset", -20
     )
     party:SetPoint("TOPLEFT", 30, -30)
     ]]

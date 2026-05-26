@@ -145,7 +145,7 @@ function L.canvas:Init()
 
   -- canvas attributes
   self.canvasWidth, self.canvasHeight = self:GetSize()
-  self.canvasHeight = self.canvasHeight - 30 
+  self.canvasHeight = self.canvasHeight - 30
   self.modelSize = 256
   self.canvasPage = 1
   self.M = {}

@@ -4,14 +4,14 @@ local A, L = ...
 local function LoadDBDefaults()
   return {
     playerPosition = {
-      point = "BOTTOM", 
-      relativePoint  = "BOTTOM", 
+      point = "BOTTOM",
+      relativePoint  = "BOTTOM",
       xOfs = -400,
       yOfs = -15,
     },
     playerPowerPosition = {
-      point = "BOTTOM", 
-      relativePoint  = "BOTTOM", 
+      point = "BOTTOM",
+      relativePoint  = "BOTTOM",
       xOfs = 400,
       yOfs = -15,
     },

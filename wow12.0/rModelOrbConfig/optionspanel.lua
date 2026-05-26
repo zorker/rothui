@@ -17,7 +17,7 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   rModelOrbConfigTemplateMixin = {}
-  
+
   function rModelOrbConfigTemplateMixin:OnLoad()
     if not self.OrbFrame then return end
     --save frame reference
@@ -32,7 +32,7 @@ local function RegisterOptionsPanel()
     end)
   end
 
-  function rModelOrbConfigTemplateMixin:OnShow() 
+  function rModelOrbConfigTemplateMixin:OnShow()
     L.F.UpdateTemplateList()
     L.templateManager:SetHeight(SettingsPanel:GetHeight())
     L.templateManager:SetPoint("LEFT", SettingsPanel, "RIGHT", 0, 0)
@@ -42,7 +42,7 @@ local function RegisterOptionsPanel()
   function rModelOrbConfigTemplateMixin:OnHide()
     L.templateManager:Hide()
   end
-  
+
   function rModelOrbConfigTemplateMixin:Init(initializer)
     --get initializer data object
     local data = initializer:GetData()
@@ -76,11 +76,11 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local modelIDSetting = Settings.RegisterAddOnSetting(
-      category, 
-      L.name.."SettingsModelID", 
+      category,
+      L.name.."SettingsModelID",
       "modelID",
       L.DB.settings,
-      Settings.VarType.Number, 
+      Settings.VarType.Number,
       "Model ID",
       2030216
   )
@@ -111,11 +111,11 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local fillValueSetting = Settings.RegisterAddOnSetting(
-      category, 
-      L.name.."SettingsFillValue", 
+      category,
+      L.name.."SettingsFillValue",
       "fillValue",
       L.DB.settings,
-      Settings.VarType.Number, 
+      Settings.VarType.Number,
       "Fill Percent",
       1
   )
@@ -128,7 +128,7 @@ local function RegisterOptionsPanel()
   local fillValueOptions = Settings.CreateSliderOptions(0, 1, 0.01)
 
   fillValueOptions:SetLabelFormatter(
-    MinimalSliderWithSteppersMixin.Label.Right, 
+    MinimalSliderWithSteppersMixin.Label.Right,
     function(value)
       return string.format("%.0f%%", value*100)
     end
@@ -141,11 +141,11 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local modelAlphaSetting = Settings.RegisterAddOnSetting(
-      category, 
-      L.name.."SettingsModelAlhpa", 
+      category,
+      L.name.."SettingsModelAlhpa",
       "modelAlpha",
       L.DB.settings,
-      Settings.VarType.Number, 
+      Settings.VarType.Number,
       "Model Opacity",
       1
   )
@@ -161,7 +161,7 @@ local function RegisterOptionsPanel()
   local modelAlphaOptions = Settings.CreateSliderOptions(0, 1, 0.01)
 
   modelAlphaOptions:SetLabelFormatter(
-    MinimalSliderWithSteppersMixin.Label.Right, 
+    MinimalSliderWithSteppersMixin.Label.Right,
     function(value)
       return string.format("%.0f%%", value*100)
     end
@@ -174,14 +174,14 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local splitAlphaSetting = Settings.RegisterAddOnSetting(
-      category, 
-      L.name.."SettingsSplitAlhpa", 
+      category,
+      L.name.."SettingsSplitAlhpa",
       "splitAlpha",
       L.DB.settings,
-      Settings.VarType.Number, 
+      Settings.VarType.Number,
       "Split Opacity",
       1
-  )  
+  )
   L.S.splitAlphaSetting = splitAlphaSetting
 
   splitAlphaSetting:SetValueChangedCallback(function(setting, value)
@@ -195,7 +195,7 @@ local function RegisterOptionsPanel()
   local splitAlphaOptions = Settings.CreateSliderOptions(0, 1, 0.01)
 
   splitAlphaOptions:SetLabelFormatter(
-    MinimalSliderWithSteppersMixin.Label.Right, 
+    MinimalSliderWithSteppersMixin.Label.Right,
     function(value)
       return string.format("%.0f%%", value*100)
     end
@@ -208,11 +208,11 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local fillColorSetting = Settings.RegisterAddOnSetting(
-      category, 
-      L.name.."SettingsFillColor", 
+      category,
+      L.name.."SettingsFillColor",
       "fillColor",
       L.DB.settings,
-      Settings.VarType.String, 
+      Settings.VarType.String,
       "Fill Color",
       "ff0000ff"
   )
@@ -232,11 +232,11 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local fillTextureSetting = Settings.RegisterAddOnSetting(
-      category, 
-      L.name.."SettingsFillTexture", 
+      category,
+      L.name.."SettingsFillTexture",
       "fillTexture",
       L.DB.settings,
-      Settings.VarType.String, 
+      Settings.VarType.String,
       "Fill Texture",
       "orb_filling16"
   )
@@ -279,11 +279,11 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local scaleValueSetting = Settings.RegisterAddOnSetting(
-      category, 
-      L.name.."SettingsScaleValue", 
+      category,
+      L.name.."SettingsScaleValue",
       "scaleValue",
       L.DB.settings,
-      Settings.VarType.Number, 
+      Settings.VarType.Number,
       "Orb Scale",
       1
   )
@@ -296,7 +296,7 @@ local function RegisterOptionsPanel()
   local scaleValueOptions = Settings.CreateSliderOptions(0.3, 2, 0.01)
 
   scaleValueOptions:SetLabelFormatter(
-    MinimalSliderWithSteppersMixin.Label.Right, 
+    MinimalSliderWithSteppersMixin.Label.Right,
     function(value)
       return string.format("%.0f%%", value*100)
     end
@@ -309,11 +309,11 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local showDebuffGlowSetting = Settings.RegisterAddOnSetting(
-      category, 
-      L.name.."SettingsShowDebuffGlow", 
+      category,
+      L.name.."SettingsShowDebuffGlow",
       "showDebuffGlow",
       L.DB.settings,
-      Settings.VarType.Boolean, 
+      Settings.VarType.Boolean,
       "Debuff Type Glow",
       false
   )
@@ -334,11 +334,11 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local showLowHealthSetting = Settings.RegisterAddOnSetting(
-      category, 
-      L.name.."SettingsShowLowHealth", 
+      category,
+      L.name.."SettingsShowLowHealth",
       "showLowHealth",
       L.DB.settings,
-      Settings.VarType.Boolean, 
+      Settings.VarType.Boolean,
       "Low Health Warning",
       false
   )

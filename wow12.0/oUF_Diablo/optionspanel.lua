@@ -26,11 +26,11 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local playerScaleSetting = Settings.RegisterAddOnSetting(
-    category, 
-    L.name.."SettingsPlayerScale", 
+    category,
+    L.name.."SettingsPlayerScale",
     "scale",
     L.DB.settings.player,
-    Settings.VarType.Number, 
+    Settings.VarType.Number,
     "Scale",
     1
   )
@@ -45,7 +45,7 @@ local function RegisterOptionsPanel()
   local playerScaleOptions = Settings.CreateSliderOptions(0.3, 2, 0.01)
 
   playerScaleOptions:SetLabelFormatter(
-    MinimalSliderWithSteppersMixin.Label.Right, 
+    MinimalSliderWithSteppersMixin.Label.Right,
     function(value)
       return string.format("%.0f%%", value*100)
     end
@@ -58,11 +58,11 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local lockPlayerFrameSetting = Settings.RegisterAddOnSetting(
-    category, 
-    L.name.."SettingsLockPlayerFrame", 
+    category,
+    L.name.."SettingsLockPlayerFrame",
     "lockPlayerFrame",
     L.DB.settings.player,
-    Settings.VarType.Boolean, 
+    Settings.VarType.Boolean,
     "Lock health orb",
     true
   )
@@ -85,11 +85,11 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   local lockPlayerPowerFrameSetting = Settings.RegisterAddOnSetting(
-    category, 
-    L.name.."SettingsLockPlayerPowerFrame", 
+    category,
+    L.name.."SettingsLockPlayerPowerFrame",
     "lockPlayerPowerFrame",
     L.DB.settings.player,
-    Settings.VarType.Boolean, 
+    Settings.VarType.Boolean,
     "Lock power orb",
     true
   )
@@ -126,11 +126,11 @@ local function RegisterOptionsPanel()
     end
 
     local setting = Settings.RegisterAddOnSetting(
-      category, 
-      L.name.."SettingsOrbTemplate"..name, 
+      category,
+      L.name.."SettingsOrbTemplate"..name,
       name,
       L.DB.settings.orbModelTemplates,
-      Settings.VarType.String, 
+      Settings.VarType.String,
       name,
       defaultString
     )
@@ -145,7 +145,7 @@ local function RegisterOptionsPanel()
   -- dropdown options
   ---------------------------------------------------------------------
 
-  local options = function()    
+  local options = function()
     local container = Settings.CreateControlTextContainer()
     local sortedOrbModelConfigTemplateKeys = {}
     for key in pairs(L.DB_ORB_CONFIG.presetTemplates) do
@@ -157,7 +157,7 @@ local function RegisterOptionsPanel()
     table.sort(sortedOrbModelConfigTemplateKeys)
     for _, key in ipairs(sortedOrbModelConfigTemplateKeys) do
       container:Add(key, key)
-    end    
+    end
     return container:GetData()
   end
 
@@ -188,7 +188,7 @@ local function RegisterOptionsPanel()
   ---------------------------------------------------------------------
 
   hooksecurefunc(SettingsPanel, "SelectCategory", function(self, categoryID)
-    if (subCategoryOrbTemplate and categoryID == subCategoryOrbTemplate:GetID()) or (category and categoryID == category:GetID()) then         
+    if (subCategoryOrbTemplate and categoryID == subCategoryOrbTemplate:GetID()) or (category and categoryID == category:GetID()) then
       if SettingsPanel.Layout then
         SettingsPanel:Layout()
       end

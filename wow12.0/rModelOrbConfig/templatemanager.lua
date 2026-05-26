@@ -7,13 +7,13 @@ local A, L = ...
 local ROW_HEIGHT = 22
 
 ---------------------------------------------------------------------
--- L.templateManager 
+-- L.templateManager
 ---------------------------------------------------------------------
 
 local frame = CreateFrame("Frame", nil, UIParent, "ButtonFrameTemplate")
 L.templateManager = frame
 
-frame:SetSize(260, 260) 
+frame:SetSize(260, 260)
 frame:SetClampedToScreen(true)
 frame:Hide()
 
@@ -43,14 +43,14 @@ local function CreateRow(row, data)
   row:SetHeight(ROW_HEIGHT)
 
   if not row.nameButton then
-  
+
     -- create delete button
     row.deleteButton = CreateFrame("Button", nil, row)
     row.deleteButton:SetSize(16, 16)
     row.deleteButton:SetPoint("RIGHT", row, "RIGHT", -5, 0)
     row.deleteButton:SetNormalTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
     row.deleteButton:SetHighlightTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Highlight")
-    
+
     -- create name buttonm
     row.nameButton = CreateFrame("Button", nil, row)
     row.nameButton:SetPoint("LEFT", row, "LEFT", 5, 0)
@@ -63,7 +63,7 @@ local function CreateRow(row, data)
     row.nameButton:SetScript("OnLeave", function()
       row.nameText:SetTextColor(GameFontNormal:GetTextColor())
     end)
-    
+
     -- create name text
     row.nameText = row.nameButton:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     row.nameText:SetAllPoints(row.nameButton)
@@ -81,7 +81,7 @@ local function CreateRow(row, data)
 
   row.deleteButton:SetScript("OnClick", function()
     if not L.DB.userTemplates[data.name] then return end
-    row.deleteTarget = data.name 
+    row.deleteTarget = data.name
     StaticPopup_Show("RMOC_TEMPLATEMANAGER_CONFIRM_DELETE", data.name, nil, row)
   end)
 
@@ -106,8 +106,8 @@ end
 ---------------------------------------------------------------------
 
 local scrollContainer = CreateFrame("Frame", nil, frame)
-scrollContainer:SetPoint("TOPLEFT", frame, "TOPLEFT", 15, -75) 
-scrollContainer:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -35, 40) 
+scrollContainer:SetPoint("TOPLEFT", frame, "TOPLEFT", 15, -75)
+scrollContainer:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -35, 40)
 
 local scrollBox = CreateFrame("Frame", nil, scrollContainer, "WowScrollBoxList")
 scrollBox:SetAllPoints(scrollContainer)
@@ -130,7 +130,7 @@ ScrollUtil.InitScrollBoxListWithScrollBar(scrollBox, scrollBar, scrollView)
 ---------------------------------------------------------------------
 
 local function UpdateTemplateList()
-  scrollDataProvider:Flush()  
+  scrollDataProvider:Flush()
   local sortedNames = {}
   for name in pairs(L.DB.presetTemplates) do
     table.insert(sortedNames, name)
@@ -138,7 +138,7 @@ local function UpdateTemplateList()
   for name in pairs(L.DB.userTemplates) do
     table.insert(sortedNames, name)
   end
-  table.sort(sortedNames)  
+  table.sort(sortedNames)
   for _, name in ipairs(sortedNames) do
     scrollDataProvider:Insert({ name = name })
   end
@@ -166,17 +166,17 @@ templateNameSaveButton:SetPoint("LEFT", templateNameEditBox, "RIGHT", 5, 0)
 templateNameSaveButton:SetText("Save")
 templateNameSaveButton:SetScript("OnClick", function()
   local name = strtrim(templateNameEditBox:GetText())
-  if name == "" or IsPresetTemplate(name) or L.DB.userTemplates[name] then 
+  if name == "" or IsPresetTemplate(name) or L.DB.userTemplates[name] then
      print(L.name, "Cannot save template under this name. Maybe already in use or prohibited preset name.")
-    return 
-  end  
+    return
+  end
   L.DB.userTemplates[name] = {
     modelID      = L.S.modelIDSetting:GetValue(),
     modelAlpha   = L.S.modelAlphaSetting:GetValue(),
     splitAlpha   = L.S.splitAlphaSetting:GetValue(),
     fillTexture  = L.S.fillTextureSetting:GetValue(),
     fillColor    = L.S.fillColorSetting:GetValue(),
-  }  
+  }
   print(L.name, "Saved template '" .. name .. "'")
   templateNameEditBox:SetText("")
   templateNameEditBox:ClearFocus()

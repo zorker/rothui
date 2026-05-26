@@ -427,11 +427,11 @@ function ZorkCameraMixin:ResetDefaultInputModes()
   --left
   self:SetLeftMouseButtonXMode(ZORK_CAMERA_MOUSE_MODE_YAW_ROTATION, true)
   self:SetLeftMouseButtonYMode(ZORK_CAMERA_MOUSE_MODE_PITCH_ROTATION, true)
-  --right 
+  --right
   self:SetRightMouseButtonXMode(ZORK_CAMERA_MOUSE_PAN_HORIZONTAL, true)
   self:SetRightMouseButtonYMode(ZORK_CAMERA_MOUSE_PAN_VERTICAL, true)
   --NEW: m4
-  self:SetMouse4ButtonXMode(ZORK_CAMERA_MOUSE_MODE_NOTHING, true) 
+  self:SetMouse4ButtonXMode(ZORK_CAMERA_MOUSE_MODE_NOTHING, true)
   self:SetMouse4ButtonYMode(ZORK_CAMERA_MOUSE_MODE_ROLL_ROTATION, true)
   --NEW: m5
   self:SetMouse5ButtonXMode(ZORK_CAMERA_MOUSE_MODE_NOTHING, true)

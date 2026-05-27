@@ -144,7 +144,7 @@ local function StylePlayer(self)
   end
 
   ---------------------------------------------------------------------
-  -- Debuff Type Coloring
+  -- Debuff Type Coloring for orbFrame.OverlayFrame.GlowTexture
   ---------------------------------------------------------------------
 
   local function GetDebuffTypeColor(element, unit, data, position)
@@ -175,6 +175,33 @@ local function StylePlayer(self)
   self.Debuffs = debuffs
 
   ---------------------------------------------------------------------
+  -- CustomAbsorb - orb texture filling top to bottom
+  ---------------------------------------------------------------------
+
+  local absorbBar = CreateFrame("StatusBar", nil, healthOrb.OverlayFrame)
+  absorbBar:SetSize(256, 256)
+  absorbBar:SetPoint("CENTER")
+  absorbBar:SetStatusBarTexture([[Interface\Buttons\WHITE8X8]])
+  absorbBar:SetStatusBarColor(1, 1, 1, 0)
+  absorbBar:SetOrientation("VERTICAL")
+  absorbBar:SetFillStyle(3)
+  absorbBar:SetRotatesTexture(true)
+
+  absorbBar.clipFrame = CreateFrame("Frame", nil, absorbBar)
+  absorbBar.clipFrame:SetClipsChildren(true)
+  absorbBar.clipFrame:SetPoint("TOPLEFT", absorbBar)
+  absorbBar.clipFrame:SetPoint("BOTTOMRIGHT", absorbBar:GetStatusBarTexture())
+
+  absorbBar.clipFrame.fill = absorbBar.clipFrame:CreateTexture(nil, "ARTWORK")
+  absorbBar.clipFrame.fill:SetSize(256, 256)
+  absorbBar.clipFrame.fill:SetPoint("TOPLEFT")
+  absorbBar.clipFrame.fill:SetTexture(L.mediaFolder.."orb_absorb")
+  absorbBar.clipFrame.fill:SetVertexColor(0.5, 0.81, 0.95, 1)
+  absorbBar.clipFrame.fill:SetBlendMode("BLEND")
+
+  self.CustomAbsorb = absorbBar
+
+  ---------------------------------------------------------------------
   -- right click menu
   ---------------------------------------------------------------------
 
@@ -192,12 +219,17 @@ local function StylePlayer(self)
   -- angel + demon
   ---------------------------------------------------------------------
 
-  local texDemon = healthOrb.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
+  local healthOrbHighlightFrame = CreateFrame("Frame", nil, healthOrb.OverlayFrame)
+  healthOrbHighlightFrame:SetSize(256, 256)
+  healthOrbHighlightFrame:SetPoint("CENTER")
+  healthOrbHighlightFrame:SetFrameLevel(math.max(absorbBar:GetFrameLevel(), healthOrb.OverlayFrame:GetFrameLevel())+1)
+
+  local texDemon = healthOrbHighlightFrame:CreateTexture(nil,"BACKGROUND",nil,2)
   texDemon:SetSize(512,256)
   texDemon:SetPoint("BOTTOMRIGHT", healthOrb.OverlayFrame, "BOTTOMLEFT", 370, 10)
   texDemon:SetTexture(L.mediaFolder.."d3_demon")
 
-  local texLeftEdge = healthOrb.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
+  local texLeftEdge = healthOrbHighlightFrame:CreateTexture(nil,"BACKGROUND",nil,2)
   texLeftEdge:SetSize(128,64)
   texLeftEdge:SetPoint("BOTTOMLEFT", healthOrb.OverlayFrame, "BOTTOMRIGHT", -100, 15)
   texLeftEdge:SetTexture(L.mediaFolder.."d3_left")
@@ -218,7 +250,7 @@ local function StylePlayer(self)
 
   local movePlayerFrame = CreateFrame("Frame", nil, UIParent)
   L.movePlayerFrame = movePlayerFrame
-  movePlayerFrame:SetFrameLevel(healthOrb.OverlayFrame:GetFrameLevel()+1)
+  movePlayerFrame:SetFrameLevel(healthOrbHighlightFrame:GetFrameLevel()+1)
   movePlayerFrame:SetSize(256, 256)
   movePlayerFrame:SetScale(L.S.playerScaleSetting:GetValue())
   movePlayerFrame:ClearAllPoints()

@@ -1,4 +1,4 @@
-## Interface: 120005
+## Interface: 120005, 120007
 ## Title: rModelOrbTemplate
 ## Notes: Orb Model XML Template
 ## Author: zork

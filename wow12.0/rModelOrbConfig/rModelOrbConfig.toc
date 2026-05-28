@@ -1,4 +1,4 @@
-## Interface: 120005
+## Interface: 120005, 120007
 ## Title: rModelOrbConfig
 ## Notes: Orb model template configurator based on rModelOrbTemplate
 ## Author: zork

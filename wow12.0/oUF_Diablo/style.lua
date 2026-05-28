@@ -192,7 +192,7 @@ local function StylePlayer(self)
   absorbBar.clipFrame:SetPoint("TOPLEFT", absorbBar)
   absorbBar.clipFrame:SetPoint("BOTTOMRIGHT", absorbBar:GetStatusBarTexture())
 
-  absorbBar.clipFrame.fill = absorbBar.clipFrame:CreateTexture(nil, "ARTWORK")
+  absorbBar.clipFrame.fill = absorbBar.clipFrame:CreateTexture(nil, "BACKGROUND", nil, 4)
   absorbBar.clipFrame.fill:SetSize(256, 256)
   absorbBar.clipFrame.fill:SetPoint("TOPLEFT")
   absorbBar.clipFrame.fill:SetTexture(L.mediaFolder.."orb_absorb")
@@ -224,25 +224,38 @@ local function StylePlayer(self)
   healthOrbHighlightFrame:SetPoint("CENTER")
   healthOrbHighlightFrame:SetFrameLevel(math.max(absorbBar:GetFrameLevel(), healthOrb.OverlayFrame:GetFrameLevel())+1)
 
+  L.hideArtTextures = {}
+
   local texDemon = healthOrbHighlightFrame:CreateTexture(nil,"BACKGROUND",nil,2)
   texDemon:SetSize(512,256)
   texDemon:SetPoint("BOTTOMRIGHT", healthOrb.OverlayFrame, "BOTTOMLEFT", 370, 10)
   texDemon:SetTexture(L.mediaFolder.."d3_demon")
+  L.hideArtTextures.texDemon = texDemon
 
   local texLeftEdge = healthOrbHighlightFrame:CreateTexture(nil,"BACKGROUND",nil,2)
   texLeftEdge:SetSize(128,64)
   texLeftEdge:SetPoint("BOTTOMLEFT", healthOrb.OverlayFrame, "BOTTOMRIGHT", -100, 15)
   texLeftEdge:SetTexture(L.mediaFolder.."d3_left")
+  L.hideArtTextures.texLeftEdge = texLeftEdge
 
   local texAngel = power.orbFrame.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
   texAngel:SetSize(512,256)
   texAngel:SetPoint("BOTTOMLEFT", power.orbFrame.OverlayFrame, "BOTTOMRIGHT", -370, 10)
   texAngel:SetTexture(L.mediaFolder.."d3_angel")
+  L.hideArtTextures.texAngel = texAngel
 
   local texRightEdge = power.orbFrame.OverlayFrame:CreateTexture(nil,"BACKGROUND",nil,2)
   texRightEdge:SetSize(128,64)
   texRightEdge:SetPoint("BOTTOMRIGHT", power.orbFrame.OverlayFrame, "BOTTOMLEFT", 100, 15)
   texRightEdge:SetTexture(L.mediaFolder.."d3_right")
+  L.hideArtTextures.texRightEdge = texRightEdge
+
+  if L.S.hidePlayerArtSetting:GetValue() == true then
+    L.hideArtTextures.texDemon:Hide()
+    L.hideArtTextures.texLeftEdge:Hide()
+    L.hideArtTextures.texAngel:Hide()
+    L.hideArtTextures.texRightEdge:Hide()
+  end
 
   -------------------------------------------
   -- movePlayerFrame

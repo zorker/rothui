@@ -1,6 +1,29 @@
 local A, L = ...
 
+---------------------------------------------------------------------
+-- deepMerge
+---------------------------------------------------------------------
+
+local function deepMerge(target, source)
+  if not source then return target end
+  if not target then target = {} end
+  for key, value in pairs(source) do
+    if type(value) == "table" then
+      if type(target[key]) ~= "table" then
+        target[key] = {}
+      end
+      deepMerge(target[key], value)
+    else
+      target[key] = value
+    end
+  end
+  return target
+end
+
+---------------------------------------------------------------------
 -- LoadDBDefaults
+---------------------------------------------------------------------
+
 local function LoadDBDefaults()
   return {
     playerPosition = {
@@ -20,6 +43,7 @@ local function LoadDBDefaults()
         scale = 1,
         lockPlayerFrame = true,
         lockPlayerPowerFrame = true,
+        hideArt = false,
       },
       orbModelTemplates = {
         CLASS_DEATHKNIGHT = "_CLASS_DEATHKNIGHT",
@@ -50,24 +74,62 @@ local function LoadDBDefaults()
         OTHER = "_OTHER",
       },
     },
-    ["DB_VERSION"] = L.dbversion,
+    ["DB_VERSION"] = 14,
   }
 end
 
+---------------------------------------------------------------------
+-- DB_UPDATE
+---------------------------------------------------------------------
+
+local DB_UPDATE = {}
+
+DB_UPDATE[14] = {
+  settings = {
+    player = {
+      hideArt = false,
+    },
+  }
+}
+
+---------------------------------------------------------------------
+-- LoadDBUpdates
+---------------------------------------------------------------------
+
+--check if a db-update is required in the local db
+--if there is no new version do nothing
+local function LoadDBUpdates()
+  --test for new version + 1
+  local newVersion = L.DB["DB_VERSION"] + 1
+  for i = newVersion, L.dbversion do
+    L.DB = deepMerge(L.DB, DB_UPDATE[i])
+    print(L.name, L.version, "updating local db  to version", i)
+  end
+  L.DB["DB_VERSION"] = L.dbversion
+end
+
+---------------------------------------------------------------------
+-- ResetDB
+---------------------------------------------------------------------
+
+--[[
+local function ResetDB()
+  L.DB = LoadDBDefaults()
+end
+]]
+
+---------------------------------------------------------------------
 -- LoadDB
+---------------------------------------------------------------------
+
 local function LoadDB()
   -- set saved variables
   oUF_Diablo_DB = oUF_Diablo_DB or LoadDBDefaults()
-  if not oUF_Diablo_DB["DB_VERSION"] or oUF_Diablo_DB["DB_VERSION"] < L.dbversion then
-    oUF_Diablo_DB = LoadDBDefaults()
-    print(L.name, "loading new db defaults")
-  end
   L.DB = oUF_Diablo_DB
+  LoadDBUpdates()
   print(L.name, L.version, "loading db version", L.DB["DB_VERSION"])
 end
+
 L.F.LoadDB = LoadDB
-
 L.DB_DEFAULTS = LoadDBDefaults()
-
--- load the rModelOrbConfig templates
-L.DB_ORB_CONFIG = rModelOrbConfig_DB --load the orb config db
+L.DB_ORB_CONFIG = rModelOrbConfig_DB

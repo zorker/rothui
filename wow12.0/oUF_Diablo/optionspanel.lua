@@ -108,6 +108,37 @@ local function RegisterOptionsPanel()
   Settings.CreateCheckbox(category, lockPlayerPowerFrameSetting, "Lock/Unlock the power orb.")
 
   ---------------------------------------------------------------------
+  -- hidePlayerArtSetting + Checkbox
+  ---------------------------------------------------------------------
+
+  local hidePlayerArtSetting = Settings.RegisterAddOnSetting(
+    category,
+    L.name.."SettingsHidePlayerArt",
+    "hideArt",
+    L.DB.settings.player,
+    Settings.VarType.Boolean,
+    "Hide art",
+    false
+  )
+  L.S.hidePlayerArtSetting = hidePlayerArtSetting
+
+  hidePlayerArtSetting:SetValueChangedCallback(function(setting, value)
+    if value == true then
+      L.hideArtTextures.texDemon:Hide()
+      L.hideArtTextures.texLeftEdge:Hide()
+      L.hideArtTextures.texAngel:Hide()
+      L.hideArtTextures.texRightEdge:Hide()
+    else
+      L.hideArtTextures.texDemon:Show()
+      L.hideArtTextures.texLeftEdge:Show()
+      L.hideArtTextures.texAngel:Show()
+      L.hideArtTextures.texRightEdge:Show()
+    end
+  end)
+
+  Settings.CreateCheckbox(category, hidePlayerArtSetting, "Hide/Show the orb art.")
+
+  ---------------------------------------------------------------------
   -- subCategoryOrbTemplate
   ---------------------------------------------------------------------
 

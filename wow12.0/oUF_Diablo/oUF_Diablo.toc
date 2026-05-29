@@ -2,7 +2,7 @@
 ## Title: oUF_Diablo
 ## Notes: Diablo orb player unitframes
 ## Author: zork
-## Version: 12.04
+## Version: 12.06
 ## Category: oUF
 ## SavedVariables: oUF_Diablo_DB
 ## IconTexture: Interface\AddOns\oUF_Diablo\assets\logo-64
@@ -13,5 +13,6 @@ elements/CustomAbsorb.lua
 init.lua
 db.lua
 optionspanel.lua
+style/player.lua
 style.lua
 events.lua

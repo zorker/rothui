@@ -1,10 +1,10 @@
 local A, L = ...
 
-L.DB = {}
-L.C = {}
-L.F = {}
-L.S = {}
-L.ORB_CONFIG_DB = {}
+L.DB = {} --local database (filled from default on init then filled from savedVariables)
+L.C = {}  --configurations
+L.F = {}  --functions
+L.S = {}  --settings
+L.O = {}  --objects
 
 L.name = A
 L.version = C_AddOns.GetAddOnMetadata(L.name, "Version")

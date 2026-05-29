@@ -13,7 +13,7 @@ L.eventFrame:SetScript("OnEvent", function(_, event, ...)
       L.F.SpawnUnits()
     end
   elseif event == "PLAYER_ENTERING_WORLD" then
-    L.playerFrame.Health:ForceUpdate()
-    L.playerFrame.Power:ForceUpdate()
+    L.O.playerFrame.Health:ForceUpdate()
+    L.O.playerFrame.Power:ForceUpdate()
   end
 end)

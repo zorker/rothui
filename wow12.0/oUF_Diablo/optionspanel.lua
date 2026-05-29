@@ -37,9 +37,9 @@ local function RegisterOptionsPanel()
   L.S.playerScaleSetting = playerScaleSetting
 
   playerScaleSetting:SetValueChangedCallback(function(setting, value)
-    L.playerFrame:SetScale(value)
-    L.movePlayerFrame:SetScale(value)
-    L.movePlayerPowerFrame:SetScale(value)
+    L.O.playerFrame:SetScale(value)
+    L.O.movePlayerFrame:SetScale(value)
+    L.O.movePlayerPowerFrame:SetScale(value)
   end)
 
   local playerScaleOptions = Settings.CreateSliderOptions(0.3, 2, 0.01)
@@ -70,11 +70,11 @@ local function RegisterOptionsPanel()
 
   lockPlayerFrameSetting:SetValueChangedCallback(function(setting, value)
     if value == true then
-      L.movePlayerFrame:EnableMouse(false)
-      L.movePlayerFrame.bg:Hide()
+      L.O.movePlayerFrame:EnableMouse(false)
+      L.O.movePlayerFrame.bg:Hide()
     else
-      L.movePlayerFrame:EnableMouse(true)
-      L.movePlayerFrame.bg:Show()
+      L.O.movePlayerFrame:EnableMouse(true)
+      L.O.movePlayerFrame.bg:Show()
     end
   end)
 
@@ -97,11 +97,11 @@ local function RegisterOptionsPanel()
 
   lockPlayerPowerFrameSetting:SetValueChangedCallback(function(setting, value)
     if value == true then
-      L.movePlayerPowerFrame:EnableMouse(false)
-      L.movePlayerPowerFrame.bg:Hide()
+      L.O.movePlayerPowerFrame:EnableMouse(false)
+      L.O.movePlayerPowerFrame.bg:Hide()
     else
-      L.movePlayerPowerFrame:EnableMouse(true)
-      L.movePlayerPowerFrame.bg:Show()
+      L.O.movePlayerPowerFrame:EnableMouse(true)
+      L.O.movePlayerPowerFrame.bg:Show()
     end
   end)
 
@@ -124,15 +124,15 @@ local function RegisterOptionsPanel()
 
   hidePlayerArtSetting:SetValueChangedCallback(function(setting, value)
     if value == true then
-      L.hideArtTextures.texDemon:Hide()
-      L.hideArtTextures.texLeftEdge:Hide()
-      L.hideArtTextures.texAngel:Hide()
-      L.hideArtTextures.texRightEdge:Hide()
+      L.O.hidePlayerArtTextures.texDemon:Hide()
+      L.O.hidePlayerArtTextures.texLeftEdge:Hide()
+      L.O.hidePlayerArtTextures.texAngel:Hide()
+      L.O.hidePlayerArtTextures.texRightEdge:Hide()
     else
-      L.hideArtTextures.texDemon:Show()
-      L.hideArtTextures.texLeftEdge:Show()
-      L.hideArtTextures.texAngel:Show()
-      L.hideArtTextures.texRightEdge:Show()
+      L.O.hidePlayerArtTextures.texDemon:Show()
+      L.O.hidePlayerArtTextures.texLeftEdge:Show()
+      L.O.hidePlayerArtTextures.texAngel:Show()
+      L.O.hidePlayerArtTextures.texRightEdge:Show()
     end
   end)
 
@@ -199,9 +199,8 @@ local function RegisterOptionsPanel()
   L.S.orbModelTemplateDropdowns = {}
 
   local callback = function(name, setting, value)
-    --print("callback", name, setting, value)
-    L.playerFrame.Health:ForceUpdate()
-    L.playerFrame.Power:ForceUpdate()
+    L.O.playerFrame.Health:ForceUpdate()
+    L.O.playerFrame.Power:ForceUpdate()
   end
 
   local sortedOrbModelTemplateKeys = {}

@@ -1,9 +1,18 @@
 local A, L = ...
 
+---------------------------------------------------------------------
+-- vars
+---------------------------------------------------------------------
+
 local darkColor =  { 0.5, 0.40, 0.35, 1 }
+local darkAuraColor =  { 1, 0.9, 0.85, 1 }
 local darkTextColor =  { 0.75, 0.73, 0.7, 1 }
 
---tone down some colors
+local visitedFrames = {}
+
+---------------------------------------------------------------------
+-- ApplyDarkMode(parent, region, textureFile)
+---------------------------------------------------------------------
 
 local function ApplyDarkMode(parent, region, textureFile)
   if not region then return end
@@ -15,7 +24,9 @@ local function ApplyDarkMode(parent, region, textureFile)
   --region:SetBlendMode("ADD")
 end
 
-local visitedFrames = {}
+---------------------------------------------------------------------
+-- SearchTexturesRecursive(parent, depth, filter)
+---------------------------------------------------------------------
 
 local function SearchTexturesRecursive(parent, depth, filter)
   if depth == 0 then visitedFrames = {} end
@@ -51,11 +62,19 @@ local function SearchTexturesRecursive(parent, depth, filter)
   end
 end
 
+---------------------------------------------------------------------
+-- InitDarkMode()
+---------------------------------------------------------------------
+
 local function InitDarkMode()
 
+  --136430 = MinimapButtonBorder
   SearchTexturesRecursive(MinimapCluster, 0, "136430")
-  SearchTexturesRecursive(MinimapBackdrop, 0, "4618666")
 
+  --MinimapCompassTexture
+  ApplyDarkMode(MinimapBackdrop, MinimapCompassTexture, nil)
+
+  --TargetFrame changes
   ApplyDarkMode(TargetFrame.TargetFrameContainer, TargetFrame.TargetFrameContainer.FrameTexture, nil)
   TargetFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor:Hide()
   TargetFrame.TargetFrameContent.TargetFrameContentMain.LevelText:ClearAllPoints()
@@ -63,6 +82,7 @@ local function InitDarkMode()
   TargetFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPRIGHT", TargetFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, -10, -2)
   TargetFrame.TargetFrameContent.TargetFrameContentContextual.PvpIcon:SetAlpha(0)
 
+  --FocusFrame changes
   ApplyDarkMode(FocusFrame.TargetFrameContainer, FocusFrame.TargetFrameContainer.FrameTexture, nil)
   FocusFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor:Hide()
   FocusFrame.TargetFrameContent.TargetFrameContentMain.LevelText:ClearAllPoints()
@@ -70,6 +90,7 @@ local function InitDarkMode()
   FocusFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPRIGHT", FocusFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, -10, -2)
   FocusFrame.TargetFrameContent.TargetFrameContentContextual.PvpIcon:SetAlpha(0)
 
+  --BuffFrame
   for i=1, #BuffFrame.auraFrames do
     local aura = BuffFrame.auraFrames[i]
     --aura.Icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
@@ -81,14 +102,38 @@ local function InitDarkMode()
     aura.BuffBorder:SetTexture([[Interface\Buttons\UI-TempEnchant-Border]])
     --AuraUtil.SetAuraBorderAtlas(aura.BuffBorder, nil, false)
     ApplyDarkMode(aura, aura.BuffBorder)
-    aura.BuffBorder:SetVertexColor(1,0.9,0.85)
+    aura.BuffBorder:SetVertexColor(unpack(darkAuraColor))
   end
 
+  --ObjectiveTracker
   ApplyDarkMode(ObjectiveTrackerFrame.Header, ObjectiveTrackerFrame.Header.Background)
   ObjectiveTrackerFrame.Header.Text:SetTextColor(unpack(darkTextColor))
-
+  ApplyDarkMode(QuestObjectiveTracker.Header, QuestObjectiveTracker.Header.Background)
+  QuestObjectiveTracker.Header.Text:SetTextColor(unpack(darkTextColor))
   ApplyDarkMode(CampaignQuestObjectiveTracker.Header, CampaignQuestObjectiveTracker.Header.Background)
   CampaignQuestObjectiveTracker.Header.Text:SetTextColor(unpack(darkTextColor))
+
+  --TargetFrame buffs
+  hooksecurefunc("TargetFrame_UpdateBuffAnchor", function(self, aura, index, numDebuffs, anchorBuff, anchorIndex, size, offsetX, offsetY, mirrorVertically)
+    if aura.BuffBorder then
+      aura.BuffBorder:Show()
+      return
+    end
+    layer, sublayer = aura.Stealable:GetDrawLayer()
+    aura.BuffBorder = aura:CreateTexture(nil, layer, nil, sublayer-1)
+    aura.BuffBorder:SetSize(aura.Stealable:GetSize())
+    aura.BuffBorder:SetPoint("CENTER", aura.Icon)
+    aura.BuffBorder:SetTexture([[Interface\Buttons\UI-TempEnchant-Border]])
+    ApplyDarkMode(aura, aura.BuffBorder)
+    aura.BuffBorder:SetVertexColor(unpack(darkAuraColor))
+  end)
+
+  --TargetFrame debuffs
+  hooksecurefunc("TargetFrame_UpdateDebuffAnchor", function(self, aura, index, numBuffs, anchorBuff, anchorIndex, size, offsetX, offsetY, mirrorVertically)
+    if aura.BuffBorder then
+      aura.BuffBorder:Hide()
+    end
+  end)
 
 
 end

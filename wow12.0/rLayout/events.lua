@@ -5,6 +5,7 @@ local function OnPlayerLogin(...)
   L.F.SkinChats()
   L.F.DisableCombatFeedback()
   --L.F.DisableObjectiveTracker()
+  L.F.InitDarkMode()
 end
 
 L.eventFrame:RegisterEvent("PLAYER_LOGIN")
@@ -17,13 +18,7 @@ L.eventFrame:SetScript("OnEvent", function(_, event, ...)
     OnPlayerLogin(...)
   elseif event == "VIGNETTE_MINIMAP_UPDATED" then
     L.F.AlertVignette(...)
-  elseif event == "UNIT_SPELLCAST_START" then
-    local unit, _, spellID = ...
-    if unit ~= "focus" then return end
-    L.F.PlaySpellAlertSound(unit, spellID, false)
-  elseif event == "UNIT_SPELLCAST_CHANNEL_START" or event ==  "UNIT_SPELLCAST_EMPOWER_START" then
-    local unit, _, spellID = ...
-    if unit ~= "focus" then return end
-    L.F.PlaySpellAlertSound(unit, spellID, true)
+  elseif event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" or event ==  "UNIT_SPELLCAST_EMPOWER_START" then
+    L.F.PlaySpellAlertSound(...)
   end
 end)

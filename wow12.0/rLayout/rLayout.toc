@@ -6,10 +6,11 @@
 ## Category: rMods
 
 init.lua
-events.lua
 statedriver.lua
 chat.lua
 combatfeedback.lua
 vignette.lua
 objectivetracker.lua
 spellalert.lua
+darkmode.lua
+events.lua

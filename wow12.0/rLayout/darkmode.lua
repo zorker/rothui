@@ -92,6 +92,7 @@ local function InitDarkMode()
   TargetFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPLEFT", TargetFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, 3, -2)
   TargetFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPRIGHT", TargetFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, -10, -2)
   TargetFrame.TargetFrameContent.TargetFrameContentContextual.PvpIcon:SetAlpha(0)
+  TargetFrame.TargetFrameContainer.Flash:SetAlpha(0.2)
 
   ---------------------------------------------------------------------
   -- FocusFrame
@@ -103,6 +104,7 @@ local function InitDarkMode()
   FocusFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPLEFT", FocusFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, 3, -2)
   FocusFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPRIGHT", FocusFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, -10, -2)
   FocusFrame.TargetFrameContent.TargetFrameContentContextual.PvpIcon:SetAlpha(0)
+  FocusFrame.TargetFrameContainer.Flash:SetAlpha(0.2)
 
   ---------------------------------------------------------------------
   -- BuffFrame

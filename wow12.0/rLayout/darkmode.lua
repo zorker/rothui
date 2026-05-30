@@ -7,7 +7,7 @@ local A, L = ...
 local darkColor =  { 0.5, 0.40, 0.35, 1 }
 local darkAuraColor =  { 1, 0.9, 0.85, 1 }
 local darkTextColor =  { 0.75, 0.73, 0.7, 1 }
-local darkButtonColor =  { 0.75, 0.73, 0.7, 1 }
+local darkButtonColor =  { 0.85, 0.73, 0.7, 1 }
 
 local visitedFrames = {}
 
@@ -161,7 +161,7 @@ local function InitDarkMode()
 
   ---------------------------------------------------------------------
   -- Action buttons
-  ------------------
+  ---------------------------------------------------------------------
 
   for i = 1, 12 do
     ApplyDarkMode(_G["ActionButton" .. i], _G["ActionButton" .. i .. "NormalTexture"], darkButtonColor)
@@ -173,6 +173,12 @@ local function InitDarkMode()
     ApplyDarkMode(_G["StanceButton" .. i], _G["StanceButton" ..i.. "NormalTexture"], darkButtonColor)
   end
 
+  ---------------------------------------------------------------------
+  -- StatusTracking bars
+  ---------------------------------------------------------------------
+
+  ApplyDarkMode(StatusTrackingBarManager.MainStatusTrackingBarContainer, StatusTrackingBarManager.MainStatusTrackingBarContainer.BarFrameTexture)
+  ApplyDarkMode(StatusTrackingBarManager.SecondaryStatusTrackingBarContainer, StatusTrackingBarManager.SecondaryStatusTrackingBarContainer.BarFrameTexture)
 
 end
 L.F.InitDarkMode = InitDarkMode

@@ -7,20 +7,22 @@ local A, L = ...
 local darkColor =  { 0.5, 0.40, 0.35, 1 }
 local darkAuraColor =  { 1, 0.9, 0.85, 1 }
 local darkTextColor =  { 0.75, 0.73, 0.7, 1 }
+local darkButtonColor =  { 0.75, 0.73, 0.7, 1 }
 
 local visitedFrames = {}
 
 ---------------------------------------------------------------------
--- ApplyDarkMode(parent, region, textureFile)
+-- ApplyDarkMode(parent, region, colorOverride)
 ---------------------------------------------------------------------
 
-local function ApplyDarkMode(parent, region, textureFile)
+local function ApplyDarkMode(parent, region, colorOverride)
   if not region then return end
   if issecretvalue(region) or region:IsForbidden() then
     return
   end
   region:SetDesaturated(true)
-  region:SetVertexColor(unpack(darkColor))
+  local color = colorOverride or darkColor
+  region:SetVertexColor(unpack(color))
   --region:SetBlendMode("ADD")
 end
 
@@ -43,7 +45,7 @@ local function SearchTexturesRecursive(parent, depth, filter)
         if (textureFile and not filter) or (textureFile and string.find(textureFile, filter)) then
           --print(string.format("%s|cff00ffff[Texture]|r Name: |cffffd100%s|r", indent, regionName))
           --print(string.format("%s   └─ Path/ID: %s", indent, tostring(textureFile)))
-          ApplyDarkMode(parent, region, textureFile)
+          ApplyDarkMode(parent, region)
         end
       end
     end
@@ -68,29 +70,44 @@ end
 
 local function InitDarkMode()
 
-  --136430 = MinimapButtonBorder
+  ---------------------------------------------------------------------
+  -- 136430 = MinimapButtonBorder
+  ---------------------------------------------------------------------
+
   SearchTexturesRecursive(MinimapCluster, 0, "136430")
 
-  --MinimapCompassTexture
-  ApplyDarkMode(MinimapBackdrop, MinimapCompassTexture, nil)
+  ---------------------------------------------------------------------
+  -- MinimapCompassTexture
+  ---------------------------------------------------------------------
 
-  --TargetFrame changes
-  ApplyDarkMode(TargetFrame.TargetFrameContainer, TargetFrame.TargetFrameContainer.FrameTexture, nil)
+  ApplyDarkMode(MinimapBackdrop, MinimapCompassTexture)
+
+  ---------------------------------------------------------------------
+  -- TargetFrame
+  ---------------------------------------------------------------------
+
+  ApplyDarkMode(TargetFrame.TargetFrameContainer, TargetFrame.TargetFrameContainer.FrameTexture)
   TargetFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor:Hide()
   TargetFrame.TargetFrameContent.TargetFrameContentMain.LevelText:ClearAllPoints()
   TargetFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPLEFT", TargetFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, 3, -2)
   TargetFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPRIGHT", TargetFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, -10, -2)
   TargetFrame.TargetFrameContent.TargetFrameContentContextual.PvpIcon:SetAlpha(0)
 
-  --FocusFrame changes
-  ApplyDarkMode(FocusFrame.TargetFrameContainer, FocusFrame.TargetFrameContainer.FrameTexture, nil)
+  ---------------------------------------------------------------------
+  -- FocusFrame
+  ---------------------------------------------------------------------
+
+  ApplyDarkMode(FocusFrame.TargetFrameContainer, FocusFrame.TargetFrameContainer.FrameTexture)
   FocusFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor:Hide()
   FocusFrame.TargetFrameContent.TargetFrameContentMain.LevelText:ClearAllPoints()
   FocusFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPLEFT", FocusFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, 3, -2)
   FocusFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPRIGHT", FocusFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, -10, -2)
   FocusFrame.TargetFrameContent.TargetFrameContentContextual.PvpIcon:SetAlpha(0)
 
-  --BuffFrame
+  ---------------------------------------------------------------------
+  -- BuffFrame
+  ---------------------------------------------------------------------
+
   for i=1, #BuffFrame.auraFrames do
     local aura = BuffFrame.auraFrames[i]
     --aura.Icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
@@ -101,11 +118,13 @@ local function InitDarkMode()
     aura.BuffBorder:SetPoint("CENTER", aura.Icon)
     aura.BuffBorder:SetTexture([[Interface\Buttons\UI-TempEnchant-Border]])
     --AuraUtil.SetAuraBorderAtlas(aura.BuffBorder, nil, false)
-    ApplyDarkMode(aura, aura.BuffBorder)
-    aura.BuffBorder:SetVertexColor(unpack(darkAuraColor))
+    ApplyDarkMode(aura, aura.BuffBorder, darkAuraColor)
   end
 
-  --ObjectiveTracker
+  ---------------------------------------------------------------------
+  -- ObjectiveTracker
+  ---------------------------------------------------------------------
+
   ApplyDarkMode(ObjectiveTrackerFrame.Header, ObjectiveTrackerFrame.Header.Background)
   ObjectiveTrackerFrame.Header.Text:SetTextColor(unpack(darkTextColor))
   ApplyDarkMode(QuestObjectiveTracker.Header, QuestObjectiveTracker.Header.Background)
@@ -113,7 +132,10 @@ local function InitDarkMode()
   ApplyDarkMode(CampaignQuestObjectiveTracker.Header, CampaignQuestObjectiveTracker.Header.Background)
   CampaignQuestObjectiveTracker.Header.Text:SetTextColor(unpack(darkTextColor))
 
-  --TargetFrame buffs
+  ---------------------------------------------------------------------
+  -- TargetFrame buffs
+  ---------------------------------------------------------------------
+
   hooksecurefunc("TargetFrame_UpdateBuffAnchor", function(self, aura, index, numDebuffs, anchorBuff, anchorIndex, size, offsetX, offsetY, mirrorVertically)
     if aura.BuffBorder then
       aura.BuffBorder:Show()
@@ -124,16 +146,32 @@ local function InitDarkMode()
     aura.BuffBorder:SetSize(aura.Stealable:GetSize())
     aura.BuffBorder:SetPoint("CENTER", aura.Icon)
     aura.BuffBorder:SetTexture([[Interface\Buttons\UI-TempEnchant-Border]])
-    ApplyDarkMode(aura, aura.BuffBorder)
-    aura.BuffBorder:SetVertexColor(unpack(darkAuraColor))
+    ApplyDarkMode(aura, aura.BuffBorder, darkAuraColor)
   end)
 
-  --TargetFrame debuffs
+  ---------------------------------------------------------------------
+  -- TargetFrame debuffs
+  ---------------------------------------------------------------------
+
   hooksecurefunc("TargetFrame_UpdateDebuffAnchor", function(self, aura, index, numBuffs, anchorBuff, anchorIndex, size, offsetX, offsetY, mirrorVertically)
     if aura.BuffBorder then
       aura.BuffBorder:Hide()
     end
   end)
+
+  ---------------------------------------------------------------------
+  -- Action buttons
+  ------------------
+
+  for i = 1, 12 do
+    ApplyDarkMode(_G["ActionButton" .. i], _G["ActionButton" .. i .. "NormalTexture"], darkButtonColor)
+    ApplyDarkMode(_G["MultiBarBottomLeftButton" .. i], _G["MultiBarBottomLeftButton" .. i .. "NormalTexture"], darkButtonColor)
+    ApplyDarkMode(_G["MultiBarBottomRightButton" .. i], _G["MultiBarBottomRightButton" ..i.. "NormalTexture"], darkButtonColor)
+    ApplyDarkMode(_G["MultiBarRightButton" .. i], _G["MultiBarRightButton" ..i.. "NormalTexture"], darkButtonColor)
+    ApplyDarkMode(_G["MultiBarLeftButton" .. i], _G["MultiBarLeftButton" ..i.. "NormalTexture"], darkButtonColor)
+    ApplyDarkMode(_G["PetActionButton" .. i], _G["PetActionButton" ..i.. "NormalTexture"], darkButtonColor)
+    ApplyDarkMode(_G["StanceButton" .. i], _G["StanceButton" ..i.. "NormalTexture"], darkButtonColor)
+  end
 
 
 end

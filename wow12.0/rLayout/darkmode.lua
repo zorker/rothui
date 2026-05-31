@@ -93,8 +93,24 @@ local function InitDarkMode()
   TargetFrame.TargetFrameContent.TargetFrameContentMain.LevelText:ClearAllPoints()
   TargetFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPLEFT", TargetFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, 3, -2)
   TargetFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPRIGHT", TargetFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, -10, -2)
+  TargetFrame.TargetFrameContent.TargetFrameContentMain.Name:SetTextColor(unpack(darkTextColor))
   TargetFrame.TargetFrameContent.TargetFrameContentContextual.PvpIcon:SetAlpha(0)
   TargetFrame.TargetFrameContainer.Flash:SetAlpha(0.2)
+
+  ---------------------------------------------------------------------
+  -- BossFrames
+  ---------------------------------------------------------------------
+
+  for i=1, 5 do
+    local bossFrame = _G["Boss"..i.."TargetFrame"]
+    ApplyDarkMode(bossFrame.TargetFrameContainer, bossFrame.TargetFrameContainer.FrameTexture)
+    bossFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor:Hide()
+    bossFrame.TargetFrameContent.TargetFrameContentMain.LevelText:ClearAllPoints()
+    bossFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPLEFT", bossFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, 3, -2)
+    bossFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPRIGHT", bossFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, -10, -2)
+    bossFrame.TargetFrameContent.TargetFrameContentMain.Name:SetTextColor(unpack(darkTextColor))
+    bossFrame.TargetFrameContainer.Flash:SetAlpha(0.2)
+  end
 
   ---------------------------------------------------------------------
   -- FocusFrame
@@ -105,6 +121,7 @@ local function InitDarkMode()
   FocusFrame.TargetFrameContent.TargetFrameContentMain.LevelText:ClearAllPoints()
   FocusFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPLEFT", FocusFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, 3, -2)
   FocusFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPRIGHT", FocusFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, -10, -2)
+  FocusFrame.TargetFrameContent.TargetFrameContentMain.Name:SetTextColor(unpack(darkTextColor))
   FocusFrame.TargetFrameContent.TargetFrameContentContextual.PvpIcon:SetAlpha(0)
   FocusFrame.TargetFrameContainer.Flash:SetAlpha(0.2)
 

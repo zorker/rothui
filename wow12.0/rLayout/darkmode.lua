@@ -96,8 +96,8 @@ local function InitDarkMode()
   TargetFrame.TargetFrameContent.TargetFrameContentMain.Name:SetTextColor(unpack(darkTextColor))
   TargetFrame.TargetFrameContent.TargetFrameContentContextual.PvpIcon:SetAlpha(0)
   TargetFrame.TargetFrameContainer.Flash:SetAlpha(0.2)
-  TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar.HealthBarTexture:SetVertexColor(0.5,0.5,0.5)
-  --TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar.HealthBarTexture:SetBlendMode("ADD")
+  --TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar.HealthBarTexture:SetVertexColor(0.5,0.5,0.5)
+  TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar.HealthBarTexture:SetBlendMode("ADD")
 
   ---------------------------------------------------------------------
   -- BossFrames
@@ -112,7 +112,8 @@ local function InitDarkMode()
     bossFrame.TargetFrameContent.TargetFrameContentMain.Name:SetPoint("TOPRIGHT", bossFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor, -10, -2)
     bossFrame.TargetFrameContent.TargetFrameContentMain.Name:SetTextColor(unpack(darkTextColor))
     bossFrame.TargetFrameContainer.Flash:SetAlpha(0.2)
-    bossFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar.HealthBarTexture:SetVertexColor(0.5,0.5,0.5)
+    --bossFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar.HealthBarTexture:SetVertexColor(0.5,0.5,0.5)
+    bossFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar.HealthBarTexture:SetBlendMode("ADD")
   end
 
   ---------------------------------------------------------------------
@@ -127,7 +128,8 @@ local function InitDarkMode()
   FocusFrame.TargetFrameContent.TargetFrameContentMain.Name:SetTextColor(unpack(darkTextColor))
   FocusFrame.TargetFrameContent.TargetFrameContentContextual.PvpIcon:SetAlpha(0)
   FocusFrame.TargetFrameContainer.Flash:SetAlpha(0.2)
-  FocusFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar.HealthBarTexture:SetVertexColor(0.5,0.5,0.5)
+  --FocusFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar.HealthBarTexture:SetVertexColor(0.5,0.5,0.5)
+  FocusFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar.HealthBarTexture:SetBlendMode("ADD")
 
   ---------------------------------------------------------------------
   -- BuffFrame

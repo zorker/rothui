@@ -9,6 +9,8 @@ local darkAuraColor =  { 1, 0.9, 0.85, 1 }
 local darkTextColor =  { 0.75, 0.73, 0.7, 1 }
 local darkButtonColor =  { 0.85, 0.73, 0.7, 1 }
 
+local spellActivationOverlayScale = 0.6
+
 local visitedFrames = {}
 
 ---------------------------------------------------------------------
@@ -145,8 +147,8 @@ local function InitDarkMode()
     end
     layer, sublayer = aura.Stealable:GetDrawLayer()
     aura.BuffBorder = aura:CreateTexture(nil, layer, nil, sublayer-1)
-    aura.BuffBorder:SetSize(aura.Stealable:GetSize())
-    aura.BuffBorder:SetPoint("CENTER", aura.Icon)
+    aura.BuffBorder:SetPoint("TOPLEFT", aura.Icon, -1, 1)
+    aura.BuffBorder:SetPoint("BOTTOMRIGHT", aura.Icon, 1, -1)
     aura.BuffBorder:SetTexture([[Interface\Buttons\UI-TempEnchant-Border]])
     ApplyDarkMode(aura, aura.BuffBorder, darkAuraColor)
   end)
@@ -181,6 +183,20 @@ local function InitDarkMode()
 
   ApplyDarkMode(StatusTrackingBarManager.MainStatusTrackingBarContainer, StatusTrackingBarManager.MainStatusTrackingBarContainer.BarFrameTexture)
   ApplyDarkMode(StatusTrackingBarManager.SecondaryStatusTrackingBarContainer, StatusTrackingBarManager.SecondaryStatusTrackingBarContainer.BarFrameTexture)
+
+  ---------------------------------------------------------------------
+  -- SpellActivationOverlay
+  ---------------------------------------------------------------------
+
+  SpellActivationOverlayFrame:SetScale(spellActivationOverlayScale)
+
+  hooksecurefunc(SpellActivationOverlayFrame, "ShowOverlay", function(self, spellID, texturePath, position, scale, r, g, b)
+    local overlay = self:GetOverlay(spellID, position)
+    if not overlay then return end
+    if overlay.texture:GetBlendMode() ~= "ADD" then
+      overlay.texture:SetBlendMode("ADD")
+    end
+  end)
 
 end
 L.F.InitDarkMode = InitDarkMode

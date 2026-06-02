@@ -172,6 +172,29 @@ local function RegisterOptionsPanel()
   Settings.CreateCheckbox(category, loadModuleVignetteSetting, "Enable/Disable the vignette module")
 
   ---------------------------------------------------------------------
+  -- rLayoutSettingsReloadButtonMixin
+  ---------------------------------------------------------------------
+
+  rLayoutSettingsReloadButtonMixin = {}
+
+  function rLayoutSettingsReloadButtonMixin:OnLoad() end
+
+  function rLayoutSettingsReloadButtonMixin:Init(initializer)
+    local data = initializer:GetData()
+    if data.text then self.ReloadButton:SetText(data.text) end
+    if data.onClick then self.ReloadButton:SetScript("OnClick", data.onClick) end
+  end
+
+  --rLayoutSettingsReloadButtonData
+  local rLayoutSettingsReloadButtonData = {
+    text = "Reload UI",
+    onClick = function() ReloadUI() end
+  }
+
+  local initializer = Settings.CreateElementInitializer("rLayoutSettingsReloadButton", rLayoutSettingsReloadButtonData)
+  layout:AddInitializer(initializer)
+
+  ---------------------------------------------------------------------
   -- Setting Panel End
   ---------------------------------------------------------------------
 

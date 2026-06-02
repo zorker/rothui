@@ -8,6 +8,7 @@
 ## IconTexture: Interface\AddOns\rLayout\assets\logo-64
 ## X-DB-Version: 1
 
+rLayoutSettingsReloadButton.xml
 init.lua
 db.lua
 modules/chat.lua

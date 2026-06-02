@@ -1,0 +1,18 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+
+  <Frame name="rLayoutSettingsReloadButton" mixin="rLayoutSettingsReloadButtonMixin" virtual="true">
+    <Size x="256" y="32" />
+    <Frames>
+      <Button parentKey="ReloadButton" inherits="UIPanelButtonTemplate" text="Click Me">
+        <Size x="100" y="26" />
+        <Anchors>
+          <Anchor point="LEFT" x="32" y="0" />
+        </Anchors>
+      </Button>
+    </Frames>
+    <Scripts>
+      <OnLoad method="OnLoad" />
+    </Scripts>
+  </Frame>
+</Ui>

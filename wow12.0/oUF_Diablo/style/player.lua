@@ -27,7 +27,7 @@ end
 
 local function UpdateOrbTemplate(orb, templateKeyName)
 
-  local templateName = L.S.orbModelTemplateDropdowns[templateKeyName]:GetValue()
+  local templateName =   L.DB.settings.orbModelTemplates[templateKeyName]
 
   local template = L.DB_ORB_CONFIG.presetTemplates[templateName] or L.DB_ORB_CONFIG.userTemplates[templateName] or L.DB_ORB_CONFIG.presetTemplates["_OTHER"] or nil
   if not template then return end
@@ -52,7 +52,7 @@ local function StylePlayer(self)
 
   self:SetSize(256, 256)
   L.O.playerFrame = self
-  self:SetScale(L.S.playerScaleSetting:GetValue())
+  self:SetScale(L.DB.settings.player.scale)
   self.elementType = "base"
 
   ---------------------------------------------------------------------
@@ -254,7 +254,7 @@ local function StylePlayer(self)
   texRightEdge:SetTexture(L.mediaFolder.."d3_right")
   L.O.hidePlayerArtTextures.texRightEdge = texRightEdge
 
-  if L.S.hidePlayerArtSetting:GetValue() == true then
+  if L.DB.settings.player.hideArt == true then
     L.O.hidePlayerArtTextures.texDemon:Hide()
     L.O.hidePlayerArtTextures.texLeftEdge:Hide()
     L.O.hidePlayerArtTextures.texAngel:Hide()
@@ -270,7 +270,7 @@ local function StylePlayer(self)
   L.O.movePlayerFrame = movePlayerFrame
   movePlayerFrame:SetFrameLevel(healthOrbHighlightFrame:GetFrameLevel()+1)
   movePlayerFrame:SetSize(256, 256)
-  movePlayerFrame:SetScale(L.S.playerScaleSetting:GetValue())
+  movePlayerFrame:SetScale(L.DB.settings.player.scale)
   movePlayerFrame:ClearAllPoints()
   movePlayerFrame:SetPoint(L.DB.playerPosition.point, UIParent, L.DB.playerPosition.relativePoint, L.DB.playerPosition.xOfs, L.DB.playerPosition.yOfs)
 
@@ -281,7 +281,7 @@ local function StylePlayer(self)
   movePlayerFrame.bg:SetAllPoints()
   movePlayerFrame.bg:SetColorTexture(0, 1, 1, 0.5)
 
-  if L.S.lockPlayerFrameSetting:GetValue() == true then
+  if L.DB.settings.player.lockPlayerFrame == true then
     movePlayerFrame:EnableMouse(false)
     movePlayerFrame.bg:Hide()
   else
@@ -316,7 +316,7 @@ local function StylePlayer(self)
   L.O.movePlayerPowerFrame = movePlayerPowerFrame
   movePlayerPowerFrame:SetFrameLevel(powerOrb.OverlayFrame:GetFrameLevel()+1)
   movePlayerPowerFrame:SetSize(256, 256)
-  movePlayerPowerFrame:SetScale(L.S.playerScaleSetting:GetValue())
+  movePlayerPowerFrame:SetScale(L.DB.settings.player.scale)
   movePlayerPowerFrame:ClearAllPoints()
   movePlayerPowerFrame:SetPoint(L.DB.playerPowerPosition.point, UIParent, L.DB.playerPowerPosition.relativePoint, L.DB.playerPowerPosition.xOfs, L.DB.playerPowerPosition.yOfs)
 
@@ -327,7 +327,7 @@ local function StylePlayer(self)
   movePlayerPowerFrame.bg:SetAllPoints()
   movePlayerPowerFrame.bg:SetColorTexture(0, 1, 1, 0.5)
 
-  if L.S.lockPlayerPowerFrameSetting:GetValue() == true then
+  if L.DB.settings.player.lockPlayerPowerFrame == true then
     movePlayerPowerFrame:EnableMouse(false)
     movePlayerPowerFrame.bg:Hide()
   else

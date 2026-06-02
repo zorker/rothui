@@ -28,7 +28,24 @@ local function LoadDBDefaults()
   return {
     settings = {
       modules = {
-        chat = true,
+        chat = {
+          enabled = true,
+        },
+        darkmode = {
+          enabled = true,
+        },
+        spellalert = {
+          enabled = true,
+        },
+        statedriver = {
+          enabled = true,
+        },
+        tooltip = {
+          enabled = true,
+        },
+        vignette = {
+          enabled = true,
+        },
       },
     },
     ["DB_VERSION"] = 1,

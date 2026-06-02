@@ -1,34 +1,42 @@
 local A, L = ...
 
 ---------------------------------------------------------------------
--- vars
----------------------------------------------------------------------
-
---config
-local chatPosition = { "BOTTOMLEFT", 10, 10 }
-local editBoxFocusAlpha = 0.8
-local editBoxAlpha = 0
-local quickJoinToastButtonAlpha = 0.3
-local quickJoinToastButtonClamp = { -10,-10,-10,-10 }
-
----------------------------------------------------------------------
 -- LoadModuleChat()
 ---------------------------------------------------------------------
 
 local function LoadModuleChat()
 
-  --ApplyClamp
+  ---------------------------------------------------------------------
+  -- vars
+  ---------------------------------------------------------------------
+
+  local chatPosition = { "BOTTOMLEFT", 10, 10 }
+  local editBoxFocusAlpha = 0.8
+  local editBoxAlpha = 0
+  local quickJoinToastButtonAlpha = 0.3
+  local quickJoinToastButtonClamp = { -10,-10,-10,-10 }
+
+  ---------------------------------------------------------------------
+  -- ApplyClamp(cf)
+  ---------------------------------------------------------------------
+
   local function ApplyClamp(cf)
     L.eventFrame.SetClampRectInsets(cf,0,0,0,0)
   end
 
-  --ApplyPoint
+  ---------------------------------------------------------------------
+  -- ApplyPoint(cf)
+  ---------------------------------------------------------------------
+
   local function ApplyPoint(cf)
     L.eventFrame.ClearAllPoints(cf)
     L.eventFrame.SetPoint(cf, unpack(chatPosition))
   end
 
-  --SkinChat
+  ---------------------------------------------------------------------
+  -- SkinChat(cf)
+  ---------------------------------------------------------------------
+
   local function SkinChat(cf)
     local cfn = cf:GetName()
     local cbg   = _G[cfn.."Background"]
@@ -57,7 +65,10 @@ local function LoadModuleChat()
     hooksecurefunc(cf, "SetClampRectInsets", ApplyClamp)
   end
 
-  --SkinTempChat
+  ---------------------------------------------------------------------
+  -- SkinTempChat()
+  ---------------------------------------------------------------------
+
   local tempChatList = {}
 
   local function SkinTempChat()
@@ -70,7 +81,10 @@ local function LoadModuleChat()
     end
   end
 
-  --SkinChats
+  ---------------------------------------------------------------------
+  -- SkinChats()
+  ---------------------------------------------------------------------
+
   local function SkinChats()
     for i = 1, NUM_CHAT_WINDOWS do
       local cf = _G["ChatFrame"..i]

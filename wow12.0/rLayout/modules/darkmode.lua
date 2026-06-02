@@ -1,76 +1,77 @@
 local A, L = ...
 
 ---------------------------------------------------------------------
--- vars
+-- LoadModuleDarkMode()
 ---------------------------------------------------------------------
 
-local darkColor =  { 0.5, 0.40, 0.35, 1 }
-local darkAuraColor =  { 1, 0.9, 0.85, 1 }
-local darkTextColor =  { 0.75, 0.73, 0.7, 1 }
-local darkButtonColor =  { 0.85, 0.73, 0.7, 1 }
+local function LoadModuleDarkMode()
 
-local spellActivationOverlayScale = 0.6
+  ---------------------------------------------------------------------
+  -- vars
+  ---------------------------------------------------------------------
 
-local visitedFrames = {}
+  local darkColor =  { 0.5, 0.40, 0.35, 1 }
+  local darkAuraColor =  { 1, 0.9, 0.85, 1 }
+  local darkTextColor =  { 0.75, 0.73, 0.7, 1 }
+  local darkButtonColor =  { 0.85, 0.73, 0.7, 1 }
 
----------------------------------------------------------------------
--- ApplyDarkMode(parent, region, colorOverride)
----------------------------------------------------------------------
+  local spellActivationOverlayScale = 0.6
 
-local function ApplyDarkMode(parent, region, colorOverride)
-  if not region then return end
-  if issecretvalue(region) or region:IsForbidden() then
-    return
+  local visitedFrames = {}
+
+  ---------------------------------------------------------------------
+  -- ApplyDarkMode(parent, region, colorOverride)
+  ---------------------------------------------------------------------
+
+  local function ApplyDarkMode(parent, region, colorOverride)
+    if not region then return end
+    if issecretvalue(region) or region:IsForbidden() then
+      return
+    end
+    region:SetDesaturated(true)
+    local color = colorOverride or darkColor
+    region:SetVertexColor(unpack(color))
+    --region:SetBlendMode("ADD")
   end
-  region:SetDesaturated(true)
-  local color = colorOverride or darkColor
-  region:SetVertexColor(unpack(color))
-  --region:SetBlendMode("ADD")
-end
 
----------------------------------------------------------------------
--- SearchTexturesRecursive(parent, depth, filter)
----------------------------------------------------------------------
+  ---------------------------------------------------------------------
+  -- SearchTexturesRecursive(parent, depth, filter)
+  ---------------------------------------------------------------------
 
-local function SearchTexturesRecursive(parent, depth, filter)
-  if depth == 0 then visitedFrames = {} end
-  if not parent or visitedFrames[parent] then return end
-  visitedFrames[parent] = true
-  --local indent = string.rep("  ", depth)
-  local numRegions = parent.GetNumRegions and parent:GetNumRegions() or 0
-  if numRegions > 0 then
-    local regions = { parent:GetRegions() }
-    for _, region in ipairs(regions) do
-      if region and region.IsObjectType and region:IsObjectType("Texture") then
-        --local regionName = region:GetName() or "Anonymous Texture"
-        local textureFile = region:GetTexture()
-        if (textureFile and not filter) or (textureFile and string.find(textureFile, filter)) then
-          --print(string.format("%s|cff00ffff[Texture]|r Name: |cffffd100%s|r", indent, regionName))
-          --print(string.format("%s   └─ Path/ID: %s", indent, tostring(textureFile)))
-          ApplyDarkMode(parent, region)
+  local function SearchTexturesRecursive(parent, depth, filter)
+    if depth == 0 then visitedFrames = {} end
+    if not parent or visitedFrames[parent] then return end
+    visitedFrames[parent] = true
+    --local indent = string.rep("  ", depth)
+    local numRegions = parent.GetNumRegions and parent:GetNumRegions() or 0
+    if numRegions > 0 then
+      local regions = { parent:GetRegions() }
+      for _, region in ipairs(regions) do
+        if region and region.IsObjectType and region:IsObjectType("Texture") then
+          --local regionName = region:GetName() or "Anonymous Texture"
+          local textureFile = region:GetTexture()
+          if (textureFile and not filter) or (textureFile and string.find(textureFile, filter)) then
+            --print(string.format("%s|cff00ffff[Texture]|r Name: |cffffd100%s|r", indent, regionName))
+            --print(string.format("%s   └─ Path/ID: %s", indent, tostring(textureFile)))
+            ApplyDarkMode(parent, region)
+          end
+        end
+      end
+    end
+
+    local numChildren = parent.GetNumChildren and parent:GetNumChildren() or 0
+    if numChildren > 0 then
+      local children = { parent:GetChildren() }
+      for _, child in ipairs(children) do
+        if child then
+            --local childName = child:GetName() or "Anonymous Child Frame"
+            --print(string.format("%s|cff00ff00[Child Frame]|r -> %s", indent, childName))
+            SearchTexturesRecursive(child, depth + 1, filter)
         end
       end
     end
   end
 
-  local numChildren = parent.GetNumChildren and parent:GetNumChildren() or 0
-  if numChildren > 0 then
-    local children = { parent:GetChildren() }
-    for _, child in ipairs(children) do
-      if child then
-          --local childName = child:GetName() or "Anonymous Child Frame"
-          --print(string.format("%s|cff00ff00[Child Frame]|r -> %s", indent, childName))
-          SearchTexturesRecursive(child, depth + 1, filter)
-      end
-    end
-  end
-end
-
----------------------------------------------------------------------
--- InitDarkMode()
----------------------------------------------------------------------
-
-local function InitDarkMode()
 
   ---------------------------------------------------------------------
   -- 136430 = MinimapButtonBorder
@@ -222,4 +223,5 @@ local function InitDarkMode()
   end)
 
 end
-L.F.InitDarkMode = InitDarkMode
+
+L.F.LoadModuleDarkMode = LoadModuleDarkMode

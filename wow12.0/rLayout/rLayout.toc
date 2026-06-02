@@ -11,9 +11,7 @@
 init.lua
 db.lua
 modules/chat.lua
-modules/combatfeedback.lua
 modules/darkmode.lua
-modules/objectivetracker.lua
 modules/spellalert.lua
 modules/statedriver.lua
 modules/tooltip.lua

@@ -1,10 +1,16 @@
 local A, L = ...
 
---SetStateDriver
-local function SetStateDriver()
+---------------------------------------------------------------------
+-- LoadModuleStateDriver()
+---------------------------------------------------------------------
+
+local function LoadModuleStateDriver()
+
+  --fix blizzart art endcaps from showing
+  MainActionBar.EndCaps:SetAlpha(0)
+
   --MainMenuBar
   RegisterStateDriver(MainActionBar, "visibility", "[petbattle][vehicleui] hide; [combat][mod:shift][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][possessbar] show; hide")
-  MainActionBar.EndCaps:SetAlpha(0)
   --state driver for PlayerFrame
   --RegisterStateDriver(PlayerFrame, "visibility", "[petbattle] hide; [combat][mod:shift][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide")
   --state driver for StanceBar
@@ -23,6 +29,7 @@ local function SetStateDriver()
   RegisterStateDriver(MultiBarBottomLeft, "visibility", "[petbattle][vehicleui] hide; [combat][mod:shift] show; hide")
   --AddActionButtonFader for Multibar 4
   RegisterStateDriver(MultiBarRight, "visibility", "[mod:shift] show; hide")
+
 end
 
-L.F.SetStateDriver = SetStateDriver
+L.F.LoadModuleStateDriver = LoadModuleStateDriver

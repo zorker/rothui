@@ -1,4 +1,4 @@
-## Interface: 120001, 120005
+## Interface: 120005, 120007
 ## Title: rModelDB
 ## Notes: Addon to create the model db for rModelViewer
 ## SavedVariables: rModelDB_G

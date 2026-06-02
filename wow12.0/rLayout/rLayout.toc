@@ -4,15 +4,19 @@
 ## Author: zork
 ## Version: 12.1
 ## Category: rMods
+## SavedVariables: rLayout_DB
 ## IconTexture: Interface\AddOns\rLayout\assets\logo-64
+## X-DB-Version: 1
 
 init.lua
-statedriver.lua
-chat.lua
-combatfeedback.lua
-vignette.lua
-objectivetracker.lua
-spellalert.lua
-darkmode.lua
-tooltip.lua
+db.lua
+modules/chat.lua
+modules/combatfeedback.lua
+modules/darkmode.lua
+modules/objectivetracker.lua
+modules/spellalert.lua
+modules/statedriver.lua
+modules/tooltip.lua
+modules/vignette.lua
+optionspanel.lua
 events.lua

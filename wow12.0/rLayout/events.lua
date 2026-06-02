@@ -11,16 +11,16 @@ L.eventFrame:SetScript("OnEvent", function(_, event, ...)
     --RegisterOptionsPanel
     L.F.RegisterOptionsPanel()
     --LoadModuleChat
-    if L.S.loadModuleChatSetting:GetValue() == true then L.F.LoadModuleChat() end
+    if L.DB.settings.modules.chat == true then L.F.LoadModuleChat() end
     --LoadModuleDarkMode
-    if L.S.loadModuleDarkModeSetting:GetValue() == true then L.F.LoadModuleDarkMode() end
+    if L.DB.settings.modules.darkmode == true then L.F.LoadModuleDarkMode() end
     --LoadModuleSpellAlert
-    if L.S.loadModuleSpellAlertSetting:GetValue() == true then L.F.LoadModuleSpellAlert() end
+    if L.DB.settings.modules.spellalert == true then L.F.LoadModuleSpellAlert() end
     --LoadModuleStateDriver
-    if L.S.loadModuleStateDriverSetting:GetValue() == true then L.F.LoadModuleStateDriver() end
+    if L.DB.settings.modules.statedriver == true then L.F.LoadModuleStateDriver() end
     --LoadModuleTooltip
-    if L.S.loadModuleTooltipSetting:GetValue() == true then L.F.LoadModuleTooltip() end
+    if L.DB.settings.modules.tooltip == true then L.F.LoadModuleTooltip() end
     --LoadModuleVignette
-    if L.S.loadModuleVignetteSetting:GetValue() == true then L.F.LoadModuleVignette() end
+    if L.DB.settings.modules.vignette == true then L.F.LoadModuleVignette() end
   end
 end)

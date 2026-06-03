@@ -159,6 +159,10 @@ local function LoadModuleDarkMode()
   QuestObjectiveTracker.Header.Text:SetTextColor(unpack(darkTextColor))
   ApplyDarkMode(CampaignQuestObjectiveTracker.Header, CampaignQuestObjectiveTracker.Header.Background)
   CampaignQuestObjectiveTracker.Header.Text:SetTextColor(unpack(darkTextColor))
+  ApplyDarkMode(WorldQuestObjectiveTracker.Header, WorldQuestObjectiveTracker.Header.Background)
+  WorldQuestObjectiveTracker.Header.Text:SetTextColor(unpack(darkTextColor))
+  ApplyDarkMode(ScenarioObjectiveTracker.Header, ScenarioObjectiveTracker.Header.Background)
+  ScenarioObjectiveTracker.Header.Text:SetTextColor(unpack(darkTextColor))
 
   ---------------------------------------------------------------------
   -- TargetFrame buffs

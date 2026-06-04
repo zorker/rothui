@@ -101,6 +101,17 @@ local function LoadModuleDarkMode()
   TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar.HealthBarTexture:SetBlendMode("ADD")
 
   ---------------------------------------------------------------------
+  -- Party and Raid Frames
+  ---------------------------------------------------------------------
+
+  hooksecurefunc("DefaultCompactUnitFrameSetup", function(frame)
+    if frame.healthBar:GetStatusBarTexture():GetBlendMode() ~= "ADD" then
+      frame.healthBar:GetStatusBarTexture():SetBlendMode("ADD")
+      frame.background:SetAlpha(0.2)
+    end
+  end)
+
+  ---------------------------------------------------------------------
   -- BossFrames
   ---------------------------------------------------------------------
 

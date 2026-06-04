@@ -2,7 +2,7 @@
 ## Title: rLayout
 ## Notes: Adjustments for the Blizzard default UI
 ## Author: zork
-## Version: 12.05
+## Version: 12.06
 ## Category: rMods
 ## SavedVariables: rLayout_DB
 ## IconTexture: Interface\AddOns\rLayout\assets\logo-64

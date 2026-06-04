@@ -13,12 +13,55 @@ local deadColor         = { 0.40, 0.40, 0.40, 1.00 }
 local GameTooltip = GameTooltip
 
 ---------------------------------------------------------------------
+-- GetLine1Prefix(unit, leftText)
+---------------------------------------------------------------------
+
+local function GetLine1Prefix(unit, leftText)
+  local prefix = ""
+  if UnitIsPlayer(unit) then
+    local _, className = UnitClass(unit)
+    if className then
+      prefix = "|A:groupfinder-icon-class-"..className:lower()..":15:15:0:0|a "
+    end
+  else
+    local classification = UnitClassification(unit)
+    if classification == "worldboss" or UnitLevel(unit) == -1 then
+      prefix = "|A:worldquest-icon-boss:15:15:0:0|a "
+    elseif classification == "rare" then
+      prefix = "|A:nameplates-icon-elite-silver:15:15:0:0|a "
+    elseif classification == "rareelite" then
+      prefix = "|A:worldquest-icon-boss:15:15:0:0|a "
+    elseif classification == "elite" then
+      prefix = "|A:nameplates-icon-elite-gold:15:15:0:0|a "
+    end
+  end
+  return prefix
+end
+
+---------------------------------------------------------------------
+-- GetLine1Suffix(unit, leftText)
+---------------------------------------------------------------------
+
+local function GetLine1Suffix(unit, leftText)
+  local suffix = ""
+  if UnitIsPlayer(unit) then
+    local instanceName, instanceType = GetInstanceInfo()
+    if instanceType == "none" and issecretvalue(leftText) == false and UnitIsAFK(unit) then
+      suffix = " |cff00ffff<afk>|r"
+    end
+  end
+  return suffix
+end
+
+---------------------------------------------------------------------
 -- GetClassOrReactionColor(unit)
 ---------------------------------------------------------------------
 
 local function GetClassOrReactionColor(unit, fallbackColor)
   local r, g, b = unpack(fallbackColor)
-  if UnitIsPlayer(unit) then
+  if UnitIsDeadOrGhost(unit) then
+    r, g, b = unpack(deadColor)
+  elseif UnitIsPlayer(unit) then
     local _, className = UnitClass(unit)
     local classColor = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[className]
     if classColor then
@@ -44,27 +87,14 @@ end
 
 local function ForceCustomBorder(tooltip)
   if not tooltip or not tooltip.NineSlice then return end
-  -- no GetUnit
-  if not tooltip.GetUnit then
+  local unit = UnitExists("mouseover") and "mouseover" or nil
+  if unit then
+    tooltip.NineSlice:SetVertexColor(GetClassOrReactionColor(unit, borderColor))
+    tooltip.NineSlice.Center:SetVertexColor(unpack(backgroundColor))
+  else
     tooltip.NineSlice:SetVertexColor(unpack(borderColor))
     tooltip.NineSlice.Center:SetVertexColor(unpack(backgroundColor))
-    return
   end
-  local _, unit = tooltip:GetUnit()
-  -- secret unit
-  if issecretvalue(unit) then
-    tooltip.NineSlice:SetVertexColor(GameTooltipTextLeft1:GetTextColor())
-    tooltip.NineSlice.Center:SetVertexColor(unpack(backgroundColor))
-    return
-  end
-  -- no unit
-  if not unit then
-    tooltip.NineSlice:SetVertexColor(unpack(borderColor))
-    tooltip.NineSlice.Center:SetVertexColor(unpack(backgroundColor))
-    return
-  end
-  tooltip.NineSlice:SetVertexColor(GetClassOrReactionColor(unit, borderColor))
-  tooltip.NineSlice.Center:SetVertexColor(unpack(backgroundColor))
 end
 
 ---------------------------------------------------------------------
@@ -100,73 +130,45 @@ local function LoadModuleTooltip()
 
   TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, function(tooltip)
     if tooltip ~= GameTooltip then return end
-    if not tooltip.GetUnit then return end
-    local _, unit = tooltip:GetUnit()
-    -- secret unit
-    if issecretvalue(unit) then
-      if GameTooltipTextLeft2 then
-        local difficultyColor = GetCreatureDifficultyColor(UnitLevel("player"))
-        GameTooltipTextLeft2:SetFont(STANDARD_TEXT_FONT, 12, "SLUG")
-        GameTooltipTextLeft2:SetTextColor(difficultyColor.r,difficultyColor.g,difficultyColor.b)
-      end
-      local numLines = tooltip:NumLines()
-      for i = 3, numLines do
-        local leftLine = _G["GameTooltipTextLeft" .. i]
-        if leftLine then
-          leftLine:SetFont(STANDARD_TEXT_FONT, 12, "SLUG")
-          leftLine:SetTextColor(unpack(textColor))
-        end
-      end
-      return
-    end
+    local unit = UnitExists("mouseover") and "mouseover" or nil
     if not unit then return end
-    -- headLine
-    local headLine = GameTooltipTextLeft1
-    if UnitIsPlayer(unit) then
-      local _, className = UnitClass(unit)
-      if UnitIsAFK(unit) then
-        tooltip:AppendText((" |cff%s<afk>|r"):format("00ffff"))
-      end
-      headLine:SetText("|A:groupfinder-icon-class-"..className:lower()..":15:15:0:0|a "..headLine:GetText())
-    else
-      local classification = UnitClassification(unit)
-      if classification == "worldboss" or UnitLevel(unit) == -1 then
-        headLine:SetText("|A:worldquest-icon-boss:15:15:0:0|a "..headLine:GetText())
-      elseif classification == "rare" then
-        headLine:SetText("|A:nameplates-icon-elite-silver:15:15:0:0|a "..headLine:GetText())
-      elseif classification == "rareelite" then
-        headLine:SetText("|A:worldquest-icon-boss:15:15:0:0|a "..headLine:GetText())
-      elseif classification == "elite" then
-        headLine:SetText("|A:nameplates-icon-elite-gold:15:15:0:0|a "..headLine:GetText())
-      end
-    end
-    headLine:SetFont(STANDARD_TEXT_FONT, 15, "SLUG")
-    if UnitIsDeadOrGhost(unit) then
-      headLine:SetTextColor(unpack(deadColor))
-    else
-      headLine:SetTextColor(GetClassOrReactionColor(unit, textColor))
-    end
-
-    -- other lines
-    local numLines = tooltip:NumLines()
-    if not numLines or numLines < 2 then return end
+    local tooltipData = tooltip:GetTooltipData()
+    if not tooltipData then return end
     local level = UnitLevel(unit)
     local difficultyColor = GetCreatureDifficultyColor((level > 0) and level or 999)
-    local levelLine = string.find(GameTooltipTextLeft3:GetText() or "empty", "%a%s%?%?") and 3 or
-                      string.find(GameTooltipTextLeft3:GetText() or "empty", "%a%s%d") and 3 or 2
-    for i = 2, numLines do
-      local leftLine = _G["GameTooltipTextLeft" .. i]
-      if leftLine and i == levelLine then
-        leftLine:SetFont(STANDARD_TEXT_FONT, 12, "SLUG")
-        leftLine:SetTextColor(difficultyColor.r,difficultyColor.g,difficultyColor.b)
-      --mark second line as guild line
-      elseif leftLine and i == 2 and levelLine == 3 then
-        leftLine:SetText("<"..leftLine:GetText()..">")
-        leftLine:SetFont(STANDARD_TEXT_FONT, 12, "SLUG")
-        leftLine:SetTextColor(unpack(guildColor))
-      elseif leftLine then
-        leftLine:SetFont(STANDARD_TEXT_FONT, 12, "SLUG")
-        leftLine:SetTextColor(unpack(textColor))
+    local levelLine = nil
+    --find the level line
+    for i, data in ipairs(tooltipData.lines) do
+      if issecretvalue(data.leftText) then
+        levelLine = 2
+        break
+      end
+      if data.lineIndex >= 2 then
+        levelLine = string.find(data.leftText, "%a%s%?%?") and data.lineIndex or
+                    string.find(data.leftText, "%a%s%d") and data.lineIndex or nil
+        if levelLine then
+          break
+        end
+      end
+    end
+    --loop over all lines
+    for i, data in ipairs(tooltipData.lines) do
+      local line = _G["GameTooltipTextLeft" .. data.lineIndex]
+      if data.lineIndex == 1 then
+        line:SetText(GetLine1Prefix(unit, data.leftText)..data.leftText..GetLine1Suffix(unit, data.leftText))
+        line:SetTextColor(GetClassOrReactionColor(unit, textColor))
+        line:SetFont(STANDARD_TEXT_FONT, 15, "SLUG")
+      end
+      if data.lineIndex >= 2 then
+        line:SetFont(STANDARD_TEXT_FONT, 12, "SLUG")
+        if data.lineIndex == 2 and levelLine and levelLine > 2 then
+          line:SetTextColor(unpack(guildColor))
+          line:SetText("<"..data.leftText..">")
+        elseif levelLine and data.lineIndex == levelLine then
+          line:SetTextColor(difficultyColor.r,difficultyColor.g,difficultyColor.b)
+        else
+          line:SetTextColor(unpack(textColor))
+        end
       end
     end
   end)

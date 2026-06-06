@@ -48,7 +48,7 @@ local function LoadDBDefaults()
         },
       },
     },
-    ["DB_VERSION"] = 1,
+    ["DB_VERSION"] = 2,
   }
 end
 
@@ -75,14 +75,19 @@ local function LoadDBUpdates()
 end
 
 ---------------------------------------------------------------------
--- ResetDB
+-- CheckForDBReset
 ---------------------------------------------------------------------
 
---[[
-local function ResetDB()
-  L.DB = LoadDBDefaults()
+local function CheckForDBReset()
+  local resetDB = false
+  if not L.DB["DB_VERSION"] or L.DB["DB_VERSION"] < 2 then
+    resetDB = true
+  end
+  if resetDB then
+    L.DB = LoadDBDefaults()
+    print(L.name, "error in db structure found, reloading db defaults")
+  end
 end
-]]
 
 ---------------------------------------------------------------------
 -- LoadDB
@@ -92,6 +97,7 @@ local function LoadDB()
   -- set saved variables
   rLayout_DB = rLayout_DB or LoadDBDefaults()
   L.DB = rLayout_DB
+  CheckForDBReset()
   LoadDBUpdates()
   print(L.name, L.version, "loading db version", L.DB["DB_VERSION"])
 end

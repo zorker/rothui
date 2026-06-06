@@ -2,7 +2,7 @@
 ## Title: rModelOrbConfig
 ## Notes: Orb model template configurator based on rModelOrbTemplate
 ## Author: zork
-## Version: 12.02
+## Version: 12.03
 ## Category: rMods
 ## SavedVariables: rModelOrbConfig_DB
 ## IconTexture: Interface\AddOns\rModelOrbConfig\assets\logo-64

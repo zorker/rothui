@@ -28,8 +28,8 @@ local function RegisterOptionsPanel()
   local loadModuleChatSetting = Settings.RegisterAddOnSetting(
     category,
     L.name.."SettingsLoadModuleChat",
-    "chat",
-    L.DB.settings.modules,
+    "enabled",
+    L.DB.settings.modules.chat,
     Settings.VarType.Boolean,
     "Enable chat module",
     true
@@ -53,8 +53,8 @@ local function RegisterOptionsPanel()
   local loadModuleDarkModeSetting = Settings.RegisterAddOnSetting(
     category,
     L.name.."SettingsLoadModuleDarkMode",
-    "darkmode",
-    L.DB.settings.modules,
+    "enabled",
+    L.DB.settings.modules.darkmode,
     Settings.VarType.Boolean,
     "Enable darkmode module",
     true
@@ -78,8 +78,8 @@ local function RegisterOptionsPanel()
   local loadModuleSpellAlertSetting = Settings.RegisterAddOnSetting(
     category,
     L.name.."SettingsLoadModuleSpellAlert",
-    "spellalert",
-    L.DB.settings.modules,
+    "enabled",
+    L.DB.settings.modules.spellalert,
     Settings.VarType.Boolean,
     "Enable spellalert module",
     true
@@ -103,8 +103,8 @@ local function RegisterOptionsPanel()
   local loadModuleStateDriverSetting = Settings.RegisterAddOnSetting(
     category,
     L.name.."SettingsLoadModuleStateDriver",
-    "statedriver",
-    L.DB.settings.modules,
+    "enabled",
+    L.DB.settings.modules.statedriver,
     Settings.VarType.Boolean,
     "Enable statedriver module",
     true
@@ -128,8 +128,8 @@ local function RegisterOptionsPanel()
   local loadModuleTooltipSetting = Settings.RegisterAddOnSetting(
     category,
     L.name.."SettingsLoadModuleTooltip",
-    "tooltip",
-    L.DB.settings.modules,
+    "enabled",
+    L.DB.settings.modules.tooltip,
     Settings.VarType.Boolean,
     "Enable tooltip module",
     true
@@ -153,8 +153,8 @@ local function RegisterOptionsPanel()
   local loadModuleVignetteSetting = Settings.RegisterAddOnSetting(
     category,
     L.name.."SettingsLoadModuleVignette",
-    "vignette",
-    L.DB.settings.modules,
+    "enabled",
+    L.DB.settings.modules.vignette,
     Settings.VarType.Boolean,
     "Enable vignette module",
     true

@@ -2,20 +2,20 @@
 ## Title: rLayout
 ## Notes: Adjustments for the Blizzard default UI
 ## Author: zork
-## Version: 12.07
+## Version: 12.08
 ## Category: rMods
 ## SavedVariables: rLayout_DB
 ## IconTexture: Interface\AddOns\rLayout\assets\logo-64
-## X-DB-Version: 1
+## X-DB-Version: 2
 
 rLayoutSettingsReloadButton.xml
 init.lua
 db.lua
+optionspanel.lua
 modules/chat.lua
 modules/darkmode.lua
 modules/spellalert.lua
 modules/statedriver.lua
 modules/tooltip.lua
 modules/vignette.lua
-optionspanel.lua
 events.lua

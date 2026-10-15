@@ -1,4 +1,4 @@
-## Interface: 120100
+## Interface: 120100, 120105, 16001
 ## Title: Radial Progress Test
 ## Notes: To test new radial texture api
 ## Author: zork

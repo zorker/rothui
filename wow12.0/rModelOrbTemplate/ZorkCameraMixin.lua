@@ -501,7 +501,7 @@ function ZorkCameraMixin:OnUpdate(elapsed) -- override
 
   --left
   if self:IsLeftMouseButtonDown() then
-    local deltaX, deltaY = GetScaledCursorDelta()
+    local deltaX, deltaY = InputUtil.GetCursorDelta(GetAppropriateTopLevelParent())
     if IsShiftKeyDown() then
       self:HandleMouseMovement(self.buttonModes.leftX,  deltaX * self:GetDeltaModifierForCameraMode(self.buttonModes.leftX), not self.buttonModes.leftXinterpolate)
     elseif IsAltKeyDown() then
@@ -514,7 +514,7 @@ function ZorkCameraMixin:OnUpdate(elapsed) -- override
 
   --right
   if self:IsRightMouseButtonDown() then
-    local deltaX, deltaY = GetScaledCursorDelta()
+    local deltaX, deltaY = InputUtil.GetCursorDelta(GetAppropriateTopLevelParent())
     if IsShiftKeyDown() then
       self:HandleMouseMovement(self.buttonModes.rightX,  deltaX * self:GetDeltaModifierForCameraMode(self.buttonModes.rightX), not self.buttonModes.rightXinterpolate)
     elseif IsAltKeyDown() then
@@ -527,14 +527,14 @@ function ZorkCameraMixin:OnUpdate(elapsed) -- override
 
   --NEW: m4
   if self:IsMouse4ButtonDown() then
-    local deltaX, deltaY = GetScaledCursorDelta()
+    local deltaX, deltaY = InputUtil.GetCursorDelta(GetAppropriateTopLevelParent())
     self:HandleMouseMovement(self.buttonModes.m4X,  deltaX * self:GetDeltaModifierForCameraMode(self.buttonModes.m4X), not self.buttonModes.m4Xinterpolate)
     self:HandleMouseMovement(self.buttonModes.m4Y, -deltaY * self:GetDeltaModifierForCameraMode(self.buttonModes.m4Y), not self.buttonModes.m4Yinterpolate)
   end
 
   --NEW: m5
   if self:IsMouse5ButtonDown() then
-    local deltaX, deltaY = GetScaledCursorDelta()
+    local deltaX, deltaY = InputUtil.GetCursorDelta(GetAppropriateTopLevelParent())
     self:HandleMouseMovement(self.buttonModes.m5X,  deltaX * self:GetDeltaModifierForCameraMode(self.buttonModes.m5X), not self.buttonModes.m5Xinterpolate)
     self:HandleMouseMovement(self.buttonModes.m5Y, -deltaY * self:GetDeltaModifierForCameraMode(self.buttonModes.m5Y), not self.buttonModes.m5Yinterpolate)
   end

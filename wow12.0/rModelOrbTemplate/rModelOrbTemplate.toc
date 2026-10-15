@@ -1,8 +1,8 @@
-## Interface: 120007, 120100
+## Interface: 120100, 120105, 16001
 ## Title: rModelOrbTemplate
 ## Notes: Orb Model XML Template
 ## Author: zork
-## Version: 12.03
+## Version: 12.05
 ## Category: rMods
 ## SavedVariables: rModelOrbTemplate_DB
 ## IconTexture: Interface\AddOns\rModelOrbTemplate\assets\logo-64

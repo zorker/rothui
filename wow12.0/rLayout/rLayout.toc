@@ -1,8 +1,8 @@
-## Interface: 120007, 120100
+## Interface: 120100, 120105, 16001
 ## Title: rLayout
 ## Notes: Adjustments for the Blizzard default UI
 ## Author: zork
-## Version: 12.09
+## Version: 12.10
 ## Category: rMods
 ## SavedVariables: rLayout_DB
 ## IconTexture: Interface\AddOns\rLayout\assets\logo-64

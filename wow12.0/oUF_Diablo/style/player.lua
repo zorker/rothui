@@ -54,6 +54,8 @@ local function StylePlayer(self)
   healthOrb.ClipFrame:SetFrameLevel(healthOrb:GetFrameLevel()+2)
   healthOrb.OverlayFrame:SetFrameLevel(healthOrb:GetFrameLevel()+3)
 
+  RegisterStateDriver(healthOrb, "visibility", "[petbattle][vehicleui][overridebar] hide; show")
+
   local health = CreateFrame("StatusBar", nil, self)
   self.Health = health
   health.elementType = "health"
@@ -70,6 +72,8 @@ local function StylePlayer(self)
   powerOrb.FillingStatusBar:SetFrameLevel(powerOrb:GetFrameLevel()+1)
   powerOrb.ClipFrame:SetFrameLevel(powerOrb:GetFrameLevel()+2)
   powerOrb.OverlayFrame:SetFrameLevel(powerOrb:GetFrameLevel()+3)
+
+  RegisterStateDriver(powerOrb, "visibility", "[petbattle][vehicleui][overridebar] hide; show")
 
   local power = CreateFrame("StatusBar", nil, self)
   self.Power = power

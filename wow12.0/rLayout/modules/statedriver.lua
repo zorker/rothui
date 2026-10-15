@@ -10,7 +10,7 @@ local function LoadModuleStateDriver()
   MainActionBar.EndCaps:SetAlpha(0)
 
   --MainMenuBar
-  RegisterStateDriver(MainActionBar, "visibility", "[petbattle][vehicleui] hide; [combat][mod:shift][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][possessbar] show; hide")
+  RegisterStateDriver(MainActionBar, "visibility", "[petbattle][vehicleui][overridebar] hide; [combat][mod:shift][@target,exists,nodead][@vehicle,exists][shapeshift][possessbar] show; hide")
   --state driver for PlayerFrame
   --RegisterStateDriver(PlayerFrame, "visibility", "[petbattle] hide; [combat][mod:shift][@target,exists,nodead][@vehicle,exists][overridebar][shapeshift][vehicleui][possessbar] show; hide")
   --state driver for StanceBar
@@ -24,11 +24,11 @@ local function LoadModuleStateDriver()
   --state driver for MainStatusTrackingBarContainer
   RegisterStateDriver(MainStatusTrackingBarContainer, "visibility", "[mod:alt] show; hide")
   --PetActionBar
-  RegisterStateDriver(PetActionBar, "visibility", "[petbattle][vehicleui] hide; [mod:shift] show; hide")
+  RegisterStateDriver(PetActionBar, "visibility", "[petbattle][vehicleui][overridebar] hide; [mod:shift] show; hide")
   --MultiBarBottomLeft - Multibar 2
-  RegisterStateDriver(MultiBarBottomLeft, "visibility", "[petbattle][vehicleui] hide; [combat][mod:shift] show; hide")
+  RegisterStateDriver(MultiBarBottomLeft, "visibility", "[petbattle][vehicleui][overridebar] hide; [combat][mod:shift] show; hide")
   --AddActionButtonFader for Multibar 4
-  RegisterStateDriver(MultiBarRight, "visibility", "[mod:shift] show; hide")
+  RegisterStateDriver(MultiBarRight, "visibility", "[petbattle][vehicleui][overridebar] hide; [mod:shift] show; hide")
 
 end
 
